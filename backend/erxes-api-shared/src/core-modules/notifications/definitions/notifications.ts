@@ -21,6 +21,7 @@ export interface INotificationDocument extends Document {
 
   // Additional data
   priority: 'low' | 'medium' | 'high' | 'urgent';
+  priorityLevel: 1 | 2 | 3 | 4;
   metadata?: any; // plugin-specific data
 
   // Timestamps
@@ -81,6 +82,12 @@ export const notificationSchema = new Schema({
     type: String,
     enum: ['low', 'medium', 'high', 'urgent'],
     default: 'medium',
+  },
+  priorityLevel: {
+    type: String,
+    enum: [1, 2, 3, 4],
+    default: 2,
+    required: true,
   },
 
   metadata: {

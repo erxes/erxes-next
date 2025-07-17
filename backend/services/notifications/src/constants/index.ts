@@ -1,6 +1,6 @@
 export const NOTIFICATION_TYPES = {
   EMAIL: 'email',
-  SMS: 'sms', 
+  SMS: 'sms',
   PUSH: 'push',
   IN_APP: 'in_app',
 } as const;
@@ -102,3 +102,5 @@ export const JOB_NAMES = {
   PROCESS_SCHEDULED: 'process-scheduled',
   SEND_BULK_EMAIL: 'send-bulk-email',
 } as const;
+
+export const PRIORITY_ORDER = { low: 1, medium: 2, high: 3, urgent: 4 };

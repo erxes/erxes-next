@@ -8,16 +8,20 @@ export const BlurWrapper = ({
 }: {
   isDisabled?: boolean;
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }) => (
-  <div className={cn('relative', className)}>
+  <div className={cn('relative flex-1', className)}>
     {isDisabled && (
       <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-sm text-muted-foreground gap-2 text-xs">
         <IconInfoTriangle className="w-4 h-4 text-yellow-500" />
         This section is disabled
       </div>
     )}
-    <div className={isDisabled ? 'pointer-events-none opacity-50' : ''}>
+    <div
+      className={cn('h-full', {
+        'pointer-events-none opacity-50': isDisabled,
+      })}
+    >
       {children}
     </div>
   </div>

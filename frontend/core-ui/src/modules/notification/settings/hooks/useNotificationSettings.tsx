@@ -1,10 +1,8 @@
 import { EDIT_USER_NOTIFICATION_SETTINGS } from '@/notification/settings/graphql/notificationSettingsMutations';
-import { useUserNotificationSettings } from '@/notification/settings/hooks/useUserNotificationSettings';
 import {
   notificationSettingsFormSchema,
   TNotificationSettingsForm,
 } from '@/notification/settings/states/notificationSettingsForm';
-import { UserNotificationSettings } from '@/notification/settings/types/notificationSettings';
 import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast, useQueryState } from 'erxes-ui';
@@ -19,7 +17,8 @@ export type onNotifTypeCheckedProp = {
 };
 
 export const useNotificationSettings = (refetch?: () => void) => {
-  const [isOrgDefault, toggleOrgDefault] = useQueryState('isOrgDefault');
+  const [isOrgDefault, toggleOrgDefault] =
+    useQueryState<boolean>('isOrgDefault');
   const [editSettings] = useMutation(EDIT_USER_NOTIFICATION_SETTINGS);
 
   const form = useForm<TNotificationSettingsForm>({
@@ -29,6 +28,7 @@ export const useNotificationSettings = (refetch?: () => void) => {
         inAppNotificationsDisabled: false,
         emailNotificationsDisabled: false,
       },
+      expiresAfterDays: 30,
       plugins: {},
     },
   });
@@ -55,8 +55,9 @@ export const useNotificationSettings = (refetch?: () => void) => {
       [pluginName]: {
         ...pluginConfigState,
         types: {
-          ...(pluginConfigState.types || {}),
+          ...(pluginConfigState?.types ?? {}),
           [notifType]: {
+            ...(pluginConfigState?.types?.[notifType] ?? {}),
             [type === 'email' ? 'emailDisabled' : 'inAppDisabled']: !checked,
           },
         },

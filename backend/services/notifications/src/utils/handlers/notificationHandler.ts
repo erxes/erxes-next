@@ -4,6 +4,7 @@ import { debugError, debugInfo } from '@/utils/debugger';
 import { INotificationJobData } from '@/types';
 import { EmailService } from '@/utils/email/emailService';
 import { generateModels } from '@/connectionResolver';
+import { PRIORITY_ORDER } from '@/constants';
 
 export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
@@ -38,48 +39,49 @@ export const handleCreateNotification = async (
           userId,
         });
 
-        // if (!shouldCreateNotification(null, userSettings, data)) {
-        //   debugInfo(`Notification skipped for user ${userId} due to settings`);
-        //   continue;
-        // }
+        if (!shouldCreateNotification(null, userSettings, data)) {
+          debugInfo(`Notification skipped for user ${userId} due to settings`);
+          continue;
+        }
 
         let notificationId;
 
         // Create in-app notification if enabled
-        // if (shouldCreateInAppNotification(null, userSettings, data)) {
-        const notification = await models.Notifications.create({
-          title: data.title,
-          message: data.message,
-          type: data.type,
-          userId,
-          fromUserId: data.fromUserId,
-          contentType: data.contentType,
-          contentTypeId: data.contentTypeId,
-          priority: data.priority || 'medium',
-          metadata: data.metadata,
-          // expiresAt: defaultConfig.expiresAfterDays
-          //   ? new Date(
-          //       Date.now() +
-          //         defaultConfig.expiresAfterDays * 24 * 60 * 60 * 1000,
-          //     )
-          //   : undefined,
-        });
+        if (shouldCreateInAppNotification(null, userSettings, data)) {
+          const notification = await models.Notifications.create({
+            title: data.title,
+            message: data.message,
+            type: data.type,
+            userId,
+            fromUserId: data.fromUserId,
+            contentType: data.contentType,
+            contentTypeId: data.contentTypeId,
+            priority: data.priority || 'medium',
+            metadata: data.metadata,
+            priorityLevel: PRIORITY_ORDER[data.priority || 'medium'],
+            // expiresAt: defaultConfig.expiresAfterDays
+            //   ? new Date(
+            //       Date.now() +
+            //         defaultConfig.expiresAfterDays * 24 * 60 * 60 * 1000,
+            //     )
+            //   : undefined,
+          });
 
-        notificationId = notification._id;
+          notificationId = notification._id;
 
-        // Send GraphQL subscription for real-time updates
-        graphqlPubsub.publish(
-          `notificationInserted:${subdomain}:${'OQgac3z4G3I2LW9QPpAtL'}`,
-          {
-            notificationInserted: {
-              ...notification.toObject(),
+          // Send GraphQL subscription for real-time updates
+          graphqlPubsub.publish(
+            `notificationInserted:${subdomain}:${'OQgac3z4G3I2LW9QPpAtL'}`,
+            {
+              notificationInserted: {
+                ...notification.toObject(),
+              },
             },
-          },
-        );
+          );
 
-        results.push({ userId, inApp: true, notificationId });
-        debugInfo(`In-app notification created for user ${userId}`);
-        // }
+          results.push({ userId, inApp: true, notificationId });
+          debugInfo(`In-app notification created for user ${userId}`);
+        }
 
         // Send email notification if enabled
         if (shouldSendEmailNotification(null, userSettings, data)) {

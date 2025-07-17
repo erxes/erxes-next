@@ -27,17 +27,12 @@ export type OnNotifTypeCheckedProp = {
 export type PluginNotificationSettingsProps = {
   pluginName: string;
   modules: Module[];
-  onNotiTypeChecked: (
-    defaultProp: OnNotifTypeCheckedProp,
-    type: 'email' | 'inApp',
-    checked: boolean,
-  ) => void;
 };
 
 type TPluginFormState = TNotificationSettingsForm['plugins'][string];
 
 export type ModuleNotificationSettingsProps = {
-  field: ControllerRenderProps<TNotificationSettingsForm, 'plugins'>;
+  // field: ControllerRenderProps<TNotificationSettingsForm, 'plugins'>;
 
   pluginName: string;
   moduleName: string;
@@ -45,25 +40,15 @@ export type ModuleNotificationSettingsProps = {
   description: string;
   types: ModuleType[];
   pluginConfigState: TPluginFormState;
-  onNotiTypeChecked: (
-    defaultProp: OnNotifTypeCheckedProp,
-    type: 'email' | 'inApp',
-    checked: boolean,
-  ) => void;
 };
 
 export type NotifTypeNotificationSettingsProps = {
   pluginName: string;
   text: string;
   notifType: string;
-  onNotiTypeChecked: (
-    defaultProp: OnNotifTypeCheckedProp,
-    type: 'email' | 'inApp',
-    checked: boolean,
-  ) => void;
   pluginConfigState: TNotificationSettingsForm['plugins'][string];
   notifTypeState: NonNullable<TPluginFormState['types']>[string];
-  field: ControllerRenderProps<TNotificationSettingsForm, 'plugins'>;
+  // field: ControllerRenderProps<TNotificationSettingsForm, 'plugins'>;
 };
 
 export type UserNotificationSettings = {
@@ -91,4 +76,17 @@ export type UserNotificationSettings = {
   // Metadata
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type PluginsNotificationConfig = {
+  pluginName: string;
+  modules: {
+    name: string;
+    description: string;
+    icon: string;
+    types: {
+      name: string;
+      text: string;
+    }[];
+  }[];
 };

@@ -1,23 +1,15 @@
 import { useNotificationsListContext } from '@/notification/my-inbox/context/NotificationsListContext';
-import {
-  IconAdjustmentsHorizontal,
-  IconSortAscending,
-  IconSortDescending,
-} from '@tabler/icons-react';
-import {
-  Button,
-  Label,
-  Popover,
-  Select,
-  Toggle,
-  useMultiQueryState,
-} from 'erxes-ui';
+import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
+import { Button, Label, Popover, Select, useMultiQueryState } from 'erxes-ui';
 
 export const NotificationAdjustments = () => {
   const { loading } = useNotificationsListContext();
-  const [{ orderBy }, setQueries] = useMultiQueryState<{
+  const [{ orderBy, status }, setQueries] = useMultiQueryState<{
     orderBy: string;
-  }>(['orderBy']);
+    status: 'read' | 'unread' | 'all';
+  }>(['orderBy', 'status']);
+
+  console.log({ status });
 
   return (
     <Popover>
@@ -43,6 +35,9 @@ export const NotificationAdjustments = () => {
               <Select.Item value="new">Newest</Select.Item>
               <Select.Item value="old">Oldest</Select.Item>
               <Select.Item value="priority">Priority</Select.Item>
+              {status && status !== 'unread' && (
+                <Select.Item value="readAt">Read at</Select.Item>
+              )}
             </Select.Content>
           </Select>
         </div>

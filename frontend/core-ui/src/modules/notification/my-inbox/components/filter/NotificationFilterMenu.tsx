@@ -14,8 +14,6 @@ import {
 export const NotificationFilterMenu = () => {
   const [status, setStatus] = useQueryState<string>('status');
 
-  console.log({ status });
-
   return (
     <Filter.View>
       <Command>

@@ -6,6 +6,8 @@ export const notificationSettingsFormSchema = z.object({
     emailNotificationsDisabled: z.boolean(),
   }),
 
+  expiresAfterDays: z.number().optional(),
+
   plugins: z.record(
     z.object({
       isDisabled: z.boolean().optional(),

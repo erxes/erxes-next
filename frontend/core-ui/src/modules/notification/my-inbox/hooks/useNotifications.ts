@@ -28,12 +28,16 @@ type NotificationsQueryResponse = ICursorListResponse<INotification>;
 
 const NOTIFICATIONS_LIMIT = 15;
 
-const generateOrderBy = (orderBy: 'new' | 'old' | 'priority' | null) => {
+const generateOrderBy = (
+  orderBy: 'new' | 'old' | 'priority' | 'readAt' | null,
+) => {
   const orderByObject: any = {};
   if (orderBy === 'old') {
     orderByObject.orderBy = { createdAt: 1 };
   } else if (orderBy === 'priority') {
     orderByObject.orderBy = { priority: -1 };
+  } else if (orderBy === 'readAt') {
+    orderByObject.orderBy = { readAt: -1 };
   }
 
   return orderByObject;

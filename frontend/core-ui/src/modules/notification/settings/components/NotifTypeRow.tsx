@@ -1,5 +1,13 @@
 import { IconDeviceDesktop, IconMail, IconMailCog } from '@tabler/icons-react';
-import { cn, Dialog, Label, Switch, Tooltip, useQueryState } from 'erxes-ui';
+import {
+  cn,
+  Command,
+  Dialog,
+  Label,
+  Switch,
+  Tooltip,
+  useQueryState,
+} from 'erxes-ui';
 
 export const NotifTypeRow = ({
   title,

@@ -157,20 +157,13 @@ const NotificationAvatar = () => {
         </div>
       </div>
 
-      <Tooltip.Provider>
-        <Tooltip>
-          <Tooltip.Trigger asChild>
-            {NotificationTypeIcon ? (
-              <NotificationTypeIcon
-                className={cn('size-4', notificationtypeColor)}
-              />
-            ) : (
-              <IconSquareRounded />
-            )}
-          </Tooltip.Trigger>
-          <Tooltip.Content>{type}</Tooltip.Content>
-        </Tooltip>
-      </Tooltip.Provider>
+      {NotificationTypeIcon ? (
+        <NotificationTypeIcon
+          className={cn('size-4 z-20', notificationtypeColor)}
+        />
+      ) : (
+        <IconSquareRounded />
+      )}
     </div>
   );
 };

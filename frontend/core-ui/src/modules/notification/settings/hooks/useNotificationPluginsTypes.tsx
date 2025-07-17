@@ -1,20 +1,10 @@
 import { NOTIFICATION_PLUGINS_TYPES } from '@/notification/settings/graphql/notificationSettingsQueries';
+import { PluginsNotificationConfig } from '@/notification/settings/types/notificationSettings';
 import { useQuery } from '@apollo/client';
 
 export const useNotificationPluginsTypes = () => {
   const { data, loading } = useQuery<{
-    pluginsNotifications: {
-      pluginName: string;
-      modules: {
-        name: string;
-        description: string;
-        icon: string;
-        types: {
-          name: string;
-          text: string;
-        }[];
-      }[];
-    }[];
+    pluginsNotifications: PluginsNotificationConfig[];
   }>(NOTIFICATION_PLUGINS_TYPES);
 
   const { pluginsNotifications = [] } = data || {};

@@ -8,6 +8,25 @@ import {
 import { IContext } from '~/connectionResolvers';
 import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
 
+const generateOrderByNotifications = (orderBy?: any) => {
+  const sort: any = { createdAt: -1 };
+
+  if (orderBy?.createdAt === 1) {
+    sort.createdAt = 1;
+  }
+
+  if (orderBy?.priority) {
+    sort.priorityLevel = orderBy.priority;
+  }
+
+  if (orderBy?.readAt) {
+    sort.readAt == orderBy?.readAt;
+  }
+
+  console.log({ sort });
+  return sort;
+};
+
 export const notificationQueries = {
   async pluginsNotifications() {
     const plugins = await getPlugins();
@@ -56,7 +75,7 @@ export const notificationQueries = {
         model: models.Notifications,
         params: {
           ...params,
-          orderBy: params?.orderBy || { createdAt: -1 },
+          orderBy: generateOrderByNotifications(params?.orderBy),
         },
         query: { ...filter, userId: user._id, isArchived: { $ne: true } },
       });
@@ -66,8 +85,6 @@ export const notificationQueries = {
       totalCount: totalCount + (params?.ids?.length || 0),
       pageInfo,
     };
-
-    // return await models.Notifications.find({ userId: user._id });
   },
 
   async notificationDetail(_root, { _id }, { models, user }: IContext) {
