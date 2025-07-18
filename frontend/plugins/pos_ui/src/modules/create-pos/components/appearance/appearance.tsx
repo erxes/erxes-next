@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Upload } from 'erxes-ui';
+import { Button, Form, Input, Upload, ColorPicker } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { IconUpload } from '@tabler/icons-react';
 import { useEffect } from 'react';
@@ -107,7 +107,7 @@ export default function AppearanceForm({
             <p className="text-[#A1A1AA] text-xs font-semibold uppercase">
               Main logo
             </p>
-            
+
             <Form.Field
               control={form.control}
               name="logoImage"
@@ -141,7 +141,9 @@ export default function AppearanceForm({
                             <IconUpload />
                           </div>
                           <Button disabled={isReadOnly}>Upload</Button>
-                          <span className="font-medium text-sm">Upload Image</span>
+                          <span className="font-medium text-sm">
+                            Upload Image
+                          </span>
                         </div>
                       </Upload.Button>
                     </Upload.Root>
@@ -156,7 +158,7 @@ export default function AppearanceForm({
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               Main colors
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex gap-4">
               <Form.Field
                 control={form.control}
                 name="backgroundColor"
@@ -166,24 +168,11 @@ export default function AppearanceForm({
                       Primary
                     </Form.Label>
                     <Form.Control>
-                      <div className="flex items-center">
-                        <Input
-                          type="color"
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="w-10 h-10 p-1 mr-2"
-                          disabled={isReadOnly}
-                          readOnly={isReadOnly}
-                        />
-                        <Input
-                          type="text"
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="flex-1"
-                          disabled={isReadOnly}
-                          readOnly={isReadOnly}
-                        />
-                      </div>
+                      <ColorPicker
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isReadOnly}
+                      />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -199,24 +188,11 @@ export default function AppearanceForm({
                       Secondary
                     </Form.Label>
                     <Form.Control>
-                      <div className="flex items-center">
-                        <Input
-                          type="color"
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="w-10 h-10 p-1 mr-2"
-                          disabled={isReadOnly}
-                          readOnly={isReadOnly}
-                        />
-                        <Input
-                          type="text"
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="flex-1"
-                          disabled={isReadOnly}
-                          readOnly={isReadOnly}
-                        />
-                      </div>
+                      <ColorPicker
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isReadOnly}
+                      />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -232,24 +208,11 @@ export default function AppearanceForm({
                       Third
                     </Form.Label>
                     <Form.Control>
-                      <div className="flex items-center">
-                        <Input
-                          type="color"
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="w-10 h-10 p-1 mr-2"
-                          disabled={isReadOnly}
-                          readOnly={isReadOnly}
-                        />
-                        <Input
-                          type="text"
-                          value={field.value}
-                          onChange={field.onChange}
-                          className="flex-1"
-                          disabled={isReadOnly}
-                          readOnly={isReadOnly}
-                        />
-                      </div>
+                      <ColorPicker
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isReadOnly}
+                      />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -257,14 +220,6 @@ export default function AppearanceForm({
               />
             </div>
           </div>
-
-          {!isReadOnly && (
-            <div className="flex justify-end space-x-2">
-              <Button type="submit">
-                Save Changes
-              </Button>
-            </div>
-          )}
         </form>
       </Form>
     </div>

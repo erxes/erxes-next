@@ -121,7 +121,6 @@ export default function ScreenConfigForm({
                       </Form.Label>
                       <Form.Control>
                         <Switch
-                          className="scale-150 w-7"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isReadOnly}
@@ -212,7 +211,6 @@ export default function ScreenConfigForm({
                       </Form.Label>
                       <Form.Control>
                         <Switch
-                          className="scale-150 w-7"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isReadOnly}
@@ -314,7 +312,6 @@ export default function ScreenConfigForm({
                       <Form.Label className="text-gray-600">PRINT</Form.Label>
                       <Form.Control>
                         <Switch
-                          className="scale-150 w-7"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isReadOnly}

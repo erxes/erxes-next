@@ -303,7 +303,7 @@ const DeliveryConfigForm = forwardRef<
                       <SelectMember
                         value={selectedWatchedUserId || undefined}
                         onValueChange={handleWatchedUserChange}
-                        className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                        className="w-full h-8 justify-start bg-white hover:bg-gray-50"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -324,7 +324,7 @@ const DeliveryConfigForm = forwardRef<
                       <SelectMember
                         value={selectedAssignedUserId || undefined}
                         onValueChange={handleAssignedUserChange}
-                        className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                        className="w-full h-8 justify-start bg-white hover:bg-gray-50"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -348,7 +348,7 @@ const DeliveryConfigForm = forwardRef<
                     <SelectProduct
                       value={field.value}
                       onValueChange={handleDeliveryProductChange}
-                      className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                      className="w-full h-8 justify-start bg-white hover:bg-gray-50"
                     />
                   </Form.Control>
                   <Form.Message />

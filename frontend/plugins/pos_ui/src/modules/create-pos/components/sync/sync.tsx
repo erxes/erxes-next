@@ -171,7 +171,7 @@ export default function SyncCardForm({
                     syncCardSettings.currentConfig.assignedUsers || undefined
                   }
                   onValueChange={handleUserChange}
-                  className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                  className="w-full h-8 justify-start bg-white hover:bg-gray-50"
                 />
               </div>
             </div>

@@ -2,11 +2,7 @@
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { IconPlus } from '@tabler/icons-react';
-import { Button, Form, Input, Label, Select } from 'erxes-ui';
-import { useSearchParams } from 'react-router-dom';
-import { useSetAtom } from 'jotai';
-import { slotAtom } from '../../states/posCategory';
+import { Form, Input, Select } from 'erxes-ui';
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '@/constants';
 import { IPosDetail } from '@/pos-detail/types/IPos';
@@ -22,17 +18,6 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
   form,
   isReadOnly = false,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const setSlot = useSetAtom(slotAtom);
-
-  const handleAddSlot = () => {
-    if (isReadOnly) return;
-    setSlot(true);
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('tab', 'slot');
-    setSearchParams(newParams);
-  };
-
   const handleBrandChange = (brandId: string | string[]) => {
     if (isReadOnly) return;
     const singleBrandId = Array.isArray(brandId) ? brandId[0] : brandId;
@@ -75,7 +60,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <Input
                     {...field}
                     placeholder="Write here"
-                    className="border border-gray-300 h-10"
+                    className="h-8"
                     disabled={isReadOnly}
                     readOnly={isReadOnly}
                   />
@@ -100,7 +85,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <Form.Control>
                     <Input
                       {...field}
-                      className="border border-gray-300 h-10"
+                      className="h-8"
                       value={field.value || ''}
                       disabled={isReadOnly}
                       readOnly={isReadOnly}
@@ -125,7 +110,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     <SelectBrand
                       value={selectedBrandId}
                       onValueChange={handleBrandChange}
-                      className="w-full h-10 border border-gray-300"
+                      className="w-full h-8"
                       disabled={isReadOnly}
                     />
                   </Form.Control>
@@ -133,25 +118,6 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                 </Form.Item>
               )}
             />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-                SLOTS
-              </Label>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="ml-2 h-6 w-6 p-0 bg-indigo-500 hover:bg-indigo-600"
-                onClick={handleAddSlot}
-                disabled={isReadOnly}
-              >
-                <IconPlus size={16} className="text-white" />
-                <span className="sr-only">Add slot</span>
-              </Button>
-            </div>
           </div>
 
           <Form.Field
@@ -192,7 +158,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                             value={currentValue || 'NULL'}
                             disabled={isReadOnly}
                           >
-                            <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                            <Select.Trigger className="w-full h-8 px-3 text-left justify-between">
                               <Select.Value
                                 placeholder={`Select Type ${index + 1}`}
                               />
@@ -232,7 +198,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     <SelectBranches.FormItem
                       value={field.value}
                       onValueChange={handleBranchChange}
-                      className="w-full h-10"
+                      className="w-full h-8"
                       mode="single"
                     />
                   </Form.Control>
@@ -253,7 +219,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     <SelectDepartments.FormItem
                       value={field.value}
                       onValueChange={handleDepartmentChange}
-                      className="w-full h-10"
+                      className="w-full h-8"
                       mode="single"
                     />
                   </Form.Control>

@@ -79,7 +79,6 @@ export default function FinanceConfigForm({
                       <Form.Label className="text-gray-600">IS SYNC ERKHET</Form.Label>
                       <Form.Control>
                         <Switch
-                          className="scale-150 w-7"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isReadOnly}
@@ -104,7 +103,6 @@ export default function FinanceConfigForm({
                       <Form.Label className="text-gray-600">CHECK ERKHET</Form.Label>
                       <Form.Control>
                         <Switch
-                          className="scale-150 w-7"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isReadOnly}
@@ -125,7 +123,6 @@ export default function FinanceConfigForm({
                       <Form.Label className="text-gray-600">CHECK INVENTORIES</Form.Label>
                       <Form.Control>
                         <Switch
-                          className="scale-150 w-7"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isReadOnly}
@@ -266,18 +263,6 @@ export default function FinanceConfigForm({
               </div>
             )}
           </div>
-
-          {!isReadOnly && onSubmit && (
-            <div className="mt-8 flex justify-end">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded disabled:opacity-50"
-              >
-                {isSubmitting ? 'Saving...' : posDetail ? 'Update' : 'Save'}
-              </button>
-            </div>
-          )}
         </form>
       </Form>
     </div>

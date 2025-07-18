@@ -48,10 +48,6 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const handleToggleSidebar = () => {
-    setRenderingPosCreate(!renderingPosCreate);
-  };
-
   return (
     <Sheet
       open={create ?? false}
@@ -62,7 +58,7 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
       <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
-          'md:w-[calc(100vw-theme(spacing.4))]',
+          !!tab && 'md:w-[calc(100vw-theme(spacing.4))]',
         )}
       >
         <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
