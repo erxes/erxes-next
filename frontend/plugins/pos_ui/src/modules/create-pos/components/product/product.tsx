@@ -239,7 +239,7 @@ export default function ProductForm({
                           )
                         }
                         disabled={isReadOnly}
-                        className="w-full h-10 px-3 text-left justify-between"
+                        className="w-full px-3 text-left justify-between"
                       />
                       {field.value?.length > 0 && (
                         <div className="text-sm text-gray-600">
@@ -279,7 +279,7 @@ export default function ProductForm({
                             )
                           }
                           disabled={isReadOnly}
-                          className="w-full h-10 px-3 text-left justify-between"
+                          className="w-full px-3 text-left justify-between"
                         />
                         {field.value?.length > 0 && (
                           <div className="text-sm text-gray-600">
@@ -312,7 +312,7 @@ export default function ProductForm({
                             )
                           }
                           disabled={isReadOnly}
-                          className="w-full h-10 px-3 text-left justify-between"
+                          className="w-full px-3 text-left justify-between"
                         />
                         {field.value?.length > 0 && (
                           <div className="text-sm text-gray-600">
@@ -490,7 +490,7 @@ export default function ProductForm({
                           )
                         }
                         disabled={isReadOnly}
-                        className="w-full h-10 px-3 text-left justify-between"
+                        className="w-full px-3 text-left justify-between"
                       />
                       {field.value?.length > 0 && (
                         <div className="text-sm text-gray-600">
