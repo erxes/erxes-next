@@ -1,7 +1,9 @@
+import { CoreNotificationContent } from '@/notification/my-inbox/components/contents/CoreNotificationContent';
 import { NoNotificationSelected } from '@/notification/my-inbox/components/NoNotificationSelected';
 import { NotificationContentSkeleton } from '@/notification/my-inbox/components/NotificationContentSkeleton';
 import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
 import { useNotification } from '@/notification/my-inbox/hooks/useNotification';
+import { INotification } from '@/notification/my-inbox/types/notifications';
 import { IconNotificationOff } from '@tabler/icons-react';
 import { Button, cn } from 'erxes-ui';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,7 +23,7 @@ export const NotificationContent = () => {
   }
   const { contentType = '' } = notification || {};
 
-  const [pluginName, moduleName] = (contentType || '')
+  const [pluginName, moduleName, collectionType] = (contentType || '')
     .replace(':', '.')
     .split('.');
 
@@ -48,13 +50,42 @@ export const NotificationContent = () => {
       </PageHeader>
 
       <div className="flex-grow overflow-hidden">
-        <RenderPluginsComponent
-          pluginName={`${pluginName}_ui`}
-          remoteModuleName="notificationWidget"
+        <NotificationContentWrapper
+          pluginName={pluginName}
           moduleName={moduleName}
-          props={notification}
+          collectionType={collectionType}
+          notification={notification}
         />
       </div>
     </div>
+  );
+};
+
+const NotificationContentWrapper = ({
+  pluginName,
+  moduleName,
+  collectionType,
+  notification,
+}: {
+  pluginName: string;
+  moduleName: string;
+  collectionType: string;
+  notification: INotification;
+}) => {
+  if (pluginName === 'core') {
+    const CoreNotificationComponent =
+      CoreNotificationContent[
+        collectionType as keyof typeof CoreNotificationContent
+      ] ?? (() => <></>);
+    return <CoreNotificationComponent {...notification} />;
+  }
+
+  return (
+    <RenderPluginsComponent
+      pluginName={`${pluginName}_ui`}
+      remoteModuleName="notificationWidget"
+      moduleName={moduleName}
+      props={notification}
+    />
   );
 };

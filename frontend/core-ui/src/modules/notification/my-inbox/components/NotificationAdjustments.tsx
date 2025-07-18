@@ -1,6 +1,22 @@
 import { useNotificationsListContext } from '@/notification/my-inbox/context/NotificationsListContext';
+import { MyInboxHotkeyScope } from '@/notification/my-inbox/types/notifications';
 import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
-import { Button, Label, Popover, Select, useMultiQueryState } from 'erxes-ui';
+import {
+  Button,
+  Label,
+  Popover,
+  Select,
+  useMultiQueryState,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+  useSetHotkeyScope,
+} from 'erxes-ui';
+import {
+  filterPopoverViewState,
+  openPopoverState,
+} from 'erxes-ui/modules/filter/states/filterStates';
+import { useAtom, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 
 export const NotificationAdjustments = () => {
   const { loading } = useNotificationsListContext();
@@ -8,8 +24,6 @@ export const NotificationAdjustments = () => {
     orderBy: string;
     status: 'read' | 'unread' | 'all';
   }>(['orderBy', 'status']);
-
-  console.log({ status });
 
   return (
     <Popover>

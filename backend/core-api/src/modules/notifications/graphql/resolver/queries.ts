@@ -6,6 +6,7 @@ import {
   graphqlPubsub,
 } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { CORE_NOTIFICATION_MODULES } from '~/modules/notifications/contants';
 import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
 
 const generateOrderByNotifications = (orderBy?: any) => {
@@ -23,7 +24,6 @@ const generateOrderByNotifications = (orderBy?: any) => {
     sort.readAt == orderBy?.readAt;
   }
 
-  console.log({ sort });
   return sort;
 };
 
@@ -39,7 +39,7 @@ export const notificationQueries = {
         icon: string;
         types: Array<{ name: string; text: string }>;
       }>;
-    }> = [];
+    }> = [...CORE_NOTIFICATION_MODULES];
     for (const pluginName of plugins) {
       const plugin = await getPlugin(pluginName);
       const meta = plugin.config?.meta || {};

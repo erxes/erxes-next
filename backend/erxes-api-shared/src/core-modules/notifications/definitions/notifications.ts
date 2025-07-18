@@ -23,6 +23,7 @@ export interface INotificationDocument extends Document {
   priority: 'low' | 'medium' | 'high' | 'urgent';
   priorityLevel: 1 | 2 | 3 | 4;
   metadata?: any; // plugin-specific data
+  action?: string;
 
   // Timestamps
   createdAt: Date;
@@ -107,6 +108,11 @@ export const notificationSchema = new Schema({
   isArchived: {
     type: Boolean,
     index: true,
+  },
+  action: {
+    type: String,
+    index: true,
+    optional: true,
   },
 });
 

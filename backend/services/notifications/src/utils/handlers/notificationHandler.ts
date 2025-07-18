@@ -38,16 +38,15 @@ export const handleCreateNotification = async (
         const userSettings = await models.UserNotificationSettings.findOne({
           userId,
         });
-
-        if (!shouldCreateNotification(null, userSettings, data)) {
-          debugInfo(`Notification skipped for user ${userId} due to settings`);
-          continue;
-        }
+        console.log({ userSettings: userSettings?.toObject() });
 
         let notificationId;
 
         // Create in-app notification if enabled
-        if (shouldCreateInAppNotification(null, userSettings, data)) {
+        const a = shouldCreateInAppNotification(null, userSettings, data);
+        console.log({ a });
+        if (a) {
+          console.log('dakdvbkahsdv');
           const notification = await models.Notifications.create({
             title: data.title,
             message: data.message,
@@ -184,21 +183,21 @@ function shouldCreateInAppNotification(
   userSettings: any,
   data: any,
 ): boolean {
-  if (!defaultConfig.inAppEnabled) return false;
+  // if (defaultConfig&&!defaultConfig.inAppEnabled) return false;
   if (!userSettings) return true;
 
   // Check global in-app setting
-  if (!userSettings.inAppNotificationsEnabled) return false;
+  if (userSettings?.inAppNotificationsDisabled) return false;
 
   // Check plugin-level setting
   const [pluginName] = data.contentType.split(':');
-  const pluginSetting = userSettings.pluginSettings[pluginName];
-  if (pluginSetting && !pluginSetting.inAppEnabled) return false;
+  const pluginSetting = (userSettings.plugins || {})[pluginName];
+  if (pluginSetting && pluginSetting?.inAppDisabled) return false;
 
   // Check specific type setting
   const typeKey = `${data.contentType}.${data.action || 'default'}`;
-  const typeSetting = userSettings.typeSettings[typeKey];
-  if (typeSetting && !typeSetting.inAppEnabled) return false;
+  const typeSetting = (userSettings?.types || {})[typeKey];
+  if (typeSetting && typeSetting?.inAppDisabled) return false;
 
   return true;
 }
@@ -208,21 +207,21 @@ function shouldSendEmailNotification(
   userSettings: any,
   data: any,
 ): boolean {
-  if (!defaultConfig.emailEnabled) return false;
+  // if (!defaultConfig.emailEnabled) return false;
   if (!userSettings) return true;
 
   // Check global email setting
-  if (!userSettings.emailNotificationsEnabled) return false;
+  if (userSettings?.emailNotificationsDisabled) return false;
 
   // Check plugin-level setting
   const [pluginName] = data.contentType.split(':');
-  const pluginSetting = userSettings.pluginSettings[pluginName];
-  if (pluginSetting && !pluginSetting.emailEnabled) return false;
+  const pluginSetting = (userSettings?.plugins || {})[pluginName];
+  if (pluginSetting?.emailDisabled) return false;
 
   // Check specific type setting
   const typeKey = `${data.contentType}.${data.action || 'default'}`;
-  const typeSetting = userSettings.typeSettings[typeKey];
-  if (typeSetting && !typeSetting.emailEnabled) return false;
+  const typeSetting = (userSettings?.types || {})[typeKey];
+  if (typeSetting?.emailDisabled) return false;
 
   return true;
 }

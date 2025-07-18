@@ -68,7 +68,7 @@ startPlugin({
         types: [
           {
             name: 'channelMembersChange',
-            text: 'Members change',
+            text: 'Assignee change',
           },
         ],
       },

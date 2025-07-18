@@ -230,7 +230,7 @@ export const loadClasses = (
 
   models.UserMovements = db.model<IUserMovementDocument, IUserMovemmentModel>(
     'user_movements',
-    loadUserMovemmentClass(models),
+    loadUserMovemmentClass(models, subdomain),
   );
 
   models.Configs = db.model<IConfigDocument, IConfigModel>(

@@ -1,0 +1,19 @@
+export const CORE_NOTIFICATION_MODULES = [
+  {
+    pluginName: 'core',
+    modules: [
+      {
+        name: 'structure',
+        description: 'Structure',
+        icon: 'IconBuilding',
+        types: [
+          { name: 'branchAssigneeChanged', text: 'Branch assignee changed' },
+          {
+            name: 'departmentAssigneeChanged',
+            text: 'Department assignee changed',
+          },
+        ],
+      },
+    ],
+  },
+];

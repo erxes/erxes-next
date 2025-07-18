@@ -26,6 +26,7 @@ const NOTIFICATION_FIELDS = `
       isRead
       contentType
       contentTypeId
+      action
 `;
 
 const NOTIFICATIONS_LIST_PARAMS = `

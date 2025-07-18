@@ -52,6 +52,7 @@ type Notification {
     metadata: JSON,
     createdAt: Date,
     isRead: Boolean
+    action:String
 }
 
 type NotificationsList {

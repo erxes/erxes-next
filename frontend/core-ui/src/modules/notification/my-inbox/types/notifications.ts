@@ -19,6 +19,7 @@ export type INotification = {
   // Additional data
   priority: 'low' | 'medium' | 'high' | 'urgent';
   metadata?: any; // plugin-specific data
+  action?: string;
 
   // Timestamps
   createdAt: string;
@@ -29,6 +30,7 @@ export type SetAtom<Args extends unknown[], Result> = (...args: Args) => Result;
 
 export enum MyInboxHotkeyScope {
   MainPage = 'my-inbox-main-filter',
+  NotificationsAbjustments = 'my-inbox-main-abjustments',
   NotificationsContainer = 'my-inbox-notifications-container',
 }
 

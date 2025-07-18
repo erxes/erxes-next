@@ -8,6 +8,7 @@ import {
   USER_ROLES,
   userSchema,
   userMovemmentSchema,
+  sendNotification,
 } from 'erxes-api-shared/core-modules';
 
 import { saveValidatedToken } from '@/auth/utils';
@@ -23,6 +24,7 @@ import {
 } from 'erxes-api-shared/core-types';
 
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-shared/core-modules';
+import { title } from 'process';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -938,6 +940,16 @@ type ICommonUserMovement = {
   createdBy?: string;
 };
 
+type IUserStructureAssignee = {
+  subdomain: string;
+  models: IModels;
+  fieldName: string;
+  contentType?: string;
+  contentTypeId?: string;
+  userIds?: string[];
+  createdBy?: string;
+};
+
 export interface IUserMovemmentModel extends Model<IUserMovementDocument> {
   manageStructureUsersMovement(
     params: ICommonUserMovement,
@@ -947,7 +959,7 @@ export interface IUserMovemmentModel extends Model<IUserMovementDocument> {
   ): Promise<IUserMovementDocument>;
 }
 
-export const loadUserMovemmentClass = (models: IModels) => {
+export const loadUserMovemmentClass = (models: IModels, subdomain: string) => {
   class UserMovemment {
     public static async manageUserMovement(params: ICommonUserMovement) {
       const user = params.user as IUserDocument;
@@ -1027,18 +1039,16 @@ export const loadUserMovemmentClass = (models: IModels) => {
     ) {
       const { createdBy, userIds, contentType, contentTypeId } = params;
       const fieldName = `${contentType}Ids`;
-      await models.Users.updateMany(
-        {
-          _id: { $nin: userIds },
-          [fieldName]: { $in: [contentTypeId] },
-        },
-        { $pull: { [fieldName]: contentTypeId } },
-      );
 
-      await models.Users.updateMany(
-        { _id: { $in: userIds } },
-        { $addToSet: { [fieldName]: contentTypeId } },
-      );
+      this.handleUsersStructureAssignee({
+        subdomain,
+        models,
+        fieldName,
+        contentType,
+        contentTypeId,
+        userIds,
+        createdBy,
+      });
 
       const userMovements = await models.UserMovements.find({
         contentType,
@@ -1092,6 +1102,66 @@ export const loadUserMovemmentClass = (models: IModels) => {
       }
 
       return 'edited';
+    }
+
+    static async handleUsersStructureAssignee({
+      subdomain,
+      models,
+      fieldName,
+      contentType,
+      contentTypeId,
+      userIds,
+      createdBy,
+    }: IUserStructureAssignee) {
+      const removedAssigneeUserIds = await models.Users.find({
+        _id: { $nin: userIds },
+        [fieldName]: { $in: [contentTypeId] },
+      }).distinct('_id');
+
+      const newlyAssignedUserIds = await models.Users.find({
+        _id: { $in: userIds },
+        [fieldName]: { $ne: contentTypeId },
+      }).distinct('_id');
+
+      for (const { title, message, targetUserIds, update, action } of [
+        {
+          action: 'removed',
+          title: `Unassigned from ${contentType}`,
+          message: `You have been unassigned from ${contentType}.`,
+          targetUserIds: removedAssigneeUserIds,
+          update: { $pull: { [fieldName]: contentTypeId } },
+        },
+        {
+          action: 'assigned',
+          title: `Assigned to ${contentType}`,
+          message: `You have been assigned to ${contentType}.`,
+          targetUserIds: newlyAssignedUserIds,
+          update: { $addToSet: { [fieldName]: contentTypeId } },
+        },
+      ]) {
+        if (targetUserIds.length > 0) {
+          await models.Users.updateMany(
+            { _id: { $in: targetUserIds } },
+            update,
+          );
+
+          console.log({ contentType, contentTypeId, createdBy });
+
+          if (contentType && contentTypeId && createdBy) {
+            sendNotification(subdomain, {
+              title,
+              message,
+              type: 'info',
+              fromUserId: createdBy,
+              userIds: targetUserIds,
+              contentType: `core:structure.${contentType}`,
+              contentTypeId,
+              action,
+              priority: 'medium',
+            });
+          }
+        }
+      }
     }
   }
   userMovemmentSchema.loadClass(UserMovemment);
