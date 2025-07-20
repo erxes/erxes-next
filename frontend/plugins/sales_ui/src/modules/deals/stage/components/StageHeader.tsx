@@ -14,7 +14,7 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
   const { probability, itemsTotalCount, name } = stage;
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center mb-3">
       <div>
         <h4 className="font-semibold flex items-center gap-2">
           {name}

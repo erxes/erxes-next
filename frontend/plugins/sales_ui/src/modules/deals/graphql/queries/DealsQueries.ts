@@ -137,13 +137,19 @@ export const GET_DEALS = gql`
   query Deals(
     $initialStageId: String,
     $stageId: String,
-
+    $limit: Int, 
+    $cursor: String, 
+    $cursorMode: CURSOR_MODE,
+    $orderBy: JSON,
     ${commonParams}
   ) {
     deals(
       initialStageId: $initialStageId,
       stageId: $stageId,
-    
+      limit: $limit, 
+      cursor: $cursor, 
+      cursorMode: $cursorMode,
+      orderBy: $orderBy, 
       ${commonParamDefs}
     ) {
       list {

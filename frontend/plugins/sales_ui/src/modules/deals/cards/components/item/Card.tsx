@@ -9,10 +9,12 @@ import { useQueryState } from 'erxes-ui';
 import { useSortable } from '@dnd-kit/sortable';
 
 type Props = {
-  card: IDeal;
+  card?: IDeal;
+  children?: React.ReactNode;
+  className?: string;
 };
 
-export const Card = ({ card = {} as IDeal }: Props) => {
+export const Card = ({ card = {} as IDeal, children, className }: Props) => {
   const [, setSalesItemId] = useQueryState<string>('salesItemId');
 
   const {

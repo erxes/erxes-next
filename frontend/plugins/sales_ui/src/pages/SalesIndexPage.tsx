@@ -18,7 +18,10 @@ export const SalesIndexPage = () => {
   return (
     <div className="flex h-full">
       <SalesLeftSidebar />
-      <div className="flex flex-col h-full w-full">
+      <div
+        className="flex flex-col h-full"
+        style={{ width: `calc(100% - 16rem)` }}
+      >
         <PageHeader>
           <PageHeader.Start>
             <Breadcrumb>
@@ -49,10 +52,15 @@ export const SalesIndexPage = () => {
           <PageSubHeader>
             <MainActionBar />
           </PageSubHeader>
-          <div className="w-full h-full p-4 overflow-x-auto">
-            <div className="flex gap-4 min-w-max h-full">
-              <StagesList />
-            </div>
+          <div
+            className="w-full p-4 overflow-x-auto"
+            style={{
+              height: 'calc(100% - 100px)',
+            }}
+          >
+            {/* <div className="flex gap-4 min-w-max h-full"> */}
+            <StagesList />
+            {/* </div> */}
             <SalesItemDetail />
           </div>
         </PageContainer>
