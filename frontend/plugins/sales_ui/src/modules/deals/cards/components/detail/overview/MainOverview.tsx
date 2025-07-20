@@ -15,8 +15,6 @@ import { useDealsContext } from '@/deals/context/DealContext';
 const MainOverview = ({ deal }: { deal: IDeal }) => {
   const { editDeals, editConformity } = useDealsContext();
 
-  console.log('ddd', deal);
-
   const handleDealFieldChange = (
     key: string,
     value: string | string[] | undefined,

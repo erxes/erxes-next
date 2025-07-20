@@ -189,6 +189,7 @@ export const GET_DEAL_DETAIL = gql`
   query DealDetail($_id: String!) {
     dealDetail(_id: $_id) {
       ${commonListFields}
+      description
       attachments {
         url
         name
