@@ -3,6 +3,7 @@ import { GET_PIPELINE_LABELS, GET_PIPELINE_LABEL_DETAIL } from "@/deals/graphql/
 import { MutationHookOptions, QueryHookOptions, useMutation, useQuery } from "@apollo/client";
 import { toast, useQueryState } from "erxes-ui";
 
+import { GET_DEAL_DETAIL } from "@/deals/graphql/queries/DealsQueries";
 import { IPipelineLabel } from "@/deals/types/pipelines";
 
 export const usePipelineLabelDetail = (
@@ -165,12 +166,12 @@ export const usePipelineLabelAdd = (options?: MutationHookOptions<any, any>) => 
 
   export const usePipelineLabelLabel = (options?: MutationHookOptions<any, any>) => {
     const [pipelineId] = useQueryState('pipelineId');
+    const [_id] = useQueryState('salesItemId');
     
     const [labelPipelineLabel, { loading, error }] = useMutation(LABEL_PIPELINE_LABEL, {
       ...options,
       variables: {
         ...options?.variables,
-        pipelineId,
       },
       refetchQueries: [
         {
@@ -178,6 +179,13 @@ export const usePipelineLabelAdd = (options?: MutationHookOptions<any, any>) => 
           variables: {
             ...options?.variables,
             pipelineId,
+          },
+        },
+        {
+          query: GET_DEAL_DETAIL,
+          variables: {
+            ...options?.variables,
+            _id,
           },
         },
       ],

@@ -6,16 +6,19 @@ import {
   usePipelineLabels,
 } from '@/deals/pipelines/hooks/usePipelineDetails';
 
+import { IPipelineLabel } from '@/deals/types/pipelines';
 import LabelForm from './LabelForm';
 
-const LabelOverlay = () => {
+const LabelOverlay = ({ labels }: { labels: IPipelineLabel[] }) => {
   const [pipelineId] = useQueryState('pipelineId');
   const [targetId] = useQueryState('salesItemId');
 
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editLabelId, setEditLabelId] = useState<string | null>(null);
-  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
+  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>(
+    labels.map((label) => label._id || ''),
+  );
 
   const { pipelineLabels = [], loading: labelsLoading } = usePipelineLabels({
     variables: { pipelineId },

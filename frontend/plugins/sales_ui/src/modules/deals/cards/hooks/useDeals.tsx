@@ -66,11 +66,12 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
       },
     ],
     awaitRefetchQueries: true,
-    onCompleted: () => {
+    onCompleted: (...args) => {
       toast({
         title: 'Successfully updated a  deal',
         variant: 'default',
       });
+      options?.onCompleted?.(...args);
     },
     onError: (err) => {
       toast({

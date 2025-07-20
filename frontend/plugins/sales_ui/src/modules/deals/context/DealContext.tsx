@@ -6,10 +6,13 @@ import {
   useDealsRemove,
 } from '../cards/hooks/useDeals';
 
+import { useConformityEdit } from '../cards/hooks/useConformity';
+
 interface DealsContextType {
   addDeals: ReturnType<typeof useDealsAdd>['addDeals'];
   editDeals: ReturnType<typeof useDealsEdit>['editDeals'];
   removeDeals: ReturnType<typeof useDealsRemove>['removeDeals'];
+  editConformity: ReturnType<typeof useConformityEdit>['editConformity'];
   loading: boolean;
   error: any;
 }
@@ -25,12 +28,26 @@ export const DealsProvider = ({ children }: { children: ReactNode }) => {
     error: errorRemove,
   } = useDealsRemove();
 
-  const loading = loadingAdd || loadingEdit || loadingRemove;
-  const error = errorAdd || errorEdit || errorRemove;
+  const {
+    editConformity,
+    loading: loadingEditConformity,
+    error: errorEditConformity,
+  } = useConformityEdit();
+
+  const loading =
+    loadingAdd || loadingEdit || loadingRemove || loadingEditConformity;
+  const error = errorAdd || errorEdit || errorRemove || errorEditConformity;
 
   const value = useMemo(
-    () => ({ addDeals, editDeals, removeDeals, loading, error }),
-    [addDeals, editDeals, removeDeals, loading, error],
+    () => ({
+      addDeals,
+      editDeals,
+      removeDeals,
+      editConformity,
+      loading,
+      error,
+    }),
+    [addDeals, editDeals, removeDeals, editConformity, loading, error],
   );
 
   return (

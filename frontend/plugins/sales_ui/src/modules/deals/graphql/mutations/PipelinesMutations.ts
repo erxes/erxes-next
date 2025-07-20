@@ -23,7 +23,7 @@ export const REMOVE_PIPELINE_LABEL = gql`
 `;
 
 export const LABEL_PIPELINE_LABEL = gql`
-  mutation SalesPipelineLabelsLabel($pipelineId: String!, $targetId: String!, $labelIds: [String!]!) {
-    salesPipelineLabelsLabel(pipelineId: $pipelineId, targetId: $targetId, labelIds: $labelIds)
+  mutation SalesPipelineLabelsLabel($targetId: String!, $labelIds: [String!]!) {
+    salesPipelineLabelsLabel(targetId: $targetId, labelIds: $labelIds)
   }
 `;
