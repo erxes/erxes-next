@@ -186,6 +186,20 @@ export const transactionInvOutSchema = z.object({
     ...invDetailSchema.shape,
   })),
 });
+
+export const transactionInvSaleSchema = z.object({
+  journal: z.literal(TrJournalEnum.INV_SALE),
+  ...baseTransactionSchema.shape,
+}).extend({
+  customerId: z.string().nullish(),
+  branchId: z.string(),
+  departmentId: z.string(),
+  invAccountId: z.string(),
+  costAccountId: z.string(),
+  details: z.array(z.object({
+    ...invDetailSchema.shape,
+  })),
+});
 //#endregion Inventories
 
 export const trDocSchema = z
@@ -197,6 +211,7 @@ export const trDocSchema = z
     transactionPayableSchema,
     transactionInvIncomeSchema,
     transactionInvOutSchema,
+    transactionInvSaleSchema,
     // transactionInventorySchema,
     // transactionFixedAssetSchema,
     transactionTaxSchema,

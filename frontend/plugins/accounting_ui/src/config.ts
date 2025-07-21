@@ -21,6 +21,10 @@ export const CONFIG: IUIConfig = {
           path: 'accounting/records',
         },
         {
+          name: 'adjustment',
+          path: 'accounting/adjustment',
+        },
+        {
           name: 'odds',
           path: 'accounting/odd-transactions',
         },

@@ -2,15 +2,26 @@ import { OperationVariables, useQuery } from '@apollo/client';
 import { GET_BRANDS } from '../graphql';
 import { useMultiQueryState } from 'erxes-ui';
 
-export const useBrands = (options?: OperationVariables) => {
+
+export const useBrandsVariables = (options?: OperationVariables) => {
+  const BRANDS_LIMIT = 30;
   const [queries] = useMultiQueryState<{
     searchValue: string;
   }>(['searchValue']);
-  const { data, error, loading, fetchMore } = useQuery(GET_BRANDS, {
-    variables: {
-      ...options?.variables,
-      searchValue: queries?.searchValue,
+  return {
+    ...options?.variables,
+    searchValue: queries?.searchValue,
+    limit: BRANDS_LIMIT,
+    orderBy: {
+      createdAt: -1,
     },
+  };
+};
+
+export const useBrands = (options?: OperationVariables) => {
+  const variables = useBrandsVariables(options);
+  const { data, error, loading } = useQuery(GET_BRANDS, {
+    variables,
     ...options,
   });
   const brands = data?.brands?.list || [];

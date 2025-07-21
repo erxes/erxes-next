@@ -1,7 +1,6 @@
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import {
   Badge,
-  Button,
   Input,
   RecordTable,
   RecordTableCellContent,
@@ -9,21 +8,23 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
 } from 'erxes-ui';
-import {
-  IconArchive,
-  IconEdit,
-  IconSettings,
-  IconTrash,
-} from '@tabler/icons-react';
 import { IIntegrationDetail } from '../types/Integration';
 import { useIntegrations } from '../hooks/useIntegrations';
 import { useParams } from 'react-router-dom';
-import { BrandsInline, SelectBrand } from 'ui-modules';
+import { BrandsInline } from 'ui-modules';
 import { useIntegrationEditField } from '@/integrations/hooks/useIntegrationEdit';
 import { useState } from 'react';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
+import { ArchiveIntegration } from '@/integrations/components/ArchiveIntegration';
+import { RemoveIntegration } from '@/integrations/components/RemoveIntegration';
 
-export const IntegrationsRecordTable = () => {
+export const IntegrationsRecordTable = ({
+  Actions,
+}: {
+  Actions: (props: {
+    cell: Cell<IIntegrationDetail, unknown>;
+  }) => React.ReactNode;
+}) => {
   const params = useParams();
 
   const { integrations, loading, handleFetchMore } = useIntegrations({
@@ -36,16 +37,11 @@ export const IntegrationsRecordTable = () => {
 
   return (
     <RecordTable.Provider
-      columns={integrationTypeColumns}
+      columns={integrationTypeColumns({ Actions })}
       data={(integrations || []).filter((integration) => integration)}
       stickyColumns={['name']}
     >
-      <RecordTable.CursorProvider
-        hasPreviousPage={false}
-        hasNextPage={false}
-        dataLength={integrations?.length}
-        sessionKey="integrations_cursor"
-      >
+      <RecordTable.Scroll>
         <RecordTable>
           <RecordTable.Header />
           <RecordTable.Body>
@@ -59,7 +55,7 @@ export const IntegrationsRecordTable = () => {
             />
           </RecordTable.Body>
         </RecordTable>
-      </RecordTable.CursorProvider>
+      </RecordTable.Scroll>
     </RecordTable.Provider>
   );
 };
@@ -105,7 +101,13 @@ export const BrandField = ({
   return <></>;
 };
 
-export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [
+export const integrationTypeColumns = ({
+  Actions,
+}: {
+  Actions: (props: {
+    cell: Cell<IIntegrationDetail, unknown>;
+  }) => React.ReactNode;
+}): ColumnDef<IIntegrationDetail>[] => [
   {
     id: 'name',
     accessorKey: 'name',
@@ -156,7 +158,7 @@ export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [
         <RecordTableCellDisplay>
           <Badge
             className="text-xs capitalize"
-            variant={status === 'success' ? 'success' : 'destructive'}
+            variant={status === 'healthy' ? 'success' : 'destructive'}
           >
             {status}
           </Badge>
@@ -168,26 +170,21 @@ export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [
   {
     id: 'action-group',
     header: () => <RecordTable.InlineHead label="Actions" />,
-    cell: () => {
+    cell: ({ cell }) => {
       return (
-        <div className="flex items-center justify-center gap-1 [&>button]:px-2">
-          <Button variant={'outline'}>
-            <IconSettings size={12} />
-          </Button>
-          <Button variant={'outline'}>
-            <IconArchive size={12} />
-          </Button>
-          <Button variant={'outline'}>
-            <IconEdit size={12} />
-          </Button>
-          <Button
-            variant={'outline'}
-            className="text-destructive bg-destructive/10"
-          >
-            <IconTrash size={12} />
-          </Button>
+        <div className="flex items-center justify-center gap-1.5">
+          <Actions cell={cell} />
+          <ArchiveIntegration
+            _id={cell.row.original._id}
+            name={cell.row.original.name}
+          />
+          <RemoveIntegration
+            _id={cell.row.original._id}
+            name={cell.row.original.name}
+          />
         </div>
       );
     },
+    size: 120,
   },
 ];
