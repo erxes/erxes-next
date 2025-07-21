@@ -160,11 +160,6 @@ export const FavIconField = ({
                     type="button"
                     className="absolute top-2 right-2 p-0 w-5 h-5 rounded-full opacity-80 transition-opacity hover:opacity-100"
                     onClick={() => {
-                      console.log('FavIconField - Delete button clicked');
-                      console.log(
-                        'FavIconField - Current value before delete:',
-                        field.value,
-                      );
                       field.onChange('');
                     }}
                   >

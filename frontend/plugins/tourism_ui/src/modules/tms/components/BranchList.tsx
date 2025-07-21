@@ -151,7 +151,8 @@ export const BranchList = () => {
                             className={`flex items-center w-full gap-3 px-4 py-2 text-left cursor-pointer hover:bg-muted rounded-md ${
                               duplicateLoading
                                 ? 'opacity-50 pointer-events-none'
-                                : ''}`}
+                                : ''
+                            }`}
                             onClick={() =>
                               !duplicateLoading &&
                               setDuplicateDialogOpen(branch._id)
@@ -167,13 +168,13 @@ export const BranchList = () => {
 
                           <div
                             className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
-                            onClick={() => {
-                              window.open(
-                                branch.uiOptions?.url ||
-                                  'https://tourism.tms.erxes.io',
-                                '_blank',
-                              );
-                            }}
+                            // onClick={() => {
+                            //   window.open(
+                            //     branch.uiOptions?.url ||
+                            //       'https://tourism.tms.erxes.io',
+                            //     '_blank',
+                            //   );
+                            // }}
                           >
                             <IconWorld size={16} stroke={1.5} />
                             <p className="text-sm font-medium leading-[100%] font-inter">

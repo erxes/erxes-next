@@ -157,7 +157,9 @@ export const TmsInformationFields = ({
         </p>
       </div>
       <div className="relative flex-1">
-        <div className="px-4 py-2 min-h-[400px]">{renderStepContent()}</div>
+        <div className="overflow-y-auto px-4 py-2 h-full max-h-screen">
+          {renderStepContent()}
+        </div>
       </div>
 
       <div className="flex flex-shrink-0 gap-2 justify-between items-center p-4 border-t">

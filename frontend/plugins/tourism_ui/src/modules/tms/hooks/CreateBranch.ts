@@ -40,7 +40,9 @@ export const useCreateBranch = () => {
     refetchQueries: [
       {
         query: GET_BRANCH_LIST,
-        variables: { limit: 10, page: 1 },
+        variables: {
+          limit: 10,
+        },
       },
     ],
   });

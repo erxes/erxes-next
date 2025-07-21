@@ -17,18 +17,12 @@ interface BranchListResponse {
   };
 }
 
-export const useBranchList = (
-  page = 1,
-  limit = 10,
-  order: 'asc' | 'desc' = 'desc',
-) => {
+export const useBranchList = (limit = 10) => {
   const { data, loading, error, refetch } = useQuery<BranchListResponse>(
     GET_BRANCH_LIST,
     {
       variables: {
         limit,
-        page,
-        order,
       },
       fetchPolicy: 'network-only',
     },

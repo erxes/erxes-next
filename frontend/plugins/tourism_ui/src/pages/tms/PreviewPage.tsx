@@ -14,6 +14,10 @@ const PreviewPage = ({ formData }: PreviewProps) => {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      const allowedOrigins = [window.location.origin];
+      if (!allowedOrigins.includes(event.origin)) {
+        return;
+      }
       if (event.data.type === 'FORM_DATA_UPDATE') {
         setStoredFormData(event.data.data);
       }

@@ -33,9 +33,17 @@ export const useBranchEdit = () => {
     EditBranchResponse,
     IEditBranchVariables
   >(EDIT_BRANCH, {
-    refetchQueries: [{ query: GET_BRANCH_LIST }],
+    refetchQueries: [
+      {
+        query: GET_BRANCH_LIST,
+        variables: {
+          limit: 10,
+        },
+      },
+    ],
     onError: (error) => {
-      console.log(error);
+      // Replace with proper error logging service
+      console.error('Branch edit failed:', error);
     },
   });
 

@@ -2,11 +2,11 @@ import { TmsCreateSheet } from '~/modules/tms/components/CreateTmsSheet';
 
 export const EmptyList = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex flex-col items-center justify-center w-full max-w-md gap-3 p-4 rounded-lg shadow-lg bg-background">
-        <div className="w-full overflow-hidden h-52">
+    <div className="flex justify-center items-center h-screen">
+      <div className="flex flex-col gap-3 justify-center items-center p-4 w-full max-w-md rounded-lg shadow-lg bg-background">
+        <div className="overflow-hidden w-full h-52">
           <img
-            src="https://s3-alpha-sig.figma.com/img/4849/e3fd/99aa90f4923e745b2872c6bcf76fa0fc?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=bnQjGXfgtdp015SUmh3JGzw5lh7NzALjcWgvEIKOUUno43G5wbODw8sbSAVc4xpddCrGTwPSt96kbzTxMm5QUDBgj9gD12wirPrCHoq6Ff26ita9VxBvp08N6EmRCovQib1UZlC~ip-ugW5oH~zHtht42iw8tgRRjDyJB0bnUWgxqVwaHxP4m2j0a630~IecH~tr1NyAfWR0X9kzDAwxDCdkzootqegfhP5lB1CqhOtVzMKZ~oj-19i5~N81gc4Mnp406DGUMo3nAOAZZuA5V3TxpPDcIY8ZubpnbWS-fJNniCLR1UAN2YC8jK~QfFNZ-KHbgahNJSadcrnBuz2-wA__"
+            src="/assets/images/tourism-empty-state.jpg"
             alt="tourism"
             className="object-cover w-full h-full rounded"
           />

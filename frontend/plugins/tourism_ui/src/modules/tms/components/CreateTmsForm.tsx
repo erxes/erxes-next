@@ -13,6 +13,13 @@ import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { formDataAtom } from '../states/formDataAtom';
 
+interface PermissionConfig {
+  type: string;
+  title: string;
+  icon: string;
+  config?: string;
+}
+
 const CreateTmsForm = ({
   branchId,
   onOpenChange,
@@ -79,7 +86,7 @@ const CreateTmsForm = ({
           : '',
         token: branchDetail.erxesAppToken || '',
         otherPayments: Array.isArray(branchDetail.permissionConfig)
-          ? branchDetail.permissionConfig.map((config: any) => ({
+          ? branchDetail.permissionConfig.map((config: PermissionConfig) => ({
               type: config.type || '',
               title: config.title || '',
               icon: config.icon || '',
@@ -94,7 +101,7 @@ const CreateTmsForm = ({
 
   const onSubmit = (data: TmsFormType) => {
     const permissionConfig =
-      data.otherPayments?.map((payment) => ({
+      data.otherPayments?.map((payment: PermissionConfig) => ({
         type: payment.type,
         title: payment.title,
         icon: payment.icon,
@@ -163,7 +170,8 @@ const CreateTmsForm = ({
             } catch (error) {
               toast({
                 title: 'Warning',
-                description: error as string,
+                description:
+                  error instanceof Error ? error.message : String(error),
                 variant: 'destructive',
               });
             }

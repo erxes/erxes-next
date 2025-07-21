@@ -7,17 +7,27 @@ interface DuplicateBranchResponse {
   bmsBranchAdd: IBranch;
 }
 
+interface IPaymentType {
+  id: string;
+  name: string;
+}
+
+interface IPermissionConfig {
+  permission: string;
+  enabled: boolean;
+}
+
 export interface IDuplicateBranchVariables {
   name: string;
   description?: string;
   generalManagerIds?: string[];
   managerIds?: string[];
   paymentIds?: string[];
-  paymentTypes?: any[];
+  paymentTypes?: IPaymentType[];
   departmentId?: string;
   token?: string;
   erxesAppToken?: string;
-  permissionConfig?: any[];
+  permissionConfig?: IPermissionConfig[];
   uiOptions?: {
     logo?: string;
     favIcon?: string;
@@ -32,7 +42,14 @@ export const useBranchDuplicate = () => {
     DuplicateBranchResponse,
     IDuplicateBranchVariables
   >(CREATE_BRANCH, {
-    refetchQueries: [{ query: GET_BRANCH_LIST }],
+    refetchQueries: [
+      {
+        query: GET_BRANCH_LIST,
+        variables: {
+          limit: 10,
+        },
+      },
+    ],
     onError: (error) => {
       console.error('Error duplicating branch:', error);
     },

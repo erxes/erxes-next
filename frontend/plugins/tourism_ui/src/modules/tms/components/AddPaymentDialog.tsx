@@ -6,6 +6,7 @@ export const AddPaymentDialog = () => {
   const [open, setOpen] = useState(false);
 
   return (
+    // TODO: Add functionalities
     <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button

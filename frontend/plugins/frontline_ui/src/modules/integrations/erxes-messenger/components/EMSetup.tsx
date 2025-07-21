@@ -56,7 +56,6 @@ export const EMSetup = ({
                   }
                 />
               </div>
-              xx
               <Separator />
               <Preview.View
                 iframeSrc={
