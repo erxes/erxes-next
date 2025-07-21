@@ -1,20 +1,20 @@
 import { z } from 'zod';
 
 export const TmsFormSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(1, 'Tour name is required'),
   color: z.string().min(1, 'Color is required'),
   logo: z.string().optional(),
   favIcon: z.string().optional(),
-  generalManager: z.array(z.string()).optional(),
-  managers: z.array(z.string()).optional(),
+  generalManeger: z.string().optional(),
+  manegers: z.array(z.string()).optional(),
   payment: z.string().optional(),
   token: z.string().optional(),
   otherPayments: z
     .array(
       z.object({
-        type: z.string().min(1, 'Type is required'),
-        title: z.string().min(1, 'Title is required'),
-        icon: z.string().min(1, 'Icon is required'),
+        type: z.string().optional(),
+        title: z.string().optional(),
+        icon: z.string().optional(),
         config: z.string().optional(),
       }),
     )

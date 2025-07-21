@@ -9,7 +9,7 @@ const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
   return (
     <PmsFormFieldsLayout>
       <Heading>Logo and favicon</Heading>
-      <div className="grid-cols-3 xl:grid">
+      <div className="xl:grid grid-cols-3">
         <Form.Field
           control={control}
           name="logo"
@@ -26,7 +26,7 @@ const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
                     size="sm"
                     variant="secondary"
                     type="button"
-                    className="flex flex-col items-center justify-center w-full gap-3 border border-dashed h-52 text-muted-foreground"
+                    className="flex flex-col gap-3 items-center justify-center w-full h-52 border border-dashed text-muted-foreground"
                   >
                     <IconUpload />
                     <Button variant={'outline'}>Upload Logo</Button>

@@ -4,18 +4,11 @@ import { GET_BRANCH_LIST } from '../graphql/queries';
 import { IBranchRemoveResponse, IBranchRemoveVariables } from '../types/branch';
 
 export const useBranchRemove = () => {
-  const [removeBranch, { loading }] = useMutation<
+  const [removeBranch, { loading, error }] = useMutation<
     IBranchRemoveResponse,
     IBranchRemoveVariables
   >(REMOVE_BRANCH, {
-    refetchQueries: [
-      {
-        query: GET_BRANCH_LIST,
-        variables: {
-          limit: 10,
-        },
-      },
-    ],
+    refetchQueries: [{ query: GET_BRANCH_LIST }],
     onError: (error) => {
       console.error('Error removing branch:', error);
     },
@@ -28,10 +21,10 @@ export const useBranchRemove = () => {
       });
 
       return response.data?.bmsBranchRemove || false;
-    } catch {
+    } catch (error) {
       return false;
     }
   };
 
-  return { removeBranchById, loading };
+  return { removeBranchById, loading, error };
 };

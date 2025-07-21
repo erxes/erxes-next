@@ -29,7 +29,7 @@ export const EMSetup = ({
       </Sheet.Header>
 
       {loading ? (
-        <div className="flex flex-1 justify-center items-center w-full">
+        <div className="flex flex-1 items-center justify-center w-full">
           <Spinner />
         </div>
       ) : (
@@ -44,7 +44,6 @@ export const EMSetup = ({
           </Resizable.Panel>
 
           <Resizable.Handle />
-
           <Resizable.Panel className="flex flex-col h-full" defaultSize={60}>
             <Preview>
               <div className="bg-background">

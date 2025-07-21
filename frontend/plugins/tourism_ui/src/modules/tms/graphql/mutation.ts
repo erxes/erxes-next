@@ -1,67 +1,61 @@
 import { gql } from '@apollo/client';
 
-export const CREATE_BRANCH = gql`
-  mutation BmsBranchAdd(
+export const CREATE_BRANCH_BRANCH = gql`
+  mutation bmsBranchAdd(
     $name: String
     $description: String
-    $generalManagerIds: [String]
-    $managerIds: [String]
+    $erxesAppToken: String
+    $user1Ids: [String]
+    $user2Ids: [String]
     $paymentIds: [String]
     $paymentTypes: [JSON]
-    $departmentId: String
-    $token: String
-    $erxesAppToken: String
-    $permissionConfig: JSON
     $uiOptions: JSON
+    $permissionConfig: JSON
   ) {
     bmsBranchAdd(
       name: $name
       description: $description
-      generalManagerIds: $generalManagerIds
-      managerIds: $managerIds
+      erxesAppToken: $erxesAppToken
+      user1Ids: $user1Ids
+      user2Ids: $user2Ids
       paymentIds: $paymentIds
       paymentTypes: $paymentTypes
-      departmentId: $departmentId
-      token: $token
-      erxesAppToken: $erxesAppToken
-      permissionConfig: $permissionConfig
       uiOptions: $uiOptions
+      permissionConfig: $permissionConfig
     ) {
       _id
+      name
+      description
       createdAt
-      userId
+      token
+      erxesAppToken
+      user1Ids
+      user2Ids
+      paymentIds
+      paymentTypes
       user {
         _id
-        username
-        email
         details {
           avatar
           fullName
-          shortName
+          __typename
         }
+        __typename
       }
-      name
-      description
-      generalManagerIds
-      managerIds
-      paymentIds
-      paymentTypes
-      departmentId
-      token
-      erxesAppToken
-      permissionConfig
       uiOptions
+      permissionConfig
+      __typename
     }
   }
 `;
 
-export const EDIT_BRANCH = gql`
+export const EDIT_BRANCH_LIST = gql`
   mutation BmsBranchEdit(
     $id: String
     $name: String
     $description: String
-    $generalManagerIds: [String]
-    $managerIds: [String]
+    $user1Ids: [String]
+    $user2Ids: [String]
     $paymentIds: [String]
     $paymentTypes: [JSON]
     $departmentId: String
@@ -74,8 +68,8 @@ export const EDIT_BRANCH = gql`
       _id: $id
       name: $name
       description: $description
-      generalManagerIds: $generalManagerIds
-      managerIds: $managerIds
+      user1Ids: $user1Ids
+      user2Ids: $user2Ids
       paymentIds: $paymentIds
       paymentTypes: $paymentTypes
       departmentId: $departmentId
@@ -89,18 +83,17 @@ export const EDIT_BRANCH = gql`
       userId
       user {
         _id
-        username
-        email
         details {
           avatar
           fullName
-          shortName
+          __typename
         }
+        __typename
       }
       name
       description
-      generalManagerIds
-      managerIds
+      user1Ids
+      user2Ids
       paymentIds
       paymentTypes
       departmentId
