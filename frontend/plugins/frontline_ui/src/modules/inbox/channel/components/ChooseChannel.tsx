@@ -19,12 +19,16 @@ export const ChooseChannel = () => {
   const [open, setOpen] = useAtom(channelCollapsibleState);
 
   return (
-    <Collapsible className="group/channel" open={open} onOpenChange={setOpen}>
-      <Collapsible.TriggerButton>
+    <Collapsible
+      className="group/channel flex-auto overflow-hidden flex flex-col"
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <Collapsible.TriggerButton className="flex-none">
         <Collapsible.TriggerIcon className="group-data-[state=open]/channel:rotate-180" />
         Channels
       </Collapsible.TriggerButton>
-      <Collapsible.Content className=" flex flex-col gap-1 py-1 pl-1">
+      <Collapsible.Content className=" flex flex-col gap-1 overflow-hidden">
         <ChooseChannelContent open={open} />
       </Collapsible.Content>
     </Collapsible>
@@ -60,7 +64,7 @@ const ChooseChannelContent = ({ open }: { open: boolean }) => {
         </Command.Primitive.Input>
       </div>
 
-      <Command.List>
+      <Command.List className="max-h-none overflow-y-auto">
         {channels?.map((channel: IChannel) => (
           <ChannelItem key={channel._id} {...channel} />
         ))}
