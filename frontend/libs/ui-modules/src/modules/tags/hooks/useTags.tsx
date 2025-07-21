@@ -6,7 +6,7 @@ import { ICursorListResponse, EnumCursorDirection } from 'erxes-ui';
 
 const TAGS_PER_PAGE = 20;
 
-export const useTags = (
+export const  useTags = (
   options?: QueryHookOptions<ICursorListResponse<ITag>>,
 ) => {
   const { data, loading, error, fetchMore } = useQuery<

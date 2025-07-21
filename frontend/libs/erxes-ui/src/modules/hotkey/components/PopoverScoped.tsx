@@ -5,7 +5,7 @@ export const PopoverScoped = ({
   scope,
   onOpenChange,
   ...props
-}: React.ComponentProps<typeof Popover.Root> & {
+}: React.ComponentProps<typeof Popover> & {
   scope?: string;
 }) => {
   const {

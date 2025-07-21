@@ -6,6 +6,10 @@ export interface IProduct {
   unitPrice: number;
   code: string;
   categoryId: string;
+  category: {
+    _id: string;
+    name: string;
+  };
   tagIds: string[];
   uom: string;
   type: 'product' | 'service' | 'unique' | 'subscription';
