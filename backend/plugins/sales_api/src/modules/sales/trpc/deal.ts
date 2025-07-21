@@ -72,7 +72,6 @@ export const dealTrpcRouter = t.router({
         await models.Deals.updateMany(
           { _id: { $in: targetIds } },
           { $set: { tagIds } },
-          { multi: true },
         );
 
         response = await models.Deals.find({ _id: { $in: targetIds } }).lean();

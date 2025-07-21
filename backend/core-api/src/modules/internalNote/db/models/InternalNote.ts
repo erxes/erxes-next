@@ -16,7 +16,7 @@ export interface IInternalNoteModel extends Model<IInternalNoteDocument> {
     _id: string,
     doc: IInternalNote,
   ): Promise<IInternalNoteDocument>;
-  removeInternalNote(_id: string): void;
+  removeInternalNote(_id: string): Promise<IInternalNoteDocument>;
   removeInternalNotes(
     contentType: string,
     contentTypeIds: string[],
@@ -42,14 +42,12 @@ export const loadInternalNoteClass = (models: IModels) => {
       { contentType, contentTypeId, ...fields }: IInternalNote,
       user,
     ) {
-      const internalNote = await models.InternalNotes.create({
+      return await models.InternalNotes.create({
         contentType,
         contentTypeId,
         createdUserId: user._id,
         ...fields,
       });
-
-      return internalNote;
     }
 
     /*
