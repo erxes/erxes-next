@@ -1,24 +1,20 @@
-import { TextField } from 'erxes-ui';
+import { cn, TextField } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 
 interface TextFieldProps {
-  placeholder?: string;
-  value: string;
   field: string;
   fieldId?: string;
   _id: string;
-  className?: string;
 }
 
 export const TextFieldCustomer = ({
-  placeholder,
-  value,
   field,
   _id,
-  className,
-}: TextFieldProps) => {
+  ...props
+}: Omit<React.ComponentProps<typeof TextField>, 'scope' | 'onValueChange'> &
+  TextFieldProps) => {
   const { customersEdit } = useCustomersEdit();
-  const onSave = (editingValue: string) => {
+  const onSave = (editingValue: string | number) => {
     customersEdit(
       {
         variables: { _id, [field]: editingValue },
@@ -28,11 +24,10 @@ export const TextFieldCustomer = ({
   };
   return (
     <TextField
-      placeholder={placeholder}
-      value={value}
+      {...props}
       scope={`customer-${_id}-${field}`}
       onValueChange={onSave}
-      className={className}
+      className={cn('shadow-sm rounded-sm text-sm', props.className)}
     />
   );
 };

@@ -5,6 +5,7 @@ import {
   Tooltip,
   cn,
   isUndefinedOrNull,
+  readImage,
 } from 'erxes-ui';
 import {
   MembersInlineContext,
@@ -29,7 +30,7 @@ export const MembersInlineRoot = ({
   memberIds?: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
-  size?: 'lg';
+  size?: AvatarProps['size'];
 }) => {
   return (
     <MembersInlineProvider
@@ -37,6 +38,7 @@ export const MembersInlineRoot = ({
       memberIds={memberIds}
       placeholder={placeholder}
       updateMembers={updateMembers}
+      size={size}
     >
       <MembersInlineAvatar size={size} />
       <MembersInlineTitle />
@@ -50,12 +52,14 @@ export const MembersInlineProvider = ({
   members,
   placeholder,
   updateMembers,
+  size,
 }: {
   children?: React.ReactNode;
   memberIds?: string[];
   members?: IUser[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
+  size?: AvatarProps['size'];
 }) => {
   const [_members, _setMembers] = useState<IUser[]>(members || []);
 
@@ -69,6 +73,7 @@ export const MembersInlineProvider = ({
           ? 'Select members'
           : placeholder,
         updateMembers: updateMembers || _setMembers,
+        size,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
@@ -92,7 +97,13 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   });
 
   useEffect(() => {
-    const newMembers = [...members].filter((m) => memberIds?.includes(m._id));
+    const newMembers = [...members].filter(
+      (m) => memberIds?.includes(m._id) && m._id !== memberId,
+    );
+    if (newMembers.some((m) => m._id === memberId)) {
+      updateMembers?.(newMembers);
+      return;
+    }
     if (userDetail) {
       updateMembers?.([...newMembers, { ...userDetail, _id: memberId }]);
     }
@@ -112,7 +123,7 @@ export const MembersInlineAvatar = ({
 }: AvatarProps & {
   containerClassName?: string;
 }) => {
-  const { members, loading, memberIds } = useMembersInlineContext();
+  const { members, loading, memberIds, size } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
 
   const sortedMembers = [...members].sort((a, b) => {
@@ -141,7 +152,7 @@ export const MembersInlineAvatar = ({
         <Tooltip delayDuration={100} key={member._id}>
           <Tooltip.Trigger asChild>
             <Avatar
-              size="lg"
+              size={size || 'lg'}
               {...props}
               className={cn(className, 'items-center justify-center')}
             >
@@ -164,10 +175,10 @@ export const MembersInlineAvatar = ({
               members.length > 1 && 'ring-2 ring-background',
               className,
             )}
-            size="lg"
+            size={size || 'lg'}
             {...props}
           >
-            <Avatar.Image src={avatar} />
+            <Avatar.Image src={readImage(avatar as string, 200)} />
             <Avatar.Fallback>{fullName?.charAt(0) || ''}</Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
@@ -187,13 +198,13 @@ export const MembersInlineAvatar = ({
 
   return (
     <div className="flex -space-x-1.5">
-      {withAvatar.map(renderAvatar)}
+      {withAvatar.map((member) => renderAvatar(member))}
       {restMembers.length > 0 && (
         <Tooltip>
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
-              size="lg"
+              size={size || 'lg'}
               {...props}
             >
               <Avatar.Fallback className="bg-primary/10 text-primary">

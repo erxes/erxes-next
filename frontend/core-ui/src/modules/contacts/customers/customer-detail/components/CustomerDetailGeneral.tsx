@@ -7,7 +7,7 @@ import { Avatar, Button, readImage } from 'erxes-ui';
 import { TextFieldCustomer } from '../../customer-edit/components/TextField';
 import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
-import { SelectCompany, CompaniesInline } from 'ui-modules';
+import { SelectCompany } from 'ui-modules';
 export const CustomerDetailGeneral = () => {
   const { customerDetail } = useCustomerDetail();
   const {
@@ -30,7 +30,7 @@ export const CustomerDetailGeneral = () => {
           </Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col items-start">
-          <FullNameField.Detail
+          <FullNameField
             scope={ContactsHotKeyScope.CustomerDetailPage + '.' + _id + '.Name'}
             closeOnEnter
             firstName={firstName || ''}
@@ -51,10 +51,8 @@ export const CustomerDetailGeneral = () => {
               }
             }}
           />
-
-          
         </div>
-        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto ">
+        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto "> 
           <Button
             variant="outline"
             className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"

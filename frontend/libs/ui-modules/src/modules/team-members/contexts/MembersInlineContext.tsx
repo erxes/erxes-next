@@ -7,6 +7,7 @@ export interface IUsersInlineContext {
   loading: boolean;
   memberIds?: string[];
   placeholder: string;
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
   updateMembers?: (members: IUser[]) => void;
 }
 

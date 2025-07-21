@@ -59,19 +59,13 @@ const InboxSettings = () => {
         setOtherIntegrations,
       }}
     >
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center h-full">
-            <Spinner />
-          </div>
-        }
-      >
+      <Suspense fallback={<div />}>
         <Routes>
           <Route
             element={
               <div className="flex flex-auto w-full overflow-hidden">
                 <InboxSettingsSidebar />
-                <PageContainer className="flex-1">
+                <PageContainer className="flex-1 overflow-hidden">
                   <PageHeader>
                     <PageHeaderStart>
                       <Button variant={'ghost'} className="font-semibold">

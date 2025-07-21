@@ -6,7 +6,7 @@ import {
 import { useCompanies } from 'ui-modules/modules/contacts/hooks/useCompanies';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
-import { cn, Combobox, Command, Popover } from 'erxes-ui';
+import { Button, cn, Combobox, Command, Popover } from 'erxes-ui';
 import { CompaniesInline } from './CompaniesInline';
 import {
   RecordTablePopover,
@@ -254,18 +254,23 @@ const SelectCompanyDetail = ({
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
-        <Combobox.TriggerBase
-          className={cn('w-min inline-flex text-sm font-medium', className)}
-          variant="outline"
-        >
-          Add Companies 
-          <IconPlus className="text-lg"/>
-        </Combobox.TriggerBase>
+        <Popover.Trigger asChild>
+          <Button
+            className={cn(
+              'w-min inline-flex text-sm font-medium',
+              className,
+            )}
+            variant="outline"
+          >
+            Add Companies
+            <IconPlus className="text-lg" />
+          </Button>
+        </Popover.Trigger>
         <Combobox.Content>
           <SelectCompany.Content />
         </Combobox.Content>
       </Popover>
-      <SelectCompanyBadgesView/>
+      <SelectCompanyBadgesView />
     </SelectCompanyProvider>
   );
 };

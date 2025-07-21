@@ -8,6 +8,7 @@ import {
   RecordTablePopover,
   SelectTree,
   TextOverflowTooltip,
+  Popover,
 } from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
@@ -37,23 +38,23 @@ export const SelectTagsProvider = ({
   const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
   const handleSelectCallback = (tag: ITag) => {
     if (!tag) return;
-    
+
     const isSingleMode = mode === 'single';
     const multipleValue = (value as string[]) || [];
     const isSelected = !isSingleMode && multipleValue.includes(tag._id);
-    
+
     const newSelectedTagIds = isSingleMode
-    ? [tag._id]
-    : isSelected
-    ? multipleValue.filter((t) => t !== tag._id)
-    : [...multipleValue, tag._id];
-    
+      ? [tag._id]
+      : isSelected
+      ? multipleValue.filter((t) => t !== tag._id)
+      : [...multipleValue, tag._id];
+
     const newSelectedTags = isSingleMode
-    ? [tag]
-    : isSelected
-    ? selectedTags.filter((t) => t._id !== tag._id)
-    : [...selectedTags, tag];
-    
+      ? [tag]
+      : isSelected
+      ? selectedTags.filter((t) => t._id !== tag._id)
+      : [...selectedTags, tag];
+
     setSelectedTags(newSelectedTags);
     onValueChange?.(isSingleMode ? tag._id : newSelectedTagIds);
     if (targetIds) {
@@ -67,7 +68,6 @@ export const SelectTagsProvider = ({
       });
     }
   };
-  console.log({ value, selectedTags });
   return (
     <SelectTagsContext.Provider
       value={{
@@ -334,14 +334,17 @@ export const SelectTagsDetail = React.forwardRef<
         {...{ targetIds, tagType, value, mode, options }}
       >
         <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-          <Combobox.TriggerBase
-            ref={ref}
-            {...props}
-            className="w-min text-sm font-medium"
-          >
-            Add Tags
-            <IconPlus className="text-lg" />
-          </Combobox.TriggerBase>
+          <Popover.Trigger asChild>
+            <Button
+              ref={ref}
+              {...props}
+              className="w-min text-sm font-medium"
+              variant="outline"
+            >
+              Add Tags
+              <IconPlus className="text-lg" />
+            </Button>
+          </Popover.Trigger>
           <Combobox.Content>
             <SelectTagsContent />
           </Combobox.Content>

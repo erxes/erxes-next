@@ -1,4 +1,4 @@
-import { Skeleton } from 'erxes-ui';
+import { Label, Skeleton } from 'erxes-ui';
 
 import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
 import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
@@ -16,35 +16,38 @@ export const CustomerGeneral = () => {
     return <div>Customer not found</div>;
   }
 
-  const { primaryEmail, primaryPhone, tagIds, ownerId, code, _id } =
+  const { primaryEmail, primaryPhone, tagIds, ownerId, code, _id, score } =
     customerDetail;
-
   return (
     <>
       <div className="py-8 space-y-6">
         <CustomerDetailSelectTag tagIds={tagIds || []} customerId={_id} />
-        <CustomerDetailAssignedTo ownerId={ownerId} />
-        <div className="px-8 space-y-6 font-medium">
+        <CustomerDetailAssignedTo ownerId={ownerId} customerId={_id} />
+        <div className="px-8  font-medium grid grid-cols-2 gap-5 col-span-5">
           <DataListItem label="Code">
             <TextFieldCustomer
               value={code || ''}
               placeholder="Add Code"
-              className="text-sm"
               field="code"
               _id={_id}
             />
           </DataListItem>
-          <DataListItem label="Primary Email">{primaryEmail}</DataListItem>
-          <DataListItem label="Primary Phone">{primaryPhone}</DataListItem>
-          {/* <DataListItem label="Score">
+          <DataListItem label="Primary Email">
             <TextFieldCustomer
-              value={score || ''}
+              value={primaryEmail || ''}
+              placeholder="Add Primary Email"
+              field="primaryEmail"
+              _id={_id}
+            />
+          </DataListItem>
+          <DataListItem label="Score">
+            <TextFieldCustomer
+              value={score?.toString() || ''}
               placeholder="Add Score"
-              className="text-sm"
               field="score"
               _id={_id}
-            />  
-          </DataListItem> */}
+            />
+          </DataListItem>
         </div>
       </div>
     </>
@@ -59,13 +62,11 @@ const DataListItem = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex gap-1 leading-4 items-center">
-      <div className="w-32 text-muted-foreground/70">{label}</div>
-      {children ? (
-        children
-      ) : (
-        <div className="text-muted-foreground/50 select-none">{'Empty'}</div>
-      )}
-    </div>
+    <fieldset className="space-y-2">
+      <Label asChild>
+        <legend>{label}</legend>
+      </Label>
+      {children}
+    </fieldset>
   );
 };

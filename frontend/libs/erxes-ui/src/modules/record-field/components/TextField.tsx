@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 export interface ITextFieldContainerProps {
   placeholder?: string;
-  value: string;
+  value: string | number;
   field: string;
   fieldId?: string;
   _id: string;
@@ -17,12 +17,13 @@ export interface ITextFieldContainerProps {
 export const TextField = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & {
+    inputType?: 'number' | 'text';
     placeholder?: string;
-    value: string;
+    value: string | number;
     scope: string;
-    onValueChange: (value: string) => void;
+    onValueChange: (value: string | number) => void;
   }
->(({ placeholder, value, scope, onValueChange, children, ...props }, ref) => {
+>(({ placeholder, value, scope, onValueChange, children, inputType = 'text', ...props }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editingValue, setEditingValue] = useState(value);
 
@@ -44,16 +45,21 @@ export const TextField = React.forwardRef<
     >
       <RecordTableCellTrigger {...props} ref={ref}>
         {children}
-        <TextOverflowTooltip value={editingValue ?? placeholder} />
+        <TextOverflowTooltip value={editingValue.toString() ?? placeholder} />
       </RecordTableCellTrigger>
       <RecordTableCellContent asChild>
         <form onSubmit={handleAction}>
           <Input
-            value={editingValue}
+            value={inputType === 'number' ? Number(editingValue) : editingValue.toString()}
             onChange={(e) => {
-              setEditingValue(e.target.value);
+              if (inputType === 'number') {
+                setEditingValue(e.target.valueAsNumber);
+              } else {
+                setEditingValue(e.target.value);
+              }
               setIsOpen(true);
             }}
+            type={inputType}
           />
           <button type="submit" className="sr-only">
             Save

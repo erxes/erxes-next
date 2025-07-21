@@ -1,4 +1,5 @@
 import {
+  Button,
   Combobox,
   Command,
   Filter,
@@ -81,7 +82,7 @@ const SelectMemberValue = ({
   size,
 }: {
   placeholder?: string;
-  size?: 'lg';
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
 }) => {
   const { memberIds, members, setMembers } = useSelectMemberContext();
 
@@ -329,16 +330,21 @@ export const SelectMemberFormItem = ({
 export const SelectMemberDetail = ({
   onValueChange,
   className,
-  size,
+  size = 'xl',
   placeholder,
+  value,
   ...props
-}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
+}: Omit<
+  React.ComponentProps<typeof SelectMemberProvider>,
+  'children' | 'value'
+> & {
   className?: string;
-  size?: 'lg';
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
   placeholder?: string;
+  value: string | null | undefined;
 }) => {
   const [open, setOpen] = useState(false);
-  console.log(value)
+  console.log(value);
   return (
     <SelectMemberProvider
       onValueChange={(value) => {
@@ -348,18 +354,23 @@ export const SelectMemberDetail = ({
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
-        <Combobox.TriggerBase
-          className={cn('w-min inline-flex text-sm font-medium ', className)}
-          variant={props.value ? "ghost" : "outline"}
-        >
-          {!props.value ? (
-            <>
+        <Popover.Trigger>
+          {!value ? (
+            <Button
+              className={cn(
+                'w-min inline-flex text-sm font-medium ',
+                className,
+              )}
+              variant="outline"
+            >
               Add Owner <IconPlus />
-            </>
+            </Button>
           ) : (
-            <SelectMemberValue size={size} />
+            <Button variant="ghost" className="px-0 h-8">
+              <SelectMemberValue size={size} />
+            </Button>
           )}
-        </Combobox.TriggerBase>
+        </Popover.Trigger>
         <Combobox.Content>
           <SelectMemberContent />
         </Combobox.Content>
@@ -376,7 +387,7 @@ export const SelectMemberRoot = ({
   ...props
 }: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
   className?: string;
-  size?: 'lg';
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
   placeholder?: string;
 }) => {
   const [open, setOpen] = useState(false);
