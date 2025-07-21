@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { CREATE_BRANCH } from '../graphql/mutation';
-import { GET_BRANCH_LIST } from '../graphql/queries';
+import { CREATE_BRANCH_BRANCH } from '../graphql/mutation';
 import { IBranch } from '../types/branch';
 
 interface CreateBranchResponse {
@@ -10,42 +9,22 @@ interface CreateBranchResponse {
 export interface ICreateBranchVariables {
   name: string;
   description?: string;
-  generalManagerIds?: string[];
-  managerIds?: string[];
+  user1Ids?: string[];
+  user2Ids?: string[];
   paymentIds?: string[];
+  paymentTypes?: any[];
   departmentId?: string;
   token?: string;
   erxesAppToken?: string;
-  permissionConfig?: {
-    _id?: string;
-    type: string;
-    title: string;
-    icon: string;
-    config?: string;
-  }[];
-  uiOptions?: {
-    logo?: string;
-    favIcon?: string;
-    colors?: {
-      primary?: string;
-    };
-  };
+  permissionConfig?: any;
+  uiOptions?: any;
 }
 
 export const useCreateBranch = () => {
   const [createBranchMutation, { loading, error }] = useMutation<
     CreateBranchResponse,
     ICreateBranchVariables
-  >(CREATE_BRANCH, {
-    refetchQueries: [
-      {
-        query: GET_BRANCH_LIST,
-        variables: {
-          limit: 10,
-        },
-      },
-    ],
-  });
+  >(CREATE_BRANCH_BRANCH);
 
   const createBranch = (options: {
     variables: ICreateBranchVariables;
@@ -55,9 +34,5 @@ export const useCreateBranch = () => {
     return createBranchMutation(options);
   };
 
-  return {
-    createBranch,
-    loading,
-    error,
-  };
+  return { createBranch, loading, error };
 };
