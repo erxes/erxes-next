@@ -4,6 +4,7 @@ import {
   Form,
   Kbd,
   Spinner,
+  usePreviousHotkeyScope,
   useScopedHotkeys,
   useToast,
 } from 'erxes-ui';
@@ -15,6 +16,10 @@ import { TagsForm } from './TagsForm';
 import { useTagsAdd } from '../hooks/useTagsAdd';
 
 export const TagsAddDialog = () => {
+  const {
+    setHotkeyScopeAndMemorizePreviousScope,
+    goBackToPreviousHotkeyScope,
+  } = usePreviousHotkeyScope();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const {
@@ -33,11 +38,19 @@ export const TagsAddDialog = () => {
       },
     });
   };
+  const onOpen = (open: boolean) => {
+    setOpen(open);
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(SettingsHotKeyScope.TagsAddDialog);
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  };
 
-  useScopedHotkeys(`c`, () => setOpen(true), SettingsHotKeyScope.TagsPage);
+  useScopedHotkeys(`c`, () => onOpen(true), SettingsHotKeyScope.TagsPage);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpen}>
       <Dialog.Trigger asChild>
         <Button>
           <IconPlus />
