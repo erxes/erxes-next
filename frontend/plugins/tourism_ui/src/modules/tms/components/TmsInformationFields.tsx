@@ -1,74 +1,101 @@
 import { UseFormReturn } from 'react-hook-form';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { currentStepAtom } from '@/tms/states/tmsInformationFieldsAtoms';
 import { TmsFormType } from '@/tms/constants/formSchema';
 import {
   TourName,
   SelectColor,
   LogoField,
   FavIconField,
-  GeneralManeger,
-  Maneger,
+  GeneralManager,
+  Manager,
   Payments,
   Token,
   OtherPayments,
 } from '@/tms/components/TmsFormFields';
 import { Button } from 'erxes-ui';
-import { IconPlus } from '@tabler/icons-react';
+import { useEffect } from 'react';
 
 export const TmsInformationFields = ({
   form,
   onOpenChange,
   onSubmit,
+  isOpen,
 }: {
   form: UseFormReturn<TmsFormType>;
   onOpenChange?: (open: boolean) => void;
   onSubmit?: (data: TmsFormType) => void;
+  isOpen?: boolean;
 }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useAtom(currentStepAtom);
+
+  useEffect(() => {
+    if (isOpen) setCurrentStep(1);
+  }, [isOpen, setCurrentStep]);
 
   const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <>
+    return (
+      <div className="relative w-full">
+        {/* Step 1 */}
+        <div
+          className={`absolute w-full ${
+            currentStep === 1
+              ? 'opacity-100 translate-x-0 pointer-events-auto'
+              : currentStep < 1
+              ? 'opacity-0 translate-x-full pointer-events-none'
+              : 'opacity-0 -translate-x-full pointer-events-none'
+          }`}
+        >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
             <TourName control={form.control} />
             <SelectColor control={form.control} />
             <LogoField control={form.control} />
             <FavIconField control={form.control} />
-          </>
-        );
-      case 2:
-        return (
-          <>
-            <Button
-              variant="default"
-              className="flex items-center w-40 gap-2 mb-2"
-            >
-              <IconPlus size={16} />
-              Add team member
-            </Button>
+          </div>
+        </div>
 
-            <GeneralManeger control={form.control} />
-            <Maneger control={form.control} />
-          </>
-        );
-      case 3:
-        return (
-          <>
+        {/* Step 2 */}
+        <div
+          className={`absolute w-full ${
+            currentStep === 2
+              ? 'opacity-100 translate-x-0 pointer-events-auto'
+              : currentStep < 2
+              ? 'opacity-0 translate-x-full pointer-events-none'
+              : 'opacity-0 -translate-x-full pointer-events-none'
+          }`}
+        >
+          <div className="space-y-4">
+            <GeneralManager control={form.control} />
+            <Manager control={form.control} />
+          </div>
+        </div>
+
+        {/* Step 3 */}
+        <div
+          className={`absolute w-full ${
+            currentStep === 3
+              ? 'opacity-100 translate-x-0 pointer-events-auto'
+              : currentStep < 3
+              ? 'opacity-0 translate-x-full pointer-events-none'
+              : 'opacity-0 -translate-x-full pointer-events-none'
+          }`}
+        >
+          <div className="space-y-4">
             <Payments control={form.control} />
             <Token control={form.control} />
             <OtherPayments control={form.control} />
-          </>
-        );
-      default:
-        return null;
-    }
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      const result = await form.trigger(['name', 'color', 'logo']);
-      if (result) setCurrentStep(2);
+      const result = await form.trigger(['name', 'color']);
+      if (result) {
+        setCurrentStep(2);
+      }
     } else if (currentStep === 2) {
       setCurrentStep(3);
     }
@@ -91,64 +118,82 @@ export const TmsInformationFields = ({
   }
 
   return (
-    <div className="flex flex-col justify-between w-full max-w-3xl mx-auto border-r border-[#F4F4F5]">
-      <div className="flex flex-col">
-        <div className="flex p-5 flex-col justify-center items-start gap-3 self-stretch border-b border-[#F4F4F5]">
-          <div className="flex items-center gap-2">
-            <div className="flex h-5 px-2 justify-center items-center gap-1 rounded-[21px] border border-[rgba(79,70,229,0.10)] bg-[rgba(79,70,229,0.10)]">
-              <p className="text-[#4F46E5] leading-none text-[12px] font-semibold uppercase font-mono">
-                STEP {currentStep}
-              </p>
-            </div>
-            <p className="text-[#4F46E5] font-inter text-[14px] font-semibold leading-[140%]">
-              {currentStep === 1
-                ? 'General information'
-                : currentStep === 2
-                ? 'Permission'
-                : 'Payments'}
+    <div className="flex flex-col mx-auto w-full max-w-3xl h-full border-r">
+      <div className="flex flex-col flex-shrink-0 gap-3 justify-center items-start self-stretch p-5 border-b">
+        <div className="flex gap-2 items-center">
+          <div className="flex h-5 px-2 justify-center items-center gap-1 rounded-[21px] bg-[rgba(79,70,229,0.10)] transition-all duration-300">
+            <p className="text-primary leading-none text-[12px] font-semibold uppercase font-mono">
+              STEP {currentStep}
             </p>
           </div>
-          <div className="flex items-center self-stretch gap-2">
-            {[1, 2, 3].map((step) => (
-              <div
-                key={step}
-                className={`w-16 h-1 rounded-full ${
-                  step === currentStep ? 'bg-[#4F46E5]' : 'bg-[#F4F4F5]'
-                }`}
-              />
-            ))}
-          </div>
-          <p className="self-stretch text-[#71717A] font-inter text-[13px] font-medium leading-[140%]">
+          <p className="text-primary font-inter text-[14px] font-semibold leading-[140%] transition-all duration-300">
             {currentStep === 1
-              ? 'Set up your TMS information'
+              ? 'General information'
               : currentStep === 2
-              ? 'Setup your permission'
-              : 'Setup your payments'}
+              ? 'Permission'
+              : 'Payments'}
           </p>
         </div>
-        <div
-          className={`grid grid-cols-1 gap-4 p-4 ${
-            currentStep === 1 ? 'md:grid-cols-2' : ''
-          } md:gap-8`}
-        >
+        <div className="flex gap-2 items-center self-stretch">
+          {[1, 2, 3].map((step) => (
+            <div
+              key={step}
+              className={`h-1 rounded-full transition-all duration-500 ease-in-out ${
+                step === currentStep
+                  ? 'bg-primary w-24'
+                  : step < currentStep
+                  ? 'bg-primary/50 w-16'
+                  : 'bg-[#F4F4F5] w-16'
+              }`}
+            />
+          ))}
+        </div>
+        <p className="self-stretch text-muted-foreground font-inter text-[13px] font-medium leading-[140%] transition-all duration-300">
+          {currentStep === 1
+            ? 'Set up your TMS information'
+            : currentStep === 2
+            ? 'Setup your permission'
+            : 'Setup your payments'}
+        </p>
+      </div>
+      <div className="relative flex-1">
+        <div className="overflow-y-auto px-4 py-2 h-full max-h-screen">
           {renderStepContent()}
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2 p-4 border-t border-[#F4F4F5]">
+      <div className="flex flex-shrink-0 gap-2 justify-between items-center p-4 border-t">
         {currentStep === 1 ? (
-          <Button variant="outline" onClick={handleCancel}>
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+            className="transition-all duration-200 hover:scale-105"
+          >
             Cancel
           </Button>
         ) : (
-          <Button variant="outline" onClick={handlePrevious}>
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            className="transition-all duration-200 hover:scale-105"
+          >
             Previous
           </Button>
         )}
         {currentStep < 3 ? (
-          <Button onClick={handleNext}>Next</Button>
+          <Button
+            onClick={handleNext}
+            className="transition-all duration-200 hover:scale-105"
+          >
+            Next
+          </Button>
         ) : (
-          <Button onClick={handleSave}>Save</Button>
+          <Button
+            onClick={handleSave}
+            className="transition-all duration-200 hover:scale-105"
+          >
+            Save
+          </Button>
         )}
       </div>
     </div>
