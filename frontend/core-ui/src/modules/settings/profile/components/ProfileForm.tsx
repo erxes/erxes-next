@@ -109,7 +109,7 @@ export const ProfileForm = () => {
           <Form.Description>This is your social links.</Form.Description>
           <LinkFields />
         </div>
-        <div className="w-full flex justify-end">
+        <div className="flex justify-end w-full">
           <Button type="submit" disabled={updating} size="sm">
             {(updating && <Spinner size={'small'} className="text-white" />) ||
               'Update'}

@@ -1,16 +1,55 @@
-import { useQuery } from '@apollo/client';
-import { EDIT_BRANCH_LIST } from '../graphql/mutation';
+import { useMutation } from '@apollo/client';
+import { EDIT_BRANCH } from '../graphql/mutation';
+import { GET_BRANCH_LIST } from '../graphql/queries';
 import { IBranch } from '../types/branch';
 
-interface BranchListResponse {
-  bmsBranchList: IBranch[];
+interface EditBranchResponse {
+  bmsBranchEdit: IBranch;
+}
+
+export interface IEditBranchVariables {
+  id: string;
+  name?: string;
+  description?: string;
+  generalManagerIds?: string[];
+  managerIds?: string[];
+  paymentIds?: string[];
+  paymentTypes?: any[];
+  departmentId?: string;
+  token?: string;
+  erxesAppToken?: string;
+  permissionConfig?: any[];
+  uiOptions?: {
+    logo?: string;
+    favIcon?: string;
+    colors?: {
+      primary?: string;
+    };
+  };
 }
 
 export const useBranchEdit = () => {
-  const { data, loading, error } =
-    useQuery<BranchListResponse>(EDIT_BRANCH_LIST);
+  const [editBranchMutation, { loading, error }] = useMutation<
+    EditBranchResponse,
+    IEditBranchVariables
+  >(EDIT_BRANCH, {
+    refetchQueries: [{ query: GET_BRANCH_LIST }],
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
-  const list = data?.bmsBranchList || [];
+  const editBranch = (options: {
+    variables: IEditBranchVariables;
+    onCompleted?: (data: EditBranchResponse) => void;
+    onError?: (error: any) => void;
+  }) => {
+    return editBranchMutation(options);
+  };
 
-  return { list, loading, error };
+  return {
+    editBranch,
+    loading,
+    error,
+  };
 };

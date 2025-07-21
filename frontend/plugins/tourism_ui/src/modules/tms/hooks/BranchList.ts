@@ -2,15 +2,41 @@ import { useQuery } from '@apollo/client';
 import { GET_BRANCH_LIST } from '../graphql/queries';
 import { IBranch } from '../types/branch';
 
-interface BranchListResponse {
-  bmsBranchList: IBranch[];
+interface PageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string;
+  endCursor: string;
 }
 
-export const useBranchList = () => {
-  const { data, loading, error } =
-    useQuery<BranchListResponse>(GET_BRANCH_LIST);
+interface BranchListResponse {
+  bmsBranchList: {
+    list: IBranch[];
+    totalCount: number;
+    pageInfo: PageInfo;
+  };
+}
 
-  const list = data?.bmsBranchList || [];
+export const useBranchList = (
+  page = 1,
+  limit = 10,
+  order: 'asc' | 'desc' = 'desc',
+) => {
+  const { data, loading, error, refetch } = useQuery<BranchListResponse>(
+    GET_BRANCH_LIST,
+    {
+      variables: {
+        limit,
+        page,
+        order,
+      },
+      fetchPolicy: 'network-only',
+    },
+  );
 
-  return { list, loading, error };
+  const list = data?.bmsBranchList?.list || [];
+  const totalCount = data?.bmsBranchList?.totalCount || 0;
+  const pageInfo = data?.bmsBranchList?.pageInfo;
+
+  return { list, totalCount, pageInfo, loading, error, refetch };
 };
