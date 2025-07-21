@@ -32,7 +32,7 @@ export const RemoveIntegration = ({
   return (
     <Button
       variant={'outline'}
-      className="text-destructive bg-destructive/10"
+      className="text-destructive bg-destructive/10 hover:bg-destructive/20"
       onClick={() =>
         confirm({
           message: `Are you sure you want to remove "${name}" integration?`,
