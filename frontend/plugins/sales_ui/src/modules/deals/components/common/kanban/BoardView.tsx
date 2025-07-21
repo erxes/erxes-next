@@ -14,6 +14,7 @@ import { IStage } from '@/deals/types/stages';
 import { ItemFooter } from '@/deals/cards/components/item/Footer';
 import { KanbanItemProps } from './types';
 import { StageHeader } from '@/deals/stage/components/StageHeader';
+import { useDealDetail } from '@/deals/cards/hooks/useDeals';
 import { useQueryState } from 'erxes-ui';
 
 const BoardView = ({
@@ -29,6 +30,7 @@ const BoardView = ({
   const [columns, setColumns] = useState(stages);
 
   const [, setSalesItemId] = useQueryState<string>('salesItemId');
+  const { loading } = useDealDetail();
 
   useEffect(() => {
     if (!deals) return; // or if dealsLoading, return;
@@ -65,6 +67,7 @@ const BoardView = ({
                     {...feature}
                     key={feature.id}
                     column={column._id}
+                    loading={loading}
                     onClick={() => setSalesItemId(feature.id)}
                   >
                     <div className="flex justify-between border-b p-2">

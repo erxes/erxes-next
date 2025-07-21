@@ -53,9 +53,7 @@ export const SalesIndexPage = () => {
             <MainActionBar />
           </PageSubHeader>
           <div className="w-full h-full p-4 overflow-x-auto overflow-y-hidden">
-            {/* <div className="flex gap-4 min-w-max h-full"> */}
             <StagesList />
-            {/* </div> */}
             <SalesItemDetail />
           </div>
         </PageContainer>

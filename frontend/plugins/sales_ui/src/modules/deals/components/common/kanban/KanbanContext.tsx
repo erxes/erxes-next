@@ -85,7 +85,8 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   children,
   className,
   onClick,
-}: KanbanCardProps<T> & { onClick?: () => void }) => {
+  loading,
+}: KanbanCardProps<T> & { onClick?: () => void; loading?: boolean }) => {
   const {
     attributes,
     listeners,
@@ -97,6 +98,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
     id,
   });
   const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
+
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
@@ -126,6 +128,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
             isDragging && 'pointer-events-none cursor-grabbing opacity-30',
             className,
           )}
+          loading={loading}
         >
           {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
         </Card>
@@ -138,6 +141,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
               isDragging && 'cursor-grabbing',
               className,
             )}
+            loading={loading}
           >
             {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
           </Card>
