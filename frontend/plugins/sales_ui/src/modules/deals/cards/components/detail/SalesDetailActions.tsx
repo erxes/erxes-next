@@ -65,7 +65,7 @@ export const SalesDetailActions = () => {
               <RelationWidget
                 module={item}
                 contentId={deal?._id || ''}
-                contentType="core:customer"
+                contentType="sales:deal"
               />
             </ActionTabsContent>
           ))}

@@ -82,7 +82,6 @@ const ChecklistItemContent = ({
           <div className="absolute right-0 top-full mt-1 z-20 w-36 bg-white border rounded shadow-md">
             <button
               onClick={() => {
-                console.log('Convert to deal:', item.content);
                 setActiveMenuIndex(null);
               }}
               className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 w-full text-sm"

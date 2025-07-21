@@ -52,12 +52,7 @@ export const SalesIndexPage = () => {
           <PageSubHeader>
             <MainActionBar />
           </PageSubHeader>
-          <div
-            className="w-full p-4 overflow-x-auto"
-            style={{
-              height: 'calc(100% - 100px)',
-            }}
-          >
+          <div className="w-full h-full p-4 overflow-x-auto overflow-y-hidden">
             {/* <div className="flex gap-4 min-w-max h-full"> */}
             <StagesList />
             {/* </div> */}

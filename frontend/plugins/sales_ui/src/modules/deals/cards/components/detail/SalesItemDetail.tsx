@@ -41,10 +41,10 @@ export const SalesItemDetail = () => {
                         <Overview deal={deal || ({} as IDeal)} />
                       </SalesDetailTabContent>
                       <SalesDetailTabContent value="plugins">
-                        hi12
+                        Custom Plugins
                       </SalesDetailTabContent>
                       <SalesDetailTabContent value="properties">
-                        hi34
+                        Custom properties
                       </SalesDetailTabContent>
                     </SalesDetailLeftSidebar>
                   </Resizable.Panel>

@@ -58,7 +58,7 @@ const BoardView = ({
         return (
           <KanbanBoard id={column._id} key={column._id}>
             <StageHeader stage={column} />
-            <KanbanCards id={column._id}>
+            <KanbanCards id={column._id} loading={dealsLoading}>
               {(feature: (typeof features)[number]) => {
                 return (
                   <KanbanCard

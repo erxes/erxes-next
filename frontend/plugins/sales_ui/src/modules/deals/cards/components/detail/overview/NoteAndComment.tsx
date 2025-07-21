@@ -38,7 +38,7 @@ const SalesNoteAndComment = () => {
     }
 
     const sendContent = JSON.stringify(content);
-    console.log('aaa', sendContent);
+
     // addConversationMessage({
     //   variables: {
     //     conversationId,

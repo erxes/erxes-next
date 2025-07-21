@@ -23,13 +23,14 @@ import {
   KanbanItemProps,
   KanbanProviderProps,
 } from './types';
-import { ScrollArea, cn } from 'erxes-ui';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { createContext, useContext, useState } from 'react';
 
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
+import { CardsLoading } from '../../loading/CardsLoading';
 import { IStage } from '@/deals/types/stages';
+import { cn } from 'erxes-ui';
 import { createPortal } from 'react-dom';
 import tunnel from 'tunnel-rat';
 
@@ -149,15 +150,25 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
 export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   children,
   className,
+  loading,
   ...props
-}: KanbanCardsProps<T>) => {
+}: KanbanCardsProps<T> & { loading: boolean }) => {
   const { data } = useContext(KanbanContext) as KanbanContextProps<T>;
 
   const filteredData = data.filter((item) => item.column === props.id);
   const items = filteredData.map((item) => item.id);
 
+  if (loading) {
+    return <CardsLoading />;
+  }
+
   return (
-    <ScrollArea className="flex-1 overflow-auto">
+    <div
+      className="overflow-auto"
+      style={{
+        height: 'calc(100vh - 180px)',
+      }}
+    >
       <SortableContext items={items}>
         <div
           className={cn('flex flex-grow flex-col gap-3', className)}
@@ -166,8 +177,7 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
           {filteredData.map(children)}
         </div>
       </SortableContext>
-      {/* <ScrollBar orientation="vertical" /> */}
-    </ScrollArea>
+    </div>
   );
 };
 
