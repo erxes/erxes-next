@@ -13,5 +13,12 @@ export const CONFIG: IUIConfig = {
       hasSettings: false,
       hasWidgets: false,
     },
+    {
+      name: 'clientportal',
+      icon: BookOpenCheck,
+      path: 'clientportal',
+      hasSettings: false,
+      hasWidgets: false,
+    },
   ],
 };
