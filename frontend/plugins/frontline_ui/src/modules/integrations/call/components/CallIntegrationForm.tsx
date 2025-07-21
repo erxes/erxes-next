@@ -25,9 +25,7 @@ export const CallIntegrationForm = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit, (error) => {
-          console.log(error);
-        })}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col flex-auto overflow-hidden"
       >
         <CallIntegrationFormLayout
@@ -164,7 +162,7 @@ export const CallIntegrationForm = ({
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="bg-destructive/20 text-destructive mt-6 size-8 ,hover:bg-destructive/30"
+                  className="bg-destructive/20 text-destructive mt-6 size-8 hover:bg-destructive/30"
                   onClick={() => remove(index)}
                 >
                   <IconTrash />
