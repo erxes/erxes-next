@@ -53,7 +53,6 @@ export const notificationSchema = new Schema({
   userId: {
     type: String,
     required: true,
-    index: true,
   },
 
   fromUserId: {
@@ -103,7 +102,6 @@ export const notificationSchema = new Schema({
 
   expiresAt: {
     type: Date,
-    index: true,
   },
   isArchived: {
     type: Boolean,
@@ -120,4 +118,4 @@ export const notificationSchema = new Schema({
 notificationSchema.index({ userId: 1, createdAt: -1 });
 notificationSchema.index({ userId: 1, isRead: 1, createdAt: -1 });
 notificationSchema.index({ contentType: 1, contentTypeId: 1 });
-notificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // MongoDB TTL index
+notificationSchema.index({ expiresAt: 1 }); // MongoDB TTL index
