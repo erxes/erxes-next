@@ -204,7 +204,7 @@ export default function ProductForm({
                           isRequired: false,
                         })
                       }
-                      className="bg-secondary text-white"
+                      className="text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
                       Add Product Detail
@@ -455,7 +455,7 @@ export default function ProductForm({
                           productIds: [],
                         })
                       }
-                      className="bg-secondary text-white"
+                      className="text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
                       Add Mapping

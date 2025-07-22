@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Upload, ColorPicker } from 'erxes-ui';
+import { Button, Form, Upload, ColorPicker } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { IconUpload } from '@tabler/icons-react';
 import { useEffect } from 'react';
@@ -172,6 +172,7 @@ export default function AppearanceForm({
                         value={field.value}
                         onValueChange={field.onChange}
                         disabled={isReadOnly}
+                        className="w-20 h-9"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -192,6 +193,7 @@ export default function AppearanceForm({
                         value={field.value}
                         onValueChange={field.onChange}
                         disabled={isReadOnly}
+                        className="w-20 h-9"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -212,6 +214,7 @@ export default function AppearanceForm({
                         value={field.value}
                         onValueChange={field.onChange}
                         disabled={isReadOnly}
+                        className="w-20 h-9"
                       />
                     </Form.Control>
                     <Form.Message />
