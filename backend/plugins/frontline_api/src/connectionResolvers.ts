@@ -68,6 +68,36 @@ import {
   IFacebookConfigModel,
   loadFacebookConfigClass,
 } from '@/integrations/facebook/db/models/Config';
+import {
+  ICallCdrModel,
+  loadCallCdrClass,
+} from '~/modules/integrations/call/db/models/cdrs';
+import {
+  ICallHistoryModel,
+  loadCallHistoryClass,
+} from '~/modules/integrations/call/db/models/histories';
+import {
+  ICallCustomerModel,
+  loadCallCustomerClass,
+} from '~/modules/integrations/call/db/models/Customers';
+import {
+  ICallIntegrationModel,
+  loadCallIntegrationClass,
+} from '~/modules/integrations/call/db/models/Integrations';
+import {
+  ICallConfigModel,
+  loadCallConfigClass,
+} from '~/modules/integrations/call/db/models/Configs';
+import {
+  ICallOperatorModel,
+  loadCallOperatorClass,
+} from '~/modules/integrations/call/db/models/Operators';
+import { ICallCdrDocument } from '~/modules/integrations/call/@types/cdrs';
+import { ICallOperatorDocuments } from '~/modules/integrations/call/@types/operators';
+import { ICallConfigDocument } from '~/modules/integrations/call/@types/config';
+import { ICallHistoryDocument } from '~/modules/integrations/call/@types/histories';
+import { ICallCustomer } from '~/modules/integrations/call/@types/customers';
+import { ICallIntegrationDocument } from '~/modules/integrations/call/@types/integrations';
 import { IFacebookBotDocument } from '~/modules/integrations/facebook/db/definitions/bots';
 import {
   IFacebookBotModel,
@@ -89,6 +119,14 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
+
+  //call
+  CallIntegrations: ICallIntegrationModel;
+  CallCustomers: ICallCustomerModel;
+  CallHistory: ICallHistoryModel;
+  CallConfigs: ICallConfigModel;
+  CallOperators: ICallOperatorModel;
+  CallCdrs: ICallCdrModel;
   FacebookBots: IFacebookBotModel;
 }
 
@@ -170,6 +208,34 @@ export const loadClasses = (
     IFacebookConfigModel
   >('facebook_configs', loadFacebookConfigClass(models));
 
+  //call models
+
+  models.CallIntegrations = db.model<
+    ICallIntegrationDocument,
+    ICallIntegrationModel
+  >('calls_integrations', loadCallIntegrationClass(models));
+
+  models.CallCustomers = db.model<ICallCustomer, ICallCustomerModel>(
+    'calls_customers',
+    loadCallCustomerClass(models),
+  );
+
+  models.CallHistory = db.model<ICallHistoryDocument, ICallHistoryModel>(
+    'calls_history',
+    loadCallHistoryClass(models),
+  );
+  models.CallConfigs = db.model<ICallConfigDocument, ICallConfigModel>(
+    'calls_configs',
+    loadCallConfigClass(models),
+  );
+  models.CallOperators = db.model<ICallOperatorDocuments, ICallOperatorModel>(
+    'calls_operators',
+    loadCallOperatorClass(models),
+  );
+  models.CallCdrs = db.model<ICallCdrDocument, ICallCdrModel>(
+    'calls_cdr',
+    loadCallCdrClass(models),
+  );
   models.FacebookBots = db.model<IFacebookBotDocument, IFacebookBotModel>(
     'facebook_messengers_bots',
     loadFacebookBotClass(models),

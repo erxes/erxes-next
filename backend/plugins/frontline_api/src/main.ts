@@ -1,11 +1,13 @@
-import { startPlugin } from 'erxes-api-shared/utils';
+import { getEnv, startPlugin } from 'erxes-api-shared/utils';
 import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/init-trpc';
 import { afterProcess } from '~/meta/afterProcess';
 import { router } from '~/routes';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
+import { initializeCallQueueMonitoring } from '~/modules/integrations/call/worker/callDashboard';
 import automations from './meta/automations';
+import initCallApp from '~/modules/integrations/call/initApp';
 
 startPlugin({
   name: 'frontline',
@@ -25,6 +27,16 @@ startPlugin({
   ),
 
   expressRouter: router,
+  onServerInit: async (app) => {
+    await initCallApp(app);
+
+    try {
+      getEnv({ name: 'CALL_DASHBOARD_ENABLED' }) &&
+        (await initializeCallQueueMonitoring());
+    } catch (error) {
+      console.error('Failed to initialize call queue monitoring:', error);
+    }
+  },
 
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);

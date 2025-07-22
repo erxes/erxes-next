@@ -131,6 +131,13 @@ import {
 } from './modules/segments/db/models/Segments';
 
 import {
+  IInternalNoteModel,
+  loadInternalNoteClass,
+} from '@/internalNote/db/models/InternalNote';
+import { IInternalNoteDocument } from '@/internalNote/types';
+import { ILogModel, loadLogsClass } from '@/logs/db/models/Logs';
+
+import {
   IAutomationModel,
   loadClass as loadAutomationClass,
 } from './modules/automations/db/models/Automations';
@@ -150,7 +157,6 @@ import {
   notificationSchema,
   userNotificationSettingsSchema,
 } from 'erxes-api-shared/core-modules';
-import { ILogModel, loadLogsClass } from './modules/logs/db/models/Logs';
 
 export interface IModels {
   Brands: IBrandModel;
@@ -162,6 +168,7 @@ export interface IModels {
   Permissions: IPermissionModel;
   UsersGroups: IUserGroupModel;
   Tags: ITagModel;
+  InternalNotes: IInternalNoteModel;
   Products: IProductModel;
   ProductCategories: IProductCategoryModel;
   ProductsConfigs: IProductsConfigModel;
@@ -249,6 +256,11 @@ export const loadClasses = (
   );
 
   models.Tags = db.model<ITagDocument, ITagModel>('tags', loadTagClass(models));
+
+  models.InternalNotes = db.model<IInternalNoteDocument, IInternalNoteModel>(
+    'internal_notes',
+    loadInternalNoteClass(models),
+  );
 
   models.Products = db.model<IProductDocument, IProductModel>(
     'products',

@@ -43,6 +43,10 @@ const productsMain = gql`
         customFieldsData
         description
         tagIds
+        category {
+          _id
+          name
+        }
         name
         shortName
         uom
@@ -93,9 +97,9 @@ const productCategoryDetail = gql`
       name
       productCount
       __typename
+    }
   }
-}
-`
+`;
 
 export const productsQueries = {
   productsMain,

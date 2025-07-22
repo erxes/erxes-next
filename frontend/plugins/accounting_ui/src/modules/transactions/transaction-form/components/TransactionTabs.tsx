@@ -14,6 +14,7 @@ import { BankTransaction } from './forms/BankForm';
 import { CashTransaction } from './forms/CashForm';
 import { InvIncomeForm } from './forms/InvIncomeForm';
 import { InvOutForm } from './forms/InvOutForm';
+import { InvSaleForm } from './forms/InvSaleForm';
 import { MainJournalForm } from './forms/MainJournalForm';
 import { PayableTransaction } from './forms/PayableForm';
 import { ReceivableTransaction } from './forms/ReceivableForm';
@@ -44,6 +45,8 @@ const TransactionForm = ({
     return <InvIncomeForm form={form} index={index} />;
   if (field.journal === TrJournalEnum.INV_OUT)
     return <InvOutForm form={form} index={index} />;
+  if (field.journal === TrJournalEnum.INV_SALE)
+    return <InvSaleForm form={form} index={index} />;
   return null;
 };
 

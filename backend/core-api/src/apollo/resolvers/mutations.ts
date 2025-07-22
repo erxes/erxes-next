@@ -1,9 +1,11 @@
 import { appMutations } from '@/apps/graphql/mutations';
 import { authMutations } from '@/auth/graphql/resolvers/mutations';
+import { automationMutations } from '@/automations/graphql/resolvers/mutations';
 import conformityMutations from '@/conformities/graphql/mutations';
 import { contactMutations } from '@/contacts/graphql/resolvers/mutations';
 import { documentMutations } from '@/documents/graphql/mutations';
 import { exchangeRateMutations } from '@/exchangeRates/graphql/resolvers/mutations';
+import { internalNoteMutations } from '@/internalNote/graphql/mutations';
 import { brandMutations } from '@/organization/brand/graphql/mutations';
 import { organizationConfigMutations } from '@/organization/settings/graphql/configs/mutations';
 import { favoriteMutations } from '@/organization/settings/graphql/favorites/mutations';
@@ -15,7 +17,6 @@ import { productMutations } from '@/products/graphql/resolvers/mutations';
 import { relationsMutations } from '@/relations/graphql/mutations';
 import { segmentMutations } from '@/segments/graphql/resolvers/mutations';
 import { tagMutations } from '@/tags/graphql/mutations';
-import { automationMutations } from '@/automations/graphql/resolvers/mutations';
 import { notificationMutations } from '~/modules/notifications/graphql/resolver/mutations';
 
 export const mutations = {
@@ -38,4 +39,5 @@ export const mutations = {
   ...documentMutations,
   ...automationMutations,
   ...notificationMutations,
+  ...internalNoteMutations,
 };

@@ -1,36 +1,31 @@
 import { IconPlus } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui';
-import { IntegrationSteps } from '@/integrations/components/IntegrationSteps';
+import { erxesMessengerSetupSheetOpenAtom } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { EMSetup } from '@/integrations/erxes-messenger/components/EMSetup';
+import { settedIntegrationDetailAtom } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
+import { resetErxesMessengerSetupAtom } from '@/integrations/erxes-messenger/states/EMSetupResetState';
 
 export const AddErxesMessengerSheet = () => {
+  const [open, setOpen] = useAtom(erxesMessengerSetupSheetOpenAtom);
+  const settedIntegrationDetail = useAtomValue(settedIntegrationDetailAtom);
+  const resetErxesMessengerSetup = useSetAtom(resetErxesMessengerSetupAtom);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <div>
         <Sheet.Trigger asChild>
-          <Button>
+          <Button
+            onClick={() =>
+              settedIntegrationDetail && resetErxesMessengerSetup()
+            }
+          >
             <IconPlus />
             Add Messenger
           </Button>
         </Sheet.Trigger>
       </div>
-
-      <Sheet.View className="gap-0 flex-col flex">
-        <Sheet.Header>
-          <Sheet.Title>Add Erxes Messenger</Sheet.Title>
-          <Sheet.Close />
-        </Sheet.Header>
-        <Sheet.Content className="grow">
-          <IntegrationSteps
-            step={1}
-            title="Add Erxes Messenger"
-            stepsLength={3}
-            description="Add Erxes Messenger to your website"
-          />
-        </Sheet.Content>
-        <Sheet.Footer>
-          <Button>Add</Button>
-        </Sheet.Footer>
-      </Sheet.View>
+      <EMSetup title="Add Erxes Messenger" />
     </Sheet>
   );
 };

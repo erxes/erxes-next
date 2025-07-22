@@ -95,6 +95,8 @@ export const TransactionsGroupForm = () => {
         ...det,
         account: undefined,
         checked: undefined,
+        invAccountId: undefined,
+        costAccountId: undefined,
       })),
       date: data.date,
       number: data.number,
