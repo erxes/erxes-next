@@ -1145,8 +1145,6 @@ export const loadUserMovemmentClass = (models: IModels, subdomain: string) => {
             update,
           );
 
-          console.log({ contentType, contentTypeId, createdBy });
-
           if (contentType && contentTypeId && createdBy) {
             sendNotification(subdomain, {
               title,

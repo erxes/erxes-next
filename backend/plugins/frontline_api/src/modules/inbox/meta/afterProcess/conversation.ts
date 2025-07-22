@@ -45,6 +45,7 @@ export const conversationAfterProcessWorkers = {
             fullDocument?.closedUserId || '',
           ),
           contentType: 'frontline:inbox.conversation',
+          notificationType: 'conversationStateChange',
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
@@ -65,6 +66,7 @@ export const conversationAfterProcessWorkers = {
           ),
           contentType: 'frontline:inbox.conversation',
           contentTypeId: fullDocument._id,
+          notificationType: 'conversationStateChange',
           action: 'resolved',
           priority: 'medium',
         });

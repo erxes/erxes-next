@@ -69,10 +69,6 @@ export const NotificationFilterMenu = () => {
             <IconCalendar />
             Filter by date
           </Filter.Item>
-          <Filter.Item value="plugins">
-            <IconPuzzle />
-            Plugins
-          </Filter.Item>
         </Command.List>
         <Command.Separator className="my-1" />
 

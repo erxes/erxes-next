@@ -12,4 +12,8 @@ export default {
   ) {
     return await models.Users.findOne({ _id: fromUserId });
   },
+
+  async emailDelivery({ _id }: INotificationDocument, _, { models }: IContext) {
+    return await models.EmailDeliveries.findOne({ notificationId: _id });
+  },
 };

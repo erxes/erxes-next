@@ -24,6 +24,12 @@ export type INotification = {
   // Timestamps
   createdAt: string;
   expiresAt?: string; // Auto-cleanup old notifications
+  emailDelivery?: {
+    _id: string;
+    status: string;
+    error?: string;
+    sentAt: string;
+  };
 };
 
 export type SetAtom<Args extends unknown[], Result> = (...args: Args) => Result;

@@ -1,8 +1,15 @@
-import { EDIT_USER_NOTIFICATION_SETTINGS } from '@/notification/settings/graphql/notificationSettingsMutations';
+import {
+  EDIT_ORG_NOTIFICATION_CONFIGURATION,
+  EDIT_USER_NOTIFICATION_SETTINGS,
+} from '@/notification/settings/graphql/notificationSettingsMutations';
 import {
   notificationSettingsFormSchema,
   TNotificationSettingsForm,
 } from '@/notification/settings/states/notificationSettingsForm';
+import {
+  generateNotificationMutationVariables,
+  togglePluginNotifType,
+} from '@/notification/settings/utils';
 import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast, useQueryState } from 'erxes-ui';
@@ -16,14 +23,18 @@ export type onNotifTypeCheckedProp = {
   notifType: string;
 };
 
-export const useNotificationSettings = (refetch?: () => void) => {
-  const [isOrgDefault, toggleOrgDefault] =
-    useQueryState<boolean>('isOrgDefault');
-  const [editSettings] = useMutation(EDIT_USER_NOTIFICATION_SETTINGS);
+export const useNotificationSettings = () => {
+  const [isOrgConfig, toggleOrgConfig] = useQueryState<boolean>('isOrgConfig');
+
+  const [editSettings] = useMutation(
+    isOrgConfig
+      ? EDIT_ORG_NOTIFICATION_CONFIGURATION
+      : EDIT_USER_NOTIFICATION_SETTINGS,
+  );
 
   const form = useForm<TNotificationSettingsForm>({
     resolver: zodResolver(notificationSettingsFormSchema),
-    defaultValues: {
+    values: {
       all: {
         inAppNotificationsDisabled: false,
         emailNotificationsDisabled: false,
@@ -32,14 +43,40 @@ export const useNotificationSettings = (refetch?: () => void) => {
       plugins: {},
     },
   });
-  const { watch } = form;
 
-  const [isEmailDisabled, isInAppDisabled] = watch([
-    'all.emailNotificationsDisabled',
-    'all.inAppNotificationsDisabled',
-  ]);
+  const { getValues, watch } = form;
 
-  const onNotiTypeChecked = (
+  const { inAppNotificationsDisabled, emailNotificationsDisabled } =
+    watch('all');
+
+  const isDisabledAllNotification =
+    inAppNotificationsDisabled && emailNotificationsDisabled;
+
+  const submitNotificationChanges = async (
+    updatedPlugins: TNotificationSettingsForm['plugins'],
+  ) => {
+    try {
+      const variables = generateNotificationMutationVariables(
+        isOrgConfig,
+        updatedPlugins,
+        getValues(),
+      );
+
+      await editSettings({
+        variables,
+      });
+
+      toast({ title: 'Edited successfully' });
+    } catch (err: any) {
+      toast({
+        title: 'Something went wrong',
+        description: err.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const onNotifTypeToggle = (
     {
       fieldOnChange,
       fieldValue,
@@ -50,48 +87,24 @@ export const useNotificationSettings = (refetch?: () => void) => {
     type: 'email' | 'inApp',
     checked: boolean,
   ) => {
-    const updatedValue = {
-      ...fieldValue,
-      [pluginName]: {
-        ...pluginConfigState,
-        types: {
-          ...(pluginConfigState?.types ?? {}),
-          [notifType]: {
-            ...(pluginConfigState?.types?.[notifType] ?? {}),
-            [type === 'email' ? 'emailDisabled' : 'inAppDisabled']: !checked,
-          },
-        },
-      },
-    };
-    fieldOnChange(updatedValue);
-    editSettings({
-      variables: {
-        userSettings: {
-          emailNotificationsDisabled: isEmailDisabled,
-          inAppNotificationsDisabled: isInAppDisabled,
-          plugins: updatedValue,
-        },
-      },
-    })
-      .then(() => {
-        toast({ title: 'Edited successfully' });
-        refetch && refetch();
-      })
-      .catch((err) =>
-        toast({
-          title: 'Something went wrong',
-          description: err.message,
-          variant: 'destructive',
-        }),
-      );
-  };
+    const updatedPlugins = togglePluginNotifType(
+      fieldValue,
+      pluginName,
+      pluginConfigState,
+      notifType,
+      type,
+      checked,
+    );
 
+    fieldOnChange(updatedPlugins);
+    submitNotificationChanges(updatedPlugins);
+  };
   return {
-    onNotiTypeChecked,
     form,
     watch,
-    isOrgDefault,
-    toggleOrgDefault,
-    isDisabledAllNotification: isEmailDisabled && isInAppDisabled,
+    onNotifTypeToggle,
+    isOrgConfig,
+    toggleOrgConfig,
+    isDisabledAllNotification,
   };
 };

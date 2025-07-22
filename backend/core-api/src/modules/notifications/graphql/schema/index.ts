@@ -39,6 +39,29 @@ type NotificationConfigListResponse {
     totalCount: Int
 }
 
+type EmailDelivery {
+  _id: String
+  notificationId: String
+  userId: String
+  email: String
+  subject: String
+  content: String
+
+  provider: String
+
+  messageId: String
+
+  status: String
+
+  sentAt: String
+
+  error: String
+  retryCount: Int
+
+  createdAt: String
+  updatedAt: String
+}
+
 type Notification {
     _id: String,
     title: String,
@@ -53,6 +76,7 @@ type Notification {
     createdAt: Date,
     isRead: Boolean
     action:String
+    emailDelivery:EmailDelivery
 }
 
 type NotificationsList {
@@ -89,7 +113,6 @@ const NOTIFICATIONS_QUERIES_PARAMS = `
     type:NotificationType,
     fromDate:String,
     endDate:String,
-    module:String,
     fromUserId:String
 `;
 

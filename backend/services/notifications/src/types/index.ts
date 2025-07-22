@@ -1,27 +1,29 @@
 // Core notification configuration for creating notifications
-export interface INotificationData {
-  // Core notification data
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
+// export interface INotificationData {
+//   // Core notification data
+//   title: string;
+//   message: string;
+//   type: 'info' | 'success' | 'warning' | 'error';
 
-  // Recipients
-  userIds: string[];
-  fromUserId?: string; // null for system notifications
+import { INotificationData } from 'erxes-api-shared/core-modules';
 
-  // Source information
-  contentType: string; // 'frontline:conversation', 'sales:deal', etc.
-  contentTypeId?: string; // ID of the source object
-  action?: string; // 'assigned', 'resolved', etc.
+//   // Recipients
+//   userIds: string[];
+//   fromUserId?: string; // null for system notifications
 
-  // Email configuration (if user wants email notifications)
-  emailSubject?: string;
-  emailTemplate?: string;
+//   // Source information
+//   contentType: string; // 'frontline:conversation', 'sales:deal', etc.
+//   contentTypeId?: string; // ID of the source object
+//   action?: string; // 'assigned', 'resolved', etc.
 
-  // Additional options
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-  metadata?: Record<string, any>; // Additional data
-}
+//   // Email configuration (if user wants email notifications)
+//   emailSubject?: string;
+//   emailTemplate?: string;
+
+//   // Additional options
+//   priority?: 'low' | 'medium' | 'high' | 'urgent';
+//   metadata?: Record<string, any>; // Additional data
+// }
 
 // Email transport configuration
 export interface IEmailTransportConfig {
@@ -37,6 +39,9 @@ export interface IEmailTransportConfig {
     accessKeyId: string;
     secretAccessKey: string;
     region: string;
+  };
+  sendgrid?: {
+    apiKey: string;
   };
 }
 

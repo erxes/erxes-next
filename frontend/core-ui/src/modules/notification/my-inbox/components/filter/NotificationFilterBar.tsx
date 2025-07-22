@@ -5,6 +5,7 @@ import {
   IconCalendarPlus,
   IconEyeUp,
   IconNotification,
+  IconPuzzle,
 } from '@tabler/icons-react';
 import { Filter, PageSubHeader, Popover, useMultiQueryState } from 'erxes-ui';
 
@@ -13,8 +14,7 @@ export const NotificationFilterBar = () => {
     priority?: string;
     type?: string;
     createdAt: string;
-    module: string;
-  }>(['priority', 'type', 'createdAt', 'module']);
+  }>(['priority', 'type', 'createdAt']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,

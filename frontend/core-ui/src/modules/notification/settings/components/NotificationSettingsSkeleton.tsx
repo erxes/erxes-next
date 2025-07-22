@@ -1,12 +1,14 @@
+import { useNotificationsSettingsContext } from '@/notification/settings/context/NotificationSettingsContext';
 import { cn, Label, Separator, Skeleton } from 'erxes-ui';
 
 export const NotificationSettingsSkeleton = () => {
+  const { isOrgConfig } = useNotificationsSettingsContext();
   return (
     <div className="w-full mx-auto max-w-3xl mb-6 pt-10">
       <div>
         <h2 className="font-semibold text-lg">My Notification Settings</h2>
         <span className="text-accent-foreground text-xs ">
-          Select push and email notifications you'd like to receive{' '}
+          Select push and email notifications you'd like to receive
         </span>
       </div>
       <Separator className="my-4" />
@@ -26,8 +28,12 @@ export const NotificationSettingsSkeleton = () => {
           </div>
         </div>
       </div>
-      <Label>Notification expires after days</Label>
-      <Skeleton className="h-8 w-full my-4" />
+      {isOrgConfig && (
+        <>
+          <Label>Notification expires after days</Label>
+          <Skeleton className="h-8 w-full my-4" />
+        </>
+      )}
       {Array.from({ length: 2 }).map((_, index) => (
         <div key={index}>
           <Skeleton className="h-6 w-1/5" />

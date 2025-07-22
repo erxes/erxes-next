@@ -11,39 +11,53 @@ export const NotifTypeRowContent = ({
   pluginConfigState,
   notifTypeState,
 }: NotifTypeNotificationSettingsProps) => {
-  const { control } = useFormContext<TNotificationSettingsForm>();
-  const { field } = useController({
+  const { control, watch } = useFormContext<TNotificationSettingsForm>();
+
+  const {
+    field: { value: pluginFieldValue, onChange: pluginFieldOnChange },
+  } = useController({
     name: 'plugins',
     control,
   });
-  const [isAllInpAppDisabled, isAllEmailDisabled] = useWatch({
-    name: ['all.isInAppDisabled', 'all.isEmailDisabled'],
-  });
-  const { onNotiTypeChecked } = useNotificationsSettingsContext();
-  const isEmailEnabled = isAllEmailDisabled || notifTypeState?.emailDisabled;
-  const isInAppEnabled = isAllInpAppDisabled || notifTypeState?.inAppDisabled;
+
+  const { onNotifTypeToggle, isDisabledAllNotification } =
+    useNotificationsSettingsContext();
+
+  const { inAppNotificationsDisabled, emailNotificationsDisabled } =
+    watch('all');
+
+  const isEmailDisabled =
+    isDisabledAllNotification ||
+    emailNotificationsDisabled ||
+    notifTypeState?.emailDisabled;
+
+  const isInAppDisabled =
+    isDisabledAllNotification ||
+    inAppNotificationsDisabled ||
+    notifTypeState?.inAppDisabled;
+
+  const handleCheck = (type: 'email' | 'inApp', checked: boolean) =>
+    onNotifTypeToggle(
+      {
+        fieldOnChange: pluginFieldOnChange,
+        fieldValue: pluginFieldValue,
+        pluginName,
+        pluginConfigState,
+        notifType,
+      },
+      type,
+      checked,
+    );
 
   return (
     <NotifTypeRow
       key={notifType}
       title={text}
       enabled={{
-        email: !isEmailEnabled,
-        inApp: !isInAppEnabled,
+        email: !isEmailDisabled,
+        inApp: !isInAppDisabled,
       }}
-      onCheck={(type, checked) =>
-        onNotiTypeChecked(
-          {
-            fieldOnChange: field.onChange,
-            fieldValue: field.value,
-            pluginName,
-            pluginConfigState,
-            notifType,
-          },
-          type,
-          checked,
-        )
-      }
+      onCheck={handleCheck}
     />
   );
 };

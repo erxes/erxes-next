@@ -8,11 +8,10 @@ export const NotificationFilterViews = () => {
     status?: string;
     priority?: string;
     type?: string;
-    module: string;
     fromUserId?: string;
-  }>(['priority', 'type', 'module', 'fromUserId']);
+  }>(['priority', 'type', 'fromUserId']);
 
-  const { priority, type, module, fromUserId } = queries;
+  const { priority, type, fromUserId } = queries;
 
   return (
     <>

@@ -45,29 +45,25 @@ const generateOrderBy = (
 
 export const useNotifications = () => {
   const currentUser = useAtomValue(currentUserState) as IUser;
+  const { id: currentNotificationId } = useParams();
 
-  const [{ status, priority, type, createdAt, module, orderBy, fromUserId }] =
+  const [{ status, priority, type, createdAt, orderBy, fromUserId }] =
     useMultiQueryState<{
       status: 'read' | 'unread' | 'all';
       priority: 'low' | 'medium' | 'high' | 'urgent';
       type: 'info' | 'success' | 'warning' | 'error';
       createdAt: string;
-      module: string;
       orderBy: 'new' | 'old' | 'priority';
       fromUserId: string;
-    }>([
-      'status',
-      'priority',
-      'type',
-      'createdAt',
-      'module',
-      'orderBy',
-      'fromUserId',
-    ]);
+    }>(['status', 'priority', 'type', 'createdAt', 'orderBy', 'fromUserId']);
 
   const { data, loading, subscribeToMore, refetch, fetchMore } =
     useQuery<NotificationsQueryResponse>(NOTIFICATIONS, {
       variables: {
+        ids:
+          currentNotificationId && status === 'unread'
+            ? [currentNotificationId]
+            : undefined,
         limit: NOTIFICATIONS_LIMIT,
         status: status?.toUpperCase() || 'UNREAD',
         priority: priority?.toUpperCase(),
@@ -75,7 +71,6 @@ export const useNotifications = () => {
         fromDate: parseDateRangeFromString(createdAt)?.from,
         endDate: parseDateRangeFromString(createdAt)?.to,
         fromUserId,
-        // module,
         ...generateOrderBy(orderBy),
       },
     });

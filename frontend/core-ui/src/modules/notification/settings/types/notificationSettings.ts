@@ -1,9 +1,5 @@
 import { TNotificationSettingsForm } from '@/notification/settings/states/notificationSettingsForm';
-import {
-  Control,
-  ControllerRenderProps,
-  FieldPathValue,
-} from 'react-hook-form';
+import { FieldPathValue } from 'react-hook-form';
 
 type ModuleType = {
   name: string;
@@ -32,8 +28,6 @@ export type PluginNotificationSettingsProps = {
 type TPluginFormState = TNotificationSettingsForm['plugins'][string];
 
 export type ModuleNotificationSettingsProps = {
-  // field: ControllerRenderProps<TNotificationSettingsForm, 'plugins'>;
-
   pluginName: string;
   moduleName: string;
   iconName: string;
@@ -48,10 +42,9 @@ export type NotifTypeNotificationSettingsProps = {
   notifType: string;
   pluginConfigState: TNotificationSettingsForm['plugins'][string];
   notifTypeState: NonNullable<TPluginFormState['types']>[string];
-  // field: ControllerRenderProps<TNotificationSettingsForm, 'plugins'>;
 };
 
-export type UserNotificationSettings = {
+export type IUserNotificationSettings = {
   _id: string;
   userId: string;
 
@@ -78,6 +71,34 @@ export type UserNotificationSettings = {
   updatedAt: Date;
 };
 
+export type IOrgNotificationConfigs = {
+  _id: string;
+
+  inAppNotificationsDisabled: boolean;
+  emailNotificationsDisabled: boolean;
+  emailTemplateId?: string;
+  emailSubject?: string;
+  createdBy: string;
+  expiresAfterDays: number;
+  plugins: {
+    [pluginName: string]: {
+      inAppDisabled: boolean;
+      emailDisabled: boolean;
+      types: {
+        [notifTypeAction: string]: {
+          inAppDisabled: boolean;
+          emailDisabled: boolean;
+          emailTemplateId?: string;
+          emailSubject?: string;
+        };
+      };
+    };
+  };
+
+  // Metadata
+  createdAt: Date;
+  updatedAt: Date;
+};
 export type PluginsNotificationConfig = {
   pluginName: string;
   modules: {

@@ -1,14 +1,34 @@
-import { 
-  getEnv, 
-  sendTRPCMessage 
-} from 'erxes-api-shared/utils';
 import { IEmailTransportConfig } from '@/types';
-import { createTransporter, generateFromEmail } from './emailUtils';
 import { debugError, debugInfo } from '@/utils/debugger';
-import { DEFAULT_EMAIL_TEMPLATES } from '@/constants';
+import { getEnv, sendTRPCMessage } from 'erxes-api-shared/utils';
+import fs from 'fs';
+import Handlebars from 'handlebars';
+import path from 'path';
+import {
+  createTransporter,
+  generateFromEmail,
+  getUserDetail,
+} from './emailUtils';
+import { IUserDocument } from 'erxes-api-shared/core-types';
 
 export class EmailService {
-  private async getEmailConfig(subdomain: string): Promise<IEmailTransportConfig> {
+  private async readFile(filename: string) {
+    const filePath = path.resolve(
+      __dirname,
+      `../../private/emailTemplates/${filename}.html`,
+    );
+    return fs.promises.readFile(filePath, 'utf8');
+  }
+
+  private async applyTemplate(data: any, templateName: string) {
+    let template: any = await this.readFile(templateName);
+
+    template = Handlebars.compile(template.toString());
+
+    return template(data);
+  }
+
+  private async getEmailConfig(): Promise<IEmailTransportConfig> {
     try {
       const configs = await sendTRPCMessage({
         pluginName: 'core',
@@ -19,25 +39,24 @@ export class EmailService {
         defaultValue: {},
       });
 
-      const DEFAULT_EMAIL_SERVICE = configs['DEFAULT_EMAIL_SERVICE'] || 'SENDGRID';
-      
+      const DEFAULT_EMAIL_SERVICE =
+        configs['DEFAULT_EMAIL_SERVICE'] || 'SENDGRID';
+
       if (DEFAULT_EMAIL_SERVICE === 'SENDGRID') {
         return {
-          service: 'SendGrid',
-          auth: {
-            user: 'apikey',
-            pass: getEnv({ name: 'SENDGRID_API_KEY' }),
-          }
+          sendgrid: {
+            apiKey: getEnv({ name: 'SENDGRID_API_KEY' }),
+          },
         };
       }
-      
+
       if (DEFAULT_EMAIL_SERVICE === 'SES') {
         return {
           ses: {
             accessKeyId: getEnv({ name: 'AWS_SES_ACCESS_KEY_ID' }),
             secretAccessKey: getEnv({ name: 'AWS_SES_SECRET_ACCESS_KEY' }),
             region: getEnv({ name: 'AWS_REGION', defaultValue: 'us-east-1' }),
-          }
+          },
         };
       }
 
@@ -50,7 +69,7 @@ export class EmailService {
         auth: {
           user: configs['MAIL_USER'],
           pass: configs['MAIL_PASS'],
-        }
+        },
       };
     } catch (error) {
       debugError('Failed to get email config', error);
@@ -58,7 +77,7 @@ export class EmailService {
     }
   }
 
-  private async getFromEmail(subdomain: string): Promise<string> {
+  private async getFromEmail(): Promise<string> {
     try {
       const configs = await sendTRPCMessage({
         pluginName: 'core',
@@ -70,55 +89,25 @@ export class EmailService {
       });
 
       const COMPANY_EMAIL_FROM = configs['COMPANY_EMAIL_FROM'];
-      const DEFAULT_AWS_EMAIL = getEnv({ name: 'DEFAULT_AWS_EMAIL' });
 
-      return COMPANY_EMAIL_FROM || DEFAULT_AWS_EMAIL || 'no-reply@example.com';
+      return COMPANY_EMAIL_FROM || 'noreply@erxes.io';
     } catch (error) {
       debugError('Failed to get from email', error);
-      return 'no-reply@example.com';
+      return 'noreply@erxes.io';
     }
   }
 
-  private processTemplate(template: string, variables: Record<string, any>): string {
-    let processed = template;
-    
-    for (const [key, value] of Object.entries(variables)) {
-      const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
-      processed = processed.replace(regex, String(value || ''));
-    }
-
-    return processed;
-  }
-
-  private async getEmailTemplate(templateId?: string): Promise<{ subject: string; content: string }> {
-    if (!templateId) {
-      return DEFAULT_EMAIL_TEMPLATES.NOTIFICATION;
-    }
-
-    try {
-      // In a real implementation, you would fetch from database
-      // For now, return default template
-      return DEFAULT_EMAIL_TEMPLATES.NOTIFICATION;
-    } catch (error) {
-      debugError('Failed to get email template', error);
-      return DEFAULT_EMAIL_TEMPLATES.NOTIFICATION;
-    }
-  }
-
-  public async sendNotificationEmail(
-    subdomain: string, 
-    notificationData: {
-      toEmail: string;
-      userId: string;
-      notificationId?: string;
-      title: string;
-      message: string;
-      contentType: string;
-      emailSubject?: string;
-      emailTemplateId?: string;
-      metadata?: any;
-    }
-  ): Promise<{
+  public async sendNotificationEmail(notificationData: {
+    toEmail: string;
+    user: IUserDocument;
+    notificationId?: string;
+    title: string;
+    message: string;
+    contentType: string;
+    emailSubject?: string;
+    emailTemplateId?: string;
+    metadata?: any;
+  }): Promise<{
     success: boolean;
     messageId?: string;
     error?: string;
@@ -128,30 +117,26 @@ export class EmailService {
   }> {
     try {
       // Get email configuration
-      const emailConfig = await this.getEmailConfig(subdomain);
+      const emailConfig = await this.getEmailConfig();
       const transporter = await createTransporter(emailConfig);
-      
+
       // Get sender email
-      const fromEmail = await this.getFromEmail(subdomain);
-      
-      // Get template
-      const template = await this.getEmailTemplate(notificationData.emailTemplateId);
-      
-      // Process template with variables
-      const variables = {
-        title: notificationData.title,
-        message: notificationData.message,
-        contentType: notificationData.contentType,
-        ...notificationData.metadata,
-      };
-      
-      const processedSubject = this.processTemplate(
-        notificationData.emailSubject || template.subject, 
-        variables
-      );
-      const processedContent = this.processTemplate(
-        template.content, 
-        { ...variables, subject: notificationData.title, content: notificationData.message }
+      const fromEmail = await this.getFromEmail();
+
+      const DOMAIN = getEnv({ name: 'DOMAIN' });
+      console.log({ DOMAIN });
+
+      const html = await this.applyTemplate(
+        {
+          notification: {
+            title: notificationData.title,
+            content: notificationData.message,
+            link: `${DOMAIN}/my-inbox/${notificationData.notificationId}`,
+            date: new Date().toISOString(),
+          },
+          userName: getUserDetail(notificationData.user),
+        },
+        'notification',
       );
 
       debugInfo(`Sending notification email to ${notificationData.toEmail}`);
@@ -159,22 +144,35 @@ export class EmailService {
       const mailOptions = {
         from: generateFromEmail('Notification Service', fromEmail),
         to: notificationData.toEmail,
-        subject: processedSubject,
-        html: processedContent,
+        subject: 'Notification',
+        html,
       };
 
-      const info = await transporter.sendMail(mailOptions);
-      
-      debugInfo(`Email sent successfully`, { messageId: info.messageId, toEmail: notificationData.toEmail });
+      let info;
+
+      if (emailConfig.sendgrid) {
+        info = await transporter.send({
+          to: mailOptions.to,
+          from: mailOptions.from,
+          subject: mailOptions.subject,
+          html: mailOptions.html,
+        });
+      } else {
+        info = await transporter.sendMail(mailOptions);
+      }
+
+      debugInfo(`Email sent successfully`, {
+        messageId: info.messageId,
+        toEmail: notificationData.toEmail,
+      });
 
       return {
         success: true,
         messageId: info.messageId,
-        subject: processedSubject,
-        content: processedContent,
+        subject: 'Notification',
+        content: html,
         provider: emailConfig.service || (emailConfig.ses ? 'ses' : 'smtp'),
       };
-
     } catch (error) {
       debugError('Email service error', error);
       return {

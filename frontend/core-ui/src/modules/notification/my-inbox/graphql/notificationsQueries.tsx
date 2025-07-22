@@ -41,7 +41,6 @@ const NOTIFICATIONS_LIST_PARAMS = `
   $type: NotificationType,
   $fromDate: String,
   $endDate: String,
-  $module: String,
   $fromUserId:String
 `;
 
@@ -57,7 +56,6 @@ const NOTIFICATIONS_LIST_PARAMS_DEF = `
   type: $type,
   fromDate: $fromDate,
   endDate: $endDate,
-  module: $module,
   fromUserId: $fromUserId
 `;
 
@@ -80,6 +78,12 @@ export const NOTIFICATION_DETAIL = gql`
   query NotificationDetail ($_id:String!) {
     notificationDetail (_id:$_id) {
       ${NOTIFICATION_FIELDS}
+      emailDelivery {
+        _id
+        status
+        error
+        sentAt
+      }
     }
   }
 `;

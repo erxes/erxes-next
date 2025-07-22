@@ -48,39 +48,22 @@ export const notificationMutations = {
     { configs },
     { models, user }: IContext,
   ) {
-    const operations: AnyBulkWriteOperation<any>[] = [];
-
-    // Process the nested config structure
-    for (const [pluginName, pluginConfigs] of Object.entries(configs as any)) {
-      for (const [moduleName, moduleConfigs] of Object.entries(
-        pluginConfigs as any,
-      )) {
-        for (const [action, config] of Object.entries(moduleConfigs as any)) {
-          const contentType = `${pluginName}:${moduleName}`;
-
-          operations.push({
-            updateOne: {
-              filter: { contentType, action },
-              update: {
-                $set: {
-                  ...(config as any),
-                  contentType,
-                  action,
-                  updatedAt: new Date(),
-                  createdBy: user._id,
-                },
-              },
-              upsert: true,
-            },
-          });
-        }
-      }
+    if (!user?.isOwner) {
+      throw new Error('Permission required');
     }
 
-    if (operations.length > 0) {
-      await models.NotificationConfigs.bulkWrite(operations);
+    const orgConfig = await models.NotificationConfigs.findOne({});
+    if (!orgConfig) {
+      await models.NotificationConfigs.create({
+        ...configs,
+        createdBy: user._id,
+      });
+    } else {
+      await models.NotificationConfigs.updateOne(
+        { _id: orgConfig._id },
+        { $set: { ...configs } },
+      );
     }
-
     return { success: true };
   },
 };

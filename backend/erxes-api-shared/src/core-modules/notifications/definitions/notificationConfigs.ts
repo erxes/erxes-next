@@ -12,6 +12,18 @@ export interface INotificationConfigDocument extends Document {
   emailTemplateId?: string;
   emailSubject?: string;
 
+  plugins: {
+    [pluginName: string]: {
+      inAppDisabled: boolean;
+      emailDisabled: boolean;
+      types: {
+        [notifTypeAction: string]: {
+          inAppDisabled: boolean;
+          emailDisabled: boolean;
+        };
+      };
+    };
+  };
   // Metadata
   createdAt: Date;
   updatedAt: Date;
@@ -34,9 +46,8 @@ const orgNotifTypeSettingsScheam = new Schema(
   { _id: false },
 );
 
-const PluginSettingsSchema = new Schema(
+const pluginSettingsSchema = new Schema(
   {
-    enabled: { type: Boolean }, // disable entire plugin notifications
     inAppDisabled: { type: Boolean },
     emailDisabled: { type: Boolean },
     types: {
@@ -51,7 +62,7 @@ const PluginSettingsSchema = new Schema(
 export const notificationConfigSchema = new Schema({
   plugins: {
     type: Map,
-    of: PluginSettingsSchema,
+    of: pluginSettingsSchema,
     default: {},
   },
 
@@ -78,15 +89,19 @@ export const notificationConfigSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  createdBy: {
+    type: String,
+    required: true,
+  },
 
   updatedAt: {
     type: Date,
     default: Date.now,
   },
 
-  createdBy: {
-    type: String,
-    required: true,
+  expiresAfterDays: {
+    type: Number,
+    default: 30,
   },
 });
 

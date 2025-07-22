@@ -1,13 +1,5 @@
 import { IconDeviceDesktop, IconMail, IconMailCog } from '@tabler/icons-react';
-import {
-  cn,
-  Command,
-  Dialog,
-  Label,
-  Switch,
-  Tooltip,
-  useQueryState,
-} from 'erxes-ui';
+import { cn, Dialog, Label, Switch, Tooltip, useQueryState } from 'erxes-ui';
 
 export const NotifTypeRow = ({
   title,
@@ -49,9 +41,9 @@ export const NotifTypeRow = ({
 };
 
 const NotifTypeEmailTemplateModal = () => {
-  const [isOrgDefault] = useQueryState('isOrgDefault');
+  const [isOrgConfig] = useQueryState('isOrgConfig');
 
-  if (!isOrgDefault) {
+  if (!isOrgConfig) {
     return <IconMail className="size-4" />;
   }
 

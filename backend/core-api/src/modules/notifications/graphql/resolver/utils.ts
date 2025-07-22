@@ -1,3 +1,5 @@
+import { IUserNotificationSettingsDocument } from 'erxes-api-shared/core-modules';
+
 export const generateNotificationsFilter = (params: {
   status: 'unread' | 'read' | 'all';
   priority: 'low' | 'medium' | 'high' | 'urgent';
@@ -37,10 +39,6 @@ export const generateNotificationsFilter = (params: {
 
   if (params?.endDate) {
     filter.createdAt = { ...(filter.createdAt || {}), $lte: params.endDate };
-  }
-
-  if (params?.module) {
-    filter.contentType = { $regex: `^[^:]+:${params.module}\\.` };
   }
 
   if (params?.fromUserId) {

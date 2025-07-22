@@ -22,3 +22,9 @@ export const USER_NOTIFICATION_SETTINGS = gql`
     userNotificationSettings
   }
 `;
+
+export const ORG_NOTIFICATION_CONFIGURATION = gql`
+  query OrganizationNotificationConfigs {
+    organizationNotificationConfigs
+  }
+`;

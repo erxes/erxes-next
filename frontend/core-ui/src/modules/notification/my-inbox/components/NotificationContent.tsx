@@ -4,8 +4,12 @@ import { NotificationContentSkeleton } from '@/notification/my-inbox/components/
 import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
 import { useNotification } from '@/notification/my-inbox/hooks/useNotification';
 import { INotification } from '@/notification/my-inbox/types/notifications';
-import { IconNotificationOff } from '@tabler/icons-react';
-import { Button, cn } from 'erxes-ui';
+import {
+  IconMailCheck,
+  IconMailX,
+  IconNotificationOff,
+} from '@tabler/icons-react';
+import { Button, cn, Label, Tooltip } from 'erxes-ui';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PageHeader } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
@@ -21,7 +25,7 @@ export const NotificationContent = () => {
   if (!notification) {
     return <NoNotificationSelected />;
   }
-  const { contentType = '' } = notification || {};
+  const { contentType = '', emailDelivery } = notification || {};
 
   const [pluginName, moduleName, collectionType] = (contentType || '')
     .replace(':', '.')
@@ -30,6 +34,27 @@ export const NotificationContent = () => {
   return (
     <div className="flex flex-col h-full">
       <PageHeader className="sm:justify-end flex items-center gap-2 flex-none pr-8">
+        {emailDelivery && (
+          <div className="mr-auto font-semibold text-accent-foreground text-xs flex items-center gap-2">
+            <span>Email Delivery:</span>
+            <Tooltip.Provider>
+              <Tooltip>
+                <Tooltip.Trigger>
+                  {emailDelivery?.error ? (
+                    <IconMailX className="size-4 text-destructive" />
+                  ) : (
+                    <IconMailCheck className="size-4 text-success" />
+                  )}
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                  {emailDelivery?.error
+                    ? emailDelivery?.error
+                    : emailDelivery.status}
+                </Tooltip.Content>
+              </Tooltip>
+            </Tooltip.Provider>
+          </div>
+        )}
         <PageHeader.End>
           <Button
             variant="outline"

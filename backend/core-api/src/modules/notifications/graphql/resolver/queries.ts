@@ -6,7 +6,7 @@ import {
   graphqlPubsub,
 } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { CORE_NOTIFICATION_MODULES } from '~/modules/notifications/contants';
+import { CORE_NOTIFICATION_MODULES } from '~/modules/notifications/constants';
 import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
 
 const generateOrderByNotifications = (orderBy?: any) => {
@@ -110,9 +110,21 @@ export const notificationQueries = {
     return await models.Notifications.countDocuments({
       userId: user._id,
       isRead: false,
+      isArchived: { $ne: true },
     });
   },
   async userNotificationSettings(_root, _args, { models, user }: IContext) {
     return await models.UserNotificationSettings.findOne({ userId: user._id });
+  },
+
+  async organizationNotificationConfigs(
+    _root,
+    _args,
+    { models, user }: IContext,
+  ) {
+    if (!user?.isOwner) {
+      throw new Error('Permission required');
+    }
+    return await models.NotificationConfigs.findOne({});
   },
 };

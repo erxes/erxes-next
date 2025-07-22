@@ -9,8 +9,8 @@ export interface INotificationSettingsContext {
   form: UseFormReturn<TNotificationSettingsForm>;
   pluginsNotifications: PluginsNotificationConfig[];
   loading: boolean;
-  isOrgDefault: boolean;
-  toggleOrgDefault: (value: boolean | null) => void;
+  isOrgConfig: boolean;
+  toggleOrgConfig: (value: boolean | null) => void;
   onCheckGlobal: (
     type: 'email' | 'inApp',
     checked: boolean,
@@ -21,7 +21,7 @@ export interface INotificationSettingsContext {
     },
     onChange: (...event: any[]) => void,
   ) => void;
-  onNotiTypeChecked: (
+  onNotifTypeToggle: (
     {
       fieldOnChange,
       fieldValue,
@@ -32,6 +32,7 @@ export interface INotificationSettingsContext {
     type: 'email' | 'inApp',
     checked: boolean,
   ) => void;
+  isDisabledAllNotification: boolean;
 }
 
 // 2. Create context
@@ -51,17 +52,18 @@ export const NotificationSettingsProvider = ({
   form,
   pluginsNotifications,
   loading,
-  isOrgDefault,
-  toggleOrgDefault,
-  onNotiTypeChecked,
+  isOrgConfig,
+  toggleOrgConfig,
+  onNotifTypeToggle,
+  isDisabledAllNotification,
 }: {
   children: React.ReactNode;
   form: UseFormReturn<TNotificationSettingsForm>;
   pluginsNotifications: PluginsNotificationConfig[];
   loading: boolean;
-  isOrgDefault: boolean;
-  toggleOrgDefault: (value: boolean | null) => void;
-  onNotiTypeChecked: (
+  isOrgConfig: boolean;
+  toggleOrgConfig: (value: boolean | null) => void;
+  onNotifTypeToggle: (
     {
       fieldOnChange,
       fieldValue,
@@ -72,6 +74,7 @@ export const NotificationSettingsProvider = ({
     type: 'email' | 'inApp',
     checked: boolean,
   ) => void;
+  isDisabledAllNotification: boolean;
 }) => {
   const onCheckGlobal =
     (type: 'email' | 'inApp', checked: boolean) =>
@@ -87,12 +90,10 @@ export const NotificationSettingsProvider = ({
           ? 'emailNotificationsDisabled'
           : 'inAppNotificationsDisabled';
 
-      const fieldChange = {
+      onChange({
         ...value,
         [fieldName]: !checked,
-      };
-
-      onChange(fieldChange);
+      });
     };
 
   return (
@@ -101,10 +102,11 @@ export const NotificationSettingsProvider = ({
         pluginsNotifications,
         loading,
         onCheckGlobal,
-        isOrgDefault,
-        toggleOrgDefault,
+        isOrgConfig,
+        toggleOrgConfig,
         form,
-        onNotiTypeChecked,
+        onNotifTypeToggle,
+        isDisabledAllNotification,
       }}
     >
       {children}
