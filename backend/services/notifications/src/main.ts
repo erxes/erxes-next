@@ -34,11 +34,12 @@ const corsOptions = {
   origin: [
     ...(DOMAIN ? [DOMAIN] : []),
     ...(isDev ? ['http://localhost:3001'] : []),
-    ALLOWED_DOMAINS ? ALLOWED_DOMAINS : 'http://localhost:3200',
+    ALLOWED_DOMAINS || 'http://localhost:3200',
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')
       .split(',')
-      .map((c) => c && RegExp(c)),
+      .map((c) => c && RegExp(c))
+      .filter(Boolean),
   ],
 };
 

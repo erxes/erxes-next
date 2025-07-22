@@ -89,6 +89,7 @@
     "dotenv": "^16.4.7",
     "erxes-telemetry": "^1.0.4",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.0.1",
     "file-type": "^20.5.0",
     "form-data": "^4.0.2",
     "formidable": "^3.5.4",

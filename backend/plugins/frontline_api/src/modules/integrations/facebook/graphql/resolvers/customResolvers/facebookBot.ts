@@ -19,7 +19,7 @@ export default {
         `/${pageId}?fields=name`,
         token,
       );
-      return response ? response : null;
+      return response || null;
     } catch (error) {
       return null;
     }

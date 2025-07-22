@@ -21,6 +21,7 @@ import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
 import './segments';
 import * as path from 'path';
+import rateLimit from 'express-rate-limit';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -55,7 +56,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(router);
 
-app.get('/subscriptionPlugin.js', async (_req, res) => {
+const fileLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
+app.get('/subscriptionPlugin.js', fileLimiter, async (_req, res) => {
   const apolloSubscriptionPath = path.join(
     require('path').resolve(
       __dirname,

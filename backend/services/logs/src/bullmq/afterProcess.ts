@@ -208,17 +208,21 @@ export const handleAfterProcess = async (
         action,
       };
       for (const rule of rules as IAfterProcessRule[]) {
-        if (rule.type === 'createdDocument' && source === 'mongo') {
-          if (action === 'create') {
-            handleCreateDocument({ ...props, rule, contentType });
-            continue;
-          }
+        if (
+          rule.type === 'createdDocument' &&
+          source === 'mongo' &&
+          action === 'create'
+        ) {
+          handleCreateDocument({ ...props, rule, contentType });
+          continue;
         }
-        if (rule.type === 'updatedDocument' && source === 'mongo') {
-          if (action === 'update') {
-            handleUpdatedDocument({ ...props, rule, contentType });
-            continue;
-          }
+        if (
+          rule.type === 'updatedDocument' &&
+          source === 'mongo' &&
+          action === 'update'
+        ) {
+          handleUpdatedDocument({ ...props, rule, contentType });
+          continue;
         }
 
         if (rule.type === 'afterAPIRequest') {

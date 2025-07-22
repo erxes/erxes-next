@@ -36,6 +36,7 @@ import {
 } from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -160,6 +161,11 @@ export async function startPlugin(
   }
 
   if (configs.hasSubscriptions) {
+    const fileLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
+      message: 'Too many requests from this IP, please try again later.',
+    });
     app.get('/subscriptionPlugin.js', async (_req, res) => {
       res.sendFile(path.join(configs.subscriptionPluginPath));
     });

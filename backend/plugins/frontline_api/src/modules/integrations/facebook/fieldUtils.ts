@@ -20,7 +20,7 @@ export const generateFacebookFields = async (models: IModels, data) => {
     selectOptions?: Array<{ label: string; value: string }>;
   }> = [];
 
-  let schema = schemas[collectionType].schema;
+  let { schema } = schemas[collectionType];
 
   fields = [];
 

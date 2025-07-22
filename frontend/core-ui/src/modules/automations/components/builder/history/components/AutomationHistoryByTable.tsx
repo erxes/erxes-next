@@ -32,9 +32,12 @@ export const ExecutionActionResult = ({
   }
 
   if (action.actionType === 'setProperty') {
-    return `Update for ${(result.result || []).length} ${result.module}: ${
+    const resultList = result?.result || [];
+    const errors = resultList.map((r: any) => r.error || '').join(', ');
+
+    return `Update for ${resultList.length} ${result.module}: ${
       result.fields || ''
-    }, (${(result?.result || []).map((r: any) => (r.error && r.error) || '')})`;
+    }, (${errors})`;
   }
 
   if (action.actionType === 'if') {
