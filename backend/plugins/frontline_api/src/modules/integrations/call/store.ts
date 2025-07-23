@@ -46,7 +46,7 @@ export const getOrCreateCustomer = async (
         action: 'get-create-update-customer',
         payload: JSON.stringify({
           integrationId: inboxIntegrationId,
-          primaryPhone: primaryPhone,
+          // primaryPhone: primaryPhone,
           isUser: true,
           phone: [primaryPhone],
         }),
@@ -81,13 +81,12 @@ export const getOrCreateCdr = async (
   operatorPhone: string,
 ) => {
   const { AcctId: acctId } = cdrParams;
-  console.log('get cdr///', acctId, customer);
 
   if (!acctId) {
     throw new Error('AcctId is required');
   }
 
-  let cdr = await models.CallCdrs.findOne({
+  const cdr = await models.CallCdrs.findOne({
     acctId,
   });
 
@@ -97,7 +96,6 @@ export const getOrCreateCdr = async (
       !['null', '', 'invalid file type'].includes(cdr.recordUrl)
     ) {
       await saveRecordUrl(cdr, models, inboxId, subdomain);
-      console.log('updated record url:', cdr.acctId);
       return 'successfully saved record url';
     }
     return cdr;
@@ -118,14 +116,13 @@ export const getOrCreateCdr = async (
     try {
       const { userfield, dst, src, action_type } = cdrParams;
 
-      console.log(cdrParams, 'cdrParams');
       const primaryPhone =
         userfield === 'Outbound' && !action_type.includes('FOLLOWME')
           ? dst
           : src;
 
       // Find existing conversation for this phone number
-      let existingConversation = await models.CallCdrs.findOne({
+      const existingConversation = await models.CallCdrs.findOne({
         $or: [{ src: primaryPhone }, { dst: primaryPhone }],
         conversationId: { $exists: true, $ne: '' },
         inboxIntegrationId: inboxId,
@@ -136,12 +133,6 @@ export const getOrCreateCdr = async (
       if (existingConversation && existingConversation.conversationId) {
         // Use existing conversation
         conversationId = existingConversation.conversationId;
-        console.log(
-          'Using existing conversation:',
-          conversationId,
-          'for phone:',
-          primaryPhone,
-        );
       }
 
       // Create new conversation only if none exists for this phone number
@@ -198,7 +189,7 @@ export async function saveRecordUrl(
   inboxId: string,
   subdomain: string,
 ) {
-  let recordUrl =
+  const recordUrl =
     createdCdr.disposition === 'ANSWERED' &&
     (createdCdr.recordfiles ||
       (await fetchRecordUrl(models, inboxId, createdCdr)));
@@ -283,7 +274,7 @@ const fetchRecordUrl = async (models, inboxIntegrationId, params) => {
 };
 
 function getRecordFiles(data) {
-  let results = [] as any;
+  const results = [] as any;
   data?.forEach((record: any) => {
     // Check in main_cdr
     if (

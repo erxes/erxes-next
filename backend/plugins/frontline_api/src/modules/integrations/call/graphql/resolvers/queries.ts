@@ -1,11 +1,8 @@
 import { IContext } from '~/connectionResolvers';
 import redis from '../../redlock';
 import { XMLParser } from 'fast-xml-parser';
-import {
-  ICallHistoryArgs,
-  ICallHistoryFilterOptions,
-} from '@/integrations/call/@types/histories';
-import { getEnv, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { ICallHistoryFilterOptions } from '@/integrations/call/@types/histories';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { sendToGrandStream } from '~/modules/integrations/call/utils';
 
 const callQueries = {
@@ -19,8 +16,8 @@ const callQueries = {
     return res;
   },
 
-  async callsCustomerDetail(_root, { customerPhone }, { subdomain }: IContext) {
-    let customer = await sendTRPCMessage({
+  async callsCustomerDetail(_root, { customerPhone }) {
+    const customer = await sendTRPCMessage({
       pluginName: 'core',
       method: 'query',
       module: 'customer',
@@ -99,7 +96,7 @@ const callQueries = {
     )) as any;
 
     if (queueData && queueData.response) {
-      const { account } = queueData?.response;
+      const { account } = queueData.response;
 
       if (account) {
         const gsUsernames = integration.operators.map(
@@ -225,7 +222,7 @@ const callQueries = {
     )) as any;
 
     if (queueData && queueData.response) {
-      const { CallQueueMembersMessage } = queueData?.response;
+      const { CallQueueMembersMessage } = queueData.response;
 
       if (CallQueueMembersMessage) {
         return CallQueueMembersMessage;

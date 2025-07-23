@@ -163,13 +163,13 @@ export const updateIntegration = async ({
     console.error('Error in consumeRPCQueue:', error.message);
     return {
       status: 'error',
-      errorMessage: error.keyPattern.wsServer
+      errorMessage: error?.keyPattern?.wsServer
         ? 'Duplicate queue detected. Queues must be unique across integrations.'
-        : error.keyPattern.srcTrunk
+        : error?.keyPattern?.srcTrunk
         ? 'Duplicate srcTrunk detected.'
-        : error.keyPattern.dstTrunk
+        : error?.keyPattern?.dstTrunk
         ? 'Duplicate dstTrunk detected.'
-        : `Error creating integration: ${error.message}`,
+        : `Error creating integration: ${error?.message}`,
     };
   }
 };

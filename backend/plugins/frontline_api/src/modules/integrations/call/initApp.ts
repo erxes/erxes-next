@@ -84,6 +84,7 @@ const initCallApp = async (app) => {
       });
       res.status(200).json({ message: 'Call received successfully' });
     } catch (error) {
+      console.error('Error receiving waiting call:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
@@ -118,6 +119,7 @@ const initCallApp = async (app) => {
   });
   // Error handling middleware
   app.use((error, _req, res, _next) => {
+    console.error('Error in middleware:', error);
     res.status(500).send(error.message);
   });
   // init bots
@@ -134,6 +136,7 @@ const initCallApp = async (app) => {
         .status(200)
         .json({ message: 'Call cdr received successfully' });
     } catch (error) {
+      console.error('Error receiving cdr:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
