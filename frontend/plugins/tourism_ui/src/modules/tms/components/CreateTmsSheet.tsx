@@ -36,7 +36,7 @@ export const TmsCreateSheet = () => {
 
 export const TmsCreateSheetHeader = () => {
   return (
-    <Sheet.Header className="p-5 border-[#F4F4F5]">
+    <Sheet.Header className="p-5 border">
       <Sheet.Title>Create Tour Management System</Sheet.Title>
       <Sheet.Close />
     </Sheet.Header>

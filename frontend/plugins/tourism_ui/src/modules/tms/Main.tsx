@@ -7,11 +7,18 @@ const Tms = lazy(() =>
   })),
 );
 
+const PreviewPage = lazy(() =>
+  import('~/pages/tms/PreviewPage').then((module) => ({
+    default: module.default,
+  })),
+);
+
 const TmsMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
         <Route path="/" element={<Tms />} />
+        <Route path="/PreviewPage" element={<PreviewPage />} />
       </Routes>
     </Suspense>
   );

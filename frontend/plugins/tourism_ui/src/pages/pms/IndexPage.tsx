@@ -2,7 +2,7 @@ import { IconBox, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
-import { PmsCreateSheet } from '@/pms/components/CreatePmsSheet';
+import { PmsCreateSheet } from '~/modules/pms/components/CreatePmsSheet';
 
 export const IndexPage = () => {
   return (
