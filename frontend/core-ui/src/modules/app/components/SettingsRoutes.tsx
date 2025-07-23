@@ -55,6 +55,12 @@ const TagsSettings = lazy(() =>
   })),
 );
 
+const AppsSettings = lazy(() =>
+  import('~/pages/settings/workspace/AppSettingsPage').then((module) => ({
+    default: module.AppSettingsPage,
+  })),
+);
+
 const ProductsSettingsRoutes = lazy(() =>
   import('@/products/settings/components/ProductSettingsRoutes').then(
     (module) => ({
@@ -126,6 +132,7 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.AutomationsCatchAll}
           element={<AutomationSettingsRoutes />}
         />
+        <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
         {getPluginsSettingsRoutes()}
       </Routes>
       <SettingsPageEffect />

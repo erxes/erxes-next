@@ -5,6 +5,7 @@ import {
   IconColorSwatch,
   IconFile,
   IconMail,
+  IconShieldCog,
   IconTag,
   IconUserCircle,
   IconUserCog,
@@ -126,6 +127,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Permissions',
       icon: IconUserCog,
       path: SettingsWorkspacePath.Permissions,
+    },
+    {
+      name: 'Apps',
+      icon: IconShieldCog,
+      path: SettingsWorkspacePath.Apps,
     },
     {
       name: 'General',

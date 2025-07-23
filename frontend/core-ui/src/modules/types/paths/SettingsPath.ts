@@ -10,6 +10,7 @@ export enum SettingsWorkspacePath {
   General = 'general',
   FileUpload = 'file-upload',
   MailConfig = 'mail-config',
+  Apps = 'apps',
   Permissions = 'permissions',
   TeamMember = 'team-member',
   Structure = 'structures',
