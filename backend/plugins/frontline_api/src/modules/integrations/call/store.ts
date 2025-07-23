@@ -46,9 +46,9 @@ export const getOrCreateCustomer = async (
         action: 'get-create-update-customer',
         payload: JSON.stringify({
           integrationId: inboxIntegrationId,
-          // primaryPhone: primaryPhone,
+          primaryPhone: primaryPhone,
           isUser: true,
-          phone: [primaryPhone],
+          phones: [primaryPhone],
         }),
       };
 
