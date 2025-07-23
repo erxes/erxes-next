@@ -19,6 +19,8 @@ import { relationsQueries } from '@/relations/graphql/queries';
 import { segmentQueries } from '@/segments/graphql/resolvers';
 import { tagQueries } from '@/tags/graphql/queries';
 
+import { notificationQueries } from '@/notifications/graphql/resolver/queries';
+
 export const queries = {
   ...contactQueries,
   ...authQueries,
@@ -39,5 +41,6 @@ export const queries = {
   ...documentQueries,
   ...automationQueries,
   ...logQueries,
+  ...notificationQueries,
   ...internalNoteQueries,
 };

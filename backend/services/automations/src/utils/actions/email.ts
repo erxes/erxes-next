@@ -6,9 +6,10 @@ import {
   sendTRPCMessage,
   sendWorkerMessage,
 } from 'erxes-api-shared/utils';
-import { EMAIL_RECIPIENTS_TYPES } from '~/constants';
+import { EMAIL_RECIPIENTS_TYPES } from '@/constants';
 import nodemailer from 'nodemailer';
 import AWS from 'aws-sdk';
+import { debugError } from '@/debuuger';
 
 const generateEmails = (entry: string | any[], key?: string): string[] => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -385,12 +386,6 @@ const createTransporter = async ({ ses }, configs) => {
     );
     const AWS_REGION = getConfig(configs, 'AWS_REGION');
 
-    console.log({
-      AWS_SES_ACCESS_KEY_ID,
-      AWS_SES_SECRET_ACCESS_KEY,
-      AWS_REGION,
-    });
-
     AWS.config.update({
       region: AWS_REGION,
       accessKeyId: AWS_SES_ACCESS_KEY_ID,
@@ -471,7 +466,7 @@ const sendEmails = async ({
       configs,
     );
   } catch (e) {
-    console.error(e.message);
+    debugError(e.message);
     throw new Error(e.message);
   }
 
@@ -519,7 +514,7 @@ const sendEmails = async ({
       responses.push({ messageId: info.messageId, toEmail });
     } catch (error) {
       responses.push({ fromEmail, toEmail, error });
-      console.log(error);
+      debugError(error.message);
     }
   }
 

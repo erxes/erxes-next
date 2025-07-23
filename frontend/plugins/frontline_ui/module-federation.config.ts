@@ -20,8 +20,10 @@ const config: ModuleFederationConfig = {
     './ticket': './src/modules/ticket/Main.tsx',
     './inboxSettings': './src/modules/inbox/Settings.tsx',
     './ticketSettings': './src/modules/ticket/Settings.tsx',
-    './automations':
+    './automationsWidget':
       './src/widgets/automations/components/AutomationRemoteEntry.tsx',
+    './notificationWidget':
+      './src/widgets/notifications/NotificationRemoteEntries.tsx',
     './relationWidget': './src/widgets/RelationWidget.tsx',
     './floatingWidget': './src/widgets/FloatingWidget.tsx',
   },

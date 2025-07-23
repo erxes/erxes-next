@@ -1,18 +1,40 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { AUTOMATION_HISTORIES_CURSOR_SESSION_KEY } from '@/automations/constants';
 import { AUTOMATION_HISTORIES } from '@/automations/graphql/automationQueries';
+import { StatusBadgeValue } from '@/automations/types';
 import { useQuery } from '@apollo/client';
 import {
   EnumCursorDirection,
   mergeCursorData,
+  parseDateRangeFromString,
+  useMultiQueryState,
+  useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
 import { useParams } from 'react-router';
+
+const LOGS_PER_PAGE = 20;
+
 export const useAutomationHistories = () => {
   const { id } = useParams();
+  const [queries] = useMultiQueryState<{
+    status?: StatusBadgeValue;
+    createdAt: string;
+  }>(['status', 'createdAt']);
+  const { cursor } = useRecordTableCursor({
+    sessionKey: AUTOMATION_HISTORIES_CURSOR_SESSION_KEY,
+  });
 
   const { actionsConst = [], triggersConst = [] } = useAutomation();
   const { data, loading, fetchMore, refetch } = useQuery(AUTOMATION_HISTORIES, {
-    variables: { automationId: id },
+    variables: {
+      automationId: id,
+      cursor: cursor ?? undefined,
+      limit: LOGS_PER_PAGE,
+      beginDate: parseDateRangeFromString(queries.createdAt)?.from,
+      endDate: parseDateRangeFromString(queries.createdAt)?.to,
+      status: queries.status,
+    },
   });
 
   const { automationHistories } = data || {};

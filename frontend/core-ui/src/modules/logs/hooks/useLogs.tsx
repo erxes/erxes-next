@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import {
   EnumCursorDirection,
   mergeCursorData,
+  parseDateRangeFromString,
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
@@ -55,7 +56,7 @@ const generateFilters = (searchParams: URLSearchParams) => {
 
   if (queryParams.createdAt) {
     filters.createdAt = {
-      value: queryParams.createdAt,
+      value: parseDateRangeFromString(queryParams.createdAt)?.from,
       operator: queryParams.createdAtOperator || undefined,
     };
   }

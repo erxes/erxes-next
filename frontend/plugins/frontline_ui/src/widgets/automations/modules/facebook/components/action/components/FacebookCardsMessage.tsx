@@ -1,10 +1,10 @@
 import { IconPhotoScan, IconTrash } from '@tabler/icons-react';
 import { Button, Card, Form, Input, Label, Tabs, Textarea } from 'erxes-ui';
-import { FacebookMessageProps } from '../types/messageActionForm';
+import { generateAutomationElementId } from 'ui-modules';
 import { TBotMessageCard } from '../states/replyMessageActionForm';
+import { FacebookMessageProps } from '../types/messageActionForm';
 import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
 import { InputTextCounter } from './InputTextCounter';
-import { nanoid } from 'nanoid';
 
 export const FacebookCardsMessage = ({
   message,
@@ -22,7 +22,7 @@ export const FacebookCardsMessage = ({
           field.onChange([
             ...cards,
             {
-              _id: nanoid(),
+              _id: generateAutomationElementId(),
               label: `Page ${(cards?.length || 0) + 1}`,
             },
           ]);

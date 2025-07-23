@@ -84,7 +84,7 @@ import {
   IUserMovementDocument,
 } from 'erxes-api-shared/core-types';
 import { createGenerateModels } from 'erxes-api-shared/utils';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import {
   IDocumentModel,
   loadDocumentClass,
@@ -136,10 +136,6 @@ import {
 } from '@/internalNote/db/models/InternalNote';
 import { IInternalNoteDocument } from '@/internalNote/types';
 import { ILogModel, loadLogsClass } from '@/logs/db/models/Logs';
-import {
-  IAutomationDocument,
-  IAutomationExecutionDocument,
-} from 'erxes-api-shared/core-modules';
 
 import {
   IAutomationModel,
@@ -149,6 +145,18 @@ import {
   IExecutionModel,
   loadClass as loadExecutionClass,
 } from './modules/automations/db/models/Executions';
+import {
+  emailDeliverySchema,
+  IAutomationDocument,
+  IAutomationExecutionDocument,
+  IEmailDeliveryDocument,
+  INotificationConfigDocument,
+  INotificationDocument,
+  IUserNotificationSettingsDocument,
+  notificationConfigSchema,
+  notificationSchema,
+  userNotificationSettingsSchema,
+} from 'erxes-api-shared/core-modules';
 
 export interface IModels {
   Brands: IBrandModel;
@@ -184,6 +192,10 @@ export interface IModels {
   Automations: IAutomationModel;
   AutomationExecutions: IExecutionModel;
   Logs: ILogModel;
+  Notifications: Model<INotificationDocument>;
+  NotificationConfigs: Model<INotificationConfigDocument>;
+  UserNotificationSettings: Model<IUserNotificationSettingsDocument>;
+  EmailDeliveries: Model<IEmailDeliveryDocument>;
 }
 
 export interface IContext extends IMainContext {
@@ -225,7 +237,7 @@ export const loadClasses = (
 
   models.UserMovements = db.model<IUserMovementDocument, IUserMovemmentModel>(
     'user_movements',
-    loadUserMovemmentClass(models),
+    loadUserMovemmentClass(models, subdomain),
   );
 
   models.Configs = db.model<IConfigDocument, IConfigModel>(
@@ -337,6 +349,26 @@ export const loadClasses = (
     IAutomationExecutionDocument,
     IExecutionModel
   >('automations_executions', loadExecutionClass(models));
+
+  models.Notifications = db.model<
+    INotificationDocument,
+    Model<INotificationDocument>
+  >('notifications', notificationSchema);
+
+  models.NotificationConfigs = db.model<
+    INotificationConfigDocument,
+    Model<INotificationConfigDocument>
+  >('notification_configs', notificationConfigSchema);
+
+  models.UserNotificationSettings = db.model<
+    IUserNotificationSettingsDocument,
+    Model<IUserNotificationSettingsDocument>
+  >('user_notification_settings', userNotificationSettingsSchema);
+
+  models.EmailDeliveries = db.model<
+    IEmailDeliveryDocument,
+    Model<IEmailDeliveryDocument>
+  >('email_deliveries', emailDeliverySchema);
 
   const db_name = db.name;
 

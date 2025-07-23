@@ -19,14 +19,20 @@ export const useNodeDropDownActions = (
   const [isOpenDialog, setOpenDialog] = useState(false);
 
   const fieldName = fields[nodeType] as 'triggers' | 'actions';
+  const actionFieldName =
+    fieldName === 'triggers' ? 'actionId' : 'nextActionId';
 
   const onRemoveNode = () => {
     const nodes = getValues(`detail.${fieldName}`) || [];
+    const updatedNodes = nodes
+      .map((node: any) =>
+        node[actionFieldName] === id
+          ? { ...node, [actionFieldName]: undefined }
+          : node,
+      )
+      .filter((node) => node.id !== id);
 
-    setValue(
-      `detail.${fieldName}`,
-      nodes.filter((node) => node.id !== id),
-    );
+    setValue(`detail.${fieldName}`, updatedNodes);
     const activeNode = getValues('activeNode');
 
     if (activeNode?.id === id) {

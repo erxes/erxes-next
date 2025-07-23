@@ -1,8 +1,7 @@
 import {
   createMQWorkerWithListeners,
   initializePluginConfig,
-  keyForConfig,
-  redis,
+  redis
 } from '../../utils';
 import { AutomationConfigs } from './types';
 
@@ -36,8 +35,7 @@ export const startAutomations = async (
 
             const resolver = config[resolverName];
 
-            const result = await resolver({ subdomain }, { data });
-            return result;
+            return await resolver({ subdomain }, data);
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);
             throw error;

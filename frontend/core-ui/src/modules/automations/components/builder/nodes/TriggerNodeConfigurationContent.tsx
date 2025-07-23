@@ -1,5 +1,5 @@
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 import { getAutomationTypes } from 'ui-modules';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const TriggerNodeConfigurationContent = ({
   type,
@@ -11,9 +11,8 @@ export const TriggerNodeConfigurationContent = ({
   const [pluginName, moduleName] = getAutomationTypes(type || '');
 
   return (
-    <RenderPluginsComponent
-      pluginName={`${pluginName}_ui`}
-      remoteModuleName="automations"
+    <RenderPluginsComponentWrapper
+      pluginName={pluginName}
       moduleName={moduleName}
       props={{
         componentType: 'triggerConfigContent',

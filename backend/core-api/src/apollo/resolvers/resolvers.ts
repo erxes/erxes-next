@@ -8,6 +8,7 @@ import userResolvers from '@/organization/team-member/graphql/customResolver';
 import productResolvers from '@/products/graphql/resolvers/customResolvers';
 import segmentResolvers from '@/segments/graphql/resolvers/customResolvers';
 import tagResolvers from '@/tags/graphql/customResolvers';
+import notificationResolvers from '@/notifications/graphql/customResolvers';
 
 export const customResolvers = {
   ...contactResolvers,
@@ -19,5 +20,6 @@ export const customResolvers = {
   ...userResolvers,
   ...brandResolvers,
   ...tagResolvers,
+  ...notificationResolvers,
   ...internalNoteResolvers,
 };

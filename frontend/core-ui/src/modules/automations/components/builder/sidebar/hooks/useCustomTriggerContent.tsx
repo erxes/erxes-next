@@ -7,8 +7,15 @@ import { useFormContext } from 'react-hook-form';
 import { getAutomationTypes } from 'ui-modules';
 
 export const useCustomTriggerContent = (activeNode: NodeData) => {
-  const { setValue } = useFormContext<TAutomationProps>();
+  const { setValue, watch } = useFormContext<TAutomationProps>();
   const { setQueryParams } = useAutomation();
+
+  const triggers = watch(`detail.triggers`);
+
+  const activeTrigger =
+    triggers.find((trigger) => trigger.id === activeNode.id) ||
+    (activeNode as any);
+
   const [pluginName, moduleName] = useMemo(
     () => getAutomationTypes(activeNode.type || ''),
     [activeNode.type],
@@ -17,6 +24,8 @@ export const useCustomTriggerContent = (activeNode: NodeData) => {
   const onSaveTriggerConfig = (config: any) => {
     setValue(`detail.triggers.${activeNode.nodeIndex}.config`, config);
     setQueryParams({ activeNodeId: null });
+    setValue('isMinimized', true);
+
     toast({
       title: 'Trigger configuration added successfully.',
     });
@@ -26,5 +35,6 @@ export const useCustomTriggerContent = (activeNode: NodeData) => {
     onSaveTriggerConfig,
     pluginName,
     moduleName,
+    activeTrigger,
   };
 };

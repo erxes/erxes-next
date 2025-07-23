@@ -21,6 +21,7 @@ import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { lazy } from 'react';
+import { NotificationsRoutes } from '@/app/components/NotificationsRoutes';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -62,10 +63,16 @@ export const useCreateAppRouter = () => {
                 element={<SegmentRoutes />}
               />
               <Route
-                path={AppPath.AutoamtionsCatchAll}
+                path={AppPath.AutomationsCatchAll}
                 element={<AutomationRoutes />}
               />
               <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
+
+              <Route
+                path={AppPath.MyInboxCatchAll}
+                element={<NotificationsRoutes />}
+              />
+
               {...getPluginsRoutes()}
               {process.env.NODE_ENV === 'development' && (
                 <Route

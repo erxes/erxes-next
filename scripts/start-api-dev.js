@@ -4,7 +4,7 @@ require('dotenv').config();
 const { ENABLED_PLUGINS } = process.env;
 const { execSync } = require('child_process');
 
-const SERVICES = ['automations', 'logs'];
+const SERVICES = ['automations', 'logs', 'notifications'];
 
 let plugins = '';
 let pluginsCount = 2;

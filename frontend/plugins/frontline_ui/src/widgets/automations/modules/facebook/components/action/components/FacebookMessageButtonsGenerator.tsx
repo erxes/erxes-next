@@ -15,18 +15,30 @@ import { CSS } from '@dnd-kit/utilities';
 import { IconGripVertical, IconX } from '@tabler/icons-react';
 import { Button, Card, cn, Input, Label } from 'erxes-ui';
 import { TBotMessageButton } from '../states/replyMessageActionForm';
-import { nanoid } from 'nanoid';
+import { generateAutomationElementId } from 'ui-modules';
+import React from 'react';
 
 export const FacebookMessageButtonsGenerator = ({
   buttons = [],
   setButtons,
   addButtonText = '+ Add button',
   limit,
+  ContentBeforeInput,
 }: {
-  buttons: TBotMessageButton[];
+  buttons: { disableRemoveButton?: boolean } & TBotMessageButton[];
   setButtons: (buttons: TBotMessageButton[]) => void;
   addButtonText?: string;
   limit: number;
+  ContentBeforeInput?: ({
+    button,
+    handleChangeButton,
+  }: {
+    button: {
+      disableRemoveButton?: boolean;
+      image_url?: string;
+    } & TBotMessageButton;
+    handleChangeButton: (button: TBotMessageButton) => void;
+  }) => React.ReactNode;
 }) => {
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -50,7 +62,15 @@ export const FacebookMessageButtonsGenerator = ({
   };
 
   const onAddButton = () =>
-    setButtons([...buttons, { _id: nanoid(), text: '', isEditing: true }]);
+    setButtons([
+      ...buttons,
+      {
+        _id: generateAutomationElementId(),
+        text: '',
+        type: 'button',
+        isEditing: true,
+      },
+    ]);
 
   const onRemovButton = (index: number) => {
     setButtons(buttons.filter((_, buttonIndex) => buttonIndex !== index));
@@ -73,6 +93,7 @@ export const FacebookMessageButtonsGenerator = ({
               button={button}
               handleChangeButton={handleChangeButton}
               onRemovButton={() => onRemovButton(index)}
+              ContentBeforeInput={ContentBeforeInput}
             />
           ))}
         </SortableContext>
@@ -93,10 +114,21 @@ const FacebookMessageButton = ({
   button,
   handleChangeButton,
   onRemovButton,
+  ContentBeforeInput,
 }: {
-  button: TBotMessageButton;
+  button: { disableRemoveButton?: boolean } & TBotMessageButton;
   handleChangeButton: (button: TBotMessageButton) => void;
   onRemovButton: () => void;
+  ContentBeforeInput?: ({
+    button,
+    handleChangeButton,
+  }: {
+    button: {
+      disableRemoveButton?: boolean;
+      image_url?: string;
+    } & TBotMessageButton;
+    handleChangeButton: (button: TBotMessageButton) => void;
+  }) => React.ReactNode;
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: button._id });
@@ -158,6 +190,12 @@ const FacebookMessageButton = ({
       >
         <IconGripVertical className="w-4 h-4" />
       </div>
+      {ContentBeforeInput ? (
+        <ContentBeforeInput
+          button={button}
+          handleChangeButton={handleChangeButton}
+        />
+      ) : null}
       <div className="flex-1 border rounded-lg p-2 flex items-center">
         {button?.isEditing ? (
           <Input
@@ -190,6 +228,7 @@ const FacebookMessageButton = ({
       <Button
         size="icon"
         variant="destructive"
+        disabled={button.disableRemoveButton}
         aria-label={`Remove button: ${button.text || 'untitled'}`}
         onClick={onRemovButton}
       >

@@ -4,7 +4,7 @@ import {
   CONVERSATION_SELECT_OPTIONS,
   CONVERSATION_STATUSES,
 } from './constants';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { customFieldSchema } from 'erxes-api-shared/core-modules';
 
 // Conversation schema
@@ -72,15 +72,18 @@ export const conversationSchemaOptions = {
   },
 };
 
-export const conversationSchema = new Schema({
-  _id: mongooseStringRandomId,
-  customsData: {
-    type: [customFieldSchema],
-    optional: true,
-    label: 'Custom s data',
-  },
-  ...conversationSchemaOptions,
-});
+export const conversationSchema = schemaWrapper(
+  new Schema({
+    _id: mongooseStringRandomId,
+    customsData: {
+      type: [customFieldSchema],
+      optional: true,
+      label: 'Custom s data',
+    },
+    ...conversationSchemaOptions,
+  }),
+  { contentType: 'frontline:inbox.conversation' },
+);
 
 conversationSchema.index(
   { visitorId: 1 },

@@ -29,7 +29,7 @@ import {
 } from '@/automations/utils/AutomationFormDefinitions';
 import { IAutomation, NodeData } from '../../types';
 import { deepCleanNulls } from '../../utils/automationBuilderUtils';
-import { AutomationHistories } from './AutomationHistories';
+import { AutomationHistories } from './history/components/AutomationHistories';
 import ConnectionLine from './edges/connectionLine';
 import PrimaryEdge from './edges/PrimaryEdge';
 import ActionNode from './nodes/ActionNode';

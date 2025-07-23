@@ -23,27 +23,6 @@ export const PlaceHolderInput = ({
   fieldType,
   selectedField,
 }: Props) => {
-  const getComma = (preValue: any) => {
-    if (fieldType === 'select' && preValue) {
-      return ', ';
-    }
-
-    if (preValue) {
-      return ' ';
-    }
-
-    return '';
-  };
-
-  const onSelect = (attribute: string) => {
-    if (onlySet) {
-      value = `{{ ${attribute} }}`;
-    } else {
-      value = `${value || ''}${getComma(value)}{{ ${attribute} }}`;
-    }
-    onChange(value);
-  };
-
   return (
     <div className="flex flex-row items-end gap-2">
       <Input
@@ -57,7 +36,9 @@ export const PlaceHolderInput = ({
         ref={ref}
         selectedField={selectedField}
         contentType={propertyType}
-        onSelect={onSelect}
+        value={value}
+        onSelect={onChange}
+        isForSelectField={fieldType === 'select'}
       />
     </div>
   );

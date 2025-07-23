@@ -79,7 +79,7 @@ export const useAutomationHeader = (
     return save({ variables: generateValues() }).then(() => {
       clearErrors();
       toast({
-        title: 'Save successfull',
+        title: 'Save successful',
       });
     });
   };

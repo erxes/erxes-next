@@ -9,6 +9,7 @@ import {
   IconCategory,
   IconAffiliate,
   IconReport,
+  IconMailbox,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 

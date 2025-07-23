@@ -8,6 +8,7 @@ import {
   generateFormFields,
   generateProductsFields,
 } from '../fields/utils';
+import { fieldsCombinedByContentType } from '~/modules/forms/utils';
 
 const t = initTRPC.context<CoreTRPCContext>().create();
 
@@ -62,7 +63,7 @@ export const fieldsTrpcRouter = t.router({
     getFieldList: t.procedure
       .input(
         z.object({
-          type: z.string(),
+          moduleType: z.string(),
           segmentId: z.string().optional(),
           usageType: z.string().optional(),
           config: z.record(z.any()).optional(),
@@ -70,9 +71,9 @@ export const fieldsTrpcRouter = t.router({
       )
       .query(async ({ ctx, input }) => {
         const { subdomain } = ctx;
-        const { type } = input;
+        const { moduleType } = input;
 
-        switch (type) {
+        switch (moduleType) {
           case 'lead':
             return generateContactsFields({ subdomain, data: input });
           case 'customer':
@@ -113,6 +114,21 @@ export const fieldsTrpcRouter = t.router({
             };
           }),
         );
+      }),
+    fieldsCombinedByContentType: t.procedure
+      .input(
+        z.object({
+          contentType: z.string(),
+          usageType: z.string().optional(),
+          excludedNames: z.array(z.string()).optional(),
+          segmentId: z.string().optional(),
+          config: z.any().optional(),
+          onlyDates: z.boolean().optional(),
+        }),
+      )
+      .query(async ({ ctx, input }) => {
+        const { subdomain, models } = ctx;
+        return await fieldsCombinedByContentType(models, subdomain, input);
       }),
   }),
 });

@@ -14,7 +14,7 @@ export const useSendEmailSidebarForm = (currentActionIndex: number) => {
       name: ['detail.triggers', 'detail.actions', `${configFieldName}`],
     },
   );
-  console.log({ actions });
+
   const contentType = getContentType(
     actions[currentActionIndex].id,
     actions,

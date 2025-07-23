@@ -4,7 +4,7 @@ import { automationFacebookBotsColumns } from '~/widgets/automations/modules/fac
 import { useAutomationBotsRecordTable } from '~/widgets/automations/modules/facebook/components/bots/hooks/useAutomationBotsRecordTable';
 
 export const AutomationBotsRecordTable = () => {
-  const { facebookMessengerBots } = useAutomationBotsRecordTable();
+  const { facebookMessengerBots, loading } = useAutomationBotsRecordTable();
 
   return (
     <>
@@ -17,6 +17,8 @@ export const AutomationBotsRecordTable = () => {
           <RecordTable className="w-full">
             <RecordTable.Header />
             <RecordTable.Body>
+              {loading && <RecordTable.RowSkeleton rows={10} />}
+
               <RecordTable.RowList />
             </RecordTable.Body>
           </RecordTable>

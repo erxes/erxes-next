@@ -37,11 +37,15 @@ import {
 } from '../states/replyMessageActionForm';
 import { MessageActionTypeNames } from '../types/messageActionForm';
 import { CSS } from '@dnd-kit/utilities';
-import { AutomationActionFormProps } from 'ui-modules';
+import {
+  AutomationActionFormProps,
+  generateAutomationElementId,
+} from 'ui-modules';
 import { FacebookInputMessage } from '~/widgets/automations/modules/facebook/components/action/components/FacebookInputMessage';
-import { nanoid } from 'nanoid';
+import { useEffect, useImperativeHandle } from 'react';
 
 export const MessageActionForm = ({
+  formRef,
   currentAction,
   onSaveActionConfig,
 }: AutomationActionFormProps<TMessageActionForm>) => {
@@ -49,8 +53,24 @@ export const MessageActionForm = ({
     resolver: zodResolver(replyMessageFormSchema),
     defaultValues: { ...(currentAction?.config || {}) },
   });
-
   const { control, watch, setValue, setError, handleSubmit } = form;
+
+  useImperativeHandle(formRef, () => ({
+    submit: () => {
+      handleSubmit(onSaveActionConfig, () => {
+        toast({
+          title: 'There is some error in the form',
+          variant: 'destructive',
+        });
+      })();
+    },
+  }));
+
+  useEffect(() => {
+    if (currentAction?.config) {
+      form.reset({ ...currentAction.config });
+    }
+  }, [currentAction?.config, form]);
 
   const messages = watch('messages') || [];
   const addMessage = (type: MessageActionTypeNames) => {
@@ -64,23 +84,28 @@ export const MessageActionForm = ({
 
     setValue('messages', [
       ...messages,
-      { _id: nanoid(), type, ...initialValues },
+      { _id: generateAutomationElementId(), type, ...initialValues },
     ]);
   };
 
   return (
-    <div className="w-[670px]  flex flex-col h-full">
+    <div className="w-[670px] ">
       <div className="flex flex-row gap-2 items-center px-6 py-2">
         <Label>Message Sequence</Label>
         <Badge variant="secondary">{`${messages.length} messages`}</Badge>
       </div>
       <div className="inline-flex gap-2 overflow-x-auto w-full p-2  ">
         {REPLY_MESSAGE_ACTION_BUTTONS.map(
-          ({ title, type, icon: Icon, inProgress }) => (
+          ({ title, type, icon: Icon, inProgress, limit }) => (
             <Button
               key={type}
               variant="outline"
-              disabled={messages.length >= 5 || inProgress}
+              disabled={
+                messages.length >= 5 ||
+                inProgress ||
+                messages.filter((message) => message.type === type).length ===
+                  limit
+              }
               onClick={() => addMessage(type as MessageActionTypeNames)}
             >
               <Icon />
@@ -89,25 +114,11 @@ export const MessageActionForm = ({
           ),
         )}
       </div>
-      <div className="flex-1 overflow-x-auto px-6 py-2">
-        <FacebookMessages
-          messages={messages}
-          control={control}
-          setValue={setValue}
-        />
-      </div>
-      <div className="p-2 flex justify-end border-t bg-white">
-        <Button
-          onClick={handleSubmit(onSaveActionConfig, (prop) => {
-            toast({
-              title: 'There is some error on field of form',
-              variant: 'destructive',
-            });
-          })}
-        >
-          Save
-        </Button>
-      </div>
+      <FacebookMessages
+        messages={messages}
+        control={control}
+        setValue={setValue}
+      />
     </div>
   );
 };

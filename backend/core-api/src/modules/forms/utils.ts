@@ -83,20 +83,7 @@ export const fieldsCombinedByContentType = async (
     onlyDates,
   }: ICombinedParams,
 ) => {
-  // let fields = await fetchServiceForms(
-  //   subdomain,
-  //   contentType,
-  //   'getList',
-  //   {
-  //     segmentId,
-  //     usageType,
-  //     config: config || {},
-  //   },
-  //   [],
-  // );
-
-  const [pluginName, moduleType] = splitType(contentType);
-
+  const [pluginName, moduleType, collectionType] = splitType(contentType);
   let fields = await sendTRPCMessage({
     pluginName,
     method: 'query',
@@ -106,7 +93,8 @@ export const fieldsCombinedByContentType = async (
       segmentId,
       usageType,
       config: config || {},
-      type: moduleType,
+      moduleType,
+      collectionType,
     },
     defaultValue: [],
   });

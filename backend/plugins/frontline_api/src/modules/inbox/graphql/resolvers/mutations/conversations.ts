@@ -394,7 +394,11 @@ export const conversationMutations = {
     { _ids, status }: { _ids: string[]; status: string },
     { user, models, subdomain }: IContext,
   ) {
-    await models.Conversations.changeStatusConversation(_ids, status, user._id);
+    await models.Conversations.changeStatusConversation(
+      _ids,
+      status,
+      'OQgac3z4G3I2LW9QPpAtL',
+    );
 
     // notify graphl subscription
     publishConversationsChanged(subdomain, _ids, status);
