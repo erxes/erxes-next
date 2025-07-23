@@ -35,14 +35,12 @@ export const TmsInformationFields = ({
 
   const renderStepContent = () => {
     return (
-      <div className="relative w-full">
+      <div className="relative w-full min-h-[300px]">
         {/* Step 1 */}
         <div
-          className={`absolute w-full ${currentStep === 1
-              ? 'opacity-100 translate-x-0 pointer-events-auto'
-              : currentStep < 1
-                ? 'opacity-0 translate-x-full pointer-events-none'
-                : 'opacity-0 -translate-x-full pointer-events-none'
+          className={`absolute inset-0 w-full transition-all duration-300 ease-in-out ${currentStep === 1
+            ? 'opacity-100 block'
+            : 'opacity-0 hidden'
             }`}
         >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
@@ -55,11 +53,9 @@ export const TmsInformationFields = ({
 
         {/* Step 2 */}
         <div
-          className={`absolute w-full ${currentStep === 2
-              ? 'opacity-100 translate-x-0 pointer-events-auto'
-              : currentStep < 2
-                ? 'opacity-0 translate-x-full pointer-events-none'
-                : 'opacity-0 -translate-x-full pointer-events-none'
+          className={`absolute inset-0 w-full transition-all duration-300 ease-in-out ${currentStep === 2
+            ? 'opacity-100 block'
+            : 'opacity-0 hidden'
             }`}
         >
           <div className="space-y-4">
@@ -70,11 +66,9 @@ export const TmsInformationFields = ({
 
         {/* Step 3 */}
         <div
-          className={`absolute w-full ${currentStep === 3
-              ? 'opacity-100 translate-x-0 pointer-events-auto'
-              : currentStep < 3
-                ? 'opacity-0 translate-x-full pointer-events-none'
-                : 'opacity-0 -translate-x-full pointer-events-none'
+          className={`absolute inset-0 w-full transition-all duration-300 ease-in-out ${currentStep === 3
+            ? 'opacity-100 block'
+            : 'opacity-0 hidden'
             }`}
         >
           <div className="space-y-4">
@@ -136,10 +130,10 @@ export const TmsInformationFields = ({
             <div
               key={step}
               className={`h-1 rounded-full transition-all duration-500 ease-in-out ${step === currentStep
-                  ? 'bg-primary w-24'
-                  : step < currentStep
-                    ? 'bg-primary/50 w-16'
-                    : 'bg-[#F4F4F5] w-16'
+                ? 'bg-primary w-24'
+                : step < currentStep
+                  ? 'bg-primary/50 w-16'
+                  : 'bg-[#F4F4F5] w-16'
                 }`}
             />
           ))}
@@ -153,7 +147,7 @@ export const TmsInformationFields = ({
         </p>
       </div>
       <div className="relative flex-1">
-        <div className="overflow-y-auto px-4 py-2 h-full max-h-screen">
+        <div className="overflow-y-auto overflow-x-hidden px-4 py-2 h-full max-h-screen">
           {renderStepContent()}
         </div>
       </div>

@@ -1,15 +1,11 @@
-import { TmsFormType } from '@/tms/constants/formSchema';
 import { readImage } from 'erxes-ui/utils/core';
 import { useEffect, useState } from 'react';
 import {
-  IconChevronDown,
-} from '@tabler/icons-react';
+  Input,
+  Select,
+} from 'erxes-ui';
 
-interface PreviewProps {
-  formData?: Partial<TmsFormType>;
-}
-
-const PreviewPage = ({ formData }: PreviewProps) => {
+const PreviewPage = () => {
   const [urlParams, setUrlParams] = useState<URLSearchParams | null>(null);
 
   useEffect(() => {
@@ -18,9 +14,9 @@ const PreviewPage = ({ formData }: PreviewProps) => {
     }
   }, []);
 
-  const tourName = urlParams?.get('name') || formData?.name || 'Таны тур оператор';
-  const themeColor = urlParams?.get('color') || formData?.color || '#4F46E5';
-  const logoParam = urlParams?.get('logo') || formData?.logo;
+  const tourName = urlParams?.get('name') || 'Таны тур оператор';
+  const themeColor = urlParams?.get('color') || '#4F46E5';
+  const logoParam = urlParams?.get('logo');
   const logoUrl = logoParam ? readImage(logoParam) : 'https://placehold.co/150x150';
 
   return (
@@ -44,26 +40,26 @@ const PreviewPage = ({ formData }: PreviewProps) => {
             Enter your email and password below to access your account.
           </p>
           <form className="space-y-3 sm:space-y-4">
-            <div className='relative'>
-              <input
-                id="tourName"
-                type="text"
-                value={tourName}
-                disabled
-                className="px-3 py-2 w-full text-sm rounded-md border bg-background text-foreground sm:text-base"
-              />
-              <div className='absolute right-3 top-1/2 -translate-y-1/2 text-sm text-foreground'>
-                <IconChevronDown />
-              </div>
-            </div>
+
+            <Select>
+              <Select.Trigger className="w-full">
+                <Select.Value placeholder="Select a branch" />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Group>
+                  <Select.Item value={tourName}>{tourName}</Select.Item>
+                </Select.Group>
+              </Select.Content>
+            </Select>
+
             <div>
               <label
                 htmlFor="email"
-                className="block mb-1 text-sm font-medium text-foreground sm:text-base"
+                className="block mb-1.5 text-sm font-medium text-foreground sm:text-base"
               >
                 Email
               </label>
-              <input
+              <Input
                 id="email"
                 type="email"
                 value="info@erxes.io"
@@ -75,7 +71,7 @@ const PreviewPage = ({ formData }: PreviewProps) => {
               <div className="flex justify-between items-center mb-1">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-foreground sm:text-base"
+                  className="block text-sm font-medium text-foreground sm:text-base mb-1.5"
                 >
                   Password
                 </label>
@@ -83,7 +79,7 @@ const PreviewPage = ({ formData }: PreviewProps) => {
                   Forgot password?
                 </p>
               </div>
-              <input
+              <Input
                 id="password"
                 type="password"
                 value="••••••••"
@@ -94,7 +90,7 @@ const PreviewPage = ({ formData }: PreviewProps) => {
             <button
               type="button"
               disabled
-              className="px-4 py-2 mt-5 w-full text-sm text-white rounded-md sm:text-base"
+              className="px-4 py-1.5 mt-5.5 w-full text-sm text-white rounded-md sm:text-base"
               style={{ backgroundColor: themeColor }}
             >
               Sign in
