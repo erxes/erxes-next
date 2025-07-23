@@ -2,7 +2,7 @@ import { useAutomationTrigger } from '@/automations/components/builder/hooks/use
 import {
   coreActionNames,
   coreActions,
-} from '@/automations/components/builder/nodes/actions/CoreActions';
+} from '@/automations/components/builder/nodes/actions/coreActions';
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { NodeData } from '@/automations/types';
 import { Handle, Position } from '@xyflow/react';

@@ -1,4 +1,4 @@
-// import { IProductDocument } from 'erxes-api-shared/core-types';
+import { IProductDocument } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 
 export default {
@@ -8,24 +8,26 @@ export default {
   ) => {
     return models.Products.findOne({ _id });
   },
-  // category: async (
-  //   product: IProductDocument,
-  //   _args: undefined,
-  //   { dataLoaders }: IContext,
-  // ) => {
-  //   return (
-  //     (product.categoryId &&
-  //       dataLoaders?.productCategory.load(product.categoryId)) ||
-  //     null
-  //   );
-  // },
-  // vendor: (
-  //   product: IProductDocument,
-  //   _args: undefined,
-  //   { dataLoaders }: IContext,
-  // ) => {
-  //   return (
-  //     (product.vendorId && dataLoaders?.company.load(product.vendorId)) || null
-  //   );
-  // },
+  category: async (
+    product: IProductDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) => {
+    if (!product.categoryId) {
+      return null;
+    }
+
+    return models.ProductCategories.findOne({ _id: product.categoryId });
+  },
+  vendor: async (
+    product: IProductDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) => {
+    if (!product.vendorId) {
+      return null;
+    }
+
+    return models.Companies.findOne({ _id: product.vendorId });
+  },
 };

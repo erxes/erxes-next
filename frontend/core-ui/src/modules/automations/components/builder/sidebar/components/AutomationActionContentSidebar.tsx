@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { getAutomationTypes } from 'ui-modules';
-import { coreActionNames } from '../../nodes/actions/CoreActions';
+import { coreActionNames } from '../../nodes/actions/coreActions';
 
 export const AutomationActionContentSidebar = () => {
   const {

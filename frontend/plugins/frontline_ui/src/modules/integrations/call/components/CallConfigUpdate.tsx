@@ -1,4 +1,11 @@
-import { Collapsible, Dialog, Form, Input, Skeleton } from 'erxes-ui';
+import {
+  Collapsible,
+  Dialog,
+  Form,
+  getPluginAssetsUrl,
+  Input,
+  Skeleton,
+} from 'erxes-ui';
 import { Button } from 'erxes-ui';
 import { IntegrationLogo } from '@/integrations/components/IntegrationLogo';
 import { INTEGRATIONS } from '@/integrations/constants/integrations';
@@ -21,7 +28,10 @@ export const CallConfigUpdateCollapse = () => {
         >
           <Collapsible.TriggerIcon className="text-accent-foreground" />
           <IntegrationLogo
-            img={INTEGRATIONS[IntegrationType.CALL].img}
+            img={getPluginAssetsUrl(
+              'frontline',
+              INTEGRATIONS[IntegrationType.CALL].img,
+            )}
             name={INTEGRATIONS[IntegrationType.CALL].name}
           />
           Call

@@ -50,7 +50,8 @@ export const BlockEditor = ({
       onChange={onChange}
       data-state={focus ? 'focus' : 'blur'}
       className={cn(
-        variant === 'outline' && 'shadow-xs data-[state=focus]:shadow-focus',
+        variant === 'outline' &&
+          'shadow-xs transition-[color,box-shadow] data-[state=focus]:shadow-focus',
         className,
       )}
       formattingToolbar={false}

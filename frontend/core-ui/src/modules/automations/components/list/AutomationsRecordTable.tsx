@@ -2,8 +2,8 @@ import { useAutomationsRecordTable } from '@/automations/hooks/useAutomationsRec
 import { IconAffiliate, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, RecordTable, Separator, Spinner } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { IPageInfo, PageHeader } from 'ui-modules';
-import { IAutomationDoc } from '../../types';
+import { PageHeader } from 'ui-modules';
+
 import { automationColumns } from './AutomationColumns';
 import { AutomationRecordTableFilters } from './AutomationRecordTableFilters';
 

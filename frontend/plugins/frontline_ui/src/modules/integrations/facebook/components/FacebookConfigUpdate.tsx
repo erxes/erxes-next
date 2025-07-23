@@ -17,6 +17,7 @@ import { INTEGRATIONS } from '@/integrations/constants/integrations';
 import { IntegrationType } from '@/types/Integration';
 import { useFacebookGetConfigs } from '../hooks/useFacebookGetConfigs';
 import { useEffect } from 'react';
+import { getPluginAssetsUrl } from 'erxes-ui';
 
 export const FacebookConfigUpdateCollapse = () => {
   return (
@@ -28,7 +29,10 @@ export const FacebookConfigUpdateCollapse = () => {
         >
           <Collapsible.TriggerIcon className="text-accent-foreground" />
           <IntegrationLogo
-            img={INTEGRATIONS[IntegrationType.FACEBOOK_MESSENGER].img}
+            img={getPluginAssetsUrl(
+              'frontline',
+              INTEGRATIONS[IntegrationType.FACEBOOK_MESSENGER].img,
+            )}
             name={INTEGRATIONS[IntegrationType.FACEBOOK_MESSENGER].name}
           />
           Facebook

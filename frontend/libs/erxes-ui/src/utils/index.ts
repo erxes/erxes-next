@@ -6,3 +6,6 @@ export * from './regex';
 export * from './isAnObject';
 export * from './isDeeplyEqual';
 export * from './core';
+export * from './colors';
+export * from './getPluginAssetsUrl';
+export * from './localization';

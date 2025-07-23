@@ -4,13 +4,24 @@ export interface IIntegration {
   kind: string;
   brandId: string;
   channelIds?: string[];
+  channels?: { _id: string }[];
 }
 
 export interface IIntegrationDetail extends IIntegration {
-  brandId: string;
+  languageCode?: string;
+  code?: string;
+  tagIds?: string[];
+  createdAt?: string;
+  leadData?: string;
+  messengerData?: string;
+  uiOptions?: string;
+  isConnected?: boolean;
+  departmentIds?: string[];
+  details?: any;
+  callData?: any;
   isActive: boolean;
   healthStatus: {
-    status: 'success' | 'page-token' | 'account-token';
+    status: 'healthy' | string;
   };
 }
 

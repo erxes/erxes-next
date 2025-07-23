@@ -1,5 +1,4 @@
 import { Document, Schema } from 'mongoose';
-import { schemaWrapper } from '../../../utils';
 import { AUTOMATION_STATUSES } from '../constants';
 
 export type IActionsMap = { [key: string]: IAction };

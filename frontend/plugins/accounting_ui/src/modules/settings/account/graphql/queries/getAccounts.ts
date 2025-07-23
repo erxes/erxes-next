@@ -1,22 +1,22 @@
 import { gql } from '@apollo/client';
 
 export const ACCOUNT_FIELDS = `
-      _id
-      code
-      name
-      status
-      currency
-      kind
-      journal
-      description
-      categoryId
-      branchId
-      departmentId
-      isTemp
-      isOutBalance
-      parentId
-      createdAt
-      scopeBrandIds
+  _id
+  code
+  name
+  status
+  currency
+  kind
+  journal
+  description
+  categoryId
+  branchId
+  departmentId
+  isTemp
+  isOutBalance
+  parentId
+  createdAt
+  scopeBrandIds
 `;
 
 export const GET_ACCOUNTS = gql`

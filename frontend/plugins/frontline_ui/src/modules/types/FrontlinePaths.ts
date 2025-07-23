@@ -3,4 +3,6 @@ export enum FrontlinePaths {
   Integrations = '/integrations',
   IntegrationDetail = '/integrations/:integrationType',
   IntegrationConfig = '/integrations-config',
+  ErxesMessengerPreview = '/integrations/erxes-messenger-preview',
+  Channels = '/channels',
 }
