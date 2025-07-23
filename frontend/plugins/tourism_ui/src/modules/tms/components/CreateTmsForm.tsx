@@ -9,9 +9,7 @@ import { TmsInformationFields } from '@/tms/components/TmsInformationFields';
 import { useCreateBranch } from '../hooks/CreateBranch';
 import { useBranchEdit } from '../hooks/BranchEdit';
 import { useBranchDetail } from '../hooks/BranchDetail';
-import { useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { formDataAtom } from '../states/formDataAtom';
+import { useEffect, useState } from 'react';
 
 interface PermissionConfig {
   type: string;
@@ -54,24 +52,6 @@ const CreateTmsForm = ({
     },
   });
 
-  const [, setFormData] = useAtom(formDataAtom);
-
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      setFormData(value as any);
-      const iframe = document.querySelector(
-        'iframe[src="/tms/PreviewPage"]',
-      ) as HTMLIFrameElement | null;
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(
-          { type: 'FORM_DATA_UPDATE', data: value },
-          '*',
-        );
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form, setFormData]);
-
   useEffect(() => {
     if (branchDetail) {
       form.reset({
@@ -87,17 +67,32 @@ const CreateTmsForm = ({
         token: branchDetail.erxesAppToken || '',
         otherPayments: Array.isArray(branchDetail.permissionConfig)
           ? branchDetail.permissionConfig.map((config: PermissionConfig) => ({
-              type: config.type || '',
-              title: config.title || '',
-              icon: config.icon || '',
-              config: config.config || '',
-            }))
+            type: config.type || '',
+            title: config.title || '',
+            icon: config.icon || '',
+            config: config.config || '',
+          }))
           : [],
       });
     }
   }, [branchDetail, form]);
 
   const { toast } = useToast();
+
+  const formData = form.watch();
+  const [debouncedUrl, setDebouncedUrl] = useState('/tms/PreviewPage');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams();
+      if (formData.name) params.set('name', formData.name);
+      if (formData.color) params.set('color', formData.color);
+      if (formData.logo) params.set('logo', formData.logo);
+      setDebouncedUrl(`/tms/PreviewPage?${params.toString()}`);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [formData.name, formData.color, formData.logo]);
 
   const onSubmit = (data: TmsFormType) => {
     const permissionConfig =
@@ -216,10 +211,10 @@ const CreateTmsForm = ({
           <div className="hidden lg:block">
             <Preview>
               <div className="bg-background">
-                <Preview.Toolbar path="/tms/PreviewPage" />
+                <Preview.Toolbar path={debouncedUrl} />
               </div>
               <Separator />
-              <Preview.View iframeSrc="/tms/PreviewPage" />
+              <Preview.View iframeSrc={debouncedUrl} />
             </Preview>
           </div>
         </Sheet.Content>

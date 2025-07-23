@@ -1,21 +1,13 @@
-import React, { useState } from 'react';
-import {
-  IconCalendarPlus,
-  IconEdit,
-  IconCopy,
-  IconWorld,
-  IconTrash,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { useState } from 'react';
 import { useBranchList } from '@/tms/hooks/BranchList';
 import { useBranchRemove } from '@/tms/hooks/BranchRemove';
 import { useBranchDuplicate } from '@/tms/hooks/BranchDuplicate';
 import { IBranch } from '@/tms/types/branch';
-import { format } from 'date-fns';
 import { EmptyList } from './EmptyList';
-import { toast, Sheet, Popover, Button, Dialog, Avatar } from 'erxes-ui';
+import { BranchCard } from './BranchCard';
+import { ConfirmationDialog } from './ConfirmationDialog';
+import { toast, Sheet, Spinner } from 'erxes-ui';
 import CreateTmsForm from './CreateTmsForm';
-import { readImage } from 'erxes-ui/utils/core';
 
 export const BranchList = () => {
   const { list, loading, error, refetch } = useBranchList();
@@ -44,7 +36,10 @@ export const BranchList = () => {
           generalManagerIds: branch.generalManagerIds || [],
           managerIds: branch.managerIds || [],
           paymentIds: branch.paymentIds || [],
-          paymentTypes: branch.paymentTypes || [],
+          paymentTypes: (branch.paymentTypes || []).map((name) => ({
+            id: name,
+            name: name,
+          })),
           erxesAppToken: branch.erxesAppToken,
           permissionConfig: branch.permissionConfig || [],
           uiOptions: branch.uiOptions || {},
@@ -96,14 +91,15 @@ export const BranchList = () => {
     }
   };
 
-  if (loading) return <div className="p-3 w-full">Loading...</div>;
+  if (loading) return <Spinner />;
+
   if (error)
     return (
-      <div className="p-3 w-full text-center">
-        <p>Error loading branches</p>
-        <p>{error.message}</p>
+      <div className="text-destructive">
+        Error loading branches: {error.message}
       </div>
     );
+
   if (!list || list.length === 0) return <EmptyList />;
 
   return (
@@ -112,135 +108,14 @@ export const BranchList = () => {
         <div className="flex-1">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
             {list.map((branch: IBranch) => (
-              <div
+              <BranchCard
                 key={branch._id}
-                className="flex flex-col items-start p-2 w-full h-full bg-background shrink-0"
-              >
-                <div className="flex gap-4 items-start self-stretch">
-                  <div className="flex flex-col items-start w-[290px] rounded-sm bg-background shadow-lg">
-                    <div className="flex justify-between items-center self-stretch px-3 h-9">
-                      <div className="flex gap-1 items-center">
-                        <h3 className="text-sm font-semibold leading-[100%] text-foreground font-inter">
-                          {branch.name || 'Unnamed Branch'}
-                        </h3>
-                      </div>
-
-                      <Popover>
-                        <Popover.Trigger asChild>
-                          <button className="flex items-center leading-[100%] text-foreground font-inter gap-1 text-sm font-medium rounded-md px-1">
-                            Action
-                            <IconChevronDown size={18} stroke={2} />
-                          </button>
-                        </Popover.Trigger>
-                        <Popover.Content
-                          className="p-1 w-48 rounded-lg border shadow-lg bg-background"
-                          side="bottom"
-                          align="end"
-                        >
-                          <div
-                            className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
-                            onClick={() => handleEditBranch(branch._id)}
-                          >
-                            <IconEdit size={16} stroke={1.5} />
-                            <p className="text-sm font-medium leading-[100%] font-inter">
-                              Edit
-                            </p>
-                          </div>
-
-                          <div
-                            className={`flex items-center w-full gap-3 px-4 py-2 text-left cursor-pointer hover:bg-muted rounded-md ${
-                              duplicateLoading
-                                ? 'opacity-50 pointer-events-none'
-                                : ''
-                            }`}
-                            onClick={() =>
-                              !duplicateLoading &&
-                              setDuplicateDialogOpen(branch._id)
-                            }
-                          >
-                            <IconCopy size={16} stroke={1.5} />
-                            <p className="text-sm font-medium leading-[100%] font-inter">
-                              {duplicateLoading
-                                ? 'Duplicating...'
-                                : 'Duplicate'}
-                            </p>
-                          </div>
-
-                          <div
-                            className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
-                            // onClick={() => {
-                            //   window.open(
-                            //     branch.uiOptions?.url ||
-                            //       'https://tourism.tms.erxes.io',
-                            //     '_blank',
-                            //   );
-                            // }}
-                          >
-                            <IconWorld size={16} stroke={1.5} />
-                            <p className="text-sm font-medium leading-[100%] font-inter">
-                              Visit website
-                            </p>
-                          </div>
-
-                          <div
-                            className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-destructive/10 text-destructive"
-                            onClick={() => setDeleteDialogOpen(branch._id)}
-                          >
-                            <IconTrash size={16} stroke={1.5} />
-                            <p className="text-sm font-medium leading-[100%] font-inter">
-                              Delete
-                            </p>
-                          </div>
-                        </Popover.Content>
-                      </Popover>
-                    </div>
-
-                    <div className="flex h-[150px] w-full flex-col items-start gap-3 self-stretch">
-                      <div className="flex justify-center items-center w-full h-full bg-background">
-                        <img
-                          src={
-                            branch.uiOptions?.logo
-                              ? readImage(branch.uiOptions.logo)
-                              : 'https://placehold.co/150x150'
-                          }
-                          alt={branch.name || 'Branch logo'}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center self-stretch px-3 h-9">
-                      <div className="flex gap-2 items-center">
-                        <IconCalendarPlus
-                          size={12}
-                          className="text-foreground"
-                        />
-                        <span className="text-[12px] font-semibold leading-[100%] font-inter">
-                          Created:{' '}
-                          {branch.createdAt
-                            ? format(new Date(branch.createdAt), 'dd MMM yyyy')
-                            : 'N/A'}
-                        </span>
-                      </div>
-
-                      <Avatar className="w-6 h-6 rounded-full border shadow-sm">
-                        {branch.user?.details?.avatar ? (
-                          <Avatar.Image
-                            src={branch.user.details.avatar}
-                            alt={branch.user.details.fullName || 'User avatar'}
-                          />
-                        ) : null}
-                        <Avatar.Fallback>
-                          {branch.user?.details?.fullName
-                            ?.split(' ')[0]
-                            ?.charAt(0)
-                            ?.toUpperCase() || 'U'}
-                        </Avatar.Fallback>
-                      </Avatar>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                branch={branch}
+                onEdit={handleEditBranch}
+                onDuplicate={setDuplicateDialogOpen}
+                onDelete={setDeleteDialogOpen}
+                duplicateLoading={duplicateLoading}
+              />
             ))}
           </div>
         </div>
@@ -277,101 +152,28 @@ export const BranchList = () => {
         </Sheet.View>
       </Sheet>
 
-      <Dialog
+      <ConfirmationDialog
         open={!!duplicateDialogOpen}
         onOpenChange={(open) => !open && setDuplicateDialogOpen(null)}
-      >
-        <Dialog.Content className="sm:max-w-md">
-          <Dialog.Header>
-            <div className="flex gap-3 items-center">
-              <div className="p-2 rounded-full bg-muted">
-                <IconCopy size={20} />
-              </div>
-              <Dialog.Title className="text-lg font-bold">
-                Duplicate Branch
-              </Dialog.Title>
-            </div>
-          </Dialog.Header>
-          <div className="space-y-4">
-            <div className="p-3 rounded-lg border shadow-sm bg-background">
-              <p className="text-sm font-medium text-foreground">
-                This will create a new branch with copied settings
-              </p>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Are you sure you want to create a duplicate of{' '}
-              <strong className="text-foreground">
-                "{list?.find((b) => b._id === duplicateDialogOpen)?.name}"
-              </strong>
-              ? A new branch will be created with all the same configurations.
-            </p>
-          </div>
-          <Dialog.Footer>
-            <Button
-              variant="outline"
-              onClick={() => setDuplicateDialogOpen(null)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="default"
-              onClick={() => {
-                const branch = list?.find((b) => b._id === duplicateDialogOpen);
-                if (branch) handleDuplicateBranch(branch);
-              }}
-              disabled={duplicateLoading}
-            >
-              {duplicateLoading ? 'Duplicating...' : 'Yes, Duplicate'}
-            </Button>
-          </Dialog.Footer>
-        </Dialog.Content>
-      </Dialog>
+        type="duplicate"
+        branchName={list?.find((b) => b._id === duplicateDialogOpen)?.name || ''}
+        loading={duplicateLoading}
+        onConfirm={() => {
+          const branch = list?.find((b) => b._id === duplicateDialogOpen);
+          if (branch) handleDuplicateBranch(branch);
+        }}
+      />
 
-      <Dialog
+      <ConfirmationDialog
         open={!!deleteDialogOpen}
         onOpenChange={(open) => !open && setDeleteDialogOpen(null)}
-      >
-        <Dialog.Content className="sm:max-w-md">
-          <Dialog.Header>
-            <div className="flex gap-3 items-center">
-              <div className="p-2 rounded-full bg-destructive/10">
-                <IconTrash size={20} className="text-destructive" />
-              </div>
-              <Dialog.Title className="text-lg font-bold">
-                Delete Branch
-              </Dialog.Title>
-            </div>
-          </Dialog.Header>
-          <div className="space-y-4">
-            <div className="p-3 rounded-lg border shadow-sm bg-background">
-              <p className="text-sm font-medium text-foreground">
-                Warning: This action cannot be undone
-              </p>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Are you sure you want to permanently delete{' '}
-              <strong className="text-foreground">
-                "{list?.find((b) => b._id === deleteDialogOpen)?.name}"
-              </strong>
-              ? All associated data will be lost forever.
-            </p>
-          </div>
-          <Dialog.Footer>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (deleteDialogOpen) handleDeleteBranch(deleteDialogOpen);
-              }}
-              disabled={removeLoading}
-            >
-              {removeLoading ? 'Deleting...' : 'Yes, Delete Forever'}
-            </Button>
-          </Dialog.Footer>
-        </Dialog.Content>
-      </Dialog>
+        type="delete"
+        branchName={list?.find((b) => b._id === deleteDialogOpen)?.name || ''}
+        loading={removeLoading}
+        onConfirm={() => {
+          if (deleteDialogOpen) handleDeleteBranch(deleteDialogOpen);
+        }}
+      />
     </>
   );
 };

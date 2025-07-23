@@ -1,37 +1,27 @@
 import { TmsFormType } from '@/tms/constants/formSchema';
 import { readImage } from 'erxes-ui/utils/core';
-import { useAtom } from 'jotai';
-import { useEffect } from 'react';
-import { formDataAtom } from '@/tms/states/formDataAtom';
+import { useEffect, useState } from 'react';
+import {
+  IconChevronDown,
+} from '@tabler/icons-react';
 
 interface PreviewProps {
   formData?: Partial<TmsFormType>;
 }
 
 const PreviewPage = ({ formData }: PreviewProps) => {
-  const [storedFormData, setStoredFormData] = useAtom(formDataAtom);
-  const effectiveFormData = { ...storedFormData, ...formData };
+  const [urlParams, setUrlParams] = useState<URLSearchParams | null>(null);
 
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      const allowedOrigins = [window.location.origin];
-      if (!allowedOrigins.includes(event.origin)) {
-        return;
-      }
-      if (event.data.type === 'FORM_DATA_UPDATE') {
-        setStoredFormData(event.data.data);
-      }
-    };
+    if (typeof window !== 'undefined') {
+      setUrlParams(new URLSearchParams(window.location.search));
+    }
+  }, []);
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [setStoredFormData]);
-
-  const tourName = effectiveFormData.name || 'Таны тур оператор';
-  const themeColor = effectiveFormData.color || '#4F46E5';
-  const logoUrl = effectiveFormData.logo
-    ? readImage(effectiveFormData.logo)
-    : 'https://placehold.co/150x150';
+  const tourName = urlParams?.get('name') || formData?.name || 'Таны тур оператор';
+  const themeColor = urlParams?.get('color') || formData?.color || '#4F46E5';
+  const logoParam = urlParams?.get('logo') || formData?.logo;
+  const logoUrl = logoParam ? readImage(logoParam) : 'https://placehold.co/150x150';
 
   return (
     <div className="flex flex-col justify-center items-center p-4 min-h-screen md:flex-row md:p-6">
@@ -54,10 +44,7 @@ const PreviewPage = ({ formData }: PreviewProps) => {
             Enter your email and password below to access your account.
           </p>
           <form className="space-y-3 sm:space-y-4">
-            <div>
-              <label htmlFor="tourName" className="sr-only">
-                Tour Name
-              </label>
+            <div className='relative'>
               <input
                 id="tourName"
                 type="text"
@@ -65,6 +52,9 @@ const PreviewPage = ({ formData }: PreviewProps) => {
                 disabled
                 className="px-3 py-2 w-full text-sm rounded-md border bg-background text-foreground sm:text-base"
               />
+              <div className='absolute right-3 top-1/2 -translate-y-1/2 text-sm text-foreground'>
+                <IconChevronDown />
+              </div>
             </div>
             <div>
               <label
@@ -104,7 +94,7 @@ const PreviewPage = ({ formData }: PreviewProps) => {
             <button
               type="button"
               disabled
-              className="px-4 py-2 mt-4 w-full text-sm text-white rounded-md sm:text-base"
+              className="px-4 py-2 mt-5 w-full text-sm text-white rounded-md sm:text-base"
               style={{ backgroundColor: themeColor }}
             >
               Sign in

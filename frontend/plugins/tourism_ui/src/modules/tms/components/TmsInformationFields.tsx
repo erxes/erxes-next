@@ -38,13 +38,12 @@ export const TmsInformationFields = ({
       <div className="relative w-full">
         {/* Step 1 */}
         <div
-          className={`absolute w-full ${
-            currentStep === 1
+          className={`absolute w-full ${currentStep === 1
               ? 'opacity-100 translate-x-0 pointer-events-auto'
               : currentStep < 1
-              ? 'opacity-0 translate-x-full pointer-events-none'
-              : 'opacity-0 -translate-x-full pointer-events-none'
-          }`}
+                ? 'opacity-0 translate-x-full pointer-events-none'
+                : 'opacity-0 -translate-x-full pointer-events-none'
+            }`}
         >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
             <TourName control={form.control} />
@@ -56,13 +55,12 @@ export const TmsInformationFields = ({
 
         {/* Step 2 */}
         <div
-          className={`absolute w-full ${
-            currentStep === 2
+          className={`absolute w-full ${currentStep === 2
               ? 'opacity-100 translate-x-0 pointer-events-auto'
               : currentStep < 2
-              ? 'opacity-0 translate-x-full pointer-events-none'
-              : 'opacity-0 -translate-x-full pointer-events-none'
-          }`}
+                ? 'opacity-0 translate-x-full pointer-events-none'
+                : 'opacity-0 -translate-x-full pointer-events-none'
+            }`}
         >
           <div className="space-y-4">
             <GeneralManager control={form.control} />
@@ -72,13 +70,12 @@ export const TmsInformationFields = ({
 
         {/* Step 3 */}
         <div
-          className={`absolute w-full ${
-            currentStep === 3
+          className={`absolute w-full ${currentStep === 3
               ? 'opacity-100 translate-x-0 pointer-events-auto'
               : currentStep < 3
-              ? 'opacity-0 translate-x-full pointer-events-none'
-              : 'opacity-0 -translate-x-full pointer-events-none'
-          }`}
+                ? 'opacity-0 translate-x-full pointer-events-none'
+                : 'opacity-0 -translate-x-full pointer-events-none'
+            }`}
         >
           <div className="space-y-4">
             <Payments control={form.control} />
@@ -110,7 +107,7 @@ export const TmsInformationFields = ({
   }
 
   function handleSave() {
-    form.trigger(['payment', 'token']).then((isValid) => {
+    form.trigger(['payment', 'token', 'otherPayments']).then((isValid) => {
       if (isValid && onSubmit) {
         onSubmit(form.getValues());
       }
@@ -130,21 +127,20 @@ export const TmsInformationFields = ({
             {currentStep === 1
               ? 'General information'
               : currentStep === 2
-              ? 'Permission'
-              : 'Payments'}
+                ? 'Permission'
+                : 'Payments'}
           </p>
         </div>
         <div className="flex gap-2 items-center self-stretch">
           {[1, 2, 3].map((step) => (
             <div
               key={step}
-              className={`h-1 rounded-full transition-all duration-500 ease-in-out ${
-                step === currentStep
+              className={`h-1 rounded-full transition-all duration-500 ease-in-out ${step === currentStep
                   ? 'bg-primary w-24'
                   : step < currentStep
-                  ? 'bg-primary/50 w-16'
-                  : 'bg-[#F4F4F5] w-16'
-              }`}
+                    ? 'bg-primary/50 w-16'
+                    : 'bg-[#F4F4F5] w-16'
+                }`}
             />
           ))}
         </div>
@@ -152,8 +148,8 @@ export const TmsInformationFields = ({
           {currentStep === 1
             ? 'Set up your TMS information'
             : currentStep === 2
-            ? 'Setup your permission'
-            : 'Setup your payments'}
+              ? 'Setup your permission'
+              : 'Setup your payments'}
         </p>
       </div>
       <div className="relative flex-1">
