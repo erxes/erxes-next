@@ -29,11 +29,11 @@ export const CredentialLoginForm = () => {
           control={form.control}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Email</Form.Label>
+              <Form.Label>Email or Username</Form.Label>
               <Form.Control>
                 <Input
-                  type="email"
-                  placeholder="Enter your work email"
+                  type="text"
+                  placeholder="Enter your work email or username"
                   {...field}
                 />
               </Form.Control>

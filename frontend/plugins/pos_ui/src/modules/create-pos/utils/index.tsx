@@ -1,7 +1,6 @@
 import type { JSX } from 'react/jsx-runtime';
 import POSSlotsManager from '@/slot/components/slot';
 import ChooseCategoryPage from '../components/category/choose-category';
-import { EcommerceForm } from '../components/general/ecommerce';
 import { RestaurantForm } from '../components/general/restaurant';
 import EcommercePaymentsForm from '../components/payments/ecommerce-payment';
 import RestaurantPaymentsForm from '../components/payments/restaurant-payment';
@@ -37,11 +36,7 @@ export const getPosCreateTabs = ({
     },
     {
       value: 'properties',
-      component: getCategoryComponent(
-        posCategory,
-        <EcommerceForm form={forms.basicInfo} />,
-        <RestaurantForm form={forms.basicInfo} />,
-      ) || <div>Please select a category first</div>,
+      component:  <RestaurantForm form={forms.basicInfo} />
     },
     {
       value: 'payments',
