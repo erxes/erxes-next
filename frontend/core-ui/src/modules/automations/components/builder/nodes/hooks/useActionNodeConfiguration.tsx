@@ -1,13 +1,8 @@
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
-// import {
-//   coreActionNames,
-//   coreActions,
-// } from '@/automations/components/builder/nodes/actions/CoreActions';
 import {
   coreActionNames,
   coreActions,
 } from '@/automations/components/builder/nodes/actions/coreActions';
-
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { NodeData } from '@/automations/types';
 import { Handle, Position } from '@xyflow/react';
@@ -22,8 +17,7 @@ export const useActionNodeConfiguration = (data: NodeData) => {
   const [pluginName, moduleName] = getAutomationTypes(type);
   const { trigger } = useAutomationTrigger(id);
 
-  // const isCoreAction = coreActionNames.includes(type);
-  const isCoreAction = false;
+  const isCoreAction = coreActionNames.includes(type);
 
   let Component = null;
 
@@ -55,14 +49,14 @@ export const useActionNodeConfiguration = (data: NodeData) => {
       />
     );
   } else {
-    // if (type in coreActions) {
-    //   const CoreActionComponent = coreActions[type as keyof typeof coreActions];
-    //   Component = (
-    //     <div className="px-4 py-2">
-    //       <CoreActionComponent config={config} />
-    //     </div>
-    //   );
-    // }
+    if (type in coreActions) {
+      const CoreActionComponent = coreActions[type as keyof typeof coreActions];
+      Component = (
+        <div className="px-4 py-2">
+          <CoreActionComponent config={config} />
+        </div>
+      );
+    }
   }
 
   return { Component };

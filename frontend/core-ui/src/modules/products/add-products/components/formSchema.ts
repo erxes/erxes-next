@@ -5,10 +5,7 @@ export const productFormSchema = z.object({
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name must be less than 100 characters'),
-  shortName: z
-    .string()
-    .min(2, 'Short name must be at least 2 characters')
-    .max(50, 'Short name must be less than 50 characters'),
+  shortName: z.string().max(50, 'Short name must be less than 50 characters'),
   type: z.string().min(1, 'Please select a type'),
   categoryId: z
     .string({

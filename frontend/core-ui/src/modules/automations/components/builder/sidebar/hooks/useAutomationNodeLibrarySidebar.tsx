@@ -1,9 +1,5 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-// <<<<<<< HEAD
-// // import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
-// =======
-// import { coreActionNames } from '@/automations/components/builder/nodes/actions/coreActions';
-// >>>>>>> 80e3b712fc651c2c48aaed206808d3f4a668a000
+import { coreActionNames } from '@/automations/components/builder/nodes/actions/coreActions';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
@@ -46,13 +42,11 @@ export const useAutomationNodeLibrarySidebar = () => {
       return actionsConst;
     }
 
-    // return actionsConst.filter(
-    //   (action) =>
-    //     coreActionNames.includes(action?.type) ||
-    //     connectableActionTypes.includes(action.type),
-    // );
-
-    return [];
+    return actionsConst.filter(
+      (action) =>
+        coreActionNames.includes(action?.type) ||
+        connectableActionTypes.includes(action.type),
+    );
   }, [awaitingToConnectNodeId, triggers, actions, actionsConst, triggersConst]);
 
   const onDragStart = (

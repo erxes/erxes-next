@@ -71,11 +71,11 @@ import {
 import {
   ICallCdrModel,
   loadCallCdrClass,
-} from '~/modules/integrations/call/db/models/cdrs';
+} from '~/modules/integrations/call/db/models/Cdrs';
 import {
   ICallHistoryModel,
   loadCallHistoryClass,
-} from '~/modules/integrations/call/db/models/histories';
+} from '~/modules/integrations/call/db/models/Histories';
 import {
   ICallCustomerModel,
   loadCallCustomerClass,
