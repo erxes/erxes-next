@@ -31,7 +31,7 @@ export const GET_USERS = gql`
 `;
 
 export const GET_USERS_GROUP = gql`
-  query usersGroups($searchValue: String, $orderBy: JSON, ${GQL_CURSOR_PARAM_DEFS}) {
+  query UsersGroups($searchValue: String, $orderBy: JSON, ${GQL_CURSOR_PARAM_DEFS}) {
     usersGroups(searchValue: $searchValue, orderBy: $orderBy,${GQL_CURSOR_PARAMS}) {
       list {
         _id

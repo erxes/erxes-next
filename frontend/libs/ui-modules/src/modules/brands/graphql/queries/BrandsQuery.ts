@@ -27,3 +27,13 @@ export const BRANDS_QUERY = gql`
     }
   }
 `;
+
+export const GET_BRAND_BY_ID = gql`
+  query BrandDetail($id: String!) {
+    brandDetail(_id: $id) {
+      _id
+      name
+      code
+    }
+  }
+`;
