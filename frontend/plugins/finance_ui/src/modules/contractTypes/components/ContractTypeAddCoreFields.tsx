@@ -1,8 +1,8 @@
-import { Editor, Form, Input } from 'erxes-ui';
+import { Checkbox, Editor, Form, Input } from 'erxes-ui';
 
-import { Control } from 'react-hook-form';
-import { ContractTypeFormValues } from '~/modules/contractTypes/components/formSchema';
-import { ContractTypeHotKeyScope } from '~/modules/contractTypes/types';
+import { Control, useWatch } from 'react-hook-form';
+import { ContractTypeFormValues } from '@/contractTypes/components/formSchema';
+import { ContractTypeHotKeyScope } from '@/contractTypes/types';
 
 export const CodeField = ({
   control,
@@ -236,7 +236,7 @@ export const IsAllowIncomeField = ({
         <Form.Item>
           <Form.Label>Is allow income</Form.Label>
           <Form.Control>
-            <Input {...field} />
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </Form.Control>
           <Form.Message />
         </Form.Item>
@@ -250,20 +250,48 @@ export const ISDepositField = ({
 }: {
   control: Control<ContractTypeFormValues>;
 }) => {
+  const isDeposit = useWatch({
+    control,
+    name: 'isDeposit',
+  });
   return (
-    <Form.Field
-      control={control}
-      name="isDeposit"
-      render={({ field }) => (
-        <Form.Item>
-          <Form.Label>Is Deposit</Form.Label>
-          <Form.Control>
-            <Input {...field} />
-          </Form.Control>
-          <Form.Message />
-        </Form.Item>
+    <div className="space-y-0">
+      <Form.Field
+        control={control}
+        name="isDeposit"
+        render={({ field }) => (
+          <Form.Item className="mb-0">
+            <Form.Label>Is Deposit</Form.Label>
+            <Form.Control>
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+
+      {isDeposit && (
+        <Form.Field
+          control={control}
+          name="isAllowOutcome"
+          render={({ field }) => (
+            <Form.Item className="mt-1">
+              <Form.Label>Is Allow Outcome</Form.Label>
+              <Form.Control>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
+          )}
+        />
       )}
-    />
+    </div>
   );
 };
 
@@ -280,7 +308,11 @@ export const LimitPercentageField = ({
         <Form.Item>
           <Form.Label>limit Percentage</Form.Label>
           <Form.Control>
-            <Input {...field} />
+            <Input
+              type="number"
+              {...field}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+            />
           </Form.Control>
           <Form.Message />
         </Form.Item>

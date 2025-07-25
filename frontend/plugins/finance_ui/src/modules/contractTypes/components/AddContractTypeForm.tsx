@@ -1,23 +1,35 @@
-import { Kbd, Sheet, Button } from 'erxes-ui/components';
+import { ApolloError } from '@apollo/client';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   usePreviousHotkeyScope,
   useScopedHotkeys,
   useSetHotkeyScope,
-} from 'erxes-ui/modules';
+  Kbd,
+  Sheet,
+  Button,
+  useToast,
+  useQueryState,
+} from 'erxes-ui';
+import { useForm } from 'react-hook-form';
+import { AddContractTypeForm } from '@/contractTypes/components/AddContractType';
+import {
+  contractTypeFormSchema,
+  ContractTypeFormValues,
+} from '@/contractTypes/components/formSchema';
+import { useAddContractType } from '@/contractTypes/hooks/useAddContractType';
+import { ContractTypeHotKeyScope } from '@/contractTypes/types';
 import { useState } from 'react';
-import { AddContractTypeForm } from '~/modules/contractTypes/components/AddContractType';
-import { ContractTypeHotKeyScope } from '~/modules/contractTypes/types';
 
 export const ContractTypeAddSheet = () => {
+  const [open, setOpen] = useState(false);
   const setHotkeyScope = useSetHotkeyScope();
-  const [open, setOpen] = useState<boolean>(false);
-  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
+  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
   const onOpen = () => {
-    setOpen(true);
     setHotkeyScopeAndMemorizePreviousScope(
       ContractTypeHotKeyScope.ContractTypeAddSheet,
     );
+    setOpen(true);
   };
 
   const onClose = () => {
@@ -26,18 +38,13 @@ export const ContractTypeAddSheet = () => {
   };
 
   useScopedHotkeys(
-    `c`,
-    () => onOpen(),
-    ContractTypeHotKeyScope.ContractTypesPage,
-  );
-  useScopedHotkeys(
     `esc`,
     () => onClose(),
     ContractTypeHotKeyScope.ContractTypeAddSheet,
   );
 
   return (
-    <Sheet onOpenChange={(open) => (open ? onOpen() : onClose())}>
+    <Sheet onOpenChange={(open) => (open ? onOpen() : onClose())} open={open}>
       <Sheet.Trigger asChild>
         <Button>
           Add Type
@@ -50,7 +57,8 @@ export const ContractTypeAddSheet = () => {
           e.preventDefault();
         }}
       >
-        <AddContractTypeForm onOpenChange={setOpen} />
+        <ContractTypeAddSheetHeader />
+        <ContractTypeAddForm />
       </Sheet.View>
     </Sheet>
   );
@@ -61,5 +69,48 @@ export const ContractTypeAddSheetHeader = () => {
     <Sheet.Header className="border-b gap-3">
       <Sheet.Title>Create Contract Type</Sheet.Title> <Sheet.Close />
     </Sheet.Header>
+  );
+};
+
+export const ContractTypeAddForm = ({}: {}) => {
+  const { contractTypesAdd, loading } = useAddContractType();
+
+  const form = useForm<ContractTypeFormValues>({
+    resolver: zodResolver(contractTypeFormSchema),
+  });
+
+  const { toast } = useToast();
+
+  async function onSubmit(data: ContractTypeFormValues) {
+    contractTypesAdd({
+      variables: {
+        ...data,
+        name: data.name ?? '',
+        code: data.code ?? '',
+      },
+      onError: (e: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+        });
+      },
+
+      onCompleted: () => {
+        form.reset();
+      },
+    });
+  }
+
+  const handleCancel = () => {
+    form.reset();
+  };
+
+  return (
+    <AddContractTypeForm
+      form={form}
+      loading={loading}
+      onSubmit={onSubmit}
+      handleCancel={handleCancel}
+    />
   );
 };

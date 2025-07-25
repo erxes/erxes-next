@@ -1,12 +1,19 @@
 import { IconLabel } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { RecordTable, RecordTableCellDisplay, RecordTableTree } from 'erxes-ui';
+import {
+  RecordTable,
+  RecordTableCellContent,
+  RecordTableCellDisplay,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+  RecordTableTree,
+  useSetQueryStateByKey,
+} from 'erxes-ui';
 import { useMemo } from 'react';
-import { useContractTypes } from '~/modules/contractTypes/hooks/useContractTypes';
-import { IContractType } from '~/modules/contractTypes/types';
-import { ContractTypeMoreColumn } from '~/modules/contractTypes/components/ContractTypeMoreColumn';
-import { TextOverflowTooltip } from 'erxes-ui/components';
-import { ContractTypeCommandBar } from '~/modules/contractTypes/components/ContractTypeCommandBar';
+import { useContractTypes } from '@/contractTypes/hooks/useContractTypes';
+import { IContractType } from '@/contractTypes/types';
+import { Badge, TextOverflowTooltip, Input } from 'erxes-ui';
+import { ContractTypeCommandBar } from '@/contractTypes/components/ContractTypeCommandBar';
 
 export const ContractTypesRecordTable = () => {
   const { contractTypes, loading } = useContractTypes();
@@ -23,7 +30,7 @@ export const ContractTypesRecordTable = () => {
 
   return (
     <RecordTable.Provider
-      columns={contractTypeColumns(contractTypeObject)}
+      columns={contractTypeColumns}
       data={contractTypes || []}
       className="m-3"
     >
@@ -43,22 +50,41 @@ export const ContractTypesRecordTable = () => {
   );
 };
 
-export const contractTypeColumns: (
-  contractTypeObject: Record<string, IContractType>,
-) => ColumnDef<IContractType>[] = (contractTypeObject) => [
-  ContractTypeMoreColumn,
+export const contractTypeColumns: ColumnDef<IContractType>[] = [
+  // ContractTypeMoreColumn,
   RecordTable.checkboxColumn as ColumnDef<IContractType>,
   {
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTable.InlineHead icon={IconLabel} label="Name" />,
     cell: ({ cell }) => {
+      const name = cell.getValue() as string;
+      const setQuery = useSetQueryStateByKey();
+
+      const setOpen = (contractTypeId: string) => {
+        setQuery('contractTypeId', contractTypeId);
+      };
+
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <Badge
+              variant={'secondary'}
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(cell.row.original._id);
+              }}
+            >
+              {name}
+            </Badge>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent className="min-w-72">
+            <Input value={name || ''} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
+    size: 250,
   },
   {
     id: 'code',

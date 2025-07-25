@@ -45,26 +45,7 @@ export const useCreateAppRouter = () => {
           <Route element={<UserProvider />}>
             <Route element={<DefaultLayout />}>
               <Route path={AppPath.Index} element={<OnBoarding />} />
-              <Route
-                path={AppPath.SettingsCatchAll}
-                element={<SettingsRoutes />}
-              />
-              <Route
-                path={AppPath.ProductsCatchAll}
-                element={<ProductsRoutes />}
-              />
-              <Route
-                path={AppPath.ContactsCatchAll}
-                element={<ContactsRoutes />}
-              />
-              <Route
-                path={AppPath.SegmentsCatchAll}
-                element={<SegmentRoutes />}
-              />
-              <Route
-                path={AppPath.AutoamtionsCatchAll}
-                element={<AutomationRoutes />}
-              />
+              /
               <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
               {...getPluginsRoutes()}
               {process.env.NODE_ENV === 'development' && (

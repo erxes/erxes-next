@@ -4,29 +4,21 @@ import { gql } from '@apollo/client';
 const commonFields = `
   $code: String,
   $name: String,
-  $status: String,
   $number: String,
   $vacancy: Float,
-  $createdAt: Date,
-  $config: JSON,
   $isAllowIncome:Boolean,
-  $isAllowOutcome:Boolean,
   $isDeposit:Boolean,
   $interestCalcType:String,
   $interestRate: Float,
   $closeInterestRate: Float,
-  $storeInterestInterval:String,
   $description:String,
   $currency:String,
-  $branchId:String,
-  $productType: String
   $limitPercentage: Float
 `;
 
 const commonVariables = `
   code:$code
   name:$name
-  status:$status
   number:$number
   vacancy:$vacancy
   createdAt:$createdAt
@@ -72,3 +64,41 @@ export const contractTypesMutations = {
   contractTypesEdit,
   contractTypesRemove,
 };
+
+export const EDIT_CONTRACTTYPE = gql`
+  mutation savingsContractTypesEdit(
+    $_id: String!
+    $code: String!
+    $name: String!
+    $number: String!
+    $vacancy: Float
+    $isAllowIncome: Boolean
+    $isDeposit: Boolean
+    $isAllowOutcome: Boolean
+    $interestCalcType: String
+    $interestRate: Float
+    $closeInterestRate: Float
+    $description: String
+    $currency: String
+    $limitPercentage: Float
+  ) {
+    savingsContractTypesEdit(
+      _id: $_id
+      code: $code
+      name: $name
+      number: $number
+      vacancy: $vacancy
+      isAllowIncome: $isAllowIncome
+      isDeposit: $isDeposit
+      isAllowOutcome: $isAllowOutcome
+      interestCalcType: $interestCalcType
+      interestRate: $interestRate
+      closeInterestRate: $closeInterestRate
+      description: $description
+      currency: $currency
+      limitPercentage: $limitPercentage
+    ) {
+      _id
+    }
+  }
+`;

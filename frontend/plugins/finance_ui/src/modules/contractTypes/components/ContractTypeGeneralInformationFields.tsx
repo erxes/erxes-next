@@ -12,9 +12,9 @@ import {
   NameField,
   NumberField,
   VacancyField,
-} from '~/modules/contractTypes/components/ContractTypeAddCoreFields';
+} from '@/contractTypes/components/ContractTypeAddCoreFields';
 
-import { ContractTypeFormValues } from '~/modules/contractTypes/components/formSchema';
+import { ContractTypeFormValues } from '@/contractTypes/components/formSchema';
 
 export const ContractTypeGeneralInformationFields = ({
   form,

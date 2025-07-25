@@ -78,3 +78,30 @@ export const contractTypeQueries = {
   contractTypeCounts,
   contractTypeDetail,
 };
+
+export const GET_CONTRACT_TYPE_DETAIL = gql`
+  query SavingsContractTypeDetail($id: String!) {
+    savingsContractTypeDetail(_id: $id) {
+      _id
+      code
+      name
+      description
+      status
+      number
+      vacancy
+      createdAt
+      config
+      currency
+      interestCalcType
+      interestRate
+      closeInterestRate
+      storeInterestInterval
+      branchId
+      isAllowIncome
+      isAllowOutcome
+      isDeposit
+      productType
+      limitPercentage
+    }
+  }
+`;

@@ -71,22 +71,22 @@ export interface ContractTypeData {
 export interface AddConrtactTypeVariables {
   code: string;
   name: string;
-  description: string;
-  status: string;
-  number: string;
-  vacancy: number;
-  currency: string;
-  interestCalcType: string;
-  storeInterestInterval: string;
-  branchId: string;
-  isAllowIncome: boolean;
-  isAllowOutcome: boolean;
-  isDeposit: boolean;
-  interestRate: number;
-  closeInterestRate: number;
+  description?: string;
+  status?: string;
+  number?: string;
+  vacancy?: number;
+  currency?: string;
+  interestCalcType?: string;
+  storeInterestInterval?: string;
+  branchId?: string;
+  isAllowIncome?: boolean;
+  isAllowOutcome?: boolean;
+  isDeposit?: boolean;
+  interestRate?: number;
+  closeInterestRate?: number;
   createdBy?: string;
   createdAt?: boolean;
   config?: IContractConfig;
-  productType: string;
-  limitPercentage: number;
+  productType?: string;
+  limitPercentage?: number;
 }

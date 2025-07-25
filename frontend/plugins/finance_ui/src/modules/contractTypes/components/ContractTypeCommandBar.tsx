@@ -29,6 +29,7 @@ export const ContractTypeCommandBar = () => {
             .join(',')}
           onDeleteSuccess={resetSelection}
         />
+
         <Separator.Inline />
         <Button variant="secondary">
           <IconPlus />

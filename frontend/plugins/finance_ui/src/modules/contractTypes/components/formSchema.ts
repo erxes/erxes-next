@@ -10,9 +10,10 @@ export const contractTypeFormSchema = z.object({
   interestCalcType: z.string().optional(),
   interestRate: z.number().optional(),
   closeInterestRate: z.number().optional(),
-  isAllowIncome: z.string().optional(),
-  isDeposit: z.string().optional(),
-  limitPercentage: z.string().optional(),
+  isAllowIncome: z.boolean().optional(),
+  isDeposit: z.boolean().optional(),
+  isAllowOutcome: z.boolean().optional(),
+  limitPercentage: z.number().optional(),
 });
 
 export type ContractTypeFormValues = z.infer<typeof contractTypeFormSchema>;

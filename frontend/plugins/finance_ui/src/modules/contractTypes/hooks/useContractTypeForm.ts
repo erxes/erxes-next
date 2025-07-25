@@ -10,8 +10,9 @@ export const contractTypeValidationSchema = z.object({
   currency: z.string().optional(),
   decsription: z.string().optional(),
   interestCalcType: z.string().optional(),
-  isAllowIncome: z.string().optional(),
-  isDeposit: z.string().optional(),
+  isAllowIncome: z.boolean().optional(),
+  isDeposit: z.boolean().optional(),
+  isAllowOutcome: z.boolean().optional(),
   limitPercentage: z.string().optional(),
 });
 
@@ -27,8 +28,9 @@ const useContractTypeForm = () => {
       currency: '',
       decsription: '',
       interestCalcType: '',
-      isAllowIncome: '',
-      isDeposit: '',
+      isAllowIncome: false,
+      isDeposit: false,
+      isAllowOutcome: false,
       limitPercentage: '',
     },
     resolver: zodResolver(contractTypeValidationSchema),

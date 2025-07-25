@@ -1,11 +1,11 @@
 import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
-import { contractTypesMutations } from '~/modules/contractTypes/graphql/mutation';
-import { contractTypeQueries } from '~/modules/contractTypes/graphql/queries';
+import { contractTypesMutations } from '@/contractTypes/graphql/mutation';
+import { contractTypeQueries } from '@/contractTypes/graphql/queries';
 import {
   AddConrtactTypeVariables,
   AddContractTypeResult,
   ContractTypeData,
-} from '~/modules/contractTypes/types';
+} from '@/contractTypes/types';
 
 export const useAddContractType = (
   options?: MutationHookOptions<

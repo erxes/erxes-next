@@ -46,7 +46,6 @@ const mutationParams = `
   code: String
   name: String
   description: String
-  status: String
   number: String
   vacancy: Float
   createdAt: Date
