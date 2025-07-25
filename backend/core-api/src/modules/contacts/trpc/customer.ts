@@ -21,25 +21,25 @@ export const customerRouter = t.router({
 
       const defaultFilter = { status: { $ne: 'deleted' } };
 
-      if (query.customerPrimaryEmail) {
+      if (query?.customerPrimaryEmail) {
         defaultFilter['$or'] = [
           { emails: { $in: [query.customerPrimaryEmail] } },
           { primaryEmail: query.customerPrimaryEmail },
         ];
       }
 
-      if (query.customerPrimaryPhone) {
+      if (query?.customerPrimaryPhone) {
         defaultFilter['$or'] = [
           { phones: { $in: [query.customerPrimaryPhone] } },
           { primaryPhone: query.customerPrimaryPhone },
         ];
       }
 
-      if (query.customerCode) {
+      if (query?.customerCode) {
         defaultFilter['code'] = query.customerCode;
       }
 
-      if (query._id) {
+      if (query?._id) {
         defaultFilter['_id'] = query._id;
       }
 

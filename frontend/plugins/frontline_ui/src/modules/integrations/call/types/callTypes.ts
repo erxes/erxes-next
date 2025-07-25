@@ -3,7 +3,7 @@ export interface ICallConfig {
   inboxId: string;
   phone: string;
   wsServer: string;
-  operators: JSON;
+  operators: { userId: string; gsUsername: string; gsPassword: string }[];
   token: string;
   queues: string[];
 }

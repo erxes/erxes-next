@@ -17,11 +17,8 @@ export interface ICallIntegrationModel extends Model<ICallIntegrationDocument> {
 
 export const loadCallIntegrationClass = (models: IModels) => {
   class Integration {
-    public static async getIntegrations(
-      userId: string,
-      integrationId?: string,
-    ) {
-      let integrations = await models.CallIntegrations.find({
+    public static async getIntegrations(userId: string) {
+      const integrations = await models.CallIntegrations.find({
         'operators.userId': userId,
       }).lean();
 
@@ -30,7 +27,7 @@ export const loadCallIntegrationClass = (models: IModels) => {
       }
 
       const filteredIntegration = integrations.map((item: ICallIntegration) => {
-        let integration = item;
+        const integration = item;
 
         const filteredOperators = integration.operators.filter(
           (operator) => operator.userId === userId,

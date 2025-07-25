@@ -35,14 +35,8 @@ const callsMutations = {
     const integration = await findIntegration(subdomain, args);
     const customer = await getOrCreateCustomer(models, subdomain, args);
 
-    const channels = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'channels',
-      action: 'find',
-      input: {
-        integrationIds: { $in: [integration.inboxId] },
-      },
+    const channels = await models.Channels.find({
+      integrationIds: { $in: [integration.inboxId] },
     });
 
     return {
@@ -271,7 +265,7 @@ const callsMutations = {
   async callHistoryRemove(
     _root,
     { _id }: { _id: string },
-    { models, subdomain, user }: IContext,
+    { models }: IContext,
   ) {
     const history = await models.CallHistory.findOneAndDelete({ _id });
 

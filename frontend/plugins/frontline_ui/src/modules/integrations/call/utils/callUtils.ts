@@ -18,3 +18,18 @@ export function parseCallDirection(
   }
   return direction.toLowerCase() as CallDirectionEnum;
 }
+
+export const logger = {
+  log: (a: any) => {
+    console.log(a, 'log a***');
+  },
+  error: (e: any) => {
+    console.error(e, 'error');
+  },
+  warn: (w: any) => {
+    console.warn(w, 'warn');
+  },
+  debug: (d: any) => {
+    console.debug(d, 'debug');
+  },
+};

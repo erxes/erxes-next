@@ -1,7 +1,6 @@
 import { IModels } from '~/connectionResolvers';
 import { getOrCreateCustomer } from './store';
 import { createOrUpdateErxesConversation, findIntegration } from './utils';
-import { receiveInboxMessage } from '~/modules/inbox/receiveMessage';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 const acceptCall = async (
@@ -16,6 +15,7 @@ const acceptCall = async (
   const operator = integration.operators?.find(
     (operator) => operator.userId === user?._id,
   );
+
   params.operatorPhone = integration.phone;
   params.extensionNumber = operator?.gsUsername || '';
   const {
@@ -48,10 +48,10 @@ const acceptCall = async (
       callStatus,
       inboxIntegrationId: integration.inboxId,
       createdAt: new Date(),
-      createdBy: user._id,
-      updatedBy: user._id,
+      createdBy: user?._id,
+      updatedBy: user?._id,
       callDuration: 0,
-      extensionNumber,
+      extensionNumber: extensionNumber || null,
       queueName: queue,
       timeStamp,
     };
@@ -70,6 +70,7 @@ const acceptCall = async (
 
       await history?.save();
     } catch (error) {
+      console.log('error saving call history', error);
       await models.CallHistory.deleteOne({ _id: history?._id });
       console.error('Error saving call history:', error.message);
     }
@@ -103,9 +104,13 @@ const acceptCall = async (
     );
 
     if (apiConversationResponse.status === 'success') {
-      history.erxesApiId = apiConversationResponse.data._id;
+      history.conversationId = apiConversationResponse.data?._id;
 
-      await history.save();
+      try {
+        await history.save();
+      } catch (e) {
+        console.error('Save error:', e);
+      }
     } else {
       throw new Error(
         `Conversation creation failed: ${JSON.stringify(
@@ -114,7 +119,7 @@ const acceptCall = async (
       );
     }
   } catch (e) {
-    await models.CallHistory.deleteCallHistory(history._id, user);
+    await models.CallHistory.deleteCallHistory(history._id?.toString(), user);
     throw new Error(e);
   }
 

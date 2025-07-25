@@ -81,7 +81,7 @@ export const receiveCdr = async (models: IModels, subdomain, params) => {
     const oneMinuteBefore = new Date(startDate.getTime() - 60 * 1000);
     const oneMinuteAfter = new Date(startDate.getTime() + 60 * 1000);
 
-    let historySelector = {
+    const historySelector = {
       customerPhone: primaryPhone,
       createdAt: { $gte: oneMinuteBefore, $lte: oneMinuteAfter },
     } as any;

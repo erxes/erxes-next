@@ -103,30 +103,26 @@ export interface SipProviderProps {
   ) => void;
 }
 export interface SipContextValue {
-  sip: SipProviderProps & {
-    // host: string | null;
-    // port: number | null;
-    // pathname?: string;
-    // user: string | null;
-    // password?: string;
-    // autoRegister?: boolean;
-    // autoAnswer?: boolean;
-    // iceRestart?: boolean;
-    // sessionTimersExpires?: number;
-    // extraHeaders?: ExtraHeaders;
-    // iceServers?: IceServers;
-    // debug?: boolean;
-    status?: SipStatusEnum;
-    errorType: SipErrorTypeEnum | null;
-    errorMessage: string | null;
-  };
-  call: {
-    id: string;
-    status: CallStatusEnum;
-    direction: CallDirectionEnum | null;
-    counterpart: string | null;
-    startTime: string;
-    groupName: string | null;
+  sip: {
+    createSession: () => void;
+    updateHistory: (
+      timeStamp: number,
+      callStartTime: Date,
+      callEndTime: Date,
+      callStatus: string,
+      direction?: string,
+      customerPhone?: string,
+      diversionHeader?: string,
+      endedBy?: string,
+    ) => void;
+    addHistory: (
+      callStatus: string,
+      timeStamp: number,
+      direction: string,
+      customerPhone: string,
+      callStartTime: Date,
+      queueName: string | null,
+    ) => void;
   };
   registerSip: () => void;
   unregisterSip: () => void;
@@ -143,4 +139,16 @@ export interface SipContextValue {
   };
   hold: () => void;
   unhold: () => void;
+}
+
+export interface ISipState {
+  sipStatus: SipStatusEnum;
+  sipErrorType: SipErrorTypeEnum | null;
+  sipErrorMessage: string | null;
+  callStatus: CallStatusEnum;
+  callDirection: CallDirectionEnum | null;
+  callCounterpart: string | null;
+  groupName: string | null;
+  callId: string | null;
+  rtcSession: any;
 }
