@@ -109,16 +109,13 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
 
     return (
       <div
-        className={cn(
-          'flex items-center justify-start rounded gap-1',
-          className,
-        )}
+        className={'flex items-center justify-start rounded gap-1'}
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Combobox.TriggerBase
             variant="secondary"
             aria-expanded={open}
-            className="h-8 text-xl w-auto pl-2 pr-2.5"
+            className={cn("h-8 text-xl w-auto pl-2 pr-2.5", className)}
           >
             {selectedCountry.flag}
           </Combobox.TriggerBase>
@@ -158,7 +155,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           placeholder={placeholder}
           ref={ref}
           variant="secondary"
-          className="bg-accent"
+          className={cn("bg-accent", className)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               const target = e.target as HTMLInputElement;

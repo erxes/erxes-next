@@ -6,22 +6,14 @@ import {
 } from 'erxes-ui/modules/record-table';
 import React, { useState } from 'react';
 
-export interface ITextFieldContainerProps {
-  placeholder?: string;
-  value: string;
-  field: string;
-  fieldId?: string;
-  _id: string;
-}
-
-export const TextField = React.forwardRef<
+export const NumberField = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & {
     placeholder?: string;
-    value: string;
+    value: number;
     scope: string;
-    onValueChange?: (value: string) => void;
-    onSave?: (value: string) => void;
+    onValueChange?: (value: number) => void;
+    onSave?: (value: number) => void;
   }
 >(
   (
@@ -49,15 +41,15 @@ export const TextField = React.forwardRef<
       >
         <RecordTableCellTrigger {...props} ref={ref}>
           {children}
-          <TextOverflowTooltip value={editingValue ?? placeholder} />
+          <TextOverflowTooltip value={editingValue.toString() ?? placeholder} />
         </RecordTableCellTrigger>
         <RecordTableCellContent asChild>
           <form onSubmit={handleAction}>
             <Input
-              value={editingValue}
+              value={editingValue.toString()}
               onChange={(e) => {
-                setEditingValue(e.target.value);
-                onValueChange && onValueChange(e.target.value);
+                setEditingValue(Number(e.target.value));
+                onValueChange && onValueChange(Number(e.target.value));
                 setIsOpen(true);
               }}
             />

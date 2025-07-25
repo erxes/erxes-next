@@ -18,7 +18,7 @@ export const FirstNameField = ({
   className,
 }: TextFieldProps) => {
   const { usersEdit } = useUserEdit();
-  const onSave = (editingValue: string) => {
+  const onSave = (editingValue: string | number) => {
     console.log('editingValue', editingValue);
     if (editingValue === value) return;
     usersEdit(
@@ -33,7 +33,7 @@ export const FirstNameField = ({
       placeholder={placeholder}
       value={value}
       scope={`user-${_id}-details-${field}`}
-      onValueChange={onSave}
+      onSave={onSave}
       className={className}
     />
   );

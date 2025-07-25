@@ -9,7 +9,7 @@ import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { SelectCompany } from 'ui-modules';
 export const CustomerDetailGeneral = () => {
-  const { customerDetail } = useCustomerDetail();
+  const { customerDetail, loading } = useCustomerDetail();
   const {
     _id,
     firstName,

@@ -18,8 +18,7 @@ import {
   EmailDisplay,
   EmailListField,
   FullNameField,
-  PhoneDisplay,
-  PhoneListField,
+  PhoneField,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellDisplay,
@@ -239,10 +238,10 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Phones'}
         >
           <RecordTableCellTrigger>
-            <PhoneDisplay phones={phones} />
+            <PhoneField.BadgeDisplay phones={phones} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <PhoneListField
+            <PhoneField
               recordId={_id}
               phones={phones}
               onValidationStatusChange={(status : 'verified' | 'unverified')=>{

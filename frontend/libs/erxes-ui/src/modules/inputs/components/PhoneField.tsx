@@ -10,8 +10,12 @@ import {
 } from '@tabler/icons-react';
 import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import {
+  Badge,
   Button,
   DropdownMenu,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
   Separator,
   TextOverflowTooltip,
 } from 'erxes-ui/components';
@@ -21,7 +25,7 @@ import {
   showPhoneInputFamilyState,
   editingPhoneFamilyState,
 } from '../states/phoneFieldStates';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { usePhoneFields } from '../hooks/usePhoneFields';
@@ -35,57 +39,44 @@ export interface IPhoneField {
 
 export type TPhones = IPhoneField[];
 
-export const PhoneFieldsProvider = ({
-  children,
-  recordId,
-  onValueChange,
-  onValidationStatusChange
-}: {
-  children: React.ReactNode;
-  recordId: string;
-  onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
-}) => {
-  return (
-    <PhoneFieldsContext.Provider value={{ recordId, onValueChange, onValidationStatusChange }}>
-      {children}
-    </PhoneFieldsContext.Provider>
-  );
+const PhoneListContainer = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return <div {...props} className={cn('p-1 space-y-1', className)} />;
 };
+PhoneListContainer.displayName = 'PhoneListContainer';
 
-export const PhoneListField = ({
-  recordId,
-  phones,
-  onValueChange,
-  onValidationStatusChange,
-}: {
-  recordId: string;
-  phones: TPhones;
-  onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
-}) => {
-  const setPhones = useSetAtom(phonesFamilyState(recordId));
-  const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+const PhoneFieldsProvider = forwardRef<
+  HTMLDivElement,
+  {
+    children: React.ReactNode;
+    recordId: string;
+    onValueChange: (phones: TPhones) => void;
+    onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  } & React.HTMLAttributes<HTMLDivElement>
+>(
+  (
+    { children, recordId, onValueChange, onValidationStatusChange, ...props },
+    ref,
+  ) => {
+    return (
+      <PhoneFieldsContext.Provider
+        value={{ recordId, onValueChange, onValidationStatusChange }}
+      >
+        <div ref={ref} {...props}>
+          {children}
+        </div>
+      </PhoneFieldsContext.Provider>
+    );
+  },
+);
+PhoneFieldsProvider.displayName = 'PhoneFieldsProvider';
 
-  useEffect(() => {
-    setPhones(phones);
-    return () => {
-      setShowPhoneInput(false);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phones, setPhones]);
-
-  return (
-    <PhoneFieldsProvider recordId={recordId} onValueChange={onValueChange} onValidationStatusChange={onValidationStatusChange}>
-      <div className="p-1 space-y-1">
-        <PhoneList />
-      </div>
-      <PhoneForm />
-    </PhoneFieldsProvider>
-  );
-};
-
-const PhoneList = () => {
+const PhoneList = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
   const { recordId } = usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
   const [animationParent] = useAutoAnimate();
@@ -94,8 +85,13 @@ const PhoneList = () => {
   useEffect(() => {
     mounted.current = true;
   }, []);
+
   return (
-    <div ref={mounted.current ? animationParent : null} className="space-y-1">
+    <div
+      ref={mounted.current ? animationParent : ref}
+      className={cn('space-y-1', className)}
+      {...props}
+    >
       {phones.map(
         (phone) =>
           phone.phone && (
@@ -103,24 +99,31 @@ const PhoneList = () => {
               className="flex items-center overflow-hidden gap-1 w-full"
               key={phone.phone}
             >
-              <PhoneField {...phone} />
+              <PhoneItem {...phone} />
               <PhoneOptions {...phone} />
             </div>
           ),
       )}
     </div>
   );
-};
+});
+PhoneList.displayName = 'PhoneList';
 
-const PhoneField = ({ phone, status, isPrimary }: IPhoneField) => {
+const PhoneItem = forwardRef<
+  HTMLButtonElement,
+  IPhoneField & React.ComponentProps<typeof Button>
+>(({ phone, status, isPrimary, className, ...props }, ref) => {
   return (
     <Button
+      ref={ref}
       variant="secondary"
       className={cn(
         'w-full font-medium text-left justify-start px-2 flex-auto overflow-hidden',
         isPrimary && 'text-primary bg-primary/10 hover:bg-primary/20',
+        className,
       )}
       size="lg"
+      {...props}
     >
       {status === 'verified' ? (
         <IconCircleDashedCheck className="text-success" />
@@ -131,17 +134,19 @@ const PhoneField = ({ phone, status, isPrimary }: IPhoneField) => {
       {isPrimary && <IconBookmarkFilled className="text-primary" />}
     </Button>
   );
-};
+});
+PhoneItem.displayName = 'PhoneItem';
 
-const PhoneOptions = ({
-  phone,
-  status,
-  isPrimary,
-}: IPhoneField & { isPrimary?: boolean }) => {
-  const { recordId, onValueChange, onValidationStatusChange } = usePhoneFields();
+const PhoneOptions = forwardRef<
+  HTMLButtonElement,
+  IPhoneField & React.ComponentProps<typeof Button>
+>(({ phone, status, isPrimary, className, ...props }, ref) => {
+  const { recordId, onValueChange, onValidationStatusChange } =
+    usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
   const setEditingPhone = useSetAtom(editingPhoneFamilyState(recordId));
   const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+
   const handleSetPrimaryPhone = () => {
     if (isPrimary) return;
     onValueChange?.([
@@ -151,23 +156,29 @@ const PhoneOptions = ({
         .map((e) => ({ ...e, isPrimary: false })),
     ]);
   };
+
   const handleEditClick = () => {
     setShowPhoneInput(true);
     setEditingPhone(phone || null);
   };
+
   const handleVerificationChange = (value: string) => {
     onValidationStatusChange?.(value as 'verified' | 'unverified');
   };
+
   const handleDeleteClick = () => {
     onValueChange?.(phones.filter((e) => e.phone !== phone));
   };
+
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
         <Button
+          ref={ref}
           variant="secondary"
-          className="w-full font-medium size-8 flex-shrink-0"
+          className={cn('w-full font-medium size-8 flex-shrink-0', className)}
           size="icon"
+          {...props}
         >
           <IconDots />
         </Button>
@@ -218,9 +229,13 @@ const PhoneOptions = ({
       </DropdownMenu.Content>
     </DropdownMenu>
   );
-};
+});
+PhoneOptions.displayName = 'PhoneOptions';
 
-const PhoneForm = () => {
+const PhoneForm = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
   const { recordId } = usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
   const [newPhone, setNewPhone] = useState<string>('');
@@ -242,6 +257,7 @@ const PhoneForm = () => {
       setNewPhone(editingPhone);
     }
   }, [showPhoneInput, editingPhone]);
+
   useEffect(() => {
     if (phones.filter((phone) => !!phone.phone).length === 0) {
       setShowPhoneInput(true);
@@ -264,6 +280,7 @@ const PhoneForm = () => {
     setNewPhone('');
     setEditingPhone(null);
   };
+
   const onPhoneAdd = (phone: string) => {
     if (phones.length === 0) {
       onValueChange?.([{ phone, status: 'unverified', isPrimary: true }]);
@@ -272,8 +289,9 @@ const PhoneForm = () => {
     }
     setNewPhone('');
   };
+
   return (
-    <>
+    <div ref={ref} className={className} {...props}>
       {showPhoneInput && (
         <div className="px-1 pb-1">
           <PhoneInput
@@ -316,6 +334,105 @@ const PhoneForm = () => {
           {editingPhone ? 'Edit phone' : 'Add phone'}
         </Button>
       </div>
-    </>
+    </div>
+  );
+});
+PhoneForm.displayName = 'PhoneForm';
+
+interface PhoneListFieldProps {
+  recordId: string;
+  phones: TPhones;
+  onValueChange: (phones: TPhones) => void;
+  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+}
+
+const PhoneListFieldRoot = forwardRef<
+  HTMLDivElement,
+  PhoneListFieldProps & React.HTMLAttributes<HTMLDivElement>
+>(
+  (
+    {
+      recordId,
+      phones,
+      onValueChange,
+      onValidationStatusChange,
+      className,
+      ...props
+    },
+    ref,
+  ) => {
+    const setPhones = useSetAtom(phonesFamilyState(recordId));
+    const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+
+    useEffect(() => {
+      setPhones(phones);
+      return () => {
+        setShowPhoneInput(false);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phones, setPhones]);
+
+    return (
+      <PhoneField.Provider
+        ref={ref}
+        recordId={recordId}
+        onValueChange={onValueChange}
+        onValidationStatusChange={onValidationStatusChange}
+        className={className}
+        {...props}
+      >
+        <PhoneField.Container>
+          <PhoneField.List />
+        </PhoneField.Container>
+        <PhoneField.Form />
+      </PhoneField.Provider>
+    );
+  },
+);
+PhoneListFieldRoot.displayName = 'PhoneListFieldRoot';
+
+export const PhonesBadgeDisplay = ({
+  phones,
+}: {
+  phones: TPhones | undefined;
+}) => {
+  const { recordId } = usePhoneFields();
+  const phonesFromAtom = useAtomValue(phonesFamilyState(recordId));
+
+  const phonesToDisplay = phones || phonesFromAtom;
+
+  return (
+    <div className="flex gap-2">
+      {phonesToDisplay?.map((phone) =>
+        phone.phone ? (
+          <Badge key={phone.phone} variant="secondary">
+            {phone.isPrimary &&
+              (phone.status === 'verified' ? (
+                <IconCircleDashedCheck className="text-success size-4" />
+              ) : (
+                <IconCircleDashed className="text-muted-foreground size-4" />
+              ))}
+            {phone.phone}
+          </Badge>
+        ) : null,
+      )}
+    </div>
   );
 };
+
+
+const PhoneFieldInlineCell = () => {
+
+}
+
+const PhoneField = Object.assign(PhoneListFieldRoot, {
+  Provider: PhoneFieldsProvider,
+  Container: PhoneListContainer,
+  List: PhoneList,
+  Item: PhoneItem,
+  Options: PhoneOptions,
+  Form: PhoneForm,
+  BadgeDisplay: PhonesBadgeDisplay,
+});
+
+export { PhoneField };
