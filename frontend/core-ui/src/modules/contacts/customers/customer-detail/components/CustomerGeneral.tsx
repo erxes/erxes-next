@@ -6,6 +6,9 @@ import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/c
 import { useDebounce } from 'use-debounce';
 import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { useEffect, useState } from 'react';
+import { PhoneFieldCustomer } from '@/contacts/customers/customer-edit/components/PhoneFieldCustomer';
+
+
 export const CustomerGeneral = () => {
   const { customerDetail, loading } = useCustomerDetail();
   const { customerEdit } = useCustomerEdit();
@@ -40,13 +43,7 @@ export const CustomerGeneral = () => {
               />
             </DataListItem>
             <DataListItem label="Primary Phone">
-              <div className="rounded-sm shadow shadow-sm">
-                <PhoneInput
-                  value={primaryPhone || ''}
-                  onChange={(value) => console.log(value)}
-                  className="bg-transparent "
-                />
-              </div>
+              <PhoneFieldCustomer _id={_id} primaryPhone={primaryPhone || ''}/>
             </DataListItem>
             <DataListItem label="Score">
               <TextFieldCustomer
@@ -68,6 +65,8 @@ export const CustomerGeneral = () => {
     </>
   );
 };
+
+
 
 const DataListItem = ({
   label,

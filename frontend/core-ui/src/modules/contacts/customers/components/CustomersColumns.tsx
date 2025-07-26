@@ -28,6 +28,7 @@ import {
   SexCode,
   SexDisplay,
   SexField,
+  TPhones,
   readImage,
   useQueryState,
   useToast,
@@ -153,7 +154,8 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                   {
                     variables: {
                       _id,
-                      emailValidationStatus: status === 'verified' ? 'valid' : 'invalid',
+                      emailValidationStatus:
+                        status === 'verified' ? 'valid' : 'invalid',
                     },
                     onError: (e: ApolloError) => {
                       toast({
@@ -233,64 +235,59 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         (phone, index, self) =>
           index === self.findIndex((t) => t.phone === phone.phone),
       );
+      const onValueChange = (newPhones: TPhones) => {
+        const primaryPhone = newPhones.find((phone) => phone.isPrimary);
+        let newPhoneValidationStatus;
+        if (primaryPhone?.status !== phoneValidationStatus) {
+          newPhoneValidationStatus =
+            primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
+        }
+        customersEdit(
+          {
+            variables: {
+              _id,
+              primaryPhone: primaryPhone?.phone || null,
+              phones: newPhones
+                .filter((phone) => !phone.isPrimary)
+                .map((phone) => phone.phone),
+              phoneValidationStatus: newPhoneValidationStatus,
+            },
+            onError: (e: ApolloError) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+              });
+            },
+          },
+          ['primaryPhone', 'phones'],
+        );
+      };
+      const onValidationStatusChange = (status: 'verified' | 'unverified') => {
+        customersEdit(
+          {
+            variables: {
+              _id,
+              phoneValidationStatus:
+                status === 'verified' ? 'valid' : 'invalid',
+            },
+            onError: (e: ApolloError) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+              });
+            },
+          },
+          ['phoneValidationStatus'],
+        );
+      };
       return (
-        <RecordTablePopover
+        <PhoneField.InlineCell
+          recordId={_id}
+          phones={phones}
           scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Phones'}
-        >
-          <RecordTableCellTrigger>
-            <PhoneField.BadgeDisplay phones={phones} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <PhoneField
-              recordId={_id}
-              phones={phones}
-              onValidationStatusChange={(status : 'verified' | 'unverified')=>{
-                customersEdit(
-                  {
-                    variables: {
-                      _id,
-                      phoneValidationStatus: status === 'verified' ? 'valid' : 'invalid',
-                    },
-                    onError: (e: ApolloError) => {
-                      toast({
-                        title: 'Error',
-                        description: e.message,
-                      });
-                    },
-                  },
-                  ['phoneValidationStatus'],
-                );
-              }}
-              onValueChange={(newPhones) => {
-                const primaryPhone = newPhones.find((phone) => phone.isPrimary);
-                let newPhoneValidationStatus;
-                if (primaryPhone?.status !== phoneValidationStatus) {
-                  newPhoneValidationStatus =
-                    primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
-                }
-                customersEdit(
-                  {
-                    variables: {
-                      _id,
-                      primaryPhone: primaryPhone?.phone || null,
-                      phones: newPhones
-                        .filter((phone) => !phone.isPrimary)
-                        .map((phone) => phone.phone),
-                      phoneValidationStatus: newPhoneValidationStatus,
-                    },
-                    onError: (e: ApolloError) => {
-                      toast({
-                        title: 'Error',
-                        description: e.message,
-                      });
-                    },
-                  },
-                  ['primaryPhone', 'phones'],
-                );
-              }}
-            />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          onValueChange={onValueChange}
+          onValidationStatusChange={onValidationStatusChange}
+        />
       );
     },
     size: 250,

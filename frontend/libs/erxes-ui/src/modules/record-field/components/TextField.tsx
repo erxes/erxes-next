@@ -31,9 +31,25 @@ export const TextField = React.forwardRef<
     const [isOpen, setIsOpen] = useState(false);
     const [editingValue, setEditingValue] = useState(value);
 
-    const handleAction = () => {
-      if (editingValue === value) return;
+    const handleAction = (e?: React.FormEvent) => {
+      e?.preventDefault();
+      if (editingValue === value) {
+        setIsOpen(false);
+        return;
+      }
       onSave && onSave(editingValue);
+      setIsOpen(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAction();
+      }
+      if (e.key === 'Escape') {
+        setEditingValue(value);
+        setIsOpen(false);
+      }
     };
 
     return (
@@ -44,6 +60,8 @@ export const TextField = React.forwardRef<
           setIsOpen(open);
           if (open) {
             setEditingValue(value);
+          } else if (!open && editingValue !== value) {
+            handleAction();
           }
         }}
       >
@@ -58,8 +76,9 @@ export const TextField = React.forwardRef<
               onChange={(e) => {
                 setEditingValue(e.target.value);
                 onValueChange && onValueChange(e.target.value);
-                setIsOpen(true);
               }}
+              onKeyDown={handleKeyDown}
+              autoFocus
             />
             <button type="submit" className="sr-only">
               Save

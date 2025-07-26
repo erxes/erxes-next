@@ -9,7 +9,7 @@ import { formatPhoneNumber } from 'erxes-ui/utils/format';
 
 interface PhoneInputProps {
   value?: string;
-  onChange: (value: string, defaultCountryCode: CountryCode) => void;
+  onChange?: (value: string, defaultCountryCode: CountryCode) => void;
   className?: string;
   defaultCountry?: CountryCode;
   placeholder?: string;
@@ -18,7 +18,7 @@ interface PhoneInputProps {
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
   (
-    { value, onChange, className, defaultCountry, placeholder, onEnter },
+    { value, onChange, className, defaultCountry, placeholder, onEnter, ...props },
     ref,
   ) => {
     const defaultCountryCode =
@@ -44,7 +44,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         ? parsedNumber.formatInternational()
         : value
       : selectedCountry.dial_code;
-    const [phoneNumber, setPhoneNumber] = useState<string>(
+    const [phoneNumber, setPhoneNumber] = useState<string>(() =>
       formatPhoneNumber({ value: initialValue || selectedCountry.dial_code }),
     );
 
@@ -75,6 +75,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         parsedNumber = null;
       }
 
+      let countryToUse = selectedCountry;
       const countryCode = parsedNumber?.country;
       if (countryCode) {
         const newCountry = CountryPhoneCodes.find(
@@ -82,40 +83,38 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         );
         if (newCountry) {
           setSelectedCountry(newCountry);
+          countryToUse = newCountry;
         }
       }
 
       setPhoneNumber(
         formatPhoneNumber({
-          defaultCountry: selectedCountry.code as CountryCode,
+          defaultCountry: countryToUse.code as CountryCode,
           value: input,
         }),
       );
-      onChange(
+      onChange?.(
         input.replace(/[a-zA-Z\s]/g, ''),
-        selectedCountry.code as CountryCode,
+        countryToUse.code as CountryCode,
       );
     };
     const handleBlur = () => {
       if (!phoneNumber.startsWith('+')) {
         const updatedNumber = '+' + phoneNumber;
         setPhoneNumber(updatedNumber);
-        onChange(
+        onChange?.(
           updatedNumber.replace(/[a-zA-Z\s]/g, ''),
           selectedCountry.code as CountryCode,
         );
       }
     };
-
     return (
-      <div
-        className={'flex items-center justify-start rounded gap-1'}
-      >
+      <div className={'flex items-center justify-start rounded gap-1'}>
         <Popover open={open} onOpenChange={setOpen}>
           <Combobox.TriggerBase
             variant="secondary"
             aria-expanded={open}
-            className={cn("h-8 text-xl w-auto pl-2 pr-2.5", className)}
+            className={cn('h-8 text-xl w-auto pl-2 pr-2.5', className)}
           >
             {selectedCountry.flag}
           </Combobox.TriggerBase>
@@ -154,17 +153,18 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           onBlur={handleBlur}
           placeholder={placeholder}
           ref={ref}
-          variant="secondary"
-          className={cn("bg-accent", className)}
+          className={cn('bg-accent', className)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              const target = e.target as HTMLInputElement;
-              onEnter?.(target.value);
+              onEnter?.(value || '');
               e.preventDefault();
             }
           }}
+          {...props}
         />
       </div>
     );
   },
 );
+
+PhoneInput.displayName = 'PhoneInput';

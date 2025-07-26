@@ -11,8 +11,7 @@ import {
   EmailDisplay,
   EmailListField,
   Input,
-  PhoneDisplay,
-  PhoneListField,
+  PhoneField,
   readImage,
   RecordTable,
   RecordTableCellContent,
@@ -20,6 +19,7 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
   TextOverflowTooltip,
+  TPhones,
   useQueryState,
 } from 'erxes-ui';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
@@ -68,11 +68,16 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <Badge variant="secondary" onClick={(e) => {
-              e.stopPropagation();
-              setRenderingCompanyDetail(true);
-              setCompanyDetail(cell.row.original._id);
-            }}>{primaryName}</Badge>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setRenderingCompanyDetail(true);
+                setCompanyDetail(cell.row.original._id);
+              }}
+            >
+              {primaryName}
+            </Badge>
           </RecordTableCellTrigger>
           <RecordTableCellContent className="min-w-72">
             <Input value={primaryName || ''} />
@@ -194,45 +199,40 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         (phone, index, self) =>
           index === self.findIndex((t) => t.phone === phone.phone),
       );
+      const onValueChange = (newPhones: TPhones) => {
+        const primaryPhone = newPhones.find((phone) => phone.isPrimary);
+        let newPhoneValidationStatus = undefined;
+        if (primaryPhone?.status !== phoneValidationStatus) {
+          newPhoneValidationStatus =
+            primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
+        }
+        companiesEdit(
+          {
+            variables: {
+              _id,
+              primaryPhone: primaryPhone?.phone || null,
+              phones: newPhones
+                .filter((phone) => !phone.isPrimary)
+                .map((phone) => phone.phone),
+              phoneValidationStatus: newPhoneValidationStatus,
+            },
+            onError: (e: ApolloError) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+              });
+            },
+          },
+          ['primaryPhone', 'phones'],
+        );
+      };
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <PhoneDisplay phones={phones} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <PhoneListField
-              recordId={_id}
-              phones={phones}
-              onValueChange={(newPhones) => {
-                const primaryPhone = newPhones.find((phone) => phone.isPrimary);
-                let newPhoneValidationStatus = undefined;
-                if (primaryPhone?.status !== phoneValidationStatus) {
-                  newPhoneValidationStatus =
-                    primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
-                }
-                companiesEdit(
-                  {
-                    variables: {
-                      _id,
-                      primaryPhone: primaryPhone?.phone || null,
-                      phones: newPhones
-                        .filter((phone) => !phone.isPrimary)
-                        .map((phone) => phone.phone),
-                      phoneValidationStatus: newPhoneValidationStatus,
-                    },
-                    onError: (e: ApolloError) => {
-                      toast({
-                        title: 'Error',
-                        description: e.message,
-                      });
-                    },
-                  },
-                  ['primaryPhone', 'phones'],
-                );
-              }}
-            />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        <PhoneField.InlineCell
+          recordId={_id}
+          scope={ContactsHotKeyScope.CompaniesPage + '.' + _id + '.Phones'}
+          phones={phones}
+          onValueChange={onValueChange}
+        />
       );
     },
   },
