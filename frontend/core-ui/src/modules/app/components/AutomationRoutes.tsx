@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Routes } from 'react-router';
 
 import { AutomationsPath } from '@/types/paths/AutomationPath';
+import { AutomationsPageEffect } from '~/pages/automations/AutomationPageEffect';
 
 const AutomationIndexPage = lazy(() =>
   import('~/pages/automations/AutomationIndexPage').then((module) => ({
@@ -25,6 +26,7 @@ export const AutomationRoutes = () => {
           element={<AutomationDetailPage />}
         />
       </Routes>
+      <AutomationsPageEffect />
     </Suspense>
   );
 };

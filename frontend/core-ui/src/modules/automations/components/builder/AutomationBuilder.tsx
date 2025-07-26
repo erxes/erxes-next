@@ -15,27 +15,33 @@ import { useEffect, useState } from 'react';
 import '@xyflow/react/dist/style.css';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { useMultiQueryState, useQueryState } from 'erxes-ui';
+import { Tabs, useMultiQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
-import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
-import {
-  automationBuilderFormSchema,
-  TAutomationProps,
-} from '@/automations/utils/AutomationFormDefinitions';
-import { IAutomation, NodeData } from '../../types';
-import { deepCleanNulls } from '../../utils/automationBuilderUtils';
-import { AutomationHistories } from './history/components/AutomationHistories';
-import ConnectionLine from './edges/connectionLine';
-import PrimaryEdge from './edges/PrimaryEdge';
-import ActionNode from './nodes/ActionNode';
-import TriggerNode from './nodes/TriggerNode';
 import { AutomationProvider } from '@/automations/components/builder/hooks/useAutomation';
 import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
+import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
+import {
+  automationBuilderActiveTabState,
+  automationBuilderSiderbarOpenState,
+} from '@/automations/states/automationState';
+import {
+  automationBuilderFormSchema,
+  TAutomationBuilderForm,
+} from '@/automations/utils/AutomationFormDefinitions';
+import { useAtom } from 'jotai';
+import { IAutomation, NodeData } from '../../types';
+import { deepCleanNulls } from '../../utils/automationBuilderUtils';
+import ConnectionLine from './edges/connectionLine';
+import PrimaryEdge from './edges/PrimaryEdge';
+import { AutomationHistories } from './history/components/AutomationHistories';
+import ActionNode from './nodes/ActionNode';
+import TriggerNode from './nodes/TriggerNode';
+import { AutomationBuilderEffect } from '@/automations/components/builder/AutomationBuilderEffect';
 
 const nodeTypes = {
   trigger: TriggerNode as any,
@@ -45,16 +51,9 @@ const nodeTypes = {
 const edgeTypes = {
   primary: PrimaryEdge,
 };
-const Builder = ({
-  reactFlowInstance,
-  setReactFlowInstance,
-}: {
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
-  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
-}) => {
+const Builder = () => {
   const {
     theme,
-    resetNodes,
     reactFlowWrapper,
     nodes,
     edges,
@@ -67,16 +66,13 @@ const Builder = ({
     onNodeDoubleClick,
     onNodeDragStop,
     onDragOver,
-    triggers,
-    actions,
-  } = useReactFlowEditor({ reactFlowInstance });
 
-  useEffect(() => {
-    resetNodes();
-  }, [JSON.stringify(triggers), JSON.stringify(actions)]);
+    setReactFlowInstance,
+  } = useReactFlowEditor();
 
   return (
     <div className="h-full" ref={reactFlowWrapper}>
+      <AutomationBuilderEffect />
       <ReactFlow
         ref={editorWrapper}
         nodes={nodes}
@@ -105,61 +101,57 @@ const Builder = ({
   );
 };
 
-const AutomationBuilderWrapper = ({
-  activeTab,
-  reactFlowInstance,
-  setReactFlowInstance,
-}: {
-  activeTab: 'builder' | 'history';
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
-  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
-}) => {
-  if (activeTab === 'history') {
-    return <AutomationHistories />;
-  }
-
-  return (
-    <div className="relative h-full flex flex-col grow">
-      <Builder
-        reactFlowInstance={reactFlowInstance}
-        setReactFlowInstance={setReactFlowInstance}
-      />
-      <AutomationBuilderSidebar />
-    </div>
-  );
-};
-
 export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
+  const [activeTab, setActiveTab] = useAtom(automationBuilderActiveTabState);
+  const [isOpenSideBar, setOpenSidebar] = useAtom(
+    automationBuilderSiderbarOpenState,
+  );
   const [queryParams] = useMultiQueryState<{
     activeNodeId: string;
     activeTab: 'builder' | 'history';
   }>(['activeNodeId', 'activeTab']);
-  const { activeNodeId, activeTab } = queryParams;
 
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
-
-  const form = useForm<TAutomationProps>({
+  const form = useForm<TAutomationBuilderForm>({
     resolver: zodResolver(automationBuilderFormSchema),
-    defaultValues: {
-      isMinimized: activeNodeId ? false : true,
-      activeTab: activeTab || 'builder',
-      detail: deepCleanNulls(detail),
-    },
+    defaultValues: deepCleanNulls(detail),
   });
 
-  const activeBulderTab = form.watch('activeTab');
+  useEffect(() => {
+    console.log({ activeTab, queryParamsactiveTab: queryParams.activeTab });
+    if (activeTab !== queryParams.activeTab) {
+      setActiveTab(queryParams.activeTab || 'builder');
+    }
+
+    if (queryParams.activeNodeId && !isOpenSideBar) {
+      setOpenSidebar(true);
+    }
+  }, [queryParams?.activeTab, queryParams?.activeNodeId]);
 
   return (
     <AutomationProvider>
       <ReactFlowProvider>
         <AutomationBuilderDnDProvider>
           <FormProvider {...form}>
-            <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
-            <AutomationBuilderWrapper
-              activeTab={activeBulderTab}
-              reactFlowInstance={reactFlowInstance}
-              setReactFlowInstance={setReactFlowInstance}
-            />
+            <Tabs value={activeTab} className="h-screen flex flex-col">
+              <AutomationBuilderHeader />
+              {activeTab === 'builder' && (
+                <Tabs.Content
+                  value="builder"
+                  className="flex-1 h-full relative"
+                >
+                  <Builder />
+                  <AutomationBuilderSidebar />
+                </Tabs.Content>
+              )}
+              {activeTab === 'history' && (
+                <Tabs.Content
+                  value="history"
+                  className="flex-1 flex flex-col h-full"
+                >
+                  <AutomationHistories />
+                </Tabs.Content>
+              )}
+            </Tabs>
           </FormProvider>
         </AutomationBuilderDnDProvider>
       </ReactFlowProvider>

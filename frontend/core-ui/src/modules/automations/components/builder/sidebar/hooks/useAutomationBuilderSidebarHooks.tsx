@@ -1,24 +1,27 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useReactFlow } from '@xyflow/react';
-import { useFormContext } from 'react-hook-form';
+import {
+  automationBuilderSiderbarOpenState,
+  toggleAutomationBuilderOpenSidebar,
+} from '@/automations/states/automationState';
+import { NodeData } from '@/automations/types';
+import { Node, useReactFlow } from '@xyflow/react';
+import { useAtomValue, useSetAtom } from 'jotai';
 
 export const useAutomationBuilderSidebarHooks = () => {
-  const { getNodes } = useReactFlow();
-  const { watch, setValue } = useFormContext<TAutomationProps>();
+  const isOpenSideBar = useAtomValue(automationBuilderSiderbarOpenState);
+  const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
   const { queryParams, setQueryParams } = useAutomation();
-  const [isMinimized, activeNode] = watch(['isMinimized', 'activeNode']);
+  const { getNode } = useReactFlow<Node<NodeData>>();
+  const activeNode = getNode(queryParams?.activeNodeId || '')?.data;
 
   const handleClose = () => {
-    setValue('activeNode', null);
-    setValue('isMinimized', true);
+    toggleSideBarOpen();
     setQueryParams({
       activeNodeId: null,
     });
   };
 
   const handleBack = () => {
-    setValue('activeNode', null);
     setQueryParams({
       activeNodeId: null,
       activeNodeTab: activeNode?.nodeType || null,
@@ -26,12 +29,10 @@ export const useAutomationBuilderSidebarHooks = () => {
   };
 
   return {
-    getNodes,
-    isMinimized,
+    isOpenSideBar,
     activeNode,
-    queryParams,
     handleBack,
     handleClose,
-    setValue,
+    toggleSideBarOpen,
   };
 };

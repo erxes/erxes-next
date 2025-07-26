@@ -1,16 +1,19 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { NodeData } from '@/automations/types';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { toast } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { getAutomationTypes } from 'ui-modules';
 
 export const useCustomTriggerContent = (activeNode: NodeData) => {
-  const { setValue, watch } = useFormContext<TAutomationProps>();
+  const { setValue, watch } = useFormContext<TAutomationBuilderForm>();
   const { setQueryParams } = useAutomation();
+  const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
 
-  const triggers = watch(`detail.triggers`);
+  const triggers = watch(`triggers`);
 
   const activeTrigger =
     triggers.find((trigger) => trigger.id === activeNode.id) ||
@@ -22,9 +25,9 @@ export const useCustomTriggerContent = (activeNode: NodeData) => {
   );
 
   const onSaveTriggerConfig = (config: any) => {
-    setValue(`detail.triggers.${activeNode.nodeIndex}.config`, config);
+    setValue(`triggers.${activeNode.nodeIndex}.config`, config);
     setQueryParams({ activeNodeId: null });
-    setValue('isMinimized', true);
+    toggleSideBarOpen();
 
     toast({
       title: 'Trigger configuration added successfully.',

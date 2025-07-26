@@ -1,17 +1,15 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import React, { useMemo } from 'react';
-import { useWatch } from 'react-hook-form';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =
     useAutomation();
   const { activeNodeTab } = queryParams || {};
 
-  const triggers =
-    useWatch<TAutomationProps>({ name: 'detail.triggers' }) ?? [];
-  const actions = useWatch<TAutomationProps>({ name: 'detail.actions' }) ?? [];
+  const { triggers, actions, getList } = useTriggersActions();
 
   const { triggersConst, actionsConst, loading, error, refetch } =
     useAutomation();
@@ -24,7 +22,7 @@ export const useAutomationNodeLibrarySidebar = () => {
       string,
     ];
 
-    const nodeList = nodeType === 'trigger' ? triggers : actions;
+    const nodeList = getList(nodeType);
     const nodeTypeValue = nodeList.find(
       (node: any) => node.id === nodeId,
     )?.type;

@@ -1,11 +1,11 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { IconBolt, IconPlus, IconSettings } from '@tabler/icons-react';
 import { Button, Card } from 'erxes-ui';
 import { memo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export const PlaceHolderNode = memo(() => {
-  const { setValue } = useFormContext<TAutomationProps>();
+  const { setValue } = useFormContext<TAutomationBuilderForm>();
 
   return (
     <Card className="w-80 bg-background shadow-lg border-0 relative">

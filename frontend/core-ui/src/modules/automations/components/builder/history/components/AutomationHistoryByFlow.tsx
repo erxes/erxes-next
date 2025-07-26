@@ -98,11 +98,11 @@ export const AutomationHistoryByFlow = ({
   return (
     <div className="h-full">
       <ReactFlow
-        nodes={generateNodes(
-          { triggers: triggers, actions: actions },
-          { constants, beforeTitleContent },
-        )}
-        edges={generateEdges({ triggers, actions })}
+        nodes={generateNodes(triggers, actions, {
+          constants,
+          beforeTitleContent,
+        })}
+        edges={generateEdges(triggers, actions)}
         fitView
         fitViewOptions={{ padding: 4, minZoom: 0.8 }}
         nodeTypes={nodeTypes}

@@ -3,48 +3,46 @@ import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
-import { NodeData } from '@/automations/types';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useMutation } from '@apollo/client';
 import {
-  Edge,
-  EdgeProps,
-  Node,
-  ReactFlowInstance,
-  useReactFlow,
-} from '@xyflow/react';
+  automationBuilderActiveTabState,
+  automationBuilderSiderbarOpenState,
+  toggleAutomationBuilderOpenSidebar,
+} from '@/automations/states/automationState';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { useMutation } from '@apollo/client';
+import { useReactFlow } from '@xyflow/react';
 import { useToast } from 'erxes-ui';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { SubmitErrorHandler, useFormContext, useWatch } from 'react-hook-form';
 import { useParams } from 'react-router';
 
-export const useAutomationHeader = (
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>,
-) => {
-  const { control, setValue, handleSubmit, clearErrors } =
-    useFormContext<TAutomationProps>();
+export const useAutomationHeader = () => {
+  const { control, handleSubmit, clearErrors } =
+    useFormContext<TAutomationBuilderForm>();
 
-  const { setQueryParams } = useAutomation();
+  const { setQueryParams, reactFlowInstance } = useAutomation();
+  const activeTab = useAtomValue(automationBuilderActiveTabState);
+  const isOpenSideBar = useAtomValue(automationBuilderSiderbarOpenState);
+  const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
 
   const { getNodes, setNodes } = useReactFlow();
   const { toast } = useToast();
   const { id } = useParams();
 
-  const [activeTab, isMinimized, detail] = useWatch({
-    control,
-    name: ['activeTab', 'isMinimized', 'detail'],
-  });
   const {
     triggers = [],
     actions = [],
     name = '',
     status = 'draft',
-  } = detail || {};
+  } = useWatch({
+    control,
+  });
 
   const [save, { loading }] = useMutation(
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
   );
 
-  const handleSave = (values: TAutomationProps) => {
+  const handleSave = (values: TAutomationBuilderForm) => {
     const generateValues = () => {
       return {
         id,
@@ -84,9 +82,7 @@ export const useAutomationHeader = (
     });
   };
 
-  const handleError: SubmitErrorHandler<TAutomationProps> = ({
-    detail: errors,
-  }) => {
+  const handleError: SubmitErrorHandler<TAutomationBuilderForm> = (errors) => {
     const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
 
@@ -144,19 +140,18 @@ export const useAutomationHeader = (
   };
 
   const toggleTabs = (value: 'builder' | 'history') => {
-    setValue('activeTab', value);
     setQueryParams({ activeTab: value });
   };
 
   return {
     control,
     loading,
-    isMinimized,
+    isOpenSideBar,
     handleSubmit,
     handleSave,
     handleError,
     activeTab,
     toggleTabs,
-    setValue,
+    toggleSideBarOpen,
   };
 };

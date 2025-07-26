@@ -95,7 +95,7 @@ const CustomMailField = ({
 
   return (
     <Form.Field
-      name={`detail.actions.${currentActionIndex}.config.customMails`}
+      name={`actions.${currentActionIndex}.config.customMails`}
       control={control}
       render={({ field }) => (
         <Form.Item>
@@ -134,7 +134,7 @@ const SendEmailConfigurationForm = ({
         isDone={!!config?.fromUserId}
       >
         <Form.Field
-          name={`detail.actions.${currentActionIndex}.config.fromUserId`}
+          name={`actions.${currentActionIndex}.config.fromUserId`}
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">
@@ -177,7 +177,7 @@ const SendEmailConfigurationForm = ({
           </Tabs.List>
           <Tabs.Content value="general" className="p-4">
             <Form.Field
-              name={`detail.actions.${currentActionIndex}.config.attributionMails`}
+              name={`actions.${currentActionIndex}.config.attributionMails`}
               control={control}
               render={({ field }) => (
                 <Form.Item>
@@ -192,7 +192,7 @@ const SendEmailConfigurationForm = ({
           <Tabs.Content value="static" className="p-4">
             <CustomMailField currentActionIndex={currentActionIndex} />
             <Form.Field
-              name={`detail.actions.${currentActionIndex}.config.teamMember`}
+              name={`actions.${currentActionIndex}.config.teamMember`}
               control={control}
               render={({ field }) => (
                 <Form.Item className="py-4">
@@ -205,7 +205,7 @@ const SendEmailConfigurationForm = ({
               )}
             />
             <Form.Field
-              name={`detail.actions.${currentActionIndex}.config.customer`}
+              name={`actions.${currentActionIndex}.config.customer`}
               control={control}
               render={({ field }) => (
                 <Form.Item className="py-4">
@@ -228,7 +228,7 @@ const SendEmailConfigurationForm = ({
         isDone={!!config?.subject}
       >
         <Form.Field
-          name={`detail.actions.${currentActionIndex}.config.subject`}
+          name={`actions.${currentActionIndex}.config.subject`}
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">

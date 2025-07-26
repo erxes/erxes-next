@@ -1,5 +1,5 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -12,9 +12,9 @@ export const useNodeDropDownActions = (
   id: string,
   nodeType: 'trigger' | 'action',
 ) => {
-  const { setQueryParams } = useAutomation();
+  const { queryParams, setQueryParams } = useAutomation();
 
-  const { setValue, getValues } = useFormContext<TAutomationProps>();
+  const { setValue, getValues } = useFormContext<TAutomationBuilderForm>();
   const [isOpenDropDown, setOpenDropDown] = useState(false);
   const [isOpenDialog, setOpenDialog] = useState(false);
 
@@ -23,7 +23,7 @@ export const useNodeDropDownActions = (
     fieldName === 'triggers' ? 'actionId' : 'nextActionId';
 
   const onRemoveNode = () => {
-    const nodes = getValues(`detail.${fieldName}`) || [];
+    const nodes = getValues(`${fieldName}`) || [];
     const updatedNodes = nodes
       .map((node: any) =>
         node[actionFieldName] === id
@@ -32,11 +32,9 @@ export const useNodeDropDownActions = (
       )
       .filter((node) => node.id !== id);
 
-    setValue(`detail.${fieldName}`, updatedNodes);
-    const activeNode = getValues('activeNode');
+    setValue(`${fieldName}`, updatedNodes);
 
-    if (activeNode?.id === id) {
-      setValue('activeNode', null);
+    if (queryParams?.activeNodeId === id) {
       setQueryParams({ activeNodeId: null });
     }
   };

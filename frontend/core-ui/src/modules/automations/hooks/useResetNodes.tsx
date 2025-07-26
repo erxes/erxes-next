@@ -1,34 +1,19 @@
-import { NodeData } from '@/automations/types';
+import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
 import {
   generateEdges,
   generateNodes,
 } from '@/automations/utils/automationBuilderUtils';
-import { Edge, Node } from '@xyflow/react';
-import { SetStateAction } from 'jotai';
-import { Dispatch } from 'react';
-import { IAction, ITrigger } from 'ui-modules';
+import { useReactFlow } from '@xyflow/react';
 
-export const useResetNodes = ({
-  nodes,
-  triggers,
-  actions,
-  setEdges,
-  setNodes,
-}: {
-  nodes: Node<NodeData>[];
-  triggers: ITrigger[];
-  actions: IAction[];
-  setNodes: Dispatch<SetStateAction<Node<NodeData>[]>>;
-  setEdges: Dispatch<SetStateAction<Edge[]>>;
-}) => {
+export const useResetNodes = () => {
+  const { getNodes, setNodes, setEdges } = useReactFlow();
+  const { triggers, actions } = useTriggersActions();
+
   const resetNodes = () => {
-    const updatedNodes: any[] = generateNodes(
-      { triggers, actions, workFlowActions: [] },
-      {},
-    );
+    const updatedNodes = generateNodes(triggers, actions);
 
     const mergedArray = updatedNodes.map((node1) => {
-      let node2 = nodes.find((o) => o.id === node1.id);
+      let node2 = getNodes().find((o) => o.id === node1.id);
 
       if (node2) {
         return {
@@ -40,11 +25,7 @@ export const useResetNodes = ({
       return node1;
     });
     setNodes(mergedArray);
-    const generatedEdges = generateEdges({
-      triggers,
-      actions,
-      workFlowActions: [],
-    });
+    const generatedEdges = generateEdges(triggers, actions);
     setEdges(generatedEdges);
   };
 

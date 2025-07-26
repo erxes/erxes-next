@@ -1,5 +1,6 @@
 import { NodeData } from '@/automations/types';
 import { onDisconnect } from '@/automations/utils/automationConnectionUtils';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { IconScissors } from '@tabler/icons-react';
 import {
   BaseEdge,
@@ -38,7 +39,9 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
     Node<NodeData>,
     Edge<EdgeProps>
   >();
-  const { actions = [], triggers = [] } = useWatch({ name: 'detail' });
+  const [triggers = [], actions = []] = useWatch<TAutomationBuilderForm>({
+    name: ['triggers', 'actions'],
+  });
 
   return (
     <>
