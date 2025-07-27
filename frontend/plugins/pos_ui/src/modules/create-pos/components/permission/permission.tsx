@@ -197,7 +197,7 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                       <SelectMember
                         value={selectedAdminId || undefined}
                         onValueChange={handleAdminMemberChange}
-                        className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                        className="w-full justify-start bg-white hover:bg-gray-50"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -217,7 +217,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
@@ -239,7 +238,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
@@ -294,7 +292,7 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                       <SelectMember
                         value={selectedCashierId || undefined}
                         onValueChange={handleCashierMemberChange}
-                        className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                        className="w-full justify-start bg-white hover:bg-gray-50"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -314,7 +312,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
@@ -336,7 +333,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />

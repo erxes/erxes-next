@@ -24,27 +24,8 @@ import { useSetAtom } from 'jotai';
 import { renderingBrandDetailAtom } from '../state';
 import { IBrand } from '../types';
 
-const MoreCell = ({ cell }: { cell: Cell<IBrand, unknown> }) => {
-  const [, setOpen] = useQueryState('brand_id');
-  const setRenderingBrandDetail = useSetAtom(renderingBrandDetailAtom);
-  const { _id } = cell.row.original;
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingBrandDetail(false);
-      }}
-    />
-  );
-};
 
 export const brandsColumns: ColumnDef<IBrand>[] = [
-  {
-    id: 'more',
-    cell: MoreCell,
-    size: 33,
-  },
   RecordTable.checkboxColumn as ColumnDef<IBrand>,
   {
     id: 'name',
@@ -53,12 +34,23 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
       <RecordTable.InlineHead label="brand name" icon={IconAlignLeft} />
     ),
     cell: ({ cell }) => {
+      const [, setBrandDetail] = useQueryState('brand_id');
+      const setRenderingBrandDetail = useSetAtom(renderingBrandDetailAtom);
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            {cell.getValue() as string}
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setRenderingBrandDetail(true);
+                setBrandDetail(cell.row.original._id);
+              }}
+            >
+              {cell.getValue() as string}
+            </Badge>
           </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          <RecordTableCellContent className="min-w-72">
             <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>

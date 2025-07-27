@@ -1,4 +1,5 @@
 import { ITag } from 'erxes-api-shared/core-types';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 export const tagMutations = {
@@ -32,9 +33,9 @@ export const tagMutations = {
     }: { type: string; targetIds: string[]; tagIds: string[] },
     { models }: IContext,
   ) {
-    const [serviceName, contentType] = type.split(':');
+    const [pluginName, moduleName] = type.split(':');
 
-    if (!serviceName || !contentType) {
+    if (!pluginName || !moduleName) {
       throw new Error(
         `Invalid type format: expected "service:content", got "${type}"`,
       );
@@ -49,7 +50,7 @@ export const tagMutations = {
       throw new Error('Tag not found.');
     }
 
-    if (serviceName === 'core') {
+    if (pluginName === 'core') {
       const modelMap = {
         customer: models.Customers,
         user: models.Users,
@@ -59,10 +60,10 @@ export const tagMutations = {
         automation: models.Automations,
       };
 
-      const model = modelMap[contentType];
+      const model = modelMap[moduleName];
 
       if (!model) {
-        throw new Error(`Unknown content type: ${contentType}`);
+        throw new Error(`Unknown content type: ${moduleName}`);
       }
 
       return await model.updateMany(
@@ -70,6 +71,19 @@ export const tagMutations = {
         { $set: { tagIds } },
       );
     }
+
+    return await sendTRPCMessage({
+      pluginName,
+      method: 'mutation',
+      module: moduleName,
+      action: 'tag',
+      input: {
+        tagIds,
+        targetIds,
+        type: moduleName,
+        action: 'tagObject',
+      },
+    });
   },
 
   /**

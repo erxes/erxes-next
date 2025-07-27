@@ -6,8 +6,8 @@ import {
 } from 'erxes-ui';
 
 const GET_BRANDS = gql`
-  query Brands($searchValue: String, ${GQL_CURSOR_PARAM_DEFS}) {
-    brands(searchValue: $searchValue, ${GQL_CURSOR_PARAMS}) {
+  query Brands($searchValue: String, $orderBy: JSON, ${GQL_CURSOR_PARAM_DEFS}) {
+    brands(searchValue: $searchValue, orderBy: $orderBy, ${GQL_CURSOR_PARAMS}) {
       list {
         _id
         code
