@@ -81,7 +81,6 @@ export interface SipProviderProps {
   extraHeaders?: ExtraHeaders;
   iceServers?: IceServers;
   debug?: boolean;
-  callUserIntegration: ICallConfigDoc;
   createSession: () => void;
   updateHistory: (
     timeStamp: number,
@@ -150,5 +149,4 @@ export interface ISipState {
   callCounterpart: string | null;
   groupName: string | null;
   callId: string | null;
-  rtcSession: any;
 }

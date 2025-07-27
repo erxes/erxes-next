@@ -55,13 +55,9 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
       },
     ],
   };
-  const callUserIntegration = callUserIntegrations.find(
-    (integration) => integration.phone === callConfig.phone,
-  ) as ICallConfig;
 
   return (
     <SipProvider
-      callUserIntegration={{ ...callUserIntegration, isAvailable: true }}
       createSession={createActiveSession}
       updateHistory={updateHistory}
       addHistory={addHistory}

@@ -23,10 +23,13 @@ export const sipStateAtom = atom<ISipState>({
   sipStatus: SipStatusEnum.DISCONNECTED,
   sipErrorType: null,
   sipErrorMessage: null,
-  rtcSession: null,
   callStatus: CallStatusEnum.IDLE,
   callDirection: null,
   callCounterpart: null,
   groupName: '',
   callId: null,
 });
+
+export const rtcSessionAtom = atom<any>(null);
+
+export const phoneToCallAtom = atom<string>('');

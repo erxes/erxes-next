@@ -29,7 +29,7 @@ export const logger = {
   warn: (w: any) => {
     console.warn(w, 'warn');
   },
-  debug: (d: any) => {
-    console.debug(d, 'debug');
+  debug: (d: any, e?: any) => {
+    console.debug(d, 'debug', e);
   },
 };

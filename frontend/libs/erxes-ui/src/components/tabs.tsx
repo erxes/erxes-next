@@ -60,4 +60,5 @@ export const Tabs = Object.assign(TabsPrimitive.Root, {
   List: TabsList,
   Trigger: TabsTrigger,
   Content: TabsContent,
+  Primitive: TabsPrimitive,
 });

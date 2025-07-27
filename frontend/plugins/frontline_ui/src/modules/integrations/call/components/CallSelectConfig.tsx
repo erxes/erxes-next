@@ -2,15 +2,16 @@ import { Button, Dialog, Input, Label, Select } from 'erxes-ui';
 import { ICallConfig } from '@/integrations/call/types/callTypes';
 import { useState } from 'react';
 import { MembersInline } from 'ui-modules';
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { callConfigAtom } from '@/integrations/call/states/sipStates';
+import { callSelectConfigDialogAtom } from '@/integrations/call/states/callSelectConfigDialogAtom';
 
 export const CallSelectConfig = ({
   callUserIntegrations,
 }: {
   callUserIntegrations: ICallConfig[];
 }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useAtom(callSelectConfigDialogAtom);
   const [selectedIntegrationId, setSelectedIntegrationId] = useState(
     callUserIntegrations[0]?._id,
   );

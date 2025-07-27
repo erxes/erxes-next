@@ -19,6 +19,7 @@ import { useAtom } from 'jotai';
 import {
   callConfigAtom,
   callInfoAtom,
+  rtcSessionAtom,
   sipStateAtom,
 } from '../states/sipStates';
 import { getPluginAssetsUrl } from 'erxes-ui';
@@ -53,6 +54,9 @@ const SipProvider = ({
   const [callInfo, setCallInfo] = useAtom(callInfoAtom);
   // State
   const [sipState, setSipState] = useAtom(sipStateAtom);
+  const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
+
+  console.log(rtcSessionState, 'rtcSessionState');
 
   const setPersistentStates = useCallback(
     (isRegistered: boolean, isAvailable: boolean) => {
@@ -198,19 +202,24 @@ const SipProvider = ({
         `Calling answerCall() is not allowed when call status is ${sipState.callStatus} and call direction is ${sipState.callDirection}`,
       );
     }
-    sipState.rtcSession?.answer({
-      mediaConstraints: {
-        audio: true,
-        video: false,
-      },
-      pcConfig: {
-        iceServers,
-      },
-    });
+    console.log(rtcSessionState, 'rtcSession --- ');
+    try {
+      rtcSessionState?.answer({
+        mediaConstraints: {
+          audio: true,
+          video: false,
+        },
+        pcConfig: {
+          iceServers,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }, [
     sipState.callStatus,
     sipState.callDirection,
-    sipState.rtcSession,
+    rtcSessionState,
     iceServers,
   ]);
 
@@ -261,42 +270,42 @@ const SipProvider = ({
   const stopCall = useCallback(() => {
     setSipState((prev) => ({ ...prev, callStatus: CallStatusEnum.IDLE }));
     uaRef.current?.terminateSessions();
-  }, []);
+  }, [setSipState]);
 
   // Audio control functions
   const isMuted = useCallback(() => {
-    return sipState.rtcSession?._audioMuted || false;
-  }, [sipState.rtcSession]);
+    return rtcSessionState?._audioMuted || false;
+  }, [rtcSessionState]);
 
   const isHeld = useCallback(() => {
     return {
-      localHold: sipState.rtcSession?._localHold,
-      remoteHold: sipState.rtcSession?._remoteHold,
+      localHold: rtcSessionState?._localHold,
+      remoteHold: rtcSessionState?._remoteHold,
     };
-  }, [sipState.rtcSession]);
+  }, [rtcSessionState]);
 
   const mute = useCallback(() => {
-    sipState.rtcSession?.mute();
-  }, [sipState.rtcSession]);
+    rtcSessionState?.mute();
+  }, [rtcSessionState]);
 
   const unmute = useCallback(() => {
-    sipState.rtcSession?.unmute();
-  }, [sipState.rtcSession]);
+    rtcSessionState?.unmute();
+  }, [rtcSessionState]);
 
   const hold = useCallback(() => {
-    sipState.rtcSession?.hold();
-  }, [sipState.rtcSession]);
+    rtcSessionState?.hold();
+  }, [rtcSessionState]);
 
   const unhold = useCallback(() => {
-    sipState.rtcSession?.unhold();
-  }, [sipState.rtcSession]);
+    rtcSessionState?.unhold();
+  }, [rtcSessionState]);
 
   const sendDtmf = useCallback(
     (tones: string) => {
-      sipState.rtcSession?.sendDTMF(tones);
+      rtcSessionState?.sendDTMF(tones);
       return 'calledSendDtmf';
     },
-    [sipState.rtcSession],
+    [rtcSessionState],
   );
 
   // Initialize JsSIP
@@ -492,10 +501,7 @@ const SipProvider = ({
         const diversionHeader = rtcRequest.getHeader('Diversion');
         const timeStamp = rtcRequest.getHeader('Timestamp') || 0;
 
-        let direction = CallDirectionEnum.OUTGOING;
-        let customerPhone = '';
-
-        if (sipState.rtcSession) {
+        if (rtcSessionState) {
           loggerRef.current.debug('incoming call replied with 486 "Busy Here"');
           rtcSession.terminate({
             status_code: 486,
@@ -504,7 +510,10 @@ const SipProvider = ({
           return;
         }
 
-        setSipState((prev) => ({ ...prev, rtcSession }));
+        setRtcSessionState(rtcSession);
+
+        let direction = CallDirectionEnum.OUTGOING;
+        let customerPhone = '';
 
         // Set up RTC session event handlers
         rtcSession.on('failed', (e: any) => {
@@ -521,11 +530,11 @@ const SipProvider = ({
               sipState.callCounterpart,
             );
           }
-          if (updateHistory && sipState.rtcSession) {
+          if (updateHistory && rtcSessionState) {
             updateHistory(
               timeStamp,
-              sipState.rtcSession.start_time,
-              sipState.rtcSession.end_time,
+              rtcSessionState.start_time,
+              rtcSessionState.end_time,
               'cancelled',
               direction,
               customerPhone,
@@ -535,11 +544,11 @@ const SipProvider = ({
           }
           setSipState((prev) => ({
             ...prev,
-            rtcSession: null,
             callStatus: CallStatusEnum.IDLE,
             callDirection: null,
             callCounterpart: null,
           }));
+          setRtcSessionState(null);
           ua?.terminateSessions();
           rtcSession = null;
         });
@@ -561,11 +570,11 @@ const SipProvider = ({
               sipState.callCounterpart,
             );
           }
-          if (updateHistory && sipState.rtcSession) {
+          if (updateHistory && rtcSessionState) {
             updateHistory(
               timeStamp,
-              sipState.rtcSession.start_time,
-              sipState.rtcSession.end_time,
+              rtcSessionState.start_time,
+              rtcSessionState.end_time,
               'cancelled',
               direction,
               customerPhone,
@@ -575,12 +584,12 @@ const SipProvider = ({
           }
           setSipState((prev) => ({
             ...prev,
-            rtcSession: null,
             callStatus: CallStatusEnum.IDLE,
             callDirection: null,
             callCounterpart: null,
             groupName: '',
           }));
+          setRtcSessionState(null);
           ua?.terminateSessions();
           rtcSession = null;
         });
@@ -591,13 +600,13 @@ const SipProvider = ({
           }
           setSipState((prev) => ({
             ...prev,
-            rtcSession: null,
             callStatus: CallStatusEnum.IDLE,
             callDirection: null,
             callCounterpart: null,
             groupName: '',
           }));
           ua?.terminateSessions();
+          setRtcSessionState(null);
           rtcSession = null;
         });
 
@@ -605,17 +614,17 @@ const SipProvider = ({
           if (uaRef.current !== ua) {
             return;
           }
-          if (updateHistory && sipState.rtcSession) {
+          if (updateHistory && rtcSessionState) {
             updateHistory(
               timeStamp,
-              sipState.rtcSession.start_time,
-              sipState.rtcSession.end_time,
+              rtcSessionState.start_time,
+              rtcSessionState.end_time,
               'rejected',
             );
+            setRtcSessionState(null);
           }
           setSipState((prev) => ({
             ...prev,
-            rtcSession: null,
             callStatus: CallStatusEnum.IDLE,
             callDirection: null,
             callCounterpart: null,
@@ -625,59 +634,72 @@ const SipProvider = ({
         });
 
         rtcSession.on('accepted', () => {
-          stopRingbackTone();
-          if (uaRef.current !== ua) {
-            return;
-          }
-          if (sipState.callDirection) {
-            direction = parseCallDirection(sipState.callDirection);
-          }
-          if (sipState.callCounterpart) {
-            customerPhone = extractPhoneNumberFromCounterpart(
-              sipState.callCounterpart,
-            );
-          }
-          if (addHistory) {
-            addHistory(
-              'active',
-              timeStamp,
+          try {
+            console.log('accepted', '--accepted');
+            stopRingbackTone();
+            if (uaRef.current !== ua) {
+              return;
+            }
+            if (sipState.callDirection) {
+              direction = parseCallDirection(sipState.callDirection);
+            }
+            if (sipState.callCounterpart) {
+              customerPhone = extractPhoneNumberFromCounterpart(
+                sipState.callCounterpart,
+              );
+            }
+            console.log(
+              'accepted',
+              '--accepted',
               direction,
               customerPhone,
-              sipState.rtcSession.start_time,
-              sipState.groupName,
+              rtcSession.connection.getRemoteStreams(),
             );
-          }
-          if (originator === 'remote' && remoteAudioRef.current) {
-            remoteAudioRef.current.srcObject =
-              rtcSession.connection.getRemoteStreams();
-          }
 
-          const playPromise = remoteAudioRef.current?.play();
-          if (playPromise) {
-            playPromise
-              .catch(() => {
-                loggerRef.current?.debug('Error playing remote audio');
-              })
-              .then(() => {
-                setTimeout(() => {
-                  remoteAudioRef.current?.play();
-                }, 2000);
-              });
+            if (addHistory) {
+              addHistory(
+                'active',
+                timeStamp,
+                direction,
+                customerPhone,
+                rtcSessionState.start_time,
+                sipState.groupName,
+              );
+            }
+            if (originator === 'remote' && remoteAudioRef.current) {
+              [remoteAudioRef.current.srcObject] =
+                rtcSession.connection.getRemoteStreams();
+            }
+
+            const playPromise = remoteAudioRef.current?.play();
+            if (playPromise) {
+              playPromise
+                .catch(() => {
+                  loggerRef.current?.debug('Error playing remote audio');
+                })
+                .then(() => {
+                  setTimeout(() => {
+                    remoteAudioRef.current?.play();
+                  }, 2000);
+                });
+              setSipState((prev) => ({
+                ...prev,
+                callStatus: CallStatusEnum.ACTIVE,
+              }));
+              return;
+            }
+
+            // Retry playback after 2 s: handles browsers that don’t return a Promise from play() or silently block the initial play call
+            setTimeout(() => {
+              remoteAudioRef.current?.play();
+            }, 2000);
             setSipState((prev) => ({
               ...prev,
               callStatus: CallStatusEnum.ACTIVE,
             }));
-            return;
+          } catch (error) {
+            console.log(error);
           }
-
-          // Retry playback after 2 s: handles browsers that don’t return a Promise from play() or silently block the initial play call
-          setTimeout(() => {
-            remoteAudioRef.current?.play();
-          }, 2000);
-          setSipState((prev) => ({
-            ...prev,
-            callStatus: CallStatusEnum.ACTIVE,
-          }));
         });
 
         // Auto-answer logic
@@ -686,11 +708,11 @@ const SipProvider = ({
           answerCall();
         }
         // used orignator === 'local' to check if the call is outgoing instead of sipState.callDirection === 'outgoing'
-        // if (originator === 'local') {
-        //   setTimeout(() => {
-        //     remoteAudioRef.current?.play();
-        //   }, 2000);
-        // }
+        if (originator === 'local') {
+          setTimeout(() => {
+            remoteAudioRef.current?.play();
+          }, 2000);
+        }
       },
     );
 
@@ -701,6 +723,7 @@ const SipProvider = ({
     }
     ua.start();
   }, [
+    debug,
     addHistory,
     answerCall,
     autoAnswer,
@@ -716,7 +739,8 @@ const SipProvider = ({
     sipState.callCounterpart,
     sipState.callDirection,
     sipState.groupName,
-    sipState.rtcSession,
+    rtcSessionState,
+    setRtcSessionState,
     stopRingbackTone,
     updateHistory,
     user,
