@@ -5,7 +5,6 @@ import { useBrands } from '../hooks/useBrands';
 
 export function BrandsRecordTable() {
   const { brands, loading } = useBrands();
-
   return (
     <RecordTable.Provider
       data={brands || []}

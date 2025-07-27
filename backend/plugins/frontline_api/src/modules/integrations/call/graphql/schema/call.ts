@@ -123,6 +123,7 @@ export const queries = `
   callWaitingList(queue: String!): String
   callProceedingList(queue: String!): String
   callQueueMemberList(integrationId: String!, queue: String!): JSON
+  callTodayStatistics(queue: String!): JSON
   `;
 
 //old mutations

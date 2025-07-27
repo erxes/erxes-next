@@ -161,6 +161,7 @@ export const updateIntegration = async ({
     return { status: 'success' };
   } catch (error) {
     console.error('Error in consumeRPCQueue:', error.message);
+    console.log(error?.keyPattern, 'key pattern');
     return {
       status: 'error',
       errorMessage: error?.keyPattern?.wsServer
