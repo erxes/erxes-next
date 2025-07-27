@@ -10,6 +10,7 @@ export const CUSTOMER_DETAIL = gql`
       middleName
       description
       position
+      isSubscribed
       department
       leadStatus
       sex

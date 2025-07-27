@@ -37,7 +37,7 @@ export const PhoneFieldCustomer = ({
     setIsOpen(false);
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setEditingValue(primaryPhone || '');
       setIsOpen(false);
@@ -70,7 +70,7 @@ export const PhoneFieldCustomer = ({
           className="bg-transparent"
           onChange={(value) => setEditingValue(value)}
           onEnter={() => handleSave(editingValue)}
-          // onKeyDown={handleKeyDown}
+          onKeyDown={handleKeyDown}
         />
       </RecordTableCellContent>
     </RecordTablePopover>

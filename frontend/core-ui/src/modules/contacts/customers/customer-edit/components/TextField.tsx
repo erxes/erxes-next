@@ -15,7 +15,6 @@ export const TextFieldCustomer = ({
   TextFieldProps) => {
   const { customersEdit } = useCustomersEdit();
   const onSave = (newValue: string) => {
-    console.log(newValue);
     customersEdit(
       {
         variables: { _id, [field]: newValue },

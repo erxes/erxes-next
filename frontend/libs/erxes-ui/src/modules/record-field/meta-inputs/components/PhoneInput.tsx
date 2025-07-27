@@ -7,7 +7,7 @@ import { CountryPhoneCodes } from 'erxes-ui/constants/CountryPhoneCodes';
 import { TCountryCode } from 'erxes-ui/types';
 import { formatPhoneNumber } from 'erxes-ui/utils/format';
 
-interface PhoneInputProps {
+interface PhoneInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   value?: string;
   onChange?: (value: string, defaultCountryCode: CountryCode) => void;
   className?: string;
@@ -18,7 +18,15 @@ interface PhoneInputProps {
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
   (
-    { value, onChange, className, defaultCountry, placeholder, onEnter, ...props },
+    {
+      value,
+      onChange,
+      className,
+      defaultCountry,
+      placeholder,
+      onEnter,
+      ...props
+    },
     ref,
   ) => {
     const defaultCountryCode =
@@ -158,6 +166,9 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             if (e.key === 'Enter') {
               onEnter?.(value || '');
               e.preventDefault();
+            }
+            if (props.onKeyDown) {
+              props.onKeyDown(e);
             }
           }}
           {...props}

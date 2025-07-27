@@ -20,6 +20,8 @@ export interface ICustomer extends ICustomerInline {
   emails?: string[];
   phones?: string[];
   tagIds?: string[];
+  isSubscribed?: string;
+  description?: string;
   ownerId?: string;
   score?: number;
   location?: {

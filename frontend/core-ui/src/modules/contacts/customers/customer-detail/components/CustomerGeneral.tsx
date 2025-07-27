@@ -1,23 +1,29 @@
-import { Label, PhoneInput, Skeleton, Switch, Textarea } from 'erxes-ui';
+import { Label, Switch, Textarea } from 'erxes-ui';
 import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
 import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
 import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
 import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/components/CustomerDetailAssignedTo';
-import { useDebounce } from 'use-debounce';
 import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
-import { useEffect, useState } from 'react';
 import { PhoneFieldCustomer } from '@/contacts/customers/customer-edit/components/PhoneFieldCustomer';
 
-
 export const CustomerGeneral = () => {
-  const { customerDetail, loading } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetail();
   const { customerEdit } = useCustomerEdit();
   if (!customerDetail) {
     return <div className="w-full h-full bg-red-400" />;
   }
 
-  const { primaryEmail, primaryPhone, tagIds, ownerId, code, _id, score } =
-    customerDetail;
+  const {
+    primaryEmail,
+    primaryPhone,
+    tagIds,
+    ownerId,
+    code,
+    _id,
+    score,
+    isSubscribed,
+    description
+  } = customerDetail;
 
   return (
     <>
@@ -43,7 +49,7 @@ export const CustomerGeneral = () => {
               />
             </DataListItem>
             <DataListItem label="Primary Phone">
-              <PhoneFieldCustomer _id={_id} primaryPhone={primaryPhone || ''}/>
+              <PhoneFieldCustomer _id={_id} primaryPhone={primaryPhone || ''} />
             </DataListItem>
             <DataListItem label="Score">
               <TextFieldCustomer
@@ -55,18 +61,26 @@ export const CustomerGeneral = () => {
             </DataListItem>
           </div>
           <DataListItem label="Subscribed">
-            <Switch />
+            <Switch
+              checked={isSubscribed === 'Yes'}
+              onCheckedChange={(checked) => {
+                customerEdit({
+                  variables: {
+                    _id,
+                    isSubscribed: checked ? 'Yes' : 'No',
+                  },
+                });
+              }}
+            />
           </DataListItem>
           <DataListItem label="Description">
-            <Textarea />
+            <Textarea value={description || ''} />
           </DataListItem>
         </div>
       </div>
     </>
   );
 };
-
-
 
 const DataListItem = ({
   label,
