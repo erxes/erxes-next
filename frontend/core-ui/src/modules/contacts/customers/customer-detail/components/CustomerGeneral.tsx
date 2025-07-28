@@ -9,9 +9,7 @@ import { PhoneFieldCustomer } from '@/contacts/customers/customer-edit/component
 export const CustomerGeneral = () => {
   const { customerDetail } = useCustomerDetail();
   const { customerEdit } = useCustomerEdit();
-  if (!customerDetail) {
-    return <div className="w-full h-full bg-red-400" />;
-  }
+  if (!customerDetail) return;
 
   const {
     primaryEmail,
@@ -22,7 +20,7 @@ export const CustomerGeneral = () => {
     _id,
     score,
     isSubscribed,
-    description
+    description,
   } = customerDetail;
 
   return (
