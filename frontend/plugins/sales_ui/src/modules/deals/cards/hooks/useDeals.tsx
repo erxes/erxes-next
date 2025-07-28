@@ -4,6 +4,13 @@ import {
   REMOVE_DEALS,
 } from '@/deals/graphql/mutations/DealsMutations';
 import {
+  EnumCursorDirection,
+  mergeCursorData,
+  toast,
+  useQueryState,
+  validateFetchMore,
+} from 'erxes-ui';
+import {
   GET_DEALS,
   GET_DEAL_DETAIL,
 } from '@/deals/graphql/queries/DealsQueries';
@@ -14,17 +21,66 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/client';
-import { toast, useQueryState } from 'erxes-ui';
 
 export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>) => {
-  const { data, loading, error } = useQuery<{ deals: IDealList }>(GET_DEALS, {
+  const { data, loading, error, fetchMore, refetch } = useQuery<{
+    deals: IDealList;
+  }>(GET_DEALS, {
     ...options,
     variables: {
       ...options?.variables,
     },
   });
 
-  return { deals: data?.deals, loading, error };
+  const { deals } = data || {};
+
+  const { list = [], pageInfo, totalCount = 0 } = deals || {};
+
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
+
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
+    if (!validateFetchMore({ direction, pageInfo })) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
+        limit: 20,
+        direction,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return Object.assign({}, prev, {
+          deals: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.deals,
+            prevResult: prev.deals,
+          }),
+        });
+      },
+    });
+  };
+
+  return {
+    deals: data?.deals,
+    loading,
+    error,
+    handleFetchMore,
+    pageInfo,
+    hasPreviousPage,
+    hasNextPage,
+    refetch,
+    totalCount,
+    list,
+  };
 };
 
 export const useDealDetail = (

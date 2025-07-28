@@ -152,41 +152,41 @@ export const GET_DEALS = gql`
       orderBy: $orderBy, 
       ${commonParamDefs}
     ) {
-      list {
-      products {
-        _id
-        name
-      }
-      unUsedAmount
-      amount
-      ${commonListFields}
-      departments {
-        _id
-        title
-      }
-      branches {
-        _id
-        title
-      }
-      companies {
-        _id
-        primaryName
-      }
-      customers {
-        _id
-        firstName
-        lastName
-        email
-      }
-      relations
-    }
-      pageInfo {
-        endCursor
-        startCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      totalCount
+        list {
+          products {
+            _id
+            name
+          }
+          unUsedAmount
+          amount
+          ${commonListFields}
+          departments {
+            _id
+            title
+          }
+          branches {
+            _id
+            title
+          }
+          companies {
+            _id
+            primaryName
+          }
+          customers {
+            _id
+            firstName
+            lastName
+            email
+          }
+          relations
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
       }
   }
 `;
