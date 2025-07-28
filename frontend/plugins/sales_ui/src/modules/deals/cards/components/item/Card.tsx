@@ -1,11 +1,12 @@
 import { IconCalendarCheck, IconCalendarClock } from '@tabler/icons-react';
+import { cn, useQueryState } from 'erxes-ui';
 
 import { CSS } from '@dnd-kit/utilities';
 import { DealsDatePicker } from '../common/DealsDatePicker';
 import { EntitySelector } from './EntitySelector';
 import { IDeal } from '@/deals/types/deals';
 import { ItemFooter } from './Footer';
-import { useQueryState } from 'erxes-ui';
+import { useDealDetail } from '../../hooks/useDeals';
 import { useSortable } from '@dnd-kit/sortable';
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export const Card = ({ card = {} as IDeal, children, className }: Props) => {
-  const [, setSalesItemId] = useQueryState<string>('salesItemId');
+  const [salesItemId, setSalesItemId] = useQueryState<string>('salesItemId');
 
   const {
     setNodeRef,
@@ -34,13 +35,19 @@ export const Card = ({ card = {} as IDeal, children, className }: Props) => {
 
   const { name, startDate, closeDate, createdAt, assignedUsers } = card;
 
+  const { loading } = useDealDetail();
+  const isThisCardLoading = salesItemId === card._id && loading;
+
   return (
     <div
       ref={setNodeRef}
       {...attributes}
       {...listeners}
       style={style}
-      className="bg-white rounded-md shadow min-h-[100px] flex flex-col justify-between"
+      className={cn(
+        'bg-white rounded-md shadow min-h-[100px] flex flex-col justify-between',
+        isThisCardLoading && 'animate-pulse',
+      )}
       onClick={() => setSalesItemId(card._id)}
       onPointerDown={(e) => e.stopPropagation()}
       onPointerUp={(e) => e.stopPropagation()}
