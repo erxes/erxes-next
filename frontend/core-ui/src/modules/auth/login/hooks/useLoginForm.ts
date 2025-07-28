@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 export const authValidationSchema = z
   .object({
-    email: z.string().trim().email('Email must be a valid email'),
+    email: z.string().max(320),
     password: z.string(),
   })
   .required();
