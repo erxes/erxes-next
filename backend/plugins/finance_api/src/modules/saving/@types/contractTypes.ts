@@ -57,3 +57,20 @@ export interface IContractTypeFilterQueryParams
   isDeposit?: boolean;
   productType?: string;
 }
+
+export interface IConfig {
+  transactionAccountNumber: string;
+  transactionAccountType: string;
+  oneTimeTransactionLimit: number;
+  periodLockType: string;
+  isStoreInterest: boolean;
+  calculationFixed: number;
+}
+
+export interface ITransactionDoc {
+  contractId?: string;
+  invoiceId?: string;
+  customerId?: string;
+  companyId?: string;
+  description?: string;
+}

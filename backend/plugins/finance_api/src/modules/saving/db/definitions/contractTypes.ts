@@ -1,4 +1,4 @@
-import { schemaHooksWrapper, field } from './utils';
+import { schemaHooksWrapper, field } from '../utils/utils';
 import { Schema } from 'mongoose';
 
 export const contractTypeSchema = schemaHooksWrapper(
