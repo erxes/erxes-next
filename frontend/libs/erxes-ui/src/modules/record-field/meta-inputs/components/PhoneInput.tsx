@@ -6,19 +6,34 @@ import parsePhoneNumberFromString, { CountryCode } from 'libphonenumber-js';
 import { CountryPhoneCodes } from 'erxes-ui/constants/CountryPhoneCodes';
 import { TCountryCode } from 'erxes-ui/types';
 import { formatPhoneNumber } from 'erxes-ui/utils/format';
+import { phoneSchema } from 'erxes-ui/modules/inputs/validations/phoneValidation';
 
-interface PhoneInputProps {
+interface PhoneInputProps
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'value' | 'onChange'
+  > {
   value?: string;
-  onChange: (value: string, defaultCountryCode: CountryCode) => void;
+  onChange?: (value: string, defaultCountryCode: CountryCode) => void;
   className?: string;
   defaultCountry?: CountryCode;
   placeholder?: string;
   onEnter?: (phone: string) => void;
+  onValidationChange?: (isValid: boolean, error?: string) => void;
 }
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
   (
-    { value, onChange, className, defaultCountry, placeholder, onEnter },
+    {
+      value,
+      onChange,
+      className,
+      defaultCountry,
+      placeholder,
+      onEnter,
+      onValidationChange,
+      ...props
+    },
     ref,
   ) => {
     const defaultCountryCode =
@@ -44,11 +59,29 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         ? parsedNumber.formatInternational()
         : value
       : selectedCountry.dial_code;
-    const [phoneNumber, setPhoneNumber] = useState<string>(
+    const [phoneNumber, setPhoneNumber] = useState<string>(() =>
       formatPhoneNumber({ value: initialValue || selectedCountry.dial_code }),
     );
 
     const [open, setOpen] = useState<boolean>(false);
+    const [validationError, setValidationError] = useState<string>('');
+
+    const validatePhone = (phone: string) => {
+      const cleanPhone = phone.replace(/[\s\-\()]/g, '');
+
+      try {
+        phoneSchema.parse({ phone: cleanPhone });
+        setValidationError('');
+        onValidationChange?.(true);
+        return true;
+      } catch (error: any) {
+        const errorMessage =
+          error.errors?.[0]?.message || 'Invalid phone number';
+        setValidationError(errorMessage);
+        onValidationChange?.(false, errorMessage);
+        return false;
+      }
+    };
 
     const handleSelect = (phoneCode: string) => {
       const country = CountryPhoneCodes.find((c) => c.dial_code === phoneCode);
@@ -75,6 +108,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         parsedNumber = null;
       }
 
+      let countryToUse = selectedCountry;
       const countryCode = parsedNumber?.country;
       if (countryCode) {
         const newCountry = CountryPhoneCodes.find(
@@ -82,43 +116,40 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         );
         if (newCountry) {
           setSelectedCountry(newCountry);
+          countryToUse = newCountry;
         }
       }
 
-      setPhoneNumber(
-        formatPhoneNumber({
-          defaultCountry: selectedCountry.code as CountryCode,
-          value: input,
-        }),
-      );
-      onChange(
-        input.replace(/[a-zA-Z\s]/g, ''),
-        selectedCountry.code as CountryCode,
-      );
+      const formattedPhone = formatPhoneNumber({
+        defaultCountry: countryToUse.code as CountryCode,
+        value: input,
+      });
+
+      setPhoneNumber(formattedPhone);
+
+      const cleanInput = input.replace(/[a-zA-Z\s]/g, '');
+      validatePhone(cleanInput);
+
+      onChange?.(cleanInput, countryToUse.code as CountryCode);
     };
     const handleBlur = () => {
       if (!phoneNumber.startsWith('+')) {
         const updatedNumber = '+' + phoneNumber;
         setPhoneNumber(updatedNumber);
-        onChange(
-          updatedNumber.replace(/[a-zA-Z\s]/g, ''),
-          selectedCountry.code as CountryCode,
-        );
+        const cleanNumber = updatedNumber.replace(/[a-zA-Z\s]/g, '');
+        validatePhone(cleanNumber);
+        onChange?.(cleanNumber, selectedCountry.code as CountryCode);
+      } else {
+        validatePhone(phoneNumber.replace(/[a-zA-Z\s]/g, ''));
       }
     };
-
     return (
-      <div
-        className={cn(
-          'flex items-center justify-start rounded gap-1',
-          className,
-        )}
-      >
+      <div className={'flex items-center justify-start rounded gap-1'}>
         <Popover open={open} onOpenChange={setOpen}>
           <Combobox.TriggerBase
             variant="secondary"
             aria-expanded={open}
-            className="h-8 text-xl w-auto pl-2 pr-2.5"
+            className={cn('h-8 text-xl w-auto pl-2 pr-2.5', className)}
           >
             {selectedCountry.flag}
           </Combobox.TriggerBase>
@@ -151,23 +182,35 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             </Command>
           </Popover.Content>
         </Popover>
-        <Input
-          value={phoneNumber}
-          onChange={handlePhoneChange}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          ref={ref}
-          variant="secondary"
-          className="bg-accent"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              const target = e.target as HTMLInputElement;
-              onEnter?.(target.value);
-              e.preventDefault();
-            }
-          }}
-        />
+        <div className="flex-1">
+          <Input
+            value={phoneNumber}
+            onChange={handlePhoneChange}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            ref={ref}
+            className={cn(
+              'bg-accent',
+              validationError &&
+                'border-destructive focus-visible:ring-destructive',
+              className,
+            )}
+            type="tel"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onEnter?.(value || '');
+                e.preventDefault();
+              }
+              if (props.onKeyDown) {
+                props.onKeyDown(e);
+              }
+            }}
+            {...props}
+          />
+        </div>
       </div>
     );
   },
 );
+
+PhoneInput.displayName = 'PhoneInput';

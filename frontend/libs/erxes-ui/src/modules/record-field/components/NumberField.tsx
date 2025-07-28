@@ -6,22 +6,14 @@ import {
 } from 'erxes-ui/modules/record-table';
 import React, { useState } from 'react';
 
-export interface ITextFieldContainerProps {
-  placeholder?: string;
-  value: string;
-  field: string;
-  fieldId?: string;
-  _id: string;
-}
-
-export const TextField = React.forwardRef<
+export const NumberField = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & {
     placeholder?: string;
-    value: string;
+    value: number;
     scope: string;
-    onValueChange?: (value: string) => void;
-    onSave?: (value: string) => void;
+    onValueChange?: (value: number) => void;
+    onSave?: (value: number) => void;
   }
 >(
   (
@@ -31,25 +23,10 @@ export const TextField = React.forwardRef<
     const [isOpen, setIsOpen] = useState(false);
     const [editingValue, setEditingValue] = useState(value);
 
-    const handleAction = (e?: React.FormEvent) => {
-      e?.preventDefault();
-      if (editingValue === value) {
-        setIsOpen(false);
-        return;
-      }
-      onSave && onSave(editingValue);
-      setIsOpen(false);
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleAction();
-      }
-      if (e.key === 'Escape') {
-        setEditingValue(value);
-        setIsOpen(false);
-      }
+    const handleAction = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (editingValue === value) return;
+      onSave?.(editingValue);
     };
 
     return (
@@ -60,25 +37,26 @@ export const TextField = React.forwardRef<
           setIsOpen(open);
           if (open) {
             setEditingValue(value);
-          } else if (!open && editingValue !== value) {
-            handleAction();
           }
         }}
       >
         <RecordTableCellTrigger {...props} ref={ref}>
           {children}
-          <TextOverflowTooltip value={editingValue ?? placeholder} />
+          <TextOverflowTooltip value={editingValue.toString() ?? placeholder} />
         </RecordTableCellTrigger>
         <RecordTableCellContent asChild>
           <form onSubmit={handleAction}>
             <Input
-              value={editingValue}
+              type="number"
+              value={editingValue.toString()}
               onChange={(e) => {
-                setEditingValue(e.target.value);
-                onValueChange?.(e.target.value);
+                const numValue = Number(e.target.value);
+                if (!isNaN(numValue)) {
+                  setEditingValue(numValue);
+                  onValueChange?.(numValue);
+                }
+                setIsOpen(true);
               }}
-              onKeyDown={handleKeyDown}
-              autoFocus
             />
             <button type="submit" className="sr-only">
               Save

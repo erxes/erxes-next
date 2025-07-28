@@ -21,7 +21,7 @@ export const CompanyTextField = ({
       placeholder={placeholder}
       value={value}
       scope={``}
-      onValueChange={onSave}
+      onSave={onSave}
     />
   );
 };

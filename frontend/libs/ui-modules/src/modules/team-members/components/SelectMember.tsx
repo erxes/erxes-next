@@ -1,4 +1,5 @@
 import {
+  Button,
   Combobox,
   Command,
   Filter,
@@ -17,7 +18,7 @@ import {
 } from '../contexts/SelectMemberContext';
 
 import { IUser } from '../types/TeamMembers';
-import { IconUser } from '@tabler/icons-react';
+import { IconPlus, IconUser } from '@tabler/icons-react';
 import { MembersInline } from './MembersInline';
 import React from 'react';
 import { currentUserState } from 'ui-modules/states';
@@ -81,7 +82,7 @@ const SelectMemberValue = ({
   size,
 }: {
   placeholder?: string;
-  size?: 'lg';
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
 }) => {
   const { memberIds, members, setMembers } = useSelectMemberContext();
 
@@ -326,6 +327,57 @@ export const SelectMemberFormItem = ({
   );
 };
 
+export const SelectMemberDetail = ({
+  onValueChange,
+  className,
+  size = 'xl',
+  placeholder,
+  value,
+  ...props
+}: Omit<
+  React.ComponentProps<typeof SelectMemberProvider>,
+  'children' | 'value'
+> & {
+  className?: string;
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
+  placeholder?: string;
+  value: string | null | undefined;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectMemberProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Popover.Trigger>
+          {!value ? (
+            <Button
+              className={cn(
+                'w-min inline-flex text-sm font-medium ',
+                className,
+              )}
+              variant="outline"
+            >
+              Add Owner <IconPlus />
+            </Button>
+          ) : (
+            <Button variant="ghost" className="px-0 h-8">
+              <SelectMemberValue size={size} />
+            </Button>
+          )}
+        </Popover.Trigger>
+        <Combobox.Content>
+          <SelectMemberContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectMemberProvider>
+  );
+};
+
 export const SelectMemberRoot = ({
   onValueChange,
   className,
@@ -334,7 +386,7 @@ export const SelectMemberRoot = ({
   ...props
 }: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
   className?: string;
-  size?: 'lg';
+  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
   placeholder?: string;
 }) => {
   const [open, setOpen] = useState(false);
@@ -370,4 +422,5 @@ export const SelectMember = Object.assign(SelectMemberRoot, {
   FilterBar: SelectMemberFilterBar,
   InlineCell: SelectMemberInlineCell,
   FormItem: SelectMemberFormItem,
+  Detail: SelectMemberDetail,
 });
