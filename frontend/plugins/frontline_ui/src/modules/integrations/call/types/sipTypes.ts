@@ -82,16 +82,7 @@ export interface SipProviderProps {
   iceServers?: IceServers;
   debug?: boolean;
   createSession: () => void;
-  updateHistory: (
-    timeStamp: number,
-    callStartTime: Date,
-    callEndTime: Date,
-    callStatus: string,
-    direction?: string,
-    customerPhone?: string,
-    diversionHeader?: string,
-    endedBy?: string,
-  ) => void;
+
   addHistory: (
     callStatus: string,
     timeStamp: number,
@@ -104,16 +95,7 @@ export interface SipProviderProps {
 export interface SipContextValue {
   sip: {
     createSession: () => void;
-    updateHistory: (
-      timeStamp: number,
-      callStartTime: Date,
-      callEndTime: Date,
-      callStatus: string,
-      direction?: string,
-      customerPhone?: string,
-      diversionHeader?: string,
-      endedBy?: string,
-    ) => void;
+
     addHistory: (
       callStatus: string,
       timeStamp: number,
