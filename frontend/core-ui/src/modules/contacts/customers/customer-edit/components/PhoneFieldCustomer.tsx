@@ -21,8 +21,9 @@ export const PhoneFieldCustomer = ({
   const phoneInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [editingValue, setEditingValue] = useState(primaryPhone || '');
-
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
   const handleSave = (newPrimaryPhone: string) => {
+    if (!isPhoneValid) return;
     if (newPrimaryPhone === primaryPhone) {
       setIsOpen(false);
       return;
@@ -71,6 +72,7 @@ export const PhoneFieldCustomer = ({
           onChange={(value) => setEditingValue(value)}
           onEnter={() => handleSave(editingValue)}
           onKeyDown={handleKeyDown}
+          onValidationChange={(isValid) => setIsPhoneValid(isValid)}
         />
       </RecordTableCellContent>
     </RecordTablePopover>

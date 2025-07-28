@@ -6,14 +6,20 @@ import parsePhoneNumberFromString, { CountryCode } from 'libphonenumber-js';
 import { CountryPhoneCodes } from 'erxes-ui/constants/CountryPhoneCodes';
 import { TCountryCode } from 'erxes-ui/types';
 import { formatPhoneNumber } from 'erxes-ui/utils/format';
+import { phoneSchema } from 'erxes-ui/modules/inputs/validations/phoneValidation';
 
-interface PhoneInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
+interface PhoneInputProps
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'value' | 'onChange'
+  > {
   value?: string;
   onChange?: (value: string, defaultCountryCode: CountryCode) => void;
   className?: string;
   defaultCountry?: CountryCode;
   placeholder?: string;
   onEnter?: (phone: string) => void;
+  onValidationChange?: (isValid: boolean, error?: string) => void;
 }
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
@@ -25,6 +31,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       defaultCountry,
       placeholder,
       onEnter,
+      onValidationChange,
       ...props
     },
     ref,
@@ -57,6 +64,24 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     );
 
     const [open, setOpen] = useState<boolean>(false);
+    const [validationError, setValidationError] = useState<string>('');
+
+    const validatePhone = (phone: string) => {
+      const cleanPhone = phone.replace(/[\s\-\()]/g, '');
+
+      try {
+        phoneSchema.parse({ phone: cleanPhone });
+        setValidationError('');
+        onValidationChange?.(true);
+        return true;
+      } catch (error: any) {
+        const errorMessage =
+          error.errors?.[0]?.message || 'Invalid phone number';
+        setValidationError(errorMessage);
+        onValidationChange?.(false, errorMessage);
+        return false;
+      }
+    };
 
     const handleSelect = (phoneCode: string) => {
       const country = CountryPhoneCodes.find((c) => c.dial_code === phoneCode);
@@ -95,25 +120,27 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         }
       }
 
-      setPhoneNumber(
-        formatPhoneNumber({
-          defaultCountry: countryToUse.code as CountryCode,
-          value: input,
-        }),
-      );
-      onChange?.(
-        input.replace(/[a-zA-Z\s]/g, ''),
-        countryToUse.code as CountryCode,
-      );
+      const formattedPhone = formatPhoneNumber({
+        defaultCountry: countryToUse.code as CountryCode,
+        value: input,
+      });
+
+      setPhoneNumber(formattedPhone);
+
+      const cleanInput = input.replace(/[a-zA-Z\s]/g, '');
+      validatePhone(cleanInput);
+
+      onChange?.(cleanInput, countryToUse.code as CountryCode);
     };
     const handleBlur = () => {
       if (!phoneNumber.startsWith('+')) {
         const updatedNumber = '+' + phoneNumber;
         setPhoneNumber(updatedNumber);
-        onChange?.(
-          updatedNumber.replace(/[a-zA-Z\s]/g, ''),
-          selectedCountry.code as CountryCode,
-        );
+        const cleanNumber = updatedNumber.replace(/[a-zA-Z\s]/g, '');
+        validatePhone(cleanNumber);
+        onChange?.(cleanNumber, selectedCountry.code as CountryCode);
+      } else {
+        validatePhone(phoneNumber.replace(/[a-zA-Z\s]/g, ''));
       }
     };
     return (
@@ -155,25 +182,32 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             </Command>
           </Popover.Content>
         </Popover>
-        <Input
-          value={phoneNumber}
-          onChange={handlePhoneChange}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          ref={ref}
-          className={cn('bg-accent', className)}
-          type="tel"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              onEnter?.(value || '');
-              e.preventDefault();
-            }
-            if (props.onKeyDown) {
-              props.onKeyDown(e);
-            }
-          }}
-          {...props}
-        />
+        <div className="flex-1">
+          <Input
+            value={phoneNumber}
+            onChange={handlePhoneChange}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            ref={ref}
+            className={cn(
+              'bg-accent',
+              validationError &&
+                'border-destructive focus-visible:ring-destructive',
+              className,
+            )}
+            type="tel"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onEnter?.(value || '');
+                e.preventDefault();
+              }
+              if (props.onKeyDown) {
+                props.onKeyDown(e);
+              }
+            }}
+            {...props}
+          />
+        </div>
       </div>
     );
   },

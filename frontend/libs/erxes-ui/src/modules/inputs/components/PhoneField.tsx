@@ -237,11 +237,14 @@ PhoneOptions.displayName = 'PhoneOptions';
 
 const PhoneForm = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & {
+    defaultCountry?: string;
+  }
+>(({ className, defaultCountry = 'MN', ...props }, ref) => {
   const { recordId } = usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
   const [newPhone, setNewPhone] = useState<string>('');
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
   const [editingPhone, setEditingPhone] = useAtom(
     editingPhoneFamilyState(recordId),
   );
@@ -271,7 +274,6 @@ const PhoneForm = forwardRef<
       setShowPhoneInput(false);
     }
   }, [phones, setShowPhoneInput]);
-
   const onPhoneEdit = (newPhone: string, prevPhone: string) => {
     onValueChange?.(
       phones.map((phoneItem) =>
@@ -304,10 +306,13 @@ const PhoneForm = forwardRef<
             onChange={(phone) => {
               setNewPhone(phone);
             }}
+            onValidationChange={(isValid) => {
+              setIsPhoneValid(isValid);
+            }}
             onEnter={(phone) => {
-              if (editingPhone) {
+              if (isPhoneValid && editingPhone) {
                 onPhoneEdit(phone, editingPhone);
-              } else {
+              } else if (isPhoneValid) {
                 onPhoneAdd(phone);
               }
             }}
@@ -322,9 +327,10 @@ const PhoneForm = forwardRef<
         <Button
           variant="secondary"
           className="w-full"
+          disabled={showPhoneInput && !isPhoneValid && newPhone.length > 0}
           onClick={(e) => {
             if (!showPhoneInput) setShowPhoneInput(true);
-            else {
+            else if (isPhoneValid) {
               if (editingPhone) {
                 onPhoneEdit(newPhone, editingPhone);
               } else {
@@ -423,7 +429,6 @@ export const PhonesBadgeDisplay = ({
   );
 };
 
-
 export interface PhoneListFieldInlineCellProps {
   recordId: string;
   phones: TPhones;
@@ -460,7 +465,7 @@ const PhoneListFieldInlineCell = forwardRef<
     }, [phones, setPhones]);
 
     return (
-      <PhoneField.Provider
+      <PhoneFieldsProvider
         ref={ref}
         recordId={recordId}
         onValueChange={onValueChange}
@@ -470,16 +475,16 @@ const PhoneListFieldInlineCell = forwardRef<
       >
         <RecordTablePopover scope={scope}>
           <RecordTableCellTrigger>
-            <PhoneField.BadgeDisplay phones={phones} />
+            <PhonesBadgeDisplay phones={phones} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <PhoneField.Container>
-              <PhoneField.List />
-            </PhoneField.Container>
-            <PhoneField.Form />
+            <PhoneListContainer>
+              <PhoneList />
+            </PhoneListContainer>
+            <PhoneForm />
           </RecordTableCellContent>
         </RecordTablePopover>
-      </PhoneField.Provider>
+      </PhoneFieldsProvider>
     );
   },
 );
@@ -492,7 +497,6 @@ export interface PhoneFieldDetailProps {
   onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
   scope?: string;
 }
-
 
 const PhoneField = Object.assign(PhoneListFieldRoot, {
   Provider: PhoneFieldsProvider,
