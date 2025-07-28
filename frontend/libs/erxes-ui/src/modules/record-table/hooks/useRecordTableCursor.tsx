@@ -9,10 +9,13 @@ export const useRecordTableCursor = ({
   const [cursor, setCursor] = useAtom(
     recordTableCursorAtomFamily(sessionKey || ''),
   );
-
   useEffect(() => {
     if (!sessionKey) return;
-    setCursor(sessionStorage.getItem(sessionKey));
+    setCursor(
+      sessionStorage.getItem(sessionKey) !== ''
+        ? sessionStorage.getItem(sessionKey)
+        : null,
+    );
   }, [sessionKey, setCursor]);
 
   return {

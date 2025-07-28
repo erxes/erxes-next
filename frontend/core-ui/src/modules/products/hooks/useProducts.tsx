@@ -1,5 +1,4 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-
 import { productsQueries } from '@/products/graphql';
 import {
   EnumCursorDirection,
@@ -23,12 +22,16 @@ export const useProducts = (options?: QueryHookOptions) => {
       pageInfo: IRecordTableCursorPageInfo;
     };
   }>(productsQueries.productsMain, {
-    ...options,
     variables: {
       limit: PRODUCTS_PER_PAGE,
+      orderBy: {
+        createdAt: -1,
+      },
       cursor,
       ...options?.variables,
     },
+    skip: cursor === undefined,
+    ...options,
   });
 
   const { list: productsMain, totalCount, pageInfo } = data?.productsMain || {};
