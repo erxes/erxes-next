@@ -41,7 +41,7 @@ export const SalesIndexPage = () => {
           </PageHeader.Start>
           <PageHeader.End>
             <Button variant="outline" asChild>
-              <Link to="/settings/sales">
+              <Link to="/settings/deals">
                 <IconSettings />
                 Go to settings
               </Link>

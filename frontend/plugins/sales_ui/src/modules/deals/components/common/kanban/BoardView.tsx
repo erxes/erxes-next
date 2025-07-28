@@ -33,7 +33,7 @@ const BoardView = ({
   const { loading } = useDealDetail();
 
   useEffect(() => {
-    if (!deals) return; // or if dealsLoading, return;
+    if (!deals) return;
 
     const mappedFeatures = deals.map((deal) => ({
       id: deal._id,
@@ -43,7 +43,6 @@ const BoardView = ({
       closeDate: deal.closeDate,
       createdAt: deal.createdAt,
       assignedUsers: deal.assignedUsers,
-      // any other props you want
     }));
 
     setFeatures(mappedFeatures);

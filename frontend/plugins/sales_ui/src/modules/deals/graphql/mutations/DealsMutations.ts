@@ -195,8 +195,8 @@ export const commonMutationParams = `
 export const ADD_DEALS = gql`
   mutation dealsAdd($name: String, ${copyVariables}, ${dealMutationVariables} ${commonMutationVariables}) {
     dealsAdd(name: $name, ${copyParams}, ${dealMutationParams}, ${commonMutationParams}) {
-      ${dealFields}
-      ${commonFields}
+      _id
+      name
     }
   }
 `;
@@ -204,8 +204,8 @@ export const ADD_DEALS = gql`
 export const EDIT_DEALS = gql`
   mutation dealsEdit($_id: String!, $name: String, ${dealMutationVariables}, ${commonMutationVariables}) {
     dealsEdit(_id: $_id, name: $name, ${dealMutationParams}, ${commonMutationParams}) {
-      ${dealFields}
-      ${commonFields}
+      _id
+      name
     }
   }
 `;

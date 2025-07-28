@@ -91,23 +91,39 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
 
 export function useDealsAdd(options?: MutationHookOptions<any, any>) {
   const [_id] = useQueryState('salesItemId');
+  const [stageId] = useQueryState('stageId');
 
   const [addDeals, { loading, error }] = useMutation(ADD_DEALS, {
     ...options,
     variables: {
       ...options?.variables,
       _id,
+      stageId,
     },
-    // refetchQueries: [
-    //   {
-    //     query: GET_CHECKLISTS,
-    //     variables: {
-    //       ...options?.variables,
-    //       contentTypeId,
-    //     },
-    //   },
-    // ],
+    refetchQueries: [
+      {
+        query: GET_DEALS,
+        variables: {
+          ...options?.variables,
+          _id,
+        },
+      },
+    ],
     awaitRefetchQueries: true,
+    onCompleted: (...args) => {
+      toast({
+        title: 'Successfully added a  deal',
+        variant: 'default',
+      });
+      options?.onCompleted?.(...args);
+    },
+    onError: (err) => {
+      toast({
+        title: 'Error',
+        description: err.message || 'Update failed',
+        variant: 'destructive',
+      });
+    },
   });
 
   return {

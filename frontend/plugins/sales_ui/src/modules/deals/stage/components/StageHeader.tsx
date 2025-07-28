@@ -1,4 +1,4 @@
-import { DropdownMenu, Sheet } from 'erxes-ui';
+import { DropdownMenu, Sheet, useQueryState } from 'erxes-ui';
 import { IconDots, IconPlus } from '@tabler/icons-react';
 
 import { AddCardForm } from '@/deals/cards/components/AddCardForm';
@@ -11,7 +11,14 @@ type Props = {
 
 export const StageHeader = ({ stage = {} as IStage }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [, setStageId] = useQueryState<string | null>('stageId');
+
   const { probability, itemsTotalCount, name } = stage;
+
+  const onSheetChange = () => {
+    setOpen(!open);
+    setStageId(!open ? stage._id : null);
+  };
 
   return (
     <div className="flex justify-between items-center mb-3">
@@ -58,7 +65,8 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
             </DropdownMenu.Group>
           </DropdownMenu.Content>
         </DropdownMenu>
-        <Sheet open={open} onOpenChange={setOpen}>
+
+        <Sheet open={open} onOpenChange={onSheetChange}>
           <Sheet.Trigger
             asChild
             onPointerDown={(e) => e.stopPropagation()}
@@ -72,7 +80,7 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
               e.preventDefault();
             }}
           >
-            <AddCardForm />
+            <AddCardForm onCloseSheet={onSheetChange} />
           </Sheet.View>
         </Sheet>
       </div>

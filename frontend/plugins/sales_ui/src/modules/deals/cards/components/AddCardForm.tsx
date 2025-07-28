@@ -1,45 +1,36 @@
-import { Button, Form, ScrollArea, Sheet, useToast } from 'erxes-ui';
+import { Button, Form, Input, ScrollArea, Sheet } from 'erxes-ui';
 import { SalesFormType, salesFormSchema } from '@/deals/constants/formSchema';
 
-import { ApolloError } from '@apollo/client';
+import { useDealsAdd } from '../hooks/useDeals';
 import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-export function AddCardForm({
-  onOpenChange,
-}: {
-  onOpenChange?: (open: boolean) => void;
-}) {
+export function AddCardForm({ onCloseSheet }: { onCloseSheet: () => void }) {
   const form = useForm<SalesFormType>({
     resolver: zodResolver(salesFormSchema),
+    defaultValues: {
+      name: '',
+    },
   });
-  //   const { toast } = useToast();
+  const { addDeals, loading } = useDealsAdd();
 
   const onSubmit = (data: SalesFormType) => {
-    // customersAdd({
-    //   variables: {
-    //     ...data,
-    //     state,
-    //   },
-    //   onError: (e: ApolloError) => {
-    //     toast({
-    //       title: 'Error',
-    //       description: e.message,
-    //     });
-    //   },
-    //   onCompleted: () => {
-    //     form.reset();
-    //     onOpenChange?.(false);
-    //   },
-    // });
+    addDeals({
+      variables: {
+        ...data,
+      },
+      onCompleted: () => {
+        form.reset();
+        onCloseSheet();
+      },
+    });
   };
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col h-full"
+        className="flex flex-col h-full overflow-hidden"
       >
         <Sheet.Header className="p-5">
           <Sheet.Title>Add deal</Sheet.Title>
@@ -49,33 +40,46 @@ export function AddCardForm({
           <Sheet.Close />
         </Sheet.Header>
         <Sheet.Content>
-          <SalesFormTabs>hi</SalesFormTabs>
+          <ScrollArea className="flex-auto">
+            <div className="p-5">
+              <div className="grid grid-cols-2 gap-5 ">
+                <Form.Field
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <Form.Item>
+                      <Form.Label>NAME</Form.Label>
+                      <Form.Control>
+                        <Input {...field} required />
+                      </Form.Control>
+                      <Form.Message />
+                    </Form.Item>
+                  )}
+                />
+              </div>
+            </div>
+          </ScrollArea>
         </Sheet.Content>
         <Sheet.Footer className="flex justify-end flex-shrink-0 px-5 gap-1">
           <Button
             type="button"
             variant="ghost"
             className="bg-background hover:bg-background/90"
-            onClick={() => onOpenChange?.(false)}
+            onClick={() => onCloseSheet()}
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
           >
             Cancel
           </Button>
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={loading}
           >
-            Save
+            {loading ? 'Saving...' : 'Save'}
           </Button>
         </Sheet.Footer>
       </form>
     </Form>
   );
 }
-
-const SalesFormTabs = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <ScrollArea className="flex-auto">
-      <div className="p-5">{children}</div>
-    </ScrollArea>
-  );
-};
