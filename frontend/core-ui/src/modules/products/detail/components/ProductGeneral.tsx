@@ -27,8 +27,7 @@ export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full space-y-4">
-        <Spinner size="large" />
-        <p className="text-muted-foreground font-medium">Loading product details...</p>
+        <Spinner />
       </div>
     );
   }
@@ -39,11 +38,12 @@ export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
         <div className="text-red-500 text-center">
           <h3 className="text-lg font-semibold mb-2">Error Loading Product</h3>
           <p className="text-sm text-muted-foreground">
-            {error.message || 'Failed to load product details. Please try again.'}
+            {error.message ||
+              'Failed to load product details. Please try again.'}
           </p>
         </div>
-        <button 
-          onClick={() => window.location.reload()} 
+        <button
+          onClick={() => window.location.reload()}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
         >
           Retry

@@ -13,19 +13,23 @@ import { ApolloError } from '@apollo/client';
 
 export const CustomerDetail = () => {
   const { toast } = useToast();
-  const { loading, error } = useCustomerDetail({
+  const { error } = useCustomerDetail({
     onError: (e: ApolloError) => {
-      toast({
-        title: 'Error',
-        description: e.message,
-        variant: 'destructive',
-      });
+      if (!e.message.includes('not found')) {
+        toast({
+          title: 'Error',
+          description: e.message,
+          variant: 'destructive',
+        });
+      }
     },
   });
   return (
     <CustomerDetailLayout
       actions={<CustomerDetailActions />}
-      otherState={loading ? 'loading' : error ? 'not-found' : undefined}
+      otherState={
+        error?.message.includes('not found') ? 'not-found' : undefined
+      }
     >
       <div className="flex flex-auto">
         <Sheet.Content className="border-b-0 rounded-b-none">
