@@ -1,29 +1,68 @@
-import { Resizable, Sidebar, Tabs, useQueryState } from 'erxes-ui';
+import {
+  Button,
+  Resizable,
+  Sheet,
+  Sidebar,
+  Tabs,
+  useQueryState,
+} from 'erxes-ui';
 import { CustomerDetailSheet } from './CustomerDetailSheet';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-
+import { Spinner } from 'erxes-ui';
+import { IconMoodAnnoyed } from '@tabler/icons-react';
 export const CustomerDetailLayout = ({
   children,
   actions,
+  otherState,
 }: {
   children: React.ReactNode;
   actions?: React.ReactNode;
+  otherState?: 'loading' | 'not-found';
 }) => {
   return (
-    <CustomerDetailSheet>
-      <div className="flex h-full flex-auto overflow-auto">
-        <div className="flex flex-col flex-auto min-h-full overflow-hidden">
-          <Resizable.PanelGroup
-            direction="horizontal"
-            className="flex-auto min-h-full overflow-hidden"
-          >
-            <Resizable.Panel>
-              <CustomerDetailTabs>{children}</CustomerDetailTabs>
-            </Resizable.Panel>
-            {actions}
-          </Resizable.PanelGroup>
-        </div>
-      </div>
+    <CustomerDetailSheet
+      className={!otherState ? undefined : 'sm:max-w-screen-lg'}
+    >
+      <Sheet.Content>
+        {otherState === 'loading' && (
+          <div className="flex items-center justify-center h-full">
+            <Spinner size="large" />
+          </div>
+        )}
+        {otherState === 'not-found' && (
+          <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col items-center gap-3">
+              <IconMoodAnnoyed className="w-16 h-16 text-muted-foreground" />
+              <div className="flex flex-col gap-2">
+                <h2 className="text-xl font-semibold w-full text-center">
+                  Customer details not found
+                </h2>
+                <p className="text-muted-foreground font-medium text-base w-full text-center">
+                  There seems to be no data on this customer
+                </p>
+              </div>
+              <Sheet.Close asChild>
+                <Button variant="outline">Close</Button>
+              </Sheet.Close>
+            </div>
+          </div>
+        )}
+        {!otherState && (
+          <div className="flex h-full flex-auto overflow-auto">
+            <div className="flex flex-col flex-auto min-h-full overflow-hidden">
+              <Resizable.PanelGroup
+                direction="horizontal"
+                className="flex-auto min-h-full overflow-hidden"
+              >
+                <Resizable.Panel>
+                  <CustomerDetailTabs>{children}</CustomerDetailTabs>
+                </Resizable.Panel>
+                {actions}
+              </Resizable.PanelGroup>
+            </div>
+          </div>
+        )}
+      </Sheet.Content>
     </CustomerDetailSheet>
   );
 };

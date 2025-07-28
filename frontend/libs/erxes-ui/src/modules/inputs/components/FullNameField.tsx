@@ -76,23 +76,23 @@ interface FullNameProps
   lastName: string;
   onClose?: (firstName: string, lastName: string) => void;
   onClick?: (e: React.MouseEvent) => void;
+  withBadge?: boolean;
 }
 
-export const FullNameRoot = ({
+const FullNameRoot = ({
   firstName,
   lastName,
   onClose,
   onClick,
+  withBadge = false,
   ...props
 }: FullNameProps) => {
   const [firstNameState, setFirstNameState] = useState<string>('');
   const [lastNameState, setLastNameState] = useState<string>('');
-
   useEffect(() => {
     setFirstNameState(firstName);
     setLastNameState(lastName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [firstName, lastName]);
   return (
     <RecordTablePopover
       scope={props.scope}
@@ -106,20 +106,32 @@ export const FullNameRoot = ({
       {...props}
     >
       <RecordTableCellTrigger>
-        <Badge
-          variant="secondary"
-          onClick={(e) => {
-            onClick?.(e);
-          }}
-        >
-          {firstName || lastName ? (
-            <span>
-              {firstName} {lastName}
-            </span>
-          ) : (
-            <span className="text-muted-foreground">Unnamed customer</span>
-          )}
-        </Badge>
+        {withBadge ? (
+          <Badge
+            variant="secondary"
+            onClick={(e) => {
+              onClick?.(e);
+            }}
+          >
+            {firstName || lastName ? (
+              <span>
+                {firstName} {lastName}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">Unnamed customer</span>
+            )}
+          </Badge>
+        ) : firstName || lastName ? (
+          <span
+            onClick={(e) => {
+              onClick?.(e);
+            }}
+          >
+            {firstName} {lastName}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">Unnamed customer</span>
+        )}
       </RecordTableCellTrigger>
       <RecordTableCellContent className="w-72" asChild>
         <FullNameField.Container>
@@ -141,11 +153,147 @@ export const FullNameRoot = ({
   );
 };
 
+const FullNameDetail = ({
+  firstName,
+  lastName,
+  onClose,
+  onClick,
+  withBadge = false,
+  ...props
+}: FullNameProps) => {
+  const [firstNameState, setFirstNameState] = useState<string>('');
+  const [lastNameState, setLastNameState] = useState<string>('');
+  useEffect(() => {
+    setFirstNameState(firstName);
+    setLastNameState(lastName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <RecordTablePopover
+      scope={props.scope}
+      open={props.open}
+      onOpenChange={(open) => {
+        props.onOpenChange?.(open);
+        if (!open) {
+          onClose?.(firstNameState, lastNameState);
+        }
+      }}
+      {...props}
+    >
+      <RecordTableCellTrigger>
+        {withBadge ? (
+          <Badge
+            variant="secondary"
+            onClick={(e) => {
+              onClick?.(e);
+            }}
+          >
+            {firstName || lastName ? (
+              <span>
+                {firstName} {lastName}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">Unnamed customer</span>
+            )}
+          </Badge>
+        ) : firstName || lastName ? (
+          <span
+            onClick={(e) => {
+              onClick?.(e);
+            }}
+          >
+            {firstName} {lastName}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">Unnamed customer</span>
+        )}
+      </RecordTableCellTrigger>
+      <RecordTableCellContent className="w-72" asChild>
+        <FullNameField.Container>
+          <FullNameField.FirstName
+            value={firstNameState || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setFirstNameState(e.target.value);
+            }}
+          />
+          <FullNameField.LastName
+            value={lastNameState || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setLastNameState(e.target.value);
+            }}
+          />
+        </FullNameField.Container>
+      </RecordTableCellContent>
+    </RecordTablePopover>
+  );
+};
+
+// const FullNameDetail = ({
+//   firstName,
+//   lastName,
+//   onClose,
+//   onClick,
+//   ...props
+// }: FullNameProps) => {
+//   const [firstNameState, setFirstNameState] = useState<string>('');
+//   const [lastNameState, setLastNameState] = useState<string>('');
+//   useEffect(() => {
+//     setFirstNameState(firstName);
+//     setLastNameState(lastName);
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
+//   return (
+//     <RecordTablePopover
+//       scope={props.scope}
+//       open={props.open}
+//       onOpenChange={(open) => {
+//         props.onOpenChange?.(open);
+//         if (!open) {
+//           onClose?.(firstNameState, lastNameState);
+//         }
+//       }}
+//       {...props}
+//     >
+//       <RecordTableCellTrigger>
+//         {firstName || lastName ? (
+//           <span
+//             onClick={(e) => {
+//               onClick?.(e);
+//             }}
+//             className="font-semibold text-lg"
+//           >
+//             {firstName} {lastName}
+//           </span>
+//         ) : (
+//           <span className="text-muted-foreground">Unnamed customer</span>
+//         )}
+//       </RecordTableCellTrigger>
+//       <RecordTableCellContent className="w-72" asChild>
+//         <FullNameField.Container>
+//           <FullNameField.FirstName
+//             value={firstNameState}
+//             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+//               setFirstNameState(e.target.value);
+//             }}
+//           />
+//           <FullNameField.LastName
+//             value={lastNameState}
+//             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+//               setLastNameState(e.target.value);
+//             }}
+//           />
+//         </FullNameField.Container>
+//       </RecordTableCellContent>
+//     </RecordTablePopover>
+//   );
+// };
+
 const FullNameField = Object.assign(FullNameRoot, {
   Container: FullNameContainer,
   Input: FullNameInput,
   FirstName: FirstNameInput,
   LastName: LastNameInput,
+  Detail: FullNameDetail,
 });
 
 export { FullNameField };
