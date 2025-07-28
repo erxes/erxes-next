@@ -82,7 +82,9 @@ export const productColumns: ColumnDef<IProduct>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
+          <TextOverflowTooltip
+            value={cell.row.original?.category?.name || ''}
+          />
         </RecordTableCellDisplay>
       );
     },

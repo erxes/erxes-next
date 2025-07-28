@@ -49,7 +49,7 @@ export const TagsForm = () => {
             <Form.Label>parent tag</Form.Label>
             <Form.Description className="sr-only">parent tag</Form.Description>
             <Form.Control>
-              <SelectTags
+              <SelectTags.Provider
                 tagType={watch('type') as string}
                 value={field.value}
                 onValueChange={field.onChange}
@@ -70,7 +70,7 @@ export const TagsForm = () => {
                     <SelectTags.Content />
                   </Combobox.Content>
                 </Popover>
-              </SelectTags>
+              </SelectTags.Provider>
             </Form.Control>
             <Form.Message />
           </Form.Item>
