@@ -47,7 +47,7 @@ const TransactionMoreColumnCell = ({
 
   return (
     <Link
-      to={`/accounting/adjustment/inventory/edit?id=${_id}`}
+      to={`/accounting/adjustment/inventory/detail?id=${_id}`}
     >
       <RecordTable.MoreButton className="w-full h-full" />
     </Link>

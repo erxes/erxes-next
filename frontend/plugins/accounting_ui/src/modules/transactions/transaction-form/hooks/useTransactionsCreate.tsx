@@ -29,7 +29,7 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
           title: 'Success',
           description: 'Transactions created successfully',
         });
-        options?.onCompeleted()
+        options?.onCompleted()
       },
       refetchQueries: [
         {
