@@ -109,7 +109,7 @@ export default function ProductForm({
                 {form.watch('productDetails')?.map((_, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-2 gap-4 p-4 border rounded-md"
+                    className="grid grid-cols-2 gap-4"
                   >
                     <Form.Field
                       control={form.control}
@@ -124,7 +124,7 @@ export default function ProductForm({
                               value={field.value}
                               onValueChange={(value) => field.onChange(value)}
                               disabled={isReadOnly}
-                              className="border border-gray-300 h-10"
+                              className="h-8"
                             />
                           </Form.Control>
                           <Form.Message />
@@ -145,7 +145,7 @@ export default function ProductForm({
                               selected={field.value}
                               onSelect={(value) => field.onChange(value)}
                               disabled={isReadOnly}
-                              className="border border-gray-300 h-10"
+                              className="h-8"
                             />
                           </Form.Control>
                           <Form.Message />
@@ -204,7 +204,7 @@ export default function ProductForm({
                           isRequired: false,
                         })
                       }
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
                       Add Product Detail
@@ -239,7 +239,7 @@ export default function ProductForm({
                           )
                         }
                         disabled={isReadOnly}
-                        className="w-full h-10 px-3 text-left justify-between"
+                        className="w-full px-3 text-left justify-between"
                       />
                       {field.value?.length > 0 && (
                         <div className="text-sm text-gray-600">
@@ -279,7 +279,7 @@ export default function ProductForm({
                             )
                           }
                           disabled={isReadOnly}
-                          className="w-full h-10 px-3 text-left justify-between"
+                          className="w-full px-3 text-left justify-between"
                         />
                         {field.value?.length > 0 && (
                           <div className="text-sm text-gray-600">
@@ -312,7 +312,7 @@ export default function ProductForm({
                             )
                           }
                           disabled={isReadOnly}
-                          className="w-full h-10 px-3 text-left justify-between"
+                          className="w-full px-3 text-left justify-between"
                         />
                         {field.value?.length > 0 && (
                           <div className="text-sm text-gray-600">
@@ -349,7 +349,7 @@ export default function ProductForm({
             </Button>
 
             {showMappings && (
-              <div className="space-y-4 p-4 border rounded-md">
+              <div className="space-y-4 p-4">
                 {form.watch('catProdMappings')?.map((mapping, index) => (
                   <div key={index} className="grid grid-cols-2 gap-4">
                     <Form.Field
@@ -365,7 +365,7 @@ export default function ProductForm({
                               selected={field.value}
                               onSelect={(value) => field.onChange(value)}
                               disabled={isReadOnly}
-                              className="border border-gray-300 h-10"
+                              className="h-8"
                             />
                           </Form.Control>
                           <Form.Message />
@@ -392,7 +392,7 @@ export default function ProductForm({
                                   }
                                 }}
                                 disabled={isReadOnly}
-                                className="w-full h-10"
+                                className="w-full h-8"
                               />
                               {field.value?.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
@@ -413,7 +413,7 @@ export default function ProductForm({
                                               ),
                                             )
                                           }
-                                          className="text-red-600 hover:text-red-800"
+                                          className="text-red-600 hover:text-red-800 bg-secondary"
                                         >
                                           ×
                                         </button>
@@ -455,7 +455,7 @@ export default function ProductForm({
                           productIds: [],
                         })
                       }
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
                       Add Mapping
@@ -490,7 +490,7 @@ export default function ProductForm({
                           )
                         }
                         disabled={isReadOnly}
-                        className="w-full h-10 px-3 text-left justify-between"
+                        className="w-full px-3 text-left justify-between"
                       />
                       {field.value?.length > 0 && (
                         <div className="text-sm text-gray-600">

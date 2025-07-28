@@ -42,7 +42,7 @@ export const pipelineQueries = {
       const userDetail = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
-        module: 'user',
+        module: 'users',
         action: 'find',
         input: {
           _id: user._id,
