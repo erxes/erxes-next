@@ -344,7 +344,6 @@ export const SelectMemberDetail = ({
   value: string | null | undefined;
 }) => {
   const [open, setOpen] = useState(false);
-  console.log(value);
   return (
     <SelectMemberProvider
       onValueChange={(value) => {

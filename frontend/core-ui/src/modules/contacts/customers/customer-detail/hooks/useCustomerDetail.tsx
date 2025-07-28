@@ -12,7 +12,7 @@ interface IUseCustomerDetailResponseData {
 export const useCustomerDetail = (operationVariables?: OperationVariables) => {
   const [_id] = useQueryState('contactId');
   const setRendering = useSetAtom(renderingCustomerDetailAtom);
-  const { data, loading } = useQuery<IUseCustomerDetailResponseData>(CUSTOMER_DETAIL, {
+  const { data, loading, error } = useQuery<IUseCustomerDetailResponseData>(CUSTOMER_DETAIL, {
     variables: {
       _id,
     },
@@ -28,5 +28,5 @@ export const useCustomerDetail = (operationVariables?: OperationVariables) => {
     },
   });
 
-  return { customerDetail: data?.customerDetail, loading };
+  return { customerDetail: data?.customerDetail, loading, error };
 };

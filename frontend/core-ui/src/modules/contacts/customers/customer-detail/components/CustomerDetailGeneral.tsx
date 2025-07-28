@@ -4,12 +4,11 @@ import { IconDeviceMobileMessage, IconMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
 import { Avatar, Button, readImage } from 'erxes-ui';
-import { TextFieldCustomer } from '../../customer-edit/components/TextField';
 import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { SelectCompany } from 'ui-modules';
 export const CustomerDetailGeneral = () => {
-  const { customerDetail, loading } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetail();
   const {
     _id,
     firstName,

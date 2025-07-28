@@ -75,7 +75,7 @@ export const TextField = React.forwardRef<
               value={editingValue}
               onChange={(e) => {
                 setEditingValue(e.target.value);
-                onValueChange && onValueChange(e.target.value);
+                onValueChange?.(e.target.value);
               }}
               onKeyDown={handleKeyDown}
               autoFocus

@@ -48,8 +48,11 @@ export const NumberField = React.forwardRef<
             <Input
               value={editingValue.toString()}
               onChange={(e) => {
-                setEditingValue(Number(e.target.value));
-                onValueChange && onValueChange(Number(e.target.value));
+                const numValue = Number(e.target.value);
+                if (!isNaN(numValue)) {
+                  setEditingValue(numValue);
+                  onValueChange?.(numValue);
+                }
                 setIsOpen(true);
               }}
             />

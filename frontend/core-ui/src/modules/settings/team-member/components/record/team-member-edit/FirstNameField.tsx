@@ -18,8 +18,7 @@ export const FirstNameField = ({
   className,
 }: TextFieldProps) => {
   const { usersEdit } = useUserEdit();
-  const onSave = (editingValue: string | number) => {
-    console.log('editingValue', editingValue);
+  const onSave = (editingValue: string) => {
     if (editingValue === value) return;
     usersEdit(
       {
