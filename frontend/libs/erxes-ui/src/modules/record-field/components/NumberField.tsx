@@ -23,9 +23,10 @@ export const NumberField = React.forwardRef<
     const [isOpen, setIsOpen] = useState(false);
     const [editingValue, setEditingValue] = useState(value);
 
-    const handleAction = () => {
+    const handleAction = (e: React.FormEvent) => {
+      e.preventDefault();
       if (editingValue === value) return;
-      onSave && onSave(editingValue);
+      onSave?.(editingValue);
     };
 
     return (
@@ -46,6 +47,7 @@ export const NumberField = React.forwardRef<
         <RecordTableCellContent asChild>
           <form onSubmit={handleAction}>
             <Input
+              type="number"
               value={editingValue.toString()}
               onChange={(e) => {
                 const numValue = Number(e.target.value);

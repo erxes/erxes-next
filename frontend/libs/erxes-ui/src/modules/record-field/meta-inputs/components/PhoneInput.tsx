@@ -162,6 +162,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           placeholder={placeholder}
           ref={ref}
           className={cn('bg-accent', className)}
+          type="tel"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               onEnter?.(value || '');
