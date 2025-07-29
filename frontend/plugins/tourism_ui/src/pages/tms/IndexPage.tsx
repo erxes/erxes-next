@@ -2,7 +2,7 @@ import { IconBox, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
-import { TmsCreateSheet } from '@/tms/components/CreateTmsSheet';
+import { TmsCreateSheet } from '~/modules/tms/components/CreateTmsSheet';
 import { BranchList } from '@/tms/components/BranchList';
 
 export const IndexPage = () => {

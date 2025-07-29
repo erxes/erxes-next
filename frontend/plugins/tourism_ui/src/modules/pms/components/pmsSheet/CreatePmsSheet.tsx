@@ -2,16 +2,22 @@ import { IconPlus } from '@tabler/icons-react';
 import { Button, Sheet, Stepper } from 'erxes-ui';
 import { PropsWithChildren, useState } from 'react';
 import CreatePmsForm from './CreatePmsForm';
-import { steps } from '../constants/steps.constants';
+import { steps } from '../../constants/steps.constants';
 import { useAtom, useSetAtom } from 'jotai';
-import { stepState } from '../states/stepStates';
-import { sheetOpenState } from '../states/sheetStates';
+import { stepState } from '../../states/stepStates';
+import { sheetOpenState } from '../../states/sheetStates';
 
 export const PmsCreateSheet = () => {
   const [open, setOpen] = useAtom(sheetOpenState);
+  const setCurrentStep = useSetAtom(stepState);
+
+  const handleOpenChange = (openState: boolean) => {
+    setOpen(openState);
+    setCurrentStep(1);
+  };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <Sheet.Trigger asChild>
         <Button>
           <IconPlus />
