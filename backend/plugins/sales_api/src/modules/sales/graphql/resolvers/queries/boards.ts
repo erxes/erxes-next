@@ -1,14 +1,15 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import { IContext } from '~/connectionResolvers';
-import { IPipelineLabelDocument, IStageDocument } from '~/modules/sales/@types';
 import {
   CLOSE_DATE_TYPES,
   PRIORITIES,
   SALES_STATUSES,
 } from '~/modules/sales/constants';
+import { IPipelineLabelDocument, IStageDocument } from '~/modules/sales/@types';
+
+import { IContext } from '~/connectionResolvers';
+import { IUserDocument } from 'erxes-api-shared/core-types';
 import { getCloseDateByType } from '~/modules/sales/utils';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export const boardQueries = {
   /**
@@ -485,4 +486,4 @@ export const boardQueries = {
   },
 };
 
-moduleRequireLogin(boardQueries);
+// moduleRequireLogin(boardQueries);
