@@ -1,74 +1,76 @@
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { field, schemaHooksWrapper } from '~/modules/saving/db/utils/utils';
 
-export const transactionSchema = schemaHooksWrapper(
-  new Schema({
-    _id: field({ pkey: true }),
-    number: field({
-      type: String,
-      label: 'Number',
-      index: true,
-    }),
-    contractId: field({
-      type: String,
-      optional: true,
-      label: 'Contract',
-      index: true,
-    }),
-    customerId: field({
-      type: String,
-      optional: true,
-      label: 'Customer',
-      index: true,
-    }),
-    companyId: field({
-      type: String,
-      optional: true,
-      label: 'Company',
-      index: true,
-    }),
-    transactionType: field({
-      type: String,
-      optional: true,
-      label: 'Transaction type',
-    }),
-    description: field({ type: String, optional: true, label: 'Description' }),
-    payDate: field({
-      type: Date,
-      default: new Date(),
-      label: 'Created at',
-    }),
-    payment: field({
-      type: Number,
-      min: 0,
-      default: 0,
-      optional: true,
-      label: 'payment',
-    }),
-    storedInterest: field({
-      type: Number,
-      min: 0,
-      default: 0,
-      optional: true,
-      label: 'stored interest',
-    }),
-    total: field({ type: Number, min: 0, default: 0, label: 'total' }),
-    balance: field({ type: Number, min: 0, default: 0, label: 'balance' }),
-    currency: field({
-      type: String,
-      default: 'MNT',
-      label: 'transaction currency of saving',
-    }),
-    contractReaction: field({ type: Object, label: 'Contract reaction' }),
-    storeReaction: field({ type: Object, label: 'Contract reaction' }),
-    isManual: field({ type: Boolean, label: 'Is manual transaction' }),
-    dealtType: field({ type: String, label: 'dealtType' }),
-    dealtResponse: field({ type: Schema.Types.Mixed, label: 'dealtResponse' }),
-    accountNumber: field({ type: String, label: 'accountNumber' }),
-    accountHolderName: field({ type: String, label: 'accountHolderName' }),
-    externalBankName: field({ type: String, label: 'externalBankName' }),
-    ownBankNumber: field({ type: String, label: 'ownBankNumber' }),
-    ownBankType: field({ type: String, label: 'ownBankType' }),
-  }),
-  'erxes_transactionSchema',
+export const transactionSchema = schemaWrapper(
+  new Schema(
+    {
+      _id: mongooseStringRandomId,
+      number: {
+        type: String,
+        label: 'Number',
+        index: true,
+      },
+      contractId: {
+        type: String,
+        optional: true,
+        label: 'Contract',
+        index: true,
+      },
+      customerId: {
+        type: String,
+        optional: true,
+        label: 'Customer',
+        index: true,
+      },
+      companyId: {
+        type: String,
+        optional: true,
+        label: 'Company',
+        index: true,
+      },
+      transactionType: {
+        type: String,
+        optional: true,
+        label: 'Transaction type',
+      },
+      description: { type: String, optional: true, label: 'Description' },
+      payDate: {
+        type: Date,
+        default: new Date(),
+        label: 'Created at',
+      },
+      payment: {
+        type: Number,
+        min: 0,
+        default: 0,
+        optional: true,
+        label: 'payment',
+      },
+      storedInterest: {
+        type: Number,
+        min: 0,
+        default: 0,
+        optional: true,
+        label: 'stored interest',
+      },
+      total: { type: Number, min: 0, default: 0, label: 'total' },
+      balance: { type: Number, min: 0, default: 0, label: 'balance' },
+      currency: {
+        type: String,
+        default: 'MNT',
+        label: 'transaction currency of saving',
+      },
+      contractReaction: { type: Object, label: 'Contract reaction' },
+      storeReaction: { type: Object, label: 'Contract reaction' },
+      isManual: { type: Boolean, label: 'Is manual transaction' },
+      dealtType: { type: String, label: 'dealtType' },
+      dealtResponse: { type: Schema.Types.Mixed, label: 'dealtResponse' },
+      accountNumber: { type: String, label: 'accountNumber' },
+      accountHolderName: { type: String, label: 'accountHolderName' },
+      externalBankName: { type: String, label: 'externalBankName' },
+      ownBankNumber: { type: String, label: 'ownBankNumber' },
+      ownBankType: { type: String, label: 'ownBankType' },
+    },
+    { timestamps: true },
+  ),
 );

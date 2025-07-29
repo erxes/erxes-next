@@ -1,13 +1,11 @@
 import { getFullDate } from 'erxes-api-shared/utils';
 import { FilterQuery, Model, models } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { CONTRACT_STATUS } from '~/modules/saving/@types/contracts';
+import { CONTRACT_STATUS } from '~/modules/saving/@types/constants';
 import {
   IPeriodLock,
   IPeriodLockDocument,
 } from '~/modules/saving/@types/periodLockTypes';
-import { periodLockSchema } from '~/modules/saving/db/definitions/periodLocks';
-import { getDiffDay } from '~/modules/saving/db/utils/utils';
 
 export interface IPeriodLockModel extends Model<IPeriodLockDocument> {
   getPeriodLock(

@@ -1,15 +1,16 @@
-import { schemaHooksWrapper, field } from '~/modules/saving/db/utils/utils';
-
 import { Schema } from 'mongoose';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
-export const periodLockSchema = schemaHooksWrapper(
-  new Schema({
-    _id: field({ pkey: true }),
-    date: field({ type: Date, label: 'Lock Date' }),
-    excludeContracts: field({
-      type: [String],
-      label: 'Exclude contracts from Lock ',
-    }),
-  }),
-  'erxes_periodLockSchema',
+export const periodLockSchema = schemaWrapper(
+  new Schema(
+    {
+      _id: mongooseStringRandomId,
+      date: { type: Date, label: 'Lock Date' },
+      excludeContracts: {
+        type: [String],
+        label: 'Exclude contracts from Lock ',
+      },
+    },
+    { timestamps: true },
+  ),
 );

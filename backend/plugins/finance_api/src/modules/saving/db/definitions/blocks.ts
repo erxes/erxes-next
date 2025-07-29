@@ -1,51 +1,53 @@
 import { Schema } from 'mongoose';
-import { field, schemaHooksWrapper } from '../utils/utils';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
-export const blockSchema = schemaHooksWrapper(
-  new Schema({
-    _id: field({ pkey: true }),
-    contractId: field({
-      type: String,
-      label: 'Saving Contract Type',
-      index: true,
-    }),
-    blockType: field({
-      type: String,
-      label: 'Block Type',
-      enum: ['scheduleTransaction', 'loanPayment'],
-      // loanPayment - orj irenguut ni avah, scheduleTransaction gartsiig haaj baiga
-      optional: true,
-    }),
-    number: field({
-      type: String,
-      label: 'Number',
-      optional: true,
-      index: true,
-    }),
-    amount: field({
-      type: Number,
-      label: 'Amount',
-      default: 0,
-      index: true,
-    }),
-    didAmount: field({
-      type: Number,
-      label: 'Amount',
-      default: 0,
-      index: true,
-    }),
-    status: field({
-      type: String,
-      label: 'Status',
-      optional: true,
-      index: true,
-    }),
-    currency: field({
-      type: String,
-      label: 'Currency',
-      optional: true,
-      index: true,
-    }),
-  }),
-  'erxes_contractSchema',
+export const blockSchema = schemaWrapper(
+  new Schema(
+    {
+      _id: mongooseStringRandomId,
+      contractId: {
+        type: String,
+        label: 'Saving Contract Type',
+        index: true,
+      },
+      blockType: {
+        type: String,
+        label: 'Block Type',
+        enum: ['scheduleTransaction', 'loanPayment'],
+        // loanPayment - orj irenguut ni avah, scheduleTransaction gartsiig haaj baiga
+        optional: true,
+      },
+      number: {
+        type: String,
+        label: 'Number',
+        optional: true,
+        index: true,
+      },
+      amount: {
+        type: Number,
+        label: 'Amount',
+        default: 0,
+        index: true,
+      },
+      didAmount: {
+        type: Number,
+        label: 'Amount',
+        default: 0,
+        index: true,
+      },
+      status: {
+        type: String,
+        label: 'Status',
+        optional: true,
+        index: true,
+      },
+      currency: {
+        type: String,
+        label: 'Currency',
+        optional: true,
+        index: true,
+      },
+    },
+    { timestamps: true },
+  ),
 );
