@@ -55,8 +55,6 @@ const SipProvider = ({
   const [sipState, setSipState] = useAtom(sipStateAtom);
   const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
 
-  console.log(rtcSessionState, 'rtcSessionState');
-
   const setPersistentStates = useCallback(
     (isRegistered: boolean, isAvailable: boolean) => {
       setCallInfo({ isRegistered });
@@ -201,7 +199,6 @@ const SipProvider = ({
         `Calling answerCall() is not allowed when call status is ${sipState.callStatus} and call direction is ${sipState.callDirection}`,
       );
     }
-    console.log(rtcSessionState, 'rtcSession --- ');
     try {
       rtcSessionState?.answer({
         mediaConstraints: {
@@ -341,6 +338,7 @@ const SipProvider = ({
       };
 
       uaRef.current = new JsSIP.UA(options);
+      JsSIP.debug.enable('JsSIP:*');
     } catch (error) {
       loggerRef.current.debug('Error', error.message, error);
       setSipState((prev) => ({
@@ -609,7 +607,6 @@ const SipProvider = ({
 
         rtcSession.on('accepted', () => {
           try {
-            console.log('accepted', '--accepted');
             stopRingbackTone();
             if (uaRef.current !== ua) {
               return;
@@ -622,13 +619,6 @@ const SipProvider = ({
                 sipState.callCounterpart,
               );
             }
-            console.log(
-              'accepted',
-              '--accepted',
-              direction,
-              customerPhone,
-              rtcSession.connection.getRemoteStreams(),
-            );
 
             if (addHistory) {
               addHistory(
@@ -636,7 +626,7 @@ const SipProvider = ({
                 timeStamp,
                 direction,
                 customerPhone,
-                rtcSessionState?.start_time,
+                rtcSession.start_time,
                 sipState.groupName,
               );
             }
@@ -756,7 +746,7 @@ const SipProvider = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   // Handle prop changes
   useEffect(() => {

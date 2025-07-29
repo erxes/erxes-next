@@ -1,16 +1,26 @@
 import { useCallUserIntegration } from '@/integrations/call/hooks/useCallUserIntegration';
 import { callConfigAtom } from '@/integrations/call/states/sipStates';
 import { Label, Select, formatPhoneNumber } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 
 export const SelectPhoneCallFrom = () => {
   const { callUserIntegrations } = useCallUserIntegration();
-  const callConfig = useAtomValue(callConfigAtom);
+  const [callConfig, setCallConfig] = useAtom(callConfigAtom);
+
+  const handleSelectPhone = (phone: string) => {
+    const selectedIntegration = callUserIntegrations?.find(
+      (integration) => integration.phone === phone,
+    );
+    if (!selectedIntegration) {
+      return;
+    }
+    setCallConfig({ ...selectedIntegration, isAvailable: true });
+  };
 
   return (
     <div className="space-y-2">
       <Label htmlFor="call-from">Call from</Label>
-      <Select>
+      <Select value={callConfig?.phone} onValueChange={handleSelectPhone}>
         <Select.Trigger id="call-from">
           <Select.Value placeholder="Select a phone" />
         </Select.Trigger>

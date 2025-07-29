@@ -1,8 +1,10 @@
+import { CallContacts } from '@/integrations/call/components/CallContacts';
 import { CallHistory } from '@/integrations/call/components/CallHistory';
 import { CallNumberInput } from '@/integrations/call/components/CallNumberInput';
 import { CallWidgetActions } from '@/integrations/call/components/CallWidgetActions';
 import { SelectPhoneCallFrom } from '@/integrations/call/components/SelectPhoneCallFrom';
 import { useSip } from '@/integrations/call/components/SipProvider';
+import { callUiAtom } from '@/integrations/call/states/callUiAtom';
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 import {
   IconAddressBook,
@@ -10,18 +12,27 @@ import {
   IconHistory,
 } from '@tabler/icons-react';
 import { Button, Tabs } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 
-export const CallTabs = ({ children }: { children: React.ReactNode }) => {
+export const CallTabs = ({
+  children,
+  keypad,
+}: {
+  children: React.ReactNode;
+  keypad: React.ReactNode;
+}) => {
+  const [callUi, setCallUi] = useAtom(callUiAtom);
+
   return (
     <>
       <div className="text-center">{children}</div>
-      <Tabs defaultValue="keypad">
+      <Tabs defaultValue="keypad" value={callUi} onValueChange={setCallUi}>
         <Tabs.Content value="history">
           <CallHistory />
         </Tabs.Content>
-        <Tabs.Content value="keypad">
-          <Dialpad />
+        <Tabs.Content value="keypad">{keypad}</Tabs.Content>
+        <Tabs.Content value="address-book">
+          <CallContacts />
         </Tabs.Content>
         <Tabs.List className="grid grid-cols-3 p-1 border-t border-b-0">
           <CallTabsTrigger value="history">
@@ -51,7 +62,7 @@ const CallTabsTrigger = ({
 }) => {
   return (
     <Button
-      className="flex-col h-12 gap-1 [&>svg]:size-5 data-[state=active]:hover:bg-accent-foreground/10"
+      className="flex-col h-12 gap-1 [&>svg]:size-5 data-[state=active]:hover:bg-accent-foreground/10 after:hidden"
       variant="ghost"
       asChild
     >
@@ -60,7 +71,7 @@ const CallTabsTrigger = ({
   );
 };
 
-const Dialpad = () => {
+export const Dialpad = () => {
   return (
     <div className="px-3">
       <CallWidgetActions />

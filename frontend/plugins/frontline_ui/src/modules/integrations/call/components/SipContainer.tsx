@@ -59,11 +59,7 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
       },
     ],
   };
-  console.log(
-    'SipContainer rendered:',
-    sipState.sipStatus,
-    sipState.callStatus,
-  );
+
   return (
     <SipProvider
       createSession={createActiveSession}

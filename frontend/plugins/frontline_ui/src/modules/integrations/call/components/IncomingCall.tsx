@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import { sipStateAtom } from '@/integrations/call/states/sipStates';
-import { extractPhoneNumberFromCounterpart } from '@/integrations/call/utils/callUtils';
 import { IconPhone, IconPhoneEnd } from '@tabler/icons-react';
-import { Button, formatPhoneNumber, getPluginAssetsUrl } from 'erxes-ui';
+import { Button, getPluginAssetsUrl } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { CallStatusEnum } from '@/integrations/call/types/sipTypes';
+import { CallNumber } from '@/integrations/call/components/CallNumber';
 
 export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -28,16 +28,13 @@ export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         audioRef.current.src = '';
       }
     };
-  }, [sipState?.callStatus, audioRef.current]);
+  }, [sipState?.callStatus]);
 
   const { answerCall, stopCall } = useSip();
-  const phoneNumber = extractPhoneNumberFromCounterpart(
-    sipState?.callCounterpart || '',
-  );
 
   const onAcceptCall = () => {
     if (audioRef.current && audioRef.current.src) {
@@ -67,9 +64,7 @@ export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
       <audio ref={audioRef} loop autoPlay />
       <div className="text-center">{children}</div>
       <div className="mt-2 px-3 mb-1 space-y-2">
-        <div className="font-semibold text-lg text-primary text-center">
-          {formatPhoneNumber({ value: phoneNumber, defaultCountry: 'MN' })}
-        </div>
+        <CallNumber />
         <div className="text-center text-accent-foreground">
           Incoming call to{' '}
           <span className="font-semibold text-foreground">

@@ -1,17 +1,12 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { IconArrowsMaximize, IconDots, IconMinus } from '@tabler/icons-react';
-import { Button, DropdownMenu, Separator } from 'erxes-ui';
-import { CustomersInline } from 'ui-modules';
+import { IconDots } from '@tabler/icons-react';
+import { Button, DropdownMenu } from 'erxes-ui';
 import {
   CallWidgetDraggableRoot,
   DraggableHandle,
 } from '@/integrations/call/components/CallWidgetDraggable';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import {
-  callWidgetPositionState,
-  expandWidgetState,
-} from '@/integrations/call/states/callWidgetStates';
-import { CallNumberInput } from '@/integrations/call/components/CallNumberInput';
+import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
 import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
 import {
   CallDirectionEnum,
@@ -23,20 +18,10 @@ import {
   sipStateAtom,
 } from '@/integrations/call/states/sipStates';
 import { CallDisconnected } from '@/integrations/call/components/CallDisconnected';
-import { CallTabs } from '@/integrations/call/components/CallTabs';
+import { CallTabs, Dialpad } from '@/integrations/call/components/CallTabs';
 import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
 import { InCall } from '@/integrations/call/components/InCall';
 import { IncomingCall } from '@/integrations/call/components/IncomingCall';
-
-// Static customer data to prevent recreating array
-const MOCK_CUSTOMERS = [
-  {
-    _id: '',
-    firstName: 'John',
-    lastName: 'Doe',
-    avatar: '',
-  },
-];
 
 export const CallWidgetContent = ({
   children,
@@ -50,15 +35,18 @@ export const CallWidgetContent = ({
     return <CallDisconnected>{children}</CallDisconnected>;
   }
 
-  if (sipState.callStatus === CallStatusEnum.IDLE) {
-    return <CallTabs>{children}</CallTabs>;
-  }
+  // if (sipState.callStatus === CallStatusEnum.IDLE) {
+  //   return <CallTabs keypad={<Dialpad />}>{children}</CallTabs>;
+  // }
 
-  if (sipState.callDirection === CallDirectionEnum.INCOMING) {
-    return <IncomingCall>{children}</IncomingCall>;
-  }
+  // if (
+  //   sipState.callDirection === CallDirectionEnum.INCOMING &&
+  //   sipState.callStatus === CallStatusEnum.STARTING
+  // ) {
+  //   return <IncomingCall>{children}</IncomingCall>;
+  // }
 
-  return <InCall>{children}</InCall>;
+  return <CallTabs keypad={<InCall />}>{children}</CallTabs>;
 };
 
 export const CallWidgetMoreActions = () => {
@@ -98,7 +86,7 @@ export const CallWidget = () => {
   }, []);
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+    <PopoverPrimitive.Root open={open}>
       <CallWidgetDraggableRoot>
         <PopoverPrimitive.Content
           side="top"

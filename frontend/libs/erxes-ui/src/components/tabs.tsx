@@ -6,16 +6,12 @@ import { cn } from 'erxes-ui/lib';
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {
-    size?: 'sm' | 'md';
-  }
->(({ className, size = 'md', ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center text-muted-foreground/70',
-      size === 'sm' && 'h-6 bg-muted rounded-lg',
-      size === 'md' && 'h-auto border-b',
+      'h-auto gap-2 rounded-none border-b border-border bg-transparent px-0 py-1 text-accent-foreground',
       className,
     )}
     {...props}
@@ -25,23 +21,19 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
-    size?: 'sm' | 'md';
-  }
->(({ className, size = 'md', ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap px-3 font-medium transition-all text-muted-foreground disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0 ',
-      size === 'sm' &&
-        'text-xs leading-none rounded-md h-6 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow',
-      size === 'md' &&
-        'relative text-sm py-2 after:absolute after:inset-x-0 after:-bottom-px outline-offset-2 after:h-px data-[state=active]:bg-transparent data-[state=active]:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70',
+      'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'relative after:absolute after:inset-x-0 after:bottom-0 after:-mb-1 after:h-0.5 hover:bg-accent  data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:after:bg-primary data-[state=active]:hover:bg-accent data-[state=active]:text-primary',
       className,
     )}
     {...props}
   />
 ));
+
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<

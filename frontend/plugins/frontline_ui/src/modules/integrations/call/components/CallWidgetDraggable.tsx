@@ -32,7 +32,7 @@ export const CallWidgetDraggable = memo(
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id: 'call-widget',
     });
-    const open = useAtomValue(callWidgetOpenAtom);
+    const [open, setOpen] = useAtom(callWidgetOpenAtom);
 
     // Memoize style object to prevent recreating on every render
     const style = useMemo(
@@ -60,6 +60,7 @@ export const CallWidgetDraggable = memo(
             variant="secondary"
             size="icon"
             className="fixed bottom-10 right-10 z-50 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
+            onClick={() => setOpen(!open)}
           >
             {open ? <IconX /> : <IconPhoneFilled className="text-primary" />}
           </Button>
@@ -83,7 +84,7 @@ export const DraggableHandle = memo(() => {
       size="icon"
       {...listeners}
       {...attributes}
-      className="cursor-move text-accent-foreground h-auto my-1"
+      className="cursor-move text-accent-foreground my-1 h-5"
     >
       <IconGripHorizontal />
     </Button>

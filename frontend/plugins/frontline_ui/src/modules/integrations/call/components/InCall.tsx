@@ -4,26 +4,27 @@ import {
   IconDialpad,
   IconFileText,
   IconMicrophone,
-  IconPhoneOutgoing,
+  IconMicrophoneOff,
   IconUser,
 } from '@tabler/icons-react';
-import { Button, ButtonProps, cn, Label } from 'erxes-ui';
-import { Toggle } from '@radix-ui/react-toggle';
-import { useAtom, useAtomValue } from 'jotai';
-import React from 'react';
-import { inCallViewAtom } from '@/integrations/call/states/callStates';
-import { SelectMember } from 'ui-modules';
+import { Button, ButtonProps, cn } from 'erxes-ui';
+import { useAtomValue } from 'jotai';
+import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
+import { CallNumber } from '@/integrations/call/components/CallNumber';
+import { intervalToDuration } from 'date-fns';
+import {
+  Transfer,
+  TransferTrigger,
+} from '@/integrations/call/components/CallTransfer';
 
-export const InCall = ({ children }: { children: React.ReactNode }) => {
+export const InCall = () => {
   const { stopCall } = useSip();
 
   return (
     <>
-      <div className="text-center">{children}</div>
       <div className="text-center space-y-2 p-2 pb-6">
-        <CallStatus />
-        <CallNumber />
+        <CallInfo />
       </div>
       <Transfer />
       <div className="grid grid-cols-5 p-1 gap-1 items-stretch border-b-0">
@@ -64,53 +65,32 @@ export const InCallActionButton = React.forwardRef<
 });
 
 export const Mute = () => {
-  return (
-    <InCallActionButton>
-      <IconMicrophone />
-      Mute
-    </InCallActionButton>
-  );
-};
+  const { mute, isMuted, unmute } = useSip();
+  const [isMutedState, setIsMutedState] = useState(isMuted());
+  const [checkIsMuted, setCheckIsMuted] = useState(false);
+  const handleClick = () => {
+    if (isMuted()) {
+      unmute();
+    } else {
+      mute();
+    }
+    setCheckIsMuted(true);
+  };
 
-export const TransferTrigger = () => {
-  const [inCallView, setInCallView] = useAtom(inCallViewAtom);
+  useEffect(() => {
+    if (checkIsMuted) {
+      setIsMutedState(isMuted());
+      setCheckIsMuted(false);
+    }
+  }, [checkIsMuted, isMuted]);
   return (
     <InCallActionButton
-      asChild
-      className="data-[state=on]:bg-muted data-[state=on]:text-foreground"
+      onClick={handleClick}
+      className={cn(isMutedState && 'text-destructive hover:text-destructive')}
     >
-      <Toggle
-        pressed={inCallView === 'transfer'}
-        onPressedChange={(pressed) =>
-          setInCallView(pressed ? 'transfer' : null)
-        }
-      >
-        <IconPhoneOutgoing />
-        Transfer
-      </Toggle>
+      {isMutedState ? <IconMicrophoneOff /> : <IconMicrophone />}
+      {isMutedState ? 'Unmute' : 'Mute'}
     </InCallActionButton>
-  );
-};
-export const Transfer = () => {
-  const inCallView = useAtomValue(inCallViewAtom);
-
-  if (inCallView !== 'transfer') {
-    return null;
-  }
-
-  return (
-    <div className="space-y-3 px-3 pb-3">
-      <div className="space-y-2">
-        <Label>Transfer to</Label>
-        <SelectMember />
-      </div>
-      <div className="flex flex-col gap-1">
-        <Button variant="secondary">Transfer</Button>
-        <Button variant="ghost" className="text-accent-foreground">
-          Cancel
-        </Button>
-      </div>
-    </div>
   );
 };
 
@@ -141,22 +121,42 @@ export const SelectCustomer = () => {
   );
 };
 
-const CallStatus = () => {
+const CallInfo = () => {
   const sip = useAtomValue(sipStateAtom);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [time, setTime] = useState({ minutes: '00', seconds: '00' });
+
+  useEffect(() => {
+    if (sip.callStatus === CallStatusEnum.ACTIVE) {
+      setStartDate(new Date());
+    }
+  }, [sip.callStatus]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      if (!startDate) return;
+      const duration = intervalToDuration({ start: startDate, end: now });
+
+      const minutes = String(duration.minutes ?? 0).padStart(2, '0');
+      const seconds = String(duration.seconds ?? 0).padStart(2, '0');
+
+      setTime({ minutes, seconds });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startDate]);
 
   return (
-    <div className="text-accent-foreground text-sm text-center font-medium">
-      {sip.callStatus}
-      {sip.callStatus === CallStatusEnum.STARTING && 'Calling...'}
-      {sip.callStatus === CallStatusEnum.ACTIVE && 'In call'}
-    </div>
-  );
-};
-
-const CallNumber = () => {
-  return (
-    <div className="text-lg font-semibold text-primary text-center">
-      8089 1582
-    </div>
+    <>
+      <div className="text-accent-foreground text-sm text-center font-medium">
+        {sip.callStatus === CallStatusEnum.STARTING && 'Calling...'}
+        {sip.callStatus === CallStatusEnum.ACTIVE && 'In call'}
+      </div>
+      <CallNumber />
+      <div className="text-center text-accent-foreground text-sm">
+        Duration: {startDate && `${time.minutes}:${time.seconds}`}
+      </div>
+    </>
   );
 };
