@@ -4,18 +4,18 @@ import { ISavingDocument } from '@/saving/@types/saving';
 import {
   IContractTypeModel,
   loadContractTypeClass,
-} from '~/modules/saving/db/models/contractTypeModel';
+} from '~/modules/saving/db/models/ContractType';
 import { IContractTypeDocument } from '~/modules/saving/@types/contractTypes';
 import mongoose from 'mongoose';
 
 import { loadSavingClass, ISavingModel } from '@/saving/db/models/Saving';
-import { IBlockModel } from '~/modules/saving/db/models/blocksModel';
+import { IBlockModel } from '~/modules/saving/db/models/Block';
 import { IPeriodLock } from '~/modules/saving/@types/periodLockTypes';
-import { IPeriodLockModel } from '~/modules/saving/db/models/periodLockModel';
-import { IContractModel } from '~/modules/saving/db/models/contractModel';
-import { ITransactionModel } from '~/modules/saving/db/models/transactionModel';
+import { IPeriodLockModel } from '~/modules/saving/db/models/PeriodLock';
+import { IContractModel } from '~/modules/saving/db/models/Contract';
+import { ITransactionModel } from '~/modules/saving/db/models/Transaction';
 import { IStoredInterest } from '~/modules/saving/@types/storedInterest';
-import { IStoredInterestModel } from '~/modules/saving/db/models/storedInterestModel';
+import { IStoredInterestModel } from '~/modules/saving/db/models/StoredInterest';
 
 export interface IModels {
   Saving: ISavingModel;
