@@ -107,7 +107,10 @@ export async function startPlugin(
 
   if (configs.expressRouter) {
     app.use(`pl:${configs.name}`, configs.expressRouter);
+    app.use(`pl-${configs.name}`, configs.expressRouter);
   }
+
+
 
   if (configs.middlewares) {
     for (const middleware of configs.middlewares) {

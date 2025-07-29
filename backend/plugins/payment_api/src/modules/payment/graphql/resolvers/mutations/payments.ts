@@ -1,16 +1,12 @@
-import {
-  checkPermission,
-  requireLogin,
-} from '@erxes/api-utils/src/permissions';
-
-import { getEnv } from '@erxes/api-utils/src/core';
-import { PAYMENTS } from '../../../api/constants';
-import { PocketAPI } from '../../../api/pocket/api';
-import { QPayQuickQrAPI } from '../../../api/qpayQuickqr/api';
-import { IContext } from '../../../connectionResolver';
-import { IPayment } from '../../../models/definitions/payments';
-import { StripeAPI } from '../../../api/stripe/api';
-import ErxesPayment from '../../../api/ErxesPayment';
+import { IPayment } from "~/modules/payment/@types/payment";
+import { IContext } from "~/connectionResolvers";
+import { PAYMENTS } from "~/constants";
+import { getEnv } from "erxes-api-shared/utils";
+import { QPayQuickQrAPI } from "~/apis/qpayQuickqr/api";
+import { PocketAPI } from "~/apis/pocket/api";
+import { StripeAPI } from "~/apis/stripe/api";
+import ErxesPayment from "~/apis/ErxesPayment";
+import { checkPermission, requireLogin } from "erxes-api-shared/core-modules";
 
 const mutations = {
   async paymentAdd(_root, doc: IPayment & { currency?: string }, { models, subdomain }: IContext) {
@@ -27,7 +23,6 @@ const mutations = {
 
     if (doc.kind === 'qpayQuickqr') {
       const api = new QPayQuickQrAPI(doc.config);
-
       const { isCompany } = doc.config;
 
       let apiResponse;

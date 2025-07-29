@@ -3,6 +3,8 @@ import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/trpc/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
+import express from 'express';
+import path from 'path';
 
 startPlugin({
   name: 'payment',
@@ -29,6 +31,10 @@ startPlugin({
 
       return context;
     },
+  },
+
+  onServerInit: async (app) => {
+    app.use('/static', express.static(path.join(__dirname, '/public')));
   },
 });
 

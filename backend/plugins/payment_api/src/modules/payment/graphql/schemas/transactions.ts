@@ -16,23 +16,6 @@ export const types = `
     status: String
     createdAt: Date
     updatedAt: Date
-
-    details: JSON
-    response: JSON
-  }
-
-  type PaymentTransaction @key(fields: "_id") {
-    _id: String
-    invoiceId: String
-    invoice: Invoice
-    paymentId: String
-    paymentKind: String
-    payment: Payment
-    amount: Float
-    status: String
-    createdAt: Date
-    updatedAt: Date
-
     details: JSON
     response: JSON
   }

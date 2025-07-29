@@ -1,4 +1,4 @@
-import { IContext } from '../../../connectionResolver';
+import { IContext } from '~/connectionResolvers';
 
 const mutations = {
   async paymentTransactionsAdd(_root, args: any, { models, subdomain }: IContext) {

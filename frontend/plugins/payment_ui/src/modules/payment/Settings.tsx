@@ -1,8 +1,24 @@
+import { Route, Routes } from 'react-router-dom';
+import { lazy } from 'react';
+
+export const PaymentsSettingsPage = lazy(() =>
+  import('~/pages/payment/PaymentsGridPage').then((module) => ({
+    default: module.default,
+  })),
+);
+
+export const PaymentListPage = lazy(() =>
+  import('~/pages/payment/PaymentListPage').then((module) => ({
+    default: module.default,
+  })),
+);
+
 const paymentSettings = () => {
-  return (
-    <div>
-      <h1>payment Settings</h1>
-    </div>
+  return (  
+    <Routes>
+      <Route path="/" element={<PaymentsSettingsPage />} />
+      <Route path="/:kind" element={<PaymentListPage />} />
+    </Routes>
   );
 };
 

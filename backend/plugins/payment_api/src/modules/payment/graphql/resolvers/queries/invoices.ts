@@ -4,7 +4,7 @@ import { IContext } from '~/connectionResolvers';
 import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 
-interface IParam {
+export interface IParam {
   searchValue?: string;
   kind?: string;
   status?: string;
