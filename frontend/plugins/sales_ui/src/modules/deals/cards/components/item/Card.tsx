@@ -45,12 +45,10 @@ export const Card = ({ card = {} as IDeal, children, className }: Props) => {
       {...listeners}
       style={style}
       className={cn(
-        'bg-white rounded-md shadow min-h-[100px] flex flex-col justify-between',
+        'bg-white rounded-md shadow min-h-[100px] flex flex-col justify-between relative',
         isThisCardLoading && 'animate-pulse',
       )}
       onClick={() => setSalesItemId(card._id)}
-      onPointerDown={(e) => e.stopPropagation()}
-      onPointerUp={(e) => e.stopPropagation()}
     >
       <div className="flex justify-between border-b p-2">
         <DealsDatePicker

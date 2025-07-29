@@ -95,6 +95,8 @@ function SortableItem({
     transition,
   };
 
+  return <div>hi</div>;
+
   return (
     <div
       ref={setNodeRef}
@@ -103,6 +105,7 @@ function SortableItem({
       {...listeners}
       className="cursor-move"
     >
+      hi
       {children}
     </div>
   );

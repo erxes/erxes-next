@@ -16,6 +16,8 @@ import {
 } from '@dnd-kit/sortable';
 
 import { CSS } from '@dnd-kit/utilities';
+import { cn } from 'erxes-ui';
+import { Slot } from '@radix-ui/react-slot';
 
 type DragDirection = 'vertical' | 'horizontal';
 
@@ -24,7 +26,7 @@ interface SortableItemProps {
   children: React.ReactNode;
 }
 
-function SortableItem({ id, children }: SortableItemProps) {
+export function SortableItem({ id, children }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -39,11 +41,22 @@ function SortableItem({ id, children }: SortableItemProps) {
     transition,
     cursor: isDragging ? 'grabbing' : 'grab',
     zIndex: isDragging ? 999 : 'auto',
-    backgroundColor: isDragging ? '#e0e0e0' : 'white',
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn('rounded-lg relative h-full', isDragging && 'bg-muted')}
+    >
+      <div
+        className={cn(
+          'absolute inset-0 rounded-lg',
+          isDragging ? 'cursor-grabbing' : 'cursor-grab',
+        )}
+        {...attributes}
+        {...listeners}
+      />
       {children}
     </div>
   );
@@ -97,14 +110,7 @@ export default function DraggableGroup({
       onDragEnd={handleDragEnd}
     >
       <SortableContext items={items} strategy={sortingStrategy}>
-        <div
-          className="flex gap-3"
-          style={{
-            flexDirection: direction === 'horizontal' ? 'row' : 'column',
-            width: direction === 'horizontal' ? '100%' : 300,
-            userSelect: 'none',
-          }}
-        >
+        <div className="flex gap-3 p-4 pb-0 h-full select-none w-max">
           {items.map((id, index) => (
             <SortableItem key={id} id={id}>
               {idToChildMap[id]}

@@ -24,7 +24,7 @@ import {
   KanbanProviderProps,
 } from './types';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
@@ -56,6 +56,24 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
     transition,
     isDragging,
   } = useSortable({ id });
+  const wasDragging = useRef(false);
+
+  const handleMouseDown = () => {
+    console.log('handleMouseDown');
+    wasDragging.current = false; // reset before every drag
+  };
+
+  const handleDragStart = () => {
+    console.log('handleDragStart');
+    wasDragging.current = true;
+  };
+
+  const handleClick = () => {
+    console.log('hi');
+    if (!wasDragging.current) {
+      console.log('hi');
+    }
+  };
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -65,7 +83,7 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
   return (
     <div
       className={cn(
-        'w-72 h-full flex-none p-2 shadow-xs bg-babyBlue rounded-md transition-all',
+        'w-72 h-full flex-none p-2 shadow-xs bg-gradient-to-b from-[#e0e0e0] to-[#e0e7ff50] rounded-md transition-all',
         isDragging ? 'ring-primary' : 'ring-transparent',
         className,
       )}
@@ -73,6 +91,9 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
       style={style}
       {...attributes}
       {...listeners}
+      onMouseDown={handleMouseDown}
+      onDragStart={handleDragStart}
+      onClick={handleClick}
     >
       {children}
     </div>
@@ -91,17 +112,31 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
     attributes,
     listeners,
     setNodeRef,
-    transition,
     transform,
+    transition,
     isDragging,
-  } = useSortable({
-    id,
-  });
+  } = useSortable({ id });
+  const wasDragging = useRef(false);
   const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
 
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
+  };
+
+  const handleMouseDown = () => {
+    wasDragging.current = false; // reset before every drag
+  };
+
+  const handleDragStart = () => {
+    wasDragging.current = true;
+  };
+
+  const handleClick = () => {
+    console.log('hi');
+    if (!wasDragging.current) {
+      onClick?.();
+    }
   };
 
   return (
@@ -112,15 +147,9 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
         {...listeners}
         {...attributes}
         style={style}
-        onClick={() => onClick?.()}
-        onPointerDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-        onPointerUp={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        onDragStart={handleDragStart}
       >
         <Card
           className={cn(

@@ -29,6 +29,8 @@ export function SortableItem({ id, children }: SortableItemProps) {
     marginBottom: 8,
   };
 
+  return <div>hi</div>;
+
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {children}

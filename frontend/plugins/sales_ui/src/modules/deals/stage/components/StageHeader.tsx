@@ -1,4 +1,4 @@
-import { DropdownMenu, Sheet, useQueryState } from 'erxes-ui';
+import { Button, DropdownMenu, Sheet, useQueryState } from 'erxes-ui';
 import { IconDots, IconPlus } from '@tabler/icons-react';
 
 import { AddCardForm } from '@/deals/cards/components/AddCardForm';
@@ -21,7 +21,7 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
   };
 
   return (
-    <div className="flex justify-between items-center mb-3">
+    <div className="flex justify-between items-center p-2">
       <div>
         <h4 className="font-semibold flex items-center gap-2">
           {name}
@@ -36,7 +36,9 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
-            <IconDots className="cursor-pointer p-1 transition-all duration-300 hover:bg-white rounded-sm" />
+            <Button variant="ghost" size="icon" className="size-6 relative">
+              <IconDots />
+            </Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content className="w-56">
             <DropdownMenu.Label>Stage section</DropdownMenu.Label>
@@ -67,12 +69,10 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
         </DropdownMenu>
 
         <Sheet open={open} onOpenChange={onSheetChange}>
-          <Sheet.Trigger
-            asChild
-            onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => e.stopPropagation()}
-          >
-            <IconPlus className="cursor-pointer p-1 transition-all duration-300 hover:bg-white rounded-sm" />
+          <Sheet.Trigger asChild>
+            <Button variant="ghost" size="icon" className="size-6 relative">
+              <IconPlus />
+            </Button>
           </Sheet.Trigger>
           <Sheet.View
             className="sm:max-w-lg p-0"
