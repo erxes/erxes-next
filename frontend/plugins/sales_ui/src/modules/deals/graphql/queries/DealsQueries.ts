@@ -168,16 +168,6 @@ export const GET_DEALS = gql`
             _id
             title
           }
-          companies {
-            _id
-            primaryName
-          }
-          customers {
-            _id
-            firstName
-            lastName
-            email
-          }
           relations
         }
         pageInfo {

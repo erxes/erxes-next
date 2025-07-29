@@ -6,8 +6,8 @@ import {
   CHECKLIST_ITEMS_REMOVE,
   REMOVE_CHECKLISTS,
 } from '@/deals/graphql/mutations/ChecklistMutations';
-import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
 import { IChecklist, IChecklistItem } from '@/deals/types/checklists';
+import { MutationHookOptions, useMutation } from '@apollo/client';
 import { QueryHookOptions, useQuery } from '@apollo/client';
 
 import { GET_CHECKLISTS } from '@/deals/graphql/queries/ChecklistQueries';
@@ -86,24 +86,6 @@ export function useChecklistItemsAdd(
     CHECKLIST_ITEMS_ADD,
     {
       ...options,
-      update: (cache: ApolloCache<any>, { data }) => {
-        try {
-          // const existingData = cache.readQuery<ChecklistData>({
-          //   query: GET_CHECKLISTS,
-          // });
-          // if (!existingData || !existingData.channels || !data?.channelsAdd)
-          //   return;
-          // cache.writeQuery<ChecklistData>({
-          //   query: GET_CHECKLISTS,
-          //   data: {
-          //     channels: [data.channelsAdd, ...existingData.channels],
-          //     channelsTotalCount: existingData.channelsTotalCount + 1,
-          //   },
-          // });
-        } catch (e) {
-          console.log('error', e);
-        }
-      },
     },
   );
 

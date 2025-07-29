@@ -198,16 +198,30 @@ export function useDealsRemove(options?: MutationHookOptions<any, any>) {
       ...options?.variables,
       _id,
     },
-    // refetchQueries: [
-    //   {
-    //     query: GET_CHECKLISTS,
-    //     variables: {
-    //       ...options?.variables,
-    //       contentTypeId,
-    //     },
-    //   },
-    // ],
+    refetchQueries: [
+      {
+        query: GET_DEALS,
+        variables: {
+          ...options?.variables,
+          _id,
+        },
+      },
+    ],
     awaitRefetchQueries: true,
+    onCompleted: (...args) => {
+      toast({
+        title: 'Successfully removed a  deal',
+        variant: 'default',
+      });
+      options?.onCompleted?.(...args);
+    },
+    onError: (err) => {
+      toast({
+        title: 'Error',
+        description: err.message || 'Update failed',
+        variant: 'destructive',
+      });
+    },
   });
 
   return {

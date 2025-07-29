@@ -1,5 +1,5 @@
-import { useAtom } from 'jotai';
 import { pluginsConfigState } from 'ui-modules';
+import { useAtom } from 'jotai';
 
 export const useWidgetsModules = () => {
   const [pluginsMetaData] = useAtom(pluginsConfigState);
@@ -11,8 +11,8 @@ export const useWidgetsModules = () => {
   const plugins = Object.values(pluginsMetaData);
 
   return plugins.flatMap((plugin) =>
-    plugin.modules
-      .filter((module) => module.hasWidgets)
+    (plugin.modules || [])
+      .filter((module) => module.hasRelationWidget)
       .map((module) => ({
         ...module,
         pluginName: plugin.name,
