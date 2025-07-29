@@ -24,7 +24,7 @@ import {
   KanbanProviderProps,
 } from './types';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
-import { createContext, useContext, useRef, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
@@ -56,24 +56,6 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
     transition,
     isDragging,
   } = useSortable({ id });
-  const wasDragging = useRef(false);
-
-  const handleMouseDown = () => {
-    console.log('handleMouseDown');
-    wasDragging.current = false; // reset before every drag
-  };
-
-  const handleDragStart = () => {
-    console.log('handleDragStart');
-    wasDragging.current = true;
-  };
-
-  const handleClick = () => {
-    console.log('hi');
-    if (!wasDragging.current) {
-      console.log('hi');
-    }
-  };
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -91,9 +73,6 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      onMouseDown={handleMouseDown}
-      onDragStart={handleDragStart}
-      onClick={handleClick}
     >
       {children}
     </div>
@@ -116,27 +95,11 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
     transition,
     isDragging,
   } = useSortable({ id });
-  const wasDragging = useRef(false);
   const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
 
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
-  };
-
-  const handleMouseDown = () => {
-    wasDragging.current = false; // reset before every drag
-  };
-
-  const handleDragStart = () => {
-    wasDragging.current = true;
-  };
-
-  const handleClick = () => {
-    console.log('hi');
-    if (!wasDragging.current) {
-      onClick?.();
-    }
   };
 
   return (
@@ -147,9 +110,6 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
         {...listeners}
         {...attributes}
         style={style}
-        onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        onDragStart={handleDragStart}
       >
         <Card
           className={cn(
