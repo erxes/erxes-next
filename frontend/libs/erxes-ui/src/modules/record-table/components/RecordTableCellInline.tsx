@@ -4,18 +4,22 @@ import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
 import { Key } from 'erxes-ui/types';
-import { useScopedHotkeys } from 'erxes-ui/modules/hotkey';
+import { UseHotkeysOptionsWithoutBuggyOptions, useScopedHotkeys } from 'erxes-ui/modules/hotkey';
+
+type NewType = {
+  scope?: string;
+  closeOnEnter?: boolean;
+  scopeOptions?: UseHotkeysOptionsWithoutBuggyOptions;
+};
 
 export const RecordTablePopover = ({
   scope,
   onOpenChange,
   open,
   closeOnEnter,
+  scopeOptions,
   ...props
-}: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> & {
-  scope?: string;
-  closeOnEnter?: boolean;
-}) => {
+}: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> & NewType) => {
   const [_open, _setOpen] = React.useState(false);
   const {
     setHotkeyScopeAndMemorizePreviousScope,
@@ -33,6 +37,8 @@ export const RecordTablePopover = ({
       goBackToPreviousHotkeyScope();
     },
     scope + '.Popover',
+    [],
+    scopeOptions,
   );
 
   return (
