@@ -1,6 +1,14 @@
 import * as _ from 'underscore';
 
-import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
+import {
+  checkUserIds,
+  cursorPaginate,
+  getNextMonth,
+  getToday,
+  regexSearchText,
+  sendTRPCMessage,
+  validSearchText,
+} from 'erxes-api-shared/utils';
 import {
   IArchiveArgs,
   IDeal,
@@ -10,23 +18,14 @@ import {
   IStage,
   IStageDocument,
 } from './@types';
-import {
-  USER_ROLES,
-  checkUserIds,
-  cursorPaginate,
-  getNextMonth,
-  getToday,
-  regexSearchText,
-  sendTRPCMessage,
-  validSearchText,
-} from 'erxes-api-shared/utils';
+import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
 
+import { can } from 'erxes-api-shared/core-modules';
+import { IUserDocument } from 'erxes-api-shared/core-types';
+import moment from 'moment';
 import { DeleteResult } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import { can } from 'erxes-api-shared/core-modules';
 import { generateFilter } from './graphql/resolvers/queries/deals';
-import moment from 'moment';
 
 export const configReplacer = (config) => {
   const now = new Date();
@@ -1445,11 +1444,7 @@ export const copyPipelineLabels = async (
     updatedLabelIds.push(newLabel._id);
   }
 
-  await models.PipelineLabels.labelsLabel(
-    newStage.pipelineId,
-    item._id,
-    updatedLabelIds,
-  );
+  await models.PipelineLabels.labelsLabel(item._id, updatedLabelIds);
 };
 
 /**
