@@ -65,7 +65,6 @@ export const documentQueries = {
       label: string;
       contentType: string;
       subTypes?: string[];
-      // }> = [...common.types];
     }> = [];
 
     for (const serviceName of services) {
@@ -90,7 +89,6 @@ export const documentQueries = {
   documentsGetEditorAttributes: async (
     _parent: undefined,
     { contentType }: { contentType: string },
-    { subdomain }: IContext,
   ) => {
     const [serviceName, type] = contentType.split(':');
 
