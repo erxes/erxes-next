@@ -23,7 +23,6 @@ export const BranchCard = ({
   return (
     <div className="flex flex-col items-start p-2 w-full h-full bg-background shrink-0">
       <div className="flex gap-4 items-start self-stretch">
-
         <div className="flex flex-col items-start w-[290px] rounded-sm bg-background shadow-lg">
           <div className="flex justify-between items-center self-stretch px-3 h-9">
             <div className="flex gap-1 items-center">
@@ -83,5 +82,5 @@ export const BranchCard = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

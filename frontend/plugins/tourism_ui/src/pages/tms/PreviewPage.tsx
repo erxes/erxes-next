@@ -1,9 +1,6 @@
 import { readImage } from 'erxes-ui/utils/core';
 import { useEffect, useState } from 'react';
-import {
-  Input,
-  Select,
-} from 'erxes-ui';
+import { Input, Select } from 'erxes-ui';
 
 const PreviewPage = () => {
   const [urlParams, setUrlParams] = useState<URLSearchParams | null>(null);
@@ -17,7 +14,9 @@ const PreviewPage = () => {
   const tourName = urlParams?.get('name') || 'Таны тур оператор';
   const themeColor = urlParams?.get('color') || '#4F46E5';
   const logoParam = urlParams?.get('logo');
-  const logoUrl = logoParam ? readImage(logoParam) : 'https://placehold.co/150x150';
+  const logoUrl = logoParam
+    ? readImage(logoParam)
+    : 'https://placehold.co/150x150';
 
   return (
     <div className="flex flex-col justify-center items-center p-4 min-h-screen md:flex-row md:p-6">
@@ -40,7 +39,6 @@ const PreviewPage = () => {
             Enter your email and password below to access your account.
           </p>
           <form className="space-y-3 sm:space-y-4">
-
             <Select>
               <Select.Trigger className="w-full">
                 <Select.Value placeholder="Select a branch" />

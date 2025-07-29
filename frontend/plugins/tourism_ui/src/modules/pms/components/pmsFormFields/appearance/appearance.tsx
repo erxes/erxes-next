@@ -1,8 +1,8 @@
 import { Control } from 'react-hook-form';
-import { Button, Form, Input, Upload } from 'erxes-ui';
+import { Button, ColorPicker, Form, Input, Upload } from 'erxes-ui';
 import PmsFormFieldsLayout from '../PmsFormFieldsLayout';
 import Heading from '../../ui/heading';
-import { IconPlus, IconTrash, IconUpload } from '@tabler/icons-react';
+import { IconTrash, IconUpload, IconX } from '@tabler/icons-react';
 import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
@@ -20,20 +20,44 @@ const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
                 Image can be shown on the top of the post also{' '}
               </Form.Description>
               <Form.Control>
-                <Upload.Root {...field} value={field.value ?? ''}>
-                  <Upload.Preview className="hidden" />
-                  <Upload.Button
-                    size="sm"
-                    variant="secondary"
-                    type="button"
-                    className="flex flex-col items-center justify-center w-full gap-3 border border-dashed h-52 text-muted-foreground"
-                  >
-                    <IconUpload />
-                    <Button variant={'outline'}>Upload Logo</Button>
-                    <span className="text-sm font-medium">
-                      Max size: 15MB, File type: PNG
-                    </span>
-                  </Upload.Button>
+                <Upload.Root
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                >
+                  {field.value ? (
+                    <div className="relative w-full">
+                      <div className="flex justify-center items-center w-full h-52 rounded-md border bg-accent">
+                        <Upload.Preview className="object-contain max-w-full max-h-full" />
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        type="button"
+                        className="absolute bottom-2 right-2 size-6"
+                        onClick={() => {
+                          field.onChange('');
+                        }}
+                      >
+                        <IconTrash size={12} color="red" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload.Preview className="hidden" />
+                      <Upload.Button
+                        size="sm"
+                        variant="secondary"
+                        type="button"
+                        className="flex flex-col items-center justify-center w-full gap-3 border border-dashed h-52 text-muted-foreground"
+                      >
+                        <IconUpload />
+                        <Button variant={'outline'}>Upload Logo</Button>
+                        <span className="text-sm font-medium">
+                          Max size: 15MB, File type: PNG
+                        </span>
+                      </Upload.Button>
+                    </>
+                  )}
                 </Upload.Root>
               </Form.Control>
               <Form.Message className="text-destructive" />
@@ -51,16 +75,11 @@ const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
             <Form.Label>Color</Form.Label>
 
             <Form.Control>
-              <div
-                className="relative w-8 h-8 overflow-hidden rounded-full"
-                style={{ backgroundColor: field.value || '#4F46E5' }}
-              >
-                <Input
-                  type="color"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  {...field}
-                />
-              </div>
+              <ColorPicker
+                value={field.value}
+                onValueChange={field.onChange}
+                className="w-24"
+              />
             </Form.Control>
             <Form.Message className="text-destructive" />
           </Form.Item>

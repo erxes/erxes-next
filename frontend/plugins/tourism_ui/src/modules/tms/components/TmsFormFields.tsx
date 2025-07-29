@@ -66,7 +66,6 @@ export const LogoField = ({ control }: { control: Control<TmsFormType> }) => {
           </Form.Description>
           <Form.Control>
             <Upload.Root
-              {...field}
               value={field.value || ''}
               onChange={(fileInfo) => {
                 if ('url' in fileInfo) {
@@ -76,24 +75,19 @@ export const LogoField = ({ control }: { control: Control<TmsFormType> }) => {
             >
               {field.value ? (
                 <div className="relative w-full">
-                  <div className="flex justify-center items-center w-full min-h-[7rem] p-4 rounded-md border shadow-sm bg-background">
+                  <div className="flex justify-center items-center w-full min-h-[7rem] p-4 rounded-md border bg-accent">
                     <Upload.Preview className="object-contain max-w-full max-h-32" />
                   </div>
                   <Button
                     size="sm"
-                    variant="destructive"
+                    variant="outline"
                     type="button"
-                    className="absolute top-2 right-2 p-0 w-5 h-5 rounded-full opacity-80 transition-opacity hover:opacity-100"
+                    className="absolute bottom-2 right-2 size-6"
                     onClick={() => {
-                      console.log('LogoField - Delete button clicked');
-                      console.log(
-                        'LogoField - Current value before delete:',
-                        field.value,
-                      );
                       field.onChange('');
                     }}
                   >
-                    <IconX size={12} />
+                    <IconTrash size={12} color="red" />
                   </Button>
                 </div>
               ) : (

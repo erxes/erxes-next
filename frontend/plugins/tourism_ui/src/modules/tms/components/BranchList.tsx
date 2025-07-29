@@ -156,7 +156,9 @@ export const BranchList = () => {
         open={!!duplicateDialogOpen}
         onOpenChange={(open) => !open && setDuplicateDialogOpen(null)}
         type="duplicate"
-        branchName={list?.find((b) => b._id === duplicateDialogOpen)?.name || ''}
+        branchName={
+          list?.find((b) => b._id === duplicateDialogOpen)?.name || ''
+        }
         loading={duplicateLoading}
         onConfirm={() => {
           const branch = list?.find((b) => b._id === duplicateDialogOpen);

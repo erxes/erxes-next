@@ -5,7 +5,7 @@ import {
   IconTrash,
   IconChevronDown,
 } from '@tabler/icons-react';
-import { Popover } from 'erxes-ui';
+import { cn, Popover } from 'erxes-ui';
 
 interface ActionMenuProps {
   onEdit: () => void;
@@ -20,6 +20,28 @@ export const ActionMenu = ({
   onDelete,
   duplicateLoading,
 }: ActionMenuProps) => {
+  const dropdownItems = [
+    {
+      label: 'Edit',
+      icon: <IconEdit size={16} stroke={1.5} />,
+      onClick: () => onEdit(),
+    },
+    {
+      label: 'Duplicate',
+      icon: <IconCopy className="size-4" />,
+      onClick: () => onDuplicate(),
+    },
+    {
+      label: 'Visit website',
+      icon: <IconWorld size={16} stroke={1.5} />,
+    },
+    {
+      label: 'Delete',
+      icon: <IconTrash size={16} stroke={1.5} />,
+      onClick: () => onDelete(),
+    },
+  ];
+
   return (
     <Popover>
       <Popover.Trigger asChild>
@@ -33,42 +55,17 @@ export const ActionMenu = ({
         side="bottom"
         align="end"
       >
-        <div
-          className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
-          onClick={onEdit}
-        >
-          <IconEdit size={16} stroke={1.5} />
-          <p className="text-sm font-medium leading-[100%] font-inter">Edit</p>
-        </div>
-
-        <div
-          className={`flex items-center w-full gap-3 px-4 py-2 text-left cursor-pointer hover:bg-muted rounded-md ${
-            duplicateLoading ? 'opacity-50 pointer-events-none' : ''
-          }`}
-          onClick={() => !duplicateLoading && onDuplicate()}
-        >
-          <IconCopy size={16} stroke={1.5} />
-          <p className="text-sm font-medium leading-[100%] font-inter">
-            {duplicateLoading ? 'Duplicating...' : 'Duplicate'}
-          </p>
-        </div>
-
-        <div className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted">
-          <IconWorld size={16} stroke={1.5} />
-          <p className="text-sm font-medium leading-[100%] font-inter">
-            Visit website
-          </p>
-        </div>
-
-        <div
-          className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-destructive/10 text-destructive"
-          onClick={onDelete}
-        >
-          <IconTrash size={16} stroke={1.5} />
-          <p className="text-sm font-medium leading-[100%] font-inter">
-            Delete
-          </p>
-        </div>
+        {dropdownItems.map((item) => (
+          <div
+            className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
+            onClick={item.onClick}
+          >
+            {item.icon}
+            <p className="text-sm font-medium leading-[100%] font-inter">
+              {item.label}
+            </p>
+          </div>
+        ))}
       </Popover.Content>
     </Popover>
   );
