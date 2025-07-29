@@ -2,14 +2,25 @@ import { ICompanyDocument } from 'erxes-api-shared/core-types';
 import { getFullDate } from 'erxes-api-shared/utils';
 import { FilterQuery, Model, models } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { CONTRACT_STATUS } from '~/modules/saving/@types/constants';
+import { getConfig } from '~/messageBroker';
 import {
+  CONTRACT_STATUS,
+  TRANSACTION_TYPE,
+} from '~/modules/saving/@types/constants';
+import {
+  ICloseVariable,
   IContract,
   IContractDocument,
 } from '~/modules/saving/@types/contracts';
 import { IConfig } from '~/modules/saving/@types/contractTypes';
+import { ITransaction } from '~/modules/saving/@types/transactions';
 import { contractSchema } from '~/modules/saving/db/definitions/contracts';
-import { addMonths, getNumber } from '~/modules/saving/db/utils/utils';
+import {
+  addMonths,
+  calcInterest,
+  getDiffDay,
+  getNumber,
+} from '~/modules/saving/db/utils/utils';
 
 export interface IContractModel extends Model<IContractDocument> {
   getContract(
@@ -78,22 +89,82 @@ export const loadContract = (models: IModels) => {
      * Close Contract
      */
 
-    // public static async closeContract(doc: ICloseVariable) {
-    //   const config: IConfig = await
-    // }
+    public static async closeContract(doc: ICloseVariable) {
+      const config: IConfig = await getConfig('savingConfig');
+
+      const contract = await models.Contracts.getContract({
+        _id: doc.contractId,
+      });
+
+      const depositAccount = await models.Contracts.findOne({
+        _id: contract.depositAccount,
+      });
+
+      if (!depositAccount) {
+        throw new Error('Deposit account not found');
+      }
+
+      if (contract.endDate < doc.closeDate) {
+        const diffDay = getDiffDay(contract.startDate, doc.closeDate);
+
+        const interest = calcInterest({
+          balance: contract.savingAmount,
+          interestRate: contract.closeInterestRate,
+          dayOfMonth: diffDay,
+          fixed: config.calculationFixed,
+        });
+
+        const returnAmount = new BigNumber(contract.storedInterest)
+          .minus(interest)
+          .toNumber();
+
+        const returnTransaction: ITransaction = {
+          payDate: doc.closeDate,
+          total: returnAmount,
+          payment: returnAmount,
+          transactionType: TRANSACTION_TYPE.OUTCOME,
+          description: 'interest return for close',
+          contractId: contract._id,
+        };
+
+        await models.Transactions.createTransaction(returnTransaction);
+
+        const totalGiveAmount = new BigNumber(contract.savingAmount)
+          .plus(interest)
+          .toNumber();
+
+        const depositGiveTransaction: ITransaction = {
+          payDate: doc.closeDate,
+          total: totalGiveAmount,
+          payment: totalGiveAmount,
+          transactionType: TRANSACTION_TYPE.INCOME,
+          description: 'interest return for close',
+          contractId: depositAccount._id,
+        };
+
+        await models.Transactions.createTransaction(depositGiveTransaction);
+
+        await models.Contracts.updateOne(
+          { _id: contract._id },
+          { $set: { status: CONTRACT_STATUS.CLOSED } },
+        );
+
+        return contract;
+      }
+    }
 
     /**
      * Remove Contract category
      */
 
     public static async removeContract(_ids: string[]) {
-      //   const transactions = await models.Transactions.countDocuments({
-      //     contractId: _ids,
-      //   });
+      const transactions = await models.Transactions.countDocuments({
+        contractId: _ids,
+      });
 
-      //   if (transactions > 0) {
-      //     throw new Error('You can not delete contract with transaction');
-      //   }
+      if (transactions > 0) {
+        throw new Error('You can not delete contract with transaction');
+      }
 
       return models.Contracts.deleteMany({ _id: { $in: _ids } });
     }

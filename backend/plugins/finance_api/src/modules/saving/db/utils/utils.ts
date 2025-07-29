@@ -1,6 +1,6 @@
 import { getFullDate } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { nanoid } from 'nanoid';
+
 import { IModels } from '~/connectionResolvers';
 import BigNumber from 'bignumber.js';
 
@@ -31,30 +31,10 @@ interface Options {
  * @param options
  * @returns {Object} тухайн талбарын бүтэцийг буцаана
  */
-export const field = (options: Options) => {
-  const { pkey, type, optional } = options;
-
-  if (type === String && !pkey && !optional) {
-    options.validate = /\S+/;
-  }
-
-  // TODO: remove
-  if (pkey) {
-    options.type = String;
-    options.default = () => nanoid();
-  }
-
-  return options;
-};
-
 export const schemaWrapper = (schema: Schema) => {
   schema.add({ scopeBrandIds: [String] });
 
   return schema;
-};
-
-export const schemaHooksWrapper = (schema: any, _cacheKey: string) => {
-  return schemaWrapper(schema);
 };
 
 export const addMonths = (date: Date, months: number) => {
