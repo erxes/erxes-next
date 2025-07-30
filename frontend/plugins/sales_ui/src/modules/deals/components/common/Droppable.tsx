@@ -17,7 +17,6 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from 'erxes-ui';
-import { Slot } from '@radix-ui/react-slot';
 
 type DragDirection = 'vertical' | 'horizontal';
 
