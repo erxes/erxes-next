@@ -65,7 +65,7 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
   return (
     <div
       className={cn(
-        'w-72 h-full flex-none p-2 shadow-xs bg-babyBlue rounded-md transition-all',
+        'w-72 h-full flex-none p-2 shadow-xs bg-gradient-to-b from-[#e0e0e0] to-[#e0e7ff50] rounded-md transition-all',
         isDragging ? 'ring-primary' : 'ring-transparent',
         className,
       )}
@@ -91,12 +91,10 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
     attributes,
     listeners,
     setNodeRef,
-    transition,
     transform,
+    transition,
     isDragging,
-  } = useSortable({
-    id,
-  });
+  } = useSortable({ id });
   const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
 
   const style = {
@@ -112,15 +110,6 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
         {...listeners}
         {...attributes}
         style={style}
-        onClick={() => onClick?.()}
-        onPointerDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-        onPointerUp={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
       >
         <Card
           className={cn(

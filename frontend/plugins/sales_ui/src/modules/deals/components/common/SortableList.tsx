@@ -103,6 +103,7 @@ function SortableItem({
       {...listeners}
       className="cursor-move"
     >
+      hi
       {children}
     </div>
   );

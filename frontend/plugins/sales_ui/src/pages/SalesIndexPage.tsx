@@ -16,12 +16,9 @@ import { StagesList } from '@/deals/stage/components/StagesList';
 
 export const SalesIndexPage = () => {
   return (
-    <div className="flex h-full">
+    <div className="flex h-full overflow-hidden w-full">
       <SalesLeftSidebar />
-      <div
-        className="flex flex-col h-full"
-        style={{ width: `calc(100% - 16rem)` }}
-      >
+      <div className="flex flex-col h-full overflow-hidden">
         <PageHeader>
           <PageHeader.Start>
             <Breadcrumb>
@@ -48,14 +45,13 @@ export const SalesIndexPage = () => {
             </Button>
           </PageHeader.End>
         </PageHeader>
-        <PageContainer>
+        <PageContainer className="overflow-hidden">
           <PageSubHeader>
             <MainActionBar />
           </PageSubHeader>
-          <div className="w-full h-full p-4 overflow-x-auto overflow-y-hidden">
-            <StagesList />
-            <SalesItemDetail />
-          </div>
+
+          <StagesList />
+          <SalesItemDetail />
         </PageContainer>
       </div>
     </div>
