@@ -1,11 +1,40 @@
 import { Schema } from 'mongoose';
 
-import { CUSTOMER_SELECT_OPTIONS } from 'erxes-api-shared/core-modules';
+import {
+  CUSTOMER_SELECT_OPTIONS,
+  customFieldSchema,
+} from 'erxes-api-shared/core-modules';
 import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
 const getEnum = (fieldName: string): string[] => {
   return CUSTOMER_SELECT_OPTIONS[fieldName].map((option) => option.value);
 };
+
+export const visitorContactSchema = new Schema(
+  {
+    email: { type: String, label: 'Email', optional: true },
+    phone: { type: String, label: 'Phone', optional: true },
+  },
+  { _id: false },
+);
+
+export const locationSchema = new Schema(
+  {
+    remoteAddress: {
+      type: String,
+      label: 'Remote address',
+      optional: true,
+    },
+    country: { type: String, label: 'Country', optional: true },
+    countryCode: { type: String, label: 'Country code', optional: true },
+    city: { type: String, label: 'City', optional: true },
+    region: { type: String, label: 'Region', optional: true },
+    hostname: { type: String, label: 'Host name', optional: true },
+    language: { type: String, label: 'Language', optional: true },
+    userAgent: { type: String, label: 'User agent', optional: true },
+  },
+  { _id: false },
+);
 
 export const customerSchema = schemaWrapper(
   new Schema(
@@ -122,6 +151,95 @@ export const customerSchema = schemaWrapper(
         label: 'Tags',
       },
       searchText: { type: String, optional: true },
+
+      ownerId: { type: String, optional: true },
+      position: {
+        type: String,
+        optional: true,
+        label: 'Position',
+        esType: 'keyword',
+      },
+      department: { type: String, optional: true, label: 'Department' },
+
+      leadStatus: {
+        type: String,
+        enum: getEnum('LEAD_STATUS_TYPES'),
+        optional: true,
+        label: 'Lead Status',
+        esType: 'keyword',
+        selectOptions: CUSTOMER_SELECT_OPTIONS.LEAD_STATUS_TYPES,
+      },
+      hasAuthority: {
+        type: String,
+        optional: true,
+        default: 'No',
+        label: 'Has authority',
+        enum: getEnum('HAS_AUTHORITY'),
+        selectOptions: CUSTOMER_SELECT_OPTIONS.HAS_AUTHORITY,
+      },
+      relatedIntegrationIds: {
+        type: [String],
+        label: 'Related integrations',
+        esType: 'keyword',
+        optional: true,
+      },
+      integrationId: {
+        type: String,
+        optional: true,
+        label: 'Integration',
+        index: true,
+        esType: 'keyword',
+      },
+
+      // Merged customer ids
+      mergedIds: { type: [String], optional: true },
+
+      trackedData: {
+        type: [customFieldSchema],
+        optional: true,
+        label: 'Tracked Data',
+      },
+      customFieldsData: {
+        type: [customFieldSchema],
+        optional: true,
+        label: 'Custom fields data',
+      },
+
+      location: {
+        type: locationSchema,
+        optional: true,
+        label: 'Location',
+      },
+
+      // if customer is not a user then we will contact with this visitor using
+      // this information
+      visitorContactInfo: {
+        type: visitorContactSchema,
+        optional: true,
+        label: 'Visitor contact info',
+      },
+
+      deviceTokens: { type: [String], default: [] },
+
+      isOnline: {
+        type: Boolean,
+        label: 'Is online',
+        optional: true,
+      },
+      lastSeenAt: {
+        type: Date,
+        label: 'Last seen at',
+        optional: true,
+        esType: 'date',
+      },
+      sessionCount: {
+        type: Number,
+        label: 'Session count',
+        optional: true,
+        esType: 'number',
+      },
+      visitorId: { type: String, optional: true },
+      data: { type: Object, optional: true },
     },
     {
       timestamps: true,

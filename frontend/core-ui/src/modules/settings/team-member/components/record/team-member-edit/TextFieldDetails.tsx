@@ -32,7 +32,7 @@ export const TextFieldUserDetails = ({
       placeholder={placeholder}
       value={value}
       scope={`user-${_id}-details-${field}`}
-      onValueChange={onSave}
+      onSave={onSave}
       className={className}
     />
   );

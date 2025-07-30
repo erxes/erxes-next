@@ -1,8 +1,8 @@
-import { Button, Combobox, Label, Popover, toast } from 'erxes-ui';
+import { Label, toast } from 'erxes-ui';
 
 import { SelectTags } from 'ui-modules';
-import { IconPlus } from '@tabler/icons-react';
 import { ApolloError } from '@apollo/client';
+import { useState } from 'react';
 
 export const CustomerDetailSelectTag = ({
   tagIds,
@@ -11,14 +11,20 @@ export const CustomerDetailSelectTag = ({
   tagIds: string[];
   customerId: string;
 }) => {
+  const [tagIdsValue, setTagIdsValue] = useState<string[]>(tagIds);
   return (
     <fieldset className="space-y-2 px-8">
       <Label asChild>
         <legend>Tags</legend>
       </Label>
-      <SelectTags
+      <SelectTags.Detail
+        mode="multiple"
         tagType="core:customer"
-        value={tagIds}
+        value={tagIdsValue}
+        targetIds={[customerId]}
+        onValueChange={(value) => {
+          setTagIdsValue(value as string[]);
+        }}
         options={(newSelectedTagIds) => ({
           update: (cache) => {
             cache.modify({
@@ -36,18 +42,7 @@ export const CustomerDetailSelectTag = ({
             });
           },
         })}
-      >
-        <Popover>
-          <Popover.Trigger asChild>
-            <Button variant="secondary">
-              <IconPlus /> Add tags
-            </Button>
-          </Popover.Trigger>
-          <Combobox.Content>
-            <SelectTags.Content />
-          </Combobox.Content>
-        </Popover>
-      </SelectTags>
+      />
     </fieldset>
   );
 };

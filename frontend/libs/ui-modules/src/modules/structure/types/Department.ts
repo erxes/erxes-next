@@ -24,7 +24,7 @@ export type ISelectDepartmentsProviderProps = {
   value?: string[] | string;
   onValueChange?: (Departments?: string[] | string) => void;
   mode?: 'single' | 'multiple';
-  children: React.ReactNode;
+  children?: React.ReactNode;
   options?: (newSelectedDepartmentIds: string[]) => MutationHookOptions<
     {
       DepartmentsMain: {

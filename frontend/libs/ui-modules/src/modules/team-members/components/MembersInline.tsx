@@ -38,6 +38,7 @@ export const MembersInlineRoot = ({
       memberIds={memberIds}
       placeholder={placeholder}
       updateMembers={updateMembers}
+      size={size}
     >
       <MembersInlineAvatar size={size} />
       <MembersInlineTitle />
@@ -51,12 +52,14 @@ export const MembersInlineProvider = ({
   members,
   placeholder,
   updateMembers,
+  size,
 }: {
   children?: React.ReactNode;
   memberIds?: string[];
   members?: IUser[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
+  size?: AvatarProps['size'];
 }) => {
   const [_members, _setMembers] = useState<IUser[]>(members || []);
 
@@ -70,6 +73,7 @@ export const MembersInlineProvider = ({
           ? 'Select members'
           : placeholder,
         updateMembers: updateMembers || _setMembers,
+        size,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
@@ -115,12 +119,11 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
 export const MembersInlineAvatar = ({
   className,
   containerClassName,
-  size,
   ...props
 }: AvatarProps & {
   containerClassName?: string;
 }) => {
-  const { members, loading, memberIds } = useMembersInlineContext();
+  const { members, loading, memberIds, size } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
 
   const sortedMembers = [...members].sort((a, b) => {
@@ -195,7 +198,7 @@ export const MembersInlineAvatar = ({
 
   return (
     <div className="flex -space-x-1.5">
-      {withAvatar.map(renderAvatar)}
+      {withAvatar.map((member) => renderAvatar(member))}
       {restMembers.length > 0 && (
         <Tooltip>
           <Tooltip.Trigger asChild>

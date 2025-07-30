@@ -1,29 +1,70 @@
-import { Resizable, Sidebar, Tabs, useQueryState } from 'erxes-ui';
-import { CustomerDetailSheet } from './CustomerDetailSheet';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 
+import {
+  Button,
+  Resizable,
+  Sheet,
+  Sidebar,
+  Tabs,
+  useQueryState,
+} from 'erxes-ui';
+
+import { CustomerDetailSheet } from './CustomerDetailSheet';
+import { IconMoodAnnoyed } from '@tabler/icons-react';
+import { Spinner } from 'erxes-ui';
 export const CustomerDetailLayout = ({
   children,
   actions,
+  otherState,
 }: {
   children: React.ReactNode;
   actions?: React.ReactNode;
+  otherState?: 'loading' | 'not-found';
 }) => {
   return (
-    <CustomerDetailSheet>
-      <div className="flex h-full flex-auto overflow-auto">
-        <div className="flex flex-col flex-auto min-h-full overflow-hidden">
-          <Resizable.PanelGroup
-            direction="horizontal"
-            className="flex-auto min-h-full overflow-hidden"
-          >
-            <Resizable.Panel>
-              <CustomerDetailTabs>{children}</CustomerDetailTabs>
-            </Resizable.Panel>
-            {actions}
-          </Resizable.PanelGroup>
-        </div>
-      </div>
+    <CustomerDetailSheet
+      className={!otherState ? undefined : 'sm:max-w-screen-lg'}
+    >
+      <Sheet.Content>
+        {otherState === 'loading' && (
+          <div className="flex items-center justify-center h-full">
+            <Spinner size="large" />
+          </div>
+        )}
+        {otherState === 'not-found' && (
+          <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col items-center gap-3">
+              <IconMoodAnnoyed className="w-16 h-16 text-muted-foreground" />
+              <div className="flex flex-col gap-2">
+                <h2 className="text-xl font-semibold w-full text-center">
+                  Customer details not found
+                </h2>
+                <p className="text-muted-foreground font-medium text-base w-full text-center">
+                  There seems to be no data on this customer
+                </p>
+              </div>
+              <Sheet.Close asChild>
+                <Button variant="outline">Close</Button>
+              </Sheet.Close>
+            </div>
+          </div>
+        )}
+        {!otherState && (
+          <div className="flex h-full flex-auto overflow-auto">
+            <div className="flex flex-col flex-auto min-h-full overflow-hidden">
+              <Resizable.PanelGroup
+                direction="horizontal"
+                className="flex-auto min-h-full overflow-hidden"
+              >
+                <Resizable.Panel>
+                  <CustomerDetailTabs>{children}</CustomerDetailTabs>
+                </Resizable.Panel>
+                {actions}
+              </Resizable.PanelGroup>
+            </div>
+          </div>
+        )}
+      </Sheet.Content>
     </CustomerDetailSheet>
   );
 };
@@ -38,7 +79,7 @@ const CustomerDetailTabs = ({ children }: { children: React.ReactNode }) => {
       className="flex-auto flex h-full"
       orientation="vertical"
     >
-      <TabsPrimitive.List className="w-64" asChild>
+      <Tabs.List className="w-64" asChild>
         <Sidebar collapsible="none" className="flex-none w-64 border-r">
           <Sidebar.Group>
             <Sidebar.GroupLabel>General</Sidebar.GroupLabel>
@@ -72,7 +113,7 @@ const CustomerDetailTabs = ({ children }: { children: React.ReactNode }) => {
         <Tabs.VerticalTrigger value="properties">
           Properties
         </Tabs.VerticalTrigger> */}
-      </TabsPrimitive.List>
+      </Tabs.List>
       {children}
     </Tabs>
   );
