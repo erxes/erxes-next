@@ -4,6 +4,8 @@ import {
   EnumCursorDirection,
   IRecordTableCursorPageInfo,
   mergeCursorData,
+  parseDateRangeFromString,
+  useMultiQueryState,
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
@@ -15,6 +17,40 @@ export const useProducts = (options?: QueryHookOptions) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: PRODUCTS_CURSOR_SESSION_KEY,
   });
+  const [{ searchValue, tags, created, updated, lastSeen }] =
+    useMultiQueryState<{
+      searchValue: string;
+      tags: string[];
+      created: string;
+      updated: string;
+      lastSeen: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
+
+  const productsQueryVariables = {
+    limit: PRODUCTS_PER_PAGE,
+    orderBy: {
+      createdAt: -1,
+    },
+    cursor,
+    searchValue,
+    tags,
+    dateFilters: JSON.stringify({
+      createdAt: {
+        gte: parseDateRangeFromString(created)?.from,
+        lte: parseDateRangeFromString(created)?.to,
+      },
+      updatedAt: {
+        gte: parseDateRangeFromString(updated)?.from,
+        lte: parseDateRangeFromString(updated)?.to,
+      },
+      lastSeenAt: {
+        gte: parseDateRangeFromString(lastSeen)?.from,
+        lte: parseDateRangeFromString(lastSeen)?.to,
+      },
+    }),
+    ...options?.variables,
+  };
+
   const { data, loading, fetchMore } = useQuery<{
     productsMain: {
       list: IProduct[];
@@ -22,14 +58,7 @@ export const useProducts = (options?: QueryHookOptions) => {
       pageInfo: IRecordTableCursorPageInfo;
     };
   }>(productsQueries.productsMain, {
-    variables: {
-      limit: PRODUCTS_PER_PAGE,
-      orderBy: {
-        createdAt: -1,
-      },
-      cursor,
-      ...options?.variables,
-    },
+    variables: productsQueryVariables,
     skip: cursor === undefined,
     ...options,
   });
@@ -78,5 +107,6 @@ export const useProducts = (options?: QueryHookOptions) => {
     totalCount,
     handleFetchMore,
     pageInfo,
+    productsQueryVariables,
   };
 };

@@ -16,8 +16,8 @@ export interface UomType {
 }
 
 export interface ProductDetail {
-  _id?: string;
-  name?: string;
+  _id: string;
+  name: string;
   barcodeDescription?: string;
   description?: string;
   categoryId?: string;
@@ -34,7 +34,7 @@ export interface ProductDetail {
 }
 
 export interface ProductFormValues {
-  _id?: string;
+  _id: string;
   name?: string;
   barcodeDescription?: string;
   description?: string;

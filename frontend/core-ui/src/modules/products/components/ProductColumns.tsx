@@ -1,3 +1,4 @@
+import { renderingProductDetailAtom } from '@/products/states/productDetailStates';
 import {
   IconCategory,
   IconCurrencyDollar,
@@ -12,21 +13,43 @@ import {
   RecordTableCellDisplay,
   CurrencyFormatedDisplay,
   CurrencyCode,
+  useQueryState,
+  RecordTablePopover,
+  RecordTableCellTrigger,
+  Badge,
+  RecordTableCellContent,
+  Input,
 } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
 import { IProduct } from 'ui-modules';
-import { productMoreColumn } from './ProductMoreColumn';
 export const productColumns: ColumnDef<IProduct>[] = [
-  productMoreColumn,
   RecordTable.checkboxColumn as ColumnDef<IProduct>,
   {
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTable.InlineHead icon={IconLabel} label="Name" />,
     cell: ({ cell }) => {
+      const name = cell.getValue() as string;
+      const [, setProductId] = useQueryState('productId');
+      const setRenderingProductDetail = useSetAtom(renderingProductDetailAtom);
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setRenderingProductDetail(true);
+                setProductId(cell.row.original._id);
+              }}
+            >
+              {name}
+            </Badge>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent className="min-w-72">
+            <Input value={name || ''} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },
