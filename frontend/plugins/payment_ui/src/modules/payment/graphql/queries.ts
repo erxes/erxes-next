@@ -9,3 +9,17 @@ export const COUNTS = gql`
     }
   }
 `;
+
+
+export const PAYMENTS = gql`
+query payments($status: String, $kind: String) {
+  payments(status: $status, kind: $kind) {
+    _id
+    name
+    kind
+    status
+    config
+    createdAt
+  }
+}
+`;

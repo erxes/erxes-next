@@ -1,16 +1,28 @@
 import React from 'react'
 
 import { IconChevronLeft } from '@tabler/icons-react';
-import { Button, getPluginAssetsUrl, REACT_APP_API_URL } from 'erxes-ui';
-import { lazy, Suspense } from 'react';
+import { Button, REACT_APP_API_URL, Spinner, Table } from 'erxes-ui';
 import { Link, useParams } from 'react-router-dom';
-import { PAYMENTS } from '~/modules/payment/constants';
+import { PAYMENT_KINDS } from '~/modules/payment/constants';
 import PaymentFormSheet from '~/modules/payment/components/PaymentFormSheet';
+import { useQuery } from '@apollo/client';
+import { PAYMENTS } from '~/modules/payment/graphql/queries';
+
 
 const PaymentListPage = () => {
     const { kind } = useParams()
     const payment =
-    PAYMENTS[kind as keyof typeof PAYMENTS];
+    PAYMENT_KINDS[kind as keyof typeof PAYMENT_KINDS];
+
+    const { data, loading } = useQuery(PAYMENTS, {
+      variables: {
+        kind: kind as string,
+      },
+    });
+
+    if (loading) {
+        return <Spinner/>
+    }
 
   return (
     <div className="mx-auto p-5 w-full max-w-5xl flex flex-col gap-8 overflow-hidden">
@@ -40,7 +52,30 @@ const PaymentListPage = () => {
           </span>
         </div>
       </div>
-      <PaymentFormSheet kind={kind as string} />
+      <PaymentFormSheet kind={kind as string} trigger={<Button className="max-w-fit">Add {payment?.name}</Button>} />
+
+      <Table>
+        <Table.Header>
+    
+            <Table.Head>Payment name</Table.Head>
+            <Table.Head>Status</Table.Head>
+            <Table.Head>Created at</Table.Head>
+            <Table.Head>Actions</Table.Head>
+
+        </Table.Header>
+        <Table.Body>
+          {data?.payments?.map((payment: any) => (
+            <Table.Row>
+                <Table.Cell>{payment?.name}</Table.Cell>
+                <Table.Cell>Active</Table.Cell>
+                <Table.Cell>{payment?.createdAt}</Table.Cell>
+                <Table.Cell>
+                  <Button variant="outline" className="max-w-fit">Edit</Button>
+                </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
   );
 }

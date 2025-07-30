@@ -1,6 +1,6 @@
 import { PaymentKind } from "~/modules/payment/types/PaymentMethods";
 
-export const PAYMENTS = {
+export const PAYMENT_KINDS = {
   [PaymentKind.QPAY]: {
     name: 'Qpay',
     description:

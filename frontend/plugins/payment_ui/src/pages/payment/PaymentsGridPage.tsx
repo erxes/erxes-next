@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import PaymentMethodCard from '~/modules/payment/components/PaymentMethodCard';
-import { PAYMENTS } from '~/modules/payment/constants';
+import { PAYMENT_KINDS } from '~/modules/payment/constants';
 import { COUNTS } from '~/modules/payment/graphql/queries';
 import { ScrollArea } from 'erxes-ui';
 
@@ -20,7 +20,7 @@ const PaymentMethods = () => {
         </div>
         {/* payments grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Object.entries(PAYMENTS).map(([key, payment]) => (
+          {Object.entries(PAYMENT_KINDS).map(([key, payment]) => (
             <PaymentMethodCard
               key={key}
               name={payment.name}

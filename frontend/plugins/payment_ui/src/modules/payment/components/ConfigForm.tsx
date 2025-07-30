@@ -10,6 +10,8 @@ type InputItem = {
 
 type Props = {
   inputs: InputItem[];
+  name: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const ConfigForm = ({ inputs }: Props) => {
@@ -17,7 +19,7 @@ const ConfigForm = ({ inputs }: Props) => {
     key: string,
     title: string,
     type?: string,
-    description?: string
+    description?: string,
   ) => {
     return (
       <div key={key} className="mb-6">
@@ -41,7 +43,7 @@ const ConfigForm = ({ inputs }: Props) => {
   return (
     <div className="space-y-4">
       {inputs.map((input) =>
-        renderInput(input.key, input.label, input.type, input.description)
+        renderInput(input.key, input.label, input.type, input.description),
       )}
     </div>
   );
