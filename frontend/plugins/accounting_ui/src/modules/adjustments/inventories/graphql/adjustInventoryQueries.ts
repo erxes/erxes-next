@@ -17,6 +17,28 @@ export const adjustInventoryFields = `
   checkedDate
 `;
 
+export const adjustInvDetailFields = `
+  _id
+  adjustId
+  createdAt
+  updatedAt
+
+  productId
+  accountId
+  departmentId
+  branchId
+
+  remainder
+  cost
+  unitCost
+  soonInCount
+  soonOutCount
+
+  error
+  warning
+  byDate
+`;
+
 const adjustInvFilterParamDefs = `
   $startDate: Date
   $endDate: Date
@@ -74,5 +96,14 @@ export const ADJUST_INVENTORY_DETAIL_QUERY = gql`
     adjustInventoryDetail(_id: $_id) {
       ${adjustInventoryFields}
     }
+  }
+`;
+
+export const ADJUST_INVENTORY_DETAILS_QUERY = gql`
+  query AdjustInventoryDetails($_id: String!) {
+    adjustInventoryDetails(_id: $_id) {
+      ${adjustInvDetailFields}
+    }
+    adjustInventoryDetailsCount(_id: $_id)
   }
 `;

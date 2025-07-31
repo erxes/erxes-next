@@ -9,7 +9,10 @@ export const AdjustInventoryDetailPage = () => {
         returnLink='/accounting/adjustment/inventory'
         returnText='Inventory'
       >
-        asfd
+        run,
+        publish,
+        delete
+        cancel,
       </AccountingHeader>
       <AdjustInventoryDetail />
     </AccountingLayout>

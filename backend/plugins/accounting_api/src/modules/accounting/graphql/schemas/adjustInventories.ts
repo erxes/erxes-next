@@ -68,12 +68,18 @@ export const queries = `
     page: Int,
     perPage: Int,
     sortField: String
-    sortDirection: Int    
+    sortDirection: Int
   ): [AdjustInventory]
   adjustInventoriesCount(${AdjustInventoriesQueryParams}): Int
   adjustInventoryDetail(_id: String): AdjustInventory
-  adjustInventoryDetails(_id: String): [AdjustInvDetail]
-  adjustInventoryDetailsCount(_id: String): Int
+  adjustInventoryDetails(
+    _id: String!,
+    page: Int,
+    perPage: Int,
+    sortField: String
+    sortDirection: Int
+  ): [AdjustInvDetail]
+  adjustInventoryDetailsCount(_id: String!): Int
 `;
 
 export const mutations = `
