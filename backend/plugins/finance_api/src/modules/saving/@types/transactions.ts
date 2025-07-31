@@ -1,3 +1,8 @@
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { Document } from 'mongoose';
 
 export interface ITransaction {
@@ -36,4 +41,21 @@ export interface IContractResult {
   invoiceId: string;
   customerId: string;
   companyId: string;
+}
+
+export interface ITransactionQueryParams
+  extends IListParams,
+    ICursorPaginateParams {
+  contractId: string;
+  customerId: string;
+  companyId: string;
+  startDate: string;
+  endDate: string;
+  ids: [string];
+  searchValue: string;
+  payDate: string;
+  contractHasnt: string;
+  transactionType: string;
+  description: string;
+  total: number;
 }
