@@ -83,41 +83,6 @@ const SipProvider = ({
     }
   }, [debug]);
 
-  // Audio playback functions
-  const playUnavailableAudio = useCallback(() => {
-    if (!ringbackToneRef.current) {
-      ringbackToneRef.current = new Audio(
-        getPluginAssetsUrl('frontline', '/sound/unAvailableCall.mp3'),
-      );
-      ringbackToneRef.current.loop = false;
-      ringbackToneRef.current
-        .play()
-        .catch(() => {
-          ringbackToneRef.current = null;
-        })
-        .then(() => {
-          ringbackToneRef.current = null;
-        });
-    }
-  }, []);
-
-  const playBusyAudio = useCallback(() => {
-    if (!ringbackToneRef.current) {
-      ringbackToneRef.current = new Audio(
-        getPluginAssetsUrl('frontline', '/sound/busyCall.mp3'),
-      );
-      ringbackToneRef.current.loop = false;
-      ringbackToneRef.current
-        .play()
-        .catch(() => {
-          ringbackToneRef.current = null;
-        })
-        .then(() => {
-          ringbackToneRef.current = null;
-        });
-    }
-  }, []);
-
   const playHangupTone = useCallback(() => {
     if (!ringbackToneRef.current) {
       ringbackToneRef.current = new Audio(
@@ -500,7 +465,6 @@ const SipProvider = ({
           }));
         }
 
-        const diversionHeader = rtcRequest.getHeader('Diversion');
         const timeStamp = rtcRequest.getHeader('Timestamp') || 0;
 
         if (rtcSessionState) {
@@ -706,6 +670,7 @@ const SipProvider = ({
     rtcSessionState,
     setRtcSessionState,
     stopRingbackTone,
+    playRingbackTone,
     user,
   ]);
 
@@ -808,3 +773,38 @@ export const useSip = () => {
 };
 
 export default SipProvider;
+
+// Audio playback functions
+// const playUnavailableAudio = useCallback(() => {
+//   if (!ringbackToneRef.current) {
+//     ringbackToneRef.current = new Audio(
+//       getPluginAssetsUrl('frontline', '/sound/unAvailableCall.mp3'),
+//     );
+//     ringbackToneRef.current.loop = false;
+//     ringbackToneRef.current
+//       .play()
+//       .catch(() => {
+//         ringbackToneRef.current = null;
+//       })
+//       .then(() => {
+//         ringbackToneRef.current = null;
+//       });
+//   }
+// }, []);
+
+// const playBusyAudio = useCallback(() => {
+//   if (!ringbackToneRef.current) {
+//     ringbackToneRef.current = new Audio(
+//       getPluginAssetsUrl('frontline', '/sound/busyCall.mp3'),
+//     );
+//     ringbackToneRef.current.loop = false;
+//     ringbackToneRef.current
+//       .play()
+//       .catch(() => {
+//         ringbackToneRef.current = null;
+//       })
+//       .then(() => {
+//         ringbackToneRef.current = null;
+//       });
+//   }
+// }, []);

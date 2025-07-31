@@ -1,10 +1,7 @@
-import {
-  callConfigAtom,
-  sipStateAtom,
-} from '@/integrations/call/states/sipStates';
+import { callConfigAtom } from '@/integrations/call/states/sipStates';
 import { useAtom } from 'jotai';
 import SipProvider from './SipProvider';
-import { useMutateCallHistory } from '@/integrations/call/hooks/useMutateCallHistory';
+import { useAddCallHistory } from '@/integrations/call/hooks/useAddCallHistory';
 import { useCallCreateSession } from '@/integrations/call/hooks/useCallCreateSession';
 import { useCallUserIntegration } from '@/integrations/call/hooks/useCallUserIntegration';
 import { useCallGetConfigs } from '@/integrations/call/hooks/useCallGetConfigs';
@@ -12,13 +9,12 @@ import { CallSelectConfig } from '@/integrations/call/components/CallSelectConfi
 
 export const SipContainer = ({ children }: { children: React.ReactNode }) => {
   const [callConfig] = useAtom(callConfigAtom);
-  const [sipState] = useAtom(sipStateAtom);
 
   const { callUserIntegrations, loading: callUserIntegrationLoading } =
     useCallUserIntegration();
   const { callConfigs, loading: callConfigLoading } = useCallGetConfigs();
 
-  const { updateHistory, addHistory } = useMutateCallHistory();
+  const { addHistory } = useAddCallHistory();
 
   const { createActiveSession } = useCallCreateSession();
 

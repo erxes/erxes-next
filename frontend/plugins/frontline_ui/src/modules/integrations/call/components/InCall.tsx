@@ -8,7 +8,7 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Button, ButtonProps, cn } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import { CallNumber } from '@/integrations/call/components/CallNumber';
@@ -17,6 +17,8 @@ import {
   Transfer,
   TransferTrigger,
 } from '@/integrations/call/components/CallTransfer';
+import { useNavigate } from 'react-router';
+import { historyIdAtom } from '@/integrations/call/states/callStates';
 
 export const InCall = () => {
   const { stopCall } = useSip();
@@ -31,7 +33,7 @@ export const InCall = () => {
         <Mute />
         <TransferTrigger />
         <Detail />
-        <Keypad />
+        <KeypadTrigger />
         <SelectCustomer />
       </div>
       <div className="px-3 pb-6">
@@ -95,15 +97,26 @@ export const Mute = () => {
 };
 
 export const Detail = () => {
+  const sip = useAtomValue(sipStateAtom);
+  const historyId = useAtomValue(historyIdAtom);
+  const navigate = useNavigate();
+
   return (
-    <InCallActionButton>
+    <InCallActionButton
+      disabled={sip.callStatus !== CallStatusEnum.ACTIVE}
+      onClick={() => {
+        if (sip.callStatus === CallStatusEnum.ACTIVE) {
+          navigate(`/integrations/call/${historyId}`);
+        }
+      }}
+    >
       <IconFileText />
       Detail
     </InCallActionButton>
   );
 };
 
-export const Keypad = () => {
+export const KeypadTrigger = () => {
   return (
     <InCallActionButton>
       <IconDialpad />

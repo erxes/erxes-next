@@ -1,59 +1,60 @@
-import { useEffect, useRef } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import { sipStateAtom } from '@/integrations/call/states/sipStates';
 import { IconPhone, IconPhoneEnd } from '@tabler/icons-react';
-import { Button, getPluginAssetsUrl } from 'erxes-ui';
+import { Button } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
-import { CallStatusEnum } from '@/integrations/call/types/sipTypes';
+import {
+  CallDirectionEnum,
+  CallStatusEnum,
+} from '@/integrations/call/types/sipTypes';
 import { CallNumber } from '@/integrations/call/components/CallNumber';
+import { useEffect, useRef } from 'react';
+import { getPluginAssetsUrl } from 'erxes-ui';
 
-export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const sipState = useAtomValue(sipStateAtom);
+export const IncomingCallAudio = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const sip = useAtomValue(sipStateAtom);
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (sipState?.callStatus === CallStatusEnum.ACTIVE) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-      } else {
+    if (
+      sip?.callStatus === CallStatusEnum.STARTING &&
+      sip.callDirection === CallDirectionEnum.INCOMING
+    ) {
+      if (audioRef.current) {
         audioRef.current.src = getPluginAssetsUrl(
           'frontline',
-          '/sound/incoming.mp3',
+          '/sound/incomingRingtone.mp3',
         );
-        audioRef.current.play();
+        audioRef.current.loop = true;
+        audioRef.current.play().catch(() => {
+          if (audioRef.current) {
+            audioRef.current.src = '';
+          }
+        });
       }
-    }
-
-    return () => {
+    } else {
       if (audioRef.current) {
         audioRef.current.pause();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         audioRef.current.src = '';
       }
-    };
-  }, [sipState?.callStatus]);
+    }
+  }, [sip?.callStatus, sip?.callDirection]);
+
+  return <audio ref={audioRef} loop autoPlay />;
+};
+
+export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
+  const sipState = useAtomValue(sipStateAtom);
 
   const { answerCall, stopCall } = useSip();
 
   const onAcceptCall = () => {
-    if (audioRef.current && audioRef.current.src) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-      audioRef.current.load();
-    }
-
     if (answerCall && sipState?.callStatus !== CallStatusEnum.IDLE) {
       answerCall();
     }
   };
 
   const onDeclineCall = () => {
-    if (audioRef.current && audioRef.current.src) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-      audioRef.current.load();
-    }
     if (stopCall) {
       stopCall();
     }
@@ -61,7 +62,6 @@ export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <audio ref={audioRef} loop autoPlay />
       <div className="text-center">{children}</div>
       <div className="mt-2 px-3 mb-1 space-y-2">
         <CallNumber />

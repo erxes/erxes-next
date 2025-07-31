@@ -21,7 +21,10 @@ import { CallDisconnected } from '@/integrations/call/components/CallDisconnecte
 import { CallTabs, Dialpad } from '@/integrations/call/components/CallTabs';
 import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
 import { InCall } from '@/integrations/call/components/InCall';
-import { IncomingCall } from '@/integrations/call/components/IncomingCall';
+import {
+  IncomingCallAudio,
+  IncomingCall,
+} from '@/integrations/call/components/IncomingCall';
 
 export const CallWidgetContent = ({
   children,
@@ -35,16 +38,16 @@ export const CallWidgetContent = ({
     return <CallDisconnected>{children}</CallDisconnected>;
   }
 
-  // if (sipState.callStatus === CallStatusEnum.IDLE) {
-  //   return <CallTabs keypad={<Dialpad />}>{children}</CallTabs>;
-  // }
+  if (sipState.callStatus === CallStatusEnum.IDLE) {
+    return <CallTabs keypad={<Dialpad />}>{children}</CallTabs>;
+  }
 
-  // if (
-  //   sipState.callDirection === CallDirectionEnum.INCOMING &&
-  //   sipState.callStatus === CallStatusEnum.STARTING
-  // ) {
-  //   return <IncomingCall>{children}</IncomingCall>;
-  // }
+  if (
+    sipState.callDirection === CallDirectionEnum.INCOMING &&
+    sipState.callStatus === CallStatusEnum.STARTING
+  ) {
+    return <IncomingCall>{children}</IncomingCall>;
+  }
 
   return <CallTabs keypad={<InCall />}>{children}</CallTabs>;
 };
@@ -77,7 +80,7 @@ export const CallWidgetMoreActions = () => {
 export const CallWidget = () => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number | undefined>();
-  const [open, setOpen] = useAtom(callWidgetOpenAtom);
+  const open = useAtomValue(callWidgetOpenAtom);
 
   useLayoutEffect(() => {
     if (popoverContentRef.current) {
@@ -86,29 +89,32 @@ export const CallWidget = () => {
   }, []);
 
   return (
-    <PopoverPrimitive.Root open={open}>
-      <CallWidgetDraggableRoot>
-        <PopoverPrimitive.Content
-          side="top"
-          align="end"
-          sideOffset={12}
-          avoidCollisions={false}
-          onOpenAutoFocus={(e) => {
-            e.preventDefault();
-          }}
-          ref={popoverContentRef}
-          style={
-            {
-              '--radix-popper-content-height': contentHeight,
-            } as CSSProperties
-          }
-          className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
-        >
-          <CallWidgetContent>
-            <DraggableHandle />
-          </CallWidgetContent>
-        </PopoverPrimitive.Content>
-      </CallWidgetDraggableRoot>
-    </PopoverPrimitive.Root>
+    <>
+      <IncomingCallAudio />
+      <PopoverPrimitive.Root open={open}>
+        <CallWidgetDraggableRoot>
+          <PopoverPrimitive.Content
+            side="top"
+            align="end"
+            sideOffset={12}
+            avoidCollisions={false}
+            onOpenAutoFocus={(e) => {
+              e.preventDefault();
+            }}
+            ref={popoverContentRef}
+            style={
+              {
+                '--radix-popper-content-height': contentHeight,
+              } as CSSProperties
+            }
+            className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
+          >
+            <CallWidgetContent>
+              <DraggableHandle />
+            </CallWidgetContent>
+          </PopoverPrimitive.Content>
+        </CallWidgetDraggableRoot>
+      </PopoverPrimitive.Root>
+    </>
   );
 };
