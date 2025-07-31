@@ -1,17 +1,24 @@
-import { IconSandbox } from '@tabler/icons-react';
-
+import { IconUserSquare, IconListCheck } from '@tabler/icons-react';
 
 import { IUIConfig } from 'erxes-ui/types';
 
 export const CONFIG: IUIConfig = {
   name: 'operation',
-  icon: IconSandbox,
+  icon: IconListCheck,
   modules: [
     {
-      name: 'task',
-      icon: IconSandbox,
-      path: 'task',
+      name: 'team',
+      icon: IconUserSquare,
+      path: 'operation/team',
       hasSettings: true,
+      hasRelationWidget: false,
+      hasFloatingWidget: false,
+    },
+    {
+      name: 'task',
+      icon: IconListCheck,
+      path: 'operation/task',
+      hasSettings: false,
       hasRelationWidget: false,
       hasFloatingWidget: false,
     },

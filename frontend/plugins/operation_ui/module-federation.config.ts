@@ -18,6 +18,7 @@ const config: ModuleFederationConfig = {
     './config': './src/config.ts',
     './task': './src/modules/task/Main.tsx',
     './taskSettings': './src/modules/task/Settings.tsx',
+    './teamSettings': './src/modules/team/Settings.tsx',
     './widgets': './src/widgets/Widgets.tsx',
   },
 
