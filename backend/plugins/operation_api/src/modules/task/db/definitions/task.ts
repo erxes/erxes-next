@@ -6,9 +6,9 @@ export const taskSchema = schemaWrapper(
   new Schema(
     {
       _id: mongooseStringRandomId,
-      name: { type: String, label: 'Name' },
+      name: { type: String, label: 'Name', required: true },
       description: { type: String, label: 'Description' },
-      status: { type: String, label: 'Status' },
+      status: { type: String, label: 'Status', required: true },
       priority: { type: String, label: 'Priority' },
       labelIds: { type: [String], label: 'Label IDs' },
       tagIds: { type: [String], label: 'Tag IDs' },
