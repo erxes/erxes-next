@@ -1,9 +1,13 @@
 import { useFormContext } from 'react-hook-form';
 import { Form, Input, Textarea } from 'erxes-ui';
-import { TBrandsForm } from '../types';
 
-export const BrandsForm = () => {
-  const form = useFormContext<TBrandsForm>();
+import { TTeamForm } from '@/team/types';
+
+export const CreateTeamForm = () => {
+  const form = useFormContext<TTeamForm>();
+
+  console.log(form);
+
   return (
     <div className="flex flex-col gap-3">
       <Form.Field
@@ -11,8 +15,8 @@ export const BrandsForm = () => {
         name="name"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label>Brand name</Form.Label>
-            <Form.Description className="sr-only">Brand name</Form.Description>
+            <Form.Label>Team name</Form.Label>
+            <Form.Description className="sr-only">Team Name</Form.Description>
             <Form.Control>
               <Input {...field} />
             </Form.Control>
