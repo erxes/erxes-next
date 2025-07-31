@@ -29,6 +29,29 @@ export interface IContractModel extends Model<IContractDocument> {
   createContract(doc: IContract): Promise<IContractDocument>;
   updateContract(_id: string, doc: IContract): Promise<IContractDocument>;
   removeContract(_ids: string[]): Promise<ICompanyDocument>;
+  closeContract(doc: ICloseVariable): Promise<IContractDocument>;
+  getContractAlert(): Promise<IContractDocument>;
+  expandDuration(_id: string, contractId: string): Promise<IContractDocument>;
+  interestChange({
+    contractId,
+    stoppedDate,
+    interestAmount,
+    lossAmount,
+  }: {
+    contractId: string;
+    stoppedDate: Date;
+    interestAmount: number;
+    lossAmount: number;
+  }): Promise<IContractDocument>;
+  interestReturn({
+    contractId,
+    invDate,
+    interestAmount,
+  }: {
+    contractId: string;
+    invDate: Date;
+    interestAmount: number;
+  });
 }
 
 export const loadContract = (models: IModels) => {
