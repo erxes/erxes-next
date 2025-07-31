@@ -25,7 +25,7 @@ type ProcessHandlerProps = {
 
 function getAllKeys(obj, prefix = '') {
   let keys: string[] = [];
-  for (let key in obj) {
+  for (const key in obj) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     keys.push(fullKey);
     if (

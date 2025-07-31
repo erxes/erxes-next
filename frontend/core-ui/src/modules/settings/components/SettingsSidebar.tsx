@@ -17,33 +17,35 @@ import { usePageTrackerStore } from 'react-page-tracker';
 export function SettingsSidebar() {
   const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
 
-  const modules = useMemo(() => {
-    const coreModules = [
-      ...CORE_MODULES.filter((module) => module.hasSettings),
-    ];
+  const pluginsWithSettingsModules: Map<string, IUIConfig['modules']> =
+    useMemo(() => {
+      if (pluginsMetaData) {
+        const groupedModules = new Map<string, IUIConfig['modules']>();
 
-    if (pluginsMetaData) {
-      const settingsModules = Object.values(pluginsMetaData || {}).flatMap(
-        (plugin) =>
-          plugin.modules
+        Object.values(pluginsMetaData).forEach((plugin) => {
+          const settingsModules = plugin.modules
             .filter((module) => module.hasSettings)
             .map((module) => ({
               ...module,
               pluginName: plugin.name,
-            })),
-      );
+            }));
 
-      return [...coreModules, ...settingsModules] as IUIConfig['modules'];
-    }
-    return coreModules;
-  }, [pluginsMetaData]);
+          if (settingsModules.length > 0) {
+            groupedModules.set(plugin.name, settingsModules);
+          }
+        });
+
+        return groupedModules;
+      }
+      return new Map();
+    }, [pluginsMetaData]);
 
   return (
     <>
       <SettingsExitButton />
       <Sidebar.Content className="styled-scroll">
         <Sidebar.Group>
-          <Sidebar.GroupLabel>Account Settings</Sidebar.GroupLabel>
+          <Sidebar.GroupLabel>Account </Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {SETTINGS_PATH_DATA.account.map((item) => (
@@ -59,7 +61,7 @@ export function SettingsSidebar() {
           </Sidebar.GroupContent>
         </Sidebar.Group>
         <Sidebar.Group>
-          <Sidebar.GroupLabel>Workspace Settings</Sidebar.GroupLabel>
+          <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {SETTINGS_PATH_DATA.nav.map((item) => (
@@ -77,10 +79,11 @@ export function SettingsSidebar() {
         </Sidebar.Group>
 
         <Sidebar.Group>
-          <Sidebar.GroupLabel>Module Settings</Sidebar.GroupLabel>
+          <Sidebar.GroupLabel>Core Modules</Sidebar.GroupLabel>
+
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {modules.map((item) => (
+              {CORE_MODULES.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
                   <NavigationButton
                     pathPrefix={AppPath.Settings}
@@ -93,6 +96,28 @@ export function SettingsSidebar() {
             </Sidebar.Menu>
           </Sidebar.GroupContent>
         </Sidebar.Group>
+
+        {Array.from(pluginsWithSettingsModules.entries()).map(
+          ([pluginName, modules]) => (
+            <Sidebar.Group key={pluginName}>
+              <Sidebar.GroupLabel>{pluginName}</Sidebar.GroupLabel>
+              <Sidebar.GroupContent>
+                <Sidebar.Menu>
+                  {modules.map((item) => (
+                    <Sidebar.MenuItem key={item.name}>
+                      <NavigationButton
+                        pathPrefix={AppPath.Settings}
+                        pathname={item.path}
+                        name={item.name}
+                        icon={item.icon as Icon}
+                      />
+                    </Sidebar.MenuItem>
+                  ))}
+                </Sidebar.Menu>
+              </Sidebar.GroupContent>
+            </Sidebar.Group>
+          ),
+        )}
       </Sidebar.Content>
     </>
   );

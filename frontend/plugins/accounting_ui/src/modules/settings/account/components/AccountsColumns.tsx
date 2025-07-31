@@ -48,9 +48,9 @@ const AccountTextField = ({
   const { editAccount } = useAccountEdit();
   return (
     <TextField
-      value={value}  
+      value={value}
       scope={`account-${_id}-${field}`}
-      onValueChange={(value) => {
+      onSave={(value) => {
         editAccount(
           {
             variables: { ...account, [field]: value },

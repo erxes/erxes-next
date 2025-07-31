@@ -1,6 +1,5 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export const pipelineQueries = {
   /**
@@ -43,7 +42,7 @@ export const pipelineQueries = {
         pluginName: 'core',
         method: 'query',
         module: 'users',
-        action: 'find',
+        action: 'findOne',
         input: {
           _id: user._id,
         },
@@ -159,4 +158,4 @@ export const pipelineQueries = {
   },
 };
 
-moduleRequireLogin(pipelineQueries);
+// moduleRequireLogin(pipelineQueries);

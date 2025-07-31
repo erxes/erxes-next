@@ -5,7 +5,7 @@ import {
   OTHER_INTEGRATIONS,
 } from '../settings/constants/integrations';
 import { IntegrationContext } from '../settings/context/IntegrationContext';
-import { Button, PageContainer, Spinner } from 'erxes-ui';
+import { Button, PageContainer } from 'erxes-ui';
 
 import { InboxSettingsTopbar } from '../settings/components/InboxSettingsTopbar';
 import { InboxSettingsSidebar } from '../settings/components/Sidebar';

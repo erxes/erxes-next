@@ -6,7 +6,7 @@ import { useScopedHotKeysCallback } from './useScopedHotKeysCallback';
 import { isDefined } from 'erxes-ui/utils/isDefined';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-type UseHotkeysOptionsWithoutBuggyOptions = Omit<Options, 'enabled'>;
+export type UseHotkeysOptionsWithoutBuggyOptions = Omit<Options, 'enabled'>;
 
 export const useScopedHotkeys = (
   keys: Keys,

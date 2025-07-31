@@ -2,10 +2,10 @@ import { OperationVariables, useMutation } from '@apollo/client';
 import { CUSTOMERS_REMOVE } from '@/contacts/customers/graphql/mutations/removeCustomers';
 import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers';
 import { ICustomer } from 'ui-modules';
-import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
+import { useCustomersVariables } from '@/contacts/customers/hooks/useCustomers';
 
 export const useRemoveCustomers = () => {
-  const { customersQueryVariables } = useCustomers();
+  const { customersQueryVariables } = useCustomersVariables();
   const [_removeCustomers, { loading }] = useMutation(CUSTOMERS_REMOVE);
 
   const removeCustomers = async (
