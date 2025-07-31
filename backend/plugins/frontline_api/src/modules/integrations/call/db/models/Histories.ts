@@ -248,7 +248,7 @@ export const loadCallHistoryClass = (models: IModels) => {
               user as IUserDocument,
               callHistory.inboxIntegrationId,
             );
-          } catch (authError) {
+          } catch (error) {
             throw new Error(ERROR_MESSAGES.UNAUTHORIZED_ACCESS);
           }
         }
@@ -362,8 +362,6 @@ export const loadCallHistoryClass = (models: IModels) => {
   }
 
   callHistorySchema.loadClass(CallHistory);
-
-  callHistorySchema.index({ timeStamp: 1 });
 
   return callHistorySchema;
 };
