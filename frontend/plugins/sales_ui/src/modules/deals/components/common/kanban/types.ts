@@ -9,17 +9,18 @@ import type {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { IStage } from '@/deals/types/stages';
-import { IUser } from 'ui-modules';
+// import { IUser } from 'ui-modules';
+import { IDeal } from '@/deals/types/deals';
 
-export type KanbanItemProps = {
-  id: string;
-  name: string;
-  column: string;
-  startDate: Date;
-  closeDate: Date;
-  createdAt: Date;
-  assignedUsers: IUser[];
-} & Record<string, unknown>;
+// export type KanbanItemProps = {
+//   id: string;
+//   name: string;
+//   column: string;
+//   startDate: Date;
+//   closeDate: Date;
+//   createdAt: Date;
+//   assignedUsers: IUser[];
+// } & Record<string, unknown>;
 
 // export type KanbanColumnProps = {
 //   id: string;
@@ -27,7 +28,7 @@ export type KanbanItemProps = {
 // } & Record<string, unknown>;
 
 export type KanbanContextProps<
-  T extends KanbanItemProps = KanbanItemProps,
+  T extends IDeal = IDeal,
   C extends IStage = IStage,
 > = {
   columns: C[];
@@ -36,18 +37,23 @@ export type KanbanContextProps<
 };
 
 export type KanbanBoardProps = {
-  id: string;
+  _id: string;
   children: ReactNode;
   className?: string;
   onColumnsChange?: (newColumns: any[]) => void;
 };
 
-export type KanbanCardProps<T extends KanbanItemProps = KanbanItemProps> = T & {
+export type KanbanCardProps = {
   children?: ReactNode;
   className?: string;
+  name?: string;
+  onClick?: () => void;
+  loading?: boolean;
+  columnId: string;
+  featureId: string;
 };
 
-export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
+export type KanbanCardsProps<T extends IDeal = IDeal> =
   Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'id'> & {
     children: (item: T) => ReactNode;
     id: string;
@@ -56,7 +62,7 @@ export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
   export type KanbanHeaderProps = HTMLAttributes<HTMLDivElement>;
 
   export type KanbanProviderProps<
-    T extends KanbanItemProps = KanbanItemProps,
+    T extends IDeal = IDeal,
     C extends IStage = IStage,
   > = Omit<DndContextProps, 'children'> & {
     children: (column: C) => ReactNode;

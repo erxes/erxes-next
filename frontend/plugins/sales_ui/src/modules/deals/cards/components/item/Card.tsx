@@ -48,7 +48,7 @@ export const Card = ({ card = {} as IDeal, children, className }: Props) => {
         'bg-white rounded-md shadow min-h-[100px] flex flex-col justify-between relative',
         isThisCardLoading && 'animate-pulse',
       )}
-      onClick={() => setSalesItemId(card._id)}
+      // onClick={() => setSalesItemId(card._id)}
     >
       <div className="flex justify-between border-b p-2">
         <DealsDatePicker
