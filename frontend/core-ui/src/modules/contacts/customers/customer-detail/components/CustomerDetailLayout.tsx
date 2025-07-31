@@ -1,3 +1,5 @@
+import * as TabsPrimitive from '@radix-ui/react-tabs';
+
 import {
   Button,
   Resizable,
@@ -6,10 +8,10 @@ import {
   Tabs,
   useQueryState,
 } from 'erxes-ui';
+
 import { CustomerDetailSheet } from './CustomerDetailSheet';
-import * as TabsPrimitive from '@radix-ui/react-tabs';
-import { Spinner } from 'erxes-ui';
 import { IconMoodAnnoyed } from '@tabler/icons-react';
+import { Spinner } from 'erxes-ui';
 export const CustomerDetailLayout = ({
   children,
   actions,
@@ -77,7 +79,7 @@ const CustomerDetailTabs = ({ children }: { children: React.ReactNode }) => {
       className="flex-auto flex h-full"
       orientation="vertical"
     >
-      <TabsPrimitive.List className="w-64" asChild>
+      <Tabs.List className="w-64" asChild>
         <Sidebar collapsible="none" className="flex-none w-64 border-r">
           <Sidebar.Group>
             <Sidebar.GroupLabel>General</Sidebar.GroupLabel>
@@ -111,7 +113,7 @@ const CustomerDetailTabs = ({ children }: { children: React.ReactNode }) => {
         <Tabs.VerticalTrigger value="properties">
           Properties
         </Tabs.VerticalTrigger> */}
-      </TabsPrimitive.List>
+      </Tabs.List>
       {children}
     </Tabs>
   );

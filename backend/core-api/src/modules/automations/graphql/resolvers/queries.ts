@@ -6,7 +6,6 @@ import {
 } from 'erxes-api-shared/utils';
 
 import {
-  ITrigger,
   IAutomationDocument,
   AUTOMATION_STATUSES,
   IAutomationExecutionDocument,
@@ -27,7 +26,7 @@ import { FilterQuery, Model, SortOrder, Document, Types } from 'mongoose';
 import {
   IAutomationsActionConfig,
   IAutomationsTriggerConfig,
-} from 'erxes-api-shared/core-modules/automations/types';
+} from 'erxes-api-shared/core-modules';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -483,7 +482,7 @@ export const automationQueries = {
           constants.actionsConst.push({ ...action, pluginName });
         }
 
-        if (!!pluginConstants?.emailRecipientTypes?.length) {
+        if (pluginConstants?.emailRecipientTypes?.length) {
           const updatedEmailRecipIentTypes =
             pluginConstants.emailRecipientTypes.map((eRT) => ({
               ...eRT,

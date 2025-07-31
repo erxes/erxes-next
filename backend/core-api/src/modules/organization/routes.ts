@@ -39,27 +39,10 @@ router.get('/initial-setup', async (req: Request, res: Response) => {
   return res.json(organizationInfo);
 });
 
-router.get('/get-frontend-plugins', async (req: Request, res: Response) => {
+router.get('/get-frontend-plugins', async (_req: Request, res: Response) => {
   const ENABLED_PLUGINS = getEnv({ name: 'ENABLED_PLUGINS' });
 
-  const remotes = [
-    {
-      name: 'frontline_ui',
-      entry: 'https://plugins.erxes.io/latest/frontline_ui/remoteEntry.js',
-    },
-    {
-      name: 'accounting_ui',
-      entry: 'https://plugins.erxes.io/latest/accounting_ui/remoteEntry.js',
-    },
-    {
-      name: 'sales_ui',
-      entry: 'https://plugins.erxes.io/latest/sales_ui/remoteEntry.js',
-    },
-    {
-      name: 'content_ui',
-      entry: 'https://plugins.erxes.io/latest/content_ui/remoteEntry.js',
-    },
-  ];
+  const remotes: { name: string; entry: string }[] = [];
 
   if (ENABLED_PLUGINS) {
     ENABLED_PLUGINS.split(',').forEach((plugin) => {
@@ -68,11 +51,9 @@ router.get('/get-frontend-plugins', async (req: Request, res: Response) => {
         entry: `https://plugins.erxes.io/latest/${plugin}_ui/remoteEntry.js`,
       });
     });
-
-    return res.json(remotes);
   }
 
-  return res.json([]);
+  return res.json(remotes);
 });
 
 export { router };

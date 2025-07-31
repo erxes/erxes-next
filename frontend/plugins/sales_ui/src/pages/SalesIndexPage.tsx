@@ -10,14 +10,15 @@ import { IconSandbox, IconSettings } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import MainActionBar from '@/deals/actionBar/components/MainActionBar';
 import { PageHeader } from 'ui-modules';
+import { SalesItemDetail } from '@/deals/cards/components/detail/SalesItemDetail';
 import { SalesLeftSidebar } from '@/deals/components/SalesLeftSidebar';
 import { StagesList } from '@/deals/stage/components/StagesList';
 
 export const SalesIndexPage = () => {
   return (
-    <div className="flex h-full">
+    <div className="flex h-full overflow-hidden w-full">
       <SalesLeftSidebar />
-      <div className="flex flex-col h-full w-full">
+      <div className="flex flex-col h-full overflow-hidden">
         <PageHeader>
           <PageHeader.Start>
             <Breadcrumb>
@@ -37,22 +38,20 @@ export const SalesIndexPage = () => {
           </PageHeader.Start>
           <PageHeader.End>
             <Button variant="outline" asChild>
-              <Link to="/settings/sales">
+              <Link to="/settings/deals">
                 <IconSettings />
                 Go to settings
               </Link>
             </Button>
           </PageHeader.End>
         </PageHeader>
-        <PageContainer>
+        <PageContainer className="overflow-hidden">
           <PageSubHeader>
             <MainActionBar />
           </PageSubHeader>
-          <div className="w-full h-full p-4 overflow-x-auto">
-            <div className="flex gap-4 min-w-max h-full">
-              <StagesList />
-            </div>
-          </div>
+
+          <StagesList />
+          <SalesItemDetail />
         </PageContainer>
       </div>
     </div>
