@@ -5,6 +5,8 @@ type Project {
     _id: String
     name: String
     description: String
+    status: String!
+    priority: String
     teamId: String!
     startDate: Date
     endDate: Date
@@ -12,10 +14,11 @@ type Project {
     updatedAt: Date
 }
 
-input ProjectInput {
+input ProjectFilter {
     name: String
     description: String
-    teamId: String!
+    status: String!
+    priority: String
     startDate: Date
     endDate: Date
     ${GQL_CURSOR_PARAM_DEFS}
@@ -31,13 +34,13 @@ type ProjectListResponse {
 
 export const queries = `
     getProject(_id: String!): Project
-    getProjectsByTeam(teamId: String!, PROJECT_INPUT): [Project]
-    getMyProjects(PROJECT_INPUT): ProjectListResponse
-    getProjects(PROJECT_INPUT): ProjectListResponse
+    getProjectsByTeam(teamId: String!, ProjectFilter): [Project]
+    getMyProjects(ProjectFilter): ProjectListResponse
+    getProjects(ProjectFilter): ProjectListResponse
 `;
 
 export const mutations = `
-    createProject(name: String!, description: String!, teamId: String!, startDate: Date, endDate: Date): Project
-    updateProject(_id: String!, name: String!, description: String!, teamId: String!, startDate: Date, endDate: Date): Project
+    createProject(name: String!, description: String!, status: String!, teamId: String!, startDate: Date, endDate: Date): Project
+    updateProject(_id: String!, name: String!, description: String!, status: String!, teamId: String!, startDate: Date, endDate: Date): Project
     removeProject(_id: String!): Project
 `;
