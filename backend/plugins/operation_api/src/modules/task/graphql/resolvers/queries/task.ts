@@ -1,12 +1,16 @@
+import { IContext } from '~/connectionResolvers';
+import { ITaskFilter } from '~/modules/task/@types/task';
 
-  import { IContext } from '~/connectionResolvers';
+export const taskQueries = {
+  getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
+    return models.Task.getTask(_id);
+  },
 
-   export const taskQueries = {
-    getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
-      return models.Task.getTask(_id);
-    },
-    
-    getTasks: async (_parent: undefined, { models }: IContext) => {
-      return models.Task.getTasks();
-    },
-  };
+  getTasks: async (
+    _parent: undefined,
+    params: ITaskFilter,
+    { models }: IContext,
+  ) => {
+    return models.Task.getTasks(params);
+  },
+};

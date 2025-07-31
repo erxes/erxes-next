@@ -12,3 +12,5 @@ export interface ITeamDocument extends ITeam, Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type ITeamFilter = ITeam;

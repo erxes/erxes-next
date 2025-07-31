@@ -7,7 +7,16 @@ export interface IStatus {
   name: string;
   teamId: string;
   description?: string;
-  color: string;
+  color?: string;
+  type: StatusType;
+}
+
+export interface IStatusEditInput {
+  _id: string;
+  name: string;
+  teamId: string;
+  description?: string;
+  color?: string;
   type: StatusType;
 }
 

@@ -23,26 +23,22 @@ export const types = `
   }
 `;
 
-const defaultFilter = `
-    status: String
-    priority: String
-    assignee: String
-    cycleId: String
-    labelIds: [String]
-    tagIds: [String]
-    createdAt: String
-    updatedAt: String
-    projectId: String 
-    ${GQL_CURSOR_PARAM_DEFS}
+const taskFilterParams = `
+  status: String
+  priority: String
+  assignee: String
+  cycleId: String
+  labelIds: [String]
+  tagIds: [String]
+  createdAt: String
+  updatedAt: String
+  projectId: String 
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `
   getTask(_id: String!): Task
-  getTasksByAssignee(assignee: String! ${defaultFilter}): TaskListResponse
-  getTasksByCycle(cycleId: String! ${defaultFilter}): TaskListResponse
-  getTasksByProject(projectId: String! ${defaultFilter}): TaskListResponse
-  getTasksByMe(${defaultFilter}): TaskListResponse
-  getTasks(${defaultFilter}): TaskListResponse
+  getTasks(${taskFilterParams}): TaskListResponse
 `;
 
 export const mutations = `

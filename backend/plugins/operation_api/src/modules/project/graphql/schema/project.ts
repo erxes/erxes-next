@@ -32,11 +32,19 @@ type ProjectListResponse {
 
 `;
 
+const projectFilterParams = `
+    name: String
+    description: String
+    status: String!
+    priority: String
+    startDate: Date
+    endDate: Date
+    ${GQL_CURSOR_PARAM_DEFS}
+`;
+
 export const queries = `
     getProject(_id: String!): Project
-    getProjectsByTeam(teamId: String!, ProjectFilter): [Project]
-    getMyProjects(ProjectFilter): ProjectListResponse
-    getProjects(ProjectFilter): ProjectListResponse
+    getProjects(${projectFilterParams}): ProjectListResponse
 `;
 
 export const mutations = `

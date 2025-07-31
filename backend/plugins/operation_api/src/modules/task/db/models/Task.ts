@@ -1,11 +1,11 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { taskSchema } from '@/task/db/definitions/task';
-import { ITask, ITaskDocument } from '@/task/@types/task';
+import { ITask, ITaskDocument, ITaskFilter } from '@/task/@types/task';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
-  getTasks(filter: any): Promise<ITaskDocument[]>;
+  getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
   createTask(doc: ITask): Promise<ITaskDocument>;
   updateTask(_id: string, doc: ITask): Promise<ITaskDocument>;
   removeTask(TaskId: string): Promise<{ ok: number }>;
@@ -23,8 +23,48 @@ export const loadTaskClass = (models: IModels) => {
       return Task;
     }
 
-    public static async getTasks(filter: any): Promise<ITaskDocument[]> {
-      return models.Task.find(filter).lean();
+    public static async getTasks(
+      params: ITaskFilter,
+    ): Promise<ITaskDocument[]> {
+      const query = {} as any;
+
+      if (params.assignee) {
+        query.assignee = params.assignee;
+      }
+
+      if (params.name) {
+        query.name = { $regex: params.name };
+      }
+
+      if (params.status) {
+        query.status = params.status;
+      }
+
+      if (params.priority) {
+        query.priority = params.priority;
+      }
+
+      if (params.labelIds) {
+        query.labelIds = { $in: params.labelIds };
+      }
+
+      if (params.tagIds) {
+        query.tagIds = { $in: params.tagIds };
+      }
+
+      if (params.cycleId) {
+        query.cycleId = params.cycleId;
+      }
+
+      if (params.projectId) {
+        query.projectId = params.projectId;
+      }
+
+      if (params.createdAt) {
+        query.createdAt = { $gte: params.createdAt };
+      }
+
+      return models.Task.find(query).lean();
     }
 
     public static async createTask(doc: ITask): Promise<ITaskDocument> {

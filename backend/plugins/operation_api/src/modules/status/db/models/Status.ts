@@ -29,10 +29,15 @@ export const loadStatusClass = (models: IModels) => {
     public static async getStatuses(
       params: IStatusFilter,
     ): Promise<IStatusDocument[]> {
-      const query = {
-        teamId: params.teamId,
-        type: params.type,
-      };
+      const query = {} as any;
+
+      if (params.teamId) {
+        query.teamId = params.teamId;
+      }
+
+      if (params.type) {
+        query.type = params.type;
+      }
 
       return models.Status.find(query).lean();
     }

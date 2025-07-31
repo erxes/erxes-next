@@ -7,6 +7,7 @@ export const typeDefs = async (): Promise<DocumentNode> => {
   return gql`
     ${apolloCommonTypes}
     ${types}
+    
     extend type Query {
       ${queries}
     }
