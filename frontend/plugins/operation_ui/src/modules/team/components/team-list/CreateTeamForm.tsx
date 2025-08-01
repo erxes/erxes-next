@@ -1,13 +1,14 @@
-import { useFormContext } from 'react-hook-form';
-import { Form, Input, Textarea } from 'erxes-ui';
+import { Form, Input, IconPicker, Textarea } from 'erxes-ui';
+import { SelectMember } from 'ui-modules';
+import { UseFormReturn } from 'react-hook-form';
 
 import { TTeamForm } from '@/team/types';
 
-export const CreateTeamForm = () => {
-  const form = useFormContext<TTeamForm>();
-
-  console.log(form);
-
+export const CreateTeamForm = ({
+  form,
+}: {
+  form: UseFormReturn<TTeamForm>;
+}) => {
   return (
     <div className="flex flex-col gap-3">
       <Form.Field
@@ -24,6 +25,22 @@ export const CreateTeamForm = () => {
           </Form.Item>
         )}
       />
+
+      <Form.Field
+        control={form.control}
+        name="icon"
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>Icon</Form.Label>
+            <Form.Description className="sr-only">Icon</Form.Description>
+            <Form.Control>
+              <IconPicker onValueChange={field.onChange} value={field.value} />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+
       <Form.Field
         control={form.control}
         name="description"
@@ -33,6 +50,25 @@ export const CreateTeamForm = () => {
             <Form.Description className="sr-only">description</Form.Description>
             <Form.Control>
               <Textarea {...field} />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+
+      <Form.Field
+        control={form.control}
+        name="memberIds"
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>Members</Form.Label>
+            <Form.Description className="sr-only">Members</Form.Description>
+            <Form.Control>
+              <SelectMember.FormItem
+                value={field.value}
+                onValueChange={field.onChange}
+                mode="multiple"
+              />
             </Form.Control>
             <Form.Message />
           </Form.Item>
