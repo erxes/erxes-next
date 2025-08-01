@@ -1,11 +1,12 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 import {
   defaultPaginate,
   regexSearchText,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
+
 import { IContext } from '~/connectionResolvers';
 import { SALES_STATUSES } from '~/modules/sales/constants';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 
 export const stageQueries = {
   /**
@@ -121,4 +122,4 @@ export const stageQueries = {
   },
 };
 
-moduleRequireLogin(stageQueries);
+// moduleRequireLogin(stageQueries);
