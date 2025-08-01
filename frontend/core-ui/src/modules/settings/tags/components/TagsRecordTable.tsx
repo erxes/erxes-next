@@ -116,7 +116,7 @@ export const tagsColumns: ColumnDef<
         >
           <RecordTableCellTrigger>
             <RecordTableTree.Trigger
-              order={cell.row.original.order}
+              order={cell.row.original.order || ''}
               name={cell.getValue() as string}
               hasChildren={cell.row.original.hasChildren}
             >
