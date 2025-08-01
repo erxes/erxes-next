@@ -9,7 +9,6 @@ import {
   IContract,
   IContractDocument,
 } from '~/modules/saving/@types/contracts';
-import { ITransactionDocument } from '~/modules/saving/@types/transactions';
 
 export const savingsContractChanged = async (contract: IContractDocument) => {
   graphqlPubsub.publish('savingsContractChanged', {
