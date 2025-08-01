@@ -93,9 +93,15 @@ export const GroupInlineEffectComponent = ({
     usersGroups && usersGroups?.find((g) => g._id === groupId);
 
   useEffect(() => {
-    const newGroups = [...groups].filter((c) => groupsIds?.includes(c._id));
+    if (!groupDetail) return;
 
-    if (groupDetail) {
+    const newGroups = [...groups].filter(
+      (c) => groupsIds?.includes(c._id) && c._id !== groupDetail._id,
+    );
+
+    const alreadyExists = groups.some((g) => g._id === groupDetail._id);
+
+    if (!alreadyExists) {
       updateGroups?.([...newGroups, groupDetail]);
     }
 
@@ -107,6 +113,7 @@ export const GroupInlineEffectComponent = ({
 
 export const GroupsInlineTitle = () => {
   const { groups, loading, placeholder } = useGroupsInlineContext();
+  console.log('groups', groups);
 
   if (loading) {
     return <Skeleton className="w-full flex-1 h-4" />;
@@ -116,18 +123,21 @@ export const GroupsInlineTitle = () => {
     return <span className="text-accent-foreground/70">{placeholder}</span>;
   }
 
-  if (groups.length < 3) {
-    return <TextOverflowTooltip value={groups.map((g) => g.name).join(', ')} />;
+  if (groups.length >= 3) {
+    return (
+      <Tooltip>
+        <Tooltip.Provider>
+          <Tooltip.Trigger>{`${groups.length} Groups`}</Tooltip.Trigger>
+          <Tooltip.Content>
+            {groups.map((group) => group.name).join(', ')} {groups?.length}
+          </Tooltip.Content>
+        </Tooltip.Provider>
+      </Tooltip>
+    );
   }
-
   return (
-    <Tooltip>
-      <Tooltip.Provider>
-        <Tooltip.Trigger>{`${groups.length} Groups`}</Tooltip.Trigger>
-        <Tooltip.Content>
-          {groups.map((group) => group.name).join(', ')}
-        </Tooltip.Content>
-      </Tooltip.Provider>
-    </Tooltip>
+    <TextOverflowTooltip
+      value={groups.map((g) => g.name).join(`, ${groups?.length}`)}
+    />
   );
 };

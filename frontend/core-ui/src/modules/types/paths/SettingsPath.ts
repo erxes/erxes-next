@@ -12,6 +12,7 @@ export enum SettingsWorkspacePath {
   MailConfig = 'mail-config',
   Apps = 'apps',
   Permissions = 'permissions',
+  Properties = 'properties',
   TeamMember = 'team-member',
   Structure = 'structures',
   StructureCatchAll = 'structures/*',

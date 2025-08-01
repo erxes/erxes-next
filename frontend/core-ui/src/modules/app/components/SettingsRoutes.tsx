@@ -82,6 +82,14 @@ const AutomationSettingsRoutes = lazy(() =>
   })),
 );
 
+const PropertiesSettins = lazy(() =>
+  import('~/pages/settings/workspace/PropertiesSettingsPage').then(
+    (module) => ({
+      default: module.PropertiesSettingsPage,
+    }),
+  ),
+);
+
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
@@ -133,6 +141,10 @@ export function SettingsRoutes() {
           element={<AutomationSettingsRoutes />}
         />
         <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
+        <Route
+          path={SettingsWorkspacePath.Properties}
+          element={<PropertiesSettins />}
+        />
         {getPluginsSettingsRoutes()}
       </Routes>
       <SettingsPageEffect />

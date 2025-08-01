@@ -6,11 +6,12 @@ import { Button, useQueryState } from 'erxes-ui';
 import { useUserEdit } from '../../hooks/useUserEdit';
 
 export const MemberForm = () => {
-  const { control, handleSubmit, watch } = useFormContext<TUserDetailForm>();
+  const { control, handleSubmit } = useFormContext<TUserDetailForm>();
   const { usersEdit } = useUserEdit();
   const [userId] = useQueryState<string>('user_id');
 
   const onSubmit = (data: TUserDetailForm) => {
+    console.log('data on submit', data)
     usersEdit(
       {
         variables: {
@@ -24,7 +25,7 @@ export const MemberForm = () => {
 
   return (
     <form
-      className="grid grid-cols-2 gap-3 w-full p-6 auto-rows-fr"
+      className="grid grid-cols-6 gap-3 w-full p-6 auto-rows-fr"
       onSubmit={handleSubmit(onSubmit)}
     >
       {USER_DETAIL_FIELDS.map((field) => {
@@ -41,7 +42,7 @@ export const MemberForm = () => {
           />
         );
       })}
-      <span className="col-span-2 flex items-center row-start-8">
+      <span className="col-span-6 flex items-center row-start-8">
         <Button className="w-1/6 ml-auto" type="submit">
           Update
         </Button>

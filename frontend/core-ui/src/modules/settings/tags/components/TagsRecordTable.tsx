@@ -18,6 +18,8 @@ import {
 } from 'erxes-ui';
 import { ITag, SelectTags, useTags } from 'ui-modules';
 import { useRemoveTag } from '../hooks/useRemoveTag';
+import { useTagsEdit } from '@/settings/tags/hooks/useTagsEdit';
+import React from 'react';
 
 export const TagMoreColumnCell = ({
   cell,
@@ -68,7 +70,9 @@ export const TagMoreColumnCell = ({
   );
 };
 
-export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
+export const tagsColumns: ColumnDef<
+  ITag & { hasChildren: boolean; type?: string }
+>[] = [
   {
     id: 'more',
     cell: TagMoreColumnCell,
@@ -79,8 +83,37 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
     header: 'Name',
     accessorKey: 'name',
     cell: ({ cell }) => {
+      const { tagsEdit, loading } = useTagsEdit();
+      const { _id, name, type } = cell.row.original;
+      const [open, setOpen] = React.useState<boolean>(false);
+      const [_name, setName] = React.useState<string>(name);
+
+      const onSave = () => {
+        if (name !== _name) {
+          tagsEdit({
+            variables: {
+              id: _id,
+              type: type,
+              name: _name,
+            },
+          });
+        }
+      };
+
+      const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
+        setName(el.currentTarget.value);
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
             <RecordTableTree.Trigger
               order={cell.row.original.order}
@@ -91,7 +124,7 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
             </RecordTableTree.Trigger>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_name} onChange={onChange} disabled={loading} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -103,13 +136,24 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
     header: 'Parent',
     accessorKey: 'parentId',
     cell: ({ cell }) => {
+      const { _id, name, type, parentId } = cell.row.original;
+      const { tagsEdit } = useTagsEdit();
       return (
         <SelectTags.InlineCell
           scope="tag"
           mode="single"
           value={cell.getValue() as string}
           onValueChange={(value) => {
-            console.log(value);
+            if (value !== parentId) {
+              tagsEdit({
+                variables: {
+                  id: _id,
+                  type: type,
+                  name: name,
+                  parentId: value || undefined,
+                },
+              });
+            }
           }}
           tagType=""
         />

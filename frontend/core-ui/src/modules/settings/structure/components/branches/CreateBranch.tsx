@@ -88,7 +88,7 @@ export const CreateBranch = () => {
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <BranchForm loading={loading} />
+              <BranchForm />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(false)}>

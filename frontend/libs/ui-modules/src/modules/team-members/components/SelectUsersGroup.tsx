@@ -4,8 +4,6 @@ import {
   Filter,
   Form,
   Popover,
-  Skeleton,
-  TextOverflowTooltip,
   cn,
   useFilterContext,
   useQueryState,
@@ -35,28 +33,28 @@ const SelectUsersGroupProvider = ({
   onValueChange?: (value: string[] | string) => void;
 }) => {
   const [usersGroups, setUsersGroups] = useState<IUserGroup[]>([]);
-  const isSingleMode = mode === 'single';
 
   const onSelect = (group: IUserGroup) => {
-    if (!group) {
-      return;
-    }
+    if (!group) return;
 
-    if (isSingleMode) {
-      setUsersGroups([group]);
-      return onValueChange?.(group._id);
-    }
-    const arrayValue = Array.isArray(value) ? value : [];
+    const isSingleMode = mode === 'single';
+    const multipleValue = (value as string[]) || [];
+    const isSelected = !isSingleMode && multipleValue.includes(group._id);
 
-    const isGroupSelected = arrayValue.includes(group._id);
-    const newSelectedGroupIds = isGroupSelected
-      ? arrayValue.filter((id) => id !== group._id)
-      : [...arrayValue, group._id];
+    const newSelectedGroupIds = isSingleMode
+      ? [group._id]
+      : isSelected
+      ? multipleValue.filter((id) => id !== group._id)
+      : [...multipleValue, group._id];
 
-    setUsersGroups(
-      usersGroups.filter((g) => newSelectedGroupIds.includes(g._id)),
-    );
-    onValueChange?.(newSelectedGroupIds);
+    const newSelectedGroups = isSingleMode
+      ? [group]
+      : isSelected
+      ? usersGroups.filter((g) => g._id !== group._id)
+      : [...usersGroups, group];
+
+    setUsersGroups(newSelectedGroups);
+    onValueChange?.(isSingleMode ? group._id : newSelectedGroupIds);
   };
 
   return (
