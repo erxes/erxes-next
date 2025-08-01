@@ -5,8 +5,8 @@ export const types = `
         memberIds: [String]
         name: String
         description: String
-        createdAt: String
-        updatedAt: String
+        createdAt: Date
+        updatedAt: Date
 
         taskCount: Int
     }

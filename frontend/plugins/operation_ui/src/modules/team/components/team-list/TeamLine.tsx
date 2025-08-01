@@ -1,6 +1,6 @@
 import { IconComponent } from 'erxes-ui';
 import { ITeam } from '@/team/types';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
 
 export const TeamLine = ({ team }: { team: ITeam }) => {
   return (
@@ -25,7 +25,7 @@ export const TeamLine = ({ team }: { team: ITeam }) => {
       </div>
 
       <div className="w-[20%] sm:w-[15%] xl:w-[15%] pl-2.5">
-        {dayjs(team.createdAt).format('YY-MMM-D')}
+        {format(team.createdAt, 'MMM d, yyyy')}
       </div>
     </div>
   );

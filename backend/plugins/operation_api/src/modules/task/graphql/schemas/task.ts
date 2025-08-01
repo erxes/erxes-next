@@ -10,8 +10,8 @@ export const types = `
     labelIds: [String]
     tagIds: [String]
     assignee: String
-    createdAt: String
-    updatedAt: String
+    createdAt: Date
+    updatedAt: Date
     cycleId: String
     projectId: String
     teamId: String
@@ -31,8 +31,8 @@ const taskFilterParams = `
   cycleId: String
   labelIds: [String]
   tagIds: [String]
-  createdAt: String
-  updatedAt: String
+  createdAt: Date
+  updatedAt: Date
   projectId: String 
   teamId: String
   ${GQL_CURSOR_PARAM_DEFS}
