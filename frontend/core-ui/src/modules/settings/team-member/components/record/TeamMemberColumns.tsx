@@ -31,8 +31,8 @@ import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { format } from 'date-fns';
-import { TeamMemberEmailField } from './team-member-edit/TeamMemberEmailField';
 import { ApolloError } from '@apollo/client';
+import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeamMemberEmailField';
 
 export const UserMoreColumnCell = ({
   cell,
