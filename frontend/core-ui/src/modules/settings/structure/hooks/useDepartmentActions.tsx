@@ -56,6 +56,7 @@ export function useDepartmentAdd(
         console.log('error', e);
       }
     },
+    refetchQueries: ['Departments'],
   });
 
   return {
@@ -113,7 +114,7 @@ export function useRemoveDepartment() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_DEPARTMENTS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: ['departmentsMain'],
+    refetchQueries: ['Departments'],
   });
 
   return {
@@ -125,26 +126,44 @@ export function useRemoveDepartment() {
 
 export function useDepartmentInlineEdit() {
   const [_departmentsEdit, { loading }] = useMutation(EDIT_DEPARTMENT);
+  const { toast } = useToast();
 
   const departmentsEdit = (
     operationVariables: OperationVariables,
     fields: string[],
   ) => {
-    const variables = operationVariables?.variables || {};
+    const { variables } = operationVariables || {};
+
     const fieldsToUpdate: Record<string, () => any> = {};
     fields.forEach((field) => {
       fieldsToUpdate[field] = () => variables[field];
     });
     return _departmentsEdit({
       ...operationVariables,
-      variables,
-      update: (cache, { data: { departmentsEdit } }) => {
+      update: (cache, { data }) => {
+        if (!data?.departmentsEdit) return;
+        const { departmentsEdit } = data;
         cache.modify({
           id: cache.identify(departmentsEdit),
           fields: fieldsToUpdate,
         });
       },
+      onCompleted: (data) => {
+        if (data?.departmentsEdit) {
+          toast({
+            title: 'Department updated successfully!',
+          });
+        }
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      },
     });
   };
+
   return { departmentsEdit, loading };
 }

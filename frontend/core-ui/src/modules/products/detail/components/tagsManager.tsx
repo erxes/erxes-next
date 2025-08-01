@@ -16,8 +16,7 @@ export function TagsManager({
 }: TagsManagerProps) {
   const client = useApolloClient();
   const { toast } = useToast();
-  const { tags: availableTags = [], refetch: refetchTags } =
-    useProductTags() || {};
+  const { tags: availableTags = [], refetch } = useProductTags() || {};
   const [tags, setTags] = React.useState<string[]>(() =>
     initialTags.map((tag) => (typeof tag === 'string' ? tag : tag._id)),
   );

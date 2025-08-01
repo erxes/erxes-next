@@ -18,7 +18,7 @@ export const SalesIndexPage = () => {
   return (
     <div className="flex h-full overflow-hidden w-full">
       <SalesLeftSidebar />
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col h-full w-full overflow-hidden">
         <PageHeader>
           <PageHeader.Start>
             <Breadcrumb>

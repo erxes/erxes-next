@@ -49,6 +49,7 @@ export function useUnitAdd(options?: MutationHookOptions<AddUnitResult, any>) {
         console.log('error', e);
       }
     },
+    refetchQueries: ['Units'],
   });
 
   return {
@@ -97,7 +98,7 @@ export function useRemoveUnit() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_UNITS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: ['unitsMain'],
+    refetchQueries: ['Units'],
   });
 
   return {
@@ -109,26 +110,43 @@ export function useRemoveUnit() {
 
 export function useUnitInlineEdit() {
   const [_unitsEdit, { loading }] = useMutation(EDIT_UNIT);
+  const { toast } = useToast();
 
   const unitsEdit = (
     operationVariables: OperationVariables,
     fields: string[],
   ) => {
-    const variables = operationVariables?.variables || {};
+    const { variables } = operationVariables || {};
+
     const fieldsToUpdate: Record<string, () => any> = {};
     fields.forEach((field) => {
       fieldsToUpdate[field] = () => variables[field];
     });
     return _unitsEdit({
       ...operationVariables,
-      variables,
-      update: (cache, { data: { unitsEdit } }) => {
+      update: (cache, { data }) => {
+        if (!data?.unitsEdit) return;
+        const { unitsEdit } = data;
         cache.modify({
           id: cache.identify(unitsEdit),
           fields: fieldsToUpdate,
         });
       },
+      onCompleted: (data) => {
+        if (data?.unitsEdit) {
+          toast({
+            title: 'Unit updated successfully!',
+          });
+        }
+      },
+      onError: (error) => {
+        toast({
+          title: error.message,
+          variant: 'destructive',
+        });
+      },
     });
   };
+
   return { unitsEdit, loading };
 }

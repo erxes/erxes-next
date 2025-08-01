@@ -23,14 +23,7 @@ export const StagesList = () => {
   }
 
   return (
-    <div
-      className="w-full h-full overflow-x-auto max-w-[var(--max-width)]"
-      style={
-        {
-          '--max-width': `calc(18rem * ${stages?.length})`,
-        } as React.CSSProperties
-      }
-    >
+    <div className="w-full h-full overflow-x-auto">
       <DraggableGroup direction="horizontal">
         {(stages || ([] as IStage[])).map((stage, i) => (
           <InView key={stage._id} triggerOnce rootMargin="200px">

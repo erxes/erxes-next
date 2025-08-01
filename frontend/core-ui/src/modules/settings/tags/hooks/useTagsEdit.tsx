@@ -1,8 +1,10 @@
 import { MutationHookOptions, useMutation } from '@apollo/client';
 import { EDIT_TAG } from '../graphql/mutations/tagsMutations';
+import { useToast } from 'erxes-ui';
 
 export const useTagsEdit = () => {
   const [editTagMutation, { loading, error }] = useMutation(EDIT_TAG);
+  const { toast } = useToast();
 
   const mutate = ({ variables, ...options }: MutationHookOptions) => {
     editTagMutation({
@@ -19,6 +21,17 @@ export const useTagsEdit = () => {
             {},
           ),
           optimistic: true,
+        });
+      },
+      onCompleted: (data) => {
+        if (data?.tagsEdit) {
+          toast({ title: 'Tag updated successfully!' });
+        }
+      },
+      onError: (error) => {
+        toast({
+          title: error.message,
+          variant: 'destructive',
         });
       },
     });

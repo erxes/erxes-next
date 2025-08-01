@@ -6,12 +6,8 @@ import { SelectBranches, SelectMember } from 'ui-modules';
 import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import { IconChevronDown } from '@tabler/icons-react';
 
-export const BranchForm = ({ loading }: { loading: boolean }) => {
+export const BranchForm = () => {
   const { control } = useFormContext<TBranchForm>();
-
-  if (loading) {
-    return <Skeleton className="w-full h-full" />;
-  }
 
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -75,7 +71,7 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
           <Form.Item>
             <Form.Label>{'Parent'}</Form.Label>
             <SelectBranches.FormItem
-              value={field.value}
+              value={field.value as string}
               onValueChange={field.onChange}
             />
             <Form.Message />
@@ -104,7 +100,7 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
           <Form.Item>
             <Form.Label>{'Phone number'}</Form.Label>
             <Form.Control>
-              <PhoneInput {...field} />
+              <PhoneInput {...field} value={field.value as string} />
             </Form.Control>
             <Form.Message />
           </Form.Item>
@@ -117,7 +113,12 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
           <Form.Item>
             <Form.Label>{field.name}</Form.Label>
             <Form.Control>
-              <Input {...field} type="email" placeholder="example@erxes.io" />
+              <Input
+                {...field}
+                value={field.value as string}
+                type="email"
+                placeholder="example@erxes.io"
+              />
             </Form.Control>
             <Form.Message />
           </Form.Item>
