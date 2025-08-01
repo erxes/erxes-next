@@ -40,6 +40,9 @@ export const useAddCallHistory = () => {
         const callConversationId = callHistoryAdd?.conversationId;
         setHistoryId(callHistoryId);
         setCurrentCallConversationId(callConversationId);
+        toast({
+          title: 'Successfully updated status',
+        });
       },
       onError: (e) => {
         setHistoryId('');
@@ -52,24 +55,7 @@ export const useAddCallHistory = () => {
           });
         }
       },
-    })
-      .then(({ data }: any) => {
-        const callHistoryId = data?.callHistoryAdd?._id;
-        const callConversationId = data?.callHistoryAdd?.conversationId;
-        setHistoryId(callHistoryId);
-        setCurrentCallConversationId(callConversationId);
-
-        toast({
-          title: 'Successfully updated status',
-        });
-      })
-      .catch((e) => {
-        toast({
-          title: 'Uh oh! Something went wrong.',
-          description: e.message,
-          variant: 'destructive',
-        });
-      });
+    });
   };
 
   return {

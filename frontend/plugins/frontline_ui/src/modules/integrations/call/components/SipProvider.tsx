@@ -57,7 +57,7 @@ const SipProvider = ({
 
   const setPersistentStates = useCallback(
     (isRegistered: boolean, isAvailable: boolean) => {
-      setCallInfo({ isRegistered });
+      setCallInfo({ isUnregistered: !isRegistered });
       setCallConfig((prev) => ({
         ...((prev || {}) as ICallConfigDoc),
         isAvailable,
@@ -71,17 +71,6 @@ const SipProvider = ({
   const ringbackToneRef = useRef<HTMLAudioElement | null>(null);
   const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
   const loggerRef = useRef<any>(logger);
-
-  // Configure debug logging
-  const reconfigureDebug = useCallback(() => {
-    if (debug) {
-      JsSIP.debug.enable('JsSIP:*');
-      loggerRef.current = logger;
-    } else {
-      JsSIP.debug.disable();
-      loggerRef.current = logger;
-    }
-  }, [debug]);
 
   const playHangupTone = useCallback(() => {
     if (!ringbackToneRef.current) {
@@ -303,7 +292,11 @@ const SipProvider = ({
       };
 
       uaRef.current = new JsSIP.UA(options);
-      JsSIP.debug.enable('JsSIP:*');
+      if (debug) {
+        JsSIP.debug.enable('JsSIP:*');
+      } else {
+        JsSIP.debug.disable();
+      }
     } catch (error) {
       loggerRef.current.debug('Error', error.message, error);
       setSipState((prev) => ({
@@ -702,7 +695,6 @@ const SipProvider = ({
     document.body.appendChild(audioElement);
     remoteAudioRef.current = audioElement;
 
-    reconfigureDebug();
     reinitializeJsSIP();
 
     return () => {
@@ -722,13 +714,6 @@ const SipProvider = ({
     callConfig?.isAvailable,
     callConfig?.phone,
   ]);
-
-  // Handle prop changes
-  useEffect(() => {
-    if (debug !== undefined) {
-      reconfigureDebug();
-    }
-  }, [debug, reconfigureDebug]);
 
   // Create context value
   const contextValue = useMemo(

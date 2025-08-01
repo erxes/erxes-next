@@ -72,7 +72,7 @@ export const SipStatusBadge = () => {
     sipState?.sipStatus === SipStatusEnum.REGISTERED;
 
   const handleConnection = () => {
-    setCallInfo((prev) => ({ ...prev, isRegistered: isConnected }));
+    setCallInfo((prev) => ({ ...prev, isUnregistered: !isConnected }));
     setCallConfig((prev) => ({
       ...(prev || ({} as ICallConfigDoc)),
       isAvailable: isConnected,
