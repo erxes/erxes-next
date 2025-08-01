@@ -12,13 +12,13 @@ import {
 
 import React, { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useTeamCreateForm } from '~/modules/team/hooks/useTeamCreateForm';
+import { useTeamForm } from '~/modules/team/hooks/useTeamForm';
 import { useTeamCreate } from '~/modules/team/hooks/useTeamCreate';
 import { TeamHotKeyScope, TTeamForm } from '@/team/types';
 import { CreateTeamForm } from '@/team/components/team-list/CreateTeamForm';
 
 export const CreateTeam = () => {
-  const form = useTeamCreateForm();
+  const form = useTeamForm({});
 
   const { addTeam, loading } = useTeamCreate();
   const { toast } = useToast();
