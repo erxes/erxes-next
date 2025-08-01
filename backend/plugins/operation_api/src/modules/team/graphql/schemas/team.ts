@@ -12,9 +12,7 @@ export const types = `
 
 export const queries = `
     getTeam(_id: String!): Team
-    getTeamsByMember(memberId: String!): [Team]
-    getMyTeams: [Team]
-    getTeams: [Team]
+    getTeams(name: String): [Team]
 `;
 
 export const mutations = `

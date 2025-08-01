@@ -1,12 +1,14 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { ADD_TEAM } from '~/modules/team/graphql/mutations/addTeam';
 import { ITeam } from '~/modules/team/types';
+import { useGetTeams } from '~/modules/team/hooks/useGetTeams';
 
 interface CreateTeamMutationResponse {
   createTeam: ITeam;
 }
 
 export const useTeamCreate = () => {
+  const { refetch } = useGetTeams({ name: '' });
   const [addTeam, { loading, error }] =
     useMutation<CreateTeamMutationResponse>(ADD_TEAM);
 
@@ -17,6 +19,7 @@ export const useTeamCreate = () => {
       ...options,
       onCompleted: (data) => {
         options?.onCompleted?.(data);
+        refetch();
       },
     });
   };
