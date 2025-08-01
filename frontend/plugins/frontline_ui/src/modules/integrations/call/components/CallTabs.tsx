@@ -1,7 +1,7 @@
 import { CallContacts } from '@/integrations/call/components/CallContacts';
 import { CallHistory } from '@/integrations/call/components/CallHistory';
 import { CallNumberInput } from '@/integrations/call/components/CallNumberInput';
-import { CallWidgetActions } from '@/integrations/call/components/CallWidgetActions';
+import { CallSipActions } from '@/integrations/call/components/CallSipActions';
 import { SelectPhoneCallFrom } from '@/integrations/call/components/SelectPhoneCallFrom';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import { callUiAtom } from '@/integrations/call/states/callUiAtom';
@@ -74,7 +74,7 @@ const CallTabsTrigger = ({
 export const Dialpad = () => {
   return (
     <div className="px-3">
-      <CallWidgetActions />
+      <CallSipActions />
       <CallNumberInput />
       <SelectPhoneCallFrom />
       <CallButton />

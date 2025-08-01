@@ -39,7 +39,7 @@ const SipProvider = ({
   pathname = '',
   user = null,
   password,
-  autoRegister = true,
+  autoRegister = false,
   autoAnswer = false,
   sessionTimersExpires = 3600,
   extraHeaders = { register: [], invite: [] },
@@ -676,13 +676,18 @@ const SipProvider = ({
 
   // Initialize audio element and JsSIP on mount
   useEffect(() => {
+    console.log('sipState', sipState);
+    console.log('callInfo', callInfo);
+    console.log('callConfig', callConfig);
     if (
       sipState.sipStatus === SipStatusEnum.REGISTERED &&
       callInfo?.isUnregistered
     ) {
+      console.log('unregisterSip');
       unregisterSip();
     }
     if (callConfig && !callConfig.isAvailable) {
+      console.log('return');
       return;
     }
 
@@ -711,7 +716,12 @@ const SipProvider = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [
+    user,
+    callInfo?.isUnregistered,
+    callConfig?.isAvailable,
+    callConfig?.phone,
+  ]);
 
   // Handle prop changes
   useEffect(() => {
