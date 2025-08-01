@@ -45,14 +45,14 @@ export const BRANCH_CREATE_SCHEMA = z.object({
   address: z.string(),
   code: z.string(),
   supervisorId: z.string().optional(),
-  parentId: z.string().optional(),
+  parentId: z.string().optional().nullable(),
   userIds: z.string().array().optional(),
-  phoneNumber: z.string().optional(),
-  email: z.string().optional(),
+  phoneNumber: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
   coordinate: z
     .object({
-      latitude: z.string(),
-      longitude: z.string(),
+      latitude: z.string().optional(),
+      longitude: z.string().optional(),
     })
     .optional(),
   links: SOCIAL_LINKS.optional(),

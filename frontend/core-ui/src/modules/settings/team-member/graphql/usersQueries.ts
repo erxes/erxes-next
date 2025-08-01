@@ -24,6 +24,8 @@ const GET_USER = gql`
       }
       links
       employeeId
+      branchIds
+      departmentIds
     }
   }
 `;

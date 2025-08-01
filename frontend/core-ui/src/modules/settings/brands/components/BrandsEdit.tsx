@@ -1,7 +1,4 @@
-import {
-  IconChessKnight,
-  IconLayoutSidebarLeftCollapse,
-} from '@tabler/icons-react';
+import { IconChessKnight } from '@tabler/icons-react';
 import {
   Button,
   Form,
@@ -18,6 +15,7 @@ import { BrandsForm } from './BrandsForm';
 import { useBrandsEdit } from '../hooks/useBrandsEdit';
 import { TBrandsForm } from '../types';
 import { ApolloError } from '@apollo/client';
+import { useBrandById } from '@/settings/brands/hooks/useBrandById';
 
 export const BrandsEdit = () => {
   const {
@@ -29,6 +27,9 @@ export const BrandsEdit = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [brandId] = useQueryState('brand_id');
+  const { brand } = useBrandById({
+    variables: { id: brandId || '' },
+  });
 
   const setOpen = (newBrandId: string | null) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -64,6 +65,15 @@ export const BrandsEdit = () => {
     },
     [handleEdit, methods, toast, brandId, setOpen],
   );
+
+  React.useEffect(() => {
+    if (brand) {
+      methods.reset({
+        name: brand.name,
+        description: brand.description,
+      });
+    }
+  }, [brand, methods]);
 
   return (
     <Sheet

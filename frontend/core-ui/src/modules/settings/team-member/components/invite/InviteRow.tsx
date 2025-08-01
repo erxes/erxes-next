@@ -98,18 +98,21 @@ export const InviteRow = ({
           <Form.Field
             control={control}
             name={`entries.${userIndex}.groupId`}
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Control>
-                  <SelectUsersGroup
-                    name={field.name}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                  />
-                </Form.Control>
-              </Form.Item>
-            )}
+            render={({ field }) => {
+              console.log('field', field)
+              return (
+                <Form.Item>
+                  <Form.Control>
+                    <SelectUsersGroup.FormItem
+                      mode="single"
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                    />
+                  </Form.Control>
+                </Form.Item>
+              );
+            }}
           />
         </Table.Cell>
         <Table.Cell
@@ -121,7 +124,6 @@ export const InviteRow = ({
             control={control}
             name={`entries.${userIndex}.unitId`}
             render={({ field }) => {
-              console.log('field.value', field.value);
               return (
                 <Form.Item>
                   <Form.Control>
