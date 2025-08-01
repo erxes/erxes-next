@@ -41,18 +41,17 @@ export const receiveInboxMessage = async (
 
     let customer;
 
-    const getCustomer = async (selector) =>
-      await sendTRPCMessage({
+    const getCustomer = async (selector) => {
+      return await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'customers',
         action: 'findOne',
-        input: { selector },
+        input: { query: selector },
       });
-
+    };
     if (primaryPhone) {
-      customer = await getCustomer({ primaryPhone });
-
+      customer = await getCustomer({ customerPrimaryPhone: primaryPhone });
       if (customer) {
         await sendTRPCMessage({
           pluginName: 'core',
@@ -66,6 +65,7 @@ export const receiveInboxMessage = async (
             },
           },
         });
+
         return sendSuccess({ _id: customer._id });
       }
     }

@@ -32,7 +32,7 @@ import { ChangeEvent, useState } from 'react';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { format } from 'date-fns';
 import { ApolloError } from '@apollo/client';
-import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeamMemberEmailField';
+import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
 
 export const UserMoreColumnCell = ({
   cell,

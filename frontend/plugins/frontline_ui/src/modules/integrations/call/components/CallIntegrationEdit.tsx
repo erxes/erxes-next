@@ -58,7 +58,7 @@ export const CallIntegrationEdit = () => {
       },
       refetchQueries: [
         'Integrations',
-        'CallIntegrationDetail',
+        'callsIntegrationDetail',
         'IntegrationDetail',
       ],
       onCompleted() {

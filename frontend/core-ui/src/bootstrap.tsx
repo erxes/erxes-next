@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 import { init } from '@module-federation/enhanced/runtime';
@@ -16,11 +15,7 @@ async function initFederation() {
   );
 
   if (NODE_ENV === 'development') {
-    root.render(
-      <StrictMode>
-        <App />
-      </StrictMode>,
-    );
+    root.render(<App />);
   } else {
     fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
       .then((res) => res.json())

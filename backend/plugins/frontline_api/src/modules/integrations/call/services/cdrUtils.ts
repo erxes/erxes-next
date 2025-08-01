@@ -134,7 +134,6 @@ export const determineExtension = (params) => {
     src,
     dst,
     action_type,
-    action_owner,
     lastapp,
     dstchannel_ext,
     dstanswer,
