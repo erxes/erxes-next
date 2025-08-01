@@ -11,7 +11,6 @@ export const MemberForm = () => {
   const [userId] = useQueryState<string>('user_id');
 
   const onSubmit = (data: TUserDetailForm) => {
-    console.log('data on submit', data)
     usersEdit(
       {
         variables: {

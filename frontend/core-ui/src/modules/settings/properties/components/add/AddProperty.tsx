@@ -21,7 +21,6 @@ export const AddProperty = () => {
   const submitHandler: SubmitHandler<IPropertyForm> = React.useCallback(
     async (data) => {
       // Handle the form submission logic here
-      console.log('Submitted data:', data);
       methods.reset();
       setOpen(false);
     },
@@ -65,13 +64,12 @@ export const AddProperty = () => {
                 name="name"
                 render={({ field }) => (
                   <Form.Item>
-                    <Form.Label>Group Name</Form.Label>
+                    <Form.Label>Property Name</Form.Label>
                     <Form.Control>
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Enter group name"
-                        className="input"
+                        placeholder="Enter property name"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -88,8 +86,7 @@ export const AddProperty = () => {
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Enter group description"
-                        className="input"
+                        placeholder="Enter property description"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -106,8 +103,7 @@ export const AddProperty = () => {
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Enter group code"
-                        className="input"
+                        placeholder="Enter property code"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -124,8 +120,7 @@ export const AddProperty = () => {
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Enter group ID"
-                        className="input"
+                        placeholder="Enter parent group"
                       />
                     </Form.Control>
                     <Form.Message />
@@ -143,7 +138,6 @@ export const AddProperty = () => {
                         {...field}
                         type="text"
                         placeholder="Enter type"
-                        className="input"
                       />
                     </Form.Control>
                     <Form.Message />

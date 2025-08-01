@@ -38,7 +38,7 @@ const SelectUsersGroupProvider = ({
     if (!group) return;
 
     const isSingleMode = mode === 'single';
-    const multipleValue = (value as string[]) || [];
+    const multipleValue = isSingleMode ? [] : Array.isArray(value) ? value : [];
     const isSelected = !isSingleMode && multipleValue.includes(group._id);
 
     const newSelectedGroupIds = isSingleMode

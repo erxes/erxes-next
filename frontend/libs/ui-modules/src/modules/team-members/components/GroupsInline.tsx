@@ -113,7 +113,6 @@ export const GroupInlineEffectComponent = ({
 
 export const GroupsInlineTitle = () => {
   const { groups, loading, placeholder } = useGroupsInlineContext();
-  console.log('groups', groups);
 
   if (loading) {
     return <Skeleton className="w-full flex-1 h-4" />;
@@ -129,7 +128,7 @@ export const GroupsInlineTitle = () => {
         <Tooltip.Provider>
           <Tooltip.Trigger>{`${groups.length} Groups`}</Tooltip.Trigger>
           <Tooltip.Content>
-            {groups.map((group) => group.name).join(', ')} {groups?.length}
+            {groups.map((group) => group.name).join(', ')}
           </Tooltip.Content>
         </Tooltip.Provider>
       </Tooltip>
