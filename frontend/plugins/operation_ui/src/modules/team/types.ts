@@ -6,4 +6,14 @@ export enum TeamHotKeyScope {
   TeamCreateSheet = 'operation-add-team',
 }
 
+export interface ITeam {
+  _id: string;
+  name: string;
+  icon: string;
+  description: string;
+  memberIds: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type TTeamForm = z.infer<typeof TEAM_FORM_SCHEMA>;

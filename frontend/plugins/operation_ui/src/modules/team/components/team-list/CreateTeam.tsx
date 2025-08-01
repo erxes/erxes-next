@@ -7,15 +7,21 @@ import {
   usePreviousHotkeyScope,
   useScopedHotkeys,
   useSetHotkeyScope,
+  useToast,
 } from 'erxes-ui';
+
 import React, { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useTeamForm } from '@/team/hooks/useTeamForm';
+import { useTeamCreateForm } from '~/modules/team/hooks/useTeamCreateForm';
+import { useTeamCreate } from '~/modules/team/hooks/useTeamCreate';
 import { TeamHotKeyScope, TTeamForm } from '@/team/types';
 import { CreateTeamForm } from '@/team/components/team-list/CreateTeamForm';
 
 export const CreateTeam = () => {
-  const { methods } = useTeamForm();
+  const form = useTeamCreateForm();
+
+  const { addTeam, loading } = useTeamCreate();
+  const { toast } = useToast();
 
   const [_open, _setOpen] = useState<boolean>(false);
   const setHotkeyScope = useSetHotkeyScope();
@@ -36,12 +42,23 @@ export const CreateTeam = () => {
 
   const submitHandler: SubmitHandler<TTeamForm> = React.useCallback(
     async (data) => {
-      console.log(data);
+      addTeam({
+        variables: data,
+        onCompleted: () => {
+          toast({ title: 'Success!' });
+          form.reset();
+          _setOpen(false);
+        },
+        onError: (error) =>
+          toast({
+            title: 'Error',
+            description: error.message,
+            variant: 'destructive',
+          }),
+      });
     },
-    [],
+    [addTeam, toast, _setOpen, form],
   );
-
-  console.log(Form);
 
   return (
     <Sheet open={_open} onOpenChange={(open) => (open ? onOpen() : onClose())}>
@@ -53,23 +70,25 @@ export const CreateTeam = () => {
         </Button>
       </Sheet.Trigger>
       <Sheet.View className="p-0">
-        <Form {...methods}>
+        <Form {...form}>
           <form
             className="flex flex-col gap-0 size-full"
-            onSubmit={methods.handleSubmit(submitHandler)}
+            onSubmit={form.handleSubmit(submitHandler)}
           >
             <Sheet.Header>
               <Sheet.Title>Add team</Sheet.Title>
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full flex flex-col px-5 py-4">
-              <CreateTeamForm />
+              <CreateTeamForm form={form} />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'secondary'} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit">Create</Button>
+              <Button type="submit" disabled={loading}>
+                Create
+              </Button>
             </Sheet.Footer>
           </form>
         </Form>

@@ -12,13 +12,11 @@ export const types = `
 
 export const queries = `
     getTeam(_id: String!): Team
-    getTeamsByMember(memberId: String!): [Team]
-    getMyTeams: [Team]
-    getTeams: [Team]
+    getTeams(name: String): [Team]
 `;
 
 export const mutations = `
-    createTeam(name: String!, description: String!, icon: String!, memberIds: [String]): Team
-    updateTeam(_id: String!, name: String!, description: String!, icon: String!, memberIds: [String]): Team
-    removeTeam(_id: String!): Team
+    teamAdd(name: String!, description: String, icon: String!, memberIds: [String]): Team
+    teamUpdate(_id: String!, name: String!, description: String, icon: String!, memberIds: [String]): Team
+    teamRemove(_id: String!): Team
 `;
