@@ -12,11 +12,12 @@ import { IconCrane, IconGavel, IconTrashX } from '@tabler/icons-react';
 import { useAdjustInventoryDetail } from '../hooks/useAdjustInventoryDetail';
 import { useAdjustInventoryDetails } from '../hooks/useAdjustInventoryDetails';
 import { ADJ_INV_STATUSES } from '~/modules/adjustments/inventories/types/AdjustInventory';
+import { useAdjustInventoryRun } from '../hooks/useAdjustInventoryRun';
 
 export const AdjustInventoryDetail = () => {
   // const parentId = useParams().parentId;
   const [id] = useQueryState<string>('id');
-  console.log(id, 'iiiiiiiiiiiiiiiiiiiiii')
+
   const { adjustInventory, loading } = useAdjustInventoryDetail({
     variables: { _id: id },
     skip: !id,
@@ -27,8 +28,18 @@ export const AdjustInventoryDetail = () => {
     skip: !id,
   });
 
+  const { runAdjust, loading: runLoading } = useAdjustInventoryRun(id ?? '');
+
   if (loading || detailsLoading) {
     return <Spinner />;
+  }
+
+  if (!id) {
+    return;
+  }
+
+  const handleRun = () => {
+    runAdjust();
   }
 
   const renderEvents = () => {
@@ -38,7 +49,9 @@ export const AdjustInventoryDetail = () => {
       case ADJ_INV_STATUSES.CANCEL:
         return (
           <>
-            <Button>
+            <Button
+              onClick={handleRun}
+            >
               <IconCrane />
               RUN
             </Button>

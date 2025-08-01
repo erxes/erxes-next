@@ -16,8 +16,8 @@ export const ADJUST_INVENTORY_CANCEL = gql`
   }
 `;
 export const ADJUST_INVENTORY_RUN = gql`
-  mutation AdjustInventoryRun($_id: String!) {
-    adjustInventoryRun(_id: $_id) {
+  mutation AdjustInventoryRun($adjustId: String!) {
+    adjustInventoryRun(adjustId: $adjustId) {
       ${adjustInventoryFields}
     }
   }

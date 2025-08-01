@@ -120,6 +120,7 @@ const adjustInventoryMutations = {
       } catch (e) {
         const now = new Date();
         await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedDate: now } });
+        // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
         // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
         //   accountingsAdjustInventoriesRunner: {
         //     userId: user._id,
@@ -136,6 +137,7 @@ const adjustInventoryMutations = {
 
       const now = new Date();
       await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedDate: now } });
+      // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
 
       // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
       //   accountingsAdjustInventoriesRunner: {
