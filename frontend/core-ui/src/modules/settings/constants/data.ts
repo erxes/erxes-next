@@ -130,6 +130,16 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsWorkspacePath.Permissions,
     },
     {
+      name: 'Apps',
+      icon: IconShieldCog,
+      path: SettingsWorkspacePath.Apps,
+    },
+    {
+      name: 'Properties',
+      icon: IconTools,
+      path: SettingsWorkspacePath.Properties,
+    },
+    {
       name: 'General',
       icon: IconAdjustmentsAlt,
       path: SettingsWorkspacePath.General,
