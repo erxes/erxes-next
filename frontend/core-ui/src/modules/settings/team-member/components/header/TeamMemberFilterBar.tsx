@@ -1,18 +1,26 @@
 import { Filter, PageSubHeader, useMultiQueryState } from 'erxes-ui';
-import { SelectBranches, SelectDepartments, SelectUnit } from 'ui-modules';
+import {
+  SelectBranches,
+  SelectBrands,
+  SelectDepartments,
+  SelectUnit,
+} from 'ui-modules';
 import { TeamMemberFilterPopover } from './TeamMemberFilterPopover';
 import { TeamMemberCounts } from '../TeamMemberCounts';
 import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../../constants/teamMemberCursorSessionKey';
 
 export const TeamMemberFilterBar = () => {
   const [queries] = useMultiQueryState<{
-    branchIds: string;
-    departmentIds: string;
+    branchIds: string[];
+    departmentIds: string[];
     unitId: string;
     isActive: boolean;
-  }>(['branchIds', 'departmentIds', 'unitId', 'isActive']);
+    brandIds: string[];
+  }>(['branchIds', 'departmentIds', 'unitId', 'isActive', 'brandIds']);
 
-  const { branchIds, departmentIds, unitId } = queries;
+  const isFiltered = Object.values(queries).some((query) => !!query);
+
+  const { branchIds, departmentIds, unitId, brandIds } = queries;
 
   return (
     <PageSubHeader>
@@ -29,17 +37,24 @@ export const TeamMemberFilterBar = () => {
             <SelectBranches.FilterBar
               mode={'multiple'}
               filterKey="branchIds"
-              label="Branch"
+              label="Branches"
             />
           )}
           {!!departmentIds && (
             <SelectDepartments.FilterBar
               mode={'multiple'}
               filterKey="departmentIds"
-              label="Department"
+              label="Departments"
             />
           )}
           {!!unitId && <SelectUnit.FilterBar />}
+          {!!brandIds && (
+            <SelectBrands.FilterBar
+              mode="multiple"
+              filterKey="brandIds"
+              label="Brands"
+            />
+          )}
           <TeamMemberCounts />
         </Filter.Bar>
       </Filter>
