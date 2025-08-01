@@ -14,6 +14,8 @@ export interface ITeam {
   memberIds: string[];
   createdAt: string;
   updatedAt: string;
+
+  taskCount: number;
 }
 
 export type TTeamForm = z.infer<typeof TEAM_FORM_SCHEMA>;
