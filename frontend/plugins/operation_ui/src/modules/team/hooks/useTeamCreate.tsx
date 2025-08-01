@@ -8,7 +8,7 @@ interface CreateTeamMutationResponse {
 }
 
 export const useTeamCreate = () => {
-  const { refetch } = useGetTeams({ name: '' });
+  const { refetch } = useGetTeams();
   const [addTeam, { loading, error }] =
     useMutation<CreateTeamMutationResponse>(ADD_TEAM);
 

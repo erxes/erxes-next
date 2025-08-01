@@ -8,6 +8,8 @@ export const GET_TEAMS = gql`
       icon
       description
       memberIds
+
+      taskCount
       createdAt
     }
   }

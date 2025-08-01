@@ -7,6 +7,8 @@ export const types = `
         description: String
         createdAt: String
         updatedAt: String
+
+        taskCount: Int
     }
 `;
 
