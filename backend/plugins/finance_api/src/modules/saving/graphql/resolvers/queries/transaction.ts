@@ -56,3 +56,5 @@ const transactionQueries = {
     return models.Transactions.getTransaction({ _id });
   },
 };
+
+export default transactionQueries;

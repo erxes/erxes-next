@@ -1,11 +1,11 @@
-export const types = () => `
-type SavingLoans {
-_id: String
-number: String
-}
-
-type SavingContact {
+export const types = `
+  type SavingLoans {
     _id: String
+    number: String
+  }
+
+type SavingContract
+ {   _id: String
     contractTypeId: String
     number: String
     branchId:String

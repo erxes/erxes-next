@@ -9,20 +9,40 @@ import {
   types as contractTypeTypes,
 } from '~/modules/saving/graphql/schemas/contractType';
 
-export const types = `
-  ${SavingTypes},
-  ${contractTypeTypes}
+import {
+  mutations as transactionMutations,
+  queries as transactionQueries,
+  types as transactionTypes,
+} from '~/modules/saving/graphql/schemas/transaction';
 
+import {
+  mutations as contractMutations,
+  queries as contractQueries,
+  types as contractTypes,
+} from '~/modules/saving/graphql/schemas/contract';
+
+import { TypeExtensions } from '~/apollo/schema/extention';
+
+export const types = `
+  ${TypeExtensions},
+  ${contractTypes},
+  ${SavingTypes},
+  ${contractTypeTypes},
+  ${transactionTypes}
 `;
 
 export const queries = `
   ${SavingQueries},
-  ${contractTypeQueries}
+  ${contractTypeQueries},
+  ${contractQueries},
+  ${transactionQueries},
 `;
 
 export const mutations = `
   ${SavingMutations},
-  ${contractTypeMutations}
+  ${contractTypeMutations},
+  ${contractMutations},
+  ${transactionMutations}
 `;
 
 export default { types, queries, mutations };

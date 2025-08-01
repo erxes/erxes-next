@@ -65,7 +65,7 @@ const commonFields = `
     invoiceId: String,
     payDate: Date,
     description: String,
-    total: FLoat,
+    total: Float,
     isManual: Boolean,
     payment: Float
     currency: String,
@@ -82,4 +82,16 @@ const clientFields = `
     externalBankName: String,
     ownBankNumebr: String,
     ownBankType: String,
+`;
+
+const changeFields = `
+  payment: Float,
+`;
+
+export const mutations = `
+  savingsTransactionsAdd(${commonFields}): SavingTransaction
+  clientSavingsTransactionsAdd(${commonFields}${clientFields}): SavingTransaction
+  savingsTransactionsEdit(_id: String!, ${commonFields}): SavingTransaction
+  savingsTransactionsChange(_id: String!, ${changeFields}): SavingTransaction
+  savingsTransactionsRemove(transactionIds: [String]): [String]
 `;
