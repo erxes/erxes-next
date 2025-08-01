@@ -27,7 +27,13 @@ import {
   mutations as blockMutations,
   queries as blockQueries,
   types as blockTypes,
-} from '~/modules/saving/graphql/schemas/contract';
+} from '~/modules/saving/graphql/schemas/block';
+
+import {
+  mutations as periodLockMutations,
+  queries as periodLockQueries,
+  types as periodLockTypes,
+} from '~/modules/saving/graphql/schemas/periodLock';
 
 export const types = `
   ${TypeExtensions},
@@ -35,7 +41,8 @@ export const types = `
   ${SavingTypes},
   ${contractTypeTypes},
   ${transactionTypes},
-  ${blockTypes}
+  ${blockTypes},
+  ${periodLockTypes}
 `;
 
 export const queries = `
@@ -43,7 +50,8 @@ export const queries = `
   ${contractTypeQueries},
   ${contractQueries},
   ${transactionQueries},
-  ${blockQueries}
+  ${blockQueries},
+  ${periodLockQueries}
 `;
 
 export const mutations = `
@@ -51,7 +59,8 @@ export const mutations = `
   ${contractTypeMutations},
   ${contractMutations},
   ${transactionMutations},
-  ${blockMutations}
+  ${blockMutations},
+  ${periodLockMutations}
 `;
 
 export default { types, queries, mutations };

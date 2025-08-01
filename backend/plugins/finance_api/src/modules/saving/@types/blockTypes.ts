@@ -42,7 +42,4 @@ export interface IBlockQueryParams extends IListParams, ICursorPaginateParams {
 
   sortField?: keyof IBlock;
   sortDirection?: 1 | -1;
-
-  limit?: number;
-  offset?: number;
 }
