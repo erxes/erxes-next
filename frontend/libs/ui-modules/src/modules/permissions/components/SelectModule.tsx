@@ -168,6 +168,7 @@ const SelectModuleFilterView = () => {
 
 const SelectModuleFilterBarItem = () => {
   const [module, setModule] = useQueryState<string>('module');
+  const { resetFilterState } = useFilterContext();
   const [open, setOpen] = useState(false);
 
   return (
@@ -180,6 +181,7 @@ const SelectModuleFilterBarItem = () => {
         value={module as string}
         onValueChange={(value) => {
           setModule(value as string);
+          resetFilterState();
           setOpen(false);
         }}
       >

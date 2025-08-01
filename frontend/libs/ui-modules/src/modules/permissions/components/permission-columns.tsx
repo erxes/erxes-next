@@ -1,33 +1,60 @@
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import {
   Badge,
+  Combobox,
+  Command,
+  Popover,
   RecordTable,
   RecordTableCellDisplay,
   TextOverflowTooltip,
+  useConfirm,
   useQueryState,
 } from 'erxes-ui';
 import { IPermission } from 'ui-modules/modules/permissions/types/permission';
-import { renderingPermissionDetailAtom } from 'ui-modules/modules/permissions/states/renderingPermissionDetail';
-import { useSetAtom } from 'jotai';
+import { usePermissionsRemove } from 'ui-modules/modules/permissions/hooks/usePermissionsMutations';
+import { IconTrash } from '@tabler/icons-react';
 
 export const PermissionsColumnsMoreCell = ({
   cell,
 }: {
   cell: Cell<IPermission, unknown>;
 }) => {
+  const confirmOptions = { confirmationValue: 'delete' };
+  const { confirm } = useConfirm();
+  const { permissionsRemove, loading } = usePermissionsRemove();
   const [, setOpen] = useQueryState('permission_id');
-  const setRenderingPermissionDetail = useSetAtom(
-    renderingPermissionDetailAtom,
-  );
+
   const { _id } = cell.row.original;
+
+  const onRemove = () => {
+    confirm({
+      message: 'Are you sure you want to remove the selected?',
+      options: confirmOptions,
+    }).then(async () => {
+      try {
+        permissionsRemove({
+          variables: { ids: [_id] },
+        });
+      } catch (e) {
+        console.error(e.message);
+      }
+    });
+  };
   return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingPermissionDetail(false);
-      }}
-    />
+    <Popover>
+      <Popover.Trigger asChild>
+        <RecordTable.MoreButton className="w-full h-full" />
+      </Popover.Trigger>
+      <Combobox.Content>
+        <Command shouldFilter={false}>
+          <Command.List>
+            <Command.Item disabled={loading} value="remove" onSelect={onRemove}>
+              <IconTrash /> Delete
+            </Command.Item>
+          </Command.List>
+        </Command>
+      </Combobox.Content>
+    </Popover>
   );
 };
 

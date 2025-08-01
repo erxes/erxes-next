@@ -1,8 +1,9 @@
 import {
+  IconChecks,
   IconPlus,
   IconTool,
+  IconUser,
   IconUserCog,
-  IconUsersGroup,
 } from '@tabler/icons-react';
 import {
   RecordTable,
@@ -29,6 +30,7 @@ import {
   toast,
   Switch,
   useMultiQueryState,
+  useFilterContext,
 } from 'erxes-ui';
 import { Link, useLocation } from 'react-router-dom';
 import { permissionColumns } from 'ui-modules/modules/permissions/components/permission-columns';
@@ -49,11 +51,13 @@ import { usePermissionsForm } from 'ui-modules/modules/permissions/hooks/usePerm
 import {
   usePermissionsAdd,
   usePermissionsFix,
+  usePermissionsRemove,
 } from 'ui-modules/modules/permissions/hooks/usePermissionsMutations';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 import { SelectModule } from 'ui-modules/modules/permissions/components/SelectModule';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SelectActions } from 'ui-modules/modules/permissions/components/SelectActions';
+import { PermissionsCommandBar } from 'ui-modules/modules/permissions/components/permissions-commandbar';
 
 export const PermissionsSidebarItem = ({
   to,
@@ -134,12 +138,22 @@ export const PermissionsSidebarGroup = ({
 };
 
 export const PermissionsRecordTable = ({ module }: { module?: string }) => {
-  const [moduleName] = useQueryState<string>('module');
+  const [{ module: moduleName, action, userId, allowed }] = useMultiQueryState<{
+    module: string;
+    action: string;
+    userId: string;
+    allowed: 'allowed' | 'notAllowed';
+  }>(['module', 'action', 'userId', 'allowed']);
   const selectedModule = moduleName || module;
+  const isAllowed = !allowed || allowed === 'allowed';
+
   const { handleFetchMore, permissions, loading, error, pageInfo } =
     usePermissions({
       variables: {
         module: selectedModule ?? undefined,
+        action: action ?? undefined,
+        userId: userId ?? undefined,
+        allowed: isAllowed ?? undefined,
       },
     });
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
@@ -177,6 +191,7 @@ export const PermissionsRecordTable = ({ module }: { module?: string }) => {
               handleFetchMore={handleFetchMore}
             />
           </RecordTable.Body>
+          <PermissionsCommandBar />
         </RecordTable>
       </RecordTable.CursorProvider>
     </RecordTable.Provider>
@@ -207,6 +222,25 @@ export const PermissionsView = ({
   );
 };
 
+const IsAllowed = () => {
+  const [allowed, setAllowed] = useQueryState<string>('allowed');
+  const { resetFilterState } = useFilterContext();
+
+  const isAllowed = !allowed || allowed === 'allowed';
+
+  const handleToggle = (value: boolean) => {
+    const nextValue = !isAllowed;
+    setAllowed(nextValue ? 'allowed' : 'notAllowed');
+    resetFilterState();
+  };
+
+  return (
+    <div className="flex items-center justify-center ml-auto">
+      <Switch checked={isAllowed} onCheckedChange={handleToggle} />
+    </div>
+  );
+};
+
 export const PermissionsFilter = ({
   module,
   shouldHide = true,
@@ -215,9 +249,10 @@ export const PermissionsFilter = ({
   shouldHide?: boolean;
 }) => {
   const [groupId] = useFilterQueryState<string>('groupId');
-  const [{ module: moduleName }] = useMultiQueryState<{
+  const [{ module: moduleName, userId }] = useMultiQueryState<{
     module: string;
-  }>(['module']);
+    userId: string;
+  }>(['module', 'userId']);
   return (
     <Filter id="permissions-filter">
       <Filter.Bar>
@@ -230,10 +265,22 @@ export const PermissionsFilter = ({
                 <Command.List>
                   <Filter.SearchValueTrigger />
                   {!shouldHide && <SelectModule.FilterItem />}
+
+                  <Filter.Item value="userId">
+                    <IconUser />
+                    Choose users
+                  </Filter.Item>
+
+                  <Command.Item className="flex items-center gap-1">
+                    <IconChecks />
+                    Granted:
+                    <IsAllowed />
+                  </Command.Item>
                 </Command.List>
               </Command>
             </Filter.View>
             {!shouldHide && <SelectModule.FilterView />}
+            <SelectMember.FilterView queryKey="userId" />
           </Combobox.Content>
         </Filter.Popover>
         <Filter.Dialog>
@@ -241,7 +288,9 @@ export const PermissionsFilter = ({
         </Filter.Dialog>
         <Filter.SearchValueBarItem />
         {!shouldHide && !!moduleName && <SelectModule.BarItem />}
+        <SelectActions.BarItem />
         {!!groupId && <SelectUsersGroup.FilterBar />}
+        {!!userId && <SelectMember.FilterBar queryKey="userId" iconOnly />}
         <PermissionsTotalCount module={module ? module : moduleName} />
       </Filter.Bar>
     </Filter>
@@ -253,9 +302,18 @@ export const PermissionsTotalCount = ({
 }: {
   module?: string | null;
 }) => {
+  const [{ action, userId, allowed }] = useMultiQueryState<{
+    action: string;
+    userId: string;
+    allowed: 'allowed' | 'notAllowed';
+  }>(['action', 'userId', 'allowed']);
+  const isAllowed = !allowed || allowed === 'allowed';
   const { totalCount, loading } = usePermissions({
     variables: {
       module: module ?? undefined,
+      action: action ?? undefined,
+      userId: userId ?? undefined,
+      allowed: isAllowed ?? undefined,
     },
   });
   return (
@@ -433,6 +491,7 @@ export const PermissionForm = () => {
                       value={field.value}
                       mode="multiple"
                       onValueChange={field.onChange}
+                      selectedModule={module}
                     />
                     <Form.Message />
                   </Form.Item>

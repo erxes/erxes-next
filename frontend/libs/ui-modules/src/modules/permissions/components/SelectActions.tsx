@@ -1,4 +1,14 @@
-import { cn, Combobox, Command, Form, Popover, useQueryState } from 'erxes-ui';
+import { IconDirection } from '@tabler/icons-react';
+import {
+  cn,
+  Combobox,
+  Command,
+  Filter,
+  Form,
+  Popover,
+  useFilterContext,
+  useQueryState,
+} from 'erxes-ui';
 import React, { createContext, useContext, useState } from 'react';
 import { ActionsInline } from 'ui-modules/modules/permissions/components/ActionsInline';
 import { usePermissionsActions } from 'ui-modules/modules/permissions/hooks/usePermissions';
@@ -79,7 +89,7 @@ export const SelectActionsProvider = ({
   );
 };
 
-const SelectActionsValue = () => {
+const SelectActionsValue = ({ module }: { module?: string }) => {
   const { actions, actionsNames, setActions } = useSelectActionsContext();
 
   return (
@@ -87,19 +97,23 @@ const SelectActionsValue = () => {
       actions={actions as IPermissionAction[]}
       actionsNames={actionsNames}
       updateActions={setActions}
+      module={module}
     />
   );
 };
 
-export const SelectActionsContent = () => {
+export const SelectActionsContent = ({
+  selectedModule,
+}: {
+  selectedModule?: string;
+}) => {
   const { actionsNames, onSelect } = useSelectActionsContext();
-  const [module] = useQueryState<string>('module');
 
   const { actions, loading, error } = usePermissionsActions();
   const actionsData =
     actions &&
     actions?.length > 0 &&
-    actions.filter((a) => a.module === module);
+    actions.filter((a) => a.module === selectedModule);
 
   return (
     <Command shouldFilter={false}>
@@ -126,9 +140,11 @@ export const SelectActionsContent = () => {
 
 export const SelectActionsFormItem = ({
   className,
+  selectedModule,
   ...props
 }: Omit<React.ComponentProps<typeof SelectActionsProvider>, 'children'> & {
   className?: string;
+  selectedModule?: string;
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -148,10 +164,47 @@ export const SelectActionsFormItem = ({
         </Form.Control>
 
         <Combobox.Content>
-          <SelectActionsContent />
+          <SelectActionsContent selectedModule={selectedModule} />
         </Combobox.Content>
       </Popover>
     </SelectActionsProvider>
+  );
+};
+
+const SelectActionsFilterBarItem = () => {
+  const [module] = useQueryState<string>('module');
+  const [action, setAction] = useQueryState<string>('action');
+  const [open, setOpen] = useState(false);
+
+  if (!module) return null;
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarName>
+        <IconDirection />
+        Action
+      </Filter.BarName>
+      <SelectActionsProvider
+        mode="single"
+        value={action as string}
+        onValueChange={(value) => {
+          setAction(value as string);
+          setOpen(false);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Filter.BarButton filterKey="action" className="rounded-l">
+              <SelectActionsValue module={module} />
+            </Filter.BarButton>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <SelectActionsContent selectedModule={module} />
+          </Combobox.Content>
+        </Popover>
+      </SelectActionsProvider>
+      <Filter.BarClose filterKey="action" />
+    </Filter.BarItem>
   );
 };
 
@@ -160,4 +213,5 @@ export const SelectActions = {
   Value: SelectActionsValue,
   Content: SelectActionsContent,
   FormItem: SelectActionsFormItem,
+  BarItem: SelectActionsFilterBarItem,
 };

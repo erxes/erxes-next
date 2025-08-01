@@ -1,4 +1,4 @@
-import { Skeleton, TextOverflowTooltip, Tooltip } from 'erxes-ui';
+import { Skeleton, TextOverflowTooltip, Tooltip, useQueryState } from 'erxes-ui';
 import { useEffect, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { usePermissionsActions } from 'ui-modules/modules/permissions/hooks/usePermissions';
@@ -10,6 +10,7 @@ export interface IActionsInlineContext {
   actionsNames?: string[];
   placeholder?: string;
   updateActions?: (actions: IPermissionAction[]) => void;
+  module?: string;
 }
 
 export const ActionsInlineContext = createContext<IActionsInlineContext | null>(
@@ -31,11 +32,13 @@ export const ActionsInline = ({
   actionsNames,
   placeholder,
   updateActions,
+  module,
 }: {
   actions: IPermissionAction[];
   actionsNames?: string[];
   placeholder?: string;
   updateActions?: (actions: IPermissionAction[]) => void;
+  module?: string;
 }) => {
   return (
     <ActionsInlineProvider
@@ -43,6 +46,7 @@ export const ActionsInline = ({
       actionsNames={actionsNames}
       placeholder={placeholder}
       updateActions={updateActions}
+      module={module}
     >
       <ActionsInlineTitle />
     </ActionsInlineProvider>
@@ -55,14 +59,21 @@ export const ActionsInlineProvider = ({
   actionsNames,
   placeholder,
   updateActions,
+  module,
 }: {
   children?: React.ReactNode;
   actions?: IPermissionAction[];
   actionsNames?: string[];
   placeholder?: string;
   updateActions?: (actions: IPermissionAction[]) => void;
+  module?: string;
 }) => {
   const [_actions, _setActions] = useState<IPermissionAction[]>(actions || []);
+    const [, setAction] = useQueryState<string>('action');
+  useEffect(() => {
+    setAction(null);
+    updateActions?.([]);
+  }, [module]);
 
   return (
     <ActionsInlineContext.Provider
@@ -72,6 +83,7 @@ export const ActionsInlineProvider = ({
         actionsNames: actionsNames || [],
         placeholder: placeholder || 'Select actions',
         updateActions: updateActions || _setActions,
+        module: module || '',
       }}
     >
       {children}
@@ -94,11 +106,15 @@ export const ActionInlineEffectComponent = ({
     list && list.find((action) => action.name === actionName);
 
   useEffect(() => {
-    const newActions = [...actions].filter((a) =>
-      actionsNames?.includes(a.name),
+    if (!actionsDetail) return;
+
+    const newActions = [...actions].filter(
+      (a) => actionsNames?.includes(a.name) && a.name !== actionsDetail.name,
     );
 
-    if (actionsDetail) {
+    const alreadyExists = actions.some((a) => a.name === actionsDetail.name);
+
+    if (!alreadyExists) {
       updateActions?.([...newActions, actionsDetail]);
     }
 
