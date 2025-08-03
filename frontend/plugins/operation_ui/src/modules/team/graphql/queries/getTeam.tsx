@@ -7,9 +7,9 @@ export const GET_TEAM = gql`
       name
       icon
       description
-      memberIds
 
       taskCount
+      memberCount
       createdAt
     }
   }

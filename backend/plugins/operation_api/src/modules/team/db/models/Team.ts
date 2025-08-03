@@ -1,5 +1,10 @@
 import { Model } from 'mongoose';
-import { ITeam, ITeamDocument } from '@/team/@types/team';
+import {
+  ITeam,
+  ITeamDocument,
+  ITeamMember,
+  TeamMember,
+} from '@/team/@types/team';
 import { ITeamFilter } from '@/team/@types/team';
 import { teamSchema } from '@/team/db/definitions/team';
 import { IModels } from '~/connectionResolvers';
@@ -8,7 +13,15 @@ export interface ITeamModel extends Model<ITeamDocument> {
   getTeam(_id: string): Promise<ITeamDocument>;
   getTeams(params: ITeamFilter): Promise<ITeamDocument[]>;
   getTeamsByMember(memberId: string): Promise<ITeamDocument[]>;
-  createTeam(doc: ITeam): Promise<ITeamDocument>;
+  createTeam({
+    teamDoc,
+    memberIds,
+    adminId,
+  }: {
+    teamDoc: ITeam;
+    memberIds: string[];
+    adminId: string;
+  }): Promise<ITeamDocument>;
   updateTeam(_id: string, doc: ITeam): Promise<ITeamDocument>;
   removeTeam(teamId: string[]): Promise<{ ok: number }>;
 }
@@ -48,15 +61,32 @@ export const loadTeamClass = (models: IModels) => {
         query.icon = params.icon;
       }
 
-      if (params.memberIds) {
-        query.memberIds = params.memberIds;
-      }
-
       return models.Team.find(query).lean();
     }
 
-    public static async createTeam(doc: ITeam): Promise<ITeamDocument> {
-      const team = await models.Team.insertOne(doc);
+    public static async createTeam({
+      teamDoc,
+      memberIds,
+      adminId,
+    }: {
+      teamDoc: ITeam;
+      memberIds: string[];
+      adminId: string;
+    }): Promise<ITeamDocument> {
+      const roles: ITeamMember[] = [];
+
+      const team = await models.Team.insertOne(teamDoc);
+
+      roles.push(
+        { memberId: adminId, teamId: team._id, role: TeamMember.ADMIN },
+        ...memberIds.map((memberId) => ({
+          memberId,
+          teamId: team._id,
+          role: TeamMember.MEMBER,
+        })),
+      );
+
+      await models.TeamMember.createTeamMembers(roles);
 
       await models.Status.createDefaultStatuses(team._id);
 

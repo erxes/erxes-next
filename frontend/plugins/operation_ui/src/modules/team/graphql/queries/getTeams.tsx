@@ -7,10 +7,10 @@ export const GET_TEAMS = gql`
       name
       icon
       description
-      memberIds
-
-      taskCount
       createdAt
+
+      memberCount
+      taskCount
     }
   }
 `;

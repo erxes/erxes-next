@@ -2,13 +2,13 @@ export const types = `
     type Team {
         _id: String
         icon: String
-        memberIds: [String]
         name: String
         description: String
         createdAt: Date
         updatedAt: Date
 
         taskCount: Int
+        memberCount: Int
     }
 `;
 

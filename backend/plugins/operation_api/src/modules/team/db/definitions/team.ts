@@ -16,3 +16,11 @@ export const teamSchema = schemaWrapper(
     },
   ),
 );
+
+export const teamMembers = schemaWrapper(
+  new Schema({
+    memberId: { type: String, label: 'Member ID' },
+    teamId: { type: String, label: 'Team ID' },
+    role: { type: String, label: 'Role' },
+  }),
+);

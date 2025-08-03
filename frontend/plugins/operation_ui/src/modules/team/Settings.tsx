@@ -7,6 +7,8 @@ import { Outlet } from 'react-router-dom';
 
 import { TeamsSettingsPage } from '~/pages/TeamSettingsIndexPage';
 import { TeamDetailPage } from '~/pages/TeamDetailPage';
+import { OperationPaths } from '~/types/paths';
+import { TeamMembersPage } from '~/pages/TeamMembersPage';
 
 const TeamSettings = () => {
   return (
@@ -28,7 +30,14 @@ const TeamSettings = () => {
           }
         >
           <Route path="/" element={<TeamsSettingsPage />} />
-          <Route path="/details/:id" element={<TeamDetailPage />} />
+          <Route
+            path={OperationPaths.TeamDetail}
+            element={<TeamDetailPage />}
+          />
+          <Route
+            path={OperationPaths.TeamMembers}
+            element={<TeamMembersPage />}
+          />
         </Route>
       </Routes>
     </Suspense>

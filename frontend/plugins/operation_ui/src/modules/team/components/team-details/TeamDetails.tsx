@@ -1,5 +1,9 @@
 import { useGetTeam } from '@/team/hooks/useGetTeam';
-import { UpdateTeamForm } from './UpdateTeamForm';
+import { MemberSection } from '@/team/components/team-details/MemberSection';
+import { UpdateTeamForm } from '@/team/components/team-details/UpdateTeamForm';
+import { EstimateSection } from '@/team/components/team-details/EstimateSection';
+import { StatusSection } from '@/team/components/team-details/SatusSection';
+import { CycleSection } from '@/team/components/team-details/CycleSection';
 
 export const TeamDetails = () => {
   const { team, loading, refetch } = useGetTeam();
@@ -15,6 +19,10 @@ export const TeamDetails = () => {
           {team && <UpdateTeamForm team={team} refetch={refetch} />}
         </section>
       </div>
+      <MemberSection team={team} />
+      <EstimateSection team={team} />
+      <StatusSection team={team} />
+      <CycleSection />
     </div>
   );
 };

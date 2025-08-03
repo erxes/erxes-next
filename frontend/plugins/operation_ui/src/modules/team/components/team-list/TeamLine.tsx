@@ -27,7 +27,7 @@ export const TeamLine = ({ team }: { team: ITeam }) => {
       </div>
 
       <div className="w-[20%] sm:w-[20%] xl:w-[20%] pl-2.5">
-        {team.memberIds.length}
+        {team.memberCount}
       </div>
 
       <div className="w-[20%] sm:w-[15%] xl:w-[15%] pl-2.5">

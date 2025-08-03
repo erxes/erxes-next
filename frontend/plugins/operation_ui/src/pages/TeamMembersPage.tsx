@@ -1,11 +1,10 @@
-import { Breadcrumb } from 'erxes-ui';
+import { Breadcrumb, Button } from 'erxes-ui';
 import { IconArrowLeft } from '@tabler/icons-react';
 
-import { TeamDetails } from '@/team/components/team-details/TeamDetails';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'erxes-ui';
+import { Members } from '@/team/components/members/Members';
 
-export const TeamDetailPage = () => {
+export const TeamMembersPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -21,18 +20,14 @@ export const TeamDetailPage = () => {
                   onClick={() => navigate(-1)}
                 >
                   <IconArrowLeft size={16} className="stroke-foreground" />
-                  Teams
+                  Team settings
                 </Button>
               </Breadcrumb.Link>
             </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>
       </div>
-      <section className="mx-auto max-w-2xl w-full relative">
-        <div className="flex items-center">
-          <TeamDetails />
-        </div>
-      </section>
+      <Members />
     </div>
   );
 };
