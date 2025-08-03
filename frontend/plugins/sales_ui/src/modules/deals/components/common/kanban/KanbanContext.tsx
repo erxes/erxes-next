@@ -50,10 +50,6 @@ const KanbanContext = createContext<KanbanContextProps>({
 });
 
 export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
-  // const { isOver, setNodeRef } = useDroppable({
-  //   id,
-  // });
-
   const {
     setNodeRef,
     attributes,
@@ -71,7 +67,7 @@ export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
   return (
     <div
       className={cn(
-        'w-72 h-full flex-none p-2 shadow-xs bg-gradient-to-b from-[#e0e0e0] to-[#e0e7ff50] rounded-md transition-all',
+        'w-72 flex-none bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-md transition-all h-full flex flex-col overflow-hidden',
         isDragging ? 'ring-primary' : 'ring-transparent',
         className,
       )}
@@ -86,17 +82,13 @@ export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
 };
 
 export const KanbanCard = ({
-  name,
   children,
   className,
-  onClick,
   loading,
-  columnId,
   featureId,
+  card,
 }: KanbanCardProps & {
-  onClick?: () => void;
   loading?: boolean;
-  columnId: string;
   featureId: string;
 }) => {
   const {
@@ -125,26 +117,28 @@ export const KanbanCard = ({
       >
         <Card
           className={cn(
-            'cursor-grab gap-4 rounded-md shadow-sm',
+            'cursor-grab',
             isDragging && 'pointer-events-none cursor-grabbing opacity-30',
             className,
           )}
+          card={card}
           loading={loading}
         >
-          {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+          {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
         </Card>
       </div>
       {activeCardId === featureId && (
         <t.In>
           <Card
             className={cn(
-              'cursor-grab gap-4 rounded-md shadow-sm ring-2 ring-primary',
+              'cursor-grab ring-2 ring-primary',
               isDragging && 'cursor-grabbing',
               className,
             )}
+            card={card}
             loading={loading}
           >
-            {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+            {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
           </Card>
         </t.In>
       )}
@@ -177,16 +171,10 @@ export const KanbanCards = <T extends IDeal = IDeal>({
   return (
     <div
       ref={setNodeRef}
-      className="overflow-auto h-full"
-      style={{
-        height: 'calc(100vh - 180px)',
-      }}
+      className="overflow-auto flex-auto flex flex-col gap-2 px-2 pb-3"
     >
       <SortableContext items={items}>
-        <div
-          className={cn('flex flex-grow flex-col gap-3', className)}
-          {...props}
-        >
+        <div className={cn('space-y-2', className)} {...props}>
           {filteredData.map(children)}
         </div>
       </SortableContext>
@@ -214,10 +202,13 @@ export const KanbanProvider = <
   ...props
 }: KanbanProviderProps<T, C>) => {
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
-  const [activeStageId, setActiveStageId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(MouseSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5, // prevent unintended drags
+      },
+    }),
     useSensor(TouchSensor),
     useSensor(KeyboardSensor),
   );
@@ -241,13 +232,11 @@ export const KanbanProvider = <
     if (!over) {
       return;
     }
-    console.log('handleDragOver', active, over);
+
     const { type: activeType, id: activeId } = getTypeAndId(
       active.id as string,
     );
     const { type: overType, id: overId } = getTypeAndId(over.id as string);
-
-    console.log('handleDragOver', active, over, columns);
 
     // COLUMN DRAGGING
     if (activeType === 'column' && overType === 'column') {
@@ -323,8 +312,6 @@ export const KanbanProvider = <
     );
     const { type: overType, id: overId } = getTypeAndId(over.id as string);
 
-    // let newData = [...data];
-    console.log('handleDragEnd', active, over, columns);
     // COLUMN DRAG
     if (activeType === 'column' && overType === 'column') {
       const activeColumnIndex = columns.findIndex(
@@ -449,7 +436,7 @@ export const KanbanProvider = <
       return `Cancelled dragging the card "${item?.name}"`;
     },
   };
-  console.log('announcements', columns, data, activeCardId);
+
   return (
     <KanbanContext.Provider value={{ columns, data, activeCardId }}>
       <DndContext
@@ -462,7 +449,12 @@ export const KanbanProvider = <
         {...props}
       >
         <SortableContext items={columns.map((c) => `column-${c._id}`)}>
-          <div className={cn('grid size-full grid-flow-col gap-4', className)}>
+          <div
+            className={cn(
+              'flex gap-3 p-4 pb-0 h-full select-none w-max',
+              className,
+            )}
+          >
             {columns.map((column) => children(column))}
           </div>
         </SortableContext>

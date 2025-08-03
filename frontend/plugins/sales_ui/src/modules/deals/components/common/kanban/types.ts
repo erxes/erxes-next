@@ -46,11 +46,9 @@ export type KanbanBoardProps = {
 export type KanbanCardProps = {
   children?: ReactNode;
   className?: string;
-  name?: string;
-  onClick?: () => void;
   loading?: boolean;
-  columnId: string;
   featureId: string;
+  card: IDeal;
 };
 
 export type KanbanCardsProps<T extends IDeal = IDeal> =

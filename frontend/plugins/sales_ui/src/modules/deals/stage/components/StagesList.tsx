@@ -1,21 +1,63 @@
+import {
+  KanbanBoard,
+  KanbanCard,
+  KanbanCards,
+  KanbanHeader,
+  KanbanProvider,
+} from '@/deals/components/common/kanban/KanbanContext';
 import { Skeleton, useQueryState } from 'erxes-ui';
+import { useEffect, useState } from 'react';
 
-import DraggableGroup from '@/deals/components/common/Droppable';
 import { IStage } from '@/deals/types/stages';
 import { InView } from 'react-intersection-observer';
-import { MultipleContainers } from '../../components/common/sortable/MultipleContainers';
 import { Stage } from './Stage';
+import { StageHeader } from './StageHeader';
 import { StagesLoading } from '@/deals/components/loading/StagesLoading';
+import { useDeals } from '@/deals/cards/hooks/useDeals';
+import { useInView } from 'react-intersection-observer';
 import { useStages } from '@/deals/stage/hooks/useStages';
 
 export const StagesList = () => {
   const [pipelineId] = useQueryState<string>('pipelineId');
+
+  const { ref: triggerRef, inView: isTriggerInView } = useInView({
+    triggerOnce: true,
+  });
+
+  const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({
+    rootMargin: '200px',
+    threshold: 0,
+  });
 
   const { stages, loading: stagesLoading } = useStages({
     variables: {
       pipelineId,
     },
   });
+
+  const {
+    list,
+    loading: dealsLoading,
+    handleFetchMore,
+    hasNextPage,
+  } = useDeals({
+    variables: {
+      pipelineId,
+    },
+    // skip: !isTriggerInView,
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const [features, setFeatures] = useState(list || []);
+  const [columns, setColumns] = useState(stages || []);
+
+  useEffect(() => {
+    setFeatures(list || []);
+  }, [list, pipelineId]);
+
+  useEffect(() => {
+    setColumns(stages || []);
+  }, [stages, pipelineId]);
 
   if (stagesLoading) {
     return <StagesLoading />;
@@ -31,7 +73,37 @@ export const StagesList = () => {
   // );
 
   return (
-    <DraggableGroup direction="horizontal" items={stages || ([] as IStage[])} />
+    <div className="w-full h-full overflow-x-auto">
+      <KanbanProvider
+        columns={columns}
+        data={features}
+        onDataChange={setFeatures}
+        onColumnsChange={setColumns}
+      >
+        {(column) => (
+          <KanbanBoard _id={column._id} key={column._id}>
+            <StageHeader stage={column} />
+            <KanbanCards id={column._id} loading={false}>
+              {(feature: (typeof features)[number]) => (
+                <KanbanCard
+                  key={feature._id}
+                  card={feature}
+                  featureId={feature._id}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-col gap-1">
+                      <p className="m-0 flex-1 font-medium text-sm">
+                        {feature.name}
+                      </p>
+                    </div>
+                  </div>
+                </KanbanCard>
+              )}
+            </KanbanCards>
+          </KanbanBoard>
+        )}
+      </KanbanProvider>
+    </div>
   );
 
   // return (
