@@ -9,23 +9,7 @@ import type {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { IStage } from '@/deals/types/stages';
-// import { IUser } from 'ui-modules';
 import { IDeal } from '@/deals/types/deals';
-
-// export type KanbanItemProps = {
-//   id: string;
-//   name: string;
-//   column: string;
-//   startDate: Date;
-//   closeDate: Date;
-//   createdAt: Date;
-//   assignedUsers: IUser[];
-// } & Record<string, unknown>;
-
-// export type KanbanColumnProps = {
-//   id: string;
-//   name: string;
-// } & Record<string, unknown>;
 
 export type KanbanContextProps<
   T extends IDeal = IDeal,
@@ -34,6 +18,7 @@ export type KanbanContextProps<
   columns: C[];
   data: T[];
   activeCardId: string | null;
+  onDataChange?: any;
 };
 
 export type KanbanBoardProps = {
@@ -53,7 +38,7 @@ export type KanbanCardProps = {
 
 export type KanbanCardsProps<T extends IDeal = IDeal> =
   Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'id'> & {
-    children: (item: T) => ReactNode;
+    children: (item: IDeal) => ReactNode;
     id: string;
   };
 

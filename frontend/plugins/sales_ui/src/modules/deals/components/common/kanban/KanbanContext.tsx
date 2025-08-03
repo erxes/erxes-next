@@ -11,14 +11,12 @@ import {
   MouseSensor,
   TouchSensor,
   closestCenter,
-  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import {
   KanbanBoardProps,
   KanbanCardProps,
-  KanbanCardsProps,
   KanbanContextProps,
   KanbanHeaderProps,
   KanbanProviderProps,
@@ -28,7 +26,6 @@ import { createContext, useContext, useState } from 'react';
 
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
-import { CardsLoading } from '../../loading/CardsLoading';
 import { IDeal } from '@/deals/types/deals';
 import { IStage } from '@/deals/types/stages';
 import { cn } from 'erxes-ui';
@@ -43,10 +40,12 @@ export const getTypeAndId = (id: string) => {
   return { type, id: rest.join('-') };
 };
 
-const KanbanContext = createContext<KanbanContextProps>({
+export const KanbanContext = createContext<KanbanContextProps>({
   columns: [],
   data: [],
   activeCardId: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onDataChange: () => {},
 });
 
 export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
@@ -84,11 +83,9 @@ export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
 export const KanbanCard = ({
   children,
   className,
-  loading,
   featureId,
   card,
 }: KanbanCardProps & {
-  loading?: boolean;
   featureId: string;
 }) => {
   const {
@@ -122,7 +119,6 @@ export const KanbanCard = ({
             className,
           )}
           card={card}
-          loading={loading}
         >
           {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
         </Card>
@@ -136,49 +132,12 @@ export const KanbanCard = ({
               className,
             )}
             card={card}
-            loading={loading}
           >
             {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
           </Card>
         </t.In>
       )}
     </>
-  );
-};
-
-export const KanbanCards = <T extends IDeal = IDeal>({
-  children,
-  className,
-  loading,
-  ...props
-}: KanbanCardsProps<T> & { loading: boolean }) => {
-  const { data } = useContext(KanbanContext) as KanbanContextProps<T>;
-
-  const { id } = props; // stage id
-
-  const { setNodeRef } = useDroppable({
-    id: `column-${id}`, // droppable id matching sortable column id
-  });
-
-  const filteredData = data.filter((item) => item.stage?._id === props.id);
-
-  const items = filteredData.map((item) => `card-${item._id}`);
-
-  if (loading) {
-    return <CardsLoading />;
-  }
-
-  return (
-    <div
-      ref={setNodeRef}
-      className="overflow-auto flex-auto flex flex-col gap-2 px-2 pb-3"
-    >
-      <SortableContext items={items}>
-        <div className={cn('space-y-2', className)} {...props}>
-          {filteredData.map(children)}
-        </div>
-      </SortableContext>
-    </div>
   );
 };
 
@@ -438,7 +397,9 @@ export const KanbanProvider = <
   };
 
   return (
-    <KanbanContext.Provider value={{ columns, data, activeCardId }}>
+    <KanbanContext.Provider
+      value={{ columns, data, activeCardId, onDataChange }}
+    >
       <DndContext
         accessibility={{ announcements }}
         collisionDetection={closestCenter}
