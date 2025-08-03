@@ -55,7 +55,7 @@ const ChecklistForm = () => {
               <Form.Item>
                 <Form.Label>NAME</Form.Label>
                 <Form.Control>
-                  <Input {...field} />
+                  <Input {...field} className="focus-visible:!outline-none" />
                 </Form.Control>
                 <Form.Message />
               </Form.Item>
