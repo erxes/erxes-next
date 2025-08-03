@@ -28,6 +28,8 @@ const USER_DETAIL_SCHEMA = z.object({
   }),
   positionIds: z.string().array().optional(),
   links: z.any().optional().nullable(),
+  branchIds: z.string().array().optional(),
+  departmentIds: z.string().array().optional(),
 });
 
 const USER_SUBMIT_SCHEMA = z.object({

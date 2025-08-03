@@ -51,6 +51,7 @@ export function useBranchAdd(
         console.log('error', e);
       }
     },
+    refetchQueries: ['Branches'],
   });
 
   return {
@@ -101,7 +102,7 @@ export function useRemoveBranch() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_BRANCHES, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: ['branchesMain'],
+    refetchQueries: ['Branches'],
   });
 
   return {
@@ -113,23 +114,40 @@ export function useRemoveBranch() {
 
 export function useBranchInlineEdit() {
   const [_branchesEdit, { loading }] = useMutation(EDIT_BRANCH);
+  const { toast } = useToast();
 
   const branchesEdit = (
     operationVariables: OperationVariables,
     fields: string[],
   ) => {
-    const variables = operationVariables?.variables || {};
+    const { variables } = operationVariables || {};
+
     const fieldsToUpdate: Record<string, () => any> = {};
     fields.forEach((field) => {
       fieldsToUpdate[field] = () => variables[field];
     });
     return _branchesEdit({
       ...operationVariables,
-      variables,
-      update: (cache, { data: { branchesEdit } }) => {
+      update: (cache, { data }) => {
+        if (!data?.branchesEdit) return;
+        const { branchesEdit } = data;
         cache.modify({
           id: cache.identify(branchesEdit),
           fields: fieldsToUpdate,
+        });
+      },
+      onCompleted: (data) => {
+        if (data?.branchesEdit) {
+          toast({
+            title: 'Branch updated successfully!',
+          });
+        }
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
         });
       },
     });

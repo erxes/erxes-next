@@ -5,11 +5,11 @@ import { ITeamDocument } from '@/team/@types/team';
 
 import mongoose from 'mongoose';
 
-import { loadTaskClass, ITaskModel } from '@/task/db/models/task';
-import { loadTeamClass, ITeamModel } from '@/team/db/models/team';
-import { loadStatusClass, IStatusModel } from '@/status/db/models/status';
+import { loadTaskClass, ITaskModel } from '@/task/db/models/Task';
+import { loadTeamClass, ITeamModel } from '@/team/db/models/Team';
+import { loadStatusClass, IStatusModel } from '@/status/db/models/Status';
 import { IStatusDocument } from '@/status/@types/status';
-import { loadProjectClass, IProjectModel } from '@/project/db/models/project';
+import { loadProjectClass, IProjectModel } from '@/project/db/models/Project';
 import { IProjectDocument } from '@/project/@types/project';
 
 export interface IModels {
