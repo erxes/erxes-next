@@ -3,6 +3,7 @@ import {
   Spinner,
   DatePicker,
   useQueryState,
+  RecordTable,
 } from 'erxes-ui';
 import { memo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,6 +14,7 @@ import { useAdjustInventoryDetail } from '../hooks/useAdjustInventoryDetail';
 import { useAdjustInventoryDetails } from '../hooks/useAdjustInventoryDetails';
 import { ADJ_INV_STATUSES } from '~/modules/adjustments/inventories/types/AdjustInventory';
 import { useAdjustInventoryRun } from '../hooks/useAdjustInventoryRun';
+import { adjustDetailTableColumns } from './AdjustInventoryDetailColumns';
 
 export const AdjustInventoryDetail = () => {
   // const parentId = useParams().parentId;
@@ -23,7 +25,7 @@ export const AdjustInventoryDetail = () => {
     skip: !id,
   });
 
-  const { adjustInvDetails, adjustInvDetailsCount, loading: detailsLoading } = useAdjustInventoryDetails({
+  const { adjustInventoryDetails, adjustInventoryDetailsCount, loading: detailsLoading, handleFetchMore } = useAdjustInventoryDetails({
     variables: { _id: id },
     skip: !id,
   });
@@ -88,35 +90,56 @@ export const AdjustInventoryDetail = () => {
         return null;
     }
   }
-
+  console.log(adjustInventoryDetails, 'kkkkkkkkkkkkkk')
   return (
-    <div className="m-3 flex-auto overflow-auto">
-      <h3 className="text-lg font-bold">
-        Inventory Adjustment Detail
-      </h3>
-      <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-accent-foreground">Begin Date:</span>
-          <span className="text-primary font-bold">
-            <DatePicker
-              value={adjustInventory?.beginDate}
-              onChange={() => null}
-              className="h-8 flex w-full"
-            />
-          </span>
+    <>
+      <div className="m-3 flex-auto">
+        <h3 className="text-lg font-bold">
+          Inventory Adjustment Detail
+        </h3>
+        <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-accent-foreground">Begin Date:</span>
+            <span className="text-primary font-bold">
+              <DatePicker
+                value={adjustInventory?.beginDate}
+                onChange={() => null}
+                className="h-8 flex w-full"
+              />
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-accent-foreground">Date:</span>
+            <span className="text-primary font-bold">
+              <DatePicker
+                value={adjustInventory?.date}
+                onChange={() => null}
+                className="h-8 flex w-full"
+              />
+            </span>
+          </div>
+          {renderEvents()}
+
         </div>
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-accent-foreground">Date:</span>
-          <span className="text-primary font-bold">
-            <DatePicker
-              value={adjustInventory?.date}
-              onChange={() => null}
-              className="h-8 flex w-full"
-            />
-          </span>
-        </div>
-        {renderEvents()}
       </div>
-    </div>
+      <RecordTable.Provider
+        columns={adjustDetailTableColumns}
+        data={adjustInventoryDetails || []}
+        stickyColumns={[]}
+        className='m-3'
+      >
+        <RecordTable.Scroll>
+          <RecordTable>
+            <RecordTable.Header />
+            <RecordTable.Body>
+              <RecordTable.RowList />
+              {!detailsLoading && adjustInventoryDetailsCount > adjustInventoryDetails?.length && (
+                <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
+              )}
+            </RecordTable.Body>
+          </RecordTable>
+        </RecordTable.Scroll>
+      </RecordTable.Provider>
+    </>
   );
 };

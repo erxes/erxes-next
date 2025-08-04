@@ -107,12 +107,14 @@ const adjustInventoryMutations = {
       status: { $in: TR_STATUSES.ACTIVE },
     }
 
-    if (currentDate !== beginDate) {
+    if (currentDate < beginDate) {
+      console.log('xxxxxxxxxxxxx', currentDate, beginDate)
       await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
     }
 
     // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
     while (currentDate < date) {
+      console.log('dddddddddddddddd', currentDate, date)
       const nextDate = getTomorrow(currentDate);
 
       try {

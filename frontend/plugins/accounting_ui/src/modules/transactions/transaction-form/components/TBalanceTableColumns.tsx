@@ -60,13 +60,12 @@ const DebitCell = ({ getValue, row }: any) => {
 
   return (
     <RecordTableCellDisplay>
-      {side === TR_SIDES.DEBIT ? amount.toLocaleString() : 0}
-      {/* <CurrencyFormatedDisplay
+      <CurrencyFormatedDisplay
         currencyValue={{
           currencyCode: CurrencyCode.MNT,
-          amountMicros: side === TR_SIDES.DEBIT ? amount * 1000000 : 0,
+          amountMicros: side === TR_SIDES.DEBIT ? amount : 0,
         }}
-      /> */}
+      />
     </RecordTableCellDisplay>
   );
 };
@@ -77,14 +76,13 @@ const CreditCell = ({ getValue, row }: any) => {
 
   return (
     <RecordTableCellDisplay>
-      {side === TR_SIDES.CREDIT ? amount : 0}
-      {/* <CurrencyFormatedDisplay
+      <CurrencyFormatedDisplay
         currencyValue={{
           currencyCode: CurrencyCode.MNT,
-          amountMicros: side === TR_SIDES.CREDIT ? amount * 1000000 : 0,
+          amountMicros: side === TR_SIDES.CREDIT ? amount : 0,
         }}
-      /> */}
-    </RecordTableCellDisplay> 
+      />
+    </RecordTableCellDisplay>
   );
 };
 
@@ -94,7 +92,7 @@ const BranchCell = ({ row }: any) => {
   return (
     <RecordTableCellDisplay>
       {`${branch?.code ? `${branch.code} - ` : ''}${branch?.title ?? ''}`}
-    </RecordTableCellDisplay> 
+    </RecordTableCellDisplay>
   );
 };
 

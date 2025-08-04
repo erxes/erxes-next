@@ -37,6 +37,30 @@ export const adjustInvDetailFields = `
   error
   warning
   byDate
+
+  account {
+    _id
+    code
+    name
+    currency
+    kind
+    journal
+  }
+  branch {
+    _id
+    code
+    title
+  }
+  department {
+    _id
+    code
+    title
+  }
+  product {
+    _id
+    code
+    name
+  }
 `;
 
 const adjustInvFilterParamDefs = `

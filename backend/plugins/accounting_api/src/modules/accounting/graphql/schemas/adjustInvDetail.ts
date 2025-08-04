@@ -19,6 +19,11 @@ export const types = `
     error: String
     warning: String
     byDate: JSON
+
+    product: Product
+    account: Account
+    branch: Branch
+    department: Department
   }
 
   type AdjustInventory @key(fields: "_id") @cacheControl(maxAge: 3){
