@@ -17,14 +17,15 @@ export const useProducts = (options?: QueryHookOptions) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: PRODUCTS_CURSOR_SESSION_KEY,
   });
-  const [{ searchValue, tags, created, updated, lastSeen }] =
+  const [{ searchValue, tags, created, updated, lastSeen, brand }] =
     useMultiQueryState<{
       searchValue: string;
       tags: string[];
       created: string;
       updated: string;
       lastSeen: string;
-    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
+      brand: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen', 'brand']);
 
   const productsQueryVariables = {
     limit: PRODUCTS_PER_PAGE,
@@ -33,7 +34,8 @@ export const useProducts = (options?: QueryHookOptions) => {
     },
     cursor,
     searchValue,
-    tags,
+    tagIds: tags?.length ? tags : undefined,
+    brandIds: brand || undefined,
     dateFilters: JSON.stringify({
       createdAt: {
         gte: parseDateRangeFromString(created)?.from,

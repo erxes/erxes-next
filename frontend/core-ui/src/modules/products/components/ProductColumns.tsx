@@ -1,3 +1,4 @@
+import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 import { renderingProductDetailAtom } from '@/products/states/productDetailStates';
 import {
   IconCategory,
@@ -21,7 +22,7 @@ import {
   Input,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
-import { IProduct } from 'ui-modules';
+import { IProduct, SelectCategory } from 'ui-modules';
 export const productColumns: ColumnDef<IProduct>[] = [
   RecordTable.checkboxColumn as ColumnDef<IProduct>,
   {
@@ -103,12 +104,23 @@ export const productColumns: ColumnDef<IProduct>[] = [
       <RecordTable.InlineHead icon={IconCategory} label="Category" />
     ),
     cell: ({ cell }) => {
+      const { productsEdit } = useProductsEdit();
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip
-            value={cell.row.original?.category?.name || ''}
-          />
-        </RecordTableCellDisplay>
+        <SelectCategory.InlineCell
+          mode="single"
+          value={cell.getValue() as string}
+          onValueChange={(value) => {
+            productsEdit({
+              variables: {
+                _id: cell.row.original._id,
+                categoryId: value,
+              },
+            });
+          }}
+          categories={
+            cell.row.original.category ? [cell.row.original.category] : []
+          }
+        />
       );
     },
   },

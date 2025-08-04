@@ -48,6 +48,7 @@ const productsMain = gql`
         category {
           _id
           name
+          code
         }
         name
         shortName
@@ -65,7 +66,7 @@ const productsMain = gql`
 `;
 
 const productCategories = gql`
-  query ProductCategories {
+  query ProductCategoryDetail {
     productCategories {
       _id
       parentId
