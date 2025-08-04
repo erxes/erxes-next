@@ -1,7 +1,4 @@
-import {
-  TEAM_FORM_SCHEMA,
-  TEAM_MEMBER_FORM_SCHEMA,
-} from '~/modules/team/schemas';
+import { TEAM_FORM_SCHEMA, TEAM_MEMBER_FORM_SCHEMA } from '@/team/schemas';
 import { z } from 'zod';
 import { IUser } from 'ui-modules';
 

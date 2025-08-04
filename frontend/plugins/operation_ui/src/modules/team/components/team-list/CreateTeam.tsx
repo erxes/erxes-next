@@ -12,8 +12,8 @@ import {
 
 import React, { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useTeamForm } from '~/modules/team/hooks/useTeamForm';
-import { useTeamCreate } from '~/modules/team/hooks/useTeamCreate';
+import { useTeamForm } from '@/team/hooks/useTeamForm';
+import { useTeamCreate } from '@/team/hooks/useTeamCreate';
 import { TeamHotKeyScope, TTeamForm } from '@/team/types';
 import { CreateTeamForm } from '@/team/components/team-list/CreateTeamForm';
 

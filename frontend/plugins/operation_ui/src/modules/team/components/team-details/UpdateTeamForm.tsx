@@ -6,13 +6,7 @@ import { useTeamUpdate } from '@/team/hooks/useTeamUpdate';
 import { useToast } from 'erxes-ui';
 import { SubmitHandler } from 'react-hook-form';
 
-export const UpdateTeamForm = ({
-  team,
-  refetch,
-}: {
-  team: ITeam;
-  refetch: any;
-}) => {
+export const UpdateTeamForm = ({ team }: { team: ITeam }) => {
   const { toast } = useToast();
   const { updateTeam } = useTeamUpdate();
 
@@ -33,7 +27,6 @@ export const UpdateTeamForm = ({
         },
         onCompleted: () => {
           toast({ title: 'Success!' });
-          refetch();
         },
         onError: (error) =>
           toast({
@@ -43,7 +36,7 @@ export const UpdateTeamForm = ({
           }),
       });
     },
-    [updateTeam, toast, team._id, refetch],
+    [updateTeam, toast, team._id],
   );
 
   return (

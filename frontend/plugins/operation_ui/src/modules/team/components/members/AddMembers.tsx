@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 import { useAddMemberForm } from '@/team/hooks/useAddMemberForm';
 // import { useMemberCreate } from '@/team/hooks/useMemberCreate';
 import { TeamHotKeyScope } from '@/team/types';
-import { MemberForm } from '~/modules/team/components/members/MemberForm';
+import { MemberForm } from '@/team/components/members/MemberForm';
 
 export const AddMembers = () => {
   const form = useAddMemberForm({});

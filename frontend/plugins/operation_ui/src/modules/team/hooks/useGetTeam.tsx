@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router';
-import { GET_TEAM } from '~/modules/team/graphql/queries/getTeam';
+import { GET_TEAM } from '@/team/graphql/queries/getTeam';
 import { ITeam } from '@/team/types';
 
 interface IUseGetTeamResponse {

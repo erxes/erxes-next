@@ -23,7 +23,7 @@ export const teamMutations = {
         name,
         description,
         icon,
-        estimateType: 0,
+        estimateType: 1,
       },
       memberIds,
       adminId: userId,

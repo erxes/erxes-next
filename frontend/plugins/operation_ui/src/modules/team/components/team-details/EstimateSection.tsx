@@ -4,13 +4,7 @@ import { TeamEstimateTypes } from '@/team/types';
 import { useTeamUpdate } from '@/team/hooks/useTeamUpdate';
 import { useToast } from 'erxes-ui';
 
-export const EstimateSection = ({
-  team,
-  refetch,
-}: {
-  team: ITeam;
-  refetch: any;
-}) => {
+export const EstimateSection = ({ team }: { team: ITeam }) => {
   const { updateTeam } = useTeamUpdate();
   const { toast } = useToast();
 
@@ -22,7 +16,6 @@ export const EstimateSection = ({
       },
       onCompleted: () => {
         toast({ title: 'Success!' });
-        refetch();
       },
       onError: (error) =>
         toast({

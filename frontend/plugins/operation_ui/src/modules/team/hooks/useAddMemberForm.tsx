@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { TEAM_MEMBER_FORM_SCHEMA } from '@/team/schemas';
-import { TTeamMemberForm } from '~/modules/team/types';
+import { TTeamMemberForm } from '@/team/types';
 
 export const useAddMemberForm = ({
   defaultValues,

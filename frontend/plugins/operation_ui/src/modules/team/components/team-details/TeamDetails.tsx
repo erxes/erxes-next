@@ -6,7 +6,7 @@ import { StatusSection } from '@/team/components/team-details/SatusSection';
 import { CycleSection } from '@/team/components/team-details/CycleSection';
 
 export const TeamDetails = () => {
-  const { team, loading, refetch } = useGetTeam();
+  const { team, loading } = useGetTeam();
   if (loading) return null;
   if (!team) return <div>Not found</div>;
 
@@ -16,11 +16,11 @@ export const TeamDetails = () => {
 
       <div className="mt-4 w-full border border-muted-foreground/15 rounded-md">
         <section className="w-full p-4">
-          {team && <UpdateTeamForm team={team} refetch={refetch} />}
+          {team && <UpdateTeamForm team={team} />}
         </section>
       </div>
       <MemberSection team={team} />
-      <EstimateSection team={team} refetch={refetch} />
+      <EstimateSection team={team} />
       <StatusSection team={team} />
       <CycleSection />
     </div>
