@@ -1,7 +1,7 @@
-import { Button, Form, Kbd, Sheet } from 'erxes-ui';
+import { Button, Form, Sheet } from 'erxes-ui';
 import { IconGitBranch, IconPlus } from '@tabler/icons-react';
 
-import { PipelineForm } from '@/deals/boards/components/PipelineForm';
+// import { PipelineForm } from '@/deals/boards/components/PipelineForm';
 import { PipelineHotKeyScope } from '@/deals/types/pipelines';
 // import { SubmitHandler } from 'react-hook-form';
 import React from 'react';
@@ -11,7 +11,7 @@ import { useScopedHotkeys } from 'erxes-ui';
 import { useSetHotkeyScope } from 'erxes-ui';
 import { useState } from 'react';
 
-export function PipelinesTopbar() {
+export function PipelineFormBar() {
   const {
     methods,
     // methods: { handleSubmit },
@@ -70,8 +70,7 @@ export function PipelinesTopbar() {
       <Sheet onOpenChange={(open) => (open ? onOpen() : onClose())} open={open}>
         <Sheet.Trigger asChild>
           <Button>
-            <IconPlus /> Create Branch
-            <Kbd>C</Kbd>
+            <IconPlus /> Add Pipeline
           </Button>
         </Sheet.Trigger>
         <Sheet.View
@@ -88,12 +87,12 @@ export function PipelinesTopbar() {
               <Sheet.Header>
                 <Sheet.Title className="text-lg text-foreground flex items-center gap-1">
                   <IconGitBranch size={16} />
-                  Create branch
+                  Add Pipeline
                 </Sheet.Title>
                 <Sheet.Close />
               </Sheet.Header>
               <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-                <PipelineForm />
+                {/* <PipelineForm /> */}
               </Sheet.Content>
               <Sheet.Footer>
                 <Button variant={'ghost'} onClick={() => setOpen(false)}>
