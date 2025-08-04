@@ -9,54 +9,43 @@ import type {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { IStage } from '@/deals/types/stages';
-import { IUser } from 'ui-modules';
-
-export type KanbanItemProps = {
-  id: string;
-  name: string;
-  column: string;
-  startDate: Date;
-  closeDate: Date;
-  createdAt: Date;
-  assignedUsers: IUser[];
-} & Record<string, unknown>;
-
-// export type KanbanColumnProps = {
-//   id: string;
-//   name: string;
-// } & Record<string, unknown>;
+import { IDeal } from '@/deals/types/deals';
 
 export type KanbanContextProps<
-  T extends KanbanItemProps = KanbanItemProps,
+  T extends IDeal = IDeal,
   C extends IStage = IStage,
 > = {
   columns: C[];
   data: T[];
   activeCardId: string | null;
+  onDataChange?: any;
 };
 
 export type KanbanBoardProps = {
-  id: string;
+  _id: string;
   children: ReactNode;
   className?: string;
   onColumnsChange?: (newColumns: any[]) => void;
 };
 
-export type KanbanCardProps<T extends KanbanItemProps = KanbanItemProps> = T & {
+export type KanbanCardProps = {
   children?: ReactNode;
   className?: string;
+  loading?: boolean;
+  featureId: string;
+  card: IDeal;
 };
 
-export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
+export type KanbanCardsProps<T extends IDeal = IDeal> =
   Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'id'> & {
-    children: (item: T) => ReactNode;
+    children: (item: IDeal) => ReactNode;
     id: string;
   };
 
   export type KanbanHeaderProps = HTMLAttributes<HTMLDivElement>;
 
   export type KanbanProviderProps<
-    T extends KanbanItemProps = KanbanItemProps,
+    T extends IDeal = IDeal,
     C extends IStage = IStage,
   > = Omit<DndContextProps, 'children'> & {
     children: (column: C) => ReactNode;
@@ -68,4 +57,5 @@ export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
     onDragStart?: (event: DragStartEvent) => void;
     onDragEnd?: (event: DragEndEvent) => void;
     onDragOver?: (event: DragOverEvent) => void;
+    updateOrders?: (variables: { itemId?: string; destinationStageId?: string; orders?: Array<{ _id: string; order: number }> }, type: 'card' | 'column') => void;
   };
