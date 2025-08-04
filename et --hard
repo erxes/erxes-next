@@ -1,0 +1,536 @@
+*   [33mb674ac4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcar_plugin[m[33m)[m Merge branch 'main' of github.com:erxes/erxes-next into car_plugin
+[31m|[m[32m\[m  
+[31m|[m * [33mb62b9b3f[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: settings team-member, select branch department, position and unit modules refactor (#214)
+[31m|[m *   [33m5206c6c9[m Merge pull request #215 from erxes/automation-delay
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m * [33m14b2875e[m chore: remove unused package
+[31m|[m [33m|[m * [33m190bb24b[m fix: coderabbitai suggestions
+[31m|[m [33m|[m * [33m07443343[m fix: coderabbitai suggestions
+[31m|[m [33m|[m * [33mc53c24aa[m fix: coderabbitai suggestion
+[31m|[m [33m|[m * [33m15644972[m fix: coderabbitai suggestions
+[31m|[m [33m|[m * [33m9a51568e[m chore: cleaning miss imports
+[31m|[m [33m|[m * [33me4f21cec[m fix: send trigger from log when configured contentType in schemawrapper
+[31m|[m [33m|[m *   [33mc5b7182b[m Merge branch 'main' of github.com:erxes/erxes-next into automation-delay
+[31m|[m [33m|[m [35m|[m[36m\[m  
+[31m|[m [33m|[m * [36m|[m [33m06594310[m update(automations): add ability delay using bullmq delay
+[31m|[m [33m|[m * [36m|[m [33m92ba4381[m fix: add error handler on matches in get attribution emails
+[31m|[m [33m|[m * [36m|[m [33mb9bace7f[m fix: import icon from tabler
+[31m|[m [33m|[m * [36m|[m [33m120c58c2[m chore: cleaning
+[31m|[m [33m|[m * [36m|[m   [33m38cd1ff4[m Merge branch 'main' of github.com:erxes/erxes-next into automation-updates
+[31m|[m [33m|[m [1;31m|[m[1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [1;32m|[m [36m|[m [33m3e402d20[m update: add ability remove segments
+[31m|[m [33m|[m * [1;32m|[m [36m|[m [33m0e231a3f[m fix: optimized some automation files and add ability send email
+[31m|[m [33m|[m * [1;32m|[m [36m|[m [33mc6f08ade[m update
+[31m|[m [33m|[m * [1;32m|[m [36m|[m   [33mb353b827[m Merge branch 'main' of github.com:erxes/erxes-next into automation-updates
+[31m|[m [33m|[m [1;33m|[m[1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [1;34m|[m [1;32m|[m [36m|[m [33maa11c501[m chore
+[31m|[m [33m|[m * [1;34m|[m [1;32m|[m [36m|[m [33mba05c77d[m update
+[31m|[m [33m|[m * [1;34m|[m [1;32m|[m [36m|[m   [33me9d93f7c[m Merge branch 'main' of github.com:erxes/erxes-next into automation-updates
+[31m|[m [33m|[m [1;35m|[m[1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m5a2b56bd[m update(automation): add  histories list in detail page
+[31m|[m [33m|[m * [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m   [33mf2c32781[m Merge branch 'main' of github.com:erxes/erxes-next into fix-segment
+[31m|[m [33m|[m [31m|[m[32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m   [33ma08456a1[m Merge branch 'main' of github.com:erxes/erxes-next into fix-segment
+[31m|[m [33m|[m [33m|[m[34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m236735d8[m[33m ([m[1;31morigin/fix-segment[m[33m)[m fix: add ability set custom filter in logs recor table
+[31m|[m [33m|[m * [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33ma5d90642[m fix(segments): optimize some file name & remove unnecessary code from components
+[31m|[m [33m|[m * [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m   [33m3ce723ec[m Merge branch 'main' of github.com:erxes/erxes-next into fix-segment
+[31m|[m [33m|[m [35m|[m[36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m7ce8603e[m fix: sonar suggestions & remove form label,control from field
+[31m|[m [33m|[m * [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m22ff709b[m chore: remove unused prop from getSegmentFormDefaultValues
+[31m|[m [33m|[m * [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m23f2acae[m chore: clean some console.log
+[31m|[m [33m|[m * [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m   [33m94749f1e[m Merge branch 'main' of github.com:erxes/erxes-next into fix-segment
+[31m|[m [33m|[m [1;31m|[m[1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [33m|[m * [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33meaaf1073[m fix(segments): optimize folder structure & component names
+[31m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m   [33m07a79b3f[m Merge pull request #220 from erxes/record-table-fix
+[31m|[m [1;33m|[m[1;34m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [1;33m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m6172820b[m refactor cursor
+[31m|[m [1;33m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33mdf5034a6[m refactor useLocation
+[31m|[m [1;33m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m58d1ac87[m fix domain
+[31m|[m [1;33m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m195d3371[m remove integration table
+[31m|[m [1;33m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33ma3b57e96[m record table customer refactor
+[31m|[m [1;33m|[m[1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m [36m/[m  
+[31m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m   [33m0475033c[m Merge pull request #216 from erxes/ui-modules
+[31m|[m [1;35m|[m[1;36m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [1;35m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m33aef325[m refactor: remove unused Branches components and queries to streamline the codebase
+[31m|[m [1;35m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m4e1329c8[m refactor: update hooks and components to use QueryHookOptions for improved type safety
+[31m|[m [1;35m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m7eb5e45a[m feat: enhance customer and company management components with improved hooks and context handling
+[31m|[m [1;35m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m22464548[m feat: add CompaniesInline and SelectCompanies components for managing company selections
+[31m|[m [1;35m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m [33m1470e22f[m Enhance components and queries for improved functionality
+[31m|[m * [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [36m|[m   [33m2ae36e54[m Merge pull request #219 from erxes/fix-tailwind
+[31m|[m [36m|[m[32m\[m [1;36m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m [36m\[m  
+[31m|[m [36m|[m [32m|[m[36m_[m[1;36m|[m[36m_[m[1;32m|[m[36m_[m[1;32m|[m[36m_[m[36m|[m[36m_[m[34m|[m[36m_[m[32m|[m[36m_[m[1;36m|[m[36m_[m[1;34m|[m[36m_[m[1;32m|[m[36m/[m  
+[31m|[m [36m|[m[36m/[m[32m|[m [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   
+[31m|[m [36m|[m * [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33mecaccb5f[m refactor tailwind config
+[31m|[m * [32m|[m [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33m5dc6f841[m Merge pull request #218 from erxes/fix-tailwind
+[31m|[m [33m|[m[32m\[m[32m|[m [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m 
+[31m|[m [33m|[m * [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33m0dd141dd[m update icon lib & fix tailwind.config
+[31m|[m [33m|[m[33m/[m [1;36m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m  
+[31m|[m * [1;36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   [33mabff26cd[m Merge pull request #205 from erxes/frontline
+[31m|[m [1;36m|[m[36m\[m [1;36m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m  
+[31m|[m [1;36m|[m [36m|[m[1;36m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m  
+[31m|[m [1;36m|[m[1;36m/[m[36m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   
+[31m|[m [1;36m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33m65275117[m filter
+[31m|[m [1;36m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33m2d5cc38b[m remov e company
+[31m|[m [1;36m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   [33m9bbafbd2[m Merge branch 'main' into frontline
+[31m|[m [1;36m|[m [1;31m|[m[1;36m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m  
+[31m|[m [1;36m|[m [1;31m|[m[1;36m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m  
+[31m|[m [1;36m|[m[1;36m/[m[1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   
+[31m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   [33m30dc86f4[m Merge pull request #211 from erxes/facebook-inbox-fix-notifications
+[31m|[m [1;33m|[m[1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m  
+[31m|[m [1;33m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33m4e95f1ab[m sendNotifications fix
+[31m|[m [1;33m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m [33mce3b36ff[m sendNotifications function fix api
+[31m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   [33mcaf157fb[m Merge pull request #210 from erxes/facebook-inbox-fix
+[31m|[m [1;35m|[m[1;36m\[m [1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m  
+[31m|[m [1;35m|[m * [1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m   [33ma862887a[m Merge branch 'main' into facebook-inbox-fix
+[31m|[m [1;35m|[m [1;34m|[m[1;35m\[m [1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m  
+[31m|[m [1;35m|[m [1;34m|[m[1;35m/[m [1;34m/[m [1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m  
+[31m|[m [1;35m|[m[1;35m/[m[1;34m|[m [1;34m/[m [1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m   
+[31m|[m [1;35m|[m [1;34m|[m[1;34m/[m [1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [1;32m/[m    
+[31m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [1;32m|[m   [33md4cd3c79[m Merge pull request #209 from erxes/facebook-inbox
+[31m|[m [1;32m|[m[34m\[m [1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m [1;32m\[m  
+[31m|[m [1;32m|[m [34m|[m[1;32m_[m[1;34m|[m[1;32m_[m[1;31m|[m[1;32m_[m[1;32m|[m[1;32m_[m[1;32m|[m[1;32m_[m[36m|[m[1;32m_[m[34m|[m[1;32m_[m[32m|[m[1;32m_[m[1;36m|[m[1;32m_[m[1;34m|[m[1;32m/[m  
+[31m|[m [1;32m|[m[1;32m/[m[34m|[m [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+[31m|[m [1;32m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m143d873c[m refactor sendNotifications
+[31m|[m [1;32m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mebd2b708[m refactor  dispatchConversationToService
+[31m|[m [1;32m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m864be212[m refactor
+[31m|[m [1;32m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mae1d3844[m fix(facebook): resolve issues with conversation query and createConversation mutation
+[31m|[m [1;32m|[m[1;32m/[m [1;34m/[m [1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[31m|[m [1;32m|[m * [1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [33m06423557[m sendNotifications fix
+[31m|[m [1;32m|[m[1;32m/[m [1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[31m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m3dc08d45[m chore: remove lucide-react (#207)
+[31m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m624ff063[m Merge pull request #206 from erxes/brand-resolver
+[31m|[m [35m|[m[36m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[31m|[m [35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m735e79d7[m Create brand.ts
+[31m|[m [35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m2adfae17[m Update resolvers.ts
+[31m|[m [35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m9aeda957[m Merge branch 'main' of github.com:erxes/erxes-next
+[31m|[m [35m|[m [1;31m|[m[1;32m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[31m|[m [35m|[m [1;31m|[m [1;32m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m18d0421f[m back
+[31m|[m [35m|[m [1;31m|[m [1;32m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mc8459ce8[m remove lucide
+[31m|[m [35m|[m [1;31m|[m [1;32m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mc9ae143b[m frontline: filter & styles
+[31m|[m [35m|[m [1;31m|[m [1;32m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mfdb93598[m query conversationsChangeStatus  fix
+[31m|[m [35m|[m [1;31m|[m [1;32m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m3f022fdd[m mark as read
+[31m|[m [35m|[m [1;31m|[m [1;32m|[m * [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m19afec2c[m frontline actions
+[31m|[m [35m|[m [1;31m|[m[35m_[m[1;32m|[m[35m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[31m|[m [35m|[m[35m/[m[1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+* [35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mec031623[m[33m ([m[1;31morigin/car_plugin[m[33m)[m update
+* [35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mc19612c9[m schema, constant update
+* [35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mf1116d7b[m car mutation update
+* [35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m3b2ff3ce[m Merge branch 'main' of github.com:erxes/erxes-next into car_plugin
+[1;33m|[m[35m\[m[35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m 
+[1;33m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m83adaaf9[m[33m ([m[1;32mmain[m[33m)[m Merge pull request #203 from erxes/conversationMessageAdd-fix
+[1;33m|[m [1;35m|[m[1;36m\[m [1;31m\[m [1;32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;33m|[m [1;35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33md4c87aeb[m refactor
+[1;33m|[m [1;35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m0d4c4e14[m fix(facebook) conversationMessageAdd mutation fix
+[1;33m|[m [1;35m|[m[1;35m/[m [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [1;35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m5a1605f7[m update
+* [1;35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m6c552fb2[m update
+* [1;35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m98ef6a41[m update
+* [1;35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33md910cb8c[m update
+* [1;35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m48e7c3d1[m endpoint update
+* [1;35m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33ma8b29762[m create car plugin
+[1;35m|[m[1;35m/[m [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33mc5d4f567[m Merge pull request #202 from erxes/frontline
+[31m|[m[32m\[m [1;31m\[m [1;32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[31m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m65f7e07c[m conversation
+* [32m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m783a800d[m Merge pull request #199 from erxes/fix-imports
+[33m|[m[34m\[m [32m\[m [1;31m\[m [1;32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[33m|[m * [32m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33ma2c3e921[m fix Link import
+[33m|[m * [32m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mfdd07609[m remove string
+[33m|[m [32m|[m[32m/[m [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[33m|[m * [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m [33mae044c2a[m fix import paths
+[33m|[m[33m/[m [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m8d39ca2d[m fix: boards query
+* [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33mb800c28b[m Merge pull request #197 from erxes/fb-login-url-fix-refactor
+[35m|[m[36m\[m [1;31m\[m [1;32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mbcb5e2f2[m refactor
+[35m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m7c2c69ce[m fix(facebook) import fix
+* [36m|[m [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m840e5a2e[m fix: conversations query update
+[36m|[m[36m/[m [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m32d427eb[m Merge pull request #195 from erxes/fb-login-url-fix
+[1;31m|[m[1;32m\[m [1;31m\[m [1;32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;31m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33ma4c1d3a6[m fix(facebook) url fix
+[1;31m|[m[1;31m/[m [1;31m/[m [1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [1;31m|[m [1;32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m9661efa4[m Merge pull request #193 from erxes/frontline-fixes
+[1;32m|[m[1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;32m|[m [1;34m|[m[1;32m_[m[1;31m|[m[1;32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[1;32m|[m[1;32m/[m[1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+[1;32m|[m * [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mf5efd8b0[m integrationKind -> integrationType
+* [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m671b0d34[m Merge pull request #192 from erxes/tourism-refactor
+[1;35m|[m[1;36m\[m [1;34m\[m [1;31m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;35m|[m * [1;34m|[m [1;31m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33me45779f8[m refactor
+[1;35m|[m [1;31m|[m [1;34m|[m[1;31m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[1;35m|[m [1;31m|[m[1;31m/[m[1;34m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+[1;35m|[m * [1;34m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33m4a9ba810[m Merge branch 'main' of github.com:erxes/erxes-next
+[1;35m|[m [31m|[m[32m\[m [1;34m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;35m|[m * [32m\[m [1;34m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m   [33m3a675b9c[m Merge branch 'main' of github.com:erxes/erxes-next
+[1;35m|[m [33m|[m[34m\[m [32m\[m [1;34m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+* [33m|[m [34m\[m [32m\[m [1;34m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m   [33maa34ac9a[m Merge pull request #183 from erxes/frontline-fixes
+[35m|[m[1;34m\[m [33m\[m [34m\[m [32m\[m [1;34m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[35m|[m [1;34m|[m [33m|[m[1;34m_[m[34m|[m[1;34m_[m[32m|[m[1;34m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[35m|[m [1;34m|[m[1;34m/[m[33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+[35m|[m * [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m90c8d3ed[m fix kinds
+[35m|[m * [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mb6ea9369[m add cursor mode
+[35m|[m * [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m8f3eb491[m conversation refactor
+[35m|[m * [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m960e20b9[m fix conversation messages
+[35m|[m [33m|[m[33m/[m [34m/[m [32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m31dc408b[m fix: frontline fblogin
+* [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m6997882d[m feat: remove logs (#191)
+* [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mb1d5012c[m fix: Accounting transaction remove and some refactors with refetches and table use arrow  (#190)
+* [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33mc7a1db5a[m Merge pull request #155 from erxes/pos-plugin
+[1;31m|[m[1;32m\[m [33m\[m [34m\[m [32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;31m|[m * [33m\[m [34m\[m [32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m   [33m704c5326[m Merge branch 'main' into pos-plugin
+[1;31m|[m [1;33m|[m[1;31m\[m [33m\[m [34m\[m [32m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;31m|[m [1;33m|[m[1;31m/[m [33m/[m [34m/[m [32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[1;31m|[m[1;31m/[m[1;33m|[m [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+* [1;33m|[m [33m|[m [34m|[m [32m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m69931c07[m feat: create schema
+[32m|[m [1;33m|[m[32m_[m[33m|[m[32m_[m[34m|[m[32m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[32m|[m[32m/[m[1;33m|[m [33m|[m [34m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+* [1;33m|[m [33m|[m [34m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m7d1ccd26[m feat: add teammember custom resolvers
+[34m|[m [1;33m|[m[34m_[m[33m|[m[34m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[34m|[m[34m/[m[1;33m|[m [33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+* [1;33m|[m [33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33mf0254929[m Merge pull request #184 from erxes/string-utils
+[33m|[m[1;36m\[m [1;33m\[m [33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[33m|[m [1;36m|[m[33m_[m[1;33m|[m[33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+[33m|[m[33m/[m[1;36m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   
+[33m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33mea382001[m Update string.ts
+[33m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m1dd39a97[m fix
+[33m|[m[33m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m [1;34m/[m  
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m [33m51b69630[m settings: file upload
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [1;34m|[m   [33mdcc89478[m Merge pull request #182 from erxes/frontline-type
+[1;34m|[m[32m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m [1;34m\[m  
+[1;34m|[m [32m|[m[1;34m_[m[1;33m|[m[1;34m_[m[1;32m|[m[1;34m_[m[1;32m|[m[1;34m_[m[36m|[m[1;34m_[m[34m|[m[1;34m_[m[32m|[m[1;34m_[m[1;36m|[m[1;34m/[m  
+[1;34m|[m[1;34m/[m[32m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m   
+[1;34m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m2f6166bf[m integration type
+[1;34m|[m[1;34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m  
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33md2858480[m fix: build subscriptions
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33md1079e66[m feat: frontline improvment
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m   [33mcbe45111[m Merge branch 'main' of github.com:erxes/erxes-next
+[33m|[m[34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m  
+[33m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33mbdee6e89[m chore: fix pnpm dev:apis
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m2be454e2[m fix: start api dev
+[34m|[m[34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [1;36m/[m  
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33mc8f6e5f6[m fix: fix build
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33mbc8aca52[m feat: add subsciption
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33mf9cdde20[m fix(ui): improve FacebookConversationMessages query display
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m8ff2f547[m fix integration value
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m1c3673b4[m fix: Accounting (#178)
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m   [33mfeb01f8e[m Merge branch 'main' of github.com:erxes/erxes-next
+[35m|[m[36m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m [1;36m\[m  
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33maade345f[m fix: fix automations build
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m4a934de3[m feat: tourism api
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m1385276d[m feat: automations
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [1;36m|[m [33m272e828b[m perf: settings
+[35m|[m [1;36m|[m [1;33m|[m[1;36m_[m[1;32m|[m[1;36m_[m[1;32m|[m[1;36m_[m[36m|[m[1;36m_[m[34m|[m[1;36m_[m[32m|[m[1;36m/[m  
+[35m|[m [1;36m|[m[1;36m/[m[1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m   
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m8b24832a[m fix: log service docker-build name
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m5388f067[m fix: services ci names
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33mc9c9a1e6[m fix: logs-service ci
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m004aa574[m fix: misstype project name of autoamations services
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m6d8de06b[m fix:automations ci
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33mde27f035[m fix: dockerfile of automations-service
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m8c56112b[m fix automation dockerfile
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33ma9e52c74[m debug: add dockerfile in -verbos on automations
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33mb33ad260[m fix automation dockerfile project.json
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m082f9e0b[m fix automation ci
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m4057fdde[m fix automation ci
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m7b630d7c[m fix automation ci
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m   [33m04255277[m Merge branch 'main' of github.com:erxes/erxes-next
+[35m|[m [1;31m|[m[1;32m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m  
+[35m|[m [1;31m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33mff2f175b[m feat: check undefined of user detail
+[35m|[m [1;31m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m938ea83e[m change react url
+[35m|[m * [1;32m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m00a2300a[m add tsconfig.build.json in services
+[35m|[m [1;32m|[m[1;32m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m  
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m1ccdbdec[m fix: misstypo  root automation & logs dockerfile
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m   [33m6ff3b5db[m Merge branch 'main' of github.com:erxes/erxes-next
+[35m|[m [1;33m|[m[1;34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m  
+[35m|[m [1;33m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m9233a3e8[m chore: add log for services address
+[35m|[m [1;33m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m1f677902[m fix: fix gateway health
+[35m|[m * [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m0b160658[m fix: misstypo automation & logs ci root
+[35m|[m [1;34m|[m[1;34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m  
+[35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m   [33m2ba22acf[m Merge branch 'main' of github.com:erxes/erxes-next
+[35m|[m [1;35m|[m[1;36m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m [32m\[m  
+[35m|[m [1;35m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33md62f55d0[m feat: change services redis address
+[35m|[m * [1;36m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33mca497c53[m add ci on services
+[35m|[m [1;36m|[m[1;36m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m  
+[35m|[m * [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m [33m80ad19bf[m add health in gateway
+[35m|[m[35m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m [32m/[m  
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33mf7608c08[m feat: add /health in core-api
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m7e4ae0d2[m chore: hide switch organization & invite teammember
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m8b3bf8cc[m fix: fix padding favorites sidebar
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [32m|[m [33m2695a6c9[m chore: remove time zone & date configs
+[32m|[m [1;33m|[m[32m_[m[1;32m|[m[32m_[m[1;32m|[m[32m_[m[36m|[m[32m_[m[34m|[m[32m/[m  
+[32m|[m[32m/[m[1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m   
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33me3f38a3e[m facebook
+* [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m   [33mfd681401[m Merge pull request #175 from erxes/test-fix
+[31m|[m[32m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m  
+[31m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m06c00948[m Update table.tsx
+[31m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m93943486[m feat: update command bars and navigation components for improved functionality and UI consistency
+* [32m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m   [33ma08d8e7f[m Merge pull request #167 from erxes/product
+[32m|[m[34m\[m [32m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m [34m\[m  
+[32m|[m [34m|[m[32m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m [34m/[m  
+[32m|[m[32m/[m[34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m   
+[32m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m097bdce7[m removes console.log
+[32m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m7d043114[m refactor: improve barcode handling and UI consistency in product detail form
+[32m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33mb9daa178[m update
+[32m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m8f83d093[m refactor: enhance product form validation and streamline product detail components
+[32m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m7d47f514[m[33m ([m[1;31morigin/product[m[33m)[m refactor: simplify file upload component and enhance product detail form error handling
+[32m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m976b3f64[m feat: implement product management features including form schema, detail view, and category selection
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m15f3560c[m fix scroll
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m5f58e6bb[m chore:improve some settings code
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33mf0b92eb3[m fix: ci core ui
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [34m|[m [33m821e141e[m feat: add imask
+[34m|[m [34m|[m[34m_[m[1;33m|[m[34m_[m[1;32m|[m[34m_[m[1;32m|[m[34m_[m[36m|[m[34m/[m  
+[34m|[m[34m/[m[34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33maa501774[m feat: imrpove settings
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m7d88937a[m fix: improve Accounting (#173)
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33meba57981[m messenger erxes
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m27ef0aa6[m Merge pull request #171 from erxes/inbox-docker-image
+[35m|[m[36m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[35m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m7e6588b8[m[33m ([m[1;31morigin/inbox-docker-image[m[33m)[m build docker image inbox
+[35m|[m[35m/[m [34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m3f81d037[m Merge pull request #170 from erxes/inbox-string-strip-html
+[1;31m|[m[1;32m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[1;31m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m691839b9[m[33m ([m[1;31morigin/inbox-string-strip-html[m[33m)[m inbox-string-strip-html add pnpm
+[1;31m|[m[1;31m/[m [34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+* [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m861e282b[m Merge pull request #168 from erxes/inbox-backend
+[1;33m|[m[1;34m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m5aeb2340[m[33m ([m[1;31morigin/inbox-refactor[m[33m)[m refactor sendConversationToServices
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m357eedce[m refactor
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m5052776b[m refactor
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m498ca735[m handleFacebookMessage mutations
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m09990a57[m fix(pagination): remove params.cursor from cursorPaginate
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m97110f0d[m refactor
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m4a1a3815[m refactor
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33mcc1a9817[m refactor
+[1;33m|[m * [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33mfbd7c4b3[m inbox refactor
+* [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m2a36dea4[m Merge pull request #169 from erxes/inbox
+[1;35m|[m[1;36m\[m [1;34m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[1;35m|[m * [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m3d6a3975[m fix ai suggests
+[1;35m|[m * [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m0434422c[m remove space
+[1;35m|[m * [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m389d0f0a[m remove backend changes
+[1;35m|[m * [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m407a05a5[m Merge branch 'main' into inbox
+[1;35m|[m [31m|[m[1;35m\[m [1;34m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[1;35m|[m [31m|[m[1;35m/[m [1;34m/[m [34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+[1;35m|[m[1;35m/[m[31m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   
+* [31m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m3359356b[m Merge pull request #154 from erxes/contacts-command-bar
+[34m|[m[34m\[m [31m\[m [1;34m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[34m|[m [34m|[m[34m_[m[31m|[m[34m_[m[1;34m|[m[34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+[34m|[m[34m/[m[34m|[m [31m|[m [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   
+[34m|[m * [31m|[m [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m8564c77f[m[33m ([m[1;31morigin/contacts-command-bar[m[33m)[m refactor: ai recommendation
+[34m|[m * [31m|[m [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33mb2e488f3[m feat: Refactor customer selection components and improve context management
+[34m|[m * [31m|[m [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m58d0c3fc[m Merge branch 'main' of github.com:erxes/erxes-next into contacts-command-bar
+[34m|[m [35m|[m[34m\[m [31m\[m [1;34m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[34m|[m [35m|[m[34m/[m [31m/[m [1;34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+[34m|[m[34m/[m[35m|[m [31m|[m [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   
+* [35m|[m [31m|[m [1;34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m9082de65[m fix: accounting inv_income begin and some refactors (#166)
+[1;34m|[m [35m|[m[1;34m_[m[31m|[m[1;34m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+[1;34m|[m[1;34m/[m[35m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   
+[1;34m|[m * [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m57a2a293[m Merge branch 'main' of github.com:erxes/erxes-next into contacts-command-bar
+[1;34m|[m [1;31m|[m[1;34m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[1;34m|[m [1;31m|[m[1;34m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+[1;34m|[m[1;34m/[m[1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   
+* [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33m62d9fbcf[m Merge branch 'main' of github.com:erxes/erxes-next
+[1;33m|[m[1;34m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[1;33m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33me1dffbdc[m move sales (#164)
+* [1;34m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m [33m67be9022[m Update pnpm-lock.yaml
+[1;34m|[m[1;34m/[m [1;31m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m [36m/[m  
+* [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [36m|[m   [33mb54fe104[m Merge branch 'main' of github.com:erxes/erxes-next
+[36m|[m[1;36m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m [36m\[m  
+[36m|[m [1;36m|[m[36m_[m[1;31m|[m[36m_[m[31m|[m[36m_[m[1;33m|[m[36m_[m[1;32m|[m[36m_[m[1;32m|[m[36m/[m  
+[36m|[m[36m/[m[1;36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+[36m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m0376ae69[m core initTRPC
+[36m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m38e4a6a3[m inbox trpc fix
+[36m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mf633b7c2[m feat: inbox trpc
+[36m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m833334e0[m fix: start plugin
+[36m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33md809d379[m feat: add express router
+[36m|[m[36m/[m [1;31m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+* [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mf43b74fb[m fix: improve Accounting (#162)
+* [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m331fc717[m fix: trpc context
+* [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33m0a5d1eea[m Merge pull request #161 from erxes/log-api
+[31m|[m[32m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[31m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mc40c063c[m[33m ([m[1;31morigin/ui_automations_logs[m[33m, [m[1;31morigin/log-api[m[33m)[m fix: gitignore logs
+[31m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33mc72b3755[m Merge branch 'main' of github.com:erxes/erxes-next into ui_automations_logs
+[31m|[m [33m|[m[31m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[31m|[m [33m|[m[31m/[m [1;31m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[31m|[m[31m/[m[33m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+* [33m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m2c36a45c[m fix: fix some schemas
+[34m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m93c80290[m fix:miss typo
+[34m|[m * [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33m4161ff1f[m Merge branch 'main' of github.com:erxes/erxes-next into ui_automations_logs
+[34m|[m [35m|[m[36m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[34m|[m * [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m33f9b121[m fix: optimize logs & automations ui
+[34m|[m * [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m095f8c6c[m fix: coderabbitai suggestions
+[34m|[m * [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m77fa4a94[m fix: automation constant miss typo
+[34m|[m * [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33me74b6375[m Merge branch 'main' of github.com:erxes/erxes-next into services
+[34m|[m [1;31m|[m[1;32m\[m [36m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[34m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m5441adef[m update: optimize logs&automation api folder strcuture
+[34m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33m5f355943[m Merge branch 'afterMutations' of github.com:erxes/erxes-next into services
+[34m|[m [1;33m|[m[1;34m\[m [1;32m\[m [36m\[m [1;31m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[34m|[m [1;33m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33md9814588[m fix: store log after process when error & pass processId propertly
+[34m|[m [1;33m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mb6cf40d0[m fix: coderabbitai suggestions
+[34m|[m [1;33m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m7901b851[m fix: miss typo afterAPIRequest
+[34m|[m [1;33m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m95d5b633[m fix: clear active change stream when service down
+[34m|[m [1;33m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mae5344f4[m chore: remove unused object
+[34m|[m [1;33m|[m * [1;32m|[m [36m|[m [1;31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m96f9dcbc[m feat: add ability recieve after process in plugin
+[34m|[m [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m * [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33m8167adc5[m Merge branch 'main' of github.com:erxes/erxes-next into contacts-command-bar
+[34m|[m [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [1;35m|[m[34m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[34m|[m [1;33m|[m[34m_[m[1;34m|[m[34m_[m[1;32m|[m[34m_[m[36m|[m[34m_[m[1;35m|[m[34m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[34m|[m[34m/[m[1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m282627dd[m chore: fix logs
+* [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m961225b7[m add cursorMode to cursor pagination
+[1;36m|[m [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m * [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33m3cf9397a[m Merge branch 'main' of github.com:erxes/erxes-next into contacts-command-bar
+[1;36m|[m [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [31m|[m[1;36m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[1;36m|[m [1;33m|[m[1;36m_[m[1;34m|[m[1;36m_[m[1;32m|[m[1;36m_[m[36m|[m[1;36m_[m[31m|[m[1;36m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[1;36m|[m[1;36m/[m[1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [1;32m|[m [36m|[m [31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mb71f647c[m feat: ui automations logs (#159)
+[36m|[m [1;33m|[m[36m_[m[1;34m|[m[36m_[m[1;32m|[m[36m/[m [31m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[36m|[m[36m/[m[1;33m|[m [1;34m|[m [1;32m|[m [31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [1;32m|[m [31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m3e4910af[m feat: automations & logs services
+* [1;33m|[m [1;34m|[m [1;32m|[m [31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mf74edb02[m feat: after mutations
+* [1;33m|[m [1;34m|[m [1;32m|[m [31m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m8adcb9d9[m Accounting select account and single details journals update (#158)
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m * [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33mbfdf48da[m Merge branch 'main' of github.com:erxes/erxes-next into contacts-command-bar
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m [33m|[m[1;32m\[m [31m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m [33m|[m[1;32m/[m [31m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m[1;32m/[m[33m|[m [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m * [31m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mf5830eaf[m feat: Add Companies Merge functionality with UI components
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m [34m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [33m10f282e2[m add facebook integratio
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m [34m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [33m5a9180f3[m refactor: update inbox integration routes, enhance Facebook integration components, and improve GraphQL queries
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m [34m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [33m958e88c5[m refactor: update Facebook GraphQL queries, add IntegrationSteps component, and create Facebook integration components
+[32m|[m [1;33m|[m [1;34m|[m [1;32m|[m [34m|[m * [1;33m|[m [1;32m|[m [1;32m|[m [33mf59e688d[m refactor: enhance NavigationButton component logic and improve Sidebar styling; add new integration components and update GraphQL queries
+[32m|[m [1;33m|[m[32m_[m[1;34m|[m[32m_[m[1;32m|[m[32m_[m[34m|[m[32m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[32m|[m[32m/[m[1;33m|[m [1;34m|[m [1;32m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [1;32m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m81e1df02[m refactor: update BrandField to use single value and integrate SelectBrand component; add brand selection functionality
+[1;32m|[m [1;33m|[m[1;32m_[m[1;34m|[m[1;32m/[m [34m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[1;32m|[m[1;32m/[m[1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m5bb5d35c[m fix: members inline
+* [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33md98eac9c[m merge
+* [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m9ab27754[m must customer
+* [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m872851e1[m continue
+* [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33mb11db206[m fix: deb fund forms
+* [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m   [33mb41ac43d[m Merge pull request #153 from erxes/accounting
+[35m|[m[36m\[m [1;33m\[m [1;34m\[m [34m\[m [1;33m\[m [1;32m\[m [1;32m\[m  
+[35m|[m * [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m8cf925d8[m refactor: update AccountingTopbar to return null and enhance CurrencyForm logic
+[35m|[m * [1;33m|[m [1;34m|[m [34m|[m [1;33m|[m [1;32m|[m [1;32m|[m [33m8a2faaab[m currency check
+[35m|[m [1;33m|[m[1;33m/[m [1;34m/[m [34m/[m [1;33m/[m [1;32m/[m [1;32m/[m  
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33mb250f5e1[m update
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m5de5ef46[m refactor: enhance type safety and consistency in POS components, streamline state management, and optimize imports across various modules
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m5d01eaed[m refactor: correct spelling in constants, enhance POS form schemas with new options, and replace Select components with Input for better user experience
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m727d3cb6[m refactor: enhance type safety in POS components by updating props and improving form handling, streamline state management, and optimize imports
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m84d540b8[m[33m ([m[1;31morigin/pos-plugin[m[33m)[m refactor: enhance POS form schemas with optional departmentId, improve type safety in appearance and finance components, and streamline form handling
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m0f1a572c[m refactor: streamline POS component props, enhance type safety, and improve form handling with read-only states
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m93fb4843[m refactor: align POS form schemas with backend structure, enhance payment method handling, and improve component props for better type safety
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m1b6e85c0[m refactor: update component imports, enhance POS forms with read-only states, and remove unused components
+[35m|[m [1;33m|[m [1;34m|[m [34m|[m * [1;32m|[m [1;32m|[m [33m675d2eb1[m feat: add 'pos' translation and export stepper component
+[35m|[m [1;33m|[m[35m_[m[1;34m|[m[35m_[m[34m|[m[35m/[m [1;32m/[m [1;32m/[m  
+[35m|[m[35m/[m[1;33m|[m [1;34m|[m [34m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [34m|[m [1;32m|[m [1;32m|[m [33m9b4af6a7[m fix: pos resolvers
+* [1;33m|[m [1;34m|[m [34m|[m [1;32m|[m [1;32m|[m [33m600ec37f[m docModifier delete
+[34m|[m [1;33m|[m[34m_[m[1;34m|[m[34m/[m [1;32m/[m [1;32m/[m  
+[34m|[m[34m/[m[1;33m|[m [1;34m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [1;32m|[m [1;32m|[m   [33m6f973572[m Merge pull request #147 from erxes/inbox-structure
+[1;33m|[m[1;32m\[m [1;33m\[m [1;34m\[m [1;32m\[m [1;32m\[m  
+[1;33m|[m [1;32m|[m[1;33m/[m [1;34m/[m [1;32m/[m [1;32m/[m  
+[1;33m|[m[1;33m/[m[1;32m|[m [1;34m|[m [1;32m|[m [1;32m|[m   
+[1;33m|[m * [1;34m|[m [1;32m|[m [1;32m|[m [33m68c17855[m[33m ([m[1;31morigin/inbox-structure[m[33m)[m chore: update dependencies in pnpm-lock.yaml and refactor RecordTableCursor, MessageItem, and FbPostConversationDetail components for improved functionality
+[1;33m|[m * [1;34m|[m [1;32m|[m [1;32m|[m   [33m337b5b48[m Merge branch 'main' into inbox-structure
+[1;33m|[m [1;33m|[m[1;33m\[m [1;34m\[m [1;32m\[m [1;32m\[m  
+[1;33m|[m [1;33m|[m[1;33m/[m [1;34m/[m [1;32m/[m [1;32m/[m  
+[1;33m|[m[1;33m/[m[1;33m|[m [1;34m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;34m|[m [1;32m|[m [1;32m|[m [33m8b3761d5[m feat: tags settings
+[1;34m|[m [1;33m|[m[1;34m/[m [1;32m/[m [1;32m/[m  
+[1;34m|[m[1;34m/[m[1;33m|[m [1;32m|[m [1;32m|[m   
+* [1;33m|[m [1;32m|[m [1;32m|[m [33m71b30b5c[m fix: calc tax
+* [1;33m|[m [1;32m|[m [1;32m|[m [33m42725193[m fix: ctaxform
+* [1;33m|[m [1;32m|[m [1;32m|[m [33mc08d87cd[m allow removing multiple brands
+* [1;33m|[m [1;32m|[m [1;32m|[m [33m6c74f94a[m chore: remove password regex from login form
+* [1;33m|[m [1;32m|[m [1;32m|[m [33m112323c9[m feat: widgets
+* [1;33m|[m [1;32m|[m [1;32m|[m [33m4463ccb3[m feat: widgets sidebar for contacts
+[1;34m|[m * [1;32m|[m [1;32m|[m [33m83e8e9a8[m merge
+[1;34m|[m * [1;32m|[m [1;32m|[m [33m2ceff1fc[m refactor: update components and hooks for improved functionality and structure in inbox and integrations modules
+[1;34m|[m[1;34m/[m [1;32m/[m [1;32m/[m  
+* [1;32m|[m [1;32m|[m [33m0907e038[m feat: file handler
+* [1;32m|[m [1;32m|[m [33mcbb79220[m feat: brands settings (#145)
+* [1;32m|[m [1;32m|[m [33m36cd25dc[m fix: vat form finish
+* [1;32m|[m [1;32m|[m [33m92003cb9[m fix(frontline_ui): close unclosed JSX tag in InboxIndexPage to resolve build error
+* [1;32m|[m [1;32m|[m [33m6be92af2[m feat: add create plugin script
+[1;32m|[m [1;32m|[m[1;32m/[m  
+[1;32m|[m[1;32m/[m[1;32m|[m   
+* [1;32m|[m   [33m66fbb99b[m Merge pull request #138 from erxes/category
+[1;35m|[m[1;36m\[m [1;32m\[m  
+[1;35m|[m * [1;32m|[m [33m260677a4[m[33m ([m[1;31morigin/category[m[33m)[m feat: add cancel functionality to AddProductCategory form and refactor category detail handling
+[1;35m|[m * [1;32m|[m [33m2e01e0ed[m feat: add product category mutations and queries, enhance product category management UI
+[1;35m|[m [1;32m|[m[1;32m/[m  
+* [1;32m/[m [33macaff0a1[m fix: vatForm up
+[1;32m|[m[1;32m/[m  
+*   [33md4cebfd5[m Merge branch 'main' of github.com:erxes/erxes-next
+[31m|[m[32m\[m  
+[31m|[m * [33mdc64252a[m refactor: optimize imports and simplify component structure in segments module
+[31m|[m *   [33m40862a2d[m Merge branches 'main' and 'main' of github.com:erxes/erxes-next
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m * [33m90dd3789[m fat: get PORT from env
+[31m|[m * [34m|[m [33me3b6fa4d[m fix: use trpc context type from erxes-api-shared
+[31m|[m [34m|[m[34m/[m  
+[31m|[m * [33m18e70e5c[m fix build
+[31m|[m * [33m0092704b[m feat: inbox channels
+[31m|[m * [33m2b569012[m remove duplicated sendTrpmessage
+[31m|[m * [33mf238d6f9[m feat: event logs & automation & segments & form(Fields) (#91)
+[31m|[m *   [33m1c7063a1[m merge
+[31m|[m [35m|[m[36m\[m  
+[31m|[m [35m|[m * [33m138c116a[m refactor: streamline TeamMember component structure and enhance filter functionality
+[31m|[m [35m|[m * [33m6465342d[m refactor: update ProductsSettings route and clean up GeneralSettings component
+[31m|[m [35m|[m * [33m736cdbf3[m add frontline api ci
+[31m|[m [35m|[m * [33m3ac78cb6[m feat: add ProductsSettings route and enhance TagsRecordTable with sorted tags
+[31m|[m [35m|[m * [33m36e40757[m update
+[31m|[m [35m|[m * [33m69eb88f3[m chore: add frontline ci & dockerfile
+[31m|[m [35m|[m * [33m964f5c56[m chore: add frontline ci & dockerfile
+[31m|[m [35m|[m * [33m8153c605[m move document & add tag meta to core (#135)
+[31m|[m [35m|[m * [33mfb54edec[m pos ci check 1
+[31m|[m [35m|[m * [33m97cd4697[m accounting ci check 1
+[31m|[m [35m|[m * [33m1842e5fe[m accounting ci check
+[31m|[m [35m|[m * [33m964256e9[m accounting ci check
+[31m|[m [35m|[m * [33m7af69245[m fix: pos_api accounting_api CI
+[31m|[m [35m|[m * [33m97288b18[m chore: update project.json to include asset path for frontline_ui
+[31m|[m [35m|[m * [33m44e06c4a[m refactor: replace FilterDropdown with FilterConversations in ConversationFilter component
+[31m|[m * [36m|[m [33mbafea30e[m add scripts
+[31m|[m [36m|[m[36m/[m  
+[31m|[m * [33m240670f3[m Settings > Structure (#131)
+[31m|[m * [33m5530d95f[m permission
+[31m|[m * [33mda0af568[m fix: add pos_api
+[31m|[m * [33me12f5c88[m chore: products type with cache
+[31m|[m * [33mb3354b30[m chore: little
+[31m|[m * [33m03a045be[m chore: trpc default method is query
+[31m|[m * [33m0c73f29d[m fix: trpc action consumer
+[31m|[m *   [33m6909686c[m Merge pull request #132 from erxes/setting-cursor
+[31m|[m [1;31m|[m[1;32m\[m  
+[31m|[m [1;31m|[m * [33m4fb014f7[m[33m ([m[1;31morigin/setting-cursor[m[33m)[m refactor
+[31m|[m [1;31m|[m * [33m7c03d006[m feat(setting): implement cursor-based pagination in UI and API
+[31m|[m [1;31m|[m[1;31m/[m  
+[31m|[m * [33me2d20bfc[m feat(facebook): add core posting and commenting helpers  - Implement facebookPostHelper.ts - Create facebookCommentHelper.ts  - Integrate with existing controllers (#120)
+[31m|[m * [33m2c49c4b8[m fix inbox conversation result
+[31m|[m * [33m0751f85a[m move permission & add permission to contact
+[31m|[m * [33m2cb46bcc[m refactor(routes): update ContactsRoutes and SettingsRoutes for improved navigation
+[31m|[m *   [33m2fad05af[m Merge pull request #130 from erxes/inbox-query-fix
+[31m|[m [1;33m|[m[1;34m\[m  
+[31m|[m [1;33m|[m * [33m1d347c85[m[33m ([m[1;31morigin/inbox-query-fix[m[33m)[m fix(inbox) conversation query
+[31m|[m [1;33m|[m[1;33m/[m  
+[31m|[m * [33m26dec164[m feat(inbox): enhance GET_CONVERSATIONS query with cursor parameters and improved structure
+[31m|[m * [33mdb76d6c6[m Merge pull request #129 from erxes/inbox-cursor-fix
+[31m|[m[31m/[m[1;36m|[m 
+[31m|[m * [33mee745063[m[33m ([m[1;31morigin/inbox-cursor-fix[m[33m)[m refactor
+[31m|[m * [33m5de4bd75[m feat(inbox) cursor arguments
+[31m|[m[31m/[m  
+* [33m0cd31089[m feat: implement tags management in settings
+* [33mfc3bc516[m chore: accounting import
+* [33m7efac012[m chore: accounting definitions
+* [33m827b85f7[m Update pnpm-lock.yaml
+*   [33m163d3613[m Merge branch 'main' of github.com:erxes/erxes-next
+[31m|[m[32m\[m  
+[31m|[m * [33m8023cd1a[m chore:
+[31m|[m * [33m90da25df[m feat: enhance ContactsPageEffect with dynamic hotkey scope management
+[31m|[m * [33mde376f43[m refactor: streamline hotkey scopes and enhance contacts routing
+[31m|[m * [33mf0e6af0d[m feat: implement session key for customers filter and record table
+[31m|[m * [33m32e65980[m feat: add @tanstack/react-virtual dependency and enhance contacts routing
+[31m|[m * [33mce151713[m chore: accounting tbalance and taxForm start
+[31m|[m * [33m7089af8d[m chore: little
+[31m|[m * [33m85b7b166[m chore: little
+[31m|[m * [33m6fccfde6[m chore: accounting refactor

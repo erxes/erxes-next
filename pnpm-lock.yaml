@@ -800,11 +800,17 @@ importers:
         specifier: workspace:^
         version: link:../../erxes-api-shared
 
+<<<<<<< HEAD
+  backend/plugins/cars_api:
+=======
   backend/plugins/content_api:
+>>>>>>> b9fcc6e94fe8d9d59da2cc9e48939d1e201bce67
     dependencies:
       erxes-api-shared:
         specifier: workspace:^
         version: link:../../erxes-api-shared
+<<<<<<< HEAD
+=======
       html-to-text:
         specifier: ^8.2.1
         version: 8.2.1
@@ -817,6 +823,7 @@ importers:
       tmp:
         specifier: ^0.2.3
         version: 0.2.3
+>>>>>>> b9fcc6e94fe8d9d59da2cc9e48939d1e201bce67
 
   backend/plugins/finance_api:
     dependencies:
