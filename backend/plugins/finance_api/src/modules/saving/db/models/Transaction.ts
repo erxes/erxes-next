@@ -30,7 +30,7 @@ export interface ITransactionModel extends Model<ITransactionDocument> {
   removeTransaction(_ids: string[]): Promise<ITransaction>;
 }
 
-export const laodTransactionClass = (models: IModels) => {
+export const loadTransactionClass = (models: IModels) => {
   class Transaction {
     /**
      *

@@ -9,13 +9,23 @@ import { IContractTypeDocument } from '~/modules/saving/@types/contractTypes';
 import mongoose from 'mongoose';
 
 import { loadSavingClass, ISavingModel } from '@/saving/db/models/Saving';
-import { IBlockModel } from '~/modules/saving/db/models/Block';
-import { IPeriodLock } from '~/modules/saving/@types/periodLockTypes';
-import { IPeriodLockModel } from '~/modules/saving/db/models/PeriodLock';
-import { IContractModel } from '~/modules/saving/db/models/Contract';
-import { ITransactionModel } from '~/modules/saving/db/models/Transaction';
-import { IStoredInterest } from '~/modules/saving/@types/storedInterest';
+import { IBlockModel, loadBlockClass } from '~/modules/saving/db/models/Block';
+import { IPeriodLockDocument } from '~/modules/saving/@types/periodLockTypes';
+import {
+  IPeriodLockModel,
+  loadPeriodLock,
+} from '~/modules/saving/db/models/PeriodLock';
+import {
+  IContractModel,
+  loadContract,
+} from '~/modules/saving/db/models/Contract';
+import {
+  ITransactionModel,
+  loadTransactionClass,
+} from '~/modules/saving/db/models/Transaction';
 import { IStoredInterestModel } from '~/modules/saving/db/models/StoredInterest';
+import { IBlockDocument } from '~/modules/saving/@types/blockTypes';
+import { ITransactionDocument } from '~/modules/saving/@types/transactions';
 
 export interface IModels {
   Saving: ISavingModel;
@@ -42,6 +52,26 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.ContractTypes = db.model<IContractTypeDocument, IContractTypeModel>(
     'saving_contract_types',
     loadContractTypeClass(models),
+  );
+
+  models.Contracts = db.model<IContractTypeDocument, IContractModel>(
+    'saving_contract',
+    loadContract(models),
+  );
+
+  models.Blocks = db.model<IBlockDocument, IBlockModel>(
+    'saving_block',
+    loadBlockClass(models),
+  );
+
+  models.Transactions = db.model<ITransactionDocument, ITransactionModel>(
+    'saving_transaction',
+    loadTransactionClass(models),
+  );
+
+  models.PeriodLocks = db.model<IPeriodLockDocument, IPeriodLockModel>(
+    'saving_period_lock',
+    loadPeriodLock(models),
   );
 
   return models;

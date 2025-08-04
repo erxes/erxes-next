@@ -125,9 +125,9 @@ const transactionMutations = {
   },
 };
 
-checkPermission(transactionMutations, 'transactionAdd', 'manageTransaction');
-checkPermission(transactionMutations, 'transactionEdit', 'manageTransaction');
-checkPermission(transactionMutations, 'transactionChange', 'manageTransaction');
-checkPermission(transactionMutations, 'transactionRemove', 'transactionRemove');
+// checkPermission(transactionMutations, 'transactionAdd', 'manageTransaction');
+// checkPermission(transactionMutations, 'transactionEdit', 'manageTransaction');
+// checkPermission(transactionMutations, 'transactionChange', 'manageTransaction');
+// checkPermission(transactionMutations, 'transactionRemove', 'transactionRemove');
 
 export default transactionMutations;

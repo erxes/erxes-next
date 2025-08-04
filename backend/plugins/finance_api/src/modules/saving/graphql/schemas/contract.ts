@@ -120,8 +120,6 @@ const commonFields = `
   branchId:String
   status: String
   description: String
-  createdBy: String
-  createdAt: Date
   savingAmount: Float
   duration: Float
   interestRate: Float

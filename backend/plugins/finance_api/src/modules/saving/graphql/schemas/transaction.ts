@@ -17,8 +17,6 @@ type SavingTransactionPreInfo {
 
 type SavingTransaction {
     _id: String,
-    createdAt: Date,
-    createdBy: String,
     customerId: String,
     companyId: String,
     invoiceId: String,

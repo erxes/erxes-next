@@ -10,7 +10,7 @@ export interface IBlockModel extends Model<IBlockDocument> {
   removeBlocks(_ids: string[]): Promise<IBlockDocument>;
 }
 
-export const laodBlockClass = (models: IModels) => {
+export const loadBlockClass = (models: IModels) => {
   class Block {
     /**
      *

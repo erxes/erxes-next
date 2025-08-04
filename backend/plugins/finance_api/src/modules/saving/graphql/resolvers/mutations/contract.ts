@@ -22,6 +22,8 @@ export const contractMutations = {
     doc: IContract,
     { models }: IContext,
   ) => {
+    console.log(doc);
+
     return await models.Contracts.createContract(doc);
   },
 
@@ -317,30 +319,30 @@ export const contractMutations = {
   },
 };
 
-checkPermission(
-  contractMutations,
-  'savingsContractsAdd',
-  'savingsContractsAdd',
-);
-checkPermission(
-  contractMutations,
-  'savingsContractsEdit',
-  'savingsContractsEdit',
-);
-checkPermission(
-  contractMutations,
-  'savingsContractsDealEdit',
-  'savingsContractsDealEdit',
-);
-checkPermission(
-  contractMutations,
-  'savingsContractsClose',
-  'savingsContractsClose',
-);
-checkPermission(
-  contractMutations,
-  'savingsContractsRemove',
-  'savingsContractsRemove',
-);
+// checkPermission(
+//   contractMutations,
+//   'savingsContractsAdd',
+//   'savingsContractsAdd',
+// );
+// checkPermission(
+//   contractMutations,
+//   'savingsContractsEdit',
+//   'savingsContractsEdit',
+// );
+// checkPermission(
+//   contractMutations,
+//   'savingsContractsDealEdit',
+//   'savingsContractsDealEdit',
+// );
+// checkPermission(
+//   contractMutations,
+//   'savingsContractsClose',
+//   'savingsContractsClose',
+// );
+// checkPermission(
+//   contractMutations,
+//   'savingsContractsRemove',
+//   'savingsContractsRemove',
+// );
 
 export default contractMutations;

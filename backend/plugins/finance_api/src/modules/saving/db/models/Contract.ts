@@ -1,7 +1,7 @@
 import { ICompanyDocument } from 'erxes-api-shared/core-types';
 import { getFullDate } from 'erxes-api-shared/utils';
 import { FilterQuery, Model, models } from 'mongoose';
-import { IModels } from '~/connectionResolvers';
+import { IContext, IModels } from '~/connectionResolvers';
 import { getConfig } from '~/messageBroker';
 import {
   CONTRACT_STATUS,
@@ -51,7 +51,7 @@ export interface IContractModel extends Model<IContractDocument> {
     contractId: string;
     invDate: Date;
     interestAmount: number;
-  });
+  }): Promise<IContractDocument>;
 }
 
 export const loadContract = (models: IModels) => {
@@ -77,6 +77,7 @@ export const loadContract = (models: IModels) => {
 
     public static async createContract(doc: IContract) {
       doc.status = CONTRACT_STATUS.NORMAL;
+
       doc.startDate = getFullDate(doc.startDate || new Date());
       doc.endDate = addMonths(new Date(doc.startDate), doc.duration);
       doc.lastStoredDate = getFullDate(doc.startDate || new Date());

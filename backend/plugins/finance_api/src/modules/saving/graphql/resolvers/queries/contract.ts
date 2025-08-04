@@ -1,12 +1,55 @@
-import { IContext } from '~/connectionResolvers';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FilterQuery } from 'mongoose';
+import { IContext, IModels } from '~/connectionResolvers';
 import {
   IContract,
   IContractDocument,
+  IContractFilterQueryParams,
 } from '~/modules/saving/@types/contracts';
+
+const generateFilter = async (
+  params: IContractFilterQueryParams,
+  models: IModels,
+) => {
+  const filter: any = {};
+
+  if (params.ids) {
+    filter._id = { $in: [params.ids] };
+  }
+
+  if (params.customerId) {
+    filter.customerId = params.customerId;
+  }
+
+  return filter;
+};
 
 const contractQueries = {
   async contractType(contract: IContract, _: undefined, { models }: IContext) {
     return await models.ContractTypes.findOne({ _id: contract.contractTypeId });
+  },
+
+  /**
+   * Contract list
+   */
+
+  savingContracts: async (
+    _root: undefined,
+    params: IContractFilterQueryParams,
+    { models }: IContext,
+  ) => {
+    const filter: FilterQuery<IContractDocument> = await generateFilter(
+      params,
+      models,
+    );
+
+    console.log(111, filter);
+
+    return await cursorPaginate<IContractDocument>({
+      model: models.Contracts,
+      params,
+      query: filter,
+    });
   },
 
   async hasTransation(

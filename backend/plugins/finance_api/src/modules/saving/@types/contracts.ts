@@ -1,4 +1,8 @@
-import { ICustomField } from 'erxes-api-shared/core-types';
+import {
+  ICursorPaginateParams,
+  ICustomField,
+  IListParams,
+} from 'erxes-api-shared/core-types';
 import { Document } from 'mongoose';
 
 export interface IContract {
@@ -41,6 +45,14 @@ export interface IContract {
 
 export interface IContractDocument extends IContract, Document {
   _id: string;
+}
+
+export interface IContractFilterQueryParams
+  extends IListParams,
+    ICursorPaginateParams {
+  ids?: string[];
+  searchValue?: string;
+  customerId?: string;
 }
 
 export interface ICloseVariable {

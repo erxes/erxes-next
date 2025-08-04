@@ -1,8 +1,6 @@
 export const types = `
   type SavingPeriodLock {
     _id: String!
-    createdAt: Date
-    createdBy: String 
     date: Date
     excludeContracts:[String]
     generals: JSON
