@@ -4,6 +4,7 @@ export interface ITeam {
   icon: string;
   name: string;
   description: string;
+  estimatedType: number;
 }
 
 export interface ITeamDocument extends ITeam, Document {

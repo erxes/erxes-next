@@ -8,6 +8,7 @@ export const types = `
         icon: String
         name: String
         description: String
+        estimatedType: Int 
         createdAt: Date
         updatedAt: Date
 
@@ -33,6 +34,6 @@ export const queries = `
 
 export const mutations = `
     teamAdd(name: String!, description: String, icon: String!, memberIds: [String]): Team
-    teamUpdate(_id: String!, name: String!, description: String, icon: String!, memberIds: [String]): Team
+    teamUpdate(_id: String!, name: String!, description: String, icon: String!, memberIds: [String], estimatedType: Int): Team
     teamRemove(_id: String!): Team
 `;

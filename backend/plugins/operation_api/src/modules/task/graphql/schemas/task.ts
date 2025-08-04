@@ -15,6 +15,7 @@ export const types = `
     cycleId: String
     projectId: String
     teamId: String
+    estimatedPoint: Int
   }
 
   type TaskListResponse {
@@ -35,6 +36,7 @@ const taskFilterParams = `
   updatedAt: Date
   projectId: String 
   teamId: String
+  estimatedPoint: Int
   ${GQL_CURSOR_PARAM_DEFS}
 `;
 
@@ -44,7 +46,7 @@ export const queries = `
 `;
 
 export const mutations = `
-  createTask(name: String!, description: String!, status: String!, priority: String!, labelIds: [String], tagIds: [String], assignee: String!, cycleId: String!, projectId: String!): Task
-  updateTask(_id: String!, name: String!, description: String!, status: String!, priority: String!, labelIds: [String], tagIds: [String], assignee: String!, cycleId: String!, projectId: String!): Task
+  createTask(name: String!, description: String!, status: String!, priority: String!, labelIds: [String], tagIds: [String], assignee: String!, cycleId: String!, projectId: String!, estimatedPoint: Int): Task
+  updateTask(_id: String!, name: String!, description: String!, status: String!, priority: String!, labelIds: [String], tagIds: [String], assignee: String!, cycleId: String!, projectId: String!, estimatedPoint: Int): Task
   removeTask(_id: String!): Task
 `;

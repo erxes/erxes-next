@@ -15,6 +15,7 @@ export interface ITask {
   assignee?: string;
   cycleId?: string;
   projectId: string;
+  estimatedPoint?: number;
 }
 
 export interface ITaskDocument extends ITask, Document {

@@ -16,6 +16,7 @@ export const taskSchema = schemaWrapper(
       assignee: { type: String, label: 'Assignee' },
       cycleId: { type: String, label: 'Cycle ID' },
       projectId: { type: String, label: 'Project ID' },
+      estimatedPoint: { type: Number, label: 'Estimated Point' },
     },
     {
       timestamps: true,
