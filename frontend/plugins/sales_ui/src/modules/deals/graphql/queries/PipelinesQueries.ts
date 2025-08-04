@@ -55,4 +55,25 @@ export const GET_PIPELINE_LABEL_DETAIL = gql`
     }
   }
 `;
+
+export const GET_PIPELINES = gql`
+  query SalesPipelines($boardId: String, $isAll: Boolean) {
+    salesPipelines(boardId: $boardId, isAll: $isAll) {
+      _id
+      name
+      boardId
+      state
+      startDate
+      endDate
+      status
+      createdAt
+      createdUser {
+        details {
+          fullName
+        }
+      }
+      itemsTotalCount
+    }
+  }
+`;
     
