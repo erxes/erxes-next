@@ -1,5 +1,6 @@
 import { TEAM_FORM_SCHEMA } from '~/modules/team/schemas';
 import { z } from 'zod';
+import { IUser } from 'ui-modules';
 
 export enum TeamHotKeyScope {
   TeamSettingsPage = 'operation-team-page',
@@ -24,6 +25,15 @@ export interface ITeam {
 
   taskCount: number;
   memberCount: number;
+}
+
+export interface ITeamMember {
+  _id: string;
+  memberId: string;
+  teamId: string;
+
+  member: IUser;
+  role: string;
 }
 
 export type TTeamForm = z.infer<typeof TEAM_FORM_SCHEMA>;

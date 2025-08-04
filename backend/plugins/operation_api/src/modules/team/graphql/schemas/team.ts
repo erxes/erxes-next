@@ -1,4 +1,8 @@
 export const types = `
+    extend type User @key(fields: "_id") {
+       _id: String @external
+    }
+
     type Team {
         _id: String
         icon: String
@@ -10,11 +14,21 @@ export const types = `
         taskCount: Int
         memberCount: Int
     }
+
+    type TeamMember {
+        _id: String
+        memberId: String
+        teamId: String
+
+        member: User
+        role: String
+    }
 `;
 
 export const queries = `
     getTeam(_id: String!): Team
     getTeams(name: String): [Team]
+    getTeamMembers(teamId: String!): [TeamMember]
 `;
 
 export const mutations = `

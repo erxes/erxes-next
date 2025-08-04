@@ -10,7 +10,7 @@ export const teamMutations = {
     memberIds = memberIds || [];
     memberIds = memberIds.includes(userId)
       ? memberIds.filter((id) => id !== userId)
-      : [...memberIds, userId];
+      : [...memberIds];
 
     return models.Team.createTeam({
       teamDoc: { name, description, icon },

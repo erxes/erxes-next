@@ -13,4 +13,12 @@ export const teamQueries = {
   ) => {
     return models.Team.getTeams(params);
   },
+
+  getTeamMembers: async (
+    _parent: undefined,
+    { teamId }: { teamId: string },
+    { models }: IContext,
+  ) => {
+    return models.TeamMember.find({ teamId });
+  },
 };
