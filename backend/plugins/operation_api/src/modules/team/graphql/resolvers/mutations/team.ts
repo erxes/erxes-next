@@ -77,11 +77,19 @@ export const teamMutations = {
     );
   },
 
-  removeTeamMember: async (
+  teamRemoveMember: async (
     _parent: undefined,
-    { _id, memberId }: { _id: string; memberId: string },
+    { _id }: { _id: string },
     { models }: IContext,
   ) => {
-    return models.TeamMember.removeTeamMember(_id, memberId);
+    return models.TeamMember.removeTeamMember(_id);
+  },
+
+  teamUpdateMember: async (
+    _parent: undefined,
+    { _id, role }: { _id: string; memberId: string; role: TeamMemberRoles },
+    { models }: IContext,
+  ) => {
+    return models.TeamMember.updateTeamMember(_id, role);
   },
 };

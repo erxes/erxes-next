@@ -11,16 +11,12 @@ export interface ITeamMemberModel extends Model<ITeamMemberDocument> {
   getTeamMember(memberId: string, teamId: string): Promise<ITeamMemberDocument>;
   createTeamMember(doc: ITeamMember): Promise<ITeamMemberDocument>;
   updateTeamMember(
-    memberId: string,
-    teamId: string,
-    doc: ITeamMember,
+    _id: string,
+    role: TeamMemberRoles,
   ): Promise<ITeamMemberDocument>;
 
   createTeamMembers(members: ITeamMember[]): Promise<ITeamMemberDocument[]>;
-  removeTeamMember(
-    memberId: string,
-    teamId: string,
-  ): Promise<ITeamMemberDocument>;
+  removeTeamMember(_id: string): Promise<ITeamMemberDocument>;
 }
 
 export const loadTeamMemberClass = (models: IModels) => {
@@ -33,23 +29,34 @@ export const loadTeamMemberClass = (models: IModels) => {
       return models.TeamMember.insertOne(doc);
     }
 
-    public static async updateTeamMember(
-      memberId: string,
-      teamId: string,
-      doc: ITeamMember,
-    ) {
-      return models.TeamMember.findOneAndUpdate(
-        { memberId, teamId },
-        { $set: { ...doc } },
-      );
+    public static async updateTeamMember(_id: string, role: TeamMemberRoles) {
+      const teamMember = await models.TeamMember.findOne({ _id });
+
+      if (!teamMember) {
+        throw new Error('Team member not found');
+      }
+
+      if (teamMember.role === TeamMemberRoles.ADMIN) {
+        const adminsCount = await models.TeamMember.countDocuments({
+          teamId: teamMember.teamId,
+          role: TeamMemberRoles.ADMIN,
+        });
+
+        if (adminsCount === 1) {
+          throw new Error('Admin cannot be removed');
+        }
+      }
+
+      return models.TeamMember.findOneAndUpdate({ _id }, { $set: { role } });
     }
 
     public static async createTeamMembers(members: ITeamMember[]) {
       return models.TeamMember.insertMany(members);
     }
 
-    public static async removeTeamMember(memberId: string, teamId: string) {
-      const teamMember = await models.TeamMember.findOne({ memberId, teamId });
+    public static async removeTeamMember(_id: string) {
+      const teamMember = await models.TeamMember.findOne({ _id });
+
       if (!teamMember) {
         throw new Error('Team member not found');
       }
@@ -58,7 +65,7 @@ export const loadTeamMemberClass = (models: IModels) => {
         throw new Error('Admin cannot be removed');
       }
 
-      return models.TeamMember.deleteOne({ memberId, teamId });
+      return models.TeamMember.deleteOne({ _id });
     }
   }
 

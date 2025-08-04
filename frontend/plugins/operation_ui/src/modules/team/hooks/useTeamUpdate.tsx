@@ -2,16 +2,16 @@ import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { UPDATE_TEAM } from '@/team/graphql/mutations/updateTeam';
 import { ITeam } from '@/team/types';
 import { GET_TEAM } from '@/team/graphql/queries/getTeam';
-interface CreateTeamMutationResponse {
+interface UpdateTeamMutationResponse {
   updateTeam: ITeam;
 }
 
 export const useTeamUpdate = () => {
   const [updateTeam, { loading, error }] =
-    useMutation<CreateTeamMutationResponse>(UPDATE_TEAM);
+    useMutation<UpdateTeamMutationResponse>(UPDATE_TEAM);
 
   const handleUpdateTeam = (
-    options: MutationFunctionOptions<CreateTeamMutationResponse, any>,
+    options: MutationFunctionOptions<UpdateTeamMutationResponse, any>,
   ) => {
     updateTeam({
       ...options,

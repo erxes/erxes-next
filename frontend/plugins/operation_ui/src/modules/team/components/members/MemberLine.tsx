@@ -3,9 +3,31 @@ import { IconX } from '@tabler/icons-react';
 import { Avatar } from 'erxes-ui';
 import { readImage } from 'erxes-ui';
 import { Select } from 'erxes-ui';
+import { useTeamMemberUpdate } from '@/team/hooks/useTeamMemberUpdate';
+import { useTeamMemberRemove } from '@/team/hooks/useTeamMemberRemove';
 
 export const MemberLine = ({ member }: { member: ITeamMember }) => {
   const { details } = member.member;
+
+  const { updateTeamMember } = useTeamMemberUpdate();
+  const { removeTeamMember } = useTeamMemberRemove();
+
+  const roleHandler = (value: string) => {
+    updateTeamMember({
+      variables: {
+        _id: member._id,
+        role: value,
+      },
+    });
+  };
+
+  const removeHandler = () => {
+    removeTeamMember({
+      variables: {
+        _id: member._id,
+      },
+    });
+  };
 
   return (
     <div className="w-full flex items-center py-3 px-6 border-b hover:bg-sidebar/50 border-muted-foreground/5 text-sm group">
@@ -30,7 +52,7 @@ export const MemberLine = ({ member }: { member: ITeamMember }) => {
       </div>
       <div className="w-[30%] sm:w-[20%] xl:w-[20%] pl-2.5 text-right">
         <div className="flex items-center gap-2">
-          <Select value={member.role}>
+          <Select value={member.role} onValueChange={roleHandler}>
             <Select.Trigger id="time-unit">
               <Select.Value placeholder="Select role" />
             </Select.Trigger>
@@ -52,9 +74,7 @@ export const MemberLine = ({ member }: { member: ITeamMember }) => {
         <IconX
           size={16}
           className="stroke-foreground cursor-pointer"
-          onClick={() => {
-            console.log('123');
-          }}
+          onClick={removeHandler}
         />
       </div>
     </div>
