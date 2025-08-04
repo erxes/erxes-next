@@ -57,4 +57,5 @@ export type KanbanCardsProps<T extends IDeal = IDeal> =
     onDragStart?: (event: DragStartEvent) => void;
     onDragEnd?: (event: DragEndEvent) => void;
     onDragOver?: (event: DragOverEvent) => void;
+    updateOrders?: (variables: any, type: string) => void;
   };

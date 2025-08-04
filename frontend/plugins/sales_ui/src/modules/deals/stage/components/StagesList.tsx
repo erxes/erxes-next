@@ -3,6 +3,10 @@ import {
   KanbanCard,
   KanbanProvider,
 } from '@/deals/components/common/kanban/KanbanContext';
+import {
+  useDealsChange,
+  useDealsStageChange,
+} from '@/deals/cards/hooks/useDeals';
 import { useEffect, useState } from 'react';
 
 import { KanbanCards } from '@/deals/components/common/kanban/KanbanCards';
@@ -20,12 +24,27 @@ export const StagesList = () => {
     },
   });
 
+  const { changeDeals } = useDealsChange();
+  const { changeDealsStage } = useDealsStageChange();
+
   const [features, setFeatures] = useState([]);
   const [columns, setColumns] = useState(stages || []);
 
   useEffect(() => {
     setColumns(stages || []);
   }, [stages, pipelineId]);
+
+  const updateOrders = async (variables: any, type: string) => {
+    const mutation = type === 'column' ? changeDealsStage : changeDeals;
+
+    try {
+      await mutation({
+        variables,
+      });
+    } catch (err) {
+      console.error('Failed to reorder stages', err);
+    }
+  };
 
   if (stagesLoading) {
     return <StagesLoading />;
@@ -38,6 +57,7 @@ export const StagesList = () => {
         data={features}
         onDataChange={setFeatures}
         onColumnsChange={setColumns}
+        updateOrders={updateOrders}
       >
         {(column) => (
           <KanbanBoard _id={column._id} key={column._id}>

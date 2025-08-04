@@ -1,5 +1,6 @@
 import {
   ADD_DEALS,
+  DEALS_CHANGE,
   EDIT_DEALS,
   REMOVE_DEALS,
 } from '@/deals/graphql/mutations/DealsMutations';
@@ -21,6 +22,8 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/client';
+
+import { UPDATE_STAGES_ORDER } from '@/deals/graphql/mutations/StagesMutations';
 
 export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>) => {
   const { data, loading, error, fetchMore, refetch } = useQuery<{
@@ -161,7 +164,6 @@ export function useDealsAdd(options?: MutationHookOptions<any, any>) {
         query: GET_DEALS,
         variables: {
           ...options?.variables,
-          _id,
         },
       },
     ],
@@ -203,7 +205,6 @@ export function useDealsRemove(options?: MutationHookOptions<any, any>) {
         query: GET_DEALS,
         variables: {
           ...options?.variables,
-          _id,
         },
       },
     ],
@@ -226,6 +227,85 @@ export function useDealsRemove(options?: MutationHookOptions<any, any>) {
 
   return {
     removeDeals,
+    loading,
+    error,
+  };
+}
+
+export function useDealsChange(options?: MutationHookOptions<any, any>) {
+  const [changeDeals, { loading, error }] = useMutation(DEALS_CHANGE, {
+    ...options,
+    variables: {
+      ...options?.variables,
+    },
+    refetchQueries: [
+      {
+        query: GET_DEALS,
+        variables: {
+          ...options?.variables,
+        },
+      },
+    ],
+    awaitRefetchQueries: true,
+    onCompleted: (...args) => {
+      toast({
+        title: 'Successfully updated a  deal',
+        variant: 'default',
+      });
+      options?.onCompleted?.(...args);
+    },
+    onError: (err) => {
+      toast({
+        title: 'Error',
+        description: err.message || 'Update failed',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  return {
+    changeDeals,
+    loading,
+    error,
+  };
+}
+
+export function useDealsStageChange(options?: MutationHookOptions<any, any>) {
+  const [changeDealsStage, { loading, error }] = useMutation(
+    UPDATE_STAGES_ORDER,
+    {
+      ...options,
+      variables: {
+        ...options?.variables,
+      },
+      refetchQueries: [
+        {
+          query: GET_DEALS,
+          variables: {
+            ...options?.variables,
+          },
+        },
+      ],
+      awaitRefetchQueries: true,
+      onCompleted: (...args) => {
+        toast({
+          title: 'Successfully updated a  deal',
+          variant: 'default',
+        });
+        options?.onCompleted?.(...args);
+      },
+      onError: (err) => {
+        toast({
+          title: 'Error',
+          description: err.message || 'Update failed',
+          variant: 'destructive',
+        });
+      },
+    },
+  );
+
+  return {
+    changeDealsStage,
     loading,
     error,
   };

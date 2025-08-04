@@ -18,7 +18,6 @@ import {
   KanbanBoardProps,
   KanbanCardProps,
   KanbanContextProps,
-  KanbanHeaderProps,
   KanbanProviderProps,
 } from './types';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
@@ -141,10 +140,6 @@ export const KanbanCard = ({
   );
 };
 
-export const KanbanHeader = ({ className, ...props }: KanbanHeaderProps) => (
-  <div className={cn('m-0 p-2 font-semibold text-sm', className)} {...props} />
-);
-
 export const KanbanProvider = <
   T extends IDeal = IDeal,
   C extends IStage = IStage,
@@ -158,6 +153,7 @@ export const KanbanProvider = <
   data,
   onDataChange,
   onColumnsChange,
+  updateOrders,
   ...props
 }: KanbanProviderProps<T, C>) => {
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
@@ -256,7 +252,7 @@ export const KanbanProvider = <
     onDragOver?.(event);
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     setActiveCardId(null);
@@ -284,8 +280,19 @@ export const KanbanProvider = <
           activeColumnIndex,
           overColumnIndex,
         );
+
         onColumnsChange?.(newColumns);
       }
+
+      updateOrders?.(
+        {
+          orders: columns.map((col, index) => ({
+            _id: col._id,
+            order: index,
+          })),
+        },
+        'column',
+      );
       return;
     }
 
@@ -303,6 +310,15 @@ export const KanbanProvider = <
       };
 
       onDataChange?.(newData);
+
+      updateOrders?.(
+        {
+          itemId: activeId,
+          destinationStageId: overId,
+        },
+        'card',
+      );
+
       return;
     }
 
@@ -344,6 +360,14 @@ export const KanbanProvider = <
       const mergedData = [...otherCards, ...reorderedCards];
 
       onDataChange?.(mergedData);
+
+      updateOrders?.(
+        {
+          itemId: activeId,
+          destinationStageId: overId,
+        },
+        'card',
+      );
     }
 
     onDragEnd?.(event);
