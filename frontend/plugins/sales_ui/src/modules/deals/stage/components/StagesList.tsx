@@ -42,7 +42,7 @@ export const StagesList = () => {
         variables,
       });
     } catch (err) {
-      console.error('Failed to reorder stages', err);
+      // Error handling is already done in the mutation hooks via toast
     }
   };
 

@@ -127,7 +127,7 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
     awaitRefetchQueries: true,
     onCompleted: (...args) => {
       toast({
-        title: 'Successfully updated a  deal',
+        title: 'Successfully updated a deal',
         variant: 'default',
       });
       options?.onCompleted?.(...args);
@@ -170,7 +170,7 @@ export function useDealsAdd(options?: MutationHookOptions<any, any>) {
     awaitRefetchQueries: true,
     onCompleted: (...args) => {
       toast({
-        title: 'Successfully added a  deal',
+        title: 'Successfully added a deal',
         variant: 'default',
       });
       options?.onCompleted?.(...args);
@@ -211,7 +211,7 @@ export function useDealsRemove(options?: MutationHookOptions<any, any>) {
     awaitRefetchQueries: true,
     onCompleted: (...args) => {
       toast({
-        title: 'Successfully removed a  deal',
+        title: 'Successfully removed a deal',
         variant: 'default',
       });
       options?.onCompleted?.(...args);
@@ -249,7 +249,7 @@ export function useDealsChange(options?: MutationHookOptions<any, any>) {
     awaitRefetchQueries: true,
     onCompleted: (...args) => {
       toast({
-        title: 'Successfully updated a  deal',
+        title: 'Successfully updated deal order',
         variant: 'default',
       });
       options?.onCompleted?.(...args);
@@ -289,7 +289,7 @@ export function useDealsStageChange(options?: MutationHookOptions<any, any>) {
       awaitRefetchQueries: true,
       onCompleted: (...args) => {
         toast({
-          title: 'Successfully updated a  deal',
+          title: 'Successfully updated a deal',
           variant: 'default',
         });
         options?.onCompleted?.(...args);

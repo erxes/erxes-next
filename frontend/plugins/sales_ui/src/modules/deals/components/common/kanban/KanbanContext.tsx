@@ -84,9 +84,7 @@ export const KanbanCard = ({
   className,
   featureId,
   card,
-}: KanbanCardProps & {
-  featureId: string;
-}) => {
+}: KanbanCardProps) => {
   const {
     attributes,
     listeners,

@@ -32,8 +32,16 @@ export const useStagesOrder = (options?: MutationHookOptions<any, any>) => {
       ...options,
       variables: {
         ...options?.variables,
-        refetchQueries: [GET_STAGES],
       },
+      refetchQueries: [
+        {
+          query: GET_STAGES,
+          variables: {
+            ...options?.variables,
+          },
+        },
+      ],
+      awaitRefetchQueries: true,
     },
   );
 

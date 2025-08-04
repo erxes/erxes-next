@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 
 import { CardsLoading } from '../../loading/CardsLoading';
 import { EnumCursorDirection } from 'erxes-ui';
@@ -10,7 +10,6 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { cn } from 'erxes-ui';
 import { useDeals } from '@/deals/cards/hooks/useDeals';
 import { useDroppable } from '@dnd-kit/core';
-import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 export const KanbanCards = <T extends IDeal = IDeal>({
