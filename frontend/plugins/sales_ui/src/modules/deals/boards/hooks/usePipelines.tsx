@@ -120,6 +120,7 @@ export const usePipelineEdit = () => {
       ...options,
       variables,
       update: (cache, { data: { salesPipelinesEdit } }) => {
+        if (!salesPipelinesEdit) return;
         cache.modify({
           id: cache.identify(salesPipelinesEdit),
           fields: Object.keys(variables || {}).reduce(
