@@ -68,7 +68,7 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
           </DropdownMenu.Content>
         </DropdownMenu>
 
-        <Sheet open={open} onOpenChange={onSheetChange}>
+        <Sheet open={open} onOpenChange={onSheetChange} data-no-dnd="true">
           <Sheet.Trigger asChild>
             <Button variant="ghost" size="icon" className="size-6 relative">
               <IconPlus />

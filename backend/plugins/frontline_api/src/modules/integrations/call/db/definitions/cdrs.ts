@@ -7,7 +7,7 @@ export const CDRSchema = new Schema({
   updatedAt: { type: Date },
   createdBy: { type: String },
   updatedBy: { type: String },
-  acctId: { type: String, unique: true },
+  acctId: { type: String },
   src: { type: String },
   dst: { type: String },
   dcontext: { type: String },
