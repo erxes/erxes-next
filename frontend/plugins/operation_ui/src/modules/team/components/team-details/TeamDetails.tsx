@@ -20,7 +20,7 @@ export const TeamDetails = () => {
         </section>
       </div>
       <MemberSection team={team} />
-      <EstimateSection team={team} />
+      <EstimateSection team={team} refetch={refetch} />
       <StatusSection team={team} />
       <CycleSection />
     </div>

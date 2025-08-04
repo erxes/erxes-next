@@ -10,7 +10,7 @@ export const teamSchema = schemaWrapper(
       memberIds: { type: [String], label: 'Member IDs' },
       name: { type: String, label: 'Name' },
       description: { type: String, label: 'Description' },
-      estimatedType: { type: Number, label: 'Estimated Type' },
+      estimateType: { type: Number, label: 'Estimated Type' },
     },
     {
       timestamps: true,

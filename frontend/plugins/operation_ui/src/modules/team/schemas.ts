@@ -6,3 +6,7 @@ export const TEAM_FORM_SCHEMA = z.object({
   description: z.string().optional(),
   memberIds: z.string().array().optional(),
 });
+
+export const TEAM_MEMBER_FORM_SCHEMA = z.object({
+  memberIds: z.string().array().optional(),
+});

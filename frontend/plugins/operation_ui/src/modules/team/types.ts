@@ -1,4 +1,7 @@
-import { TEAM_FORM_SCHEMA } from '~/modules/team/schemas';
+import {
+  TEAM_FORM_SCHEMA,
+  TEAM_MEMBER_FORM_SCHEMA,
+} from '~/modules/team/schemas';
 import { z } from 'zod';
 import { IUser } from 'ui-modules';
 
@@ -37,3 +40,5 @@ export interface ITeamMember {
 }
 
 export type TTeamForm = z.infer<typeof TEAM_FORM_SCHEMA>;
+
+export type TTeamMemberForm = z.infer<typeof TEAM_MEMBER_FORM_SCHEMA>;

@@ -20,6 +20,7 @@ export const useGetTeamMembers = () => {
   );
 
   const members = data?.getTeamMembers;
+  const coreMembers = data?.getTeamMembers.map((member) => member.member);
 
-  return { members, loading, refetch };
+  return { members, loading, refetch, coreMembers };
 };

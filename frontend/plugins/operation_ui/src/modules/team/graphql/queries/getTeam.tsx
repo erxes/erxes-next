@@ -7,6 +7,7 @@ export const GET_TEAM = gql`
       name
       icon
       description
+      estimateType
 
       taskCount
       memberCount
