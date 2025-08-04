@@ -44,6 +44,15 @@ export interface ITeamMember {
   role: string;
 }
 
+export interface ITeamStatus {
+  _id: string;
+  name: string;
+  description: string;
+  color: string;
+  order: number;
+  type: TeamStatusTypes;
+}
+
 export type TTeamForm = z.infer<typeof TEAM_FORM_SCHEMA>;
 
 export type TTeamMemberForm = z.infer<typeof TEAM_MEMBER_FORM_SCHEMA>;

@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { IStatus, IStatusEditInput } from '~/modules/status/@types/status';
+import { IStatus, IStatusEditInput } from '@/status/@types/status';
 
 export const statusMutations = {
   createStatus: async (
