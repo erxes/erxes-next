@@ -17,10 +17,7 @@ import {
 import {
   KanbanBoardProps,
   KanbanCardProps,
-  KanbanCardsProps,
   KanbanContextProps,
-  KanbanHeaderProps,
-  KanbanItemProps,
   KanbanProviderProps,
 } from './types';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
@@ -28,7 +25,7 @@ import { createContext, useContext, useState } from 'react';
 
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
-import { CardsLoading } from '../../loading/CardsLoading';
+import { IDeal } from '@/deals/types/deals';
 import { IStage } from '@/deals/types/stages';
 import { cn } from 'erxes-ui';
 import { createPortal } from 'react-dom';
@@ -37,17 +34,20 @@ import tunnel from 'tunnel-rat';
 const t = tunnel();
 export type { DragEndEvent } from '@dnd-kit/core';
 
-const KanbanContext = createContext<KanbanContextProps>({
+export const getTypeAndId = (id: string) => {
+  const [type, ...rest] = id.split('-');
+  return { type, id: rest.join('-') };
+};
+
+export const KanbanContext = createContext<KanbanContextProps>({
   columns: [],
   data: [],
   activeCardId: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onDataChange: () => {},
 });
 
-export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
-  // const { isOver, setNodeRef } = useDroppable({
-  //   id,
-  // });
-
+export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
   const {
     setNodeRef,
     attributes,
@@ -55,7 +55,7 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id: `column-${_id}` });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -65,7 +65,7 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
   return (
     <div
       className={cn(
-        'w-72 h-full flex-none p-2 shadow-xs bg-gradient-to-b from-[#e0e0e0] to-[#e0e7ff50] rounded-md transition-all',
+        'w-72 flex-none bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-md transition-all h-full flex flex-col overflow-hidden',
         isDragging ? 'ring-primary' : 'ring-transparent',
         className,
       )}
@@ -79,14 +79,12 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
   );
 };
 
-export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
-  id,
-  name,
+export const KanbanCard = ({
   children,
   className,
-  onClick,
-  loading,
-}: KanbanCardProps<T> & { onClick?: () => void; loading?: boolean }) => {
+  featureId,
+  card,
+}: KanbanCardProps) => {
   const {
     attributes,
     listeners,
@@ -94,7 +92,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id: `card-${featureId}` });
   const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
 
   const style = {
@@ -105,7 +103,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   return (
     <>
       <div
-        key={id}
+        key={featureId}
         ref={setNodeRef}
         {...listeners}
         {...attributes}
@@ -113,26 +111,26 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
       >
         <Card
           className={cn(
-            'cursor-grab gap-4 rounded-md shadow-sm',
+            'cursor-grab',
             isDragging && 'pointer-events-none cursor-grabbing opacity-30',
             className,
           )}
-          loading={loading}
+          card={card}
         >
-          {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+          {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
         </Card>
       </div>
-      {activeCardId === id && (
+      {activeCardId === featureId && (
         <t.In>
           <Card
             className={cn(
-              'cursor-grab gap-4 rounded-md shadow-sm ring-2 ring-primary',
+              'cursor-grab ring-2 ring-primary',
               isDragging && 'cursor-grabbing',
               className,
             )}
-            loading={loading}
+            card={card}
           >
-            {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+            {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
           </Card>
         </t.In>
       )}
@@ -140,46 +138,8 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   );
 };
 
-export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
-  children,
-  className,
-  loading,
-  ...props
-}: KanbanCardsProps<T> & { loading: boolean }) => {
-  const { data } = useContext(KanbanContext) as KanbanContextProps<T>;
-
-  const filteredData = data.filter((item) => item.column === props.id);
-  const items = filteredData.map((item) => item.id);
-
-  if (loading) {
-    return <CardsLoading />;
-  }
-
-  return (
-    <div
-      className="overflow-auto"
-      style={{
-        height: 'calc(100vh - 180px)',
-      }}
-    >
-      <SortableContext items={items}>
-        <div
-          className={cn('flex flex-grow flex-col gap-3', className)}
-          {...props}
-        >
-          {filteredData.map(children)}
-        </div>
-      </SortableContext>
-    </div>
-  );
-};
-
-export const KanbanHeader = ({ className, ...props }: KanbanHeaderProps) => (
-  <div className={cn('m-0 p-2 font-semibold text-sm', className)} {...props} />
-);
-
 export const KanbanProvider = <
-  T extends KanbanItemProps = KanbanItemProps,
+  T extends IDeal = IDeal,
   C extends IStage = IStage,
 >({
   children,
@@ -191,56 +151,106 @@ export const KanbanProvider = <
   data,
   onDataChange,
   onColumnsChange,
+  updateOrders,
   ...props
 }: KanbanProviderProps<T, C>) => {
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
+
   const sensors = useSensors(
-    useSensor(MouseSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5, // prevent unintended drags
+      },
+    }),
     useSensor(TouchSensor),
     useSensor(KeyboardSensor),
   );
+
   const handleDragStart = (event: DragStartEvent) => {
-    const card = data.find((item) => item.id === event.active.id);
-    if (card) {
-      setActiveCardId(event.active.id as string);
+    const { type, id } = getTypeAndId(event.active.id as string);
+
+    if (type === 'card') {
+      const card = data.find((item) => item._id === id);
+
+      if (card) {
+        setActiveCardId(`card-${id}`); // use full ID since that's what useSortable uses
+      }
     }
+
     onDragStart?.(event);
   };
+
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) {
       return;
     }
 
-    const activeColumnIndex = columns.findIndex((col) => col._id === active.id);
-    const overColumnIndex = columns.findIndex((col) => col._id === over.id);
+    const { type: activeType, id: activeId } = getTypeAndId(
+      active.id as string,
+    );
+    const { type: overType, id: overId } = getTypeAndId(over.id as string);
 
-    if (activeColumnIndex !== -1 && overColumnIndex !== -1) {
-      const newColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
-      // Add an `onColumnsChange` prop to update column order
-      onColumnsChange?.(newColumns);
+    // COLUMN DRAGGING
+    if (activeType === 'column' && overType === 'column') {
+      const activeIndex = columns.findIndex((col) => col._id === activeId);
+      const overIndex = columns.findIndex((col) => col._id === overId);
+
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const newColumns = arrayMove(columns, activeIndex, overIndex);
+        onColumnsChange?.(newColumns);
+      }
       return;
     }
 
-    const activeItem = data.find((item) => item.id === active.id);
-    const overItem = data.find((item) => item.id === over.id);
-    if (!(activeItem && overItem)) {
-      return;
-    }
+    if (activeType === 'card' && overType === 'column') {
+      const newData = [...data];
+      const activeIndex = newData.findIndex((item) => item._id === activeId);
+      if (activeIndex === -1) return;
 
-    const activeColumn = activeItem.column;
-    const overColumn = overItem.column;
-    if (activeColumn !== overColumn) {
-      let newData = [...data];
-      const activeIndex = newData.findIndex((item) => item.id === active.id);
-      const overIndex = newData.findIndex((item) => item.id === over.id);
-      newData[activeIndex].column = overColumn;
-      newData = arrayMove(newData, activeIndex, overIndex);
+      const targetColumn = columns.find((col) => col._id === overId);
+      if (!targetColumn) return;
+
+      newData[activeIndex] = {
+        ...newData[activeIndex],
+        stage: targetColumn,
+      };
+
       onDataChange?.(newData);
+      return;
     }
+
+    // CARD DRAGGING
+    if (activeType === 'card' && overType === 'card') {
+      const activeItem = data.find((item) => item._id === activeId);
+      const overItem = data.find((item) => item._id === overId);
+      if (!(activeItem && overItem)) return;
+
+      if (activeItem.stage?._id !== overItem.stage?._id) {
+        let newData = [...data];
+
+        const activeIndex = newData.findIndex((item) => item._id === activeId);
+        const overIndex = newData.findIndex((item) => item._id === overId);
+
+        if (activeIndex === -1 || overIndex === -1) return;
+
+        // Update stage object by copying overItem.stage to active card
+        const updatedActiveItem = {
+          ...newData[activeIndex],
+          stage: { ...overItem.stage },
+        };
+        newData[activeIndex] = updatedActiveItem;
+
+        newData = arrayMove(newData, activeIndex, overIndex);
+
+        onDataChange?.(newData);
+      }
+    }
+
     onDragOver?.(event);
   };
-  const handleDragEnd = (event: DragEndEvent) => {
+
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     setActiveCardId(null);
@@ -249,52 +259,169 @@ export const KanbanProvider = <
     if (!over || active.id === over.id) {
       return;
     }
-    // let newData = [...data];
 
-    const activeColumnIndex = columns.findIndex((col) => col._id === active.id);
-    const overColumnIndex = columns.findIndex((col) => col._id === over.id);
-
-    const activeCardIndex = data.findIndex((item) => item.id === active.id);
-    const overCardIndex = data.findIndex((item) => item.id === over.id);
+    const { type: activeType, id: activeId } = getTypeAndId(
+      active.id as string,
+    );
+    const { type: overType, id: overId } = getTypeAndId(over.id as string);
 
     // COLUMN DRAG
-    if (activeColumnIndex !== -1 && overColumnIndex !== -1) {
-      const newColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
-      // Add an `onColumnsChange` prop to update column order
-      onColumnsChange?.(newColumns);
+    if (activeType === 'column' && overType === 'column') {
+      const activeColumnIndex = columns.findIndex(
+        (col) => col._id === activeId,
+      );
+      const overColumnIndex = columns.findIndex((col) => col._id === overId);
+
+      if (activeColumnIndex !== -1 && overColumnIndex !== -1) {
+        const newColumns = arrayMove(
+          columns,
+          activeColumnIndex,
+          overColumnIndex,
+        );
+
+        onColumnsChange?.(newColumns);
+      }
+
+      updateOrders?.(
+        {
+          orders: columns.map((col, index) => ({
+            _id: col._id,
+            order: index,
+          })),
+        },
+        'column',
+      );
+      return;
+    }
+
+    if (activeType === 'card' && overType === 'column') {
+      const newData = [...data];
+      const activeIndex = newData.findIndex((item) => item._id === activeId);
+      if (activeIndex === -1) return;
+
+      const targetColumn = columns.find((col) => col._id === overId);
+      if (!targetColumn) return;
+
+      newData[activeIndex] = {
+        ...newData[activeIndex],
+        stage: targetColumn,
+      };
+
+      onDataChange?.(newData);
+
+      updateOrders?.(
+        {
+          itemId: activeId,
+          destinationStageId: overId,
+        },
+        'card',
+      );
+
       return;
     }
 
     // CARD DRAG
-    if (activeCardIndex !== -1 && overCardIndex !== -1) {
-      const newData = arrayMove(data, activeCardIndex, overCardIndex);
-      onDataChange?.(newData);
+    if (activeType === 'card' && overType === 'card') {
+      const activeItem = data.find((item) => item._id === activeId);
+      const overItem = data.find((item) => item._id === overId);
+      if (!(activeItem && overItem)) return;
+
+      const newData = [...data];
+      const activeIndex = newData.findIndex((item) => item._id === activeId);
+      if (activeIndex === -1) return;
+
+      // Clone and update active card's stage if different
+      if (activeItem.stage?._id !== overItem.stage?._id) {
+        newData[activeIndex] = {
+          ...newData[activeIndex],
+          stage: { ...overItem.stage },
+        };
+      }
+
+      // Get all cards in the target stage (after update if changed)
+      const targetStageId = newData[activeIndex].stage?._id;
+      const cardsInStage = newData.filter(
+        (item) => item.stage?._id === targetStageId,
+      );
+
+      const activePos = cardsInStage.findIndex((item) => item._id === activeId);
+      const overPos = cardsInStage.findIndex((item) => item._id === overId);
+
+      if (activePos === -1 || overPos === -1) return;
+
+      const reorderedCards = arrayMove(cardsInStage, activePos, overPos);
+
+      const otherCards = newData.filter(
+        (item) => item.stage?._id !== targetStageId,
+      );
+
+      const mergedData = [...otherCards, ...reorderedCards];
+
+      onDataChange?.(mergedData);
+
+      updateOrders?.(
+        {
+          itemId: activeId,
+          destinationStageId: overId,
+        },
+        'card',
+      );
     }
 
     onDragEnd?.(event);
   };
+
   const announcements: Announcements = {
     onDragStart({ active }) {
-      const { name, column } = data.find((item) => item.id === active.id) ?? {};
-      return `Picked up the card "${name}" from the "${column}" column`;
+      const { type, id } = getTypeAndId(active.id as string);
+
+      if (type !== 'card') return;
+
+      const item = data.find((item) => item._id === id);
+      if (!item) return;
+
+      return `Picked up the card "${item.name}" from the "${item.stage?.name}" column`;
     },
+
     onDragOver({ active, over }) {
-      const { name } = data.find((item) => item.id === active.id) ?? {};
-      const newColumn = columns.find((column) => column._id === over?.id)?.name;
-      return `Dragged the card "${name}" over the "${newColumn}" column`;
+      const { type, id } = getTypeAndId(active.id as string);
+      const { id: overId } = getTypeAndId(over?.id as string);
+
+      if (type !== 'card') return;
+
+      const item = data.find((item) => item._id === id);
+      const column = columns.find((col) => col._id === overId);
+
+      return `Dragged the card "${item?.name}" over the "${column?.name}" column`;
     },
+
     onDragEnd({ active, over }) {
-      const { name } = data.find((item) => item.id === active.id) ?? {};
-      const newColumn = columns.find((column) => column._id === over?.id)?.name;
-      return `Dropped the card "${name}" into the "${newColumn}" column`;
+      const { type, id } = getTypeAndId(active.id as string);
+      const { id: overId } = getTypeAndId(over?.id as string);
+
+      if (type !== 'card') return;
+
+      const item = data.find((item) => item._id === id);
+      const column = columns.find((col) => col._id === overId);
+
+      return `Dropped the card "${item?.name}" into the "${column?.name}" column`;
     },
+
     onDragCancel({ active }) {
-      const { name } = data.find((item) => item.id === active.id) ?? {};
-      return `Cancelled dragging the card "${name}"`;
+      const { type, id } = getTypeAndId(active.id as string);
+
+      if (type !== 'card') return;
+
+      const item = data.find((item) => item._id === id);
+
+      return `Cancelled dragging the card "${item?.name}"`;
     },
   };
+
   return (
-    <KanbanContext.Provider value={{ columns, data, activeCardId }}>
+    <KanbanContext.Provider
+      value={{ columns, data, activeCardId, onDataChange }}
+    >
       <DndContext
         accessibility={{ announcements }}
         collisionDetection={closestCenter}
@@ -304,8 +431,13 @@ export const KanbanProvider = <
         sensors={sensors}
         {...props}
       >
-        <SortableContext items={columns.map((c) => c._id)}>
-          <div className={cn('grid size-full grid-flow-col gap-4', className)}>
+        <SortableContext items={columns.map((c) => `column-${c._id}`)}>
+          <div
+            className={cn(
+              'flex gap-3 p-4 pb-0 h-full select-none w-max',
+              className,
+            )}
+          >
             {columns.map((column) => children(column))}
           </div>
         </SortableContext>
