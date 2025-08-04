@@ -6,7 +6,11 @@ import {
 } from '@/integrations/call/states/sipStates';
 import { ICallConfigDoc } from '@/integrations/call/types/callTypes';
 import { SipStatusEnum } from '@/integrations/call/types/sipTypes';
-import { IconPlayerPlay, IconPower } from '@tabler/icons-react';
+import {
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconPower,
+} from '@tabler/icons-react';
 import { Badge, Button } from 'erxes-ui';
 import { useAtomValue, useSetAtom } from 'jotai';
 
@@ -48,16 +52,18 @@ export const TurnOffButton = () => {
 };
 
 export const SipPauseButton = () => {
-  const { pauseAgent, loading } = usePauseAgent();
+  const { pauseAgent, loading, agentStatus } = usePauseAgent();
+  const isPaused = agentStatus === 'pause';
   return (
     <Button
       size="sm"
       variant="outline"
       className="ml-auto"
-      onClick={() => pauseAgent('pause')}
+      onClick={() => pauseAgent(isPaused ? 'unpause' : 'pause')}
       disabled={loading}
     >
-      <IconPlayerPlay /> unpause
+      {isPaused ? <IconPlayerPlay /> : <IconPlayerPause />}
+      {isPaused ? 'Unpause' : 'Pause'}
     </Button>
   );
 };
