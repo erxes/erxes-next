@@ -13,14 +13,20 @@ import React, { useState } from 'react';
 // import { SubmitHandler } from 'react-hook-form';
 import { useAddMemberForm } from '@/team/hooks/useAddMemberForm';
 // import { useMemberCreate } from '@/team/hooks/useMemberCreate';
-import { TeamHotKeyScope } from '@/team/types';
+import { TeamHotKeyScope, TTeamMemberForm } from '@/team/types';
 import { MemberForm } from '@/team/components/members/MemberForm';
+import { useAddTeamMember } from '@/team/hooks/useAddTeamMember';
+import { SubmitHandler } from 'react-hook-form';
+import { useToast } from 'erxes-ui';
+import { useParams } from 'react-router';
 
 export const AddMembers = () => {
   const form = useAddMemberForm({});
+  const { id: teamId } = useParams();
 
-  // const { addMember, loading } = ();
-  // const { toast } = useToast();
+  const { toast } = useToast();
+
+  const { addTeamMember } = useAddTeamMember();
 
   const [_open, _setOpen] = useState<boolean>(false);
   const setHotkeyScope = useSetHotkeyScope();
@@ -39,25 +45,25 @@ export const AddMembers = () => {
   useScopedHotkeys(`c`, () => onOpen(true), TeamHotKeyScope.TeamSettingsPage);
   useScopedHotkeys(`esc`, () => onClose(), TeamHotKeyScope.TeamCreateSheet);
 
-  // const submitHandler: SubmitHandler<TTeamForm> = React.useCallback(
-  //   async (data) => {
-  //     addTeam({
-  //       variables: data,
-  //       onCompleted: () => {
-  //         toast({ title: 'Success!' });
-  //         form.reset();
-  //         _setOpen(false);
-  //       },
-  //       onError: (error) =>
-  //         toast({
-  //           title: 'Error',
-  //           description: error.message,
-  //           variant: 'destructive',
-  //         }),
-  //     });
-  //   },
-  //   [addTeam, toast, _setOpen, form],
-  // );
+  const submitHandler: SubmitHandler<TTeamMemberForm> = React.useCallback(
+    async (data) => {
+      addTeamMember({
+        variables: { ...data, teamId },
+        onCompleted: () => {
+          toast({ title: 'Success!' });
+          form.reset();
+          _setOpen(false);
+        },
+        onError: (error) =>
+          toast({
+            title: 'Error',
+            description: error.message,
+            variant: 'destructive',
+          }),
+      });
+    },
+    [addTeamMember, toast, _setOpen, form, teamId],
+  );
 
   return (
     <Dialog open={_open} onOpenChange={onOpen}>
@@ -89,7 +95,7 @@ export const AddMembers = () => {
         </Dialog.Header>
         <Form {...form}>
           <form
-            // onSubmit={form.handleSubmit()}
+            onSubmit={form.handleSubmit(submitHandler)}
             className="flex flex-col size-full gap-5"
           >
             <MemberForm form={form} />
