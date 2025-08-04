@@ -170,7 +170,7 @@ export const updateIntegration = async ({
         ? 'Duplicate srcTrunk detected.'
         : error?.keyPattern?.dstTrunk
         ? 'Duplicate dstTrunk detected.'
-        : `Error creating integration: ${error.message}`,
+        : `Error creating integration: ${error?.message}`,
     };
   }
 };
