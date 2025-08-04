@@ -13,11 +13,7 @@ import {
   CallStatusEnum,
   ISipState,
 } from '@/integrations/call/types/sipTypes';
-import {
-  callInfoAtom,
-  sipStateAtom,
-} from '@/integrations/call/states/sipStates';
-import { CallDisconnected } from '@/integrations/call/components/CallDisconnected';
+import { sipStateAtom } from '@/integrations/call/states/sipStates';
 import { CallTabs, Dialpad } from '@/integrations/call/components/CallTabs';
 import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
 import { InCall } from '@/integrations/call/components/InCall';
@@ -32,11 +28,6 @@ export const CallWidgetContent = ({
   children: React.ReactNode;
 }) => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
-  const callInfo = useAtomValue(callInfoAtom);
-
-  if (callInfo?.isUnregistered) {
-    return <CallDisconnected>{children}</CallDisconnected>;
-  }
 
   if (sipState.callStatus === CallStatusEnum.IDLE) {
     return <CallTabs keypad={<Dialpad />}>{children}</CallTabs>;
