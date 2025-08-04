@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { ITaskFilter } from '~/modules/task/@types/task';
+import { ITaskFilter } from '@/task/@types/task';
 
 export const taskQueries = {
   getTask: async (_parent: undefined, { _id }, { models }: IContext) => {

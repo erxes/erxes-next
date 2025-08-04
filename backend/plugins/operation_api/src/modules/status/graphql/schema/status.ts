@@ -4,7 +4,8 @@ export const types = `
         name: String!
         teamId: String!
         description: String
-        color: String
+        color: String,
+        order: Int
         type: String
         createdAt: Date
         updatedAt: Date
@@ -17,6 +18,7 @@ export const types = `
         description: String
         color: String
         type: String
+        order: Int
     }
 `;
 
@@ -28,6 +30,6 @@ export const queries = `
 
 export const mutations = `
     addStatus(input: StatusInput!): Status
-    updateStatus(_id: String!, input: StatusInput!): Status
+    updateStatus(_id: String!, name: String, description: String, color: String, order: Int, type: String): Status
     deleteStatus(_id: String!): Status
 `;

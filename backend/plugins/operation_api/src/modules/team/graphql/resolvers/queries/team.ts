@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { ITeamFilter } from '~/modules/team/@types/team';
+import { ITeamFilter } from '@/team/@types/team';
 
 export const teamQueries = {
   getTeam: async (_parent: undefined, { _id }, { models }: IContext) => {

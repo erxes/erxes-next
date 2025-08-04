@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { IProjectFilter } from '~/modules/project/@types/project';
+import { IProjectFilter } from '@/project/@types/project';
 
 export const projectQueries = {
   getProject: async (_parent: undefined, { _id }, { models }: IContext) => {
