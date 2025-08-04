@@ -10,6 +10,7 @@ import PmsFormFieldsLayout from '../PmsFormFieldsLayout';
 import { IconPlus } from '@tabler/icons-react';
 import { PmsBranchFormType } from '@/pms/constants/formSchema';
 import Heading from '../../ui/heading';
+import { SelectCategory, SelectProduct } from 'ui-modules';
 
 const PipelineConfig = ({
   control,
@@ -118,28 +119,15 @@ const PipelineConfig = ({
         render={({ field }) => (
           <Form.Item>
             <Form.Control>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <Select.Trigger>
-                  <Select.Value placeholder="Choose room category" />
-                </Select.Trigger>
-                <Select.Content className="max-h-52">
-                  {['roomCategory1', 'roomCategory2', 'roomCategory3'].map(
-                    (test, index) => (
-                      <Select.Item value={test} key={index}>
-                        {test}
-                      </Select.Item>
-                    ),
-                  )}
-                </Select.Content>
-              </Select>
+              <SelectProduct
+                value={field.value}
+                onValueChange={field.onChange}
+              />
             </Form.Control>
             <Form.Message className="text-destructive" />
           </Form.Item>
         )}
       />
-      <Button className="w-fit">
-        <IconPlus /> Add room
-      </Button>
 
       <Heading>Extra product categories</Heading>
       <Form.Field
@@ -148,21 +136,15 @@ const PipelineConfig = ({
         render={({ field }) => (
           <Form.Item>
             <Form.Control>
-              <MultipleSelector
-                hidePlaceholderWhenSelected
-                placeholder="Choose product categories"
-                defaultOptions={options}
-                onChange={(values: MultiSelectOption[]) => console.log(values)}
-                className="placeholder:text-accent-foreground/70"
+              <SelectProduct
+                value={field.value}
+                onValueChange={field.onChange}
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
           </Form.Item>
         )}
       />
-      <Button className="w-fit">
-        <IconPlus /> Add extra product
-      </Button>
     </PmsFormFieldsLayout>
   );
 };
