@@ -4,6 +4,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { useState, useEffect } from 'react';
 
 import { IconPlus } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
@@ -15,6 +16,12 @@ export const StatusGroup = ({ statusType }: { statusType: string }) => {
   const { statuses = [] } = useStatusesByType({ type: statusType });
   const { updateStatus } = useUpdateStatus();
 
+  const [_statuses, _setStatuses] = useState(statuses);
+
+  useEffect(() => {
+    _setStatuses(statuses);
+  }, [statuses]);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -25,8 +32,6 @@ export const StatusGroup = ({ statusType }: { statusType: string }) => {
 
     const newOrder = arrayMove(statuses, oldIndex, newIndex);
 
-    console.log(newOrder);
-
     newOrder.forEach((status, index) => {
       updateStatus({
         variables: {
@@ -35,6 +40,8 @@ export const StatusGroup = ({ statusType }: { statusType: string }) => {
         },
       });
     });
+
+    _setStatuses(newOrder);
   };
 
   return (
@@ -52,10 +59,10 @@ export const StatusGroup = ({ statusType }: { statusType: string }) => {
 
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
-          items={statuses.map((status) => status._id)}
+          items={_statuses.map((status) => status._id)}
           strategy={verticalListSortingStrategy}
         >
-          {statuses.map((status) => (
+          {_statuses.map((status) => (
             <Status key={status._id} status={status} />
           ))}
         </SortableContext>
