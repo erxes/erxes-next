@@ -98,17 +98,6 @@ export const AddMembers = () => {
             </Button>
           </form>
         </Form>
-        {/* <Form {...methods}>
-          <form
-            onSubmit={handleSubmit(submitHandler)}
-            className="flex flex-col size-full gap-5"
-          >
-            <TagsForm />
-            <Button className="w-full" type="submit" disabled={loading}>
-              {loading ? <Spinner /> : 'Add'}
-            </Button>
-          </form>
-        </Form> */}
       </Dialog.Content>
     </Dialog>
   );

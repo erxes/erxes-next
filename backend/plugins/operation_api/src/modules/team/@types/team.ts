@@ -15,7 +15,7 @@ export interface ITeamDocument extends ITeam, Document {
 
 export type ITeamFilter = ITeam;
 
-export enum TeamMember {
+export enum TeamMemberRoles {
   ADMIN = 'admin',
   MEMBER = 'member',
   LEAD = 'lead',
@@ -24,7 +24,7 @@ export enum TeamMember {
 export interface ITeamMember {
   memberId: string;
   teamId: string;
-  role: TeamMember;
+  role: TeamMemberRoles;
 }
 
 export interface ITeamMemberDocument extends ITeamMember, Document {

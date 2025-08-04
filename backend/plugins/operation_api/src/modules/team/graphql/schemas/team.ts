@@ -36,4 +36,6 @@ export const mutations = `
     teamAdd(name: String!, description: String, icon: String!, memberIds: [String]): Team
     teamUpdate(_id: String!, name: String, description: String, icon: String, memberIds: [String], estimateType: Int): Team
     teamRemove(_id: String!): Team
+    teamAddMembers(_id: String!, memberIds: [String]): TeamMember
+    removeTeamMember(_id: String!, memberId: String): TeamMember
 `;

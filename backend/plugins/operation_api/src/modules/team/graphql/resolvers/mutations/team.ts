@@ -1,10 +1,15 @@
 import { IContext } from '~/connectionResolvers';
-// import { TeamEstimateTypes } from '~/modules/team/types';
+import { TeamMemberRoles } from '@/team/@types/team';
 
 export const teamMutations = {
   teamAdd: async (
     _parent: undefined,
-    { name, description, icon, memberIds },
+    {
+      name,
+      description,
+      icon,
+      memberIds,
+    }: { name: string; description: string; icon: string; memberIds: string[] },
     { models, user }: IContext,
   ) => {
     const userId = user._id;
@@ -27,7 +32,19 @@ export const teamMutations = {
 
   teamUpdate: async (
     _parent: undefined,
-    { _id, name, description, icon, estimateType },
+    {
+      _id,
+      name,
+      description,
+      icon,
+      estimateType,
+    }: {
+      _id: string;
+      name: string;
+      description: string;
+      icon: string;
+      estimateType: number;
+    },
     { models }: IContext,
   ) => {
     return models.Team.updateTeam(_id, {
@@ -37,7 +54,34 @@ export const teamMutations = {
       estimateType,
     });
   },
-  teamRemove: async (_parent: undefined, { _id }, { models }: IContext) => {
+
+  teamRemove: async (
+    _parent: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) => {
     return models.Team.removeTeam(_id);
+  },
+
+  teamAddMembers: async (
+    _parent: undefined,
+    { _id, memberIds }: { _id: string; memberIds: string[] },
+    { models }: IContext,
+  ) => {
+    return models.TeamMember.createTeamMembers(
+      memberIds.map((memberId) => ({
+        memberId,
+        teamId: _id,
+        role: TeamMemberRoles.MEMBER,
+      })),
+    );
+  },
+
+  removeTeamMember: async (
+    _parent: undefined,
+    { _id, memberId }: { _id: string; memberId: string },
+    { models }: IContext,
+  ) => {
+    return models.TeamMember.removeTeamMember(_id, memberId);
   },
 };

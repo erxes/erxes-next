@@ -25,7 +25,6 @@ export const MemberForm = ({
                   value={field.value}
                   onValueChange={field.onChange}
                 />
-                <SelectMember.Content />
               </SelectMember.Provider>
             </Form.Control>
             <Form.Message />

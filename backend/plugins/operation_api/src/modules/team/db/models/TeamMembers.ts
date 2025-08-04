@@ -1,5 +1,9 @@
 import { Model } from 'mongoose';
-import { ITeamMember, ITeamMemberDocument } from '@/team/@types/team';
+import {
+  ITeamMember,
+  ITeamMemberDocument,
+  TeamMemberRoles,
+} from '@/team/@types/team';
 import { teamMembers } from '@/team/db/definitions/team';
 import { IModels } from '~/connectionResolvers';
 
@@ -12,7 +16,11 @@ export interface ITeamMemberModel extends Model<ITeamMemberDocument> {
     doc: ITeamMember,
   ): Promise<ITeamMemberDocument>;
 
-  createTeamMembers(roles: ITeamMember[]): Promise<ITeamMemberDocument[]>;
+  createTeamMembers(members: ITeamMember[]): Promise<ITeamMemberDocument[]>;
+  removeTeamMember(
+    memberId: string,
+    teamId: string,
+  ): Promise<ITeamMemberDocument>;
 }
 
 export const loadTeamMemberClass = (models: IModels) => {
@@ -36,8 +44,21 @@ export const loadTeamMemberClass = (models: IModels) => {
       );
     }
 
-    public static async createTeamMembers(roles: ITeamMember[]) {
-      return models.TeamMember.insertMany(roles);
+    public static async createTeamMembers(members: ITeamMember[]) {
+      return models.TeamMember.insertMany(members);
+    }
+
+    public static async removeTeamMember(memberId: string, teamId: string) {
+      const teamMember = await models.TeamMember.findOne({ memberId, teamId });
+      if (!teamMember) {
+        throw new Error('Team member not found');
+      }
+
+      if (teamMember.role === TeamMemberRoles.ADMIN) {
+        throw new Error('Admin cannot be removed');
+      }
+
+      return models.TeamMember.deleteOne({ memberId, teamId });
     }
   }
 

@@ -3,7 +3,7 @@ import {
   ITeam,
   ITeamDocument,
   ITeamMember,
-  TeamMember,
+  TeamMemberRoles,
 } from '@/team/@types/team';
 import { ITeamFilter } from '@/team/@types/team';
 import { teamSchema } from '@/team/db/definitions/team';
@@ -22,8 +22,9 @@ export interface ITeamModel extends Model<ITeamDocument> {
     memberIds: string[];
     adminId: string;
   }): Promise<ITeamDocument>;
+  addMembers(_id: string, memberIds: string[]): Promise<ITeamDocument>;
   updateTeam(_id: string, doc: ITeam): Promise<ITeamDocument>;
-  removeTeam(teamId: string[]): Promise<{ ok: number }>;
+  removeTeam(teamId: string): Promise<{ ok: number }>;
 }
 
 export const loadTeamClass = (models: IModels) => {
@@ -78,11 +79,11 @@ export const loadTeamClass = (models: IModels) => {
       const team = await models.Team.insertOne(teamDoc);
 
       roles.push(
-        { memberId: adminId, teamId: team._id, role: TeamMember.ADMIN },
+        { memberId: adminId, teamId: team._id, role: TeamMemberRoles.ADMIN },
         ...memberIds.map((memberId) => ({
           memberId,
           teamId: team._id,
-          role: TeamMember.MEMBER,
+          role: TeamMemberRoles.MEMBER,
         })),
       );
 
@@ -97,8 +98,8 @@ export const loadTeamClass = (models: IModels) => {
       return await models.Team.findOneAndUpdate({ _id }, { $set: { ...doc } });
     }
 
-    public static async removeTeam(teamId: string[]) {
-      return models.Team.deleteOne({ _id: { $in: teamId } });
+    public static async removeTeam(teamId: string) {
+      return models.Team.deleteOne({ _id: teamId });
     }
   }
 
