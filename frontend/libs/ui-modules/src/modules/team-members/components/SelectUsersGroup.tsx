@@ -1,90 +1,72 @@
 import {
   Combobox,
   Command,
+  Filter,
+  Form,
   Popover,
-  Skeleton,
-  TextOverflowTooltip,
   cn,
+  useFilterContext,
+  useQueryState,
 } from 'erxes-ui';
 import React, { useState } from 'react';
 import { useSelectUsersGroupContext, useUsersGroup } from '../hooks';
 
 import { IUserGroup } from '../types/TeamMembers';
 import { SelectUsersGroupContext } from '../contexts/SelectUsersGroupContext';
+import { GroupsInline } from 'ui-modules/modules/team-members/components/GroupsInline';
+import { IconUsers } from '@tabler/icons-react';
 
 type Props = {
   value?: string;
   onValueChange: (value: string) => void;
 };
 
-export const SelectUsersGroup = React.forwardRef<
-  React.ElementRef<typeof Combobox.Trigger>,
-  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & Props
->(({ value, onValueChange, ...props }, ref) => {
-  const [_open, _setOpen] = useState(false);
-  return (
-    <SelectUsersGroupProvider>
-      <Popover open={_open} onOpenChange={_setOpen}>
-        <Combobox.Trigger
-          {...props}
-          ref={ref}
-          className={cn('w-full flex text-left', props.className)}
-        >
-          <SelectUsersGroupValue value={value} />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <UsersGroupsList
-            renderItem={(usersGroup) => (
-              <SelectUsersGroupItem
-                key={usersGroup._id}
-                usersGroup={usersGroup}
-                onValueChange={(value) => {
-                  onValueChange(value);
-                  _setOpen(false);
-                }}
-              />
-            )}
-          />
-        </Combobox.Content>
-      </Popover>
-    </SelectUsersGroupProvider>
-  );
-});
-
-const SelectUsersGroupItem = ({
-  usersGroup,
-  onValueChange,
-}: {
-  usersGroup: IUserGroup;
-  onValueChange: (value: string) => void;
-}) => {
-  const { selectedUsersGroup, setSelectedUsersGroup } =
-    useSelectUsersGroupContext();
-  return (
-    <Command.Item
-      value={usersGroup.name}
-      onSelect={() => {
-        setSelectedUsersGroup(usersGroup);
-        onValueChange(usersGroup._id);
-      }}
-    >
-      <TextOverflowTooltip value={usersGroup.name} />
-      <Combobox.Check checked={selectedUsersGroup?._id === usersGroup._id} />
-    </Command.Item>
-  );
-};
-
 const SelectUsersGroupProvider = ({
   children,
+  mode = 'single',
+  value,
+  onValueChange,
 }: {
   children: React.ReactNode;
+  mode?: 'single' | 'multiple';
+  value?: string[] | string;
+  onValueChange?: (value: string[] | string) => void;
 }) => {
-  const [selectedUsersGroup, setSelectedUsersGroup] = useState<
-    IUserGroup | undefined
-  >(undefined);
+  const [usersGroups, setUsersGroups] = useState<IUserGroup[]>([]);
+
+  const onSelect = (group: IUserGroup) => {
+    if (!group) return;
+
+    const isSingleMode = mode === 'single';
+    const multipleValue = isSingleMode ? [] : Array.isArray(value) ? value : [];
+    const isSelected = !isSingleMode && multipleValue.includes(group._id);
+
+    const newSelectedGroupIds = isSingleMode
+      ? [group._id]
+      : isSelected
+      ? multipleValue.filter((id) => id !== group._id)
+      : [...multipleValue, group._id];
+
+    const newSelectedGroups = isSingleMode
+      ? [group]
+      : isSelected
+      ? usersGroups.filter((g) => g._id !== group._id)
+      : [...usersGroups, group];
+
+    setUsersGroups(newSelectedGroups);
+    onValueChange?.(isSingleMode ? group._id : newSelectedGroupIds);
+  };
+
   return (
     <SelectUsersGroupContext.Provider
-      value={{ selectedUsersGroup, setSelectedUsersGroup }}
+      value={{
+        usersGroups,
+        setUsersGroups,
+        groupsIds: !value ? [] : Array.isArray(value) ? value : [value],
+        onSelect,
+        loading: false,
+        error: null,
+      }}
     >
       {children}
     </SelectUsersGroupContext.Provider>
@@ -92,33 +74,157 @@ const SelectUsersGroupProvider = ({
 };
 
 const SelectUsersGroupValue = ({ value }: { value?: string }) => {
-  const { selectedUsersGroup } = useSelectUsersGroupContext();
-  const { usersGroups, loading } = useUsersGroup();
+  const { usersGroups, groupsIds, setUsersGroups } =
+    useSelectUsersGroupContext();
 
-  if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
-  const usersGroup = usersGroups?.find(
-    (group: IUserGroup) => group._id === value,
-  );
   return (
-    <Combobox.Value
-      placeholder="Select Group"
-      value={selectedUsersGroup?.name || usersGroup?.name}
+    <GroupsInline
+      groups={usersGroups}
+      groupsIds={groupsIds}
+      updateGroups={setUsersGroups}
     />
   );
 };
 
-export const UsersGroupsList = ({
-  renderItem,
-}: {
-  renderItem: (usersGroup: IUserGroup) => React.ReactNode;
-}) => {
-  const { usersGroups, loading } = useUsersGroup();
+export const UsersGroupContent = () => {
+  const { groupsIds, onSelect } = useSelectUsersGroupContext();
+  const {
+    usersGroups: groupsData,
+    loading,
+    totalCount,
+    error,
+    handleFetchMore,
+  } = useUsersGroup();
   return (
-    <Command>
-      <Command.List>
-        <Combobox.Empty loading={loading} />
-        {usersGroups?.map((usersGroup: IUserGroup) => renderItem(usersGroup))}
+    <Command shouldFilter={false}>
+      <Command.Input
+        variant="secondary"
+        focusOnMount
+        placeholder="Search groups"
+      />
+
+      <Command.List className="max-h-[300px] overflow-y-auto">
+        <Combobox.Empty loading={loading} error={error} />
+        {groupsData && groupsData?.length > 0 && (
+          <>
+            {groupsData.map((group) => (
+              <Command.Item
+                key={group._id}
+                value={group._id}
+                onSelect={() => onSelect(group)}
+              >
+                {group.name}
+                <Combobox.Check checked={groupsIds.includes(group._id)} />
+              </Command.Item>
+            ))}
+
+            <Combobox.FetchMore
+              fetchMore={handleFetchMore}
+              currentLength={groupsData.length}
+              totalCount={totalCount || 0}
+            />
+          </>
+        )}
       </Command.List>
     </Command>
   );
+};
+
+export const SelectUsersGroupFormItem = ({
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectUsersGroupProvider>, 'children'> & {
+  className?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectUsersGroupProvider {...props}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.Trigger className={cn('w-full', className)}>
+            <SelectUsersGroupValue />
+          </Combobox.Trigger>
+        </Form.Control>
+
+        <Combobox.Content>
+          <UsersGroupContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectUsersGroupProvider>
+  );
+};
+
+const SelectUsersGroupsFilterItem = () => {
+  return (
+    <Filter.Item filterKey={'groupId'}>
+      <IconUsers />
+      Users group
+    </Filter.Item>
+  );
+};
+
+const SelectUsersGroupFilterView = () => {
+  const [groupId, setGroupId] = useQueryState<string>('groupId');
+  const { resetFilterState } = useFilterContext();
+
+  return (
+    <Filter.View filterKey="channelId">
+      <SelectUsersGroupProvider
+        value={groupId || []}
+        onValueChange={(value) => {
+          setGroupId(value as string);
+          resetFilterState();
+        }}
+      >
+        <UsersGroupContent />
+      </SelectUsersGroupProvider>
+    </Filter.View>
+  );
+};
+
+export const SelectUsersGroupBar = () => {
+  const [groupId, setGroupId] = useQueryState<string>('groupId');
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarName>
+        <IconUsers />
+        Users group
+      </Filter.BarName>
+      <SelectUsersGroupProvider
+        value={groupId || []}
+        onValueChange={(value) => {
+          if (value.length > 0) {
+            setGroupId(value as string);
+          } else {
+            setGroupId(null);
+          }
+          setOpen(false);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Filter.BarButton filterKey="groupId" className="rounded-l">
+              <SelectUsersGroupValue />
+            </Filter.BarButton>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <UsersGroupContent />
+          </Combobox.Content>
+        </Popover>
+      </SelectUsersGroupProvider>
+      <Filter.BarClose filterKey="groupId" />
+    </Filter.BarItem>
+  );
+};
+
+export const SelectUsersGroup = {
+  Value: SelectUsersGroupValue,
+  Content: UsersGroupContent,
+  Provider: SelectUsersGroupProvider,
+  FormItem: SelectUsersGroupFormItem,
+  FilterItem: SelectUsersGroupsFilterItem,
+  FilterView: SelectUsersGroupFilterView,
+  FilterBar: SelectUsersGroupBar,
 };
