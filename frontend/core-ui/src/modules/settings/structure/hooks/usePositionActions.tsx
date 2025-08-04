@@ -13,6 +13,7 @@ import {
   GET_POSITIONS_LIST,
   REMOVE_POSITIONS,
 } from '../graphql';
+import { data } from 'react-router';
 
 interface PositionData {
   positionsMain: {
@@ -52,6 +53,7 @@ export function usePositionAdd(
         console.log('error', e);
       }
     },
+    refetchQueries: ['Positions'],
   });
 
   return {
@@ -106,7 +108,7 @@ export function useRemovePosition() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_POSITIONS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: ['positionsMain'],
+    refetchQueries: ['Positions'],
   });
 
   return {
@@ -118,6 +120,7 @@ export function useRemovePosition() {
 
 export function usePositionInlineEdit() {
   const [_positionsEdit, { loading }] = useMutation(EDIT_POSITION);
+  const { toast } = useToast();
 
   const positionsEdit = (
     operationVariables: OperationVariables,
@@ -136,6 +139,13 @@ export function usePositionInlineEdit() {
           id: cache.identify(positionsEdit),
           fields: fieldsToUpdate,
         });
+      },
+      onCompleted: (data) => {
+        if (data?.positionsEdit) {
+          toast({
+            title: `Position ${data.positionsEdit.code} updated successfully.`,
+          });
+        }
       },
     });
   };

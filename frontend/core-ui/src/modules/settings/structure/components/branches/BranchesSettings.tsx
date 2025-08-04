@@ -17,7 +17,7 @@ export function BranchesSettings() {
       <RecordTable.Provider
         data={sortedBranches || []}
         columns={BranchColumns}
-        stickyColumns={['checkbox', 'title', 'code']}
+        stickyColumns={['checkbox', 'code', 'title']}
         className="m-3"
       >
         <RecordTableTree ordered id="branches-list">

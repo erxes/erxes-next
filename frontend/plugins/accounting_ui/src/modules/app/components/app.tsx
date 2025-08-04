@@ -33,9 +33,9 @@ const AdjustInventoryList = lazy(() =>
   })),
 );
 
-const AdjustInventoryForm = lazy(() =>
-  import('~/pages/AdjustInventoryFormPage').then((module) => ({
-    default: module.AdjustInventoryFormPage,
+const AdjustInventoryDetail = lazy(() =>
+  import('~/pages/AdjustInventoryDetailPage').then((module) => ({
+    default: module.AdjustInventoryDetailPage,
   })),
 );
 
@@ -59,8 +59,7 @@ const PluginAccounting = () => {
         <Route path="/transaction/create" element={<TransactionForm />} />
         <Route path="/adjustment" element={<AdjustmentsHomePage />} />
         <Route path="/adjustment/inventory" element={<AdjustInventoryList />} />
-        <Route path="/adjustment/inventory/create" element={<AdjustInventoryForm />} />
-        <Route path="/adjustment/inventory/edit" element={<AdjustInventoryForm />} />
+        <Route path="/adjustment/inventory/detail" element={<AdjustInventoryDetail />} />
       </Routes>
       <PageChangeEffect />
     </Suspense>

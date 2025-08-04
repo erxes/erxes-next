@@ -77,7 +77,7 @@ export const productColumns: ColumnDef<IProduct>[] = [
         <RecordTableCellDisplay>
           <CurrencyFormatedDisplay
             currencyValue={{
-              amountMicros: (cell.getValue() as number) * 1000000,
+              amountMicros: (cell.getValue() as number),
               currencyCode: CurrencyCode.MNT,
             }}
           />

@@ -9,11 +9,13 @@ import { cn } from 'erxes-ui/lib';
 import { CurrencyCode } from 'erxes-ui/types';
 
 type CurrencyFormatedDisplayProps = {
-  currencyValue: FieldCurrencyValue | null | undefined;
+  currencyValue?: FieldCurrencyValue | null;
+  kind?: 'short' | 'finance'
 };
 
 export const CurrencyFormatedDisplay = ({
   currencyValue,
+  kind
 }: CurrencyFormatedDisplayProps) => {
   const shouldDisplayCurrency = isDefined(currencyValue?.currencyCode);
 
@@ -23,7 +25,7 @@ export const CurrencyFormatedDisplay = ({
 
   const amountToDisplay = isUndefinedOrNull(currencyValue?.amountMicros)
     ? null
-    : currencyValue?.amountMicros / 1000000;
+    : currencyValue?.amountMicros * 1000000 / 1000000;
 
   if (!shouldDisplayCurrency) {
     return <EllipsisDisplay>{0}</EllipsisDisplay>;
@@ -34,7 +36,7 @@ export const CurrencyFormatedDisplay = ({
       {isDefined(CurrencyIcon) && amountToDisplay !== null && (
         <CurrencyIcon className="size-4 text-muted-foreground" />
       )}
-      {amountToDisplay !== null ? formatAmount(amountToDisplay) : ''}
+      {amountToDisplay !== null ? formatAmount(amountToDisplay, kind) : ''}
     </EllipsisDisplay>
   );
 };
