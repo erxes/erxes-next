@@ -417,6 +417,7 @@ export const SelectMember = Object.assign(SelectMemberRoot, {
   Provider: SelectMemberProvider,
   Value: SelectMemberValue,
   Content: SelectMemberContent,
+  CommandItem: SelectMemberCommandItem,
   FilterItem: SelectMemberFilterItem,
   FilterView: SelectMemberFilterView,
   FilterBar: SelectMemberFilterBar,

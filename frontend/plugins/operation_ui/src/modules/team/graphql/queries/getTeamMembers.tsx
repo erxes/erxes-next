@@ -6,18 +6,6 @@ export const GET_TEAM_MEMBERS = gql`
       _id
       memberId
       teamId
-
-      member {
-        _id
-        username
-        details {
-          firstName
-          lastName
-          avatar
-        }
-
-        email
-      }
       role
     }
   }

@@ -1,15 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { GET_TEAM_MEMBERS } from '@/team/graphql/queries/getTeamMembers';
 import { ITeamMember } from '@/team/types';
-import { useParams } from 'react-router';
 
 interface IGetTeamMembersQueryResponse {
   getTeamMembers: ITeamMember[];
 }
 
-export const useGetTeamMembers = () => {
-  const { id: teamId } = useParams();
-
+export const useGetTeamMembers = ({ teamId }: { teamId?: string }) => {
   const { data, loading, refetch } = useQuery<IGetTeamMembersQueryResponse>(
     GET_TEAM_MEMBERS,
     {
@@ -20,7 +17,6 @@ export const useGetTeamMembers = () => {
   );
 
   const members = data?.getTeamMembers;
-  const coreMembers = data?.getTeamMembers.map((member) => member.member);
 
-  return { members, loading, refetch, coreMembers };
+  return { members, loading, refetch };
 };
