@@ -89,9 +89,8 @@ export const AutomationBuilderHeader = ({
           />
 
           <Tabs defaultValue={activeTab}>
-            <Tabs.List size="sm" className="h-8 ">
+            <Tabs.List className="h-8">
               <Tabs.Trigger
-                size="sm"
                 value="builder"
                 className="h-8 py-2 px-6"
                 onClick={() => toggleTabs('builder')}
@@ -99,7 +98,6 @@ export const AutomationBuilderHeader = ({
                 Builder
               </Tabs.Trigger>
               <Tabs.Trigger
-                size="sm"
                 value="history"
                 className="h-8 py-2 px-6"
                 onClick={() => toggleTabs('history')}
