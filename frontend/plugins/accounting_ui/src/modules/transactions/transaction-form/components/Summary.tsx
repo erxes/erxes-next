@@ -68,7 +68,7 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
           <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
-              amountMicros: sumDebit * 1000000,
+              amountMicros: sumDebit,
             }}
           />
         </span>
@@ -79,7 +79,7 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
           <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
-              amountMicros: sumCredit * 1000000,
+              amountMicros: sumCredit,
             }}
           />
         </span>
@@ -90,7 +90,7 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
           <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
-              amountMicros: (sumCredit - sumDebit) * 1000000,
+              amountMicros: (sumCredit - sumDebit),
             }}
           />
         </span>

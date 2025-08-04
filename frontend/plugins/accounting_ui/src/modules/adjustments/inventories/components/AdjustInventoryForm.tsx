@@ -1,49 +1,61 @@
-import { useForm } from 'react-hook-form';
-import { TAdjustInventoryForm } from '../types/adjustInventoryForm';
-import { IconGavel, IconTrashX } from '@tabler/icons-react';
+import { AccountingDialog } from '@/layout/components/Dialog';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconPlus } from '@tabler/icons-react';
 import {
   Button,
-  Form,
-  Input,
-  Textarea,
-  Spinner,
   DatePicker,
   Dialog,
+  Form,
+  Spinner,
+  Textarea,
   useQueryState,
 } from 'erxes-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { adjustInventorySchema } from '../types/adjustInventorySchema';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useAdjustInventoryAdd } from '../hooks/useAdjustInventoryAdd';
+import { TAdjustInventoryForm } from '../types/adjustInventoryForm';
+import { adjustInventorySchema } from '../types/adjustInventorySchema';
 
+export const AddAdjustInventory = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger asChild>
+        <Button>
+          <IconPlus />
+          Add Inventory Adjustment
+        </Button>
+      </Dialog.Trigger>
+      <AccountingDialog title="Add Account" description="Add a new account">
+        <AddAdjustInventoryForm setOpen={setOpen} />
+      </AccountingDialog>
+    </Dialog>
+  );
+};
 
-export const AdjustInventoryForm = () => {
-  const [id] = useQueryState<string>('id');
-
+const AddAdjustInventoryForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const form = useForm<TAdjustInventoryForm>({
     resolver: zodResolver(adjustInventorySchema),
     defaultValues: {
       date: new Date(),
     },
   });
-
-  const { addAdjustInventory } = useAdjustInventoryAdd();
+  const { addAdjustInventory, loading } = useAdjustInventoryAdd();
+  const [id] = useQueryState<string>('id');
   const onSubmit = (data: TAdjustInventoryForm) => {
-    console.log(data, 'aaaaaaaaaaaaaaaa')
-    addAdjustInventory({ variables: { ...data } })
-    // if (id) {
-    //   updateTransaction({
-    //     variables: { parentId, trDocs },
-    //   });
-    // } else {
-    //   createTransaction({
-    //     variables: { trDocs }
-    //   });
-    // }
+    addAdjustInventory({
+      variables: { ...data },
+      onCompleted: () => {
+        setOpen(false);
+        form.reset();
+      },
+    })
   };
 
   const onError = (error: any) => {
     console.log(error);
   };
+
   return (
     <Form {...form}>
       <form
@@ -83,18 +95,18 @@ export const AdjustInventoryForm = () => {
             </Form.Item>
           )}
         />
-        <Button type="submit">
-          <IconGavel />
-          Save
-        </Button>
-        <Button
-          variant="secondary"
-          className="text-destructive"
-        // onClick={handleDelete}
-        >
-          <IconTrashX />
-          {`Delete`}
-        </Button>
+
+        <Dialog.Footer className="col-span-2 mt-4">
+          <Dialog.Close asChild>
+            <Button variant="outline" type="button" size="lg">
+              Cancel
+            </Button>
+          </Dialog.Close>
+          <Button type="submit" size="lg" disabled={loading}>
+            {loading && <Spinner />}
+            Save
+          </Button>
+        </Dialog.Footer>
       </form>
     </Form>
   );
