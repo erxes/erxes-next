@@ -2,13 +2,13 @@ import { Breadcrumb, Button } from 'erxes-ui';
 import { IconArrowLeft } from '@tabler/icons-react';
 
 import { useNavigate } from 'react-router-dom';
-import { Members } from '@/team/components/members/Members';
+import { Statuses } from '@/team/components/status/Statuses';
 
-export const TeamMembersPage = () => {
+export const TeamStatusPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-auto">
+    <div className="h-full overflow-auto">
       <div className="px-4 h-16 flex items-center">
         <Breadcrumb>
           <Breadcrumb.List>
@@ -27,7 +27,11 @@ export const TeamMembersPage = () => {
           </Breadcrumb.List>
         </Breadcrumb>
       </div>
-      <Members />
+      <section className="mx-auto max-w-2xl">
+        <div className="flex items-center">
+          <Statuses />
+        </div>
+      </section>
     </div>
   );
 };

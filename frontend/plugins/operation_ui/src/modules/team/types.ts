@@ -14,6 +14,14 @@ export enum TeamEstimateTypes {
   EXPONENTIAL = '4',
 }
 
+export enum TeamStatusTypes {
+  Backlog = 'backlog',
+  Unstarted = 'unstarted',
+  Started = 'started',
+  Completed = 'completed',
+  Cancelled = 'cancelled',
+}
+
 export interface ITeam {
   _id: string;
   name: string;

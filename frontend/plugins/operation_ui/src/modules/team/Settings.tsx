@@ -9,6 +9,7 @@ import { TeamsSettingsPage } from '~/pages/TeamSettingsIndexPage';
 import { TeamDetailPage } from '~/pages/TeamDetailPage';
 import { OperationPaths } from '~/types/paths';
 import { TeamMembersPage } from '~/pages/TeamMembersPage';
+import { TeamStatusPage } from '~/pages/TeamStatusPage';
 
 const TeamSettings = () => {
   return (
@@ -37,6 +38,10 @@ const TeamSettings = () => {
           <Route
             path={OperationPaths.TeamMembers}
             element={<TeamMembersPage />}
+          />
+          <Route
+            path={OperationPaths.TeamStatus}
+            element={<TeamStatusPage />}
           />
         </Route>
       </Routes>

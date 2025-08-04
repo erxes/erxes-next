@@ -3,7 +3,7 @@ import { CreateTeam } from '@/team/components/team-list/CreateTeam';
 
 export const TeamsSettingsPage = () => {
   return (
-    <div>
+    <div className="overflow-auto">
       <div className="ml-auto flex justify-between px-8 py-6">
         <h1 className="text-xlfont-semibold">Teams</h1>
 
