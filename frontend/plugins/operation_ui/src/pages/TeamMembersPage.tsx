@@ -3,12 +3,13 @@ import { IconArrowLeft } from '@tabler/icons-react';
 
 import { useNavigate } from 'react-router-dom';
 import { Members } from '@/team/components/members/Members';
+import { Members as MembersLegacy } from '@/team/components/members/MembersLegacy';
 
 export const TeamMembersPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-auto">
+    <div className="h-screen">
       <div className="px-4 h-16 flex items-center">
         <Breadcrumb>
           <Breadcrumb.List>
@@ -28,6 +29,7 @@ export const TeamMembersPage = () => {
         </Breadcrumb>
       </div>
       <Members />
+      <MembersLegacy></MembersLegacy>
     </div>
   );
 };
