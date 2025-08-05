@@ -31,5 +31,5 @@ export const queries = `
 export const mutations = `
     addStatus(name: String!, teamId: String!, description: String, color: String, order: Int, type: String): Status
     updateStatus(_id: String!, name: String, description: String, color: String, order: Int, type: String): Status
-    deleteStatus(_id: String!): String
+    deleteStatus(_id: String!): JSON
 `;
