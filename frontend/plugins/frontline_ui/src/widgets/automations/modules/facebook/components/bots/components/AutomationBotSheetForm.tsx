@@ -132,6 +132,7 @@ const FacebookBotFormContent = ({
   );
   const { onSave, onSaveloading } = useFacebookBotSave();
   const [accountId, pageId] = form.watch(['accountId', 'pageId']);
+  console.log({ accountId, pageId });
 
   return (
     <>
@@ -321,7 +322,6 @@ const FacebookPageInfo = memo(
     if (!accountId || !pageId) {
       return (
         <Label className="text-lg flex gap-2 items-center">
-          {' '}
           <IconInfoTriangle className="size-3 text-destructive" /> Select a Page
         </Label>
       );
