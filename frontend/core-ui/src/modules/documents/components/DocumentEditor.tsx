@@ -83,11 +83,11 @@ const DocumentTitleEditor = ({
     handleEventListener();
 
     document.addEventListener('input', handleEventListener);
-    document.addEventListener('resize', handleEventListener);
+    window.addEventListener('resize', handleEventListener);
 
     return () => {
       document.removeEventListener('input', handleEventListener);
-      document.removeEventListener('resize', handleEventListener);
+      window.removeEventListener('resize', handleEventListener);
     };
   }, [value]);
 

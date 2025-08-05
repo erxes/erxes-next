@@ -5,10 +5,10 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 
-type DocumentTypeConfig = {
+interface DocumentTypeConfig {
   icon: React.ElementType;
   label: string;
-};
+}
 
 export const DOCUMENTS_TYPES_SET: Record<string, DocumentTypeConfig> = {
   'core:customer': {

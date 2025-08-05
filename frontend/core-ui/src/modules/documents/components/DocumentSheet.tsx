@@ -11,12 +11,9 @@ export const DocumentSheet = () => {
 
   const { handleSubmit } = useFormContext<FormType>();
 
-  const submitHandler: SubmitHandler<FormType> = useCallback(
-    async (data) => {
-      documentSave(data as any);
-    },
-    [documentSave],
-  );
+  const submitHandler: SubmitHandler<FormType> = useCallback(async () => {
+    documentSave();
+  }, [documentSave]);
 
   if (!documentId) {
     return <Button onClick={() => setDocumentId(' ')}>Add Document</Button>;

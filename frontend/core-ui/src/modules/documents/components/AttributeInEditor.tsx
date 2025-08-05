@@ -33,9 +33,18 @@ const ATTRIBUTE_QUERY = gql`
   }
 `;
 
+interface Attribute {
+  label?: string;
+  name: string;
+  value?: any;
+  groupDetail?: {
+    name: string;
+  };
+}
+
 interface AttributeInEditorProps {
   editor: any;
-  attributes?: any[];
+  attributes?: Attribute[];
   loading?: boolean;
 }
 
@@ -62,7 +71,7 @@ const AttributeInEditor = ({
 
 interface AttributeMenuProps extends SlashMenuProps {
   items: DefaultReactSuggestionItem[];
-  attributes?: any[];
+  attributes?: Attribute[];
   loading?: boolean;
 }
 
@@ -167,7 +176,7 @@ interface AttributeMenuItemProps {
   isSelected: boolean;
   index: number;
   text: string;
-  attribute?: any;
+  attribute?: Attribute;
 }
 
 function AttributeMenuItem({
@@ -195,7 +204,7 @@ function AttributeMenuItem({
 
 function getAttributeMenuItems(
   editor: IBlockEditor,
-  attributes: any[],
+  attributes: Attribute[],
 ): DefaultReactSuggestionItem[] {
   return attributes.map((attribute) => ({
     title: attribute.label || attribute.name || '',

@@ -34,9 +34,7 @@ export const useDocument = () => {
 
   const [saveDocument, { loading: saving }] = useMutation(SAVE_DOCUMENT);
 
-  const documentSave = async (data: any) => {
-    console.log('data', data);
-
+  const documentSave = async () => {
     const document: any = {
       name: getValues('name'),
       content: getValues('content'),
