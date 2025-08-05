@@ -1,4 +1,5 @@
 import { Button, cn } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link, useLocation } from 'react-router-dom';
 import { IconUserFilled, IconBox } from '@tabler/icons-react';
 
@@ -8,6 +9,9 @@ export const MainNavigation = () => {
 
   return (
     <div className="p-3 flex flex-col gap-1 h-full">
+      <PageHeader.Start className="flex items-center gap-2">
+        Operation
+      </PageHeader.Start>
       <Button
         variant="ghost"
         className={cn(
