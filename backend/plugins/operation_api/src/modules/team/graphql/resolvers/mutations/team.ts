@@ -1,5 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { TeamMemberRoles } from '@/team/@types/team';
+import { checkUserRole } from '@/utils';
 
 export const teamMutations = {
   teamAdd: async (
@@ -45,8 +46,13 @@ export const teamMutations = {
       icon: string;
       estimateType: number;
     },
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
+    await checkUserRole(models, _id, user._id, [
+      TeamMemberRoles.ADMIN,
+      TeamMemberRoles.LEAD,
+    ]);
+
     return models.Team.updateTeam(_id, {
       name,
       description,
@@ -58,16 +64,23 @@ export const teamMutations = {
   teamRemove: async (
     _parent: undefined,
     { _id }: { _id: string },
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
+    await checkUserRole(models, _id, user._id, [TeamMemberRoles.ADMIN]);
+
     return models.Team.removeTeam(_id);
   },
 
   teamAddMembers: async (
     _parent: undefined,
     { _id, memberIds }: { _id: string; memberIds: string[] },
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
+    await checkUserRole(models, _id, user._id, [
+      TeamMemberRoles.ADMIN,
+      TeamMemberRoles.LEAD,
+    ]);
+
     return models.TeamMember.createTeamMembers(
       memberIds.map((memberId) => ({
         memberId,
@@ -80,16 +93,20 @@ export const teamMutations = {
   teamRemoveMember: async (
     _parent: undefined,
     { _id }: { _id: string },
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
+    await checkUserRole(models, _id, user._id, [TeamMemberRoles.ADMIN]);
+
     return models.TeamMember.removeTeamMember(_id);
   },
 
   teamUpdateMember: async (
     _parent: undefined,
     { _id, role }: { _id: string; memberId: string; role: TeamMemberRoles },
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
+    await checkUserRole(models, _id, user._id, [TeamMemberRoles.ADMIN]);
+
     return models.TeamMember.updateTeamMember(_id, role);
   },
 };
