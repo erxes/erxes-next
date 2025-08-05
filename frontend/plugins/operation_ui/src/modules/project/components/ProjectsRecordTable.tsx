@@ -1,16 +1,10 @@
 import { projectsColumns } from '@/project/components/ProjectsColumn';
 import { RecordTable, RecordTableTree } from 'erxes-ui';
+import { useProjects } from '@/project/hooks/useGetProjects';
 
 export const ProjectsRecordTable = ({ type }: { type: string }) => {
-  const projects = [
-    {
-      _id: '1',
-      icon: '1',
-      name: 'Project 1',
-      tagIds: [],
-      createdAt: new Date(),
-    },
-  ];
+  const { projects } = useProjects();
+
   return (
     <RecordTable.Provider
       columns={projectsColumns}

@@ -11,24 +11,10 @@ type Project {
     leadId: String
     startDate: Date
     targetDate: Date
-    
-    status: String
-
     createdAt: Date
     updatedAt: Date
 }
 
-input ProjectFilter {
-    name: Strings   
-    description: String
-    status: String!
-    priority: String
-    teamIds: [String]!
-    leadId: String
-    startDate: Date
-    targetDate: Date
-    ${GQL_CURSOR_PARAM_DEFS}
-}  
 
 type ProjectListResponse {
     list: [Project],
@@ -41,9 +27,9 @@ type ProjectListResponse {
 const projectFilterParams = `
     name: String
     description: String
-    status: String!
+    status: String
     priority: String
-    teamIds: [String]!
+    teamIds: [String]
     leadId: String
     startDate: Date
     targetDate: Date

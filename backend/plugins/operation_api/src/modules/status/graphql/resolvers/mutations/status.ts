@@ -14,7 +14,7 @@ export const statusMutations = {
       TeamMemberRoles.LEAD,
     ]);
 
-    return models.Status.createStatus(params);
+    return models.Status.addStatus(params);
   },
 
   updateStatus: async (
@@ -30,7 +30,7 @@ export const statusMutations = {
     return models.Status.updateStatus(_id, params);
   },
 
-  removeStatus: async (
+  deleteStatus: async (
     _parent: undefined,
     { _id }: { _id: string },
     { models, user }: IContext,
