@@ -1,5 +1,3 @@
-import gql from 'graphql-tag';
-
 const integrationCommonFields = `
     _id: String
     inboxId: String
@@ -125,6 +123,7 @@ export const queries = `
   callWaitingList(queue: String!): String
   callProceedingList(queue: String!): String
   callQueueMemberList(integrationId: String!, queue: String!): JSON
+  callTodayStatistics(queue: String!): JSON
   `;
 
 //old mutations

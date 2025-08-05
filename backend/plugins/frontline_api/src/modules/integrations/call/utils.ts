@@ -1,4 +1,6 @@
 import * as jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+
 import fetch from 'node-fetch';
 import FormData from 'form-data';
 import momentTz from 'moment-timezone';
@@ -160,7 +162,7 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
   const expiry = isCron ? CALL_CRON_API_EXPIRY : CALL_API_EXPIRY;
 
   // Check existing cookie
-  let callCookie = await redis.get(cookieKey);
+  const callCookie = await redis.get(cookieKey);
   if (callCookie) {
     console.log(
       `Using existing ${isCron ? 'cron' : 'regular'} cookie:`,
@@ -186,9 +188,10 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     const data = await challengeResponse.json();
     const { challenge } = data?.response;
 
-    const bcrypt = require('bcrypt');
-    const saltRounds = 10;
-    const hashedPassword = bcrypt.hashSync(challenge + apiPassword, saltRounds);
+    const token = crypto
+      .createHash('md5')
+      .update(challenge + apiPassword)
+      .digest('hex');
 
     const loginResponse = await sendRequest(`https://${wsServer}/api`, {
       method: 'POST',
@@ -197,7 +200,7 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
         request: {
           action: 'login',
           user: apiUser,
-          token: hashedPassword,
+          token,
         },
       }),
     });
@@ -244,7 +247,7 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
 
   const history = await getCallHistory(models, _id);
   const { inboxIntegrationId = '' } = history;
-  let operator = operatorPhone || history.operatorPhone;
+  const operator = operatorPhone || history.operatorPhone;
   const fetchRecordUrl = async (retryCount) => {
     try {
       const { response, extensionNumber } = await sendToGrandStream(
@@ -330,7 +333,7 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
         user,
       );
 
-      let cdrRoot = cdrData.response?.cdr_root || cdrData.cdr_root;
+      const cdrRoot = cdrData.response?.cdr_root || cdrData.cdr_root;
 
       if (!cdrRoot) {
         console.log(
@@ -943,7 +946,7 @@ const errorList: ErrorList = {
 export const toCamelCase = (obj) => {
   const camelCaseObj = {};
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const camelCaseKey = key.replace(/_([a-z])/g, (_, letter) =>
         letter.toUpperCase(),
       );

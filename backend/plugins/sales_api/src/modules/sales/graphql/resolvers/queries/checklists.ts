@@ -1,5 +1,5 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 
 export const checklistQueries = {
   /**
@@ -28,4 +28,4 @@ export const checklistQueries = {
   },
 };
 
-moduleRequireLogin(checklistQueries);
+// moduleRequireLogin(checklistQueries);

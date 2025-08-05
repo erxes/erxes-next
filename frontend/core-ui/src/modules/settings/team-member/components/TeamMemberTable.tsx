@@ -19,7 +19,7 @@ const TeamMemberTable = () => {
     <RecordTable.Provider
       columns={teamMemberColumns}
       data={users || []}
-      stickyColumns={['more', 'avatar', 'firstName', 'lastName']}
+      stickyColumns={['more', 'avatar', 'name']}
       className="m-3"
     >
       <RecordTable.CursorProvider

@@ -1,12 +1,16 @@
 import { IContext } from '~/connectionResolvers';
 import redis from '../../redlock';
 import { XMLParser } from 'fast-xml-parser';
-import {
-  ICallHistoryArgs,
-  ICallHistoryFilterOptions,
-} from '@/integrations/call/@types/histories';
-import { getEnv, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { ICallHistoryFilterOptions } from '@/integrations/call/@types/histories';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { sendToGrandStream } from '~/modules/integrations/call/utils';
+import {
+  calculateAbandonmentRate,
+  calculateAverageHandlingTime,
+  calculateAverageSpeedOfAnswer,
+  calculateFirstCallResolution,
+  calculateServiceLevel,
+} from '~/modules/integrations/call/statistics';
 
 const callQueries = {
   async callsIntegrationDetail(_root, { integrationId }, { models }: IContext) {
@@ -19,8 +23,8 @@ const callQueries = {
     return res;
   },
 
-  async callsCustomerDetail(_root, { customerPhone }, { subdomain }: IContext) {
-    let customer = await sendTRPCMessage({
+  async callsCustomerDetail(_root, { customerPhone }) {
+    const customer = await sendTRPCMessage({
       pluginName: 'core',
       method: 'query',
       module: 'customer',
@@ -99,7 +103,7 @@ const callQueries = {
     )) as any;
 
     if (queueData && queueData.response) {
-      const { account } = queueData?.response;
+      const { account } = queueData.response;
 
       if (account) {
         const gsUsernames = integration.operators.map(
@@ -225,7 +229,7 @@ const callQueries = {
     )) as any;
 
     if (queueData && queueData.response) {
-      const { CallQueueMembersMessage } = queueData?.response;
+      const { CallQueueMembersMessage } = queueData.response;
 
       if (CallQueueMembersMessage) {
         return CallQueueMembersMessage;
@@ -233,6 +237,164 @@ const callQueries = {
       return [];
     }
     return 'request failed';
+  },
+
+  async callTodayStatistics(
+    _root,
+    { queue }: { queue: string },
+    { models }: IContext,
+  ) {
+    const DEFAULT_VALUE = '0';
+
+    try {
+      const now = new Date();
+      const dateFrom = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      );
+      const dateTo = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+      );
+
+      const todayCdrs = await models.CallCdrs.find({
+        actionType: { $regex: queue },
+        start: {
+          $gte: dateFrom,
+          $lt: dateTo,
+        },
+      });
+
+      const [
+        serviceLevel,
+        firstCallResolution,
+        averageSpeed,
+        averageAnsweredTime,
+      ] = await Promise.all([
+        calculateServiceLevel(todayCdrs),
+        calculateFirstCallResolution(todayCdrs),
+        calculateAverageSpeedOfAnswer(todayCdrs),
+        calculateAverageHandlingTime(todayCdrs),
+      ]);
+
+      return {
+        serviceLevel: serviceLevel?.toString() || DEFAULT_VALUE,
+        firstCallResolution: firstCallResolution?.toString() || DEFAULT_VALUE,
+        averageSpeed: averageSpeed?.toString() || DEFAULT_VALUE,
+        averageAnsweredTime: averageAnsweredTime?.toString() || DEFAULT_VALUE,
+      };
+    } catch (error) {
+      console.error('Error in callTodayStatistics:', error);
+
+      return {
+        serviceLevel: DEFAULT_VALUE,
+        firstCallResolution: DEFAULT_VALUE,
+        averageSpeed: DEFAULT_VALUE,
+        averageAnsweredTime: DEFAULT_VALUE,
+      };
+    }
+  },
+
+  async callCalculateServiceLevel(_root, { queue }, { models }: IContext) {
+    const now = new Date();
+    const dateFrom = new Date(now.getFullYear(), 5, 12);
+    const dateTo = new Date(now.getFullYear(), 5, 13);
+
+    const todyCdrs = await models.CallCdrs.find({
+      actionType: { $regex: queue },
+      start: {
+        $gte: dateFrom,
+        $lt: dateTo,
+      },
+    });
+
+    const serviceLevel = await calculateServiceLevel(todyCdrs);
+
+    return serviceLevel;
+  },
+  async callCalculateFirstCallResolution(
+    _root,
+    { queue },
+    { models }: IContext,
+  ) {
+    const now = new Date();
+    const dateFrom = new Date(now.getFullYear(), 5, 12);
+    const dateTo = new Date(now.getFullYear(), 5, 13);
+
+    const todyCdrs = await models.CallCdrs.find({
+      actionType: { $regex: queue },
+      start: {
+        $gte: dateFrom,
+        $lt: dateTo,
+      },
+    });
+
+    const firstCallResolution = await calculateFirstCallResolution(todyCdrs);
+
+    return firstCallResolution;
+  },
+  async callCalculateAbandonmentRate(_root, { queue }, { models }: IContext) {
+    const now = new Date();
+    const dateFrom = new Date(now.getFullYear(), 5, 12);
+    const dateTo = new Date(now.getFullYear(), 5, 13);
+
+    const todyCdrs = await models.CallCdrs.find({
+      actionType: { $regex: queue },
+      start: {
+        $gte: dateFrom,
+        $lt: dateTo,
+      },
+    });
+
+    const abandonedRate = await calculateAbandonmentRate(todyCdrs);
+
+    return abandonedRate;
+  },
+
+  async callCalculateAverageSpeedOfAnswer(
+    _root,
+    { queue },
+    { models }: IContext,
+  ) {
+    const now = new Date();
+    const dateFrom = new Date(now.getFullYear(), 5, 12);
+    const dateTo = new Date(now.getFullYear(), 5, 13);
+
+    const todyCdrs = await models.CallCdrs.find({
+      actionType: { $regex: queue },
+      start: {
+        $gte: dateFrom,
+        $lt: dateTo,
+      },
+    });
+
+    const averageSpeed = await calculateAverageSpeedOfAnswer(todyCdrs);
+
+    return averageSpeed;
+  },
+
+  async callCalculateAverageHandlingTime(
+    _root,
+    { queue },
+    { models }: IContext,
+  ) {
+    const now = new Date();
+    const dateFrom = new Date(now.getFullYear(), 5, 12);
+    const dateTo = new Date(now.getFullYear(), 5, 13);
+
+    const todyCdrs = await models.CallCdrs.find({
+      actionType: { $regex: queue },
+      start: {
+        $gte: dateFrom,
+        $lt: dateTo,
+      },
+    });
+
+    const averageAnsweredTime = await calculateAverageHandlingTime(todyCdrs);
+
+    return averageAnsweredTime;
   },
 };
 export default callQueries;

@@ -5,6 +5,7 @@ import {
 import {
   Avatar,
   AvatarProps,
+  Badge,
   cn,
   Combobox,
   isUndefinedOrNull,
@@ -158,6 +159,7 @@ const CompaniesInlineAvatar = ({ className, ...props }: AvatarProps) => {
     </div>
   );
 };
+CompaniesInlineAvatar.displayName = 'CompaniesInline.Avatar';
 
 const CompaniesInlineTitle = () => {
   const { companies, loading, placeholder } = useCompaniesInlineContext();
@@ -183,6 +185,7 @@ const CompaniesInlineTitle = () => {
     />
   );
 };
+CompaniesInlineTitle.displayName = 'CompaniesInline.Title';
 
 const CompaniesInlineRoot = ({
   companyIds,
@@ -197,14 +200,81 @@ const CompaniesInlineRoot = ({
       placeholder={placeholder}
       updateCompanies={updateCompanies}
     >
-      <CompaniesInline.Avatar />
-      <CompaniesInline.Title />
+      <CompaniesInlineAvatar />
+      <CompaniesInlineTitle />
     </CompaniesInlineProvider>
   );
 };
+
+const CompanyNameBadges = ({
+  ...props
+}: React.ComponentProps<typeof Badge>) => {
+  const { companies } = useCompaniesInlineContext();
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {companies.map((company) => (
+        <Badge key={company._id} {...props}>
+          {company.primaryName}
+        </Badge>
+      ))}
+    </div>
+  );
+};
+CompanyNameBadges.displayName = 'CompaniesInline.CompanyNameBadges';
+
+const CompaniesInlineWithBadges = ({
+  companyIds,
+  companies,
+  placeholder,
+  updateCompanies,
+  badgeClassName,
+  badgeVariant,
+}: Omit<CompaniesInlineProviderProps, 'children'> & {
+  badgeClassName?: string;
+  badgeVariant?:
+    | 'default'
+    | 'destructive'
+    | 'secondary'
+    | 'success'
+    | 'warning';
+}) => {
+  return (
+    <CompaniesInlineProvider
+      companyIds={companyIds}
+      companies={companies}
+      placeholder={placeholder}
+      updateCompanies={updateCompanies}
+    >
+      <CompanyNameBadges className={badgeClassName} variant={badgeVariant} />
+    </CompaniesInlineProvider>
+  );
+};
+CompaniesInlineWithBadges.displayName = 'CompaniesInline.WithBadges';
+
+const CompaniesInlineWithoutAvatar = ({
+  companyIds,
+  companies,
+  placeholder,
+  updateCompanies,
+}: Omit<CompaniesInlineProviderProps, 'children'>) => {
+  return (
+    <CompaniesInlineProvider
+      companyIds={companyIds}
+      companies={companies}
+      placeholder={placeholder}
+      updateCompanies={updateCompanies}
+    >
+      <CompaniesInlineTitle />
+    </CompaniesInlineProvider>
+  );
+};
+
+CompaniesInlineWithoutAvatar.displayName = 'CompaniesInline.WithoutAvatar';
 
 export const CompaniesInline = Object.assign(CompaniesInlineRoot, {
   Provider: CompaniesInlineProvider,
   Avatar: CompaniesInlineAvatar,
   Title: CompaniesInlineTitle,
+  Badges: CompaniesInlineWithBadges,
+  WithoutAvatar: CompaniesInlineWithoutAvatar,
 });

@@ -42,9 +42,11 @@ const ADD_UNIT = gql`
 
 const EDIT_UNIT = gql`
   mutation UnitsEdit(
+    $id: String!
     ${commonDefs}
     ) {
     unitsEdit(
+      _id: $id,
       ${commonVars}
       ) {
       ${returnFields}

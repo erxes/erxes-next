@@ -9,26 +9,30 @@ export const adjustTypes = [
   { value: 'fxa', label: 'fixedasset' }
 ]
 
-export const AdjustmentHeader = ({ children }: { children?: React.ReactNode; }) => {
+export const AdjustmentHeader = ({ children, defaultKind }: { children?: React.ReactNode; defaultKind?: string }) => {
   const navigate = useNavigate();
   const params = useParams();
-  const subTitle = params['*']?.replace('adjustment/', '');
+  const subTitle = defaultKind || params['*']?.replace('adjustment/', '');
 
   return (
-    <AccountingHeader leftChildren={
-      (<Select value={subTitle} onValueChange={(val) => navigate(`/accounting/adjustment/${val}`)}>
-        <Select.Trigger>
-          <Select.Value placeholder="Select a kind" />
-        </Select.Trigger>
-        <Select.Content>
-          {adjustTypes.map((kind) => (
-            <Select.Item key={kind.value} value={kind.value} className="capitalize">
-              {kind.label}
-            </Select.Item>
-          ))}
-        </Select.Content>
-      </Select>)
-    }>
+    <AccountingHeader
+      leftChildren={
+        (<Select value={subTitle} onValueChange={(val) => navigate(`/accounting/adjustment/${val}`)}>
+          <Select.Trigger>
+            <Select.Value placeholder="Select a kind" />
+          </Select.Trigger>
+          <Select.Content>
+            {adjustTypes.map((kind) => (
+              <Select.Item key={kind.value} value={kind.value} className="capitalize">
+                {kind.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>)
+      }
+      returnLink='/accounting/adjustment/inventory'
+      returnText='Inventory'
+    >
       {children}
     </AccountingHeader>
   );

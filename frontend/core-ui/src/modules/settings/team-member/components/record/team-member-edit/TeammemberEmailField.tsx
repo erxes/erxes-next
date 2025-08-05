@@ -8,7 +8,6 @@ import {
   RecordTableCellContent,
   RecordTableCellTrigger,
   RecordTablePopover,
-  TextOverflowTooltip,
 } from 'erxes-ui';
 import React, { useState } from 'react';
 

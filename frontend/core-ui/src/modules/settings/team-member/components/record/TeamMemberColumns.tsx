@@ -31,8 +31,8 @@ import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { format } from 'date-fns';
-import { TeamMemberEmailField } from './team-member-edit/TeammemberEmailField';
 import { ApolloError } from '@apollo/client';
+import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -148,7 +148,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
               !status || status === 'Not verified' ? 'destructive' : 'success'
             }
           >
-            {status || 'Not verified'}
+            {status ? (cell.getValue() as string) : 'Not verified'}
           </Badge>
         </RecordTableCellDisplay>
       );

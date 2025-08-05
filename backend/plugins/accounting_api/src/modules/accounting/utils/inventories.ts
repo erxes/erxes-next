@@ -19,7 +19,7 @@ const calcTrs = async (models: IModels, {
     const { _id, records } = trs;
     const { accountId, branchId, departmentId, productId } = _id;
 
-    if (!branchId || !departmentId || productId || accountId) {
+    if (!branchId || !departmentId || !productId || !accountId) {
       continue
     }
 

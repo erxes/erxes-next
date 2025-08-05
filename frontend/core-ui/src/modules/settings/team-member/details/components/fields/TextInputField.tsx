@@ -1,7 +1,7 @@
 import { DatePicker, Form, Input } from 'erxes-ui';
 import React from 'react';
 import { Control, FieldPath, FieldValues } from 'react-hook-form';
-import { SelectPositions } from 'ui-modules';
+import { SelectBranches, SelectDepartments, SelectPositions } from 'ui-modules';
 
 type Props<T extends FieldValues> = {
   label: string;
@@ -23,7 +23,7 @@ export const TextInputField = <T extends FieldValues>({
         control={control}
         name={name}
         render={({ field }) => (
-          <Form.Item>
+          <Form.Item className="col-span-2">
             <Form.Label>{label}</Form.Label>
             <Form.Description>{description}</Form.Description>
             <Form.Control>
@@ -40,10 +40,65 @@ export const TextInputField = <T extends FieldValues>({
         control={control}
         name={name}
         render={({ field }) => (
-          <Form.Item>
+          <Form.Item className="col-span-2">
             <Form.Label>{label}</Form.Label>
             <Form.Description>{description}</Form.Description>
             <SelectPositions.FormItem
+              mode="multiple"
+              value={field.value}
+              onValueChange={field.onChange}
+            />
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+    );
+  } else if (name === 'email' || name === 'username') {
+    return (
+      <Form.Field
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <Form.Item className="col-span-3">
+            <Form.Label>{label}</Form.Label>
+            <Form.Description>{description}</Form.Description>
+            <Form.Control>
+              <Input {...field} {...rest} />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+    );
+  } else if (name === 'branchIds') {
+    return (
+      <Form.Field
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <Form.Item className="col-span-2">
+            <Form.Label>{label}</Form.Label>
+            <Form.Description>{description}</Form.Description>
+            <SelectBranches.FormItem
+              mode="multiple"
+              value={field.value}
+              onValueChange={field.onChange}
+            />
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+    );
+  } else if (name === 'departmentIds') {
+    return (
+      <Form.Field
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <Form.Item className="col-span-2">
+            <Form.Label>{label}</Form.Label>
+            <Form.Description>{description}</Form.Description>
+            <SelectDepartments.FormItem
               mode="multiple"
               value={field.value}
               onValueChange={field.onChange}
@@ -59,7 +114,7 @@ export const TextInputField = <T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <Form.Item>
+        <Form.Item className="col-span-2">
           <Form.Label>{label}</Form.Label>
           <Form.Description>{description}</Form.Description>
           <Form.Control>

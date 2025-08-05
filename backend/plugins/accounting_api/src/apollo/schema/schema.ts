@@ -9,7 +9,7 @@ import extendTypes from '@/accounting/graphql/schemas/extendTypes';
 import { mutations as transactionMutations, queries as transactionQueries, types as transactionTypes } from '@/accounting/graphql/schemas/transactionCommon';
 import { mutations as vatRowMutations, queries as vatRowQueries, types as vatRowTypes } from '@/accounting/graphql/schemas/vatRow';
 import { mutations as accInventoryMutations, queries as accInventoryQueries, types as accInventoryTypes } from '@/accounting/graphql/schemas/inventories';
-import { mutations as adjustInventoryMutations, queries as adjustInventoryQueries, types as adjustInventoryTypes } from '@/accounting/graphql/schemas/adjustInventories';
+import { mutations as adjustInventoryMutations, queries as adjustInventoryQueries, types as adjustInventoryTypes } from '~/modules/accounting/graphql/schemas/adjustInvDetail';
 
 export const types = `
   enum CacheControlScope {

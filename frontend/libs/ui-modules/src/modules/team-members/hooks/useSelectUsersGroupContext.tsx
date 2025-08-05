@@ -2,5 +2,11 @@ import { useContext } from 'react';
 import { SelectUsersGroupContext } from '../contexts/SelectUsersGroupContext';
 
 export const useSelectUsersGroupContext = () => {
-  return useContext(SelectUsersGroupContext);
+  const context = useContext(SelectUsersGroupContext);
+  if (!context) {
+    throw new Error(
+      'useSelectUsersGroupContext must be used within a SelectUsersGroupContext',
+    );
+  }
+  return context;
 };

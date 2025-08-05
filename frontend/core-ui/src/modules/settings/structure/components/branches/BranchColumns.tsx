@@ -9,8 +9,10 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
   RecordTableTree,
+  Spinner,
   Textarea,
   TextOverflowTooltip,
+  useConfirm,
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
@@ -70,14 +72,21 @@ export const BranchRemoveCell = ({
 }: {
   cell: Cell<IBranchListItem, unknown>;
 }) => {
-  const { _id } = cell.row.original;
+  const { confirm } = useConfirm();
+  const { _id, title } = cell.row.original;
   const { handleRemove, loading } = useRemoveBranch();
+
   const onRemove = () => {
-    handleRemove({
-      variables: {
-        ids: [_id],
-      },
-    });
+    confirm({
+      message: `Are you sure you want to remove '${title}'`,
+      options: { confirmationValue: 'delete' },
+    }).then(() =>
+      handleRemove({
+        variables: {
+          ids: [_id],
+        },
+      }),
+    );
   };
   return (
     <Button
@@ -86,61 +95,13 @@ export const BranchRemoveCell = ({
       onClick={onRemove}
       className="text-destructive bg-destructive/10"
     >
-      <IconTrash size={12} />
+      {loading ? <Spinner /> : <IconTrash size={12} />}
     </Button>
   );
 };
 
 export const BranchColumns: ColumnDef<IBranchListItem>[] = [
   RecordTable.checkboxColumn as ColumnDef<IBranchListItem>,
-  {
-    id: 'title',
-    accessorKey: 'title',
-    header: () => <RecordTable.InlineHead label="title" />,
-    cell: ({ cell }) => {
-      const { title, _id } = cell.row.original;
-      const [_title, setTitle] = useState<string>(title);
-      const { branchesEdit, loading } = useBranchInlineEdit();
-      const [open, setOpen] = useState<boolean>(false);
-
-      const onSave = () => {
-        if (_title !== title) {
-          branchesEdit({ variables: { id: _id, title: _title } }, ['title']);
-        }
-      };
-
-      const onChange = (el: ChangeEvent<HTMLInputElement>) => {
-        const { value } = el.currentTarget;
-        setTitle(value);
-      };
-
-      return (
-        <RecordTablePopover
-          open={open}
-          onOpenChange={(open) => {
-            setOpen(open);
-            if (!open) {
-              onSave();
-            }
-          }}
-        >
-          <RecordTableCellTrigger>
-            <RecordTableTree.Trigger
-              order={cell.row.original.order}
-              name={cell.getValue() as string}
-              hasChildren={cell.row.original.hasChildren as boolean}
-            >
-              <TextOverflowTooltip value={cell.getValue() as string} />
-            </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={_title} onChange={onChange} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
-    },
-    size: 250,
-  },
   {
     id: 'code',
     accessorKey: 'code',
@@ -158,8 +119,7 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
       };
 
       const onChange = (el: ChangeEvent<HTMLInputElement>) => {
-        const { value } = el.currentTarget;
-        setCode(value);
+        setCode(el.currentTarget.value);
       };
 
       return (
@@ -167,31 +127,87 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
-            if (!open) {
-              onSave();
-            }
+            if (!open) onSave();
           }}
         >
           <RecordTableCellTrigger>
-            {cell.getValue() as string}
+            <RecordTableTree.Trigger
+              order={cell.row.original.order}
+              name={cell.getValue() as string}
+              hasChildren={cell.row.original.hasChildren as boolean}
+            >
+              <TextOverflowTooltip value={cell.getValue() as string} />
+            </RecordTableTree.Trigger>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={_code} onChange={onChange} />
+            <Input value={_code} onChange={onChange} disabled={loading} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
     },
   },
   {
+    id: 'title',
+    accessorKey: 'title',
+    header: () => <RecordTable.InlineHead label="title" />,
+    cell: ({ cell }) => {
+      const { title, _id, code } = cell.row.original;
+      const [_title, setTitle] = useState<string>(title);
+      const { branchesEdit, loading } = useBranchInlineEdit();
+      const [open, setOpen] = useState<boolean>(false);
+
+      const onSave = () => {
+        if (_title !== title) {
+          branchesEdit({ variables: { id: _id, title: _title, code } }, [
+            'title',
+            'code',
+          ]);
+        }
+      };
+
+      const onChange = (el: ChangeEvent<HTMLInputElement>) => {
+        setTitle(el.currentTarget.value);
+      };
+
+      return (
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) onSave();
+          }}
+        >
+          <RecordTableCellTrigger>
+            {cell.getValue() as string}
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input value={_title} onChange={onChange} disabled={loading} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
+    },
+    size: 250,
+  },
+  {
     id: 'parentId',
     accessorKey: 'parentId',
     header: () => <RecordTable.InlineHead label="parent" />,
     cell: ({ cell }) => {
+      const { parentId, _id, code } = cell.row.original;
+      const { branchesEdit, loading } = useBranchInlineEdit();
+
       return (
         <SelectBranches.InlineCell
           mode="single"
           value={cell.getValue() as string}
-          onValueChange={() => {}}
+          onValueChange={(value) => {
+            if (value !== parentId) {
+              branchesEdit(
+                { variables: { id: _id, parentId: value, code: code } },
+                ['parentId', 'code'],
+              );
+            }
+          }}
         />
       );
     },
@@ -202,16 +218,17 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'address',
     header: () => <RecordTable.InlineHead label="address" />,
     cell: ({ cell }) => {
-      const { address, _id } = cell.row.original;
+      const { address, _id, code } = cell.row.original;
       const [_address, setAddress] = useState<string>(address);
       const { branchesEdit, loading } = useBranchInlineEdit();
       const [open, setOpen] = useState<boolean>(false);
 
       const onSave = () => {
         if (_address !== address) {
-          branchesEdit({ variables: { id: _id, address: _address } }, [
-            'address',
-          ]);
+          branchesEdit(
+            { variables: { id: _id, address: _address, code: code } },
+            ['address', 'code'],
+          );
         }
       };
 

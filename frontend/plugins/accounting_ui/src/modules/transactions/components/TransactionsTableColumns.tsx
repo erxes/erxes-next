@@ -65,7 +65,7 @@ const JournalCell = ({ getValue }: any) => {
 };
 
 const SumDebitCell = ({ getValue, row }: any) => {
-  const [sumDt, setSumDt] = useState(getValue() as number);
+  const sumDt = getValue() as number;
   const { _id } = row.original;
 
   return (
@@ -74,22 +74,16 @@ const SumDebitCell = ({ getValue, row }: any) => {
         <CurrencyFormatedDisplay
           currencyValue={{
             currencyCode: CurrencyCode.MNT,
-            amountMicros: sumDt * 1000000,
+            amountMicros: sumDt,
           }}
         />
       </RecordTableCellTrigger>
-      <RecordTableCellContent>
-        <CurrencyField.ValueInput
-          value={sumDt}
-          onChange={(value) => setSumDt(value)}
-        />
-      </RecordTableCellContent>
     </RecordTablePopover>
   );
 };
 
 const SumCreditCell = ({ getValue, row }: any) => {
-  const [sumCt, setSumCt] = useState(getValue() as number);
+  const sumCt = getValue() as number;
   const { _id } = row.original;
 
   return (
@@ -98,16 +92,10 @@ const SumCreditCell = ({ getValue, row }: any) => {
         <CurrencyFormatedDisplay
           currencyValue={{
             currencyCode: CurrencyCode.MNT,
-            amountMicros: sumCt * 1000000,
+            amountMicros: sumCt,
           }}
         />
       </RecordTableCellTrigger>
-      <RecordTableCellContent>
-        <CurrencyField.ValueInput
-          value={sumCt}
-          onChange={(value) => setSumCt(value)}
-        />
-      </RecordTableCellContent>
     </RecordTablePopover>
   );
 };
@@ -127,9 +115,8 @@ const DepartmentCell = ({ row }: any) => {
 
   return (
     <RecordTableCellDisplay>
-      {`${department?.code ? `${department.code} - ` : ''}${
-            department?.title ?? ''
-          }`}
+      {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''
+        }`}
     </RecordTableCellDisplay>
   );
 };
@@ -148,7 +135,7 @@ const AccountCell = ({ row }: any) => {
   return (
     <RecordTableCellDisplay>
       {details.length &&
-            `${details[0].account?.code} - ${details[0].account?.name}`}
+        `${details[0].account?.code} - ${details[0].account?.name}`}
     </RecordTableCellDisplay>
   );
 };
@@ -162,9 +149,8 @@ const TransactionMoreColumnCell = ({
 
   return (
     <Link
-      to={`/accounting/transaction/edit?parentId=${parentId}&trId=${
-        originId || _id
-      }`}
+      to={`/accounting/transaction/edit?parentId=${parentId}&trId=${originId || _id
+        }`}
     >
       <RecordTable.MoreButton className="w-full h-full" />
     </Link>
