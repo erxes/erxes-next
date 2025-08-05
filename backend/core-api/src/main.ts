@@ -17,6 +17,7 @@ import {
 
 import './meta/automations';
 import { generateModels } from './connectionResolvers';
+import { documents } from './meta/documents';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
 import './segments';
@@ -85,6 +86,7 @@ httpServer.listen(port, async () => {
     meta: {
       permissions: moduleObjects,
       tags,
+      documents,
     },
   });
 });
