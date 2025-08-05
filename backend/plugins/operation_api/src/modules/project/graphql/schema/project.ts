@@ -7,7 +7,7 @@ type Project {
     description: String
     status: String!
     priority: String
-    teamId: String!
+    teamIds: [String]!
     startDate: Date
     endDate: Date
     createdAt: Date
@@ -19,6 +19,7 @@ input ProjectFilter {
     description: String
     status: String!
     priority: String
+    teamIds: [String]!
     startDate: Date
     endDate: Date
     ${GQL_CURSOR_PARAM_DEFS}
@@ -37,6 +38,7 @@ const projectFilterParams = `
     description: String
     status: String!
     priority: String
+    teamIds: [String]!
     startDate: Date
     endDate: Date
     ${GQL_CURSOR_PARAM_DEFS}
@@ -48,7 +50,7 @@ export const queries = `
 `;
 
 export const mutations = `
-    createProject(name: String!, description: String!, status: String!, teamId: String!, startDate: Date, endDate: Date): Project
-    updateProject(_id: String!, name: String!, description: String!, status: String!, teamId: String!, startDate: Date, endDate: Date): Project
+    createProject(name: String!, description: String!, status: String!, teamIds: [String]!, startDate: Date, endDate: Date): Project
+    updateProject(_id: String!, name: String!, description: String!, status: String!, teamIds: [String]!, startDate: Date, endDate: Date): Project
     removeProject(_id: String!): Project
 `;
