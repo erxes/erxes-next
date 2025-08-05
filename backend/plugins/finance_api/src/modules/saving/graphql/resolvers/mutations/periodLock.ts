@@ -7,11 +7,13 @@ import {
 } from '~/modules/saving/@types/periodLockTypes';
 
 const periodLockMutations = {
-  savingsPeriodLock: async (
+  savingsPeriodLocksAdd: async (
     _root: undefined,
     doc: IPeriodLock,
     { models }: IContext,
   ) => {
+    console.log(111111);
+
     return await models.PeriodLocks.createPeriodLock(doc);
   },
 

@@ -50,9 +50,30 @@ export interface IContractDocument extends IContract, Document {
 export interface IContractFilterQueryParams
   extends IListParams,
     ICursorPaginateParams {
-  ids?: string[];
   searchValue?: string;
+  status?: string;
+  ids?: string[];
+  closeDate?: Date;
+  conformityMainTypeId?: string;
+  conformityMainType?: string;
+  conformityIsSaved?: boolean;
+  conformityIsRelated?: boolean;
+  contractTypeId?: string;
+  isExpired?: string;
+  repaymentDate?: 'today';
+  closeDateType?: 'today' | 'thisWeek' | 'thisMonth';
+  startStartDate?: Date;
+  endStartDate?: Date;
+  startCloseDate?: Date;
+  endCloseDate?: Date;
   customerId?: string;
+  branchId?: string;
+  savingAmount?: number;
+  interestRate?: number;
+  isDeposit?: boolean;
+  dealId?: string;
+  sortField?: string;
+  sortDirection?: 1 | -1 | 0;
 }
 
 export interface ICloseVariable {
