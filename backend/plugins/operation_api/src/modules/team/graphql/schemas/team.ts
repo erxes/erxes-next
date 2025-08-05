@@ -30,6 +30,7 @@ export const queries = `
     getTeam(_id: String!): Team
     getTeams(name: String): [Team]
     getTeamMembers(teamId: String!): [TeamMember]
+    getMyTeams: [Team]
 `;
 
 export const mutations = `
