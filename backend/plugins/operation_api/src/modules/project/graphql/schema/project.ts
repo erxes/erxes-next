@@ -8,20 +8,25 @@ type Project {
     status: String!
     priority: String
     teamIds: [String]!
+    leadId: String
     startDate: Date
-    endDate: Date
+    targetDate: Date
+    
+    status: String
+
     createdAt: Date
     updatedAt: Date
 }
 
 input ProjectFilter {
-    name: String
+    name: Strings   
     description: String
     status: String!
     priority: String
     teamIds: [String]!
+    leadId: String
     startDate: Date
-    endDate: Date
+    targetDate: Date
     ${GQL_CURSOR_PARAM_DEFS}
 }  
 
@@ -39,8 +44,9 @@ const projectFilterParams = `
     status: String!
     priority: String
     teamIds: [String]!
+    leadId: String
     startDate: Date
-    endDate: Date
+    targetDate: Date
     ${GQL_CURSOR_PARAM_DEFS}
 `;
 

@@ -1,43 +1,8 @@
-import {
-  IconCalendarPlus,
-  IconLabelFilled,
-  IconTags,
-  IconUser,
-} from '@tabler/icons-react';
+import { IconLabelFilled } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import {
-  Avatar,
-  RecordTable,
-  RecordTableCellDisplay,
-  RelativeDateDisplay,
-  readImage,
-} from 'erxes-ui';
-
-// import { IProjec, SelectTags } from 'ui-modules';
-
-const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<any>;
+import { RecordTable } from 'erxes-ui';
 
 export const projectsColumns: ColumnDef<any>[] = [
-  checkBoxColumn,
-  {
-    id: 'avatar',
-    accessorKey: 'avatar',
-    header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
-    cell: ({ cell }) => {
-      const { firstName, lastName } = cell.row.original;
-      return (
-        <div className="flex items-center justify-center h-8">
-          <Avatar size="lg">
-            <Avatar.Image src={readImage(cell.getValue() as string)} />
-            <Avatar.Fallback>
-              {firstName?.charAt(0) || lastName?.charAt(0) || '-'}
-            </Avatar.Fallback>
-          </Avatar>
-        </div>
-      );
-    },
-    size: 34,
-  },
   {
     id: 'name',
     accessorKey: 'name',
@@ -45,35 +10,53 @@ export const projectsColumns: ColumnDef<any>[] = [
       <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return <div>132</div>;
+      return <div>dadaaas</div>;
+    },
+    size: 240,
+  },
+  {
+    id: 'priority',
+    accessorKey: 'priority',
+    header: () => (
+      <RecordTable.InlineHead label="Priority" icon={IconLabelFilled} />
+    ),
+    cell: ({ cell }) => {
+      return <div>dadaaas</div>;
+    },
+    size: 240,
+  },
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: () => (
+      <RecordTable.InlineHead label="Status" icon={IconLabelFilled} />
+    ),
+    cell: ({ cell }) => {
+      return <div>dadaaas</div>;
     },
     size: 240,
   },
 
   {
-    id: 'tagIds',
-    accessorKey: 'tagIds',
-    header: () => <RecordTable.InlineHead label="Tags" icon={IconTags} />,
+    id: 'Lead',
+    header: () => (
+      <RecordTable.InlineHead label="Lead" icon={IconLabelFilled} />
+    ),
     cell: ({ cell }) => {
-      return <div>123</div>;
+      return <div>dadaaas</div>;
     },
-    size: 360,
+    size: 240,
   },
 
   {
-    id: 'createdAt',
-    accessorKey: 'createdAt',
+    id: 'targetDate',
+    accessorKey: 'targetDate',
     header: () => (
-      <RecordTable.InlineHead label="Created At" icon={IconCalendarPlus} />
+      <RecordTable.InlineHead label="Target Date" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return (
-        <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableCellDisplay>
-            <RelativeDateDisplay.Value value={cell.getValue() as string} />
-          </RecordTableCellDisplay>
-        </RelativeDateDisplay>
-      );
+      return <div>dadaaas</div>;
     },
+    size: 240,
   },
 ];

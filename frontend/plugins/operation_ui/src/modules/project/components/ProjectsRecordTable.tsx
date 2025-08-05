@@ -5,6 +5,7 @@ export const ProjectsRecordTable = ({ type }: { type: string }) => {
   const projects = [
     {
       _id: '1',
+      icon: '1',
       name: 'Project 1',
       tagIds: [],
       createdAt: new Date(),
@@ -17,7 +18,7 @@ export const ProjectsRecordTable = ({ type }: { type: string }) => {
       className="m-3"
       stickyColumns={['more', 'name']}
     >
-      <RecordTableTree id="tags-list" ordered>
+      <RecordTableTree id="projects-list" ordered>
         <RecordTable.Scroll>
           <RecordTable>
             <RecordTable.Header />

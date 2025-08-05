@@ -10,9 +10,10 @@ export const projectSchema = schemaWrapper(
       description: { type: String, label: 'Description' },
       status: { type: String, label: 'Status', required: true },
       priority: { type: String, label: 'Priority' },
-      teamId: { type: String, label: 'Team ID', required: true },
-      startDate: { type: Date, label: 'Start Date', required: true },
-      endDate: { type: Date, label: 'End Date', required: true },
+      teamIds: { type: [String], label: 'Team ID', required: true },
+      startDate: { type: Date, label: 'Start Date' },
+      targetDate: { type: Date, label: 'Target Date' },
+      leadId: { type: String, label: 'Lead ID' },
     },
     {
       timestamps: true,

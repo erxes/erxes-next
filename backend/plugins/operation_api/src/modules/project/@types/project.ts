@@ -9,8 +9,9 @@ export interface IProject {
   description?: string;
   teamId: string;
   priority?: string;
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date;
+  targetDate?: Date;
+  leadId?: string;
 }
 
 export interface IProjectFilter extends ICursorPaginateParams, IListParams {
@@ -19,8 +20,8 @@ export interface IProjectFilter extends ICursorPaginateParams, IListParams {
   teamId?: string;
   priority?: string;
   startDate?: Date;
-  endDate?: Date;
-  userId?: string;
+  targetDate?: Date;
+  leadId?: string;
 }
 
 export interface IProjectDocument extends IProject, Document {
