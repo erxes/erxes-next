@@ -54,7 +54,7 @@ const generateFilter = (params: IDocumentFilterQueryParams) => {
         }
       }
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(`Invalid dateFilters: ${error.message}`);
     }
   }
 
