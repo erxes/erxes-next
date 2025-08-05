@@ -1,4 +1,4 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';

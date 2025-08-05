@@ -1,4 +1,4 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
   automationBuilderSiderbarOpenState,
   toggleAutomationBuilderOpenSidebar,

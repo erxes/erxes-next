@@ -20,6 +20,7 @@ export const AutomationsPageEffect = () => {
         }
 
         setHotkeyScope(AutomationsHotKeyScope.Builder);
+        // setHotkeyScope(AutomationsHotKeyScope.BuilderPanel);
         break;
       }
     }

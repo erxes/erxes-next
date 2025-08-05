@@ -10,7 +10,6 @@ export type MessageActionTypeNames = keyof typeof INITIAL_OBJ_MESSAGE_TYPES;
 export type FacebookMessageProps = {
   index: number;
   message: TBotMessage;
-  control: Control<TMessageActionForm>;
   handleMessageChange: (
     messageIndex: number,
     field: FieldPath<TBotMessage>,

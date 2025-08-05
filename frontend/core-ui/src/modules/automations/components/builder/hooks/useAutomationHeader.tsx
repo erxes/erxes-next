@@ -1,54 +1,39 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
-import {
-  automationBuilderActiveTabState,
-  automationBuilderSiderbarOpenState,
-  toggleAutomationBuilderOpenSidebar,
-} from '@/automations/states/automationState';
+import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
 import { useReactFlow } from '@xyflow/react';
-import { useToast } from 'erxes-ui';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { SubmitErrorHandler, useFormContext, useWatch } from 'react-hook-form';
+import { useIsMobile, useToast } from 'erxes-ui';
+import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useParams } from 'react-router';
 
 export const useAutomationHeader = () => {
-  const { control, handleSubmit, clearErrors } =
+  const { handleSubmit, clearErrors } =
     useFormContext<TAutomationBuilderForm>();
 
   const { setQueryParams, reactFlowInstance } = useAutomation();
-  const activeTab = useAtomValue(automationBuilderActiveTabState);
-  const isOpenSideBar = useAtomValue(automationBuilderSiderbarOpenState);
-  const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
+  const isMobile = useIsMobile();
 
   const { getNodes, setNodes } = useReactFlow();
   const { toast } = useToast();
   const { id } = useParams();
 
-  const {
-    triggers = [],
-    actions = [],
-    name = '',
-    status = 'draft',
-  } = useWatch({
-    control,
-  });
-
   const [save, { loading }] = useMutation(
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
   );
 
-  const handleSave = (values: TAutomationBuilderForm) => {
+  const handleSave = async (values: TAutomationBuilderForm) => {
+    const { triggers, actions, name, status } = values;
     const generateValues = () => {
       return {
         id,
         name,
         status: status,
-        triggers: triggers.map((t: any) => ({
+        triggers: triggers.map((t) => ({
           id: t.id,
           type: t.type,
           config: t.config,
@@ -58,9 +43,8 @@ export const useAutomationHeader = () => {
           actionId: t.actionId,
           position: t.position,
           isCustom: t.isCustom,
-          workflowId: t.workflowId,
         })),
-        actions: actions.map((a: any) => ({
+        actions: actions.map((a) => ({
           id: a.id,
           type: a.type,
           nextActionId: a.nextActionId,
@@ -69,7 +53,6 @@ export const useAutomationHeader = () => {
           label: a.label,
           description: a.description,
           position: a.position,
-          workflowId: a.workflowId,
         })),
       };
     };
@@ -85,6 +68,7 @@ export const useAutomationHeader = () => {
   const handleError: SubmitErrorHandler<TAutomationBuilderForm> = (errors) => {
     const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
+    const { actions, triggers } = useTriggersActions();
 
     const nodeErrorMap: Record<string, string> = {};
 
@@ -139,19 +123,15 @@ export const useAutomationHeader = () => {
     }
   };
 
-  const toggleTabs = (value: 'builder' | 'history') => {
+  const toggleTabs = (value: 'builder' | 'history') =>
     setQueryParams({ activeTab: value });
-  };
 
   return {
-    control,
     loading,
-    isOpenSideBar,
     handleSubmit,
     handleSave,
     handleError,
-    activeTab,
     toggleTabs,
-    toggleSideBarOpen,
+    isMobile,
   };
 };

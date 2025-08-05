@@ -1,4 +1,4 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';

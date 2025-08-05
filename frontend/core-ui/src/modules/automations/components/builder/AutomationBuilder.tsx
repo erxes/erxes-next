@@ -1,16 +1,5 @@
-import {
-  Background,
-  Controls,
-  Edge,
-  EdgeProps,
-  MiniMap,
-  Node,
-  OnInit,
-  ReactFlow,
-  ReactFlowInstance,
-  ReactFlowProvider,
-} from '@xyflow/react';
-import { useEffect, useState } from 'react';
+import { ReactFlowProvider } from '@xyflow/react';
+import { useEffect } from 'react';
 
 import '@xyflow/react/dist/style.css';
 
@@ -18,13 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Tabs, useMultiQueryState } from 'erxes-ui';
-import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
+import { AutomationBuilderDnDProvider } from '../../context/AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
-import { AutomationProvider } from '@/automations/components/builder/hooks/useAutomation';
-import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
-import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
+import { AutomationBuilderCanvas } from '@/automations/components/builder/AutomationBuilderCanvas';
+import { AutomationProvider } from '@/automations/context/AutomationProvider';
 import {
   automationBuilderActiveTabState,
   automationBuilderSiderbarOpenState,
@@ -34,74 +22,16 @@ import {
   TAutomationBuilderForm,
 } from '@/automations/utils/AutomationFormDefinitions';
 import { useAtom } from 'jotai';
-import { IAutomation, NodeData } from '../../types';
+import { IAutomation } from '../../types';
 import { deepCleanNulls } from '../../utils/automationBuilderUtils';
-import ConnectionLine from './edges/connectionLine';
-import PrimaryEdge from './edges/PrimaryEdge';
 import { AutomationHistories } from './history/components/AutomationHistories';
-import ActionNode from './nodes/ActionNode';
-import TriggerNode from './nodes/TriggerNode';
-import { AutomationBuilderEffect } from '@/automations/components/builder/AutomationBuilderEffect';
+import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
 
-const nodeTypes = {
-  trigger: TriggerNode as any,
-  action: ActionNode as any,
-  scratch: PlaceHolderNode,
-};
-const edgeTypes = {
-  primary: PrimaryEdge,
-};
-const Builder = () => {
-  const {
-    theme,
-    reactFlowWrapper,
-    nodes,
-    edges,
-    onNodesChange,
-    onEdgesChange,
-    editorWrapper,
-    onConnect,
-    onDrop,
-    isValidConnection,
-    onNodeDoubleClick,
-    onNodeDragStop,
-    onDragOver,
-
-    setReactFlowInstance,
-  } = useReactFlowEditor();
-
-  return (
-    <div className="h-full" ref={reactFlowWrapper}>
-      <AutomationBuilderEffect />
-      <ReactFlow
-        ref={editorWrapper}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onDrop={onDrop}
-        isValidConnection={isValidConnection}
-        onNodeDoubleClick={onNodeDoubleClick}
-        onInit={setReactFlowInstance}
-        onDragOver={onDragOver}
-        fitView
-        connectionLineComponent={ConnectionLine}
-        onNodeDragStop={onNodeDragStop}
-        colorMode={theme}
-        minZoom={0.1}
-      >
-        <Controls />
-        <Background />
-        <MiniMap pannable position="top-left" />
-      </ReactFlow>
-    </div>
-  );
+type AutomationBuilderProps = {
+  detail?: IAutomation;
 };
 
-export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
+export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
   const [activeTab, setActiveTab] = useAtom(automationBuilderActiveTabState);
   const [isOpenSideBar, setOpenSidebar] = useAtom(
     automationBuilderSiderbarOpenState,
@@ -117,7 +47,6 @@ export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
   });
 
   useEffect(() => {
-    console.log({ activeTab, queryParamsactiveTab: queryParams.activeTab });
     if (activeTab !== queryParams.activeTab) {
       setActiveTab(queryParams.activeTab || 'builder');
     }
@@ -139,7 +68,8 @@ export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
                   value="builder"
                   className="flex-1 h-full relative"
                 >
-                  <Builder />
+                  {/* <AutomationBuilderCanvas /> */}
+                  <InspectorPanel />
                   <AutomationBuilderSidebar />
                 </Tabs.Content>
               )}

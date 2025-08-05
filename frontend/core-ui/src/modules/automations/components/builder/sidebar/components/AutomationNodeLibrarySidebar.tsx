@@ -29,7 +29,7 @@ export const AutomationNodeLibrarySidebar = () => {
   };
 
   return (
-    <Command className="h-full w-[540px]">
+    <Command className="h-full w-2xl">
       <Command.Input
         placeholder="Search..."
         variant="primary"

@@ -1,4 +1,4 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useSetAtom } from 'jotai';

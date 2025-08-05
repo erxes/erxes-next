@@ -2,13 +2,15 @@ import { cn, Form, Input, Select, Textarea } from 'erxes-ui';
 import { FacebookMessageProps } from '../types/messageActionForm';
 import { InputTextCounter } from './InputTextCounter';
 import { ChangeEvent } from 'react';
+import { useReplyMessegaAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 
 export const FacebookInputMessage = ({
   index,
-  control,
   message,
   handleMessageChange,
 }: FacebookMessageProps) => {
+  const { control } = useReplyMessegaAction();
+
   const { value, type } = message?.input || {};
 
   const handleValueChange = (

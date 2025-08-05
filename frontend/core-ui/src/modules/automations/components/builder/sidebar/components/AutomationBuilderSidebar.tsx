@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { AutomationActionContentSidebar } from './AutomationActionContentSidebar';
 import { AutomationNodeLibrarySidebar } from './AutomationNodeLibrarySidebar';
 import { AutomationTriggerContentSidebar } from './AutomationTriggerContentSidebar';
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AutomationBuilderSidebar = () => {
@@ -48,7 +48,7 @@ export const AutomationBuilderSidebar = () => {
     }
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), AutomationsHotKeyScope.Builder);
+  useScopedHotkeys(`mod+g`, () => onOpen(), AutomationsHotKeyScope.Builder);
   useScopedHotkeys(`esc`, () => onClose(), AutomationsHotKeyScope.Builder);
 
   return (
@@ -60,7 +60,8 @@ export const AutomationBuilderSidebar = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="absolute right-0 top-0 min-w-80 max-w-2xl w-fit h-full bg-sidebar rounded-none flex flex-col z-50 shadow-lg"
+          className="
+          absolute right-0 top-0 min-w-80 max-w-2xl w-fit h-full bg-sidebar rounded-none flex flex-col z-50 shadow-lg"
         >
           {activeNode && (
             <>

@@ -91,6 +91,7 @@ export type StatusBadgeValue =
 export enum AutomationsHotKeyScope {
   Builder = 'automation-builder',
   BuilderSideBar = 'automation-builder-sidebar',
+  BuilderPanel = 'automation-builder-panel',
   HistoriesFilter = 'automation-histories-filter',
 }
 
