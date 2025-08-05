@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { IDocumentDocument } from '../../types';
+import { IDocumentDocument } from '~/modules/documents/types';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {

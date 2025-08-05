@@ -30,28 +30,32 @@ const generateFilter = (params: IDocumentFilterQueryParams) => {
     filter.name = new RegExp(`.*${searchValue}.*`, 'i');
   }
 
-  if (dateFilters) {
-    const dateFilter = JSON.parse(dateFilters);
-
-    for (const [key, value] of Object.entries(dateFilter)) {
-      const { gte, lte } = (value || {}) as { gte?: string; lte?: string };
-
-      if (gte || lte) {
-        filter[key] = {};
-
-        if (gte) {
-          filter[key]['$gte'] = gte;
-        }
-
-        if (lte) {
-          filter[key]['$lte'] = lte;
-        }
-      }
-    }
-  }
-
   if (userIds?.length) {
     filter.createdUserId = { $in: userIds };
+  }
+
+  if (dateFilters) {
+    try {
+      const dateFilter = JSON.parse(dateFilters || '{}');
+
+      for (const [key, value] of Object.entries(dateFilter)) {
+        const { gte, lte } = (value || {}) as { gte?: string; lte?: string };
+
+        if (gte || lte) {
+          filter[key] = {};
+
+          if (gte) {
+            filter[key]['$gte'] = gte;
+          }
+
+          if (lte) {
+            filter[key]['$lte'] = lte;
+          }
+        }
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   return filter;
@@ -118,7 +122,7 @@ export const documentQueries = {
   ) => {
     const [serviceName] = contentType.split(':');
 
-    const editorAttributes = documents.editorAttributes;
+    const { editorAttributes } = documents;
 
     if (editorAttributes) {
       return await editorAttributes(models, subdomain, contentType);
