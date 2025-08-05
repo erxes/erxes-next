@@ -54,12 +54,12 @@ export const useProjects = (
     },
   );
 
-  const { list: projects, pageInfo, totalCount } = data?.projects || {};
+  const { list: projects, pageInfo, totalCount } = data?.getProjects || {};
 
   useEffect(() => {
     if (!totalCount) return;
     setProjectTotalCount(totalCount);
-  }, [totalCount]);
+  }, [totalCount, setProjectTotalCount]);
 
   const handleFetchMore = ({
     direction,
@@ -83,10 +83,10 @@ export const useProjects = (
         if (!fetchMoreResult) return prev;
 
         return Object.assign({}, prev, {
-          projects: mergeCursorData({
+          getProjects: mergeCursorData({
             direction,
-            fetchMoreResult: fetchMoreResult.projects,
-            prevResult: prev.projects,
+            fetchMoreResult: fetchMoreResult.getProjects,
+            prevResult: prev.getProjects,
           }),
         });
       },

@@ -7,9 +7,10 @@ import {
 export interface IProject {
   name: string;
   description?: string;
-  teamId: string;
+  teamIds: string[];
   priority?: string;
   startDate?: Date;
+  status: string;
   targetDate?: Date;
   leadId?: string;
 }
@@ -17,11 +18,12 @@ export interface IProject {
 export interface IProjectFilter extends ICursorPaginateParams, IListParams {
   name?: string;
   description?: string;
-  teamId?: string;
+  teamIds?: string[];
   priority?: string;
   startDate?: Date;
   targetDate?: Date;
   leadId?: string;
+  status?: string;
 }
 
 export interface IProjectDocument extends IProject, Document {

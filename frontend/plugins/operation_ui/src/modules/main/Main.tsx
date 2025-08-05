@@ -15,7 +15,7 @@ const taskMain = () => {
       <Routes>
         <Route
           element={
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full overflow-hidden">
               <PageHeader>
                 <PageHeader.Start>
                   <Breadcrumb>

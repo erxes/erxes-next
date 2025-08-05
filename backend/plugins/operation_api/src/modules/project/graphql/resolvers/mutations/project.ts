@@ -3,21 +3,41 @@ import { IContext } from '~/connectionResolvers';
 export const projectMutations = {
   createProject: async (
     _parent: undefined,
-    { name, teamId, startDate, endDate },
+    { name, teamIds, startDate, targetDate, priority, status, description },
     { models }: IContext,
   ) => {
-    return models.Project.createProject({ name, teamId, startDate, endDate });
+    return models.Project.createProject({
+      name,
+      teamIds,
+      startDate,
+      targetDate,
+      priority,
+      status,
+      description,
+    });
   },
   updateProject: async (
     _parent: undefined,
-    { _id, name, teamId, startDate, endDate },
+    {
+      _id,
+      name,
+      teamIds,
+      startDate,
+      targetDate,
+      priority,
+      status,
+      description,
+    },
     { models }: IContext,
   ) => {
     return models.Project.updateProject(_id, {
       name,
-      teamId,
+      teamIds,
       startDate,
-      endDate,
+      targetDate,
+      priority,
+      status,
+      description,
     });
   },
   removeProject: async (_parent: undefined, { _id }, { models }: IContext) => {

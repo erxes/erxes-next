@@ -42,7 +42,7 @@ export const queries = `
 `;
 
 export const mutations = `
-    createProject(name: String!, description: String!, status: String!, teamIds: [String]!, startDate: Date, endDate: Date): Project
-    updateProject(_id: String!, name: String!, description: String!, status: String!, teamIds: [String]!, startDate: Date, endDate: Date): Project
-    removeProject(_id: String!): Project
+    createProject(name: String!, description: String!, status: String!, teamIds: [String]!, startDate: Date, targetDate: Date): Project
+    updateProject(_id: String!, name: String!, description: String!, status: String!, teamIds: [String]!, startDate: Date, targetDate: Date): Project
+    removeProject(_id: String!): JSON
 `;
