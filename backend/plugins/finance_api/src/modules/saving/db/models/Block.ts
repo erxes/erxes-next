@@ -53,6 +53,8 @@ export const loadBlockClass = (models: IModels) => {
         doc.currency = contract?.currency;
       }
       if (contract) {
+        console.log(1111111, (contract.blockAmount ?? 0) + doc.amount);
+
         await models.Contracts.updateOne(
           { _id: contract._id },
           { $set: { blockAmount: (contract.blockAmount ?? 0) + doc.amount } },

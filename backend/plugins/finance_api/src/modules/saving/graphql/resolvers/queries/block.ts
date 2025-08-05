@@ -38,11 +38,21 @@ const blockQueries = {
   ) => {
     const filter: FilterQuery<IBlockDocument> = await generateFilter(params);
 
-    return cursorPaginate<IBlockDocument>({
+    const result = cursorPaginate<IBlockDocument>({
       model: models.Blocks,
       params,
       query: filter,
     });
+
+    return result;
+  },
+
+  savingBlockDetail: async (
+    _root: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    return await models.Blocks.getBlock({ _id });
   },
 };
 

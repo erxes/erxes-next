@@ -40,42 +40,7 @@ const generateFilter = async (
     };
   }
 
-  // if (
-  //   params.conformityMainTypeId &&
-  //   params.conformityMainType &&
-  //   params.conformityIsSaved
-  // ) {
-  //   filter._id = {
-  //     $in: await models.Conformities.savedConformity({
-  //       mainType: params.conformityMainType,
-  //       mainTypeId: params.conformityMainTypeId,
-  //       relTypes: ['contract', 'contractSub'],
-  //     }),
-  //   };
-  // }
-
-  // if (
-  //   params.conformityMainTypeId &&
-  //   params.conformityMainType &&
-  //   params.conformityIsRelated
-  // ) {
-  //   let ids = [];
-  //   ids = ids.concat(
-  //     await models.Conformities.relatedConformity({
-  //       mainType: params.conformityMainType,
-  //       mainTypeId: params.conformityMainTypeId,
-  //       relType: 'contract',
-  //     }),
-  //   );
-  //   ids = ids.concat(
-  //     await models.Conformities.relatedConformity({
-  //       mainType: params.conformityMainType,
-  //       mainTypeId: params.conformityMainTypeId,
-  //       relType: 'contractSub',
-  //     }),
-  //   );
-  //   filter._id = { $in: ids };
-  // }
+  // conformity
 
   if (params.contractTypeId) {
     filter.contractTypeId = params.contractTypeId;

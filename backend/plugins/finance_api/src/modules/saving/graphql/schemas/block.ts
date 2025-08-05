@@ -31,10 +31,10 @@ const queryParams = `
 `;
 
 export const queries = `
-  savingsBlocks(${queryParams}): [SavingBlock]  
+  savingsBlocks(${queryParams}): SavingBlockListResponse
 `;
 
-const commonFields = `
+const mutationParams = `
   number: String,
   blockType: String,
   contractId: String,
@@ -50,6 +50,6 @@ const commonFields = `
 `;
 
 export const mutations = `
-  savingsBlockAdd(${commonFields}): SavingBlock
+  savingsBlockAdd(${mutationParams}): SavingBlock
   savingsBlocksRemove(contractIds: [String]): [String]
 `;

@@ -1,6 +1,5 @@
 import { IContext } from '~/connectionResolvers';
 import { IBlock } from '~/modules/saving/@types/blockTypes';
-import transaction from '~/modules/saving/graphql/resolvers/customResolvers/transaction';
 import { savingsContractChanged } from '~/modules/saving/graphql/resolvers/mutations/contract';
 
 const blockMutations = {
