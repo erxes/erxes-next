@@ -57,22 +57,12 @@ export const FilterDialogDateView = ({ filterKey }: { filterKey: string }) => {
             {filterKey}
           </Dialog.Title>
           <div>
-            <Tabs.List size="sm">
-              <Tabs.Trigger value="day" size="sm">
-                Day
-              </Tabs.Trigger>
-              <Tabs.Trigger value="month" size="sm">
-                Month
-              </Tabs.Trigger>
-              <Tabs.Trigger value="quarter" size="sm">
-                Quarter
-              </Tabs.Trigger>
-              <Tabs.Trigger value="halfYear" size="sm">
-                Half Year
-              </Tabs.Trigger>
-              <Tabs.Trigger value="year" size="sm">
-                Year
-              </Tabs.Trigger>
+            <Tabs.List>
+              <Tabs.Trigger value="day">Day</Tabs.Trigger>
+              <Tabs.Trigger value="month">Month</Tabs.Trigger>
+              <Tabs.Trigger value="quarter">Quarter</Tabs.Trigger>
+              <Tabs.Trigger value="halfYear">Half Year</Tabs.Trigger>
+              <Tabs.Trigger value="year">Year</Tabs.Trigger>
             </Tabs.List>
           </div>
         </Dialog.Header>
@@ -220,7 +210,6 @@ const DateFilterRadioGroupItem = ({
 
   return (
     <Button
-      size="sm"
       variant="secondary"
       className="shadow-none has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70 capitalize"
       onClick={() => {
