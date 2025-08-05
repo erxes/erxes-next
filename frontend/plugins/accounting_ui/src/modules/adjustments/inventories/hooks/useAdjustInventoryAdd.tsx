@@ -29,7 +29,7 @@ export const useAdjustInventoryAdd = (options?: OperationVariables) => {
           title: 'Success',
           description: 'Adjust Inventory created successfully',
         });
-        options?.onCompeleted()
+        options?.onCompleted()
       },
       refetchQueries: [
         {

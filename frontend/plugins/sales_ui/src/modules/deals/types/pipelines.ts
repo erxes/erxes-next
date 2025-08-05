@@ -1,4 +1,6 @@
 import { IUser } from "ui-modules";
+import { PIPELINE_CREATE_SCHEMA } from "../schemas/pipelineFormSchema";
+import { z } from "zod";
 
 export interface IPipeline {
     _id: string;
@@ -55,3 +57,9 @@ export interface IPipeline {
     pipelineId: string;
   }
   
+  export enum PipelineHotKeyScope {
+    PipelineSettingsPage = 'pipeline-settings-page',
+    PipelineAddSheet = 'pipeline-add-sheet',
+  }
+
+  export type TPipelineForm = z.infer<typeof PIPELINE_CREATE_SCHEMA>;

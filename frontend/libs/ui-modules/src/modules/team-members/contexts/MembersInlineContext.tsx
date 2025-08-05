@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-
+import { AvatarProps } from 'erxes-ui';
 import { IUser } from '../types/TeamMembers';
 
 export interface IUsersInlineContext {
@@ -7,6 +7,7 @@ export interface IUsersInlineContext {
   loading: boolean;
   memberIds?: string[];
   placeholder: string;
+  size?: AvatarProps['size'];
   updateMembers?: (members: IUser[]) => void;
 }
 

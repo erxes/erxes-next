@@ -22,6 +22,14 @@ interface IQueryParams {
   sortDirection?: number;
 }
 
+interface IDetailsQueryParams {
+  _id: string;
+  page?: number;
+  perPage?: number;
+  sortField?: string;
+  sortDirection?: number;
+}
+
 export const generateFilter = async (
   models: IModels,
   params: IQueryParams,
@@ -96,9 +104,30 @@ const adjustInventoryQueries = {
     return models.AdjustInventories.find(filter).countDocuments();
   },
 
-  async adjustInventoriesDetail(_root, { _id }: { _id: string }, { models }: IContext) {
-    return models.Accounts.findOne({ _id }).lean();
+  async adjustInventoryDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+    return await models.AdjustInventories.findOne({ _id }).lean();
   },
+
+  async adjustInventoryDetails(_root, params: IDetailsQueryParams, { models }: IContext) {
+    const { _id, sortField, sortDirection, page, perPage } = params;
+
+    const pagintationArgs = { page, perPage };
+
+    let sort: any = { createdAt: 1 };
+    if (sortField) {
+      sort = { [sortField]: sortDirection ?? 1 };
+    }
+
+    return await defaultPaginate(
+      models.AdjustInvDetails.find({ adjustId: _id }).sort(sort),
+      pagintationArgs,
+    )
+  },
+
+  async adjustInventoryDetailsCount(_root, { _id }: { _id: string }, { models }: IContext) {
+    return await models.AdjustInvDetails.find({ adjustId: _id }).countDocuments();
+  }
+
 };
 
 // requireLogin(adjustInventoryQueries, 'accountsCount');

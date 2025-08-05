@@ -40,6 +40,8 @@ export const types = `
     assignedUserIds: [String]
     branchIds: [String]
     departmentIds:[String]
+    branches: [Branch]
+    departments: [Department]
     labelIds: [String]
     startDate: Date
     closeDate: Date
@@ -56,6 +58,7 @@ export const types = `
     attachments: [Attachment]
     userId: String
     tagIds: [String]
+    relations: [String]
 
     assignedUsers: [User]
     stage: SalesStage
@@ -78,7 +81,7 @@ export const types = `
 
     tags: [Tag]
 
-    products: JSON
+    products: [Product]
     productsData: JSON
     paymentsData: JSON
 

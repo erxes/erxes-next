@@ -31,8 +31,9 @@ startPlugin({
     await initCallApp(app);
 
     try {
-      getEnv({ name: 'CALL_DASHBOARD_ENABLED' }) &&
-        (await initializeCallQueueMonitoring());
+      if (getEnv({ name: 'CALL_DASHBOARD_ENABLED' })) {
+        await initializeCallQueueMonitoring();
+      }
     } catch (error) {
       console.error('Failed to initialize call queue monitoring:', error);
     }

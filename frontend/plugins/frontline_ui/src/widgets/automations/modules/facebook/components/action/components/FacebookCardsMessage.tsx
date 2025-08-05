@@ -65,12 +65,9 @@ export const FacebookCardsMessage = ({
           </div>
           <Tabs>
             <div className="overflow-x-auto p-2">
-              <Tabs.List
-                size="sm"
-                defaultValue={cards?.length === 1 ? '1' : undefined}
-              >
+              <Tabs.List defaultValue={cards?.length === 1 ? '1' : undefined}>
                 {cards.map((_, index) => (
-                  <Tabs.Trigger key={index} size="sm" value={String(index)}>{`${
+                  <Tabs.Trigger key={index} value={String(index)}>{`${
                     index + 1
                   } Page`}</Tabs.Trigger>
                 ))}

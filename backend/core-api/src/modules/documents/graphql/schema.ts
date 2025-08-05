@@ -1,4 +1,4 @@
-import { GQL_CURSOR_PARAM_DEFS } from "erxes-api-shared/utils";
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Document {
@@ -6,7 +6,7 @@ export const types = `
     code: String
 
     createdAt: Date
-    createdUserId: String
+    createdUser: User
 
     contentType: String!
     subType: String
@@ -20,6 +20,7 @@ export const types = `
   type DocumentEditorAttribute {
     value: String
     name: String
+    groupDetail: JSON
   }
 
   type DocumentsTypes {
@@ -42,6 +43,9 @@ const queryParams = `
   contentType: String,
   subType: String
 
+  dateFilters: String,
+  userIds: [String]
+
   ${GQL_CURSOR_PARAM_DEFS}
 `;
 
@@ -49,7 +53,7 @@ export const queries = `
   documents(${queryParams}): DocumentListResponse
   documentsDetail(_id: String!): Document
   documentsGetEditorAttributes(contentType: String!): [DocumentEditorAttribute]
-  documentsGetContentTypes:[DocumentsTypes]
+  documentsTypes:[DocumentsTypes]
   documentsTotalCount(searchValue: String, contentType: String): Int
 `;
 

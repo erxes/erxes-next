@@ -233,14 +233,13 @@ export const loadCallHistoryClass = (models: IModels) => {
         }
 
         if (!user || !user._id) {
-          throw new Error('Valid user is required for deletion');
+          throw new Error('Valid user is required for deletion 1222');
         }
 
         const callHistory = await models.CallHistory.findById(id);
         if (!callHistory) {
           throw new Error(ERROR_MESSAGES.CALL_HISTORY_NOT_FOUND);
         }
-
         if (callHistory.createdBy !== user._id.toString()) {
           try {
             await this.validateUserIntegration(
@@ -248,7 +247,7 @@ export const loadCallHistoryClass = (models: IModels) => {
               user as IUserDocument,
               callHistory.inboxIntegrationId,
             );
-          } catch (authError) {
+          } catch (error) {
             throw new Error(ERROR_MESSAGES.UNAUTHORIZED_ACCESS);
           }
         }
@@ -272,7 +271,7 @@ export const loadCallHistoryClass = (models: IModels) => {
 
         return success;
       } catch (error) {
-        console.error(`Error deleting call history ${id}:`, error);
+        console.error(`Error deleting call history ${id}:`, error.message);
         throw error;
       }
     }
@@ -362,8 +361,6 @@ export const loadCallHistoryClass = (models: IModels) => {
   }
 
   callHistorySchema.loadClass(CallHistory);
-
-  callHistorySchema.index({ timeStamp: 1 });
 
   return callHistorySchema;
 };
