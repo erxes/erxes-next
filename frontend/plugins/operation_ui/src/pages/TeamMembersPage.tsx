@@ -3,7 +3,6 @@ import { IconArrowLeft } from '@tabler/icons-react';
 
 import { useNavigate } from 'react-router-dom';
 import { Members } from '@/team/components/members/Members';
-import { Members as MembersLegacy } from '@/team/components/members/MembersLegacy';
 
 export const TeamMembersPage = () => {
   const navigate = useNavigate();
@@ -29,7 +28,6 @@ export const TeamMembersPage = () => {
         </Breadcrumb>
       </div>
       <Members />
-      <MembersLegacy></MembersLegacy>
     </div>
   );
 };

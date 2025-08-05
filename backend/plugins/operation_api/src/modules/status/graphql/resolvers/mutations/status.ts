@@ -22,7 +22,9 @@ export const statusMutations = {
     { _id, ...params }: IStatusEditInput,
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, params.teamId, user._id, [
+    const status = await models.Status.getStatus(_id);
+
+    await checkUserRole(models, status.teamId, user._id, [
       TeamMemberRoles.ADMIN,
       TeamMemberRoles.LEAD,
     ]);
@@ -35,7 +37,9 @@ export const statusMutations = {
     { _id }: { _id: string },
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, _id, user._id, [
+    const status = await models.Status.getStatus(_id);
+
+    await checkUserRole(models, status.teamId, user._id, [
       TeamMemberRoles.ADMIN,
       TeamMemberRoles.LEAD,
     ]);

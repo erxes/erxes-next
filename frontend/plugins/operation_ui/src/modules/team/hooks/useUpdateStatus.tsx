@@ -1,5 +1,4 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
-
 import { ITeamStatus } from '@/team/types';
 
 import { UPDATE_TEAM_STATUS } from '@/team/graphql/mutations/updateTeamStatus';

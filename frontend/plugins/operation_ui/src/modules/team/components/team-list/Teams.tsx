@@ -12,11 +12,11 @@ export function Teams() {
   };
   return (
     <div className="overflow-auto h-full px-8">
-      <div className="transition-colors p-1 rounded-md">
+      <div className="bg-sidebar border border-sidebar pl-1 border-t-4 border-l-4 pb-2 pr-2 rounded-lg">
         <Table>
           <Table.Header>
             <Table.Row className="rounded-t-md">
-              <Table.Head className="w-auto rounded-tl-md">Title</Table.Head>
+              <Table.Head className="w-auto rounded-tl-md pl-2">Title</Table.Head>
               <Table.Head className="w-20">Members</Table.Head>
               <Table.Head className="w-20">Tasks</Table.Head>
               <Table.Head className="w-32">Created At</Table.Head>
@@ -33,7 +33,7 @@ export function Teams() {
                     onClick={() => onClick(team._id)}
                     className="hover:cursor-pointer shadow-xs "
                   >
-                    <Table.Cell className="font-medium border-none w-auto ">
+                    <Table.Cell className="font-medium border-none pl-2 w-auto ">
                       <span className="w-full flex gap-2 text-base font-medium">
                         <span className="[1lh] flex items-center">
                           <IconComponent name={team.icon} className="size-4" />
