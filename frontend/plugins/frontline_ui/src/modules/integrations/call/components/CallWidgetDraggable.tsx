@@ -1,10 +1,15 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { IconGripVertical } from '@tabler/icons-react';
+import {
+  IconGripHorizontal,
+  IconPhoneFilled,
+  IconX,
+} from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
 import { DndContext, useDraggable } from '@dnd-kit/core';
 import { createContext, useContext, useMemo, memo, useCallback } from 'react';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
+import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
 
 // Memoize context to prevent recreating on every render
 const DragContext = createContext<{
@@ -27,6 +32,7 @@ export const CallWidgetDraggable = memo(
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id: 'call-widget',
     });
+    const [open, setOpen] = useAtom(callWidgetOpenAtom);
 
     // Memoize style object to prevent recreating on every render
     const style = useMemo(
@@ -49,11 +55,16 @@ export const CallWidgetDraggable = memo(
 
     return (
       <DragContext.Provider value={contextValue}>
-        <PopoverPrimitive.Trigger
-          className="fixed bottom-10 right-10 h-px z-50 w-96"
-          ref={setNodeRef}
-          style={style}
-        />
+        <PopoverPrimitive.Trigger ref={setNodeRef} style={style} asChild>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="fixed bottom-10 right-10 z-50 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <IconX /> : <IconPhoneFilled className="text-primary" />}
+          </Button>
+        </PopoverPrimitive.Trigger>
 
         {children}
       </DragContext.Provider>
@@ -68,8 +79,14 @@ export const DraggableHandle = memo(() => {
   const { listeners, attributes } = useContext(DragContext);
 
   return (
-    <Button variant="secondary" size="icon" {...listeners} {...attributes}>
-      <IconGripVertical />
+    <Button
+      variant="ghost"
+      size="icon"
+      {...listeners}
+      {...attributes}
+      className="cursor-move text-accent-foreground my-1 h-5"
+    >
+      <IconGripHorizontal />
     </Button>
   );
 });

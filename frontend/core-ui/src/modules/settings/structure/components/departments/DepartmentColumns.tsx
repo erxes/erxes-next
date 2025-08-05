@@ -10,14 +10,20 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
   RecordTableTree,
+  Spinner,
   TextOverflowTooltip,
+  useConfirm,
   useQueryState,
 } from 'erxes-ui';
 import { IDepartmentListItem } from '../../types/department';
 import { useSetAtom } from 'jotai';
 import { renderingDepartmentDetailAtom } from '../../states/renderingDepartmentDetail';
-import { MembersInline } from 'ui-modules';
-import { useRemoveDepartment } from '../../hooks/useDepartmentActions';
+import { SelectMember } from 'ui-modules';
+import {
+  useDepartmentInlineEdit,
+  useRemoveDepartment,
+} from '../../hooks/useDepartmentActions';
+import { useState } from 'react';
 
 export const DepartmentWorkingHoursColumnCell = ({
   cell,
@@ -70,14 +76,20 @@ export const DepartmentRemoveCell = ({
 }: {
   cell: Cell<IDepartmentListItem, unknown>;
 }) => {
-  const { _id } = cell.row.original;
+  const { _id, title } = cell.row.original;
+  const { confirm } = useConfirm();
   const { handleRemove, loading } = useRemoveDepartment();
   const onRemove = () => {
-    handleRemove({
-      variables: {
-        ids: [_id],
-      },
-    });
+    confirm({
+      message: `Are you sure you want to remove '${title}'`,
+      options: { confirmationValue: 'delete' },
+    }).then(() =>
+      handleRemove({
+        variables: {
+          ids: [_id],
+        },
+      }),
+    );
   };
   return (
     <Button
@@ -86,7 +98,7 @@ export const DepartmentRemoveCell = ({
       onClick={onRemove}
       className="text-destructive bg-destructive/10"
     >
-      <IconTrash size={12} />
+      {loading ? <Spinner /> : <IconTrash size={12} />}
     </Button>
   );
 };
@@ -98,13 +110,40 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
     cell: ({ cell }) => {
+      const { departmentsEdit, loading } = useDepartmentInlineEdit();
+      const { _id, code } = cell.row.original;
+      const [_code, setCode] = useState<string>(code);
+      const [open, setOpen] = useState<boolean>(false);
+
+      const onSave = () => {
+        if (_code !== code) {
+          departmentsEdit({ variables: { id: _id, code: _code } }, ['code']);
+        }
+      };
+
+      const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
+        setCode(el.currentTarget.value);
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) onSave();
+          }}
+        >
           <RecordTableCellTrigger>
-            {cell.getValue() as string}
+            <RecordTableTree.Trigger
+              order={(cell.row.original?.order as string) || ''}
+              name={cell.getValue() as string}
+              hasChildren={cell.row.original.hasChildren as boolean}
+            >
+              <TextOverflowTooltip value={cell.getValue() as string} />
+            </RecordTableTree.Trigger>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_code} onChange={onChange} disabled={loading} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -115,19 +154,37 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="title" />,
     cell: ({ cell }) => {
+      const { departmentsEdit, loading } = useDepartmentInlineEdit();
+      const { _id, code, title } = cell.row.original;
+      const [_title, setTitle] = useState<string>(title);
+      const [open, setOpen] = useState<boolean>(false);
+
+      const onSave = () => {
+        if (_title !== title) {
+          departmentsEdit({ variables: { id: _id, title: _title, code } }, [
+            'title',
+            'code',
+          ]);
+        }
+      };
+
+      const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(el.currentTarget.value);
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) onSave();
+          }}
+        >
           <RecordTableCellTrigger>
-            <RecordTableTree.Trigger
-              order={(cell.row.original?.order as string) || ''}
-              name={cell.getValue() as string}
-              hasChildren={cell.row.original?.hasChildren as boolean}
-            >
-              <TextOverflowTooltip value={cell.getValue() as string} />
-            </RecordTableTree.Trigger>
+            {cell.getValue() as string}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_title} onChange={onChange} disabled={loading} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -139,9 +196,23 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'supervisorId',
     header: () => <RecordTable.InlineHead label="supervisor" />,
     cell: ({ cell }) => {
+      const { _id, code } = cell.row.original;
+      const { departmentsEdit } = useDepartmentInlineEdit();
       return (
         <RecordTableCellDisplay>
-          <MembersInline.Provider memberIds={[cell.getValue() as string]} />
+          <SelectMember.InlineCell
+            scope={`DepartmentsPage.${_id}`}
+            value={cell.getValue() as string}
+            mode="single"
+            onValueChange={(value) => {
+              departmentsEdit(
+                {
+                  variables: { id: _id, supervisorId: value, code },
+                },
+                ['supervisorId', 'code'],
+              );
+            }}
+          />
         </RecordTableCellDisplay>
       );
     },

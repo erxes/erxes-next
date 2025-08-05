@@ -4,7 +4,7 @@ import { StructureTopbar } from '@/settings/structure/components/StructureTopbar
 import { PageContainer, Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { SettingsHeader } from 'ui-modules';
+import { Permissions, SettingsHeader } from 'ui-modules';
 
 export const StructureMain = lazy(() =>
   import('@/settings/structure/components/Structure').then((module) => ({
@@ -61,6 +61,10 @@ export function StructureSettingsPage() {
             <Route path="departments" element={<DepartmentsSettings />} />
             <Route path="units" element={<UnitsSettings />} />
             <Route path="positions" element={<PositionsSettings />} />
+            <Route
+              path="permissions"
+              element={<Permissions.View module="structures" />}
+            />
           </Routes>
         </Suspense>
       </div>

@@ -75,8 +75,8 @@ export const GET_BOARD_CONTENT_TYPE_DETAIL = gql`
 `;
 
 export const GET_BOARD_LOGS = gql`
-  query SalesBoardLogs($action: String, $content: JSON, $contentType: String, $contentId: String){
-    salesBoardLogs(action: $action, content: $content, contentType: $contentType, contentId: $contentId)
+  query SalesBoardLogs($action: String, $content: JSON, $contentId: String){
+    salesBoardLogs(action: $action, content: $content, contentId: $contentId)
   }
 `;
 

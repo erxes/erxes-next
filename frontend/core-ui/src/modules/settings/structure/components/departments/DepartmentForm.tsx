@@ -3,12 +3,8 @@ import { Form, Input, Skeleton, Textarea } from 'erxes-ui';
 import { SelectDepartments, SelectMember } from 'ui-modules';
 import { TDepartmentForm } from '../../types/department';
 
-export const DepartmentForm = ({ loading }: { loading: boolean }) => {
+export const DepartmentForm = () => {
   const { control } = useFormContext<TDepartmentForm>();
-
-  if (loading) {
-    return <Skeleton className="w-full h-full" />;
-  }
 
   return (
     <div className="grid grid-cols-2 gap-2">

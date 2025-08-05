@@ -3,9 +3,15 @@ import { MutationHookOptions, OperationVariables } from '@apollo/client';
 export interface ITag {
   _id: string;
   name: string;
+  type: string;
   colorCode?: string;
+  createdAt?: string;
+  cursor?: string;
+  objectCount?: number;
   parentId?: string;
-  order: string;
+  order?: string;
+  relatedIds?: string[];
+  totalObjectCount?: number;
 }
 
 export type ISelectTagsProviderProps = {

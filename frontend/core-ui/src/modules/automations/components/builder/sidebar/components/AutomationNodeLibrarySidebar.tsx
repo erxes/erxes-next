@@ -171,11 +171,11 @@ export const AutomationNodeLibrarySidebar = () => {
         className="flex-1 flex flex-col"
       >
         <div className="px-4 pt-2">
-          <Tabs.List size="sm" className="w-full">
-            <Tabs.Trigger size="sm" value="trigger" className="flex-1">
+          <Tabs.List className="w-full">
+            <Tabs.Trigger value="trigger" className="flex-1">
               Triggers
             </Tabs.Trigger>
-            <Tabs.Trigger size="sm" value="action" className="flex-1">
+            <Tabs.Trigger value="action" className="flex-1">
               Actions
             </Tabs.Trigger>
           </Tabs.List>

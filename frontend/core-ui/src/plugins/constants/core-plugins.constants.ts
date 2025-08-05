@@ -18,7 +18,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     name: 'contacts',
     icon: IconBookmarks,
     path: 'contacts',
-    hasSettings: false,
+    hasSettings: true,
     hasRelationWidget: true,
     submenus: [
       {

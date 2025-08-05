@@ -1,5 +1,6 @@
 import automationsResolvers from '@/automations/graphql/resolvers/customResolver';
 import contactResolvers from '@/contacts/graphql/resolvers/customResolvers';
+import documentResolvers from '@/documents/graphql/customResolvers';
 import internalNoteResolvers from '@/internalNote/graphql/customResolvers';
 import logResolvers from '@/logs/graphql/resolvers/customResolvers';
 import brandResolvers from '@/organization/brand/graphql/customResolver/brand';
@@ -21,5 +22,6 @@ export const customResolvers = {
   ...brandResolvers,
   ...tagResolvers,
   ...notificationResolvers,
+  ...documentResolvers,
   ...internalNoteResolvers,
 };

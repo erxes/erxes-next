@@ -10,6 +10,7 @@ export const CUSTOMER_DETAIL = gql`
       middleName
       description
       position
+      isSubscribed
       department
       leadStatus
       sex
@@ -25,6 +26,12 @@ export const CUSTOMER_DETAIL = gql`
       primaryPhone
       score
       code
+      companies {
+        _id
+        avatar
+        primaryName
+      }
+      __typename
     }
   }
 `;

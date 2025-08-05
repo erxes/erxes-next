@@ -10,13 +10,16 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
+  Spinner,
   TextOverflowTooltip,
+  useConfirm,
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingUnitDetailAtom } from '../../states/renderingUnitDetail';
-import { MembersInline, SelectDepartments } from 'ui-modules';
-import { useRemoveUnit } from '../../hooks/useUnitActions';
+import { SelectDepartments, SelectMember } from 'ui-modules';
+import { useRemoveUnit, useUnitInlineEdit } from '../../hooks/useUnitActions';
+import { useState } from 'react';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -44,14 +47,20 @@ export const UnitRemoveCell = ({
 }: {
   cell: Cell<IUnitListItem, unknown>;
 }) => {
-  const { _id } = cell.row.original;
+  const { confirm } = useConfirm();
+  const { _id, title } = cell.row.original;
   const { handleRemove, loading } = useRemoveUnit();
   const onRemove = () => {
-    handleRemove({
-      variables: {
-        ids: [_id],
-      },
-    });
+    confirm({
+      message: `Are you sure you want to remove '${title}'`,
+      options: { confirmationValue: 'delete' },
+    }).then(() =>
+      handleRemove({
+        variables: {
+          ids: [_id],
+        },
+      }),
+    );
   };
   return (
     <Button
@@ -60,7 +69,7 @@ export const UnitRemoveCell = ({
       onClick={onRemove}
       className="text-destructive bg-destructive/10"
     >
-      <IconTrash size={12} />
+      {loading ? <Spinner /> : <IconTrash size={12} />}
     </Button>
   );
 };
@@ -72,13 +81,45 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
     cell: ({ cell }) => {
+      const { unitsEdit, loading } = useUnitInlineEdit();
+      const { _id, code } = cell.row.original;
+      const [open, setOpen] = useState<boolean>(false);
+      const [_code, setCode] = useState<string>(code || '');
+
+      const onSave = () => {
+        if (_code !== code) {
+          unitsEdit(
+            {
+              variables: {
+                id: _id,
+                code: _code,
+              },
+            },
+            ['code'],
+          );
+        }
+      };
+
+      const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = el.currentTarget;
+        setCode(value);
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={cell.getValue() as string} />
+            {cell.getValue() as string}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_code} onChange={onChange} disabled={loading} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -89,13 +130,43 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="title" />,
     cell: ({ cell }) => {
+      const { unitsEdit, loading } = useUnitInlineEdit();
+      const { _id, title, code } = cell.row.original;
+      const [open, setOpen] = useState<boolean>(false);
+      const [_title, setTitle] = useState<string>(title || '');
+      const onSave = () => {
+        if (_title !== title) {
+          unitsEdit(
+            {
+              variables: {
+                id: _id,
+                title: _title,
+                code: code,
+              },
+            },
+            ['title', 'code'],
+          );
+        }
+      };
+      const onChange = (el: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = el.currentTarget;
+        setTitle(value);
+      };
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
             <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_title} onChange={onChange} disabled={loading} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -107,9 +178,27 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'supervisorId',
     header: () => <RecordTable.InlineHead label="supervisor" />,
     cell: ({ cell }) => {
+      const { _id, code } = cell.row.original;
+      const { unitsEdit } = useUnitInlineEdit();
       return (
         <RecordTableCellDisplay>
-          <MembersInline memberIds={[cell.getValue() as string]} />
+          <SelectMember.InlineCell
+            mode="single"
+            value={cell.getValue() as string}
+            onValueChange={(value) => {
+              unitsEdit(
+                {
+                  variables: {
+                    id: _id,
+                    supervisorId: value,
+                    code,
+                  },
+                },
+                ['supervisorId', 'code'],
+              );
+            }}
+            scope={`UnitsPage.${_id}.Supervisor`}
+          />
         </RecordTableCellDisplay>
       );
     },
@@ -119,11 +208,24 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'departmentId',
     header: () => <RecordTable.InlineHead label="department" />,
     cell: ({ cell }) => {
+      const { _id, code } = cell.row.original;
+      const { unitsEdit } = useUnitInlineEdit();
       return (
         <SelectDepartments.InlineCell
           mode="single"
           value={cell.getValue() as string}
-          onValueChange={() => {}}
+          onValueChange={(value) => {
+            unitsEdit(
+              {
+                variables: {
+                  id: _id,
+                  departmentId: value,
+                  code,
+                },
+              },
+              ['departmentId', 'code'],
+            );
+          }}
         />
       );
     },

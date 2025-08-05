@@ -6,9 +6,11 @@ import {
   IconColorSwatch,
   IconFile,
   IconMail,
-  IconNotification,
+  IconShieldCog,
   IconTag,
+  IconTools,
   IconUserCircle,
+  IconUserCog,
   IconUsersGroup,
 } from '@tabler/icons-react';
 import {
@@ -122,6 +124,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Team member',
       icon: IconUsersGroup,
       path: SettingsWorkspacePath.TeamMember,
+    },
+    {
+      name: 'Permissions',
+      icon: IconUserCog,
+      path: SettingsWorkspacePath.Permissions,
     },
     {
       name: 'General',

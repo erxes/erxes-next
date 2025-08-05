@@ -65,7 +65,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
           <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
-              amountMicros: sumDt * 1000000,
+              amountMicros: sumDt,
             }}
           />
         }
@@ -91,7 +91,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
           <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
-              amountMicros: sumCt * 1000000,
+              amountMicros: sumCt,
             }}
           />
         }

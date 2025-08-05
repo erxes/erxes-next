@@ -6,7 +6,7 @@ import { ICursorListResponse, EnumCursorDirection } from 'erxes-ui';
 
 const TAGS_PER_PAGE = 20;
 
-export const  useTags = (
+export const useTags = (
   options?: QueryHookOptions<ICursorListResponse<ITag>>,
 ) => {
   const { data, loading, error, fetchMore } = useQuery<
@@ -46,7 +46,7 @@ export const  useTags = (
   return {
     tags: tagsWithHasChildren,
     sortedTags: [...(tagsWithHasChildren || [])].sort((a, b) =>
-      a.order?.localeCompare(b.order),
+      (a.order || '').localeCompare(b.order || ''),
     ),
     pageInfo,
     totalCount,

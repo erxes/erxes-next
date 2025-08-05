@@ -45,3 +45,13 @@ export interface IAdjustInvDetail {
   branch?: IBranch;
   department?: IDepartment;
 }
+
+export const ADJ_INV_STATUSES = {
+  DRAFT: 'draft',
+  RUNNING: 'running',
+  PROGRESS: 'progress',
+  COMPLETE: 'complete',
+  CANCEL: 'cancel',
+  PUBLISH: 'publish',
+  all: ['draft', 'cancel', 'publish', 'running', 'progress', 'complete'],
+}

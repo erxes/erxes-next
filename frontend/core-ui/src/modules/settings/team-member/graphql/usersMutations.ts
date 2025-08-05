@@ -49,6 +49,8 @@ const USERS_INLINE_EDIT = gql`
     $employeeId: String
     $positionIds: [String]
     $links: JSON
+    $branchIds: [String]
+    $departmentIds: [String]
   ) {
     usersEdit(
       _id: $_id
@@ -58,8 +60,27 @@ const USERS_INLINE_EDIT = gql`
       employeeId: $employeeId
       positionIds: $positionIds
       links: $links
+      branchIds: $branchIds
+      departmentIds: $departmentIds
     ) {
       _id
+      username
+      email
+      positionIds
+      details {
+        shortName
+        birthDate
+        workStartedDate
+        location
+        description
+        firstName
+        middleName
+        lastName
+      }
+      links
+      employeeId
+      branchIds
+      departmentIds
     }
   }
 `;

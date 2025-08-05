@@ -1,4 +1,8 @@
 const extendTypes = `
+  extend type Product @key(fields: "_id") {
+    _id: String! @external
+  }
+
   extend type Branch @key(fields: "_id") {
     _id: String @external
   }
@@ -23,9 +27,7 @@ const extendTypes = `
 
 export default extendTypes;
 
-// extend type Product @key(fields: "_id") {
-//   _id: String! @external
-// }
+
 
 // extend type ProductCategory @key(fields: "_id") {
 //   _id: String! @external

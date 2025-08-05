@@ -1,8 +1,8 @@
 import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
 
 import {
-  AUTOMATION_STATUSES,
   IAutomationDocument,
+  AUTOMATION_STATUSES,
   IAutomationExecutionDocument,
   IAutomationsActionConfig,
   IAutomationsTriggerConfig,
@@ -475,7 +475,7 @@ export const automationQueries = {
           constants.actionsConst.push({ ...action, pluginName });
         }
 
-        if (!!pluginConstants?.emailRecipientTypes?.length) {
+        if (pluginConstants?.emailRecipientTypes?.length) {
           const updatedEmailRecipIentTypes =
             pluginConstants.emailRecipientTypes.map((eRT) => ({
               ...eRT,

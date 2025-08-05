@@ -1,6 +1,7 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
+import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { IPipelineDocument } from '~/modules/sales/@types';
 
 export const pipelineQueries = {
   /**
@@ -8,15 +9,14 @@ export const pipelineQueries = {
    */
   async salesPipelines(
     _root,
-    {
-      boardId,
-      isAll,
-    }: {
+    params: {
       boardId: string;
       isAll: boolean;
-    },
+    } & ICursorPaginateParams,
     { user, models }: IContext,
   ) {
+    const { boardId, isAll } = params;
+
     const query: any =
       user.isOwner || isAll
         ? {}
@@ -43,7 +43,7 @@ export const pipelineQueries = {
         pluginName: 'core',
         method: 'query',
         module: 'users',
-        action: 'find',
+        action: 'findOne',
         input: {
           _id: user._id,
         },
@@ -66,9 +66,17 @@ export const pipelineQueries = {
       query.boardId = boardId;
     }
 
-    return models.Pipelines.find(query)
-      .sort({ order: 1, createdAt: -1 })
-      .lean();
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IPipelineDocument>({
+        model: models.Pipelines,
+        params: {
+          ...params,
+          orderBy: { order: 1, createdAt: -1 },
+        },
+        query,
+      });
+
+    return { list, totalCount, pageInfo };
   },
 
   async salesPipelineStateCount(
@@ -159,4 +167,4 @@ export const pipelineQueries = {
   },
 };
 
-moduleRequireLogin(pipelineQueries);
+// moduleRequireLogin(pipelineQueries);
