@@ -8,7 +8,7 @@ import { generateDefaultStatuses } from '@/status/utils';
 export interface IStatusModel extends Model<IStatusDocument> {
   getStatus(_id: string): Promise<IStatusDocument>;
   getStatuses(teamId: string, type?: string): Promise<IStatusDocument[]>;
-  createStatus(doc: IStatus): Promise<IStatusDocument>;
+  addStatus(doc: IStatus): Promise<IStatusDocument>;
   createDefaultStatuses(teamId: string): Promise<IStatusDocument[]>;
   updateStatus(_id: string, doc: IStatus): Promise<IStatusDocument>;
   removeStatus(_id: string): Promise<{ ok: number }>;
@@ -39,7 +39,14 @@ export const loadStatusClass = (models: IModels) => {
       return models.Status.find(query).sort({ order: 1 });
     }
 
-    public static async createStatus(doc: IStatus): Promise<IStatusDocument> {
+    public static async addStatus(doc: IStatus): Promise<IStatusDocument> {
+      const status = await models.Status.findOne({
+        teamId: doc.teamId,
+        type: doc.type,
+      }).sort({ order: -1 });
+
+      doc.order = status ? status.order + 1 : 1;
+
       return models.Status.insertOne(doc);
     }
 

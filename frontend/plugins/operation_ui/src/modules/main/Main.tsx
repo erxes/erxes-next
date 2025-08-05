@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router';
 import { MainLayout } from '@/main/MainLayout';
 import { Outlet } from 'react-router-dom';
 import { PageHeader } from 'ui-modules';
@@ -8,12 +8,6 @@ import { Link } from 'react-router-dom';
 import { IconSandbox } from '@tabler/icons-react';
 import { MyTasksPage } from '~/pages/MyTasksPage';
 import { ProjectsPage } from '~/pages/ProjectsPage';
-
-const IndexPage = lazy(() =>
-  import('~/pages/OperationIndexPage').then((module) => ({
-    default: module.IndexPage,
-  })),
-);
 
 const taskMain = () => {
   return (
@@ -44,7 +38,7 @@ const taskMain = () => {
             </div>
           }
         >
-          <Route path="/" element={<IndexPage />} />
+          <Route path="/" element={<Navigate to="my-tasks" replace />} />
           <Route path="my-tasks" element={<MyTasksPage />} />
           <Route path="projects" element={<ProjectsPage />} />
         </Route>

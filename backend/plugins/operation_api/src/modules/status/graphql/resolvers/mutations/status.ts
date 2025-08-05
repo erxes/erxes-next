@@ -4,7 +4,7 @@ import { checkUserRole } from '@/utils';
 import { TeamMemberRoles } from '@/team/@types/team';
 
 export const statusMutations = {
-  createStatus: async (
+  addStatus: async (
     _parent: undefined,
     params: IStatus,
     { models, user }: IContext,
