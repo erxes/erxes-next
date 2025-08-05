@@ -4,7 +4,7 @@ import { GET_STATUSES_BY_TYPE } from '../graphql/queries/getStatusesByType';
 
 
 export const useAddStatus = () => {
-  const [_addStatus] = useMutation(ADD_STATUS);
+  const [_addStatus, { loading, error }] = useMutation(ADD_STATUS);
   const addStatus = (options: MutationHookOptions) => {
     return _addStatus({
       update: (cache, { data }) => {
@@ -35,5 +35,5 @@ export const useAddStatus = () => {
       ...options,
     });
   };
-  return addStatus;
+  return { addStatus, loading, error };
 };

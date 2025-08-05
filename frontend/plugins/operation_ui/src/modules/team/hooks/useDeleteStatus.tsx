@@ -4,12 +4,12 @@ import { MutationHookOptions } from '@apollo/client';
 import { GET_STATUSES_BY_TYPE } from '../graphql/queries/getStatusesByType';
 
 export const useDeleteStatus = () => {
-  const [_deleteStatus] = useMutation(DELETE_STATUS);
+  const [_deleteStatus, { loading, error }] = useMutation(DELETE_STATUS);
   const deleteStatus = (options: MutationHookOptions) => {
     return _deleteStatus({
       ...options,
       refetchQueries: [GET_STATUSES_BY_TYPE],
     });
   };
-  return deleteStatus;
+  return { deleteStatus, loading, error };
 };

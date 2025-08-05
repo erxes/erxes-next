@@ -141,7 +141,7 @@ export const Status = ({
 const StatusOptionMenu = ({ statusId }: { statusId: string }) => {
   const setEditingStatus = useSetAtom(editingStatusState);
   const { toast } = useToast();
-  const deleteStatus = useDeleteStatus();
+  const { deleteStatus } = useDeleteStatus();
 
   const handleDeleteStatus = () => {
     deleteStatus({
@@ -203,7 +203,7 @@ export const StatusForm = ({
   statusType: TeamStatusTypes;
   editingStatus?: ITeamStatus;
 }) => {
-  const addStatus = useAddStatus();
+  const { addStatus } = useAddStatus();
   const { toast } = useToast();
   const { updateStatus } = useUpdateStatus();
   const { id: teamId } = useParams();
