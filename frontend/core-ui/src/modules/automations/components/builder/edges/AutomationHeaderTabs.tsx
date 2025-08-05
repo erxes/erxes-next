@@ -39,19 +39,17 @@ export const AutomationHeaderTabs = ({
   );
 
   return (
-    <Tabs.List size="sm" className="h-8 ">
+    <Tabs.List className="bg-accent rounded border-b-none px-1 border-none">
       <Tabs.Trigger
-        size="sm"
+        className="w-24 font-normal after:content-none after:border-none after:shadow-none data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:text-foreground"
         value="builder"
-        className="h-8 py-2 px-6"
         onClick={() => toggleTabs('builder')}
       >
         Builder
       </Tabs.Trigger>
       <Tabs.Trigger
-        size="sm"
+        className="w-24 font-normal after:content-none after:border-none after:shadow-none data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:text-foreground"
         value="history"
-        className="h-8 py-2 px-6"
         onClick={() => toggleTabs('history')}
       >
         History

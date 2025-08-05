@@ -43,16 +43,14 @@ export const AutomationNodeLibrarySidebar = () => {
         }
         className="flex-1 flex flex-col overflow-auto"
       >
-        <div className="px-4 py-2 border-b">
-          <Tabs.List className="w-full">
-            <Tabs.Trigger value="trigger" className="flex-1">
-              Triggers
-            </Tabs.Trigger>
-            <Tabs.Trigger value="action" className="flex-1">
-              Actions
-            </Tabs.Trigger>
-          </Tabs.List>
-        </div>
+        <Tabs.List className="w-full border-b">
+          <Tabs.Trigger value="trigger" className="w-1/2">
+            Triggers
+          </Tabs.Trigger>
+          <Tabs.Trigger value="action" className="w-1/2">
+            Actions
+          </Tabs.Trigger>
+        </Tabs.List>
 
         {[
           { type: 'trigger' as 'trigger', list: triggersConst },
