@@ -25,3 +25,5 @@ export const REMOVE_PAYMENT = gql`
     paymentRemove(_id: $_id) 
   }
 `;
+
+

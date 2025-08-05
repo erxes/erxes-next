@@ -6,10 +6,10 @@ export const PAYMENT_KINDS = {
     description:
       'Connect your existing Qpay account to Erxes',
     active: true,
-    inputs: [
-        { key: 'qpayMerchantUser', label: 'Username' },
-        { key: 'qpayMerchantPassword', label: 'Password', type: 'password' },
-        { key: 'qpayInvoiceCode', label: 'Invoice code' },
+    fields: [
+        { key: 'qpayMerchantUser', label: 'Username', validation: { type: 'minLength', value: 1 } },
+        { key: 'qpayMerchantPassword', label: 'Password', type: 'password', validation: { type: 'minLength', value: 1 } },
+        { key: 'qpayInvoiceCode', label: 'Invoice code', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.QUICKQR]: {
@@ -17,23 +17,24 @@ export const PAYMENT_KINDS = {
     description:
       'Connect your bank account to Qpay',
     active: true,
+    fields: []
   },
   [PaymentKind.SOCIALPAY]: {
     name: 'Social Pay',
     description: 'Fast and easy way to receive payments',
     active: true,
-    inputs: [
-        { key: 'inStoreSPTerminal', label: 'Terminal' },
-        { key: 'inStoreSPKey', label: 'Key', type: 'password' },
+    fields: [
+        { key: 'inStoreSPTerminal', label: 'Terminal', validation: { type: 'minLength', value: 1 } },
+        { key: 'inStoreSPKey', label: 'Key', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
 },
   [PaymentKind.MONPAY]: {
     name: 'MonPay',
     description: 'Easy, fast and reliable payment by QR scan',
     active: true,
-    inputs: [
-        { key: 'username', label: 'Branch username' },
-        { key: 'accountId', label: 'Account ID', type: 'password' },
+    fields: [
+        { key: 'username', label: 'Branch username', validation: { type: 'minLength', value: 1 } },
+        { key: 'accountId', label: 'Account ID', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.STOREPAY]: {
@@ -41,65 +42,66 @@ export const PAYMENT_KINDS = {
     description: 'Connect your StorePay merchant account.',
     active: true,
 
-    inputs: [
-        { key: 'storeId', label: 'Store id' },
-        { key: 'merchantUsername', label: 'Merchant username' },
-        { key: 'merchantPassword', label: 'Merchant password', type: 'password' },
-        { key: 'appUsername', label: 'App username' },
-        { key: 'appPassword', label: 'App password', type: 'password' },
+    fields: [
+        { key: 'storeId', label: 'Store id', validation: { type: 'minLength', value: 1 } },
+        { key: 'merchantUsername', label: 'Merchant username', validation: { type: 'minLength', value: 1 } },
+        { key: 'merchantPassword', label: 'Merchant password', type: 'password', validation: { type: 'minLength', value: 1 } },
+        { key: 'appUsername', label: 'App username', validation: { type: 'minLength', value: 1 } },
+        { key: 'appPassword', label: 'App password', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.POCKET]: {
     name: 'Pocket',
     description: 'Connect your Pocket merchant account.',
     active: true,
-    inputs: [
-        { key: 'pocketMerchant', label: 'Merchant' },
-        { key: 'pocketClientId', label: 'Client ID' },
-        { key: 'pocketClientSecret', label: 'Client secret', type: 'password' },
+    fields: [
+        { key: 'pocketMerchant', label: 'Merchant', validation: { type: 'minLength', value: 1 } },
+        { key: 'pocketClientId', label: 'Client ID', validation: { type: 'minLength', value: 1 } },
+        { key: 'pocketClientSecret', label: 'Client secret', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.WECHATPAY]: {
     name: 'Qpay Wechat Pay',
     description: 'Receive payments in Mongolia through the WeChat Pay',
     active: true,
-    inputs: [
-        { key: 'username', label: 'Username' },
-        { key: 'password', label: 'Password', type: 'password' },
-        { key: 'terminal', label: 'Terminal code' },
+    fields: [
+        { key: 'username', label: 'Username', validation: { type: 'minLength', value: 1 } },
+        { key: 'password', label: 'Password', type: 'password', validation: { type: 'minLength', value: 1 } },
+        { key: 'terminal', label: 'Terminal code', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.MINUPAY]: {
     name: 'Minupay',
     description: 'Connect your Minupay merchant account.',
     active: true,
-    inputs: [
-        { key: 'username', label: 'Username' },
-        { key: 'password', label: 'Password', type: 'password' },
+    fields: [
+        { key: 'username', label: 'Username', validation: { type: 'minLength', value: 1 } },
+        { key: 'password', label: 'Password', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.GOLOMT]: {
     name: 'Golomt Card',
     description: 'Connect your Golomt e-commerce account.',
     active: true,
-    inputs: [
-        { key: 'merchant', label: 'Merchant' },
-        { key: 'key', label: 'Key' },
-        { key: 'token', label: 'Token', type: 'password' },
+    fields: [
+        { key: 'merchant', label: 'Merchant', validation: { type: 'minLength', value: 1 } },
+        { key: 'key', label: 'Key', validation: { type: 'minLength', value: 1 } },
+        { key: 'token', label: 'Token', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.STRIPE]: {
     name: 'Stripe',
     description: 'Accepts most type of domestic and foreign card.',
     active: true,
-    inputs: [
-        { key: 'publishableKey', label: 'Publishable key' },
-        { key: 'secretKey', label: 'Secret key', type: 'password' },
+    fields: [
+        { key: 'publishableKey', label: 'Publishable key', validation: { type: 'minLength', value: 1 } },
+        { key: 'secretKey', label: 'Secret key', type: 'password', validation: { type: 'minLength', value: 1 } },
       ],
   },
   [PaymentKind.KAHNBANK]: {
     name: 'Khanbank',
     description: 'Connect your Khanbank Corporate Gateway account.',
     active: true,
+    fields: []
   },
 };
