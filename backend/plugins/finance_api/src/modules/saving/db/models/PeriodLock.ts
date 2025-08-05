@@ -43,8 +43,6 @@ export const loadPeriodLock = (models: IModels) => {
      */
 
     public static async createPeriodLock(doc: IPeriodLock) {
-      console.log(22222);
-
       const nextLock = await models.PeriodLocks.findOne({
         date: { $gte: doc.date },
       })

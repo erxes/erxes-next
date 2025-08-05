@@ -51,7 +51,7 @@ total: Float
 
 export const queries = `
     savingsTransactionMain(${queryParams}): SavingTransactionListResponse
-    savingsTransactions(${queryParams}): [SavingTransaction]
+    savingsTransactions(${queryParams}): SavingTransactionListResponse
     clientSavingsTransaction(${queryParams}): [SavingTransaction]
     savingsTransactionDetail(_id: String!): SavingTransaction
 `;

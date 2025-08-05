@@ -38,11 +38,14 @@ const transactionQueries = {
       models,
     );
 
-    return await cursorPaginate<ITransactionDocument>({
-      model: models.Transactions,
-      params,
-      query: filter,
-    });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<ITransactionDocument>({
+        model: models.Transactions,
+        params,
+        query: filter,
+      });
+
+    return { list, totalCount, pageInfo };
   },
 
   /**

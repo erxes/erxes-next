@@ -1,7 +1,7 @@
 import { ICompanyDocument } from 'erxes-api-shared/core-types';
 import { getFullDate } from 'erxes-api-shared/utils';
 import { FilterQuery, Model, models } from 'mongoose';
-import { IContext, IModels } from '~/connectionResolvers';
+import { IModels } from '~/connectionResolvers';
 import { getConfig } from '~/messageBroker';
 import {
   CONTRACT_STATUS,

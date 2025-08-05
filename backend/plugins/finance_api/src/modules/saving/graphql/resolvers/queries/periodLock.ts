@@ -45,7 +45,7 @@ const periodLockQueries = {
     params: IPeriodLockQueryParams,
     { models }: IContext,
   ) => {
-    const filter = generateFilter(params, models);
+    const filter = await generateFilter(params, models);
 
     return await models.PeriodLocks.find(filter).lean();
   },

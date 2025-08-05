@@ -1,7 +1,5 @@
-import { Icon } from '@tabler/icons-react';
 import { checkPermission } from 'erxes-api-shared/core-modules';
 import {
-  coreModelAddons,
   cursorPaginate,
   getFullDate,
   sendTRPCMessage,
@@ -249,11 +247,14 @@ const contractQueries = {
       params,
     );
 
-    return await cursorPaginate<IContractDocument>({
-      model: models.Contracts,
-      params,
-      query: filter,
-    });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IContractDocument>({
+        model: models.Contracts,
+        params,
+        query: filter,
+      });
+
+    return { list, totalCount, pageInfo };
   },
 
   clientSavingsContracts: async (
@@ -265,11 +266,14 @@ const contractQueries = {
 
     const loanContractsQuery = await generateFilter(models, params);
 
-    return await cursorPaginate<IContractDocument>({
-      model: models.Contracts,
-      params,
-      query: loanContractsQuery,
-    });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IContractDocument>({
+        model: models.Contracts,
+        params,
+        query: loanContractsQuery,
+      });
+
+    return { list, totalCount, pageInfo };
   },
 
   /**
@@ -393,16 +397,16 @@ const contractQueries = {
   },
 };
 
-checkPermission(
-  contractQueries,
-  'savingsContractsMain',
-  'savingsShowContracts',
-);
-checkPermission(
-  contractQueries,
-  'savingsContractDetail',
-  'savingsShowContracts',
-);
-checkPermission(contractQueries, 'savingsContracts', 'savingsShowContracts');
+// checkPermission(
+//   contractQueries,
+//   'savingsContractsMain',
+//   'savingsShowContracts',
+// );
+// checkPermission(
+//   contractQueries,
+//   'savingsContractDetail',
+//   'savingsShowContracts',
+// );
+// checkPermission(contractQueries, 'savingsContracts', 'savingsShowContracts');
 
 export default contractQueries;

@@ -12,8 +12,6 @@ const periodLockMutations = {
     doc: IPeriodLock,
     { models }: IContext,
   ) => {
-    console.log(111111);
-
     return await models.PeriodLocks.createPeriodLock(doc);
   },
 

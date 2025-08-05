@@ -23,7 +23,7 @@ const transactionMutations = {
       });
 
       if (contract) {
-        // await savingsContractChanged(contract)
+        //  await savingsContractChanged(contract)
       }
     }
 

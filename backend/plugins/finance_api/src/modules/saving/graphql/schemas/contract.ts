@@ -104,8 +104,8 @@ const checkBalanceParams = `
 `;
 
 export const queries = `
-  savingsContractsMain(${queryParams}): SavingContractsListResponse
-  savingsContracts(${queryParams}): [SavingContract]
+  savingsContractsMain(${queryParams}): SavingContract
+  savingsContracts(${queryParams}): SavingContractsListResponse
   clientSavingContracts(${queryParams}): [SavingContract]
   savingsContractDetail(_id: String!): SavingContract
   savingsCloseInfo(contractId: String, date: Date): SavingCloseInfo
