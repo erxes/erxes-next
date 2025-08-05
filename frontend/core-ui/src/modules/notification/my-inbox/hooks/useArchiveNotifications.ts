@@ -46,15 +46,15 @@ export const useArchiveNotifications = ({
     }
     archive({
       variables,
-    })
-      .then(() => {
+      onError: (error) => {
+        toast({ title: 'Something went error', description: error?.message });
+      },
+      onCompleted: () => {
         toast({ title: 'Archived successfully' });
 
         setSelectedNotifications([]);
-      })
-      .catch((error) =>
-        toast({ title: 'Something went error', description: error?.message }),
-      );
+      },
+    });
     callback && callback();
   };
 
