@@ -5,7 +5,7 @@ type Project {
     _id: String
     name: String
     description: String
-    status: String!
+    status: Int
     priority: Int
     teamIds: [String]!
     leadId: String
@@ -27,7 +27,7 @@ type ProjectListResponse {
 const projectFilterParams = `
     name: String
     description: String
-    status: String
+    status: Int
     priority: Int
     teamIds: [String]
     leadId: String
@@ -42,7 +42,7 @@ export const queries = `
 `;
 
 export const mutations = `
-    createProject(name: String!, description: String!, status: String!, teamIds: [String]!, priority: Int, startDate: Date, targetDate: Date): Project
-    updateProject(_id: String!, name: String!, description: String!, status: String!, teamIds: [String]!, priority: Int, startDate: Date, targetDate: Date): Project
+    createProject(name: String!, description: String!, status: Int, teamIds: [String]!, priority: Int, startDate: Date, targetDate: Date): Project
+    updateProject(_id: String!, name: String!, description: String!, status: Int, priority: Int, teamIds: [String]!, startDate: Date, targetDate: Date): Project
     removeProject(_id: String!): JSON
 `;
