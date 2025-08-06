@@ -1,4 +1,4 @@
-import { IconPhotoScan, IconTrash } from '@tabler/icons-react';
+import { IconPhotoScan, IconTrash, IconX } from '@tabler/icons-react';
 import { Button, Card, Form, Input, Label, Tabs, Textarea } from 'erxes-ui';
 import { generateAutomationElementId } from 'ui-modules';
 import { TBotMessageCard } from '../states/replyMessageActionForm';
@@ -59,7 +59,7 @@ export const FacebookCardsMessage = ({
                 disabled={cards.length >= 10}
                 onClick={() => addPage(field.onChange)}
               >
-                + add page
+                <IconX className="size-3" /> add page
               </Button>
             </div>
           </div>
