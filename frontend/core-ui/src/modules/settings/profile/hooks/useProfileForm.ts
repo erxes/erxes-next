@@ -4,9 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 const discordIdRegex = /^\d{17,19}$/;
-
-const discordUrlRegex =
-  /^https:\/\/(www\.)?discord\.(com\/users|com|gg)\/[A-Za-z0-9-]+\/?$/;
+const discordUrlRegex = new RegExp(
+  '^https://(?:www\\.)?discord\\.com/users/[A-Za-z0-9-]+/?$|' +
+    '^https://(?:www\\.)?discord\\.gg/[A-Za-z0-9-]+/?$',
+);
 
 export const profileValidationSchema = z
   .object({

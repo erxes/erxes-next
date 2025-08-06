@@ -1,4 +1,4 @@
-import { teammemberDetailActiveActionTabAtom } from '@/settings/team-member/states/teamMemberDetailStates';
+import { teamMemberDetailActiveActionTabAtom } from '@/settings/team-member/states/teamMemberDetailStates';
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import {
   Button,
@@ -21,7 +21,7 @@ export const MemberDetailSheet = ({
   const [open, setOpen] = useQueryState<string>('user_id');
   const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
 
-  const activeTab = useAtomValue(teammemberDetailActiveActionTabAtom);
+  const activeTab = useAtomValue(teamMemberDetailActiveActionTabAtom);
 
   return (
     <Sheet

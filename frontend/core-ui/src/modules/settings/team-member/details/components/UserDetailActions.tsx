@@ -1,5 +1,5 @@
 import { useUserDetail } from '@/settings/team-member/hooks/useUserDetail';
-import { teammemberDetailActiveActionTabAtom } from '@/settings/team-member/states/teamMemberDetailStates';
+import { teamMemberDetailActiveActionTabAtom } from '@/settings/team-member/states/teamMemberDetailStates';
 import { useRelationWidgetsModules } from '@/widgets/hooks/useRelationWidgetsModules';
 import { Icon, IconX } from '@tabler/icons-react';
 import { Button, Resizable, SideMenu } from 'erxes-ui';
@@ -11,7 +11,7 @@ export const UserDetailActions = () => {
   const { userDetail } = useUserDetail();
   const userId = userDetail?._id;
   const [activeTab, setActiveTab] = useAtom(
-    teammemberDetailActiveActionTabAtom,
+    teamMemberDetailActiveActionTabAtom,
   );
   const widgetsModules = useRelationWidgetsModules();
   const { RelationWidget } = useRelationWidget();
@@ -52,7 +52,7 @@ export const UserDetailActions = () => {
 
 export const UserDetailActionsTrigger = () => {
   const [activeTab, setActiveTab] = useAtom(
-    teammemberDetailActiveActionTabAtom,
+    teamMemberDetailActiveActionTabAtom,
   );
   const widgetsModules = useRelationWidgetsModules();
 
@@ -103,7 +103,7 @@ export const ActionTabsContent = ({
 
 export const ActionHeader = (props: { title?: string; icon: Icon }) => {
   const [activeTab, setActiveTab] = useAtom(
-    teammemberDetailActiveActionTabAtom,
+    teamMemberDetailActiveActionTabAtom,
   );
   return (
     <div className="flex items-center h-12 border-b px-6 text-primary gap-2 flex-none">

@@ -249,7 +249,6 @@ export const PositionsList = ({
 
 export const SelectPositionsValue = () => {
   const { selectedPositions, mode, positionIds } = useSelectPositionsContext();
-  console.log('positionIds', positionIds);
 
   if (positionIds && positionIds?.length > 1)
     return (

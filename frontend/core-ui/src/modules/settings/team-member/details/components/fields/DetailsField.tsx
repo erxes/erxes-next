@@ -4,7 +4,7 @@ import { Input } from 'erxes-ui';
 import React from 'react';
 
 interface Props {
-  field: string;
+  field: keyof IDetailsType;
   _id: string;
   details: IDetailsType & { __typename?: string };
 }

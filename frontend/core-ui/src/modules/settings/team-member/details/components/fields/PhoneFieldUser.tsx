@@ -21,8 +21,13 @@ export const PhoneFieldUser = ({ _id, details }: PhoneFieldUserProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editingValue, setEditingValue] = useState(operatorPhone || '');
   const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
   const handleSave = (newPhone: string) => {
-    if (!isPhoneValid) return;
+    if (!isPhoneValid) {
+      setErrorMessage('Please enter a valid phone number.');
+      return;
+    }
     if (newPhone === operatorPhone) {
       setIsOpen(false);
       return;
@@ -42,35 +47,40 @@ export const PhoneFieldUser = ({ _id, details }: PhoneFieldUserProps) => {
   };
 
   return (
-    <RecordTablePopover
-      scope={`user-${_id}-primaryPhone`}
-      open={isOpen}
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        if (open) {
-          setEditingValue(operatorPhone || '');
-          setTimeout(() => {
-            phoneInputRef.current?.focus();
-          });
-        } else if (!open && editingValue !== operatorPhone) {
-          handleSave(editingValue);
-        }
-      }}
-    >
-      <RecordTableCellTrigger className="shadow-xs rounded-sm text-sm">
-        {formatPhoneNumber({ value: operatorPhone || '' })}
-      </RecordTableCellTrigger>
-      <RecordTableCellContent>
-        <PhoneInput
-          value={editingValue}
-          ref={phoneInputRef}
-          className="bg-transparent"
-          onChange={(value) => setEditingValue(value)}
-          onEnter={() => handleSave(editingValue)}
-          onKeyDown={handleKeyDown}
-          onValidationChange={(isValid) => setIsPhoneValid(isValid)}
-        />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+    <>
+      <RecordTablePopover
+        scope={`user-${_id}-primaryPhone`}
+        open={isOpen}
+        onOpenChange={(open) => {
+          setIsOpen(open);
+          if (open) {
+            setEditingValue(operatorPhone || '');
+            setTimeout(() => {
+              phoneInputRef.current?.focus();
+            });
+          } else if (!open && editingValue !== operatorPhone) {
+            handleSave(editingValue);
+          }
+        }}
+      >
+        <RecordTableCellTrigger className="shadow-xs rounded-sm text-sm">
+          {formatPhoneNumber({ value: operatorPhone || '' })}
+        </RecordTableCellTrigger>
+        <RecordTableCellContent>
+          <PhoneInput
+            value={editingValue}
+            ref={phoneInputRef}
+            className="bg-transparent"
+            onChange={(value) => setEditingValue(value)}
+            onEnter={() => handleSave(editingValue)}
+            onKeyDown={handleKeyDown}
+            onValidationChange={(isValid) => setIsPhoneValid(isValid)}
+          />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+      {!isPhoneValid && errorMessage ? (
+        <span className="text-destructive text-xs">{errorMessage}</span>
+      ) : null}
+    </>
   );
 };

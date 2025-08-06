@@ -16,15 +16,7 @@ import {
   IconProps,
 } from '@tabler/icons-react';
 import { useUserEdit } from '@/settings/team-member/hooks/useUserEdit';
-
-type UserLinks = {
-  facebook?: string;
-  twitter?: string;
-  website?: string;
-  discord?: string;
-  github?: string;
-  instagram?: string;
-};
+import { UserLinks } from '@/settings/team-member/types';
 
 type LinkFieldName = keyof UserLinks;
 
@@ -97,7 +89,7 @@ export const LinkInput = React.forwardRef<HTMLButtonElement, Props>(
         url = `https://${trimmed}`;
       }
 
-      window.open(url, '_blank');
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
 
     return (

@@ -22,6 +22,7 @@ import {
   DatePicker,
   readImage,
   RecordTableCellDisplay,
+  toast,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { useSetAtom } from 'jotai';
@@ -107,8 +108,13 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
                 lastName: last,
               },
             },
-            onError: (error: ApolloError) =>
-              console.error('Failed to update user details:', error),
+            onError: (error: ApolloError) => {
+              toast({
+                title: 'Failed to update user details',
+                description: error.message,
+                variant: 'destructive',
+              });
+            },
           });
         }
       };

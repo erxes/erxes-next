@@ -28,7 +28,7 @@ export const PositionBadge = React.forwardRef<
       variables: {
         id: positionId,
       },
-      skip: !positionId,
+      skip: !positionId || !!position,
       onCompleted: ({ positionDetail }: { positionDetail: IPosition }) => {
         onCompleted?.(positionDetail);
       },

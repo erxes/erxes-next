@@ -86,11 +86,11 @@ export enum UsersHotKeyScope {
   UserEditSheet = 'user-edit-sheet',
 }
 
-export type UserLinks = {
+export interface UserLinks {
   facebook?: string;
   twitter?: string;
   website?: string;
   discord?: string;
   github?: string;
   instagram?: string;
-};
+}
