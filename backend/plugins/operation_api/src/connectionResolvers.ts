@@ -15,6 +15,8 @@ import { loadStatusClass, IStatusModel } from '@/status/db/models/Status';
 import { IStatusDocument } from '@/status/@types/status';
 import { loadProjectClass, IProjectModel } from '@/project/db/models/Project';
 import { IProjectDocument } from '@/project/@types/project';
+import { loadNoteClass, INoteModel } from '@/note/db/models/Note';
+import { INoteDocument } from '@/note/types';
 
 export interface IModels {
   Task: ITaskModel;
@@ -22,6 +24,7 @@ export interface IModels {
   TeamMember: ITeamMemberModel;
   Status: IStatusModel;
   Project: IProjectModel;
+  Note: INoteModel;
 }
 
 export interface IContext extends IMainContext {
@@ -54,6 +57,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Project = db.model<IProjectDocument, IProjectModel>(
     'operation_projects',
     loadProjectClass(models),
+  );
+
+  models.Note = db.model<INoteDocument, INoteModel>(
+    'operation_notes',
+    loadNoteClass(models),
   );
 
   return models;
