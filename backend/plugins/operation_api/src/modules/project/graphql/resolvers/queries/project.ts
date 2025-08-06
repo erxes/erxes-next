@@ -12,13 +12,9 @@ export const projectQueries = {
   getProjects: async (
     _parent: undefined,
     params: IProjectFilter,
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
     const filter: FilterQuery<IProjectDocument> = {};
-
-    if (params.teamIds) {
-      filter.teamIds = { $in: params.teamIds };
-    }
 
     if (params.name) {
       filter.name = { $regex: params.name, $options: 'i' };
@@ -44,12 +40,14 @@ export const projectQueries = {
       filter.leadId = params.leadId;
     }
 
-    if (params.userId) {
-      const members = await models.TeamMember.find({
-        memberId: params.userId,
+    if (params.teamIds && params.teamIds.length > 0) {
+      filter.teamIds = { $in: params.teamIds };
+    } else {
+      const teamIds = await models.TeamMember.find({
+        memberId: user._id,
       }).distinct('teamId');
 
-      filter.teamIds = { $in: members };
+      filter.teamIds = { $in: teamIds };
     }
 
     const { list, totalCount, pageInfo } =
