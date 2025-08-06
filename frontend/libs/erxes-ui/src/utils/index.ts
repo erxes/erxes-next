@@ -10,3 +10,4 @@ export * from './isDeeplyEqual';
 export * from './localization';
 export * from './regex';
 export * from './IsUndefinedOrNull';
+export * from './isEnabled';

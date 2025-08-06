@@ -1,9 +1,4 @@
 import {
-  replacePlaceHolders,
-  setProperty,
-} from 'erxes-api-shared/core-modules';
-import { generateModels, IModels } from '~/connectionResolvers';
-import {
   actionCreateComment,
   checkCommentTrigger,
 } from '@/integrations/facebook/meta/automation/comments';
@@ -12,11 +7,16 @@ import {
   checkMessageTrigger,
 } from '@/integrations/facebook/meta/automation/messages';
 import {
-  IAutomationWorkerContext,
   IAutomationReceiveActionData,
+  IAutomationWorkerContext,
   ICheckTriggerData,
   IReplacePlaceholdersData,
 } from '@/integrations/facebook/meta/automation/types/automationTypes';
+import {
+  replacePlaceHolders,
+  setProperty,
+} from 'erxes-api-shared/core-modules';
+import { generateModels, IModels } from '~/connectionResolvers';
 
 const getItems = async (
   subdomain: string,
@@ -49,12 +49,12 @@ export const facebookAutomationWorkers = {
     if (actionType === 'create') {
       switch (collectionType) {
         case 'messages':
-          return await actionCreateMessage(
+          return await actionCreateMessage({
             models,
             subdomain,
             action,
             execution,
-          );
+          });
         case 'comments':
           return await actionCreateComment(
             models,
@@ -64,7 +64,7 @@ export const facebookAutomationWorkers = {
           );
 
         default:
-          return;
+          return { result: null };
       }
     }
 
@@ -76,19 +76,21 @@ export const facebookAutomationWorkers = {
         execution,
         triggerType,
       );
-      return setProperty({
-        models,
-        subdomain,
-        getRelatedValue,
-        module,
-        rules,
-        execution,
-        relatedItems,
-        triggerType,
-      });
+      return {
+        result: await setProperty({
+          models,
+          subdomain,
+          getRelatedValue,
+          module,
+          rules,
+          execution,
+          relatedItems,
+          triggerType,
+        }),
+      };
     }
 
-    return;
+    return { result: null };
   },
   replacePlaceHolders: async (
     { subdomain }: IAutomationWorkerContext,

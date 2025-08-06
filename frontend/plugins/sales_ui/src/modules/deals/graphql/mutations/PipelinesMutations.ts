@@ -40,13 +40,13 @@ const commonPipelineParamsDef = `
   $metric: String,
   $hackScoringType: String,
   $templateId: String,
-  $isCheckDate: Boolean
-  $isCheckUser: Boolean
-  $isCheckDepartment: Boolean
+  $isCheckDate: Boolean,
+  $isCheckUser: Boolean,
+  $isCheckDepartment: Boolean,
   $excludeCheckUserIds: [String],
-  $numberConfig: String
-  $numberSize: String
-  $nameConfig: String
+  $numberConfig: String,
+  $numberSize: String,
+  $nameConfig: String,
   $departmentIds: [String],
   $branchIds: [String],
   $tagId: String,
@@ -73,19 +73,19 @@ const commonPipelineParams = `
   templateId: $templateId,
   isCheckDate: $isCheckDate,
   isCheckUser: $isCheckUser,
-  isCheckDepartment: $isCheckDepartment
+  isCheckDepartment: $isCheckDepartment,
   excludeCheckUserIds: $excludeCheckUserIds,
-  numberConfig: $numberConfig
-  numberSize: $numberSize
-  nameConfig: $nameConfig
-  branchIds: $branchIds
-  departmentIds: $departmentIds
-  tagId: $tagId
-  initialCategoryIds: $initialCategoryIds
-  excludeCategoryIds: $excludeCategoryIds
-  excludeProductIds: $excludeProductIds
-  paymentIds: $paymentIds
-  paymentTypes: $paymentTypes
+  numberConfig: $numberConfig,
+  numberSize: $numberSize,
+  nameConfig: $nameConfig,
+  branchIds: $branchIds,
+  departmentIds: $departmentIds,
+  tagId: $tagId,
+  initialCategoryIds: $initialCategoryIds,
+  excludeCategoryIds: $excludeCategoryIds,
+  excludeProductIds: $excludeProductIds,
+  paymentIds: $paymentIds,
+  paymentTypes: $paymentTypes,
   erxesAppToken: $erxesAppToken
 `;
 

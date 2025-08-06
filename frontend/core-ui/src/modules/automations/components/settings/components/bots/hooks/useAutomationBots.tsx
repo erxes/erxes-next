@@ -45,7 +45,6 @@ export const useAutomationBotIntegrationDetail = (botType: string) => {
   const botIntegrationConstant = automationBotsConstants.find(
     ({ name }) => name === botType,
   );
-  console.log({ botIntegrationConstant });
 
   // Always call the hook with a safe fallback
 

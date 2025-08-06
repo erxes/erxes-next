@@ -23,31 +23,31 @@ export const receiveMessage = async (
       `Received message: ${activity.text} from ${activity.from.id}`,
     );
     const { recipient, from, timestamp, channelData } = activity;
-    const pageId = recipient.id,
-      userId = from.id,
-      kind = INTEGRATION_KINDS.MESSENGER,
-      mid = channelData.message?.mid,
-      attachments = channelData.message?.attachments;
-
     let { message, postback } = channelData;
+    const pageId = recipient.id;
+    const userId = from.id;
+    const kind = INTEGRATION_KINDS.MESSENGER;
+    const mid = channelData.message?.mid || postback?.mid;
+    const attachments = channelData.message?.attachments;
+
     let text = activity.text || message?.text;
     let adData;
 
-    // if (!text && !message && !!postback) {
-    //   text = postback.title;
+    if (!text && !message && !!postback) {
+      text = postback.title;
 
-    //   message = {
-    //     mid: postback.mid
-    //   };
+      message = {
+        mid: postback.mid,
+      };
 
-    //   if (postback.payload) {
-    //     message.payload = postback.payload;
-    //   }
-    // }
+      if (postback.payload) {
+        message.payload = postback.payload;
+      }
+    }
 
-    // if (message.quick_reply) {
-    //   message.payload = message.quick_reply.payload;
-    // }
+    if (message?.quick_reply) {
+      message.payload = message.quick_reply.payload;
+    }
 
     const customer = await getOrCreateCustomer(
       models,
@@ -153,6 +153,7 @@ export const receiveMessage = async (
           content: text,
           customerId: customer.erxesApiId,
           attachments: formattedAttachments,
+          botId,
         });
 
         const doc = {
@@ -174,7 +175,11 @@ export const receiveMessage = async (
 
         conversationMessage = created;
 
-        // triggerFacebookAutomation(subdomain,{conversationMessage,payload,adData})
+        await triggerFacebookAutomation(subdomain, {
+          conversationMessage: conversationMessage.toObject(),
+          payload: message?.payload,
+          adData,
+        });
       } catch (e) {
         throw new Error(
           e.message.includes('duplicate')

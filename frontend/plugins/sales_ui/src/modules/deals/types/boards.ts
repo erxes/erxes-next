@@ -1,5 +1,5 @@
-import { BOARD_CREATE_SCHEMA } from "../schemas/boardFormSchema";
-import { IPipeline } from "./pipelines";
+import { BOARD_CREATE_SCHEMA } from "@/deals/schemas/boardFormSchema";
+import { IPipeline } from "@/deals/types/pipelines";
 import { z } from "zod";
 
 export interface IBoard {

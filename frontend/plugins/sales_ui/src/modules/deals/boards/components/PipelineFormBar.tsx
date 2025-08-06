@@ -1,9 +1,7 @@
 import { Button, Form, Sheet } from 'erxes-ui';
 import { IconGitBranch, IconPlus } from '@tabler/icons-react';
 
-// import { PipelineForm } from '@/deals/boards/components/PipelineForm';
 import { PipelineHotKeyScope } from '@/deals/types/pipelines';
-// import { SubmitHandler } from 'react-hook-form';
 import React from 'react';
 import { usePipelineForm } from '@/deals/boards/hooks/usePipelineForm';
 import { usePreviousHotkeyScope } from 'erxes-ui';
@@ -17,8 +15,7 @@ export function PipelineFormBar() {
     // methods: { handleSubmit },
   } = usePipelineForm();
   const [open, setOpen] = useState<boolean>(false);
-  // const { handleAdd, loading } = usePipelineAdd();
-  // const { toast } = useToast();
+
   const setHotkeyScope = useSetHotkeyScope();
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
@@ -44,26 +41,6 @@ export function PipelineFormBar() {
     () => onClose(),
     PipelineHotKeyScope.PipelineAddSheet,
   );
-
-  // const submitHandler: SubmitHandler<TBranchForm> = React.useCallback(
-  //   async (data) => {
-  //     handleAdd({
-  //       variables: data,
-  //       onCompleted: () => {
-  //         toast({ title: 'Success!' });
-  //         methods.reset();
-  //         setOpen(false);
-  //       },
-  //       onError: (error) =>
-  //         toast({
-  //           title: 'Error',
-  //           description: error.message,
-  //           variant: 'destructive',
-  //         }),
-  //     });
-  //   },
-  //   [handleAdd],
-  // );
 
   return (
     <div className="ml-auto flex items-center gap-3">

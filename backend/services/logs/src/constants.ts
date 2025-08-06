@@ -14,4 +14,5 @@ export const AFTER_PROCESS_CONSTANTS = {
   'graphql.mutation': 'afterMutation',
   'mongo.create': 'createdDocument',
   'mongo.update': 'updatedDocument',
+  'mongo.delete': 'deleteDocument',
 };

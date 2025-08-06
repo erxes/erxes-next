@@ -102,7 +102,7 @@ export const BoardForm = () => {
                           type="text"
                           placeholder="Enter board name"
                           className="input"
-                          defaultValue={boardDetail?.name}
+                          value={field.value || boardDetail?.name || ''}
                         />
                       </Form.Control>
                       <Form.Message />
@@ -112,7 +112,7 @@ export const BoardForm = () => {
               )}
             </Sheet.Content>
             <Sheet.Footer>
-              <Button variant={'ghost'} onClick={() => setOpen(false)}>
+              <Button variant={'ghost'} onClick={handleClose}>
                 Cancel
               </Button>
               <Button type="submit" disabled={addLoading || editLoading}>

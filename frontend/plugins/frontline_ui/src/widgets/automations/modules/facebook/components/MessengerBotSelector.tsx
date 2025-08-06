@@ -1,6 +1,20 @@
 import { useFacebookBots } from '@/integrations/facebook/hooks/useFacebookBots';
-import { IconCheck, IconChevronDown, IconSettings } from '@tabler/icons-react';
-import { Avatar, Collapsible, Label, Separator, Spinner } from 'erxes-ui';
+import { IFacebookBot } from '@/integrations/facebook/types/FacebookBot';
+import {
+  IconCheck,
+  IconChevronDown,
+  IconFlask,
+  IconRobotFace,
+  IconSettings,
+} from '@tabler/icons-react';
+import {
+  Avatar,
+  Button,
+  Collapsible,
+  Label,
+  Separator,
+  Spinner,
+} from 'erxes-ui';
 import { useState } from 'react';
 import { Link } from 'react-router';
 
@@ -48,28 +62,58 @@ export const FacebookBotSelector = ({ botId, onSelect }: Props) => {
       </Collapsible.Trigger>
       <Separator />
       <Collapsible.Content className="p-4">
-        {bots.map(({ _id, profileUrl, name }: any) => (
-          <div
-            className="border rounded-sm px-4 py-2 flex flex-row justify-between items-center"
-            key={_id}
-            onClick={() => handleSelect(_id)}
-          >
-            <div className="flex flex-row gap-2 items-center">
-              {selectedBotId === _id && <IconCheck className="w-4 h-4" />}
-              <Avatar className="w-6 h-6">
-                <Avatar.Image src={profileUrl || '/images/erxes-bot.svg'} />
-                <Avatar.Fallback>{(name || '').charAt(0)}</Avatar.Fallback>
-              </Avatar>
-              {name}
-            </div>
-            <Link
-              to={`/settings/automations/bots/facebook-messenger-bots?facebookBotId=${_id}`}
-            >
-              <IconSettings className="w-4 h-4 text-muted-foreground" />
-            </Link>
-          </div>
-        ))}
+        <MessengerBotList
+          bots={bots}
+          selectedBotId={selectedBotId}
+          handleSelect={handleSelect}
+        />
       </Collapsible.Content>
     </Collapsible>
   );
+};
+
+const MessengerBotList = ({
+  selectedBotId,
+  bots,
+  handleSelect,
+}: {
+  bots: IFacebookBot[];
+  selectedBotId: string;
+  handleSelect: (_id: string) => void;
+}) => {
+  if (!bots?.length) {
+    return (
+      <div className="flex flex-col gap-2 items-center text-accent-foreground">
+        <IconRobotFace />
+        <p>There's no bots configured</p>
+        <Button variant="secondary" asChild>
+          <Link to={`/settings/automations/bots/facebook-messenger-bots`}>
+            <Label>Create first facebook messenger bot</Label>
+          </Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return bots.map(({ _id, profileUrl, name }: any) => (
+    <div
+      className="border rounded-sm px-4 py-2 flex flex-row justify-between items-center"
+      key={_id}
+      onClick={() => handleSelect(_id)}
+    >
+      <div className="flex flex-row gap-2 items-center">
+        {selectedBotId === _id && <IconCheck className="w-4 h-4" />}
+        <Avatar className="w-6 h-6">
+          <Avatar.Image src={profileUrl || '/images/erxes-bot.svg'} />
+          <Avatar.Fallback>{(name || '').charAt(0)}</Avatar.Fallback>
+        </Avatar>
+        {name}
+      </div>
+      <Link
+        to={`/settings/automations/bots/facebook-messenger-bots?facebookBotId=${_id}`}
+      >
+        <IconSettings className="w-4 h-4 text-muted-foreground" />
+      </Link>
+    </div>
+  ));
 };

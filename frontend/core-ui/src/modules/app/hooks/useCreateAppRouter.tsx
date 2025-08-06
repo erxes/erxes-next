@@ -12,6 +12,7 @@ import { AppPath } from '@/types/paths/AppPath';
 import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
 import { ComponentsRoutes } from '../components/ComponentsRoutes';
 
+import { NotificationsRoutes } from '@/app/components/NotificationsRoutes';
 import { ProductsRoutes } from '@/app/components/ProductsRoutes';
 import { SegmentRoutes } from '@/app/components/SegmentsRoutes';
 import { SettingsRoutes } from '@/app/components/SettingsRoutes';
@@ -64,7 +65,7 @@ export const useCreateAppRouter = () => {
                 element={<SegmentRoutes />}
               />
               <Route
-                path={AppPath.AutoamtionsCatchAll}
+                path={AppPath.AutomationsCatchAll}
                 element={<AutomationRoutes />}
               />
               <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
@@ -73,6 +74,12 @@ export const useCreateAppRouter = () => {
                 path={AppPath.DocumentsCatchAll}
                 element={<DocumentsRoutes />}
               />
+
+              <Route
+                path={AppPath.MyInboxCatchAll}
+                element={<NotificationsRoutes />}
+              />
+
               {...getPluginsRoutes()}
               {process.env.NODE_ENV === 'development' && (
                 <Route
