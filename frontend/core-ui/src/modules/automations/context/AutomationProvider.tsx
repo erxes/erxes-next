@@ -1,5 +1,10 @@
 import { AUTOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
-import { ConstantsQueryResponse, NodeData } from '@/automations/types';
+import {
+  AutomationBuilderTabsType,
+  AutomationNodeType,
+  ConstantsQueryResponse,
+  NodeData,
+} from '@/automations/types';
 import { useQuery } from '@apollo/client';
 import {
   Edge,
@@ -29,9 +34,9 @@ type QueryValues<T extends QueryTypes> = {
 };
 
 type AutomationQueryParams = {
-  activeTab?: 'builder' | 'history';
+  activeTab?: AutomationBuilderTabsType;
   activeNodeId?: string;
-  activeNodeTab?: 'trigger' | 'action';
+  activeNodeTab?: AutomationNodeType;
 };
 
 interface AutomationContextType {

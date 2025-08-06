@@ -1,4 +1,5 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
+import { AutomationNodeType } from '@/automations/types';
 import { IconLinkPlus, IconPlus } from '@tabler/icons-react';
 import { Handle, Position } from '@xyflow/react';
 import { Button, cn } from 'erxes-ui';
@@ -7,7 +8,7 @@ import React, { memo, useCallback } from 'react';
 
 interface NodeOutputHandlerProps extends React.HTMLAttributes<HTMLDivElement> {
   handlerId: string;
-  nodeType: 'trigger' | 'action';
+  nodeType: AutomationNodeType;
   showAddButton: boolean;
   addButtonClassName?: string;
 }
@@ -18,7 +19,7 @@ const AwaitToConnectButton = memo(
     nodeHandleId,
     addButtonClassName,
   }: {
-    nodeType: 'trigger' | 'action';
+    nodeType: AutomationNodeType;
     addButtonClassName?: string;
     nodeHandleId: string;
   }) => {
@@ -75,8 +76,8 @@ const AwaitToConnectButton = memo(
       </AnimatePresence>
     );
     return (
-      <div className="absolute flex items-center top-1/2 -translate-y-1/2 translate-x-[15px] pointer-events-none">
-        <div className="bg-accent-foreground h-[1px] w-10 -z-1" />
+      <div className="absolute flex items-center top-1/2 -translate-y-1/2 translate-x-4 pointer-events-none">
+        <div className="bg-accent-foreground h-px w-10 -z-1" />
         <div className="nodrag nopan pointer-events-auto">
           <Button
             onClick={handleClick}

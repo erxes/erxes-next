@@ -5,13 +5,13 @@ import { TBotMessageCard } from '../states/replyMessageActionForm';
 import { FacebookMessageProps } from '../types/messageActionForm';
 import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
 import { InputTextCounter } from './InputTextCounter';
-import { useReplyMessegaAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
+import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 
 export const FacebookCardsMessage = ({
   message,
   index,
 }: FacebookMessageProps) => {
-  const { control } = useReplyMessegaAction();
+  const { control } = useReplyMessageAction();
   const { cards = [] } = message || {};
 
   const addPage = (onChange: (...event: any[]) => void) => {

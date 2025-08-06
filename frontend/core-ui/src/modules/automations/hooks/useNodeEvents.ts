@@ -1,7 +1,7 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
-import { NodeData } from '@/automations/types';
+import { AutomationNodeType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { Node } from '@xyflow/react';
 import { useSetAtom } from 'jotai';
@@ -14,7 +14,7 @@ export const useNodeEvents = () => {
   const { getList } = useTriggersActions();
 
   const onNodeDragStop = (_: any, node: Node<NodeData>) => {
-    const nodeType = node.data.nodeType as 'trigger' | 'action';
+    const nodeType = node.data.nodeType as AutomationNodeType;
 
     const list = getList(nodeType);
 

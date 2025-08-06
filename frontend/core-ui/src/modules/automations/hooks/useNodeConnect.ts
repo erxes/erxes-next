@@ -10,7 +10,6 @@ import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefini
 import { addEdge, Connection, Node, useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { IAction, ITrigger } from 'ui-modules';
 
 export const useNodeConnect = () => {
   const { triggers, actions } = useTriggersActions();

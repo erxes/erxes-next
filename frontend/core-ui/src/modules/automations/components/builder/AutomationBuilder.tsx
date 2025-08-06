@@ -22,7 +22,7 @@ import {
   TAutomationBuilderForm,
 } from '@/automations/utils/AutomationFormDefinitions';
 import { useAtom } from 'jotai';
-import { IAutomation } from '../../types';
+import { AutomationBuilderTabsType, IAutomation } from '../../types';
 import { deepCleanNulls } from '../../utils/automationBuilderUtils';
 import { AutomationHistories } from './history/components/AutomationHistories';
 
@@ -37,7 +37,7 @@ export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
   );
   const [queryParams] = useMultiQueryState<{
     activeNodeId: string;
-    activeTab: 'builder' | 'history';
+    activeTab: AutomationBuilderTabsType;
   }>(['activeNodeId', 'activeTab']);
 
   const form = useForm<TAutomationBuilderForm>({

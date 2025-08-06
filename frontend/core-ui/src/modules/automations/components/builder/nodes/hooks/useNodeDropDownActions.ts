@@ -1,16 +1,17 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
+import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-const fields = {
-  trigger: 'triggers',
-  action: 'actions',
+const fields: Record<AutomationNodeType, AutomationNodesType> = {
+  [AutomationNodeType.Trigger]: AutomationNodesType.Triggers,
+  [AutomationNodeType.Action]: AutomationNodesType.Actions,
 };
 
 export const useNodeDropDownActions = (
   id: string,
-  nodeType: 'trigger' | 'action',
+  nodeType: AutomationNodeType,
 ) => {
   const { queryParams, setQueryParams } = useAutomation();
 
@@ -18,7 +19,7 @@ export const useNodeDropDownActions = (
   const [isOpenDropDown, setOpenDropDown] = useState(false);
   const [isOpenDialog, setOpenDialog] = useState(false);
 
-  const fieldName = fields[nodeType] as 'triggers' | 'actions';
+  const fieldName = fields[nodeType] as AutomationNodesType;
   const actionFieldName =
     fieldName === 'triggers' ? 'actionId' : 'nextActionId';
 

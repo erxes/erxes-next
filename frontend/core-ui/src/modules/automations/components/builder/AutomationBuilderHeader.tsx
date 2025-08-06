@@ -1,6 +1,6 @@
 import { AutomationBuilderHeaderActions } from '@/automations/components/builder/edges/AutomationBuilderHeaderActions';
 import { AutomationHeaderTabs } from '@/automations/components/builder/edges/AutomationHeaderTabs';
-import { AutomtionBuilderNameInput } from '@/automations/components/builder/header/AutomtionBuilderNameInput';
+import { AutomationBuilderNameInput } from '@/automations/components/builder/header/AutomationBuilderNameInput';
 import { IconAffiliate, IconSettings } from '@tabler/icons-react';
 import {
   Breadcrumb,
@@ -64,11 +64,11 @@ export const AutomationBuilderHeader = () => {
       >
         <div
           className={cn('flex ', {
-            'tems-center space-x-2 gap-8': !isMobile,
+            'items-center space-x-2 gap-8': !isMobile,
             'flex-row justify-between items-center': isMobile,
           })}
         >
-          <AutomtionBuilderNameInput />
+          <AutomationBuilderNameInput />
 
           <AutomationHeaderTabs toggleTabs={toggleTabs} />
         </div>

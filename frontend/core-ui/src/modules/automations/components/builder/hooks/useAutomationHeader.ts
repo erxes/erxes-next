@@ -4,6 +4,7 @@ import {
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
 import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { AutomationBuilderTabsType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
 import { useReactFlow } from '@xyflow/react';
@@ -123,7 +124,7 @@ export const useAutomationHeader = () => {
     }
   };
 
-  const toggleTabs = (value: 'builder' | 'history') =>
+  const toggleTabs = (value: AutomationBuilderTabsType) =>
     setQueryParams({ activeTab: value });
 
   return {

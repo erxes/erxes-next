@@ -1,27 +1,29 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
-import { AutomationsHotKeyScope } from '@/automations/types';
+import {
+  AutomationBuilderTabsType,
+  AutomationsHotKeyScope,
+} from '@/automations/types';
 import { Tabs, usePreviousHotkeyScope, useScopedHotkeys } from 'erxes-ui';
 
 export const AutomationHeaderTabs = ({
   toggleTabs,
 }: {
-  toggleTabs: (tab: 'builder' | 'history') => void;
+  toggleTabs: (tab: AutomationBuilderTabsType) => void;
 }) => {
   const { queryParams } = useAutomation();
 
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
   const openHistory = () => {
-    console.log(queryParams.activeTab);
     if (queryParams.activeTab !== 'history') {
-      toggleTabs('history');
+      toggleTabs(AutomationBuilderTabsType.History);
       setHotkeyScopeAndMemorizePreviousScope(AutomationsHotKeyScope.Builder);
     }
   };
 
   const openBuilder = () => {
     if (queryParams.activeTab !== 'builder') {
-      toggleTabs('builder');
+      toggleTabs(AutomationBuilderTabsType.Bilder);
       setHotkeyScopeAndMemorizePreviousScope(AutomationsHotKeyScope.Builder);
     }
   };
@@ -43,14 +45,14 @@ export const AutomationHeaderTabs = ({
       <Tabs.Trigger
         className="w-24 font-normal after:content-none after:border-none after:shadow-none data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:text-foreground"
         value="builder"
-        onClick={() => toggleTabs('builder')}
+        onClick={() => toggleTabs(AutomationBuilderTabsType.Bilder)}
       >
         Builder
       </Tabs.Trigger>
       <Tabs.Trigger
         className="w-24 font-normal after:content-none after:border-none after:shadow-none data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:text-foreground"
         value="history"
-        onClick={() => toggleTabs('history')}
+        onClick={() => toggleTabs(AutomationBuilderTabsType.History)}
       >
         History
       </Tabs.Trigger>

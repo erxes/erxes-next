@@ -1,7 +1,7 @@
-import { useAutomation } from '@/automations/context/AutomationProvider';
 import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { AutomationNodeType } from '@/automations/types';
 import React, { useMemo } from 'react';
 
 export const useAutomationNodeLibrarySidebar = () => {
@@ -18,7 +18,7 @@ export const useAutomationNodeLibrarySidebar = () => {
     if (!awaitingToConnectNodeId) return actionsConst;
 
     const [nodeType, nodeId] = awaitingToConnectNodeId.split('__') as [
-      'trigger' | 'action',
+      AutomationNodeType,
       string,
     ];
 
@@ -49,7 +49,7 @@ export const useAutomationNodeLibrarySidebar = () => {
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: 'trigger' | 'action',
+    nodeType: AutomationNodeType,
     { type, label, description, icon, isCustom }: any,
   ) => {
     const data = {

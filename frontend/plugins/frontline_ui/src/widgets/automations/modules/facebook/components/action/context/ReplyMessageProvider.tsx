@@ -43,7 +43,7 @@ export const ReplyMessageProvider = ({
   const addMessage = (type: MessageActionTypeNames) => {
     if (messages.length === 5) {
       return setError('messages', {
-        message: 'You can only 5 messages per action',
+        message: 'You can only add up to 5 messages per action',
       });
     }
 
@@ -72,11 +72,11 @@ export const ReplyMessageProvider = ({
   );
 };
 
-export const useReplyMessegaAction = () => {
+export const useReplyMessageAction = () => {
   const ctx = useContext(ReplyMessageContext);
   if (!ctx)
     throw new Error(
-      'useReplyMessegaAction must be used within ReplyMessageProvider',
+      'useReplyMessageAction must be used within ReplyMessageProvider',
     );
   return ctx;
 };

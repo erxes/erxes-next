@@ -21,7 +21,7 @@ export type NodeData = {
   id: string;
   nodeIndex: number;
   label: string;
-  nodeType: 'trigger' | 'action';
+  nodeType: AutomationNodeType;
   icon?: string;
   description?: string;
   type: string;
@@ -36,7 +36,7 @@ export type NodeData = {
   actionId?: string;
   beforeTitleContent?: (
     id: string,
-    type: 'action' | 'trigger',
+    type: AutomationNodeType,
   ) => React.ReactNode;
 };
 
@@ -77,7 +77,7 @@ export type AutomationDropHandlerParams = {
 };
 
 export type TDraggingNode = {
-  nodeType: 'trigger' | 'action';
+  nodeType: AutomationNodeType;
   type: string;
   label: string;
   description: string;
@@ -98,4 +98,19 @@ export enum AutomationsHotKeyScope {
 export enum AutomationsPath {
   Index = '/automations',
   Detail = '/edit/:id',
+}
+
+export enum AutomationNodeType {
+  Trigger = 'trigger',
+  Action = 'action',
+}
+
+export enum AutomationNodesType {
+  Triggers = 'triggers',
+  Actions = 'actions',
+}
+
+export enum AutomationBuilderTabsType {
+  Bilder = 'builder',
+  History = 'history',
 }

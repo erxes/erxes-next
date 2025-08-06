@@ -11,12 +11,12 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { FieldPath } from 'react-hook-form';
-import { useReplyMessegaAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
+import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 import { TBotMessage } from '../states/replyMessageActionForm';
 import { FacebookBotMessage } from '~/widgets/automations/modules/facebook/components/action/components/FacebookBotMessage';
 
 export const FacebookMessages = () => {
-  const { setValue, messages } = useReplyMessegaAction();
+  const { setValue, messages } = useReplyMessageAction();
   const sensors = useSensors(useSensor(PointerSensor));
 
   const handleDragEnd = (event: any) => {

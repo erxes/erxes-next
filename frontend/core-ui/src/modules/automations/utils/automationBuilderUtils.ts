@@ -4,7 +4,12 @@ import { useQuery } from '@apollo/client';
 import { Edge, Node } from '@xyflow/react';
 import { generateAutomationElementId, IAction, ITrigger } from 'ui-modules';
 import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
-import { AutomationDropHandlerParams, NodeData, TDraggingNode } from '../types';
+import {
+  AutomationDropHandlerParams,
+  AutomationNodeType,
+  NodeData,
+  TDraggingNode,
+} from '../types';
 
 /**
  * Calculates the position of a node in the React Flow canvas.
@@ -481,7 +486,7 @@ export const automationDropHandler = ({
   if (awaitingToConnectNodeId) {
     const [awaitingNodeType, nodeId, connectionFieldName] =
       awaitingToConnectNodeId.split('__') as [
-        'trigger' | 'action',
+        AutomationNodeType,
         string,
         string | undefined,
       ];

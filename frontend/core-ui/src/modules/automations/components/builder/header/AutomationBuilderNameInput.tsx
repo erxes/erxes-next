@@ -2,7 +2,7 @@ import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefini
 import { Form, Input } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 
-export const AutomtionBuilderNameInput = () => {
+export const AutomationBuilderNameInput = () => {
   const { control } = useFormContext<TAutomationBuilderForm>();
   return (
     <Form.Field

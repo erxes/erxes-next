@@ -8,6 +8,7 @@ import {
 } from 'ui-modules';
 import { useAutomationNodeLibrarySidebar } from '../hooks/useAutomationNodeLibrarySidebar';
 import { LoadingSkeleton } from '@/automations/components/builder/sidebar/components/SidebarNodeLibrarySkeleton';
+import { AutomationNodeType } from '@/automations/types';
 
 export const AutomationNodeLibrarySidebar = () => {
   const {
@@ -21,7 +22,7 @@ export const AutomationNodeLibrarySidebar = () => {
     onDragStart,
   } = useAutomationNodeLibrarySidebar();
 
-  const commonProps = {
+  const commonTabContentProps = {
     loading,
     error,
     refetch,
@@ -39,7 +40,7 @@ export const AutomationNodeLibrarySidebar = () => {
       <Tabs
         defaultValue={activeNodeTab || 'trigger'}
         onValueChange={(value) =>
-          setQueryParams({ activeNodeTab: value as 'trigger' | 'action' })
+          setQueryParams({ activeNodeTab: value as AutomationNodeType })
         }
         className="flex-1 flex flex-col overflow-auto"
       >
@@ -53,8 +54,11 @@ export const AutomationNodeLibrarySidebar = () => {
         </Tabs.List>
 
         {[
-          { type: 'trigger' as 'trigger', list: triggersConst },
-          { type: 'action' as 'action', list: actionsConst },
+          {
+            type: 'trigger' as AutomationNodeType.Trigger,
+            list: triggersConst,
+          },
+          { type: 'action' as AutomationNodeType.Action, list: actionsConst },
         ].map(({ type, list = [] }, index) => (
           <Tabs.Content
             key={index}
@@ -62,7 +66,11 @@ export const AutomationNodeLibrarySidebar = () => {
             className="flex-1 p-2 pt-0 mt-0 w-full overflow-auto flex-1"
           >
             <Command.Group className="space-y-2 " heading={type.toUpperCase()}>
-              <TabContentWrapper {...commonProps} type={type} list={list} />
+              <TabContentWrapper
+                {...commonTabContentProps}
+                type={type}
+                list={list}
+              />
             </Command.Group>
           </Tabs.Content>
         ))}
@@ -82,13 +90,13 @@ const TabContentWrapper = ({
   loading: boolean;
   error: ApolloError | undefined;
   refetch: () => void;
-  type: 'trigger' | 'action';
+  type: AutomationNodeType;
   list:
     | IAutomationsTriggerConfigConstants[]
     | IAutomationsActionConfigConstants[];
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: 'trigger' | 'action',
+    nodeType: AutomationNodeType,
     { type, label, description, icon, isCustom }: any,
   ) => void;
 }) => {
@@ -126,10 +134,10 @@ const NodeLibraryRow = ({
   nodeType,
 }: {
   item: IAutomationsTriggerConfigConstants | IAutomationsActionConfigConstants;
-  nodeType: 'trigger' | 'action';
+  nodeType: AutomationNodeType;
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: 'trigger' | 'action',
+    nodeType: AutomationNodeType,
     { type, label, description, icon, isCustom }: any,
   ) => void;
 }) => {

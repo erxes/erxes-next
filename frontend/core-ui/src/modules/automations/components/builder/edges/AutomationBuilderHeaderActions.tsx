@@ -37,7 +37,7 @@ export const AutomationBuilderHeaderActions = () => {
           <Form.Item>
             <Form.Control>
               <div className="flex items-center space-x-2">
-                <Label htmlFor="mode">InActive</Label>
+                <Label htmlFor="mode">Inactive</Label>
                 <Switch
                   id="mode"
                   onCheckedChange={(open) =>
