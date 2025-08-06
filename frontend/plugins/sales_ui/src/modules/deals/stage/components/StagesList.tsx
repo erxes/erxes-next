@@ -1,12 +1,18 @@
-import { Skeleton, useQueryState } from 'erxes-ui';
+import {
+  KanbanBoard,
+  KanbanCard,
+  KanbanProvider,
+} from '@/deals/components/common/kanban/KanbanContext';
+import {
+  useDealsChange,
+  useDealsStageChange,
+} from '@/deals/cards/hooks/useDeals';
+import { useEffect, useState } from 'react';
 
-import DraggableGroup, {
-  SortableItem,
-} from '@/deals/components/common/Droppable';
-import { IStage } from '@/deals/types/stages';
-import { InView } from 'react-intersection-observer';
-import { Stage } from './Stage';
+import { KanbanCards } from '@/deals/components/common/kanban/KanbanCards';
+import { StageHeader } from './StageHeader';
 import { StagesLoading } from '@/deals/components/loading/StagesLoading';
+import { useQueryState } from 'erxes-ui';
 import { useStages } from '@/deals/stage/hooks/useStages';
 
 export const StagesList = () => {
@@ -18,30 +24,64 @@ export const StagesList = () => {
     },
   });
 
+  const { changeDeals } = useDealsChange();
+  const { changeDealsStage } = useDealsStageChange();
+
+  const [features, setFeatures] = useState([]);
+  const [columns, setColumns] = useState(stages || []);
+
+  useEffect(() => {
+    setColumns(stages || []);
+  }, [stages, pipelineId]);
+
+  const updateOrders = async (variables: any, type: string) => {
+    const mutation = type === 'column' ? changeDealsStage : changeDeals;
+
+    try {
+      await mutation({
+        variables,
+      });
+    } catch (err) {
+      // Error handling is already done in the mutation hooks via toast
+    }
+  };
+
   if (stagesLoading) {
     return <StagesLoading />;
   }
 
   return (
     <div className="w-full h-full overflow-x-auto">
-      <DraggableGroup direction="horizontal">
-        {(stages || ([] as IStage[])).map((stage, i) => (
-          <InView key={stage._id} triggerOnce rootMargin="200px">
-            {({ inView, ref }) => (
-              <div
-                ref={ref}
-                className="w-72 flex-none bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-t-lg  h-full flex flex-col overflow-hidden"
-              >
-                {inView ? (
-                  <Stage stage={stage} />
-                ) : (
-                  <Skeleton className="w-72 h-full rounded-md" />
-                )}
-              </div>
-            )}
-          </InView>
-        ))}
-      </DraggableGroup>
+      <KanbanProvider
+        columns={columns}
+        data={features}
+        onDataChange={setFeatures}
+        onColumnsChange={setColumns}
+        updateOrders={updateOrders}
+      >
+        {(column) => (
+          <KanbanBoard _id={column._id} key={column._id}>
+            <StageHeader stage={column} />
+            <KanbanCards id={column._id}>
+              {(feature) => (
+                <KanbanCard
+                  key={feature._id}
+                  card={feature}
+                  featureId={feature._id}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-col gap-1">
+                      <p className="m-0 flex-1 font-medium text-sm">
+                        {feature.name}
+                      </p>
+                    </div>
+                  </div>
+                </KanbanCard>
+              )}
+            </KanbanCards>
+          </KanbanBoard>
+        )}
+      </KanbanProvider>
     </div>
   );
 };

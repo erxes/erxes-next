@@ -13,7 +13,7 @@ export const REPLY_MESSAGE_ACTION_BUTTONS = [
   { type: 'text', title: 'Text', icon: IconLetterTSmall },
   { type: 'card', title: 'Card', icon: IconCards },
   { type: 'quickReplies', title: 'Quick Replies', icon: IconBolt },
-  { type: 'input', title: 'Input', icon: IconForms },
+  { type: 'input', title: 'Input', icon: IconForms, limit: 1 },
   { type: 'image', title: 'Image', icon: IconPhotoScan, inProgress: true },
   {
     type: 'attachments',

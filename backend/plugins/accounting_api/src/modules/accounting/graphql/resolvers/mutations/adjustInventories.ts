@@ -107,12 +107,14 @@ const adjustInventoryMutations = {
       status: { $in: TR_STATUSES.ACTIVE },
     }
 
-    if (currentDate !== beginDate) {
+    if (currentDate < beginDate) {
+      console.log('xxxxxxxxxxxxx', currentDate, beginDate)
       await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
     }
 
     // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
     while (currentDate < date) {
+      console.log('dddddddddddddddd', currentDate, date)
       const nextDate = getTomorrow(currentDate);
 
       try {
@@ -120,6 +122,7 @@ const adjustInventoryMutations = {
       } catch (e) {
         const now = new Date();
         await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedDate: now } });
+        // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
         // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
         //   accountingsAdjustInventoriesRunner: {
         //     userId: user._id,
@@ -136,6 +139,7 @@ const adjustInventoryMutations = {
 
       const now = new Date();
       await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedDate: now } });
+      // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
 
       // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
       //   accountingsAdjustInventoriesRunner: {

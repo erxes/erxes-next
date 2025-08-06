@@ -159,8 +159,8 @@ const SendEmailConfigurationForm = ({
         ].some((key) => (config || {})[key])}
       >
         <Tabs defaultValue="general" className="w-full p-4">
-          <Tabs.List size="sm" className="w-full">
-            <Tabs.Trigger value="general" size="sm" className="w-full">
+          <Tabs.List className="w-full">
+            <Tabs.Trigger value="general" className="w-full">
               General
               {config?.attributionMails && (
                 <Badge variant="destructive">
@@ -168,7 +168,7 @@ const SendEmailConfigurationForm = ({
                 </Badge>
               )}
             </Tabs.Trigger>
-            <Tabs.Trigger value="static" className="relative w-full" size="sm">
+            <Tabs.Trigger value="static" className="relative w-full">
               Static
               {(config?.customMails ||
                 config?.customer ||

@@ -1,5 +1,3 @@
-import gql from 'graphql-tag';
-
 const integrationCommonFields = `
     _id: String
     inboxId: String

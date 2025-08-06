@@ -34,16 +34,10 @@ export const Default: Story = {
 export const SmallSize: Story = {
   render: () => (
     <Tabs defaultValue="account" className="w-[400px]">
-      <Tabs.List size="sm" className="w-fit">
-        <Tabs.Trigger size="sm" value="account">
-          Account
-        </Tabs.Trigger>
-        <Tabs.Trigger size="sm" value="password">
-          Password
-        </Tabs.Trigger>
-        <Tabs.Trigger size="sm" value="settings">
-          Settings
-        </Tabs.Trigger>
+      <Tabs.List className="w-fit">
+        <Tabs.Trigger value="account">Account</Tabs.Trigger>
+        <Tabs.Trigger value="password">Password</Tabs.Trigger>
+        <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="account" className="p-4">
         <p>Account settings content goes here.</p>

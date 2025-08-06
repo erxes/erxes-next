@@ -3,6 +3,7 @@ import Account from '@/accounting/graphql/resolvers/customResolvers/account';
 import AccountCategory from '@/accounting/graphql/resolvers/customResolvers/accountCategory';
 import AccTransaction from '@/accounting/graphql/resolvers/customResolvers/accTransaction';
 import AccTrDetail from '@/accounting/graphql/resolvers/customResolvers/accTrDetail';
+import AdjustInvDetail from '@/accounting/graphql/resolvers/customResolvers/adjustInvDetail';
 import {
   AccountingConfigs as MutationsAccountingConfig,
   AccountCategories as MutationsAccountCategory,
@@ -29,6 +30,7 @@ const resolvers: any = {
   AccountCategory,
   AccCommonTransaction: AccTransaction,
   AccTrDetail,
+  AdjustInvDetail,
   Mutation: {
     ...MutationsAccountCategory,
     ...MutationsAccount,

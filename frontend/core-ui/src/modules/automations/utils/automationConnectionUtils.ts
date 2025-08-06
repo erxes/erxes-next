@@ -150,16 +150,6 @@ export const generateConnect = (
   return info;
 };
 
-export const getNewId = (checkIds: string[]) => {
-  let newId = Math.random().toString(36).slice(-8);
-
-  if (checkIds.includes(newId)) {
-    newId = getNewId(checkIds);
-  }
-
-  return newId;
-};
-
 export const checkIsValidConnect = ({
   nodes,
   edges,

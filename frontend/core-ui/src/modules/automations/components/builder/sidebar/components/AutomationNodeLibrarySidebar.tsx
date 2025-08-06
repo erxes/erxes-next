@@ -1,31 +1,43 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { Card, Input, Skeleton, Tabs, Badge } from 'erxes-ui';
+import { IconSearch } from '@tabler/icons-react';
+import { Card, IconComponent, Input, Skeleton, Tabs } from 'erxes-ui';
 import React, { useState } from 'react';
+import {
+  IAutomationsActionConfigConstants,
+  IAutomationsTriggerConfigConstants,
+} from 'ui-modules';
 import { useAutomationNodeLibrarySidebar } from '../hooks/useAutomationNodeLibrarySidebar';
-import { IconCodeVariable, IconSearch } from '@tabler/icons-react';
 
-const TabsContent = (
-  nodeType: string,
-  list: any[],
+const TabsContent = ({
+  nodeType,
+  list,
+  onDragStart,
+  searchValue,
+}: {
+  nodeType: 'trigger' | 'action';
+  list:
+    | IAutomationsTriggerConfigConstants[]
+    | IAutomationsActionConfigConstants[];
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: string,
-    node: any,
-  ) => void,
-  searchValue: string,
-) => {
+    nodeType: 'trigger' | 'action',
+    { type, label, description, icon, isCustom }: any,
+  ) => void;
+  searchValue: string;
+}) => {
   if (searchValue) {
     list = list.filter((item) => new RegExp(searchValue, 'i').test(item.label));
   }
 
   return list.map((item, index) => {
     const color = nodeType === 'action' ? 'success' : 'primary';
+    const { icon: iconName, label, description } = item;
 
     return (
       <Card
         key={index}
-        className={`hover:shadow-md transition-shadow cursor-pointer border-accent hover:border-${color} cursor-grab hover:bg-accent transition-colors mb-2 w-[500px]`}
+        className={`hover:shadow-md transition-shadow cursor-pointer border-accent hover:border-${color} cursor-grab hover:bg-accent transition-colors mb-2 w-[350px] sm:w-[500px]`}
         draggable
         onDragStart={(event) => onDragStart(event, nodeType, item)}
       >
@@ -34,16 +46,16 @@ const TabsContent = (
             <div
               className={`p-3 bg-${color}/10 text-${color} border-${color} rounded-lg`}
             >
-              <IconCodeVariable />
+              <IconComponent name={iconName} />
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-4">
                 <h3 className="font-semibold text-foreground text-sm">
-                  {item?.label}
+                  {label || ''}
                 </h3>
               </div>
               <p className="text-accent-foreground leading-relaxed text-xs">
-                {item?.description}
+                {description || ''}
               </p>
             </div>
           </div>
@@ -77,12 +89,29 @@ const LoadingSkeleton = () => {
   );
 };
 
-const TabContentWrapper = (
-  loading: boolean,
-  error: ApolloError | undefined,
-  refetch: () => void,
-  { type, list, onDragStart, searchValue }: any,
-) => {
+const TabContentWrapper = ({
+  loading,
+  error,
+  refetch,
+  type,
+  list,
+  onDragStart,
+  searchValue,
+}: {
+  loading: boolean;
+  error: ApolloError | undefined;
+  refetch: () => void;
+  type: 'trigger' | 'action';
+  list:
+    | IAutomationsTriggerConfigConstants[]
+    | IAutomationsActionConfigConstants[];
+  onDragStart: (
+    event: React.DragEvent<HTMLDivElement>,
+    nodeType: 'trigger' | 'action',
+    { type, label, description, icon, isCustom }: any,
+  ) => void;
+  searchValue: string;
+}) => {
   if (loading) {
     return <LoadingSkeleton />;
   }
@@ -95,7 +124,16 @@ const TabContentWrapper = (
       />
     );
   }
-  return <div>{TabsContent(type, list, onDragStart, searchValue)}</div>;
+  return (
+    <div>
+      <TabsContent
+        nodeType={type}
+        list={list}
+        onDragStart={onDragStart}
+        searchValue={searchValue}
+      />
+    </div>
+  );
 };
 
 export const AutomationNodeLibrarySidebar = () => {
@@ -133,19 +171,19 @@ export const AutomationNodeLibrarySidebar = () => {
         className="flex-1 flex flex-col"
       >
         <div className="px-4 pt-2">
-          <Tabs.List size="sm" className="w-full">
-            <Tabs.Trigger size="sm" value="trigger" className="flex-1">
+          <Tabs.List className="w-full">
+            <Tabs.Trigger value="trigger" className="flex-1">
               Triggers
             </Tabs.Trigger>
-            <Tabs.Trigger size="sm" value="action" className="flex-1">
+            <Tabs.Trigger value="action" className="flex-1">
               Actions
             </Tabs.Trigger>
           </Tabs.List>
         </div>
 
         {[
-          { type: 'trigger', list: triggersConst },
-          { type: 'action', list: actionsConst },
+          { type: 'trigger' as 'trigger', list: triggersConst },
+          { type: 'action' as 'action', list: actionsConst },
         ].map(({ type, list = [] }, index) => (
           <Tabs.Content
             key={index}
@@ -153,12 +191,15 @@ export const AutomationNodeLibrarySidebar = () => {
             className=" flex-1 p-4 mt-0 w-full"
           >
             <div className="space-y-2">
-              {TabContentWrapper(loading, error, refetch, {
-                type,
-                list,
-                onDragStart,
-                searchValue,
-              })}
+              <TabContentWrapper
+                loading={loading}
+                error={error}
+                refetch={refetch}
+                type={type}
+                list={list}
+                onDragStart={onDragStart}
+                searchValue={searchValue}
+              />
             </div>
           </Tabs.Content>
         ))}

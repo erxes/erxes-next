@@ -14,6 +14,7 @@ export const types = `
     updatedAt: String
     cycleId: String
     projectId: String
+    teamId: String
   }
 
   type TaskListResponse {
@@ -33,6 +34,7 @@ const taskFilterParams = `
   createdAt: String
   updatedAt: String
   projectId: String 
+  teamId: String
   ${GQL_CURSOR_PARAM_DEFS}
 `;
 
