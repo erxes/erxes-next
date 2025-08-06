@@ -9,10 +9,12 @@ export const statusMutations = {
     params: IStatus,
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, params.teamId, user._id, [
-      TeamMemberRoles.ADMIN,
-      TeamMemberRoles.LEAD,
-    ]);
+    await checkUserRole({
+      models,
+      teamId: params.teamId,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
 
     return models.Status.addStatus(params);
   },
@@ -24,10 +26,12 @@ export const statusMutations = {
   ) => {
     const status = await models.Status.getStatus(_id);
 
-    await checkUserRole(models, status.teamId, user._id, [
-      TeamMemberRoles.ADMIN,
-      TeamMemberRoles.LEAD,
-    ]);
+    await checkUserRole({
+      models,
+      teamId: status.teamId,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
 
     return models.Status.updateStatus(_id, params);
   },
@@ -39,10 +43,12 @@ export const statusMutations = {
   ) => {
     const status = await models.Status.getStatus(_id);
 
-    await checkUserRole(models, status.teamId, user._id, [
-      TeamMemberRoles.ADMIN,
-      TeamMemberRoles.LEAD,
-    ]);
+    await checkUserRole({
+      models,
+      teamId: status.teamId,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
 
     return models.Status.removeStatus(_id);
   },

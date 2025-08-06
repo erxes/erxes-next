@@ -1,11 +1,43 @@
 import { IModels } from '~/connectionResolvers';
 
-export const checkUserRole = async (
-  models: IModels,
-  teamId: string,
-  userId: string,
-  allowedRoles: string[],
-) => {
+export const checkUserRole = async ({
+  models,
+  teamId,
+  userId,
+  allowedRoles,
+  teamIds,
+}: {
+  models: IModels;
+  teamId?: string;
+  userId: string;
+  allowedRoles: string[];
+  teamIds?: string[];
+}) => {
+  if (teamIds && teamIds.length > 0) {
+    const userRoles = await models.TeamMember.find({
+      teamId: { $in: teamIds },
+      memberId: userId,
+    });
+
+    if (!userRoles || userRoles.length === 0) {
+      throw new Error('User not in team');
+    }
+
+    let isAllowed = false;
+
+    userRoles.forEach((userRole) => {
+      if (allowedRoles.includes(userRole.role)) {
+        isAllowed = true;
+      }
+    });
+
+    if (!isAllowed) {
+      throw new Error('User is not authorized to perform this action');
+    }
+
+    return;
+  }
+
   const userRole = await models.TeamMember.findOne({
     teamId,
     memberId: userId,
@@ -19,5 +51,5 @@ export const checkUserRole = async (
     throw new Error('User is not authorized to perform this action');
   }
 
-  return userRole.role;
+  return;
 };
