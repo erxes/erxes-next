@@ -3,7 +3,10 @@ export interface IProject {
   name: string;
   icon: string;
   tagIds: string[];
-  createdAt: Date;
+  createdAt: string;
   priority: number;
   status: number;
+  targetDate: string;
+  leadId: string;
+  teamIds: string[];
 }

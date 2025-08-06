@@ -45,7 +45,7 @@ export const StatusSelect = ({ value, id }: StatusSelectProps) => {
           variant="secondary"
           style={{ backgroundColor: `${selectedStatus?.IconColor}25` }}
         >
-          {selectedStatus && selectedStatus.value !== 0 && (
+          {selectedStatus && (
             <selectedStatus.Icon
               className="w-4 h-4"
               color={selectedStatus.IconColor}

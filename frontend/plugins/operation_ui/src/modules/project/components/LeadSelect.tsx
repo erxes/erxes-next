@@ -1,94 +1,68 @@
-import { Combobox, Command, Form, Popover } from 'erxes-ui';
 import {
+  Combobox,
+  Command,
+  RecordTableCellContent,
+  RecordTablePopover,
+  RecordTableCellTrigger,
+} from 'erxes-ui';
+import {
+  useUsers,
+  SelectMember,
   currentUserState,
   IUser,
-  SelectMember,
-  useUsers,
   useSelectMemberContext,
 } from 'ui-modules';
-import { UseFormReturn } from 'react-hook-form';
-import { TTeamMemberForm } from '@/team/types';
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
 import { useAtomValue } from 'jotai';
 import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
-import { useParams } from 'react-router';
-import React from 'react';
-
-export const MemberForm = ({
-  form,
-}: {
-  form: UseFormReturn<TTeamMemberForm>;
-}) => {
-  const { id: teamId } = useParams();
-  return (
-    <div className="flex flex-col gap-3">
-      <Form.Field
-        control={form.control}
-        name="memberIds"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>Choose members</Form.Label>
-            <Form.Description className="sr-only">Members</Form.Description>
-            <SelectTeamMember
-              teamId={teamId}
-              mode="multiple"
-              value={field.value}
-              onValueChange={field.onChange}
-              inForm={true}
-            />
-            <Form.Message />
-          </Form.Item>
-        )}
-      />
-    </div>
-  );
-};
-
-export const SelectTeamMember = ({
-  teamId,
-  mode,
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
+import { useUpdateProject } from '@/project/hooks/useUpdateProject';
+export const LeadSelect = ({
+  teamIds,
   value,
-  onValueChange,
-  exclude,
-  inForm,
+  id,
 }: {
-  teamId?: string;
-  mode: 'multiple' | 'single';
-  value?: string[];
-  onValueChange?: (value: string[] | string) => void;
-  exclude?: boolean;
-  inForm?: boolean;
+  teamIds?: string[] | string;
+  value?: string;
+  id: string;
 }) => {
-  const Control = inForm ? Form.Control : React.Fragment;
+  const [open, setOpen] = useState(false);
+  const { updateProject } = useUpdateProject();
+  const onValueChange = (value: string | string[]) => {
+    updateProject({
+      variables: {
+        _id: id,
+        leadId: value,
+      },
+    });
+    setOpen(false);
+  };
   return (
     <SelectMember.Provider
       value={value}
+      mode={'single'}
       onValueChange={onValueChange}
-      mode={mode}
     >
-      <Popover>
-        <Control>
-          <Combobox.Trigger>
-            <SelectMember.Value />
-          </Combobox.Trigger>
-        </Control>
-        <Combobox.Content>
-          <MemberFormContent teamId={teamId} exclude={exclude ?? true} />
-        </Combobox.Content>
-      </Popover>
+      <RecordTablePopover open={open} onOpenChange={setOpen}>
+        <RecordTableCellTrigger>
+          <SelectMember.Value />
+        </RecordTableCellTrigger>
+        <RecordTableCellContent>
+          <SelectTeamMemberContent teamIds={teamIds} exclude={false} />
+        </RecordTableCellContent>
+      </RecordTablePopover>
     </SelectMember.Provider>
   );
 };
 
-export const MemberFormContent = ({
-  teamId,
+export const SelectTeamMemberContent = ({
+  teamIds,
   exclude,
 }: {
-  teamId?: string;
+  teamIds?: string[] | string;
   exclude: boolean;
 }) => {
-  const { members: teamMembers } = useGetTeamMembers({ teamIds: teamId });
+  const { members: teamMembers } = useGetTeamMembers({ teamIds });
   const excludeIds = teamMembers?.map((member) => member.memberId);
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
@@ -107,7 +81,9 @@ export const MemberFormContent = ({
           !memberIds?.find((memberId) => memberId === user._id) &&
           !excludeIds?.find((excludeId) => excludeId === user._id),
       )
-    : users;
+    : users.filter(
+        (user) => !members.find((member) => member._id === user._id),
+      );
   return (
     <Command shouldFilter={false}>
       <Command.Input

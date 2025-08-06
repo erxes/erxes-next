@@ -4,6 +4,7 @@ import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import { IconLabelFilled, IconProgressCheck } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import { StatusSelect } from '@/project/components/StatusSelect';
+import { TargetDateSelect } from '@/project/components/TargetDateSelect';
 import {
   Badge,
   Input,
@@ -16,6 +17,7 @@ import { IProject } from '@/project/types';
 import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
 import { PrioritySelect } from '@/project/components/PrioritySelect';
+import { LeadSelect } from '@/project/components/LeadSelect';
 
 export const projectsColumns: ColumnDef<IProject>[] = [
   {
@@ -75,9 +77,14 @@ export const projectsColumns: ColumnDef<IProject>[] = [
       <RecordTable.InlineHead label="Priority" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return <PrioritySelect value={cell.row.original.priority || 0} id={cell.row.original._id} />;
+      return (
+        <PrioritySelect
+          value={cell.row.original.priority || 0}
+          id={cell.row.original._id}
+        />
+      );
     },
-    size: 103,
+    size: 170,
   },
   {
     id: 'status',
@@ -86,9 +93,14 @@ export const projectsColumns: ColumnDef<IProject>[] = [
       <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
     ),
     cell: ({ cell }) => {
-      return <StatusSelect value={cell.row.original.status || 0} id={cell.row.original._id} />;
+      return (
+        <StatusSelect
+          value={cell.row.original.status || 0}
+          id={cell.row.original._id}
+        />
+      );
     },
-    size: 120,
+    size: 170,
   },
 
   {
@@ -97,7 +109,13 @@ export const projectsColumns: ColumnDef<IProject>[] = [
       <RecordTable.InlineHead label="Lead" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return <div>dadaaas</div>;
+      return (
+        <LeadSelect
+          id={cell.row.original._id}
+          value={cell.row.original.leadId}
+          teamIds={cell.row.original.teamIds}
+        />
+      );
     },
     size: 240,
   },
@@ -109,7 +127,13 @@ export const projectsColumns: ColumnDef<IProject>[] = [
       <RecordTable.InlineHead label="Target Date" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return <div>dadaaas</div>;
+      const targetDate = cell.getValue() as string;
+      return (
+        <TargetDateSelect
+          value={targetDate ? new Date(targetDate) : undefined}
+          id={cell.row.original._id}
+        />
+      );
     },
     size: 240,
   },

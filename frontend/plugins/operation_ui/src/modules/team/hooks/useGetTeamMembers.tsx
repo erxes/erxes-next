@@ -6,13 +6,21 @@ interface IGetTeamMembersQueryResponse {
   getTeamMembers: ITeamMember[];
 }
 
-export const useGetTeamMembers = ({ teamId }: { teamId?: string }) => {
+export const useGetTeamMembers = ({
+  teamIds,
+}: {
+  teamIds?: string[] | string;
+}) => {
+  const getVariables = () => {
+    if (Array.isArray(teamIds)) {
+      return { teamIds };
+    }
+    return { teamId: teamIds };
+  };
   const { data, loading, refetch } = useQuery<IGetTeamMembersQueryResponse>(
     GET_TEAM_MEMBERS,
     {
-      variables: {
-        teamId,
-      },
+      variables: getVariables(),
     },
   );
 
