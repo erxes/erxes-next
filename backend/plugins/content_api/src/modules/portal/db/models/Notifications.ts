@@ -1,12 +1,9 @@
-
 import { Model } from 'mongoose';
-
 
 import { INotificationDocument } from '@/portal/@types/notification';
 import { IModels } from '~/connectionResolvers';
 import { INotification } from '@/portal/@types/notification';
 import { notificationSchema } from '@/portal/db/definitions/notification';
-
 
 export interface INotificationModel extends Model<INotificationDocument> {
   markAsRead(ids: string[], userId?: string): void;
@@ -34,11 +31,9 @@ export const loadNotificationClass = (models: IModels) => {
         selector = { _id: { $in: ids } };
       }
 
-      return models.Notifications.updateMany(
-        selector,
-        { $set: { isRead: true } },
-        { multi: true },
-      );
+      return models.Notifications.updateMany(selector, {
+        $set: { isRead: true },
+      });
     }
 
     /**
