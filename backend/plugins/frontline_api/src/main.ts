@@ -1,9 +1,10 @@
 import { getEnv, startPlugin } from 'erxes-api-shared/utils';
 import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/init-trpc';
+import { afterProcess } from '~/meta/afterProcess';
+import { router } from '~/routes';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
-import { router } from '~/routes';
 import { initializeCallQueueMonitoring } from '~/modules/integrations/call/worker/callDashboard';
 import automations from './meta/automations';
 import initCallApp from '~/modules/integrations/call/initApp';
@@ -58,21 +59,32 @@ startPlugin({
 
   meta: {
     automations,
-    // afterProcess: {
-    //   rules: [
-    //     { type: 'updatedDocument', contentTypes: ['core:user'] },
-    //     { type: 'afterAuth', types: ['login'] },
-    //     { type: 'afterMutation', mutationNames: ['usersEdit'] },
-    //   ],
-    //   onDocumentUpdated: async ({ subdomain }, data) => {
-    //     // do logic
-    //   },
-    //   onAfterAuth: async (context, data) => {
-    //     // do logic
-    //   },
-    //   onAfterMutation: (context, args) => {
-    //     // do logic
-    //   },
-    // },
+    afterProcess,
+    notificationModules: [
+      {
+        name: 'conversations',
+        description: 'Conversations',
+        icon: 'IconComment',
+        types: [
+          { name: 'conversationAddMessage', text: 'Message added' },
+          { name: 'conversationAssigneeChange', text: 'Assignee changed' },
+          { name: 'conversationCreated', text: 'Conversation created' },
+          { name: 'conversationParticipantAdded', text: 'Participant added' },
+          { name: 'conversationStateChange', text: 'State changed' },
+          { name: 'conversationTagged', text: 'Conversation tagged' },
+        ],
+      },
+      {
+        name: 'channels',
+        description: 'Channels',
+        icon: 'IconDeviceLaptop',
+        types: [
+          {
+            name: 'channelMembersChange',
+            text: 'Assignee change',
+          },
+        ],
+      },
+    ],
   },
 });

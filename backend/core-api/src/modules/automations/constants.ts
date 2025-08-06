@@ -46,14 +46,14 @@ export const EMAIL_RECIPIENTS_TYPES = [
 export const UI_ACTIONS = [
   {
     type: 'if',
-    icon: 'Sitemap',
+    icon: 'IconSitemap',
     label: 'Branches',
     description: 'Create simple or if/then branches',
     isAvailable: true,
   },
   {
     type: 'setProperty',
-    icon: 'Flask',
+    icon: 'IconFlask',
     label: 'Manage properties',
     description:
       'Update existing default or custom properties for Contacts, Companies, Cards, Conversations',
@@ -61,7 +61,7 @@ export const UI_ACTIONS = [
   },
   {
     type: 'delay',
-    icon: 'Hourglass',
+    icon: 'IconHourglass',
     label: 'Delay',
     description:
       'Delay the next action with a timeframe, a specific event or activity',
@@ -69,7 +69,7 @@ export const UI_ACTIONS = [
   },
   {
     type: 'workflow',
-    icon: 'JumpRope',
+    icon: 'IconJumpRope',
     label: 'Workflow',
     description:
       'Enroll in another workflow,  trigger outgoing webhook or write custom code',
@@ -77,7 +77,7 @@ export const UI_ACTIONS = [
   },
   {
     type: 'sendEmail',
-    icon: 'MailFast',
+    icon: 'IconMailFast',
     label: 'Send Email',
     description: 'Send Email',
     emailRecipientsConst: EMAIL_RECIPIENTS_TYPES,
@@ -88,35 +88,35 @@ export const UI_ACTIONS = [
 export const UI_TRIGGERS = [
   {
     type: 'core:user',
-    icon: 'Users',
+    icon: 'IconUsers',
     label: 'Team member',
     description:
       'Start with a blank workflow that enrolls and is triggered off team members',
   },
   {
     type: 'core:customer',
-    icon: 'UsersGroup',
+    icon: 'IconUsersGroup',
     label: 'Customer',
     description:
       'Start with a blank workflow that enrolls and is triggered off Customers',
   },
   {
     type: 'core:lead',
-    icon: 'UsersGroup',
+    icon: 'IconUsersGroup',
     label: 'Lead',
     description:
       'Start with a blank workflow that enrolls and is triggered off Leads',
   },
   {
     type: 'core:company',
-    icon: 'Building',
+    icon: 'IconBuilding',
     label: 'Company',
     description:
       'Start with a blank workflow that enrolls and is triggered off company',
   },
   {
     type: 'core:form_submission',
-    icon: 'Forms',
+    icon: 'IconForms',
     label: 'Form submission',
     description:
       'Start with a blank workflow that enrolls and is triggered off form submission',

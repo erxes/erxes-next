@@ -142,6 +142,11 @@ import {
 } from '@/logs/graphql/schema';
 
 import {
+  mutations as NotificationsMutations,
+  queries as NotificationsQueries,
+  types as NotificationsTypes,
+} from '@/notifications/graphql/schema';
+import{
   mutations as InternalNoteMutations,
   queries as InternalNoteQueries,
   types as InternalNoteTypes,
@@ -185,6 +190,7 @@ export const types = `
     ${DocumentTypes}
     ${AutomationsTypes}
     ${LogsTypes}
+    ${NotificationsTypes}
     ${InternalNoteTypes}
   `;
 
@@ -213,6 +219,7 @@ export const queries = `
     ${DocumentQueries}
     ${AutomationsQueries}
     ${LogsQueries}
+     ${NotificationsQueries}
     ${InternalNoteQueries}
   `;
 
@@ -240,6 +247,7 @@ export const mutations = `
     ${UsersGroupMutations}
     ${DocumentMutations}
     ${AutomationsMutations}
+    ${NotificationsMutations}
     ${InternalNoteMutations}
   `;
 

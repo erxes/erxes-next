@@ -10,4 +10,5 @@ export * from './segments';
 export * from './automations';
 export * from './header';
 export * from './brands';
+export * from './notifications';
 export * from './permissions';

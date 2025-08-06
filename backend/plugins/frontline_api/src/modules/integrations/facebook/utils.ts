@@ -586,3 +586,18 @@ export const checkIsAdsOpenThread = (entry: any[] = []) => {
 
   return isSourceAds && isTypeOpenThread && hasAdsContextData;
 };
+
+export const generateFieldBotOptions = async (models: IModels, fields) => {
+  const bots = await models.FacebookBots.find({});
+
+  const selectOptions: Array<{ label: string; value: any }> = bots.map(
+    (bot) => ({
+      value: bot._id,
+      label: bot.name,
+    }),
+  );
+
+  return fields.map((field) =>
+    field.name === 'botId' ? { ...field, selectOptions } : field,
+  );
+};

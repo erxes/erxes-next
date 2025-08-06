@@ -18,7 +18,7 @@ const coreLibraries = new Set([
   'react-i18next',
 ]);
 
-const SERVICES = ['automations', 'logs'];
+const SERVICES = ['automations', 'logs', 'notifications'];
 
 const config: ModuleFederationConfig = {
   name: 'core-ui',
