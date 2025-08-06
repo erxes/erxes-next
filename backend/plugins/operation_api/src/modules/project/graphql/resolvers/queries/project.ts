@@ -44,6 +44,14 @@ export const projectQueries = {
       filter.leadId = params.leadId;
     }
 
+    if (params.userId) {
+      const members = await models.TeamMember.find({
+        memberId: params.userId,
+      }).distinct('teamId');
+
+      filter.teamIds = { $in: members };
+    }
+
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IProjectDocument>({
         model: models.Project,
