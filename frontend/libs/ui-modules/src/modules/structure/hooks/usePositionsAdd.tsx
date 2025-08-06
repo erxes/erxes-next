@@ -8,7 +8,7 @@ export const usePositionsAdd = () => {
     positionsAdd({
       ...options,
       variables,
-      refetchQueries: ['PositionsMain'],
+      refetchQueries: ['Positions'],
     });
   };
 

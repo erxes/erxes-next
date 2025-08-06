@@ -22,10 +22,11 @@ import {
   DatePicker,
   readImage,
   RecordTableCellDisplay,
+  toast,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { useSetAtom } from 'jotai';
-import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
+import { renderingTeamMemberDetailAtom } from '../../states/teamMemberDetailStates';
 import { SelectPositions } from 'ui-modules';
 import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
@@ -99,20 +100,22 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       const onSave = (first: string, last: string) => {
         if (first !== firstName || last !== lastName) {
-          usersEdit(
-            {
-              variables: {
-                _id,
-                details: {
-                  firstName: first,
-                  lastName: last,
-                },
+          usersEdit({
+            variables: {
+              _id,
+              details: {
+                firstName: first,
+                lastName: last,
               },
-              onError: (error: ApolloError) =>
-                console.error('Failed to update user details:', error),
             },
-            ['details'],
-          );
+            onError: (error: ApolloError) => {
+              toast({
+                title: 'Failed to update user details',
+                description: error.message,
+                variant: 'destructive',
+              });
+            },
+          });
         }
       };
 
@@ -171,15 +174,12 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const [open, setOpen] = useState<boolean>(false);
       const [_employeeId, setEmployeeId] = useState<string>(employeeId);
       const onSave = () => {
-        usersEdit(
-          {
-            variables: {
-              _id,
-              employeeId: _employeeId,
-            },
+        usersEdit({
+          variables: {
+            _id,
+            employeeId: _employeeId,
           },
-          ['employeeId'],
-        );
+        });
       };
 
       const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -231,15 +231,12 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
           mode="multiple"
           value={cell.getValue() as string[]}
           onValueChange={(value) =>
-            usersEdit(
-              {
-                variables: {
-                  _id,
-                  positionIds: value,
-                },
+            usersEdit({
+              variables: {
+                _id,
+                positionIds: value,
               },
-              ['positionIds'],
-            )
+            })
           }
         />
       );
@@ -261,18 +258,15 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       );
       const { usersEdit } = useUserEdit();
       const onSave = () => {
-        usersEdit(
-          {
-            variables: {
-              _id,
-              details: {
-                ...rest,
-                workStartedDate: _workStartedDate,
-              },
+        usersEdit({
+          variables: {
+            _id,
+            details: {
+              ...rest,
+              workStartedDate: _workStartedDate,
             },
           },
-          ['details'],
-        );
+        });
       };
 
       const onChange = (date: Date) => {
@@ -297,6 +291,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
           </RecordTableCellTrigger>
           <RecordTableCellContent>
             <DatePicker
+              defaultMonth={workStartedDate}
               value={_workStartedDate}
               onChange={(d) => onChange(d as Date)}
             />

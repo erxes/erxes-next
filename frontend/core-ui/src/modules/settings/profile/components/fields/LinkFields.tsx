@@ -32,11 +32,20 @@ const LinkFields = () => {
               key={`toggle-item-${index}`}
               className={`${field.error && 'border-red-500'} w-10`}
               onDoubleClick={() => {
-                const url = form.getValues(
+                const rawValue = form.getValues(
                   [fieldPath, fieldName].join('.') as keyof FormType,
                 );
 
-                if (typeof url === 'string' && url) {
+                if (typeof rawValue === 'string' && rawValue.trim()) {
+                  const trimmed = rawValue.trim();
+
+                  const url =
+                    fieldName === 'discord' && /^\d{17,19}$/.test(trimmed)
+                      ? `https://discord.com/users/${trimmed}`
+                      : trimmed.startsWith('http')
+                      ? trimmed
+                      : `https://${trimmed}`;
+
                   window.open(url, '_blank');
                 }
               }}

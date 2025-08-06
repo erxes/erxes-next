@@ -17,7 +17,6 @@ export const GET_USER_DETAIL = gql`
         middleName
         lastName
         employeeId
-        position
         operatorPhone
         birthDate
         workStartedDate

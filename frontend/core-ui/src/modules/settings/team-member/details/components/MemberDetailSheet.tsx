@@ -1,48 +1,46 @@
+import { teamMemberDetailActiveActionTabAtom } from '@/settings/team-member/states/teamMemberDetailStates';
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
-import { Button, cn, Sheet } from 'erxes-ui';
-import { useSearchParams } from 'react-router-dom';
+import {
+  Button,
+  cn,
+  Sheet,
+  usePreviousHotkeyScope,
+  useQueryState,
+} from 'erxes-ui';
+import { useAtomValue } from 'jotai';
+import React from 'react';
 
 export const MemberDetailSheet = ({
   children,
+  className,
+  ...props
 }: {
   children: React.ReactNode;
-}) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  className?: string;
+} & React.ComponentProps<typeof Sheet>) => {
+  const [open, setOpen] = useQueryState<string>('user_id');
+  const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
 
-  const userId = searchParams.get('user_id');
+  const activeTab = useAtomValue(teamMemberDetailActiveActionTabAtom);
 
-  const setOpen = (newUserId: string | null) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    if (newUserId) {
-      newSearchParams.set('user_id', newUserId);
-    } else {
-      newSearchParams.delete('user_id');
-    }
-    setSearchParams(newSearchParams);
-  };
   return (
     <Sheet
-      open={!!userId}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) {
-          setOpen(null);
-        }
+      open={!!open}
+      onOpenChange={() => {
+        setOpen(null);
+        goBackToPreviousHotkeyScope();
       }}
+      {...props}
     >
       <Sheet.View
         className={cn(
-          'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
-          // !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
+          'p-0 md:w-[calc(100vw-theme(spacing.4))] flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none sm:max-w-screen-2xl',
+          !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
+          className,
         )}
       >
         <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              setOpen(null);
-            }}
-          >
+          <Button variant="ghost" size="icon">
             <IconLayoutSidebarLeftCollapse />
           </Button>
           <Sheet.Title>Team Member Detail</Sheet.Title>
@@ -51,7 +49,7 @@ export const MemberDetailSheet = ({
             Team Member Detail
           </Sheet.Description>
         </Sheet.Header>
-        <Sheet.Content>{children}</Sheet.Content>
+        {children}
       </Sheet.View>
     </Sheet>
   );

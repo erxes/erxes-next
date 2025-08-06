@@ -1,4 +1,11 @@
-import { Button, Form, Input, ScrollArea, Textarea } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Input,
+  PhoneInput,
+  ScrollArea,
+  Textarea,
+} from 'erxes-ui';
 import {
   useAddStructureDetail,
   useEditStructureDetail,
@@ -44,7 +51,7 @@ export const Structure = () => {
       return;
     }
 
-    handleEdit({ variables: { ...variables, _id: structureDetail._id } }, [
+    handleEdit({ variables: { ...variables, id: structureDetail._id } }, [
       'title',
       'description',
       'supervisorId',
@@ -125,7 +132,7 @@ export const Structure = () => {
                   <Form.Item>
                     <Form.Label>{'Phone number'}</Form.Label>
                     <Form.Control>
-                      <Input {...field} inputMode="numeric" pattern="[0-9]*" />
+                      <PhoneInput {...field} />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>

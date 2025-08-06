@@ -24,6 +24,7 @@ export interface ISelectPositionsContext {
   newPositionName: string;
   setNewPositionName: (positionName: string) => void;
   mode: 'single' | 'multiple';
+  positionIds?: string[];
 }
 
 export type ISelectPositionsProviderProps = {
@@ -31,6 +32,7 @@ export type ISelectPositionsProviderProps = {
   value?: string[] | string;
   onValueChange?: (positions?: string[] | string) => void;
   mode?: 'single' | 'multiple';
+  positionIds?: string[];
   children: React.ReactNode;
   options?: (newSelectedPositionIds: string[]) => MutationHookOptions<
     {

@@ -33,8 +33,7 @@ const PROFILE_ADVANCED_FIELDS = [
   },
   {
     fieldLabel: 'Position',
-    fieldName: 'position',
-    fieldPath: 'details',
+    fieldName: 'positionIds',
     field: { element: 'input', attributes: { type: 'text' } },
   },
   {

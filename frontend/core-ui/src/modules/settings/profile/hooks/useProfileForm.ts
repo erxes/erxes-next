@@ -3,6 +3,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
+const discordIdRegex = /^\d{17,19}$/;
+const discordUrlRegex = new RegExp(
+  '^https://(?:www\\.)?discord\\.com/users/[A-Za-z0-9-]+/?$|' +
+    '^https://(?:www\\.)?discord\\.gg/[A-Za-z0-9-]+/?$',
+);
+
 export const profileValidationSchema = z
   .object({
     details: z.object({
@@ -14,7 +20,6 @@ export const profileValidationSchema = z
       operatorPhone: z.string().optional(),
       birthDate: z.date().or(z.string()).optional(),
       workStartedDate: z.date().or(z.string()).optional(),
-      position: z.string().optional(),
       location: z.string().optional(),
       employeeId: z.string().optional().nullable(),
     }),
@@ -23,17 +28,23 @@ export const profileValidationSchema = z
         facebook: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?facebook\.com\/((profile\.php\?id=\d+)|([A-Za-z0-9._-]+))\/?$/, {
-            message: 'Invalid Facebook URL',
-          })
+          .regex(
+            /^https:\/\/(www\.)?facebook\.com\/((profile\.php\?id=\d+)|([A-Za-z0-9._-]+))\/?$/,
+            {
+              message: 'Invalid Facebook URL',
+            },
+          )
           .optional()
           .or(z.literal('')),
         twitter: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?(twitter\.com|x\.com)\/[A-Za-z0-9._-]+\/?$/, {
-            message: 'Invalid Twitter/X URL',
-          })
+          .regex(
+            /^https:\/\/(www\.)?(twitter\.com|x\.com)\/[A-Za-z0-9._-]+\/?$/,
+            {
+              message: 'Invalid Twitter/X URL',
+            },
+          )
           .optional()
           .or(z.literal('')),
         website: z
@@ -41,14 +52,19 @@ export const profileValidationSchema = z
           .url({ message: 'Invalid website URL' })
           .optional()
           .or(z.literal('')),
+
         discord: z
           .string()
-          .url()
-          .regex(/^https:\/\/(www\.)?discord\.(com|gg)\/[A-Za-z0-9-]+\/?$/, {
-            message: 'Invalid Discord URL',
-          })
-          .optional()
-          .or(z.literal('')),
+          .refine(
+            (val) =>
+              val === '' ||
+              discordIdRegex.test(val) ||
+              discordUrlRegex.test(val),
+            {
+              message: 'Enter a valid Discord profile URL or User ID',
+            },
+          )
+          .optional(),
         gitHub: z
           .string()
           .url()
@@ -87,7 +103,6 @@ const useProfileForm = () => {
         operatorPhone: '',
         birthDate: undefined,
         workStartedDate: undefined,
-        position: '',
         location: '',
         employeeId: '',
       },
