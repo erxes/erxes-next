@@ -6,7 +6,16 @@ import { IContext } from '~/connectionResolvers';
 export const projectMutations = {
   createProject: async (
     _parent: undefined,
-    { name, teamIds, startDate, targetDate, priority, status, description },
+    {
+      name,
+      teamIds,
+      startDate,
+      targetDate,
+      priority,
+      status,
+      description,
+      leadId,
+    },
     { models, user }: IContext,
   ) => {
     await checkUserRole({
@@ -24,6 +33,7 @@ export const projectMutations = {
       priority,
       status,
       description,
+      leadId,
     });
   },
   updateProject: async (
@@ -37,6 +47,7 @@ export const projectMutations = {
       priority,
       status,
       description,
+      leadId,
     }: IProjectDocument,
     { models, user }: IContext,
   ) => {
@@ -56,6 +67,7 @@ export const projectMutations = {
       priority,
       status,
       description,
+      leadId,
     });
   },
   removeProject: async (_parent: undefined, { _id }, { models }: IContext) => {
