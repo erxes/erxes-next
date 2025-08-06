@@ -16,7 +16,11 @@ async function initFederation() {
   );
 
   if (NODE_ENV === 'development') {
-    root.render(<App />);
+    root.render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    );
   } else {
     fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
       .then((res) => res.json())
