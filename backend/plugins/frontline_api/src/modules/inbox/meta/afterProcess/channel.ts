@@ -54,7 +54,8 @@ export const channelAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
-        } as INotificationData);
+          notificationType: 'channelMembersChange',
+        });
       }
 
       if (removeMemberIds.length) {
@@ -68,7 +69,8 @@ export const channelAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
-        } as INotificationData);
+          notificationType: 'channelMembersChange',
+        });
       }
     }
   },

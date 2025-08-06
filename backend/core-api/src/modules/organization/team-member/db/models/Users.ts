@@ -1156,6 +1156,10 @@ export const loadUserMovemmentClass = (models: IModels, subdomain: string) => {
               contentTypeId,
               action,
               priority: 'medium',
+              notificationType:
+                contentType === 'department'
+                  ? 'departmentAssigneeChanged'
+                  : 'branchAssigneeChanged',
             });
           }
         }
