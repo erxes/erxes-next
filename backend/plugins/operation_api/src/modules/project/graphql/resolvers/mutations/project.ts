@@ -1,3 +1,4 @@
+import { IProjectDocument } from '@/project/@types/project';
 import { IContext } from '~/connectionResolvers';
 
 export const projectMutations = {
@@ -27,7 +28,7 @@ export const projectMutations = {
       priority,
       status,
       description,
-    },
+    }: IProjectDocument,
     { models }: IContext,
   ) => {
     return models.Project.updateProject(_id, {
