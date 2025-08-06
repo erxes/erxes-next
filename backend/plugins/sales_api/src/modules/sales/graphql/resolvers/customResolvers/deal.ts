@@ -1,7 +1,7 @@
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { IDealDocument } from '~/modules/sales/@types';
 import { generateAmounts } from '~/modules/sales/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {
@@ -13,31 +13,38 @@ export default {
   // async customers() {},
 
   async branches(deal: IDealDocument) {
-    return await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'branches',
-      action: 'find',
-      input: {
-        query: { _id: { $in: deal.branchIds } },
-      },
-      defaultValue: [],
-    });
+    if (!deal.branchIds?.length) {
+      return [];
+    }
+
+    return deal.branchIds.map((branchId) => ({
+      __typename: 'Branch',
+      _id: branchId,
+    }));
   },
+
   async departments(deal: IDealDocument) {
-    return await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'departments',
-      action: 'find',
-      input: {
-        query: {
-          _id: { $in: deal.departmentIds },
-        },
-      },
-      defaultValue: [],
-    });
+    if (!deal.departmentIds?.length) {
+      return [];
+    }
+
+    return deal.departmentIds.map((departmentId) => ({
+      __typename: 'Department',
+      _id: departmentId,
+    }));
   },
+
+  async assignedUsers(deal: IDealDocument) {
+    if (!deal.assignedUserIds?.length) {
+      return [];
+    }
+
+    return deal.assignedUserIds.map((assignedUserId) => ({
+      __typename: 'User',
+      _id: assignedUserId,
+    }));
+  },
+
   async customPropertiesData(deal: IDealDocument) {
     const customFieldsData = (deal?.customFieldsData as any[]) || [];
 
@@ -79,84 +86,95 @@ export default {
       .map((_id) => ({ __typename: 'Tag', _id }));
   },
 
+  // async products(deal: IDealDocument) {
+  //   const { productsData } = deal || {};
+
+  //   const products: any = [];
+
+  //   if (!productsData || !productsData.length) {
+  //     return products;
+  //   }
+
+  //   const productIds = productsData
+  //     .filter((pd) => pd.productId)
+  //     .map((pd) => pd.productId);
+
+  //   const allProducts = await sendTRPCMessage({
+  //     pluginName: 'core',
+  //     method: 'query',
+  //     module: 'products',
+  //     action: 'find',
+  //     input: {
+  //       query: {
+  //         _id: { $in: productIds },
+  //       },
+  //       limit: productsData.length,
+  //     },
+  //   });
+
+  //   for (const data of productsData || []) {
+  //     if (!data.productId) {
+  //       continue;
+  //     }
+  //     const product = allProducts.find((p) => p._id === data.productId);
+
+  //     if (!product) {
+  //       continue;
+  //     }
+
+  //     const { customFieldsData } = product;
+
+  //     const customFields: any[] = [];
+
+  //     const fieldIds: string[] = [];
+  //     for (const customFieldData of customFieldsData || []) {
+  //       fieldIds.push(customFieldData.field);
+  //     }
+
+  //     const fields = await sendTRPCMessage({
+  //       pluginName: 'core',
+  //       method: 'query',
+  //       module: 'fields',
+  //       action: 'find',
+  //       input: {
+  //         query: {
+  //           _id: { $in: fieldIds },
+  //         },
+  //       },
+  //       defaultValue: [],
+  //     });
+
+  //     for (const customFieldData of customFieldsData || []) {
+  //       const field = fields.find((f) => f._id === customFieldData.field);
+
+  //       if (field) {
+  //         customFields[customFieldData.field] = {
+  //           text: field.text,
+  //           data: customFieldData.value,
+  //         };
+  //       }
+  //     }
+
+  //     product.customFieldsData = customFields;
+
+  //     products.push({
+  //       ...data,
+  //       product,
+  //     });
+  //   }
+
+  //   return products;
+  // },
+
   async products(deal: IDealDocument) {
-    const { productsData } = deal || {};
-
-    const products: any = [];
-
-    if (!productsData || !productsData.length) {
-      return products;
+    if (!deal.productsData) {
+      return [];
     }
 
-    const productIds = productsData
-      .filter((pd) => pd.productId)
-      .map((pd) => pd.productId);
-
-    const allProducts = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'products',
-      action: 'find',
-      input: {
-        query: {
-          _id: { $in: productIds },
-        },
-        limit: productsData.length,
-      },
-    });
-
-    for (const data of productsData || []) {
-      if (!data.productId) {
-        continue;
-      }
-      const product = allProducts.find((p) => p._id === data.productId);
-
-      if (!product) {
-        continue;
-      }
-
-      const { customFieldsData } = product;
-
-      const customFields: any[] = [];
-
-      const fieldIds: string[] = [];
-      for (const customFieldData of customFieldsData || []) {
-        fieldIds.push(customFieldData.field);
-      }
-
-      const fields = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'fields',
-        action: 'find',
-        input: {
-          query: {
-            _id: { $in: fieldIds },
-          },
-        },
-        defaultValue: [],
-      });
-
-      for (const customFieldData of customFieldsData || []) {
-        const field = fields.find((f) => f._id === customFieldData.field);
-
-        if (field) {
-          customFields[customFieldData.field] = {
-            text: field.text,
-            data: customFieldData.value,
-          };
-        }
-      }
-
-      product.customFieldsData = customFields;
-
-      products.push({
-        ...data,
-        product,
-      });
-    }
-
-    return products;
+    return deal.productsData.map((pd) => ({
+      __typename: 'Product',
+      _id: pd.productId,
+    }));
   },
 
   async unusedAmount(deal: IDealDocument) {
@@ -165,35 +183,6 @@ export default {
 
   async amount(deal: IDealDocument) {
     return generateAmounts(deal.productsData || []);
-  },
-
-  async assignedUsers(
-    deal: IDealDocument,
-    _args: undefined,
-    _context: IContext,
-    { isSubscription },
-  ) {
-    if (isSubscription && deal.assignedUserIds?.length) {
-      return sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'users',
-        action: 'find',
-        input: {
-          query: {
-            _id: { $in: deal.assignedUserIds },
-          },
-        },
-        defaultValue: [],
-      });
-    }
-
-    return (deal.assignedUserIds || [])
-      .filter((e) => e)
-      .map((_id) => ({
-        __typename: 'User',
-        _id,
-      }));
   },
 
   async pipeline(deal: IDealDocument, _args: undefined, { models }: IContext) {

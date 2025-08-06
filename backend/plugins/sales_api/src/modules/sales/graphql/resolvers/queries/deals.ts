@@ -1,3 +1,16 @@
+import { CLOSE_DATE_TYPES, SALES_STATUSES } from '~/modules/sales/constants';
+import {
+  IArchiveArgs,
+  IDealDocument,
+  IDealQueryParams,
+} from '~/modules/sales/@types';
+import { IContext, IModels } from '~/connectionResolvers';
+import {
+  archivedItems,
+  archivedItemsCount,
+  checkItemPermByUser,
+  getItemList,
+} from '~/modules/sales/utils';
 import {
   checkPermission,
   moduleRequireLogin,
@@ -8,22 +21,10 @@ import {
   regexSearchText,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
-import moment from 'moment';
+
 import { FilterQuery } from 'mongoose';
-import { IContext, IModels } from '~/connectionResolvers';
-import {
-  IArchiveArgs,
-  IDealDocument,
-  IDealQueryParams,
-} from '~/modules/sales/@types';
-import { CLOSE_DATE_TYPES, SALES_STATUSES } from '~/modules/sales/constants';
-import {
-  archivedItems,
-  archivedItemsCount,
-  checkItemPermByUser,
-  getItemList,
-} from '~/modules/sales/utils';
 import dealResolvers from '../customResolvers/deal';
+import moment from 'moment';
 
 export const generateFilter = async (
   models: IModels,
@@ -648,15 +649,11 @@ export const dealQueries = {
       unUsedAmount: await dealResolvers.unusedAmount(item),
     });
 
-    const deals = await getItemList(
-      models,
-      filter,
-      args,
-      user,
-      'deal',
-      { productsData: 1 },
-      getExtraFields,
-    );
+    const {
+      list: deals,
+      pageInfo,
+      totalCount,
+    } = await getItemList(models, filter, args, user, getExtraFields);
 
     const dealProductIds = deals.flatMap((deal) => {
       if (deal.productsData && deal.productsData.length > 0) {
@@ -712,7 +709,7 @@ export const dealQueries = {
       }
     }
 
-    return deals;
+    return { list: deals, pageInfo, totalCount };
   },
 
   async dealsTotalCount(
@@ -729,7 +726,7 @@ export const dealQueries = {
    * Archived list
    */
   async archivedDeals(_root, args: IArchiveArgs, { models }: IContext) {
-    return archivedItems(models, args, models.Deals);
+    return archivedItems(models, args);
   },
 
   async archivedDealsCount(_root, args: IArchiveArgs, { models }: IContext) {
@@ -901,5 +898,5 @@ export const dealQueries = {
   //   async checkDiscount() {}
 };
 
-moduleRequireLogin(dealQueries);
-checkPermission(dealQueries, 'deals', 'showDeals');
+// moduleRequireLogin(dealQueries);
+// checkPermission(dealQueries, 'deals', 'showDeals');

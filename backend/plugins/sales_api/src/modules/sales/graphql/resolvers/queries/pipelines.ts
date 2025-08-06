@@ -1,6 +1,7 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { defaultPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
+import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { IPipelineDocument } from '~/modules/sales/@types';
 
 export const pipelineQueries = {
   /**
@@ -8,20 +9,14 @@ export const pipelineQueries = {
    */
   async salesPipelines(
     _root,
-    {
-      boardId,
-      type,
-      isAll,
-      ...queryParams
-    }: {
+    params: {
       boardId: string;
-      type: string;
       isAll: boolean;
-      page: number;
-      perPage: number;
-    },
+    } & ICursorPaginateParams,
     { user, models }: IContext,
   ) {
+    const { boardId, isAll } = params;
+
     const query: any =
       user.isOwner || isAll
         ? {}
@@ -47,8 +42,8 @@ export const pipelineQueries = {
       const userDetail = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
-        module: 'user',
-        action: 'find',
+        module: 'users',
+        action: 'findOne',
         input: {
           _id: user._id,
         },
@@ -67,41 +62,32 @@ export const pipelineQueries = {
       }
     }
 
-    const { page, perPage } = queryParams;
-
     if (boardId) {
       query.boardId = boardId;
     }
 
-    if (type) {
-      query.type = type;
-    }
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IPipelineDocument>({
+        model: models.Pipelines,
+        params: {
+          ...params,
+          orderBy: { order: 1, createdAt: -1 },
+        },
+        query,
+      });
 
-    if (page && perPage) {
-      return defaultPaginate(
-        models.Pipelines.find(query).sort({ createdAt: 1 }),
-        queryParams,
-      );
-    }
-
-    return models.Pipelines.find(query)
-      .sort({ order: 1, createdAt: -1 })
-      .lean();
+    return { list, totalCount, pageInfo };
   },
 
   async salesPipelineStateCount(
     _root,
-    { boardId, type }: { boardId: string; type: string },
+    { boardId }: { boardId: string },
     { models }: IContext,
   ) {
     const query: any = {};
 
     if (boardId) {
       query.boardId = boardId;
-    }
-
-    if (type) {
-      query.type = type;
     }
 
     const counts: any = {};
@@ -181,4 +167,4 @@ export const pipelineQueries = {
   },
 };
 
-moduleRequireLogin(pipelineQueries);
+// moduleRequireLogin(pipelineQueries);

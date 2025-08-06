@@ -43,13 +43,9 @@ export const pipelineLabelMutations = {
    */
   async salesPipelineLabelsLabel(
     _root: undefined,
-    {
-      pipelineId,
-      targetId,
-      labelIds,
-    }: { pipelineId: string; targetId: string; labelIds: string[] },
+    { targetId, labelIds }: { targetId: string; labelIds: string[] },
     { models }: IContext,
   ) {
-    return models.PipelineLabels.labelsLabel(pipelineId, targetId, labelIds);
+    return models.PipelineLabels.labelsLabel(targetId, labelIds);
   },
 };

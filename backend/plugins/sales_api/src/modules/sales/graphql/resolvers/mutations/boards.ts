@@ -50,8 +50,8 @@ export const boardMutations = {
 
       await sendTRPCMessage({
         pluginName: 'core',
-        method: 'query',
-        module: 'fieldsGroups', // ??
+        method: 'mutation',
+        module: 'fieldsGroups',
         action: 'updateGroup',
         input: { groupId: fieldGroup._id, fieldGroup },
       });
@@ -69,7 +69,6 @@ export const boardMutations = {
       startDate,
     }: {
       _id: string;
-      type: string;
       status: string;
       timeSpent: number;
       startDate: string;
