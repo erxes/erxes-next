@@ -4,4 +4,6 @@ export interface IProject {
   icon: string;
   tagIds: string[];
   createdAt: Date;
+  priority: number;
+  status: number;
 }

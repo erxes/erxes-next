@@ -1,6 +1,6 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECTS } from '@/project/graphql/queries/getProjects';
-import { ICustomer } from 'ui-modules';
+import { IProject } from '@/project/types';
 import {
   useRecordTableCursor,
   mergeCursorData,
@@ -17,7 +17,7 @@ import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 const PROJECTS_PER_PAGE = 30;
 
 export const useProjectsVariables = (
-  variables?: QueryHookOptions<ICursorListResponse<ICustomer>>['variables'],
+  variables?: QueryHookOptions<ICursorListResponse<IProject>>['variables'],
 ) => {
   const [{ searchValue }] = useMultiQueryState<{
     searchValue: string;
@@ -41,16 +41,19 @@ export const useProjectsVariables = (
 };
 
 export const useProjects = (
-  options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
+  options?: QueryHookOptions<ICursorListResponse<IProject>>,
 ) => {
+  const { cursor } = useRecordTableCursor({
+    sessionKey: PROJECTS_CURSOR_SESSION_KEY,
+  });
   const setProjectTotalCount = useSetAtom(projectTotalCountAtom);
-  // Customer Filter implementation
-  const { data, loading, fetchMore } = useQuery<ICursorListResponse<ICustomer>>(
+  const { data, loading, fetchMore } = useQuery<ICursorListResponse<IProject>>(
     GET_PROJECTS,
     {
       ...options,
       variables: useProjectsVariables(options?.variables)
         ?.projectsQueryVariables,
+      skip: cursor === undefined,
     },
   );
 

@@ -1,8 +1,23 @@
-import { IconLabelFilled } from '@tabler/icons-react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useNavigate } from 'react-router';
+import { useUpdateProject } from '@/project/hooks/useUpdateProject';
+import { IconLabelFilled, IconProgressCheck } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { RecordTable } from 'erxes-ui';
+import { StatusSelect } from '@/project/components/StatusSelect';
+import {
+  Badge,
+  Input,
+  RecordTable,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+} from 'erxes-ui';
+import { IProject } from '@/project/types';
+import { useState } from 'react';
+import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
+import { PrioritySelect } from '@/project/components/PrioritySelect';
 
-export const projectsColumns: ColumnDef<any>[] = [
+export const projectsColumns: ColumnDef<IProject>[] = [
   {
     id: 'name',
     accessorKey: 'name',
@@ -10,7 +25,46 @@ export const projectsColumns: ColumnDef<any>[] = [
       <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return <div>dadaaas</div>;
+      const name = cell.getValue() as string;
+      const [value, setValue] = useState(name);
+      const { updateProject } = useUpdateProject();
+      const navigate = useNavigate();
+      return (
+        <RecordTablePopover
+          scope={
+            ProjectHotKeyScope.ProjectTableCell +
+            '.' +
+            cell.row.original._id +
+            '.Name'
+          }
+          closeOnEnter
+          onOpenChange={(open) => {
+            if (!open && value !== name) {
+              updateProject({
+                variables: { _id: cell.row.original._id, name: value },
+              });
+            }
+          }}
+        >
+          <RecordTableCellTrigger>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/operation/projects/${cell.row.original._id}`);
+              }}
+            >
+              {name}
+            </Badge>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent className="min-w-72">
+            <Input
+              value={value || ''}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
     },
     size: 240,
   },
@@ -21,20 +75,20 @@ export const projectsColumns: ColumnDef<any>[] = [
       <RecordTable.InlineHead label="Priority" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      return <div>dadaaas</div>;
+      return <PrioritySelect value={cell.row.original.priority || 0} id={cell.row.original._id} />;
     },
-    size: 240,
+    size: 103,
   },
   {
     id: 'status',
     accessorKey: 'status',
     header: () => (
-      <RecordTable.InlineHead label="Status" icon={IconLabelFilled} />
+      <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
     ),
     cell: ({ cell }) => {
-      return <div>dadaaas</div>;
+      return <StatusSelect value={cell.row.original.status || 0} id={cell.row.original._id} />;
     },
-    size: 240,
+    size: 120,
   },
 
   {

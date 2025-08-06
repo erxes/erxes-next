@@ -30,6 +30,7 @@ import { useToast } from 'erxes-ui';
 import { SelectMember, SelectTags } from 'ui-modules';
 import { useSetAtom } from 'jotai';
 import { renderingCompanyDetailAtom } from '@/contacts/states/companyDetailStates';
+import { useState } from 'react';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   RecordTable.checkboxColumn as ColumnDef<TCompany>,
@@ -63,10 +64,30 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     ),
     cell: ({ cell }) => {
       const { primaryName } = cell.row.original;
+      const [value, setValue] = useState(primaryName);
       const setRenderingCompanyDetail = useSetAtom(renderingCompanyDetailAtom);
       const [, setCompanyDetail] = useQueryState('companyId');
+      const { companiesEdit } = useCompaniesEdit();
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          scope={
+            ContactsHotKeyScope.CompaniesPage +
+            '.' +
+            cell.row.original._id +
+            '.Name'
+          }
+          closeOnEnter
+          onOpenChange={(open) => {
+            if (!open) {
+              companiesEdit(
+                {
+                  variables: { _id: cell.row.original._id, primaryName: value },
+                },
+                ['primaryName'],
+              );
+            }
+          }}
+        >
           <RecordTableCellTrigger>
             <Badge
               variant="secondary"
@@ -80,7 +101,10 @@ export const companyColumns: ColumnDef<TCompany>[] = [
             </Badge>
           </RecordTableCellTrigger>
           <RecordTableCellContent className="min-w-72">
-            <Input value={primaryName || ''} />
+            <Input
+              value={value || ''}
+              onChange={(e) => setValue(e.target.value)}
+            />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
