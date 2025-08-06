@@ -9,7 +9,7 @@ export const projectMutations = {
     { name, teamIds, startDate, targetDate, priority, status, description },
     { models, user }: IContext,
   ) => {
-    checkUserRole({
+    await checkUserRole({
       models,
       teamIds,
       userId: user._id,
@@ -40,9 +40,10 @@ export const projectMutations = {
     }: IProjectDocument,
     { models, user }: IContext,
   ) => {
-    checkUserRole({
+    const project = await models.Project.getProject(_id);
+    await checkUserRole({
       models,
-      teamIds,
+      teamIds: project.teamIds,
       userId: user._id,
       allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
     });
