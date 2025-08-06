@@ -1,3 +1,7 @@
+import { useGetProject } from '@/project/hooks/useGetProject';
+
 export const ProjectDetails = ({ projectId }: { projectId: string }) => {
-  return <div>{projectId}</div>;
+  const { project, loading } = useGetProject({ projectId });
+
+  return <div>{project?.name}</div>;
 };
