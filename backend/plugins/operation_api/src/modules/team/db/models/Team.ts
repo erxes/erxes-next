@@ -8,6 +8,7 @@ import {
 import { ITeamFilter } from '@/team/@types/team';
 import { teamSchema } from '@/team/db/definitions/team';
 import { IModels } from '~/connectionResolvers';
+import { FilterQuery } from 'mongoose';
 
 export interface ITeamModel extends Model<ITeamDocument> {
   getTeam(_id: string): Promise<ITeamDocument>;
@@ -48,7 +49,7 @@ export const loadTeamClass = (models: IModels) => {
     public static async getTeams(
       params: ITeamFilter,
     ): Promise<ITeamDocument[]> {
-      const query = {} as any;
+      const query: FilterQuery<ITeamDocument> = {};
 
       if (params.name) {
         query.name = params.name;
@@ -60,6 +61,14 @@ export const loadTeamClass = (models: IModels) => {
 
       if (params.icon) {
         query.icon = params.icon;
+      }
+
+      if (params.userId) {
+        const teamIds = await models.TeamMember.find({
+          memberId: params.userId,
+        }).distinct('teamId');
+
+        query._id = { $in: teamIds };
       }
 
       return models.Team.find(query).lean();

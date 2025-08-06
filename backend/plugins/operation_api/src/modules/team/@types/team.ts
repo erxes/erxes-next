@@ -13,7 +13,9 @@ export interface ITeamDocument extends ITeam, Document {
   updatedAt: Date;
 }
 
-export type ITeamFilter = ITeam;
+export interface ITeamFilter extends ITeam {
+  userId: string;
+}
 
 export enum TeamMemberRoles {
   ADMIN = 'admin',

@@ -28,7 +28,7 @@ export const types = `
 
 export const queries = `
     getTeam(_id: String!): Team
-    getTeams(name: String): [Team]
+    getTeams(name: String, userId: String): [Team]
     getTeamMembers(teamId: String, teamIds: [String]): [TeamMember]
 `;
 
