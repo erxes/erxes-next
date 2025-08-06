@@ -48,10 +48,12 @@ export const teamMutations = {
     },
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, _id, user._id, [
-      TeamMemberRoles.ADMIN,
-      TeamMemberRoles.LEAD,
-    ]);
+    await checkUserRole({
+      models,
+      teamId: _id,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
 
     return models.Team.updateTeam(_id, {
       name,
@@ -66,7 +68,12 @@ export const teamMutations = {
     { _id }: { _id: string },
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, _id, user._id, [TeamMemberRoles.ADMIN]);
+    await checkUserRole({
+      models,
+      teamId: _id,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN],
+    });
 
     return models.Team.removeTeam(_id);
   },
@@ -76,10 +83,12 @@ export const teamMutations = {
     { _id, memberIds }: { _id: string; memberIds: string[] },
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, _id, user._id, [
-      TeamMemberRoles.ADMIN,
-      TeamMemberRoles.LEAD,
-    ]);
+    await checkUserRole({
+      models,
+      teamId: _id,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
 
     return models.TeamMember.createTeamMembers(
       memberIds.map((memberId) => ({
@@ -95,7 +104,12 @@ export const teamMutations = {
     { _id }: { _id: string },
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, _id, user._id, [TeamMemberRoles.ADMIN]);
+    await checkUserRole({
+      models,
+      teamId: _id,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN],
+    });
 
     return models.TeamMember.removeTeamMember(_id);
   },
@@ -105,7 +119,12 @@ export const teamMutations = {
     { _id, role }: { _id: string; memberId: string; role: TeamMemberRoles },
     { models, user }: IContext,
   ) => {
-    await checkUserRole(models, _id, user._id, [TeamMemberRoles.ADMIN]);
+    await checkUserRole({
+      models,
+      teamId: _id,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN],
+    });
 
     return models.TeamMember.updateTeamMember(_id, role);
   },

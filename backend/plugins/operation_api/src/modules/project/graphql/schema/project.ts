@@ -34,6 +34,7 @@ const projectFilterParams = `
     leadId: String
     startDate: Date
     targetDate: Date
+    userId: String
     ${GQL_CURSOR_PARAM_DEFS}
 `;
 
