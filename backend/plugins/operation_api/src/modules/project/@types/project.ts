@@ -24,6 +24,7 @@ export interface IProjectFilter extends ICursorPaginateParams, IListParams {
   targetDate?: Date;
   leadId?: string;
   status?: number;
+  userId?: string;
 }
 
 export interface IProjectDocument extends IProject, Document {

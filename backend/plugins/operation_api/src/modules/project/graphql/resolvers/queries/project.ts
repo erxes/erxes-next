@@ -12,7 +12,7 @@ export const projectQueries = {
   getProjects: async (
     _parent: undefined,
     params: IProjectFilter,
-    { models, user }: IContext,
+    { models }: IContext,
   ) => {
     const filter: FilterQuery<IProjectDocument> = {};
 
@@ -42,9 +42,11 @@ export const projectQueries = {
 
     if (params.teamIds && params.teamIds.length > 0) {
       filter.teamIds = { $in: params.teamIds };
-    } else {
+    }
+
+    if (params.userId) {
       const teamIds = await models.TeamMember.find({
-        memberId: user._id,
+        memberId: params.userId,
       }).distinct('teamId');
 
       filter.teamIds = { $in: teamIds };
