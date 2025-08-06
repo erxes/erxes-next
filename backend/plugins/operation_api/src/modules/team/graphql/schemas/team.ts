@@ -29,7 +29,7 @@ export const types = `
 export const queries = `
     getTeam(_id: String!): Team
     getTeams(name: String): [Team]
-    getTeamMembers(teamId: String!): [TeamMember]
+    getTeamMembers(teamId: String, teamIds: [String]): [TeamMember]
     getMyTeams: [Team]
 `;
 

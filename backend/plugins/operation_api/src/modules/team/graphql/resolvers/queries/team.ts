@@ -29,9 +29,34 @@ export const teamQueries = {
 
   getTeamMembers: async (
     _parent: undefined,
-    { teamId }: { teamId: string },
+    { teamId, teamIds }: { teamId: string; teamIds: string[] },
     { models }: IContext,
   ) => {
+    if (teamIds && teamIds.length > 0) {
+      const uniqueMembers = await models.TeamMember.aggregate([
+        {
+          $match: {
+            teamId: { $in: teamIds },
+          },
+        },
+        {
+          $sort: { _id: -1 }, // эсвэл createdAt байвал createdAt: -1
+        },
+        {
+          $group: { 
+            _id: '$memberId',
+            doc: { $first: '$$ROOT' },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: '$doc' },
+        },
+      ]);
+  
+      return uniqueMembers;
+    }
+  
     return models.TeamMember.find({ teamId });
+  },
   },
 };
