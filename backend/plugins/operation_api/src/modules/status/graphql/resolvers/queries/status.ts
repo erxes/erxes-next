@@ -1,5 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { IStatusFilter } from '@/status/@types/status';
+import { STATUS_TYPES } from '@/status/constants';
 
 export const statusQueries = {
   getStatus: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -11,7 +12,11 @@ export const statusQueries = {
     { teamId }: IStatusFilter,
     { models }: IContext,
   ) => {
-    return models.Status.getStatuses(teamId);
+    const statuses = Object.values(STATUS_TYPES).map((type) => {
+      return models.Status.getStatuses(teamId, type);
+    });
+
+    return statuses;
   },
 
   getStatusesByType: async (
