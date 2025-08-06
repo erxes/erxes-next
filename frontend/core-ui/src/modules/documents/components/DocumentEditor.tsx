@@ -1,7 +1,7 @@
 import { DocumentEditorSkeleton } from '@/documents/components/DocumentEditorSkeleton';
 import { useDocument } from '@/documents/hooks/useDocument';
 import { useDocumentAttributes } from '@/documents/hooks/useDocumentAttributes';
-import { BlockEditor, cn, useBlockEditor } from 'erxes-ui';
+import { BlockEditor, cn, IBlockEditor, useBlockEditor } from 'erxes-ui';
 
 import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -11,13 +11,13 @@ const EditorController = ({
   editor,
   onChange,
 }: {
-  editor: any;
+  editor: IBlockEditor;
   onChange: (value: string) => void;
 }) => {
   const { attributes, loading } = useDocumentAttributes();
 
   useEffect(() => {
-    const unsubscribe = editor.onChange((editor: any) => {
+    const unsubscribe = editor.onChange((editor: IBlockEditor) => {
       onChange(JSON.stringify(editor.document));
     });
 

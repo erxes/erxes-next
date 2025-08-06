@@ -24,7 +24,7 @@ interface Attribute {
 }
 
 interface AttributeInEditorProps {
-  editor: any;
+  editor: IBlockEditor;
   attributes?: Attribute[];
   loading?: boolean;
 }
