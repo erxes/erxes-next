@@ -1,6 +1,18 @@
 import { AUTOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
-import { ConstantsQueryResponse } from '@/automations/types';
+import {
+  AutomationBuilderTabsType,
+  AutomationNodeType,
+  ConstantsQueryResponse,
+  NodeData,
+} from '@/automations/types';
 import { useQuery } from '@apollo/client';
+import {
+  Edge,
+  EdgeProps,
+  Node,
+  OnInit,
+  ReactFlowInstance,
+} from '@xyflow/react';
 import { useMultiQueryState } from 'erxes-ui';
 import {
   createContext,
@@ -22,9 +34,9 @@ type QueryValues<T extends QueryTypes> = {
 };
 
 type AutomationQueryParams = {
-  activeTab?: 'builder' | 'history';
+  activeTab?: AutomationBuilderTabsType;
   activeNodeId?: string;
-  activeNodeTab?: 'trigger' | 'action';
+  activeNodeTab?: AutomationNodeType;
 };
 
 interface AutomationContextType {
@@ -38,6 +50,8 @@ interface AutomationContextType {
   error: any;
   refetch: () => void;
   clear: () => void;
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>> | null;
+  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
 }
 
 const AutomationContext = createContext<AutomationContextType | null>(null);
@@ -48,6 +62,10 @@ export const AutomationProvider = ({
   children: React.ReactNode;
 }) => {
   const [awaitingToConnectNodeId, setAwaitingToConnectNodeId] = useState('');
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<
+    Node<NodeData>,
+    Edge<EdgeProps>
+  > | null>(null);
   const [queryParams, setQueryParams] =
     useMultiQueryState<AutomationQueryParams>([
       'activeTab',
@@ -98,6 +116,8 @@ export const AutomationProvider = ({
         error,
         refetch,
         clear,
+        reactFlowInstance,
+        setReactFlowInstance,
       }}
     >
       {children}

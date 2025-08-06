@@ -1,56 +1,41 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
-import { NodeData } from '@/automations/types';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { AutomationBuilderTabsType } from '@/automations/types';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
-import {
-  Edge,
-  EdgeProps,
-  Node,
-  ReactFlowInstance,
-  useReactFlow,
-} from '@xyflow/react';
-import { useToast } from 'erxes-ui';
-import { SubmitErrorHandler, useFormContext, useWatch } from 'react-hook-form';
+import { useReactFlow } from '@xyflow/react';
+import { useIsMobile, useToast } from 'erxes-ui';
+import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useParams } from 'react-router';
 
-export const useAutomationHeader = (
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>,
-) => {
-  const { control, setValue, handleSubmit, clearErrors } =
-    useFormContext<TAutomationProps>();
+export const useAutomationHeader = () => {
+  const { handleSubmit, clearErrors } =
+    useFormContext<TAutomationBuilderForm>();
 
-  const { setQueryParams } = useAutomation();
+  const { setQueryParams, reactFlowInstance } = useAutomation();
+  const { actions, triggers } = useTriggersActions();
+  const isMobile = useIsMobile();
 
   const { getNodes, setNodes } = useReactFlow();
   const { toast } = useToast();
   const { id } = useParams();
 
-  const [activeTab, isMinimized, detail] = useWatch({
-    control,
-    name: ['activeTab', 'isMinimized', 'detail'],
-  });
-  const {
-    triggers = [],
-    actions = [],
-    name = '',
-    status = 'draft',
-  } = detail || {};
-
   const [save, { loading }] = useMutation(
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
   );
 
-  const handleSave = (values: TAutomationProps) => {
+  const handleSave = async (values: TAutomationBuilderForm) => {
+    const { triggers, actions, name, status } = values;
     const generateValues = () => {
       return {
         id,
         name,
         status: status,
-        triggers: triggers.map((t: any) => ({
+        triggers: triggers.map((t) => ({
           id: t.id,
           type: t.type,
           config: t.config,
@@ -60,9 +45,8 @@ export const useAutomationHeader = (
           actionId: t.actionId,
           position: t.position,
           isCustom: t.isCustom,
-          workflowId: t.workflowId,
         })),
-        actions: actions.map((a: any) => ({
+        actions: actions.map((a) => ({
           id: a.id,
           type: a.type,
           nextActionId: a.nextActionId,
@@ -71,7 +55,6 @@ export const useAutomationHeader = (
           label: a.label,
           description: a.description,
           position: a.position,
-          workflowId: a.workflowId,
         })),
       };
     };
@@ -84,9 +67,7 @@ export const useAutomationHeader = (
     });
   };
 
-  const handleError: SubmitErrorHandler<TAutomationProps> = ({
-    detail: errors,
-  }) => {
+  const handleError: SubmitErrorHandler<TAutomationBuilderForm> = (errors) => {
     const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
 
@@ -143,20 +124,15 @@ export const useAutomationHeader = (
     }
   };
 
-  const toggleTabs = (value: 'builder' | 'history') => {
-    setValue('activeTab', value);
+  const toggleTabs = (value: AutomationBuilderTabsType) =>
     setQueryParams({ activeTab: value });
-  };
 
   return {
-    control,
     loading,
-    isMinimized,
     handleSubmit,
     handleSave,
     handleError,
-    activeTab,
     toggleTabs,
-    setValue,
+    isMobile,
   };
 };

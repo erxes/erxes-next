@@ -6,7 +6,7 @@ import {
   OperatorType,
 } from '../types/ManagePropertyTypes';
 import { UseFormSetValue } from 'react-hook-form';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,7 +16,7 @@ export const useManagePropertyRule = (
   rules: IManagePropertyRule[],
   index: number,
   fieldName: IManagePropertyFieldName,
-  setValue: UseFormSetValue<TAutomationProps>,
+  setValue: UseFormSetValue<TAutomationBuilderForm>,
   fields: IManagePropertyField[],
   rule: IManagePropertyRule,
 ) => {

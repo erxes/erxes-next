@@ -47,7 +47,7 @@ export const useArchiveNotifications = ({
     archive({
       variables,
       onError: (error) => {
-        toast({ title: 'Something went error', description: error?.message });
+        toast({ title: 'Something went wrong', description: error?.message });
       },
       onCompleted: () => {
         toast({ title: 'Archived successfully' });

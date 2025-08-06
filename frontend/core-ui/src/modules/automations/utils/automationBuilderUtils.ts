@@ -4,7 +4,12 @@ import { useQuery } from '@apollo/client';
 import { Edge, Node } from '@xyflow/react';
 import { generateAutomationElementId, IAction, ITrigger } from 'ui-modules';
 import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
-import { AutomationDropHandlerParams, NodeData, TDraggingNode } from '../types';
+import {
+  AutomationDropHandlerParams,
+  AutomationNodeType,
+  NodeData,
+  TDraggingNode,
+} from '../types';
 
 /**
  * Calculates the position of a node in the React Flow canvas.
@@ -117,15 +122,6 @@ export const generateNode = (
     },
   };
 
-  // if (node.type === 'workflow') {
-  //   doc.style = {
-  //     backgroundColor: rgba(colors.colorPrimary, 0.12),
-  //     border: `1px solid ${colors.borderPrimary}`,
-  //     borderRadius: '8px',
-  //     zIndex: -1,
-  //   };
-  // }
-
   if (parentId) {
     doc.parentId = parentId;
     doc.extent = 'parent';
@@ -155,16 +151,9 @@ export const generateNode = (
  */
 
 export const generateNodes = (
-  {
-    actions = [],
-    triggers = [],
-    workFlowActions,
-  }: {
-    actions: IAction[];
-    triggers: ITrigger[];
-    workFlowActions?: { workflowId: string; actions: IAction[] }[];
-  },
-  props: any,
+  triggers: ITrigger[],
+  actions: IAction[],
+  props: any = {},
 ) => {
   if (triggers.length === 0 && actions.length === 0) {
     return [
@@ -186,22 +175,14 @@ export const generateNodes = (
     nodes.forEach((node, index) => {
       generatedNodes.push({
         ...generateNode(
-          node,
+          { ...node, config: node.config ?? {} },
           type,
-          nodes,
+          nodes.map((n) => ({ ...n, config: n.config ?? {} })),
           { ...props, nodeIndex: index },
           generatedNodes,
         ),
       });
     });
-  }
-
-  for (const { workflowId, actions } of workFlowActions || []) {
-    for (const action of actions) {
-      generatedNodes.push(
-        generateNode(action, 'action', actions, props, [], workflowId),
-      );
-    }
   }
 
   return generatedNodes;
@@ -223,15 +204,10 @@ export const generateNodes = (
  * @returns An array of `Edge` objects to be used with React Flow representing connections between nodes.
  */
 
-export const generateEdges = ({
-  actions,
-  triggers,
-  workFlowActions,
-}: {
-  triggers: ITrigger[];
-  actions: IAction[];
-  workFlowActions?: { workflowId: string; actions: IAction[] }[];
-}): Edge[] => {
+export const generateEdges = (
+  triggers: ITrigger[],
+  actions: IAction[],
+): Edge[] => {
   let generatedEdges: any = [];
 
   const commonStyle = {
@@ -305,62 +281,12 @@ export const generateEdges = ({
         }
       }
 
-      if (type === 'action' && edge.workflowId && target) {
-        const workflow = (workFlowActions || [])?.find(
-          ({ workflowId, actions }) =>
-            workflowId === edge.workflowId &&
-            actions.some((ac) => ac.id === target),
-        );
-
-        if (workflow) {
-        }
-      }
-
-      if (edgeObj.type === 'workflow') {
-        if (
-          workFlowActions?.find(
-            ({ workflowId }) => edge.workflowId === workflowId,
-          ) &&
-          workflowConnections.length
-        ) {
-          for (const conn of workflowConnections) {
-            generatedEdges.push({
-              ...edgeObj,
-              id: `${edge.workflowId}-${conn.id}`,
-              target: conn.targetId,
-              source: conn.sourceId,
-              animated: true,
-              style: { ...commonStyle },
-            });
-          }
-        } else {
-          const workflow = (workFlowActions || [])?.some(({ actions }) =>
-            actions.some((action) => action.id !== target),
-          );
-          if (workflow) {
-            edgeObj.target = undefined;
-          }
-        }
-      }
-      if (
-        edge?.workflowId &&
-        !(workFlowActions || [])?.some(
-          (workFlowAction) => workFlowAction?.workflowId === edge?.workflowId,
-        )
-      ) {
-        edgeObj.target = edge?.workflowId;
-      }
-
       if (!edgeObj?.target) {
         continue;
       }
 
       generatedEdges.push(edgeObj);
     }
-  }
-  for (const { actions } of workFlowActions || []) {
-    const workflowEdges = generateEdges({ actions, triggers: [] });
-    generatedEdges = [...generatedEdges, ...workflowEdges];
   }
 
   return generatedEdges;
@@ -520,10 +446,10 @@ export const generateSendEmailRecipientMails = ({
  */
 
 export const automationDropHandler = ({
-  event,
-  reactFlowInstance,
   triggers,
   actions,
+  event,
+  reactFlowInstance,
 }: AutomationDropHandlerParams) => {
   event.preventDefault();
 
@@ -548,7 +474,7 @@ export const automationDropHandler = ({
     };
   }
 
-  const position = reactFlowInstance.screenToFlowPosition({
+  const position = reactFlowInstance?.screenToFlowPosition({
     x: event.clientX,
     y: event.clientY,
   });
@@ -560,7 +486,7 @@ export const automationDropHandler = ({
   if (awaitingToConnectNodeId) {
     const [awaitingNodeType, nodeId, connectionFieldName] =
       awaitingToConnectNodeId.split('__') as [
-        'trigger' | 'action',
+        AutomationNodeType,
         string,
         string | undefined,
       ];
@@ -648,6 +574,7 @@ const generateAwaitingNodeConnection = (
 ) => {
   let fieldName = nodeType === 'trigger' ? 'actionId' : 'nextActionId';
   let fieldValue = actionId;
+
   if (connectionFieldName) {
     fieldName = `config`;
 
@@ -658,7 +585,7 @@ const generateAwaitingNodeConnection = (
     );
   }
 
-  return { ...node, [fieldName]: fieldValue };
+  return { ...node, [fieldName]: fieldValue } as any;
 };
 
 /**

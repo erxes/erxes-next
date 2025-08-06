@@ -1,7 +1,6 @@
-import { NavigationButton } from '@/navigation/components/NavigationButton';
 import { useUnreadNotificationCount } from '@/notification/my-inbox/hooks/useUnreadNotificationCount';
 import { IconMailbox } from '@tabler/icons-react';
-import { Badge, cn, Sidebar, Spinner } from 'erxes-ui';
+import { cn, Sidebar, Spinner } from 'erxes-ui';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 

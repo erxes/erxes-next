@@ -1,5 +1,5 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { useAutomation } from '@/automations/context/AutomationProvider';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { lazy } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -38,13 +38,13 @@ const Actions: Record<
 
 export const useActionDetail = () => {
   const { queryParams } = useAutomation();
-  const { control } = useFormContext<TAutomationProps>();
+  const { control } = useFormContext<TAutomationBuilderForm>();
 
   // Watch all actions once
   const actions =
     useWatch({
       control,
-      name: 'detail.actions',
+      name: 'actions',
     }) || [];
 
   const currentIndex = actions.findIndex(
