@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { filterSuggestionItems } from '@blocknote/core';
 import {
   DefaultReactSuggestionItem,
@@ -12,26 +12,7 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { useEffect, useState } from 'react';
-
-const ATTRIBUTE_QUERY = gql`
-  query fieldsCombinedByContentType(
-    $contentType: String!
-    $usageType: String
-    $excludedNames: [String]
-    $segmentId: String
-    $config: JSON
-    $onlyDates: Boolean
-  ) {
-    fieldsCombinedByContentType(
-      contentType: $contentType
-      usageType: $usageType
-      excludedNames: $excludedNames
-      segmentId: $segmentId
-      config: $config
-      onlyDates: $onlyDates
-    )
-  }
-`;
+import { ATTRIBUTE_QUERY } from 'ui-modules/modules/documents/graphql/queries';
 
 interface Attribute {
   label?: string;
@@ -153,7 +134,7 @@ const AttributeMenuWrapper = (props: AttributeMenuWrapperProps) => {
     if (!props.loading && !props.attributes?.length) {
       setShouldQuery(true);
     }
-  }, [props.loading, props.attributes, contentType]);
+  }, [props.loading, props.attributes, contentType, props.contentType]);
 
   const { data, loading } = useQuery(ATTRIBUTE_QUERY, {
     variables: {
@@ -184,10 +165,9 @@ function AttributeMenuItem({
   isSelected,
   attribute,
 }: AttributeMenuItemProps) {
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = () => {
     if (!onClick) return;
-    event.preventDefault();
-    event.stopPropagation();
+
     onClick();
   };
 
@@ -217,9 +197,10 @@ function getAttributeMenuItems(
             value: attribute.value || attribute.name,
           },
         },
+        ' ',
       ]);
     },
   }));
 }
 
-export default AttributeMenuWrapper;
+export { AttributeMenuWrapper as AttributeInEditor };

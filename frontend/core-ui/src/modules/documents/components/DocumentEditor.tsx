@@ -1,4 +1,3 @@
-import AttributeInEditor from '@/documents/components/AttributeInEditor';
 import { DocumentEditorSkeleton } from '@/documents/components/DocumentEditorSkeleton';
 import { useDocument } from '@/documents/hooks/useDocument';
 import { useDocumentAttributes } from '@/documents/hooks/useDocumentAttributes';
@@ -6,10 +5,40 @@ import { BlockEditor, cn, useBlockEditor } from 'erxes-ui';
 
 import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { AttributeInEditor } from 'ui-modules';
 
-const DocumentContentEditor = ({ editor, document }: any) => {
+const EditorController = ({
+  editor,
+  onChange,
+}: {
+  editor: any;
+  onChange: (value: string) => void;
+}) => {
   const { attributes, loading } = useDocumentAttributes();
 
+  useEffect(() => {
+    const unsubscribe = editor.onChange((editor: any) => {
+      onChange(JSON.stringify(editor.document));
+    });
+
+    return unsubscribe;
+  }, [editor, onChange]);
+
+  return (
+    <BlockEditor
+      editor={editor}
+      className={cn('flex-1 w-full overflow-y-auto')}
+    >
+      <AttributeInEditor
+        editor={editor}
+        attributes={attributes}
+        loading={loading}
+      />
+    </BlockEditor>
+  );
+};
+
+const DocumentContentEditor = ({ editor, document }: any) => {
   const { control } = useFormContext();
 
   useEffect(() => {
@@ -35,24 +64,9 @@ const DocumentContentEditor = ({ editor, document }: any) => {
       name="content"
       control={control}
       rules={{ required: 'Content is required' }}
-      render={({ field }) => {
-        editor.onChange((editor: any) => {
-          field.onChange(JSON.stringify(editor.document));
-        });
-
-        return (
-          <BlockEditor
-            editor={editor}
-            className={cn('flex-1 w-full overflow-y-auto')}
-          >
-            <AttributeInEditor
-              editor={editor}
-              attributes={attributes}
-              loading={loading}
-            />
-          </BlockEditor>
-        );
-      }}
+      render={({ field }) => (
+        <EditorController editor={editor} onChange={field.onChange} />
+      )}
     />
   );
 };

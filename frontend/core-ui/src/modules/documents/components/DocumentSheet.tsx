@@ -6,6 +6,9 @@ import { useDocument } from '../hooks/useDocument';
 
 export const DocumentSheet = () => {
   const [documentId, setDocumentId] = useQueryState('documentId');
+  const [contentType] = useQueryState('contentType');
+
+  const { reset: resetForm } = useFormContext();
 
   const { documentSave } = useDocument();
 
@@ -15,8 +18,21 @@ export const DocumentSheet = () => {
     documentSave();
   }, [documentSave]);
 
+  if (!contentType) {
+    return null;
+  }
+
   if (!documentId) {
-    return <Button onClick={() => setDocumentId(' ')}>Add Document</Button>;
+    return (
+      <Button
+        onClick={() => {
+          setDocumentId(' ');
+          resetForm();
+        }}
+      >
+        Add Document
+      </Button>
+    );
   }
 
   return <Button onClick={handleSubmit(submitHandler)}>Save Document</Button>;

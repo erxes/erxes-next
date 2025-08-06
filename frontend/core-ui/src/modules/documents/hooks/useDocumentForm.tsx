@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryState } from 'erxes-ui';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -11,12 +12,14 @@ export const documentValidationSchema = z.object({
 export type FormType = z.infer<typeof documentValidationSchema>;
 
 const useDocumentForm = () => {
+  const [contentType] = useQueryState('contentType');
+
   const form = useForm<FormType>({
     mode: 'onSubmit',
     defaultValues: {
       name: '',
       content: '',
-      contentType: '',
+      contentType: (contentType as string) || '',
     },
     resolver: zodResolver(documentValidationSchema),
   });

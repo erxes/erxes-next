@@ -1,25 +1,21 @@
 import { IconSortDescending2Filled } from '@tabler/icons-react';
-import { Button, Combobox, Command, Popover } from 'erxes-ui';
+import { Button, DropdownMenu } from 'erxes-ui';
 
 export const DocumentSort = () => {
   return (
     <>
-      <Popover>
-        <Popover.Trigger asChild>
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
           <Button variant="ghost">
             <IconSortDescending2Filled className="w-4 h-4" />
           </Button>
-        </Popover.Trigger>
+        </DropdownMenu.Trigger>
 
-        <Combobox.Content>
-          <Command>
-            <Command.List className="p-1">
-              <Command.Item>Newest First</Command.Item>
-              <Command.Item>Oldest First</Command.Item>
-            </Command.List>
-          </Command>
-        </Combobox.Content>
-      </Popover>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>Newest First</DropdownMenu.Item>
+          <DropdownMenu.Item>Oldest First</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
     </>
   );
 };
