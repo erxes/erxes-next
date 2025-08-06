@@ -11,7 +11,7 @@ import { IconCheck } from '@tabler/icons-react';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 
 interface PrioritySelectProps {
-  value: number
+  value: number;
   id: string;
 }
 
@@ -38,15 +38,10 @@ export const PrioritySelect = ({ value, id }: PrioritySelectProps) => {
       open={open}
       onOpenChange={setOpen}
     >
-      <RecordTableCellTrigger className='justify-center'>
-        <Badge
-          variant="secondary"
-        >
+      <RecordTableCellTrigger>
+        <Badge variant="secondary">
           {selectedPriority && selectedPriority.value !== 0 && (
-            <selectedPriority.Icon
-              className="w-4 h-4"
-              stroke={2}
-            />
+            <selectedPriority.Icon className="w-4 h-4" stroke={2} />
           )}
           {selectedPriority?.name}
         </Badge>
@@ -66,10 +61,7 @@ export const PrioritySelect = ({ value, id }: PrioritySelectProps) => {
                 }}
               >
                 <span className="flex items-center gap-2">
-                  <option.Icon
-                    className="w-4 h-4"
-                    stroke={1.8}
-                  />
+                  <option.Icon className="w-4 h-4" stroke={1.8} />
                   {option.name}
                 </span>
                 <IconCheck

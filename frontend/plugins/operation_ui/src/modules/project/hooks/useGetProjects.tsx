@@ -10,7 +10,8 @@ import {
   useMultiQueryState,
 } from 'erxes-ui';
 import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
-import { useSetAtom } from 'jotai';
+import { currentUserState } from 'ui-modules/states';
+import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 
@@ -22,7 +23,7 @@ export const useProjectsVariables = (
   const [{ searchValue }] = useMultiQueryState<{
     searchValue: string;
   }>(['searchValue']);
-
+  const currentUser = useAtomValue(currentUserState);
   const { cursor } = useRecordTableCursor({
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
   });
@@ -34,8 +35,12 @@ export const useProjectsVariables = (
     },
     cursor,
     searchValue: searchValue || undefined,
-
     ...variables,
+    ...(!variables?.teamIds &&
+      !variables?.userIds &&
+      currentUser?._id && {
+        userIds: [currentUser._id],
+      }),
   };
   return { projectsQueryVariables };
 };

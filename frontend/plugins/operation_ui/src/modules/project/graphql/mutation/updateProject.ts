@@ -24,6 +24,7 @@ export const UPDATE_PROJECT_MUTATION = gql`
       targetDate: $targetDate
     ) {
       _id
+      teamIds
     }
   }
 `;

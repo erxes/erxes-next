@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useNavigate } from 'react-router';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
-import { IconLabelFilled, IconProgressCheck } from '@tabler/icons-react';
+import {
+  IconAlertSquareRounded,
+  IconCalendarFilled,
+  IconLabelFilled,
+  IconProgressCheck,
+  IconUser,
+} from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import { StatusSelect } from '@/project/components/StatusSelect';
 import { TargetDateSelect } from '@/project/components/TargetDateSelect';
@@ -18,123 +24,143 @@ import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
 import { PrioritySelect } from '@/project/components/PrioritySelect';
 import { LeadSelect } from '@/project/components/LeadSelect';
+import { ITeam } from '@/team/types';
+import TeamsSelect from '@/project/components/TeamsSelect';
 
-export const projectsColumns: ColumnDef<IProject>[] = [
-  {
-    id: 'name',
-    accessorKey: 'name',
-    header: () => (
-      <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
-    ),
-    cell: ({ cell }) => {
-      const name = cell.getValue() as string;
-      const [value, setValue] = useState(name);
-      const { updateProject } = useUpdateProject();
-      const navigate = useNavigate();
-      return (
-        <RecordTablePopover
-          scope={
-            ProjectHotKeyScope.ProjectTableCell +
-            '.' +
-            cell.row.original._id +
-            '.Name'
-          }
-          closeOnEnter
-          onOpenChange={(open) => {
-            if (!open && value !== name) {
-              updateProject({
-                variables: { _id: cell.row.original._id, name: value },
-              });
+export const projectsColumns = (
+  _teams: ITeam[] | undefined,
+): ColumnDef<IProject>[] => {
+  return [
+    {
+      id: 'name',
+      accessorKey: 'name',
+      header: () => (
+        <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
+      ),
+      cell: ({ cell }) => {
+        const name = cell.getValue() as string;
+        const [value, setValue] = useState(name);
+        const { updateProject } = useUpdateProject();
+        const navigate = useNavigate();
+        return (
+          <RecordTablePopover
+            scope={
+              ProjectHotKeyScope.ProjectTableCell +
+              '.' +
+              cell.row.original._id +
+              '.Name'
             }
-          }}
-        >
-          <RecordTableCellTrigger>
-            <Badge
-              variant="secondary"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/operation/projects/${cell.row.original._id}`);
-              }}
-            >
-              {name}
-            </Badge>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent className="min-w-72">
-            <Input
-              value={value || ''}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
+            closeOnEnter
+            onOpenChange={(open) => {
+              if (!open && value !== name) {
+                updateProject({
+                  variables: { _id: cell.row.original._id, name: value },
+                });
+              }
+            }}
+          >
+            <RecordTableCellTrigger>
+              <Badge
+                variant="secondary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/operation/projects/${cell.row.original._id}`);
+                }}
+              >
+                {name}
+              </Badge>
+            </RecordTableCellTrigger>
+            <RecordTableCellContent className="min-w-72">
+              <Input
+                value={value || ''}
+                onChange={(e) => setValue(e.target.value)}
+              />
+            </RecordTableCellContent>
+          </RecordTablePopover>
+        );
+      },
+      size: 240,
     },
-    size: 240,
-  },
-  {
-    id: 'priority',
-    accessorKey: 'priority',
-    header: () => (
-      <RecordTable.InlineHead label="Priority" icon={IconLabelFilled} />
-    ),
-    cell: ({ cell }) => {
-      return (
-        <PrioritySelect
-          value={cell.row.original.priority || 0}
-          id={cell.row.original._id}
+    {
+      id: 'priority',
+      accessorKey: 'priority',
+      header: () => (
+        <RecordTable.InlineHead
+          label="Priority"
+          icon={IconAlertSquareRounded}
         />
-      );
+      ),
+      cell: ({ cell }) => {
+        return (
+          <PrioritySelect
+            value={cell.row.original.priority || 0}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 170,
     },
-    size: 170,
-  },
-  {
-    id: 'status',
-    accessorKey: 'status',
-    header: () => (
-      <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
-    ),
-    cell: ({ cell }) => {
-      return (
-        <StatusSelect
-          value={cell.row.original.status || 0}
-          id={cell.row.original._id}
-        />
-      );
+    {
+      id: 'status',
+      accessorKey: 'status',
+      header: () => (
+        <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <StatusSelect
+            value={cell.row.original.status || 0}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 170,
     },
-    size: 170,
-  },
+    {
+      id: 'teamIds',
+      header: () => <RecordTable.InlineHead label="Team" icon={IconUser} />,
+      cell: ({ cell }) => {
+        return (
+          <TeamsSelect
+            id={cell.row.original._id}
+            value={cell.row.original.teamIds || []}
+            teams={_teams || []}
+          />
+        );
+      },
+      size: 240,
+    },
+    {
+      id: 'leadId',
+      header: () => <RecordTable.InlineHead label="Lead" icon={IconUser} />,
+      cell: ({ cell }) => {
+        return (
+          <LeadSelect
+            id={cell.row.original._id}
+            value={cell.row.original.leadId}
+            teamIds={cell.row.original.teamIds}
+          />
+        );
+      },
+      size: 240,
+    },
 
-  {
-    id: 'Lead',
-    header: () => (
-      <RecordTable.InlineHead label="Lead" icon={IconLabelFilled} />
-    ),
-    cell: ({ cell }) => {
-      return (
-        <LeadSelect
-          id={cell.row.original._id}
-          value={cell.row.original.leadId}
-          teamIds={cell.row.original.teamIds}
-        />
-      );
+    {
+      id: 'targetDate',
+      accessorKey: 'targetDate',
+      header: () => (
+        <RecordTable.InlineHead label="Target Date" icon={IconCalendarFilled} />
+      ),
+      cell: ({ cell }) => {
+        const targetDate = cell.getValue() as string;
+        return (
+          <TargetDateSelect
+            value={targetDate ? new Date(targetDate) : undefined}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 240,
     },
-    size: 240,
-  },
-
-  {
-    id: 'targetDate',
-    accessorKey: 'targetDate',
-    header: () => (
-      <RecordTable.InlineHead label="Target Date" icon={IconLabelFilled} />
-    ),
-    cell: ({ cell }) => {
-      const targetDate = cell.getValue() as string;
-      return (
-        <TargetDateSelect
-          value={targetDate ? new Date(targetDate) : undefined}
-          id={cell.row.original._id}
-        />
-      );
-    },
-    size: 240,
-  },
-];
+  ];
+};

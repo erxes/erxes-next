@@ -6,11 +6,34 @@ import {
 } from 'erxes-ui';
 
 export const GET_PROJECTS = gql`
-  query getProjects($name: String, ${GQL_CURSOR_PARAM_DEFS}) {
-    getProjects(name: $name, ${GQL_CURSOR_PARAMS}) {
+  query GetProjects(
+    $userId: String
+    $name: String
+    $status: Int
+    $priority: Int
+    $teamIds: [String]
+    $leadId: String
+    $startDate: Date
+    $targetDate: Date
+    $orderBy: JSON
+    ${GQL_CURSOR_PARAM_DEFS}
+  ) {
+    getProjects(
+      userId: $userId
+      name: $name
+      status: $status
+      priority: $priority
+      teamIds: $teamIds
+      leadId: $leadId
+      startDate: $startDate
+      targetDate: $targetDate
+      orderBy: $orderBy
+      ${GQL_CURSOR_PARAMS}
+    ) {
       list {
         _id
         name
+        icon
         description
         status
         priority
@@ -20,8 +43,9 @@ export const GET_PROJECTS = gql`
         targetDate
         createdAt
         updatedAt
-      }
+      } 
       ${GQL_PAGE_INFO}
+      totalCount
     }
   }
 `;

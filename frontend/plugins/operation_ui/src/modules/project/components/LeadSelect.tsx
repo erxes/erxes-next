@@ -45,7 +45,7 @@ export const LeadSelect = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen}>
         <RecordTableCellTrigger>
-          <SelectMember.Value />
+          <SelectMember.Value placeholder="Lead not specified" />
         </RecordTableCellTrigger>
         <RecordTableCellContent>
           <SelectTeamMemberContent teamIds={teamIds} exclude={false} />

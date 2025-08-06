@@ -40,7 +40,7 @@ export const StatusSelect = ({ value, id }: StatusSelectProps) => {
       open={open}
       onOpenChange={setOpen}
     >
-      <RecordTableCellTrigger className="justify-center">
+      <RecordTableCellTrigger>
         <Badge
           variant="secondary"
           style={{ backgroundColor: `${selectedStatus?.IconColor}25` }}

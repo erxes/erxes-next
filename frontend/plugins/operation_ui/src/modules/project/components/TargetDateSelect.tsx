@@ -51,7 +51,7 @@ export const TargetDateSelect = ({ value, id }: TargetDateSelectProps) => {
             {format(value, 'MMM d, yyyy')}
           </span>
         ) : (
-          <span className="text-muted-foreground">not specified</span>
+          <span className="text-accent-foreground">not specified</span>
         )}
       </RecordTableCellTrigger>
       <RecordTableCellContent className="w-fit">

@@ -2,15 +2,17 @@ import { projectsColumns } from '@/project/components/ProjectsColumn';
 import { RecordTable } from 'erxes-ui';
 import { useProjects } from '@/project/hooks/useGetProjects';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
+import { useGetTeams } from '@/team/hooks/useGetTeams';
 
 export const ProjectsRecordTable = ({ type }: { type: string }) => {
   const { projects, handleFetchMore, pageInfo, loading } = useProjects();
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
+  const { teams } = useGetTeams();
 
   return (
     <div className="flex flex-col overflow-hidden h-full">
       <RecordTable.Provider
-        columns={projectsColumns}
+        columns={projectsColumns(teams)}
         data={projects || [{}]}
         className="m-3 h-full"
         stickyColumns={['name']}
