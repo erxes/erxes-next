@@ -17,6 +17,7 @@ export const useAutomationHeader = () => {
     useFormContext<TAutomationBuilderForm>();
 
   const { setQueryParams, reactFlowInstance } = useAutomation();
+  const { actions, triggers } = useTriggersActions();
   const isMobile = useIsMobile();
 
   const { getNodes, setNodes } = useReactFlow();
@@ -69,7 +70,6 @@ export const useAutomationHeader = () => {
   const handleError: SubmitErrorHandler<TAutomationBuilderForm> = (errors) => {
     const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
-    const { actions, triggers } = useTriggersActions();
 
     const nodeErrorMap: Record<string, string> = {};
 
