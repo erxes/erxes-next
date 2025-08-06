@@ -40,10 +40,10 @@ export const teamQueries = {
           },
         },
         {
-          $sort: { _id: -1 }, // эсвэл createdAt байвал createdAt: -1
+          $sort: { _id: -1 },
         },
         {
-          $group: { 
+          $group: {
             _id: '$memberId',
             doc: { $first: '$$ROOT' },
           },
@@ -52,11 +52,10 @@ export const teamQueries = {
           $replaceRoot: { newRoot: '$doc' },
         },
       ]);
-  
+
       return uniqueMembers;
     }
-  
+
     return models.TeamMember.find({ teamId });
-  },
   },
 };
