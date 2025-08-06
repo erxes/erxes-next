@@ -11,7 +11,7 @@ type Props = {
 };
 
 const PaymentTable = ({ payments, onEdit, onDelete }: Props) => {
-
+  console.log(payments);
   return (
     <div className="bg-white rounded-lg border">
       <div className="overflow-x-auto">
@@ -33,7 +33,8 @@ const PaymentTable = ({ payments, onEdit, onDelete }: Props) => {
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-full text-white">
                         <img
-                          src={`${REACT_APP_API_URL}/pl:payment/static/images/${payment.kind}`}
+                          className="w-6 h-6 object-contain rounded-md"
+                          src={`${REACT_APP_API_URL}/pl:payment/static/images/payments/${payment.kind}.png`}
                           alt={paymentKind(payment.kind)?.name}
                         />
                       </div>

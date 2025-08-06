@@ -1,50 +1,56 @@
-import { IPayment } from "~/modules/payment/@types/payment";
-import { IContext } from "~/connectionResolvers";
-import { PAYMENTS } from "~/constants";
-import { getEnv } from "erxes-api-shared/utils";
-import { QPayQuickQrAPI } from "~/apis/qpayQuickqr/api";
-import { PocketAPI } from "~/apis/pocket/api";
-import { StripeAPI } from "~/apis/stripe/api";
-import ErxesPayment from "~/apis/ErxesPayment";
-import { checkPermission, requireLogin } from "erxes-api-shared/core-modules";
+import { IPayment } from '~/modules/payment/@types/payment';
+import { IContext } from '~/connectionResolvers';
+import { PAYMENTS } from '~/constants';
+import { getEnv } from 'erxes-api-shared/utils';
+import { QPayQuickQrAPI } from '~/apis/qpayQuickqr/api';
+import { PocketAPI } from '~/apis/pocket/api';
+import { StripeAPI } from '~/apis/stripe/api';
+import ErxesPayment from '~/apis/ErxesPayment';
+import { checkPermission, requireLogin } from 'erxes-api-shared/core-modules';
 
 const mutations = {
-  async paymentAdd(_root, doc: IPayment & { currency?: string }, { models, subdomain }: IContext) {
+  async paymentAdd(
+    _root,
+    args: any & { currency?: string },
+    { models, subdomain }: IContext,
+  ) {
+    const { input } = args;
     const DOMAIN = getEnv({ name: 'DOMAIN' })
       ? `${getEnv({ name: 'DOMAIN' })}/gateway`
       : 'http://localhost:4000';
     const domain = DOMAIN.replace('<subdomain>', subdomain);
-    const acceptedCurrencies = PAYMENTS[doc.kind].acceptedCurrencies;
-    doc.acceptedCurrencies = acceptedCurrencies;
+    
+    const acceptedCurrencies = PAYMENTS[input.kind].acceptedCurrencies;
+    input.acceptedCurrencies = acceptedCurrencies;
 
-    if (doc.config?.currency) {
-      doc.acceptedCurrencies = [doc.config.currency];
+    if (input.config?.currency) {
+      input.acceptedCurrencies = [input.config.currency];
     }
 
-    if (doc.kind === 'qpayQuickqr') {
-      const api = new QPayQuickQrAPI(doc.config);
-      const { isCompany } = doc.config;
+    if (input.kind === 'qpayQuickqr') {
+      const api = new QPayQuickQrAPI(input.config);
+      const { isCompany } = input.config;
 
       let apiResponse;
       try {
         if (isCompany) {
-          apiResponse = await api.createCompany(doc.config);
+          apiResponse = await api.createCompany(input.config);
         } else {
-          apiResponse = await api.createCustomer(doc.config);
+          apiResponse = await api.createCustomer(input.config);
         }
 
         const { id } = apiResponse;
 
-        doc.config.merchantId = id;
+        input.config.merchantId = id;
       } catch (e) {
         throw new Error(e.message);
       }
     }
 
-    const payment = await models.PaymentMethods.createPayment(doc);
+    const payment = await models.PaymentMethods.createPayment(input);
 
-    if (doc.kind === 'pocket') {
-      const pocketApi = new PocketAPI(doc.config, domain);
+    if (input.kind === 'pocket') {
+      const pocketApi = new PocketAPI(input.config, domain);
       try {
         await pocketApi.registerWebhook(payment._id);
       } catch (e) {
@@ -53,8 +59,8 @@ const mutations = {
       }
     }
 
-    if (doc.kind === 'stripe') {
-      const stripeApi = new StripeAPI(doc.config, domain);
+    if (input.kind === 'stripe') {
+      const stripeApi = new StripeAPI(input.config, domain);
       try {
         await stripeApi.registerWebhook(payment._id);
       } catch (e) {
@@ -83,16 +89,11 @@ const mutations = {
 
   async paymentEdit(
     _root,
-    {
-      _id,
-      name,
-      status,
-      kind,
-      config,
-      currency
-    }: { _id: string; name: string; status: string; kind: string; config: any, currency?: string },
-    { models }: IContext
+    args: any,
+    { models }: IContext,
   ) {
+    const { _id, input } = args;
+    const { name, status, kind, config, currency } = input;
     const { acceptedCurrencies } = PAYMENTS[kind];
 
     if (kind === 'qpayQuickqr') {
@@ -122,7 +123,7 @@ const mutations = {
       kind,
       config,
       acceptedCurrencies,
-    }
+    };
 
     if (currency) {
       doc.acceptedCurrencies = [currency];

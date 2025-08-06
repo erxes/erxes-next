@@ -112,7 +112,10 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
   private domain: string;
   private config: QPayMerchantConfig;
 
-  constructor(config: QPayMerchantConfig = { username: '', password: '' }, domain?: string) {
+  constructor(
+    config: QPayMerchantConfig = { username: '', password: '' },
+    domain?: string,
+  ) {
     super({ isFlat: false });
     this.domain = domain || '';
     this.config = config;
@@ -120,7 +123,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
 
   async createCompany(args: IMerchantCompanyParams) {
     try {
-      console.debug('Creating company merchant:', { companyName: args.companyName });
+      console.debug('Creating company merchant:', {
+        companyName: args.companyName,
+      });
       return await this.makeRequest<IMerchantResponse>({
         method: 'POST',
         path: meta.paths.company,
@@ -133,9 +138,13 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
       });
     } catch (error: any) {
       console.debug('Error creating company:', error);
-      if (error.message?.includes('MERCHANT_ALREADY_REGISTERED') || 
-          error.message?.includes('Бүртгэлтэй мерчант байна')) {
-        console.debug('Merchant already registered, updating existing merchant');
+      if (
+        error.message?.includes('MERCHANT_ALREADY_REGISTERED') ||
+        error.message?.includes('Бүртгэлтэй мерчант байна')
+      ) {
+        console.debug(
+          'Merchant already registered, updating existing merchant',
+        );
         return await this.updateExistingMerchant({
           ...args,
           company_name: args.companyName,
@@ -148,7 +157,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
   }
 
   async updateCompany(args: IMerchantCompanyParams) {
-    console.debug('Updating company merchant:', { companyName: args.companyName });
+    console.debug('Updating company merchant:', {
+      companyName: args.companyName,
+    });
     return await this.makeRequest<IMerchantResponse>({
       method: 'PUT',
       path: `${meta.paths.company}/${this.config.merchantId}`,
@@ -163,7 +174,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
 
   async createCustomer(args: IMerchantCustomerParams) {
     try {
-      console.debug('Creating customer merchant:', { businessName: args.businessName });
+      console.debug('Creating customer merchant:', {
+        businessName: args.businessName,
+      });
       const res = await this.makeRequest<IMerchantResponse>({
         method: 'POST',
         path: meta.paths.person,
@@ -180,9 +193,13 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
       return res;
     } catch (error: any) {
       console.debug('Error creating customer:', error);
-      if (error.message?.includes('MERCHANT_ALREADY_REGISTERED') || 
-          error.message?.includes('Бүртгэлтэй мерчант байна')) {
-        console.debug('Merchant already registered, updating existing merchant');
+      if (
+        error.message?.includes('MERCHANT_ALREADY_REGISTERED') ||
+        error.message?.includes('Бүртгэлтэй мерчант байна')
+      ) {
+        console.debug(
+          'Merchant already registered, updating existing merchant',
+        );
         return await this.updateExistingMerchant({
           ...args,
           first_name: args.firstName,
@@ -195,7 +212,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
   }
 
   async updateCustomer(args: IMerchantCustomerParams) {
-    console.debug('Updating customer merchant:', { businessName: args.businessName });
+    console.debug('Updating customer merchant:', {
+      businessName: args.businessName,
+    });
     return await this.makeRequest<IMerchantResponse>({
       method: 'PUT',
       path: `${meta.paths.person}/${this.config.merchantId}`,
@@ -212,7 +231,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
 
   async removeMerchant() {
     try {
-      console.debug('Removing merchant:', { merchantId: this.config.merchantId });
+      console.debug('Removing merchant:', {
+        merchantId: this.config.merchantId,
+      });
       return await this.makeRequest<IMerchantResponse>({
         method: 'DELETE',
         path: `${meta.paths.getMerchant}/${this.config.merchantId}`,
@@ -227,29 +248,28 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
   }
 
   async updateExistingMerchant(args: any) {
-    console.debug('Updating existing merchant:', { registerNumber: args.registerNumber });
-    const list = await this.list();
+    console.debug('Updating existing merchant:', {
+      registerNumber: args.registerNumber,
+    });
 
-    if (list.rows && list.rows.length > 0) {
-      const existingMerchant = list.rows.find(
-        (item) => item.register_number === args.registerNumber
-      );
-      const path =
-        existingMerchant?.type === 'COMPANY'
-          ? meta.paths.company
-          : meta.paths.person;
-      if (existingMerchant) {
-        return this.makeRequest<IMerchantResponse>({
-          method: 'PUT',
-          path: `${path}/${existingMerchant.id}`,
-          data: {
-            ...args,
-            business_name: args.businessName,
-            register_number: args.registerNumber,
-            mcc_code: args.mccCode,
-          },
-        });
-      }
+    const existingMerchant = await this.findExistingMerchant(
+      args.registerNumber,
+    );
+    const path =
+      existingMerchant?.type === 'COMPANY'
+        ? meta.paths.company
+        : meta.paths.person;
+    if (existingMerchant) {
+      return this.makeRequest<IMerchantResponse>({
+        method: 'PUT',
+        path: `${path}/${existingMerchant.id}`,
+        data: {
+          ...args,
+          business_name: args.businessName,
+          register_number: args.registerNumber,
+          mcc_code: args.mccCode,
+        },
+      });
     }
   }
 
@@ -277,7 +297,7 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
         ],
       },
     });
-    
+
     return {
       ...res,
       qrData: `data:image/jpg;base64,${res.qr_image}`,
@@ -286,7 +306,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
 
   async checkInvoice(invoice: ITransactionDocument) {
     try {
-      console.debug('Checking invoice status:', { invoiceId: invoice.response?.id });
+      console.debug('Checking invoice status:', {
+        invoiceId: invoice.response?.id,
+      });
       const res = await this.makeRequest<IInvoiceResponse>({
         method: 'POST',
         path: meta.paths.checkInvoice,
@@ -307,7 +329,9 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
 
   async manualCheck(invoice: ITransactionDocument) {
     try {
-      console.debug('Manually checking invoice status:', { invoiceId: invoice.response?.id });
+      console.debug('Manually checking invoice status:', {
+        invoiceId: invoice.response?.id,
+      });
       const res = await this.makeRequest<IInvoiceResponse>({
         method: 'POST',
         path: meta.paths.checkInvoice,
@@ -339,7 +363,49 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
     return await this.makeRequest<IMerchantResponse>({
       method: 'POST',
       path: meta.paths.merchantList,
+      data: {
+        offset: {
+          page_number: 1,
+          page_limit: 20,
+        },
+      },
     });
+  }
+
+  async findExistingMerchant(registerNumber: string): Promise<any | null> {
+    let pageNumber = 1;
+    const pageLimit = 20;
+
+    while (true) {
+      console.debug(`Fetching merchants - Page: ${pageNumber}`);
+      const list = await this.makeRequest<IMerchantResponse>({
+        method: 'POST',
+        path: meta.paths.merchantList,
+        data: {
+          offset: {
+            page_number: pageNumber,
+            page_limit: pageLimit,
+          },
+        },
+      });
+
+      const found = list.rows?.find(
+        (item) => item.register_number === registerNumber,
+      );
+
+      if (found) {
+        return found;
+      }
+
+      // Stop if we’ve reached the end
+      if (!list.rows || list.rows.length < pageLimit) {
+        break;
+      }
+
+      pageNumber++;
+    }
+
+    return null;
   }
 
   async getDistricts(city: string) {

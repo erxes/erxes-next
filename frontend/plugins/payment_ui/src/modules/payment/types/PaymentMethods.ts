@@ -9,6 +9,7 @@ export enum PaymentKind {
     MINUPAY = 'minupay',
     GOLOMT = 'golomt',
     STRIPE = 'stripe',
-    KAHNBANK = 'khanbank',
+    // TODO: Add Khanbank after khanbank plugin is ready
+    // KAHNBANK = 'khanbank',
   }
   

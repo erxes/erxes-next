@@ -23,3 +23,9 @@ query payments($status: String, $kind: String) {
   }
 }
 `;
+
+export const DISTRICTS = gql`
+  query qpayGetDistricts($cityCode: String!) {
+    qpayGetDistricts(cityCode: $cityCode)
+  }
+`;
