@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { IDocumentDocument } from '../../types';
+import { IDocumentDocument } from '~/modules/documents/types';
 import { documentSchema } from '../definitions/documents';
 
 export interface IDocumentModel extends Model<IDocumentDocument> {

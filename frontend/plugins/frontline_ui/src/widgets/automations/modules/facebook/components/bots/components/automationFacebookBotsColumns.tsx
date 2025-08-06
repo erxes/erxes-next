@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { IconEdit, IconRefresh, IconX } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
+  Avatar,
   Button,
   RecordTable,
   RecordTableCellDisplay,
@@ -44,9 +45,14 @@ export const automationFacebookBotsColumns: ColumnDef<IFacebookBot>[] = [
     accessorKey: 'page',
     header: () => <RecordTable.InlineHead label="Page" />,
     cell: ({ cell }) => {
+      const { profileUrl = '' } = cell.row.original || {};
       const { name = '-' } = cell.getValue() || ({} as any);
       return (
         <RecordTableCellDisplay className="w-full flex items-center justify-center">
+          <Avatar>
+            <Avatar.Image src={profileUrl} />
+            <Avatar.Fallback>{name}</Avatar.Fallback>
+          </Avatar>
           {name}
         </RecordTableCellDisplay>
       );

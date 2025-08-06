@@ -1,5 +1,6 @@
 import {
   IconAdjustmentsAlt,
+  IconBellRinging,
   IconChartPie2,
   IconChessKnight,
   IconColorSwatch,
@@ -159,6 +160,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Brands',
       icon: IconChessKnight,
       path: SettingsWorkspacePath.Brands,
+    },
+    {
+      name: 'Notification',
+      icon: IconBellRinging,
+      path: SettingsWorkspacePath.Notification,
     },
   ],
 };

@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 import { init } from '@module-federation/enhanced/runtime';
