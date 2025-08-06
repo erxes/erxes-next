@@ -9,7 +9,7 @@ import {
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
-import { generateFilter } from '~/modules/contacts/utils';
+import { generateFilter } from '@/contacts/utils';
 
 export const customerQueries = {
   /**
@@ -20,8 +20,10 @@ export const customerQueries = {
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
-    const filter: FilterQuery<ICustomerDocument> =
-      await generateFilter(params, models);
+    const filter: FilterQuery<ICustomerDocument> = await generateFilter(
+      params,
+      models,
+    );
 
     const { list, totalCount, pageInfo } =
       await cursorPaginate<ICustomerDocument>({

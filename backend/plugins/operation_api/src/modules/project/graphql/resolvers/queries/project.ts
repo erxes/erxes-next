@@ -2,6 +2,7 @@ import { IContext } from '~/connectionResolvers';
 import { IProjectFilter } from '@/project/@types/project';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IProjectDocument } from '@/project/@types/project';
+import { FilterQuery } from 'mongoose';
 
 export const projectQueries = {
   getProject: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -13,7 +14,36 @@ export const projectQueries = {
     params: IProjectFilter,
     { models }: IContext,
   ) => {
-    const filter = {};
+    const filter: FilterQuery<IProjectDocument> = {};
+
+    if (params.teamIds) {
+      filter.teamIds = { $in: params.teamIds };
+    }
+
+    if (params.name) {
+      filter.name = { $regex: params.name, $options: 'i' };
+    }
+
+    if (params.status) {
+      filter.status = params.status;
+    }
+
+    if (params.priority) {
+      filter.priority = params.priority;
+    }
+
+    if (params.startDate) {
+      filter.startDate = { $gte: params.startDate };
+    }
+
+    if (params.targetDate) {
+      filter.targetDate = { $gte: params.targetDate };
+    }
+
+    if (params.leadId) {
+      filter.leadId = params.leadId;
+    }
+
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IProjectDocument>({
         model: models.Project,
