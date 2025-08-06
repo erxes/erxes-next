@@ -11,10 +11,7 @@ const paymentMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
-        <Route path="/" element={<IndexPage />} />
-        <Route path="/methods" element={<IndexPage />} />
-        <Route path="/invoices" element={<IndexPage />} />
-       
+        <Route path="/" element={<IndexPage />} />       
       </Routes>
     </Suspense>
   );

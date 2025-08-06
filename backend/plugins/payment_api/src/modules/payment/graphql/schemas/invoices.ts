@@ -39,6 +39,12 @@ export const types = `
 
     transactions: [PaymentTransaction]
   }
+
+  type InvoicesListResponse {
+    list: [Invoice],
+    pageInfo: PageInfo
+    totalCount: Int,
+  }
 `;
 
 
@@ -68,18 +74,25 @@ export const mutations = `
   invoicesRemove(_ids: [String]!): String
 `;
 
+const cursorParams = `
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
+`;
+
+
 const queryParams = `
   searchValue: String
   kind: String
   status: String
-  page: Int
-  perPage: Int
+  
   contentType: String
   contentTypeId: String
+  ${cursorParams}
 `;
 
 export const queries = `
-  invoices(${queryParams}): [Invoice]
+  invoices(${queryParams}): InvoicesListResponse
   invoicesTotalCount(${queryParams}): invoicesTotalCount
   invoiceDetail(_id: String!): Invoice
   invoiceDetailByContent(contentType: String!, contentTypeId: String!): [Invoice]

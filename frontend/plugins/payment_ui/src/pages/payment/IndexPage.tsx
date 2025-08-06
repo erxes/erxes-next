@@ -1,11 +1,11 @@
 import {
   IconCaretDownFilled,
-  IconSandbox,
-  IconSettings,
+  IconCurrencyDollar,
+  IconSettings
 } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator } from 'erxes-ui';
-import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
+import { PageHeader } from 'ui-modules';
 
 export const IndexPage = () => {
   return (
@@ -17,7 +17,7 @@ export const IndexPage = () => {
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
                   <Link to="/settings/payment">
-                    <IconSandbox />
+                    <IconCurrencyDollar />
                     payment
                   </Link>
                 </Button>
@@ -33,9 +33,6 @@ export const IndexPage = () => {
               <IconSettings />
               Go to settings
             </Link>
-          </Button>
-          <Button>
-            More <IconCaretDownFilled />
           </Button>
         </PageHeader.End>
       </PageHeader>

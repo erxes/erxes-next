@@ -8,7 +8,13 @@ import {
 } from '~/modules/payment/graphql/mutations';
 import { IPayment, IPaymentDocument } from '~/modules/payment/types/Payment';
 import { Button, Sheet, useConfirm, useToast, Breadcrumb } from 'erxes-ui';
-import { IconArrowBack, IconCreditCard, IconPlus } from '@tabler/icons-react';
+import {
+  IconArrowBack,
+  IconCreditCard,
+  IconCurrencyDollar,
+  IconPlus,
+  IconSettings,
+} from '@tabler/icons-react';
 import PaymentTable from '~/modules/payment/components/PaymentTable';
 import PaymentForm from '~/modules/payment/components/PaymentForm';
 import { Link } from 'react-router-dom';
@@ -145,32 +151,30 @@ const PaymentModule = () => {
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
                   <Link to="/payment">
-                    <IconArrowBack />
+                    <IconCurrencyDollar />
                     Invoices
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to="/settings/payment">
+                    <IconSettings />
+                    Payment Settings
                   </Link>
                 </Button>
               </Breadcrumb.Item>
             </Breadcrumb.List>
           </Breadcrumb>
         </PageHeader.Start>
+        <PageHeader.End>
+          <Button onClick={handleAddPayment}>
+            <IconPlus className="w-4 h-4 mr-2" />
+            Add Payment
+          </Button>
+        </PageHeader.End>
       </PageHeader>
-
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <IconCreditCard className="w-6 h-6 text-blue-600" />
-              <h1 className="text-xl font-semibold text-gray-900">
-                Payment Methods
-              </h1>
-            </div>
-            <Button onClick={handleAddPayment}>
-              <IconPlus className="w-4 h-4 mr-2" />
-              Add Payment
-            </Button>
-          </div>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
