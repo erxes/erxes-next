@@ -23,7 +23,7 @@ export const AutomationHeaderTabs = ({
 
   const openBuilder = () => {
     if (queryParams.activeTab !== 'builder') {
-      toggleTabs(AutomationBuilderTabsType.Bilder);
+      toggleTabs(AutomationBuilderTabsType.Builder);
       setHotkeyScopeAndMemorizePreviousScope(AutomationsHotKeyScope.Builder);
     }
   };
@@ -45,7 +45,7 @@ export const AutomationHeaderTabs = ({
       <Tabs.Trigger
         className="w-24 font-normal after:content-none after:border-none after:shadow-none data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:text-foreground"
         value="builder"
-        onClick={() => toggleTabs(AutomationBuilderTabsType.Bilder)}
+        onClick={() => toggleTabs(AutomationBuilderTabsType.Builder)}
       >
         Builder
       </Tabs.Trigger>

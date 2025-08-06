@@ -111,6 +111,6 @@ export enum AutomationNodesType {
 }
 
 export enum AutomationBuilderTabsType {
-  Bilder = 'builder',
+  Builder = 'builder',
   History = 'history',
 }
