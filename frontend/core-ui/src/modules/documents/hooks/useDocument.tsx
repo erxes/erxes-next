@@ -34,7 +34,7 @@ export const useDocument = () => {
 
   const [saveDocument, { loading: saving }] = useMutation(SAVE_DOCUMENT);
 
-  const documentSave = async () => {
+  const documentSave = () => {
     const document: any = {
       name: getValues('name'),
       content: getValues('content'),
@@ -45,53 +45,50 @@ export const useDocument = () => {
       document._id = cleanDocumentId;
     }
 
-    try {
-      const response = await saveDocument({
-        variables: { ...document },
-        update: (cache, { data: { documentsSave } }) => {
-          const docId = cache.identify(documentsSave);
+    saveDocument({
+      variables: { ...document },
+      update: (cache, { data: { documentsSave } }) => {
+        const docId = cache.identify(documentsSave);
 
-          if (cleanDocumentId) {
-            return cache.modify({
-              id: docId,
-              fields: Object.keys(document || {}).reduce(
-                (fields: any, field) => {
-                  fields[field] = () => (document || {})[field];
-                  return fields;
-                },
-                {},
-              ),
-            });
-          }
-
-          cache.modify({
-            fields: {
-              documents(existingDocs) {
-                const { list = [] } = existingDocs || {};
-
-                return [...list, documentsSave];
-              },
-            },
+        if (cleanDocumentId) {
+          return cache.modify({
+            id: docId,
+            fields: Object.keys(document || {}).reduce((fields: any, field) => {
+              fields[field] = () => (document || {})[field];
+              return fields;
+            }, {}),
           });
-        },
-      });
-
-      if (response.data) {
-        if (!cleanDocumentId) {
-          setTimeout(() => {
-            setDocumentId(response.data.documentsSave._id);
-          }, 0);
         }
 
-        toast({ title: 'Successfully saved document' });
-      }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: error?.message,
-        variant: 'destructive',
-      });
-    }
+        cache.modify({
+          fields: {
+            documents(existingDocs) {
+              const { list = [] } = existingDocs || {};
+
+              return [...list, documentsSave];
+            },
+          },
+        });
+      },
+      onCompleted: (data) => {
+        if (data.documentsSave) {
+          if (!cleanDocumentId) {
+            setTimeout(() => {
+              setDocumentId(data.documentsSave._id);
+            }, 0);
+          }
+
+          toast({ title: 'Successfully saved document' });
+        }
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description: error?.message,
+          variant: 'destructive',
+        });
+      },
+    });
   };
 
   return {
