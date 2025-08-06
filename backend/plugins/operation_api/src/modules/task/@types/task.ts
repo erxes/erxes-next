@@ -13,8 +13,9 @@ export interface ITask {
   labelIds?: string[];
   tagIds?: string[];
   assignee?: string;
+  createdBy?: string;
   cycleId?: string;
-  projectId: string;
+  projectId?: string;
   estimatedPoint?: number;
 }
 
