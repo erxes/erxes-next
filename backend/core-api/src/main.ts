@@ -17,9 +17,12 @@ import {
 
 import './meta/automations';
 import { generateModels } from './connectionResolvers';
+import { documents } from './meta/documents';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
 import './segments';
+import * as path from 'path';
+import rateLimit from 'express-rate-limit';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -54,6 +57,26 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(router);
 
+const fileLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
+app.get('/subscriptionPlugin.js', fileLimiter, async (_req, res) => {
+  const apolloSubscriptionPath = path.join(
+    require('path').resolve(
+      __dirname,
+      'apollo',
+      process.env.NODE_ENV === 'production'
+        ? 'subscription.js'
+        : 'subscription.ts',
+    ),
+  );
+
+  res.sendFile(apolloSubscriptionPath);
+});
+
 app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
@@ -81,10 +104,11 @@ httpServer.listen(port, async () => {
   await joinErxesGateway({
     name: 'core',
     port,
-    hasSubscriptions: false,
+    hasSubscriptions: true,
     meta: {
       permissions: moduleObjects,
       tags,
+      documents,
     },
   });
 });

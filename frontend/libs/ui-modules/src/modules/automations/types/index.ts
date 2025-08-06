@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 
 export type IActionProps = {
   currentActionIndex: number;
@@ -32,10 +32,11 @@ export type IAction<TConfig = any> = {
   nextActionId?: string;
   isAvailable?: boolean;
   style?: any;
-  config?: TConfig & IConfig;
+  config: TConfig & IConfig;
   position?: any;
   isAvailableOptionalConnect?: boolean;
   workflowId?: string;
+  isCustom?: boolean;
 
   count?: number;
 };
@@ -57,6 +58,33 @@ export type ITrigger<TConfig = any> = {
   count?: number;
 };
 
+export interface IAutomationHistoryAction {
+  createdAt: Date;
+  actionId: string;
+  actionType: string;
+  actionConfig?: any;
+  nextActionId?: string;
+  result?: any;
+}
+
+export interface IAutomationHistory {
+  _id: string;
+  createdAt: Date;
+  modifiedAt?: Date;
+  automationId: string;
+  triggerId: string;
+  triggerType: string;
+  triggerConfig?: any;
+  nextActionId?: string;
+  targetId: string;
+  target: any;
+  status: 'active' | 'waiting' | 'error' | 'missed' | 'complete';
+  description: string;
+  actions?: IAutomationHistoryAction[];
+  startWaitingDate?: Date;
+  waitingActionId?: string;
+}
+
 export type BaseAutomationRemoteProps = {
   type?: string;
   componentType: string;
@@ -64,6 +92,9 @@ export type BaseAutomationRemoteProps = {
 
 export type AutomationTriggerFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
+    formRef: RefObject<{
+      submit: () => void;
+    }>;
     componentType: 'triggerForm';
     activeTrigger: ITrigger<TConfig>;
     onSaveTriggerConfig: (config: TConfig) => void;
@@ -71,6 +102,9 @@ export type AutomationTriggerFormProps<TConfig = any> =
 
 export type AutomationActionFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
+    formRef: RefObject<{
+      submit: () => void;
+    }>;
     componentType: 'actionForm';
     currentAction: IAction<TConfig>;
     onSaveActionConfig: (config: TConfig) => void;
@@ -90,11 +124,21 @@ export type AutomationActionNodeConfigProps<
   currentAction?: any;
   config?: TActionConfig;
   trigger?: ITrigger<TTriggerConfig>;
-  OptionConnectHandle?: ({
-    optionalId,
-  }: {
-    optionalId: string;
-  }) => React.ReactNode;
+  OptionConnectHandle?:
+    | (({ optionalId }: { optionalId: string }) => React.ReactNode)
+    | null;
+};
+
+export type AutomationExecutionHistoryNameProps<TTarget = any> = {
+  componentType: 'historyName';
+  triggerType: string;
+  target: TTarget;
+};
+
+export type AutomationExecutionActionResultProps = {
+  componentType: 'historyActionResult';
+  action: IAutomationHistoryAction;
+  result: IAutomationHistoryAction['result'];
 };
 
 export type AutomationRemoteEntryProps =
@@ -102,6 +146,8 @@ export type AutomationRemoteEntryProps =
   | AutomationActionFormProps
   | AutomationTriggerConfigProps
   | AutomationActionNodeConfigProps
+  | AutomationExecutionHistoryNameProps
+  | AutomationExecutionActionResultProps
   | { componentType: 'automationBotsContent' };
 
 export type AutomationRemoteEntryTypes = {
@@ -109,4 +155,31 @@ export type AutomationRemoteEntryTypes = {
   ActionForm: AutomationActionFormProps;
   TriggerNodeConfig: AutomationTriggerConfigProps;
   ActionNodeConfig: AutomationActionNodeConfigProps;
+  HistoryName: AutomationExecutionHistoryNameProps;
+  ActionResult: AutomationExecutionActionResultProps;
+};
+
+export type IAutomationsTriggerConfigConstants = {
+  type: string;
+  icon: string;
+  label: string;
+  description: string;
+  isCustom?: boolean;
+  connectableActionTypes?: string[];
+  conditions?: {
+    type: string;
+    icon: string;
+    label: string;
+    description: string;
+  }[];
+};
+
+export type IAutomationsActionConfigConstants = {
+  type: string;
+  icon: string;
+  label: string;
+  description: string;
+  isAvailableOptionalConnect?: boolean;
+  emailRecipientsConst?: any;
+  connectableActionTypes?: string[];
 };

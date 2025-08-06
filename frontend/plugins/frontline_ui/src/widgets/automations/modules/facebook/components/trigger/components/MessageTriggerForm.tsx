@@ -3,18 +3,20 @@ import { IconChevronLeft } from '@tabler/icons-react';
 import { Button, cn, Form, Label } from 'erxes-ui';
 import { useState } from 'react';
 import { useForm, UseFormReturn, UseFormSetValue } from 'react-hook-form';
+import {
+  AutomationTriggerFormProps,
+  generateAutomationElementId,
+} from 'ui-modules';
 import { FacebookBotSelector } from '../../MessengerBotSelector';
-import { DirectMessageConfigForm } from './DirectMessageConfigForm';
-import { FacebookBotPersistenceMenuSelector } from './FacebookBotPersistenceMenuSelector';
-import { MessageTriggerConditionsList } from './MessageTriggerConditionsList';
 import {
   TMessageTriggerForm,
   TMessageTriggerFormDirectMessage,
   TMessageTriggerFormPersistentMenu,
   triggerFormSchema,
 } from '../states/messageTriggerFormSchema';
-import { AutomationTriggerFormProps } from 'ui-modules';
-import { nanoid } from 'nanoid';
+import { DirectMessageConfigForm } from './DirectMessageConfigForm';
+import { FacebookBotPersistenceMenuSelector } from './FacebookBotPersistenceMenuSelector';
+import { MessageTriggerConditionsList } from './MessageTriggerConditionsList';
 
 const renderActiveItemContent = ({
   onConditionChange,
@@ -60,7 +62,6 @@ const renderActiveItemContent = ({
             return (
               <DirectMessageConfigForm
                 conditions={currentCondition?.conditions || []}
-                botId={formState.botId}
                 onConditionChange={onConditionItemChange}
               />
             );
@@ -109,7 +110,7 @@ const renderConditionsContent = ({
       setFormValue('conditions', [
         ...(formState?.conditions || []),
         {
-          _id: nanoid(),
+          _id: generateAutomationElementId(),
           type: conditionType,
           [fieldName]: fieldValue,
         },

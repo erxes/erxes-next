@@ -3,6 +3,7 @@ import {
   getPlugins,
   IAfterProcessRule,
   sendWorkerMessage,
+  TAfterProcessRule,
 } from 'erxes-api-shared/utils';
 import { AfterProcessProps } from '~/types';
 
@@ -17,7 +18,7 @@ interface WorkerMessage {
 type ProcessHandlerProps = {
   subdomain: string;
   pluginName: string;
-  rules: IAfterProcessRule[];
+  rule: IAfterProcessRule;
   payload: any;
   contentType?: string;
   action: string;
@@ -25,7 +26,7 @@ type ProcessHandlerProps = {
 
 function getAllKeys(obj, prefix = '') {
   let keys: string[] = [];
-  for (let key in obj) {
+  for (const key in obj) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     keys.push(fullKey);
     if (
@@ -54,64 +55,57 @@ const sendProcessMessage = async (message: WorkerMessage): Promise<void> => {
 const handleAfterMutation = ({
   subdomain,
   pluginName,
-  rules,
+  rule,
   payload,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'afterMutation');
+  const { mutationNames = [] } = rule as TAfterProcessRule['AfterMutation'];
+  const { mutationName } = payload || {};
 
-  if (rule) {
-    const { mutationNames = [] } = rule || {};
-    const { mutationName } = payload || {};
-
-    if (mutationNames.includes(mutationName)) {
-      sendProcessMessage({
-        pluginName,
-        queueName: 'afterProcess',
-        jobName: 'onAfterMutation',
-        subdomain,
-        data: payload,
-      });
-    }
+  if (mutationNames.includes(mutationName)) {
+    sendProcessMessage({
+      pluginName,
+      queueName: 'afterProcess',
+      jobName: 'onAfterMutation',
+      subdomain,
+      data: payload,
+    });
   }
 };
 
 const handleUpdatedDocument = ({
   subdomain,
   pluginName,
-  rules,
+  rule,
   payload,
   contentType,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'updatedDocument');
-  if (rule) {
-    const { contentTypes = [], when } = rule;
+  const { contentTypes, when } = rule as TAfterProcessRule['UpdatedDocument'];
 
-    if (contentTypes.includes(contentType || '')) {
-      let shouldSend = true;
+  if (contentType && contentTypes.includes(contentType)) {
+    let shouldSend = true;
 
-      if (when) {
-        const { updatedFields = [], removedFields = [] } =
-          payload.updateDescription;
+    if (when) {
+      const { updatedFields = [], removedFields = [] } =
+        payload.updateDescription;
 
-        const hasRemovedFieldsExists = getAllKeys(removedFields).some((key) =>
-          (when.fieldsRemoved || []).includes(key),
-        );
-        const hasUpdatedFieldsExists = getAllKeys(updatedFields).some((key) =>
-          (when.fieldsUpdated || []).includes(key),
-        );
+      const hasRemovedFieldsExists = getAllKeys(removedFields).some((key) =>
+        (when.fieldsRemoved || []).includes(key),
+      );
+      const hasUpdatedFieldsExists = getAllKeys(updatedFields).some((key) =>
+        (when.fieldsUpdated || []).includes(key),
+      );
 
-        shouldSend = hasRemovedFieldsExists || hasUpdatedFieldsExists;
-      }
+      shouldSend = hasRemovedFieldsExists || hasUpdatedFieldsExists;
+    }
 
-      if (shouldSend) {
-        sendProcessMessage({
-          pluginName,
-          queueName: 'afterProcess',
-          jobName: 'onDocumentUpdated',
-          subdomain,
-          data: payload,
-        });
-      }
+    if (shouldSend) {
+      sendProcessMessage({
+        pluginName,
+        queueName: 'afterProcess',
+        jobName: 'onDocumentUpdated',
+        subdomain,
+        data: { ...payload, contentType },
+      });
     }
   }
 };
@@ -119,36 +113,30 @@ const handleUpdatedDocument = ({
 const handleCreateDocument = ({
   subdomain,
   pluginName,
-  rules,
+  rule,
   payload,
   contentType,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'createdDocument');
-
-  if (rule) {
+  const { when, contentTypes } = rule as TAfterProcessRule['CreateDocument'];
+  if (contentTypes.includes(contentType || '')) {
     const document = payload?.fullDocument;
+    let shouldSend = true;
+    if (when) {
+      const { fieldsWith = [] } = when || {};
+      const hasFieldsExists = getAllKeys(document).some((key) =>
+        fieldsWith.includes(key),
+      );
+      shouldSend = hasFieldsExists;
+    }
 
-    const { contentTypes = [], when } = rule;
-
-    if (contentTypes.includes(contentType || '')) {
-      let shouldSend = true;
-      if (when) {
-        const { fieldsWith = [] } = when || {};
-        const hasFieldsExists = getAllKeys(document).some((key) =>
-          fieldsWith.includes(key),
-        );
-        shouldSend = hasFieldsExists;
-      }
-
-      if (shouldSend) {
-        sendProcessMessage({
-          pluginName,
-          queueName: 'afterProcess',
-          jobName: 'onDocumentCreated',
-          subdomain,
-          data: payload,
-        });
-      }
+    if (shouldSend) {
+      sendProcessMessage({
+        pluginName,
+        queueName: 'afterProcess',
+        jobName: 'onDocumentCreated',
+        subdomain,
+        data: { ...payload, contentType },
+      });
     }
   }
 };
@@ -156,36 +144,32 @@ const handleCreateDocument = ({
 const handleAfterAPIRequest = ({
   subdomain,
   pluginName,
-  rules,
+  rule,
   payload,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'afterAPIRequest');
-
-  if (rule) {
-    const { paths = [] } = rule;
-    const { path } = payload || {};
-    if (paths.includes(path)) {
-      sendProcessMessage({
-        pluginName,
-        queueName: 'afterProcess',
-        jobName: 'onAfterApiRequest',
-        subdomain,
-        data: payload,
-      });
-    }
+  const { paths = [] } = rule as TAfterProcessRule['AfterAPIRequest'];
+  const { path } = payload || {};
+  if (paths.includes(path)) {
+    sendProcessMessage({
+      pluginName,
+      queueName: 'afterProcess',
+      jobName: 'onAfterApiRequest',
+      subdomain,
+      data: payload,
+    });
   }
 };
 
 const handleAfterAuth = ({
   subdomain,
   pluginName,
-  rules,
+  rule,
   payload,
   action,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'afterAuth');
+  const { types = [] } = rule as TAfterProcessRule['AfterAuth'];
 
-  if (rule && (rule?.types || []).includes(action)) {
+  if (types.includes(action)) {
     sendProcessMessage({
       pluginName,
       queueName: 'afterProcess',
@@ -217,37 +201,44 @@ export const handleAfterProcess = async (
 
       const { rules = [] } = plugin.config.meta.afterProcess || {};
 
-      const props: ProcessHandlerProps = {
+      const props = {
         subdomain,
         pluginName,
-        rules,
         payload,
         action,
       };
-
-      if (source === 'mongo') {
-        if (action === 'update') {
-          handleUpdatedDocument({ ...props, contentType });
+      for (const rule of rules as IAfterProcessRule[]) {
+        if (
+          rule.type === 'createdDocument' &&
+          source === 'mongo' &&
+          action === 'create'
+        ) {
+          handleCreateDocument({ ...props, rule, contentType });
           continue;
         }
-        if (action === 'create') {
-          handleCreateDocument({ ...props, contentType });
+        if (
+          rule.type === 'updatedDocument' &&
+          source === 'mongo' &&
+          action === 'update'
+        ) {
+          handleUpdatedDocument({ ...props, rule, contentType });
           continue;
         }
-      }
-      if (source === 'graphql') {
-        handleAfterMutation(props);
-        continue;
-      }
 
-      if (source === 'auth') {
-        handleAfterAuth(props);
-        continue;
-      }
+        if (rule.type === 'afterAPIRequest') {
+          handleAfterAPIRequest({ ...props, rule });
+          continue;
+        }
 
-      if (source === 'webhook') {
-        handleAfterAPIRequest(props);
-        continue;
+        if (rule.type === 'afterAuth') {
+          handleAfterAuth({ ...props, rule });
+          continue;
+        }
+
+        if (rule.type === 'afterMutation') {
+          handleAfterMutation({ ...props, rule });
+          continue;
+        }
       }
     }
   } catch (error) {

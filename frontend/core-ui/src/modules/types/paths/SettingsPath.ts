@@ -10,14 +10,18 @@ export enum SettingsWorkspacePath {
   General = 'general',
   FileUpload = 'file-upload',
   MailConfig = 'mail-config',
-  Permission = 'permission',
+  Apps = 'apps',
+  Permissions = 'permissions',
+  Properties = 'properties',
   TeamMember = 'team-member',
-  Structure = 'structure',
-  StructureCatchAll = 'structure/*',
+  Structure = 'structures',
+  StructureCatchAll = 'structures/*',
   Tags = 'tags',
   ProductsCatchAll = 'products/*',
   Brands = 'brands',
   AutomationsCatchAll = 'automations/*',
+  Notification ="notification",
+  NotificationCatchAll = 'notification/*',
 }
 
 export type TSettingPath = {

@@ -29,8 +29,6 @@ const commonParams = `
   $pipelineId: String,
   $parentId: String,
   $closeDateType: String,
-  $sortField: String,
-  $sortDirection: Int,
   $userIds: [String],
   $segment: String,
   $segmentData:String,
@@ -64,8 +62,6 @@ const commonParamDefs = `
   pipelineId: $pipelineId,
   parentId: $parentId,
   closeDateType: $closeDateType,
-  sortField: $sortField,
-  sortDirection: $sortDirection,
   userIds: $userIds,
   segment: $segment,
   segmentData: $segmentData,
@@ -89,11 +85,33 @@ const commonParamDefs = `
 export const commonListFields = `
   _id
   name
-  companies
-  customers
-  assignedUsers
-  labels
-  stage
+  companies {
+    _id
+    primaryName
+  }
+  customers {
+    _id
+    firstName
+    lastName
+    email
+  }
+  assignedUsers {
+    _id
+    details {
+      avatar
+      fullName
+    }
+  }
+  assignedUserIds
+  labels {
+    _id
+    name
+    colorCode
+  }
+  stage {
+    _id
+    name
+  }
   isComplete
   isWatched
   relations
@@ -119,19 +137,62 @@ export const GET_DEALS = gql`
   query Deals(
     $initialStageId: String,
     $stageId: String,
-
+    $limit: Int, 
+    $cursor: String, 
+    $cursorMode: CURSOR_MODE,
+    $orderBy: JSON,
     ${commonParams}
   ) {
     deals(
       initialStageId: $initialStageId,
       stageId: $stageId,
-    
+      limit: $limit, 
+      cursor: $cursor, 
+      cursorMode: $cursorMode,
+      orderBy: $orderBy, 
       ${commonParamDefs}
     ) {
-      products
-      unusedAmount
-      amount
+        list {
+          products {
+            _id
+            name
+          }
+          unUsedAmount
+          amount
+          ${commonListFields}
+          departments {
+            _id
+            title
+          }
+          branches {
+            _id
+            title
+          }
+          relations
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
+      }
+  }
+`;
+
+export const GET_DEAL_DETAIL = gql`
+  query DealDetail($_id: String!) {
+    dealDetail(_id: $_id) {
       ${commonListFields}
+      description
+      attachments {
+        url
+        name
+        duration
+        size  
+        type
+      }
       departments {
         _id
         title
@@ -140,8 +201,20 @@ export const GET_DEALS = gql`
         _id
         title
       }
-      companies
-      customers
+      companies {
+        _id
+        primaryName
+      }
+      customers {
+        _id
+        firstName
+        lastName
+        email
+      }
+      products {
+        _id
+        name
+      }
       relations
     }
   }
@@ -158,3 +231,4 @@ export const GET_ITEMS_COUNT_BY_ASSIGNED_USER = gql`
     salesItemsCountByAssignedUser(pipelineId: $pipelineId, type: $type, stackBy: $stackBy)
   }
 `;
+  

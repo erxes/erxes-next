@@ -3,8 +3,8 @@ import { Organization } from './Organization';
 import { SidebarNavigation } from './SidebarNavigation';
 import { SidebarNavigationFavorites } from './SidebarNavigationFavorites';
 import { User } from './User';
-import { Notification } from '@/notification/components/Notification';
 import { SidebarNavigationComponents } from './SidebarNavigationComponents';
+import { MyInboxMainNavigationBarItem } from '@/notification/my-inbox/components/MyInboxMainNavigationBarItem';
 
 export const MainNavigationBar = () => {
   return (
@@ -13,7 +13,6 @@ export const MainNavigationBar = () => {
         <Sidebar.Menu>
           <Sidebar.MenuItem className="flex gap-2 items-center">
             <Organization />
-            <Notification />
           </Sidebar.MenuItem>
         </Sidebar.Menu>
       </Sidebar.Header>
@@ -23,6 +22,8 @@ export const MainNavigationBar = () => {
         {process.env.NODE_ENV === 'development' && (
           <SidebarNavigationComponents />
         )}
+        <MyInboxMainNavigationBarItem />
+
         <SidebarNavigationFavorites />
         <SidebarNavigation />
       </Sidebar.Content>

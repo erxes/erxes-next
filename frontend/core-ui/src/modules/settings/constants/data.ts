@@ -1,12 +1,16 @@
 import {
   IconAdjustmentsAlt,
+  IconBellRinging,
   IconChartPie2,
   IconChessKnight,
   IconColorSwatch,
   IconFile,
   IconMail,
+  IconShieldCog,
   IconTag,
+  IconTools,
   IconUserCircle,
+  IconUserCog,
   IconUsersGroup,
 } from '@tabler/icons-react';
 import {
@@ -122,6 +126,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsWorkspacePath.TeamMember,
     },
     {
+      name: 'Permissions',
+      icon: IconUserCog,
+      path: SettingsWorkspacePath.Permissions,
+    },
+    {
       name: 'General',
       icon: IconAdjustmentsAlt,
       path: SettingsWorkspacePath.General,
@@ -151,6 +160,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Brands',
       icon: IconChessKnight,
       path: SettingsWorkspacePath.Brands,
+    },
+    {
+      name: 'Notification',
+      icon: IconBellRinging,
+      path: SettingsWorkspacePath.Notification,
     },
   ],
 };

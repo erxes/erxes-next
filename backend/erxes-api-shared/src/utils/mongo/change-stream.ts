@@ -52,6 +52,7 @@ export const startChangeStreams = (
       sendWorkerQueue('logs', 'put_log').add('put_log', {
         subdomain,
         source: 'mongo',
+        status: 'success',
         contentType,
         payload: change,
       });

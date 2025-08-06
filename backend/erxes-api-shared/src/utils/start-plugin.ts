@@ -29,9 +29,14 @@ import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
 import { AfterProcessConfigs, logHandler, startAfterProcess } from './logs';
 import { closeMongooose } from './mongo';
-import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
+import {
+  initializePluginConfig,
+  joinErxesGateway,
+  leaveErxesGateway,
+} from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -39,6 +44,7 @@ type IMeta = {
   automations?: AutomationConfigs;
   segments?: SegmentConfigs;
   afterProcess?: AfterProcessConfigs;
+  notificationModules?: any[];
 };
 
 type ApiHandler = {
@@ -106,8 +112,7 @@ export async function startPlugin(
   });
 
   if (configs.expressRouter) {
-    app.use(`pl:${configs.name}`, configs.expressRouter);
-    app.use(`pl-${configs.name}`, configs.expressRouter);
+    app.use(`/pl:${configs.name}`, configs.expressRouter);
   }
 
 
@@ -158,10 +163,11 @@ export async function startPlugin(
   }
 
   if (configs.hasSubscriptions) {
-    console.log(
-      'configs.subscriptionPluginPath',
-      configs.subscriptionPluginPath,
-    );
+    const fileLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
+      message: 'Too many requests from this IP, please try again later.',
+    });
     app.get('/subscriptionPlugin.js', async (_req, res) => {
       res.sendFile(path.join(configs.subscriptionPluginPath));
     });
@@ -187,10 +193,9 @@ export async function startPlugin(
     next();
   });
 
-  // // Error handling middleware
+  // Error handling middleware
   // app.use((error: any, _req: any, res: any) => {
-  //   // const msg = filterXSS(error.message);
-  //   const msg = error.message;
+  //   const msg = filterXSS(error.message);
 
   //   // debugError(`Error: ${msg}`);
 
@@ -280,7 +285,8 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments, afterProcess } = configs.meta || {};
+    const { automations, segments, afterProcess, notificationModules } =
+      configs.meta || {};
 
     if (automations) {
       await startAutomations(configs.name, automations);
@@ -292,6 +298,14 @@ export async function startPlugin(
 
     if (afterProcess) {
       await startAfterProcess(configs.name, afterProcess);
+    }
+
+    if (notificationModules) {
+      await initializePluginConfig(
+        configs.name,
+        'notificationModules',
+        notificationModules,
+      );
     }
   } // end configs.meta if
 

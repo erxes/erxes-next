@@ -180,7 +180,6 @@ export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
   return tempArray;
 };
 
-
 export const fixDate = (
   value: string | number | Date,
   defaultValue: Date = new Date(),
@@ -231,7 +230,9 @@ export const getUniqueValue = async (
   }
 
   if (retryCount >= maxRetries) {
-    throw new Error(`Unable to generate unique value for field ${fieldName} after ${maxRetries} attempts`);
+    throw new Error(
+      `Unable to generate unique value for field ${fieldName} after ${maxRetries} attempts`,
+    );
   }
 
   return uniqueValue;
@@ -281,7 +282,7 @@ export const getNextMonth = (date: Date): { start: number; end: number } => {
 };
 
 export const fixNum = (value: any, p = 4) => {
-  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ""));
+  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ''));
 
   if (isNaN(cleanNumber)) {
     return 0;
@@ -289,11 +290,9 @@ export const fixNum = (value: any, p = 4) => {
 
   const multiplier = 10 ** p;
 
-  const big = Math.round(
-    Number((cleanNumber * multiplier).toFixed(2))
-  );
+  const big = Math.round(Number((cleanNumber * multiplier).toFixed(2)));
 
-  return Number((big / multiplier).toFixed(p))
+  return Number((big / multiplier).toFixed(p));
 };
 
 const DATE_OPTIONS = {

@@ -1,18 +1,12 @@
-// import { getService, getPlugins } from '@erxes/api-utils/src/serviceDiscovery';
-import {
-  // cursorPaginate,
-  getPlugin,
-  getPlugins,
-} from 'erxes-api-shared/utils';
+import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
 
 import {
-  ITrigger,
-  IAutomationDocument,
   AUTOMATION_STATUSES,
+  IAutomationDocument,
   IAutomationExecutionDocument,
+  IAutomationsActionConfig,
+  IAutomationsTriggerConfig,
 } from 'erxes-api-shared/core-modules';
-import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
-import { IContext } from '~/connectionResolvers';
 import {
   ICursorPaginateParams,
   ICursorPaginateResult,
@@ -23,11 +17,9 @@ import {
   getCursor,
   getPaginationInfo,
 } from 'erxes-api-shared/utils';
-import { FilterQuery, Model, SortOrder, Document, Types } from 'mongoose';
-import {
-  IAutomationsActionConfig,
-  IAutomationsTriggerConfig,
-} from 'erxes-api-shared/core-modules/automations/types';
+import { Document, FilterQuery, Model, SortOrder, Types } from 'mongoose';
+import { IContext } from '~/connectionResolvers';
+import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -483,7 +475,7 @@ export const automationQueries = {
           constants.actionsConst.push({ ...action, pluginName });
         }
 
-        if (!!pluginConstants?.emailRecipientTypes?.length) {
+        if (pluginConstants?.emailRecipientTypes?.length) {
           const updatedEmailRecipIentTypes =
             pluginConstants.emailRecipientTypes.map((eRT) => ({
               ...eRT,

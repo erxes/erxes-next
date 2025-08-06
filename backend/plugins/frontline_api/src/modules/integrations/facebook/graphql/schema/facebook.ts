@@ -134,6 +134,8 @@ export const queries = `
   facebookMessengerBotsTotalCount:Int
   facebookMessengerBots:[FacebookMessengerBot]
   facebookMessengerBot(_id:String):FacebookMessengerBot
+  facebookGetBotPosts(botId:String):JSON
+  facebookGetBotPost(botId:String,postId:String):JSON
 `;
 
 export const mutations = `

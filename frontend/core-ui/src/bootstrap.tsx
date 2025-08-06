@@ -1,14 +1,14 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 import { init } from '@module-federation/enhanced/runtime';
 
-import { NODE_ENV } from 'erxes-ui';
+import { NODE_ENV, REACT_APP_API_URL } from 'erxes-ui';
 
 import './styles.css';
 
 import { App } from '@/app/components/App';
-// import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
+import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 
 async function initFederation() {
   const root = ReactDOM.createRoot(
@@ -22,55 +22,38 @@ async function initFederation() {
       </StrictMode>,
     );
   } else {
-    // fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
-    // .then((res) => res.json())
-    // .then((data) => {
-    init({
-      name: 'core',
-      remotes: [
-        {
-          name: 'frontline_ui',
-          entry: 'https://plugins.erxes.io/latest/frontline_ui/remoteEntry.js',
-        },
-        {
-          name: 'accounting_ui',
-          entry: 'https://plugins.erxes.io/latest/accounting_ui/remoteEntry.js',
-        },
-        {
-          name: 'sales_ui',
-          entry: 'https://plugins.erxes.io/latest/sales_ui/remoteEntry.js',
-        },
-        {
-          name: 'content_ui',
-          entry: 'https://plugins.erxes.io/latest/content_ui/remoteEntry.js',
-        },
-      ],
-    });
+    fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
+      .then((res) => res.json())
+      .then((data) => {
+        init({
+          name: 'core',
+          remotes: data,
+        });
 
-    root.render(
-      <StrictMode>
-        <App />
-      </StrictMode>,
-    );
-    // })
-    // .catch((error: unknown) => {
-    //   console.error(
-    //     'Failed to initialize frontend plugins:',
-    //     error instanceof Error ? error.message : String(error),
-    //   );
+        root.render(
+          <StrictMode>
+            <App />
+          </StrictMode>,
+        );
+      })
+      .catch((error: unknown) => {
+        console.error(
+          'Failed to initialize frontend plugins:',
+          error instanceof Error ? error.message : String(error),
+        );
 
-    //   root.render(
-    //     <StrictMode>
-    //       <ClientConfigError
-    //         error={
-    //           error instanceof Error
-    //             ? error
-    //             : new Error('Failed to initialize frontend plugins')
-    //         }
-    //       />
-    //     </StrictMode>,
-    //   );
-    // });
+        root.render(
+          <StrictMode>
+            <ClientConfigError
+              error={
+                error instanceof Error
+                  ? error
+                  : new Error('Failed to initialize frontend plugins')
+              }
+            />
+          </StrictMode>,
+        );
+      });
   }
 }
 

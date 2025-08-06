@@ -1,3 +1,16 @@
+import { CLOSE_DATE_TYPES, SALES_STATUSES } from '~/modules/sales/constants';
+import {
+  IArchiveArgs,
+  IDealDocument,
+  IDealQueryParams,
+} from '~/modules/sales/@types';
+import { IContext, IModels } from '~/connectionResolvers';
+import {
+  archivedItems,
+  archivedItemsCount,
+  checkItemPermByUser,
+  getItemList,
+} from '~/modules/sales/utils';
 import {
   checkPermission,
   moduleRequireLogin,
@@ -8,22 +21,10 @@ import {
   regexSearchText,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
-import moment from 'moment';
+
 import { FilterQuery } from 'mongoose';
-import { IContext, IModels } from '~/connectionResolvers';
-import {
-  IArchiveArgs,
-  IDealDocument,
-  IDealQueryParams,
-} from '~/modules/sales/@types';
-import { CLOSE_DATE_TYPES, SALES_STATUSES } from '~/modules/sales/constants';
-import {
-  archivedItems,
-  archivedItemsCount,
-  checkItemPermByUser,
-  getItemList,
-} from '~/modules/sales/utils';
 import dealResolvers from '../customResolvers/deal';
+import moment from 'moment';
 
 export const generateFilter = async (
   models: IModels,
@@ -897,5 +898,5 @@ export const dealQueries = {
   //   async checkDiscount() {}
 };
 
-moduleRequireLogin(dealQueries);
-checkPermission(dealQueries, 'deals', 'showDeals');
+// moduleRequireLogin(dealQueries);
+// checkPermission(dealQueries, 'deals', 'showDeals');

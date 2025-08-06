@@ -171,7 +171,6 @@ export const loadClass = (models: IModels) => {
       await models.Conversations.updateMany(
         { _id: { $in: conversationIds } },
         { $set: { assignedUserId } },
-        { multi: true },
       );
 
       return models.Conversations.find({ _id: { $in: conversationIds } });
@@ -186,7 +185,6 @@ export const loadClass = (models: IModels) => {
       await models.Conversations.updateMany(
         { _id: { $in: conversationIds } },
         { $unset: { assignedUserId: 1 } },
-        { multi: true },
       );
 
       return models.Conversations.find({ _id: { $in: conversationIds } });
@@ -226,7 +224,6 @@ export const loadClass = (models: IModels) => {
       return models.Conversations.updateMany(
         { _id: { $in: conversationIds } },
         { $set: { status, closedAt, closedUserId, updatedAt } },
-        { multi: true },
       );
     }
 
@@ -366,11 +363,7 @@ export const loadClass = (models: IModels) => {
      * Resolve all conversation
      */
     public static resolveAllConversation(query: any, param: any) {
-      return models.Conversations.updateMany(
-        query,
-        { $set: param },
-        { multi: true },
-      );
+      return models.Conversations.updateMany(query, { $set: param });
     }
 
     public static async getUserRelevance(args: { skillId?: string }) {

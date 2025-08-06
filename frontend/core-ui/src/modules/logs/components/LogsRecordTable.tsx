@@ -74,7 +74,7 @@ export const LogsRecordTable = () => {
                 </tr>
               )}
 
-              {!loading && <RecordTable.RowSkeleton rows={40} />}
+              {loading && <RecordTable.RowSkeleton rows={40} />}
               <RecordTable.RowList />
               <RecordTable.CursorForwardSkeleton
                 handleFetchMore={handleFetchMore}

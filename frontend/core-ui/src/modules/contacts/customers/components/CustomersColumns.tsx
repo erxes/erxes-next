@@ -18,8 +18,7 @@ import {
   EmailDisplay,
   EmailListField,
   FullNameField,
-  PhoneDisplay,
-  PhoneListField,
+  PhoneField,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellDisplay,
@@ -29,6 +28,7 @@ import {
   SexCode,
   SexDisplay,
   SexField,
+  TPhones,
   readImage,
   useQueryState,
   useToast,
@@ -91,6 +91,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           lastName={lastName}
           onClose={onSave}
           closeOnEnter
+          withBadge
           onClick={(e) => {
             e.stopPropagation();
             setDetailOpen(_id);
@@ -138,6 +139,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       return (
         <RecordTablePopover
           scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Emails'}
+          scopeOptions={{
+            preventDefault: false,
+          }}
         >
           <RecordTableCellTrigger>
             <EmailDisplay emails={_emails} />
@@ -145,6 +149,24 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           <RecordTableCellContent className="w-72">
             <EmailListField
               recordId={_id}
+              onValidationStatusChange={(status) => {
+                customersEdit(
+                  {
+                    variables: {
+                      _id,
+                      emailValidationStatus:
+                        status === 'verified' ? 'valid' : 'invalid',
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['emailValidationStatus'],
+                );
+              }}
               onValueChange={(newEmails) => {
                 const primaryEmail = newEmails.find((email) => email.isPrimary);
                 let newEmailValidationStatus;
@@ -169,7 +191,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                       });
                     },
                   },
-                  ['primaryEmail', 'emails', 'emailValidationStatus'],
+                  ['primaryEmail', 'emails'],
                 );
               }}
               emails={_emails}
@@ -213,47 +235,59 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         (phone, index, self) =>
           index === self.findIndex((t) => t.phone === phone.phone),
       );
+      const onValueChange = (newPhones: TPhones) => {
+        const primaryPhone = newPhones.find((phone) => phone.isPrimary);
+        let newPhoneValidationStatus;
+        if (primaryPhone?.status !== phoneValidationStatus) {
+          newPhoneValidationStatus =
+            primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
+        }
+        customersEdit(
+          {
+            variables: {
+              _id,
+              primaryPhone: primaryPhone?.phone || null,
+              phones: newPhones
+                .filter((phone) => !phone.isPrimary)
+                .map((phone) => phone.phone),
+              phoneValidationStatus: newPhoneValidationStatus,
+            },
+            onError: (e: ApolloError) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+              });
+            },
+          },
+          ['primaryPhone', 'phones'],
+        );
+      };
+      const onValidationStatusChange = (status: 'verified' | 'unverified') => {
+        customersEdit(
+          {
+            variables: {
+              _id,
+              phoneValidationStatus:
+                status === 'verified' ? 'valid' : 'invalid',
+            },
+            onError: (e: ApolloError) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+              });
+            },
+          },
+          ['phoneValidationStatus'],
+        );
+      };
       return (
-        <RecordTablePopover
+        <PhoneField.InlineCell
+          recordId={_id}
+          phones={phones}
           scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Phones'}
-        >
-          <RecordTableCellTrigger>
-            <PhoneDisplay phones={phones} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <PhoneListField
-              recordId={_id}
-              phones={phones}
-              onValueChange={(newPhones) => {
-                const primaryPhone = newPhones.find((phone) => phone.isPrimary);
-                let newPhoneValidationStatus;
-                if (primaryPhone?.status !== phoneValidationStatus) {
-                  newPhoneValidationStatus =
-                    primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
-                }
-                customersEdit(
-                  {
-                    variables: {
-                      _id,
-                      primaryPhone: primaryPhone?.phone || null,
-                      phones: newPhones
-                        .filter((phone) => !phone.isPrimary)
-                        .map((phone) => phone.phone),
-                      phoneValidationStatus: newPhoneValidationStatus,
-                    },
-                    onError: (e: ApolloError) => {
-                      toast({
-                        title: 'Error',
-                        description: e.message,
-                      });
-                    },
-                  },
-                  ['primaryPhone', 'phones', 'emailValidationStatus'],
-                );
-              }}
-            />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          onValueChange={onValueChange}
+          onValidationStatusChange={onValidationStatusChange}
+        />
       );
     },
     size: 250,

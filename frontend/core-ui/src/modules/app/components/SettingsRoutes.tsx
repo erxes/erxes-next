@@ -36,6 +36,11 @@ const TeamMemberSettings = lazy(() =>
     default: module.TeamMemberPage,
   })),
 );
+const PermissionsSettings = lazy(() =>
+  import('~/pages/settings/workspace/PermissionPage').then((module) => ({
+    default: module.PermissionPage,
+  })),
+);
 const StructureSettings = lazy(() =>
   import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
     (module) => ({
@@ -47,6 +52,12 @@ const StructureSettings = lazy(() =>
 const TagsSettings = lazy(() =>
   import('~/pages/settings/workspace/tags/TagsSettingPage').then((module) => ({
     default: module.TagsSettingPage,
+  })),
+);
+
+const AppsSettings = lazy(() =>
+  import('~/pages/settings/workspace/AppSettingsPage').then((module) => ({
+    default: module.AppSettingsPage,
   })),
 );
 
@@ -69,6 +80,21 @@ const AutomationSettingsRoutes = lazy(() =>
   ).then((module) => ({
     default: module.AutomationSettingsRoutes,
   })),
+);
+const NotificationSettingsRoutes = lazy(() =>
+  import('@/notification/settings/components/NotificationsRoutes').then(
+    (module) => ({
+      default: module.NotificationSettingsRoutes,
+    }),
+  ),
+);
+
+const PropertiesSettins = lazy(() =>
+  import('~/pages/settings/workspace/PropertiesSettingsPage').then(
+    (module) => ({
+      default: module.PropertiesSettingsPage,
+    }),
+  ),
 );
 
 export function SettingsRoutes() {
@@ -101,6 +127,10 @@ export function SettingsRoutes() {
           element={<TeamMemberSettings />}
         />
         <Route
+          path={SettingsWorkspacePath.Permissions}
+          element={<PermissionsSettings />}
+        />
+        <Route
           path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
         />
@@ -116,6 +146,15 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.AutomationsCatchAll}
           element={<AutomationSettingsRoutes />}
+        />
+        <Route
+          path={SettingsWorkspacePath.NotificationCatchAll}
+          element={<NotificationSettingsRoutes />}
+        />
+        <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
+        <Route
+          path={SettingsWorkspacePath.Properties}
+          element={<PropertiesSettins />}
         />
         {getPluginsSettingsRoutes()}
       </Routes>

@@ -1,10 +1,9 @@
 import { useFormContext } from 'react-hook-form';
 import { Form, Input, Skeleton } from 'erxes-ui';
-import { AssignMultipleMembers } from 'ui-modules';
 import { TPositionForm } from '../../types/position';
-import { SelectPositions } from 'ui-modules';
+import { SelectMember, SelectPositions } from 'ui-modules';
 
-export const PositionForm = ({ loading }: { loading: boolean }) => {
+export const PositionForm = ({ loading }: { loading?: boolean }) => {
   const { control } = useFormContext<TPositionForm>();
 
   if (loading) {
@@ -47,8 +46,9 @@ export const PositionForm = ({ loading }: { loading: boolean }) => {
             <Form.Item className="col-span-2">
               <Form.Label>{'Team members'}</Form.Label>
               <Form.Control>
-                <AssignMultipleMembers
+                <SelectMember.FormItem
                   value={field.value}
+                  mode="multiple"
                   onValueChange={field.onChange}
                 />
               </Form.Control>

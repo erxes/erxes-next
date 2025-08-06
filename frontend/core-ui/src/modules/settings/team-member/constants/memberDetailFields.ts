@@ -66,6 +66,21 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
     description: 'Short name',
   },
   {
+    label: 'Employee Id',
+    name: 'employeeId',
+    placeholder: 'Employee Id',
+    attributeType: 'text',
+    description: 'Employee Id',
+  },
+  {
+    label: 'Description',
+    name: 'description',
+    placeholder: 'Description',
+    attributeType: 'textfield',
+    path: 'details',
+    description: 'Description',
+  },
+  {
     label: 'Email',
     name: 'email',
     placeholder: 'Email',
@@ -78,28 +93,6 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
     placeholder: 'Username',
     attributeType: 'text',
     description: 'Username',
-  },
-  {
-    label: 'Description',
-    name: 'description',
-    placeholder: 'Description',
-    attributeType: 'textfield',
-    path: 'details',
-    description: 'Description',
-  },
-  {
-    label: 'Employee Id',
-    name: 'employeeId',
-    placeholder: 'Employee Id',
-    attributeType: 'text',
-    description: 'Employee Id',
-  },
-  {
-    label: 'Positions',
-    name: 'positionIds',
-    placeholder: 'Positions',
-    attributeType: 'text',
-    description: 'Positions',
   },
   {
     label: 'Birth date',
@@ -124,6 +117,27 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
     attributeType: 'date',
     path: 'details',
     description: 'Join date',
+  },
+  {
+    label: 'Positions',
+    name: 'positionIds',
+    placeholder: 'Positions',
+    attributeType: 'text',
+    description: 'Positions',
+  },
+  {
+    label: 'Branches',
+    name: 'branchIds',
+    placeholder: 'Branches',
+    attributeType: 'text',
+    description: 'Branches',
+  },
+  {
+    label: 'Departments',
+    name: 'departmentIds',
+    placeholder: 'Departments',
+    attributeType: 'text',
+    description: 'Departments',
   },
 ];
 

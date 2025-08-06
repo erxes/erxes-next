@@ -74,10 +74,11 @@ export const InventoryRow = ({
   useEffect(() => {
     if (loading || !currentCostInfo) return;
 
-    const cost = currentCostInfo[detail.productId || ''];
-    if (cost === undefined) return;
+    const costInfo = currentCostInfo[detail.productId || ''];
 
-    form.setValue(getFieldName('unitPrice'), cost);
+    if (costInfo === undefined) return;
+
+    form.setValue(getFieldName('unitPrice'), costInfo.unitCost);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detail.productId, loading]);

@@ -1,8 +1,9 @@
+import { ALL_ICONS } from 'erxes-ui/modules/icons/components/TablerIcons';
 import { IconsProvider } from '../icons';
 import { IconComponent } from '../icons/components/IconComponent';
 import { StoryObj } from '@storybook/react';
 
-export const IconStory = ({ name }: { name?: string }) => (
+export const IconStory = ({ name }: { name?: keyof typeof ALL_ICONS }) => (
   <IconsProvider>
     <IconComponent name={name} />
   </IconsProvider>

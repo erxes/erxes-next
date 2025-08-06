@@ -8,10 +8,6 @@ export const usePluginsModules = () => {
   const [pluginsMetaData] = useAtom(pluginsConfigState);
 
   const modules = useMemo(() => {
-    const coreModules = [
-      ...CORE_MODULES.filter((module) => module.hasSettings),
-    ];
-
     if (pluginsMetaData) {
       const pluginsModules = Object.values(pluginsMetaData || {}).flatMap(
         (plugin) =>
@@ -21,9 +17,9 @@ export const usePluginsModules = () => {
           })),
       );
 
-      return [...coreModules, ...pluginsModules] as IUIConfig['modules'];
+      return [...CORE_MODULES, ...pluginsModules] as IUIConfig['modules'];
     }
-    return coreModules;
+    return CORE_MODULES;
   }, [pluginsMetaData]);
 
   return modules;

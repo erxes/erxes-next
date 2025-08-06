@@ -2,7 +2,12 @@ import { IconChecks } from '@tabler/icons-react';
 import { Combobox, Command, Filter } from 'erxes-ui';
 import { IsActiveBar } from './IsActiveBar';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
-import { SelectBranches, SelectDepartments, SelectUnit } from 'ui-modules';
+import {
+  SelectBranches,
+  SelectBrands,
+  SelectDepartments,
+  SelectUnit,
+} from 'ui-modules';
 
 export function TeamMemberFilterPopover() {
   return (
@@ -15,12 +20,13 @@ export function TeamMemberFilterPopover() {
 
             <Command.List className="p-1">
               <Filter.SearchValueTrigger />
-              <SelectBranches.FilterItem value="branchIds" label="Branch" />
+              <SelectBranches.FilterItem value="branchIds" label="Branches" />
               <SelectDepartments.FilterItem
                 value="departmentIds"
-                label="Department"
+                label="Departments"
               />
               <SelectUnit.FilterItem />
+              <SelectBrands.FilterItem value="brandIds" label="Brands" />
               <Command.Item className="flex items-center gap-1">
                 <IconChecks />
                 isActive
@@ -35,6 +41,7 @@ export function TeamMemberFilterPopover() {
           filterKey="departmentIds"
         />
         <SelectUnit.FilterView />
+        <SelectBrands.FilterView mode="multiple" filterKey="brandIds" />
       </Combobox.Content>
     </Filter.Popover>
   );
