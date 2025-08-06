@@ -10,7 +10,7 @@ export const useTeamCreateForm = () => {
     defaultValues: {
       name: '',
       description: '',
-      icon: 'IconBox',
+      icon: 'IconBuildingSkyscraper',
     },
     resolver: zodResolver(TEAM_FORM_SCHEMA),
   });

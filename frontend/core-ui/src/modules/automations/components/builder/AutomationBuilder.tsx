@@ -11,7 +11,7 @@ import { AutomationBuilderDnDProvider } from '../../context/AutomationBuilderDnD
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
-import { AutomationBuilderCanvas } from '@/automations/components/builder/AutomationBuilderCanvas';
+import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
 import { AutomationProvider } from '@/automations/context/AutomationProvider';
 import {
   automationBuilderActiveTabState,
@@ -25,7 +25,6 @@ import { useAtom } from 'jotai';
 import { IAutomation } from '../../types';
 import { deepCleanNulls } from '../../utils/automationBuilderUtils';
 import { AutomationHistories } from './history/components/AutomationHistories';
-import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
 
 type AutomationBuilderProps = {
   detail?: IAutomation;

@@ -83,8 +83,6 @@ export const useFacebookBotForm = (facebookBotId: string | null) => {
     pageId: facebookMessengerBot?.pageId,
   };
 
-  console.log({ formDefaultValues });
-
   return {
     loadingDetail,
 

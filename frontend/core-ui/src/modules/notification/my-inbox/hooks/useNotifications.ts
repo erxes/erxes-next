@@ -61,7 +61,7 @@ export const useNotifications = () => {
     useQuery<NotificationsQueryResponse>(NOTIFICATIONS, {
       variables: {
         ids:
-          currentNotificationId && status === 'unread'
+          currentNotificationId && (!status || status === 'unread')
             ? [currentNotificationId]
             : undefined,
         limit: NOTIFICATIONS_LIMIT,

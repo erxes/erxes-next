@@ -132,7 +132,6 @@ const FacebookBotFormContent = ({
   );
   const { onSave, onSaveloading } = useFacebookBotSave();
   const [accountId, pageId] = form.watch(['accountId', 'pageId']);
-  console.log({ accountId, pageId });
 
   return (
     <>

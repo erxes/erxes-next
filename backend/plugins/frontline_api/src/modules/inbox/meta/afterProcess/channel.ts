@@ -51,6 +51,7 @@ export const channelAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
+          notificationType: 'channelMembersChange',
         });
       }
 
@@ -65,6 +66,7 @@ export const channelAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
+          notificationType: 'channelMembersChange',
         });
       }
     }
