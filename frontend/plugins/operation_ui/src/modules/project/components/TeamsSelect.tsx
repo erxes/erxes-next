@@ -22,7 +22,6 @@ const TeamsSelect = ({ id, value, teams }: TeamsSelectProps) => {
   const { updateProject } = useUpdateProject();
   const [localSelectedIds, setLocalSelectedIds] = useState<string[]>(value);
 
-  // Sync local state when prop changes
   useEffect(() => {
     setLocalSelectedIds(value);
   }, [value]);
@@ -35,7 +34,12 @@ const TeamsSelect = ({ id, value, teams }: TeamsSelectProps) => {
   );
 
   const handleSelect = (teamId: string) => {
-    const newValue = localSelectedIds.includes(teamId)
+    const isSelected = localSelectedIds.includes(teamId);
+    if (isSelected && localSelectedIds.length === 1) {
+      return;
+    }
+
+    const newValue = isSelected
       ? localSelectedIds.filter((id) => id !== teamId)
       : [...localSelectedIds, teamId];
     setLocalSelectedIds(newValue);
@@ -44,7 +48,6 @@ const TeamsSelect = ({ id, value, teams }: TeamsSelectProps) => {
   const onOpenChange = (open: boolean) => {
     setOpen(open);
     if (!open) {
-      // Only update if there's a change
       const hasChanged =
         localSelectedIds.length !== value.length ||
         !localSelectedIds.every((id) => value.includes(id));

@@ -1,4 +1,4 @@
-import { Badge, cn, Command } from 'erxes-ui';
+import { cn, Command } from 'erxes-ui';
 import { PROJECT_STATUS_OPTIONS } from '@/project/constants';
 import {
   RecordTablePopover,
@@ -41,19 +41,14 @@ export const StatusSelect = ({ value, id }: StatusSelectProps) => {
       onOpenChange={setOpen}
     >
       <RecordTableCellTrigger>
-        <Badge
-          variant="secondary"
-          style={{ backgroundColor: `${selectedStatus?.IconColor}25` }}
-        >
-          {selectedStatus && (
-            <selectedStatus.Icon
-              className="w-4 h-4"
-              color={selectedStatus.IconColor}
-              stroke={2}
-            />
-          )}
-          {selectedStatus?.name}
-        </Badge>
+        {selectedStatus && (
+          <selectedStatus.Icon
+            className="w-4 h-4"
+            color={selectedStatus.IconColor}
+            stroke={2}
+          />
+        )}
+        <p>{selectedStatus?.name}</p>
       </RecordTableCellTrigger>
       <RecordTableCellContent className="max-w-72">
         <Command>

@@ -39,9 +39,20 @@ export const PrioritySelect = ({ value, id }: PrioritySelectProps) => {
       onOpenChange={setOpen}
     >
       <RecordTableCellTrigger>
-        <Badge variant="secondary">
+        <Badge
+          variant="secondary"
+          style={
+            selectedPriority?.value !== 0
+              ? { backgroundColor: `${selectedPriority?.IconColor}25` }
+              : undefined
+          }
+        >
           {selectedPriority && selectedPriority.value !== 0 && (
-            <selectedPriority.Icon className="w-4 h-4" stroke={2} />
+            <selectedPriority.Icon
+              className="w-4 h-4"
+              color={selectedPriority.IconColor}
+              stroke={2}
+            />
           )}
           {selectedPriority?.name}
         </Badge>
@@ -61,7 +72,11 @@ export const PrioritySelect = ({ value, id }: PrioritySelectProps) => {
                 }}
               >
                 <span className="flex items-center gap-2">
-                  <option.Icon className="w-4 h-4" stroke={1.8} />
+                  <option.Icon
+                    className="w-4 h-4"
+                    color={option.IconColor}
+                    stroke={1.8}
+                  />
                   {option.name}
                 </span>
                 <IconCheck
