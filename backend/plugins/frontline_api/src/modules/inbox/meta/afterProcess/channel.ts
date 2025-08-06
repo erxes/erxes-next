@@ -1,4 +1,7 @@
-import { sendNotification } from 'erxes-api-shared/core-modules';
+import {
+  INotificationData,
+  sendNotification,
+} from 'erxes-api-shared/core-modules';
 import { IAfterProcessRule } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { IChannelDocument } from '~/modules/inbox/@types/channels';
@@ -51,7 +54,7 @@ export const channelAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
-        });
+        } as INotificationData);
       }
 
       if (removeMemberIds.length) {
@@ -65,7 +68,7 @@ export const channelAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
-        });
+        } as INotificationData);
       }
     }
   },

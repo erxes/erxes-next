@@ -1,4 +1,7 @@
-import { sendNotification } from 'erxes-api-shared/core-modules';
+import {
+  INotificationData,
+  sendNotification,
+} from 'erxes-api-shared/core-modules';
 import { IAfterProcessRule } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import {
@@ -49,7 +52,7 @@ export const conversationAfterProcessWorkers = {
           contentTypeId: fullDocument._id,
           action: 'resolved',
           priority: 'medium',
-        });
+        } as INotificationData);
       }
 
       if (updatedFields.status === 'open' && prevDocument.status === 'closed') {
@@ -69,7 +72,7 @@ export const conversationAfterProcessWorkers = {
           notificationType: 'conversationStateChange',
           action: 'resolved',
           priority: 'medium',
-        });
+        } as INotificationData);
       }
     }
   },
