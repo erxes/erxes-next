@@ -1,8 +1,4 @@
-import { useLocation } from 'react-router-dom';
-import { IconCaretUpFilled } from '@tabler/icons-react';
-import { Collapsible, Sidebar } from 'erxes-ui';
-import { NavigationButton } from './NavigationButton';
-import { Icon } from '@tabler/icons-react';
+import { NavigationMenuGroup, NavigationMenuLinkItem } from 'erxes-ui';
 import { useFavorites } from '../hooks/useFavorites';
 
 export function SidebarNavigationFavorites() {
@@ -11,29 +7,11 @@ export function SidebarNavigationFavorites() {
   if (!favorites || favorites.length === 0) return null;
 
   return (
-    <Collapsible defaultOpen className="group/collapsible">
-      <Sidebar.Group>
-        <Sidebar.GroupLabel asChild>
-          <Collapsible.Trigger className="flex items-center gap-2">
-            <IconCaretUpFilled className="size-3.5 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-            <span className="font-sans text-xs font-semibold normal-case">
-              Favorites
-            </span>
-          </Collapsible.Trigger>
-        </Sidebar.GroupLabel>
-        <Collapsible.Content>
-          <Sidebar.GroupContent className="pt-2">
-            <Sidebar.Menu>
-              {favorites.map((item) => {
-                return (
-                  <SidebarNavigationFavoritesItem key={item.name} {...item} />
-                );
-              })}
-            </Sidebar.Menu>
-          </Sidebar.GroupContent>
-        </Collapsible.Content>
-      </Sidebar.Group>
-    </Collapsible>
+    <NavigationMenuGroup name="Favorites">
+      {favorites.map((item) => {
+        return <SidebarNavigationFavoritesItem key={item.name} {...item} />;
+      })}
+    </NavigationMenuGroup>
   );
 }
 
@@ -46,21 +24,10 @@ export function SidebarNavigationFavoritesItem({
   icon?: React.ElementType;
   path: string;
 }) {
-  const { pathname } = useLocation();
   const Icon = icon || (() => <span />);
   const pathWithoutUi = path.replace('_ui', '');
-  const isActive = pathname.includes(pathWithoutUi);
 
   return (
-    <Collapsible asChild open={isActive} className="group/collapsible">
-      <Sidebar.MenuItem key={name}>
-        <NavigationButton
-          isFavorite={true}
-          pathname={pathWithoutUi}
-          name={name}
-          icon={Icon as Icon}
-        />
-      </Sidebar.MenuItem>
-    </Collapsible>
+    <NavigationMenuLinkItem name={name} icon={Icon} path={pathWithoutUi} />
   );
 }

@@ -1,23 +1,19 @@
 import { currentOrganizationState } from 'ui-modules';
 
-import {
-  // Avatar,
-  cn,
-  DropdownMenu,
-  Sidebar,
-  TextOverflowTooltip,
-} from 'erxes-ui';
+import { cn, DropdownMenu, Sidebar, TextOverflowTooltip } from 'erxes-ui';
 
 import { Logo } from '@/auth/components/Logo';
 import { useAtom } from 'jotai';
 import { IconSelector } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/auth/hooks/useAuth';
+import { User } from '@/navigation/components/User';
+import { ThemeSelector } from '@/navigation/components/ThemeSelector';
+import { SelectLanguages } from '@/navigation/components/SelectLanguages';
 
 export function Organization() {
   const [currentOrganization] = useAtom(currentOrganizationState);
   const { handleLogout } = useAuth();
-
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -40,19 +36,43 @@ export function Organization() {
           <IconSelector className="ml-auto size-4 text-accent-foreground" />
         </Sidebar.MenuButton>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content align="start">
+      <DropdownMenu.Content align="start" className="space-y-1">
+        <User />
+        <DropdownMenu.Separator />
         <DropdownMenu.Item asChild>
           <Link to="/settings" className="text-sm">
             Settings
           </Link>
         </DropdownMenu.Item>
-        {/* <DropdownMenu.Item asChild>
+        <DropdownMenu.Separator />
+        <ThemeSelector />
+        <SelectLanguages />
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item className="text-sm" onClick={() => handleLogout()}>
+          Logout
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Label className="flex items-center gap-2">
+          Version
+          <span className="text-primary ml-auto tracking-wider">
+            3.0.0-beta.1
+          </span>
+        </DropdownMenu.Label>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+}
+
+{
+  /* <DropdownMenu.Item asChild>
           <Link to="/settings/team-member" className="text-sm">
             Invite and manage team members
           </Link>
-        </DropdownMenu.Item> */}
-        <DropdownMenu.Separator />
-        {/* <DropdownMenu.Sub>
+        </DropdownMenu.Item> */
+}
+
+{
+  /* <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger>
             Switch organization
             <IconChevronRight className="ml-auto size-4 text-accent-foreground" />
@@ -91,18 +111,5 @@ export function Organization() {
               </DropdownMenu.RadioItem>
             </DropdownMenu.RadioGroup>
           </DropdownMenu.SubContent>
-        </DropdownMenu.Sub> */}
-        <DropdownMenu.Item className="text-sm" onClick={() => handleLogout()}>
-          Logout
-        </DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Label className="flex items-center gap-2">
-          Version
-          <span className="text-primary ml-auto tracking-wider">
-            3.0.0-beta.1
-          </span>
-        </DropdownMenu.Label>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  );
+        </DropdownMenu.Sub> */
 }
