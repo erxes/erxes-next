@@ -24,37 +24,6 @@ export const types = `
     pageInfo: PageInfo
     totalCount: Int,
   }
-
-  input CreateTaskInput {
-    name: String!
-    description: String
-    teamId: String!
-    status: String
-    priority: Int
-    labelIds: [String]
-    tagIds: [String]
-    assigneeId: String
-    cycleId: String
-    projectId: String
-    estimatedPoint: Int
-  
-  }
-
-  input UpdateTaskInput {
-    _id: String!
-    name: String
-    description: String
-    teamId: String!
-    status: String
-    priority: Int
-    labelIds: [String]
-    tagIds: [String]
-    assigneeId: String
-    cycleId: String
-    projectId: String
-    estimatedPoint: Int
-  }
-    
 `;
 
 const taskFilterParams = `
@@ -73,13 +42,42 @@ const taskFilterParams = `
   ${GQL_CURSOR_PARAM_DEFS}
 `;
 
+const createTaskParams = `
+  name: String!
+  description: String
+  teamId: String!
+  status: String
+  priority: Int
+  labelIds: [String]
+  tagIds: [String]
+  assigneeId: String
+  cycleId: String
+  projectId: String
+  estimatedPoint: Int
+`;
+
+const updateTaskParams = `
+  _id: String!
+  name: String
+  description: String
+  teamId: String
+  status: String
+  priority: Int
+  labelIds: [String]
+  tagIds: [String]
+  assigneeId: String
+  cycleId: String
+  projectId: String
+  estimatedPoint: Int
+`;
+
 export const queries = `
   getTask(_id: String!): Task
   getTasks(${taskFilterParams}): TaskListResponse
 `;
 
 export const mutations = `
-  createTask(input: CreateTaskInput!): Task
-  updateTask(input: UpdateTaskInput!): Task
+  createTask(${createTaskParams}): Task
+  updateTask(${updateTaskParams}): Task
   removeTask(_id: String!): Task
 `;

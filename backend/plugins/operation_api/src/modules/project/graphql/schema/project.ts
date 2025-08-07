@@ -22,32 +22,6 @@ type ProjectListResponse {
     pageInfo: PageInfo
     totalCount: Int,
 }
-
-input CreateProjectInput {
-  name: String!
-  leadId: String
-  icon: String
-  description: String
-  status: Int
-  priority: Int
-  teamIds: [String!]!
-  startDate: Date
-  targetDate: Date
-}
-
-input UpdateProjectInput {
-  _id: String!
-  name: String
-  leadId: String
-  icon: String
-  description: String
-  status: Int
-  priority: Int
-  teamIds: [String!]
-  startDate: Date
-  targetDate: Date
-}
-
 `;
 
 const projectFilterParams = `
@@ -63,13 +37,38 @@ const projectFilterParams = `
     ${GQL_CURSOR_PARAM_DEFS}
 `;
 
+const createProjectParams = `
+  name: String!
+  leadId: String
+  icon: String
+  description: String
+  status: Int
+  priority: Int
+  teamIds: [String!]!
+  startDate: Date
+  targetDate: Date
+`;
+
+const updateProjectParams = `
+  _id: String!
+  name: String
+  leadId: String
+  icon: String
+  description: String
+  status: Int
+  priority: Int
+  teamIds: [String]
+  startDate: Date
+  targetDate: Date
+`;
+
 export const queries = `
     getProject(_id: String!): Project
     getProjects(${projectFilterParams}): ProjectListResponse
 `;
 
 export const mutations = `
-  createProject(input: CreateProjectInput!): Project
-  updateProject(input: UpdateProjectInput!): Project
+  createProject(${createProjectParams}): Project
+  updateProject(${updateProjectParams}): Project
   removeProject(_id: String!): JSON
 `;

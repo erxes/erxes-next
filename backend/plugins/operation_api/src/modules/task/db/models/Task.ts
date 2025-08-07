@@ -28,8 +28,8 @@ export const loadTaskClass = (models: IModels) => {
     ): Promise<ITaskDocument[]> {
       const query = {} as any;
 
-      if (params.assignee) {
-        query.assignee = params.assignee;
+      if (params.assigneeId) {
+        query.assigneeId = params.assigneeId;
       }
 
       if (params.name) {

@@ -104,7 +104,7 @@ const SelectStatusValue = ({ placeholder }: { placeholder?: string }) => {
   return (
     <div className="flex gap-1 ">
       {selectedStatuses.map((status) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" key={status.value}>
           <status.Icon
             className="w-3 h-3"
             color={status.IconColor}
@@ -213,6 +213,7 @@ export const SelectStatusFilterBar = ({
   const [open, setOpen] = useState(false);
 
   if (status === null) return null;
+
   return (
     <Filter.BarItem>
       <Filter.BarName>
