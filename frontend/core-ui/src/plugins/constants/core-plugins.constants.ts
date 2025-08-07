@@ -1,15 +1,15 @@
 import {
-  IconShoppingCart,
-  IconBookmarks,
-  IconChartPie,
-  IconMagnet,
-  IconUser,
-  IconBuilding,
-  IconSpiral,
-  IconCategory,
   IconAffiliate,
+  IconBookmarks,
+  IconBuilding,
+  IconCategory,
+  IconChartPie,
+  IconFile,
+  IconMagnet,
   IconReport,
-  IconMailbox,
+  IconShoppingCart,
+  IconSpiral,
+  IconUser,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 
@@ -82,5 +82,12 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     path: 'logs',
     hasSettings: false,
     hasRelationWidget: true,
+  },
+  {
+    name: 'documents',
+    icon: IconFile,
+    path: 'documents',
+    hasSettings: true,
+    hasRelationWidget: false,
   },
 ];
