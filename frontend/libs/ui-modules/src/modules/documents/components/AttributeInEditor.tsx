@@ -165,17 +165,11 @@ function AttributeMenuItem({
   isSelected,
   attribute,
 }: AttributeMenuItemProps) {
-  const handleClick = () => {
-    if (!onClick) return;
-
-    onClick();
-  };
-
   return (
     <SuggestionMenuItem
       isSelected={isSelected}
-      onClick={handleClick}
-      className="justify-start cursor-pointer"
+      onClick={onClick}
+      className="justify-start cursor-pointer hover:bg-muted"
     >
       {!!attribute && <div>{attribute.label || attribute.name}</div>}
     </SuggestionMenuItem>
@@ -189,6 +183,9 @@ function getAttributeMenuItems(
   return attributes.map((attribute) => ({
     title: attribute.label || attribute.name || '',
     onItemClick: () => {
+      editor.suggestionMenus.clearQuery();
+      editor.suggestionMenus.closeMenu();
+
       editor.insertInlineContent([
         {
           type: 'attribute',
