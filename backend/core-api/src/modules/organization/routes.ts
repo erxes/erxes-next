@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { getEnv, getSubdomain } from 'erxes-api-shared/utils';
 import { generateModels } from '~/connectionResolvers';
 import { getSaasOrganizationDetail } from 'erxes-api-shared/utils';
+import { magiclinkCallback, ssocallback } from '~/utils/saas';
 
 const router: Router = Router();
 
@@ -55,5 +56,8 @@ router.get('/get-frontend-plugins', async (_req: Request, res: Response) => {
 
   return res.json(remotes);
 });
+
+router.get('/sso-callback', ssocallback);
+router.get('/ml-callback', magiclinkCallback);
 
 export { router };
