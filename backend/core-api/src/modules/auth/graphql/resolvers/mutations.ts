@@ -1,5 +1,19 @@
-import { authCookieOptions, getEnv, logHandler } from 'erxes-api-shared/utils';
+import {
+  authCookieOptions,
+  getEnv,
+  logHandler,
+  redis,
+  updateSaasOrganization,
+} from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { WorkOS } from '@workos-inc/node';
+import * as jwt from 'jsonwebtoken';
+import {
+  getCallbackRedirectUrl,
+  isValidEmail,
+  sendSaasMagicLinkEmail,
+} from '~/modules/auth/utils';
+import { assertSaasEnvironment } from '~/utils/saas';
 
 type LoginParams = {
   email: string;
@@ -132,22 +146,96 @@ export const authMutations = {
     _params: undefined,
     { models, subdomain }: IContext,
   ) {
-    try {
-      return null;
-    } catch (e) {
-      throw new Error(e.message);
-    }
+    assertSaasEnvironment();
+    const WORKOS_API_KEY = getEnv({ name: 'WORKOS_API_KEY', subdomain });
+
+    const workosClient = new WorkOS(WORKOS_API_KEY);
+
+    const state = await jwt.sign(
+      {
+        subdomain,
+        redirectUri: getCallbackRedirectUrl(subdomain, 'sso-callback'),
+      },
+      models.Users.getSecret(),
+      { expiresIn: '1d' },
+    );
+
+    const authorizationURL = workosClient.sso.getAuthorizationUrl({
+      provider: 'GoogleOAuth',
+      redirectUri: getCallbackRedirectUrl(subdomain, 'sso-callback'),
+
+      clientId: getEnv({ name: 'WORKOS_PROJECT_ID', subdomain }),
+      state,
+    });
+
+    await updateSaasOrganization(subdomain, {
+      lastActiveDate: Date.now(),
+    });
+
+    return authorizationURL;
   },
 
   async loginWithMagicLink(
-    _parent: undefined,
+    _,
     { email }: { email: string },
     { models, subdomain }: IContext,
   ) {
-    try {
-      return 'Invalid login';
-    } catch (e) {
-      throw new Error(e.message);
+    assertSaasEnvironment();
+
+    const WORKOS_API_KEY = getEnv({ name: 'WORKOS_API_KEY', subdomain });
+    const workosClient = new WorkOS(WORKOS_API_KEY);
+
+    if (!isValidEmail(email)) {
+      throw new Error(
+        'Invalid email address provided. Please enter a valid email.',
+      );
     }
+
+    const user = await models.Users.findOne({
+      email,
+    });
+
+    if (!user) {
+      return 'Invalid login';
+    }
+
+    const token = await jwt.sign(
+      {
+        user: models.Users.getTokenFields(user),
+        subdomain,
+        redirectUri: getCallbackRedirectUrl(subdomain, 'ml-callback'),
+      },
+      models.Users.getSecret(),
+      { expiresIn: '1d' },
+    );
+
+    // validated tokens are checked at user middleware
+    await models.Users.updateOne(
+      { _id: user._id },
+      { $push: { validatedTokens: token } },
+    );
+
+    // will use subdomain when workos callback data arrives
+    await redis.set('subdomain', subdomain);
+
+    const session = await workosClient.passwordless.createSession({
+      email,
+      type: 'MagicLink',
+      state: token,
+      redirectURI: getCallbackRedirectUrl(subdomain, 'ml-callback'),
+    });
+
+    await sendSaasMagicLinkEmail({
+      subdomain,
+      models,
+      toEmail: email,
+      link: session.link,
+    });
+
+    await updateSaasOrganization(subdomain, {
+      lastActiveDate: Date.now(),
+    });
+
+    return 'success';
   },
 };
