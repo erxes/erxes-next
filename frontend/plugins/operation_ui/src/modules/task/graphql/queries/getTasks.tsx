@@ -9,7 +9,7 @@ export const GET_TASKS = gql`
   query GetTasks(
     status: String
     priority: Int
-    assignee: String
+    assigneeId: String
     createdBy: String
     cycleId: String
     labelIds: [String]
@@ -25,7 +25,7 @@ export const GET_TASKS = gql`
     getTasks(
       status: $status
       priority: $priority
-      assignee: $assignee
+      assigneeId: $assignee
       createdBy: $createdBy
       cycleId: $cycleId
       labelIds: $labelIds

@@ -22,7 +22,7 @@ import {
 } from 'erxes-ui';
 import { IProject } from '@/project/types';
 import { useState } from 'react';
-import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
+import { ProjectHotKeyScope } from '@/project/types';
 import { SelectPriority } from '@/project/components/select/SelectPriority';
 import { SelectLead } from '@/project/components/select/SelectLead';
 import { ITeam } from '@/team/types';

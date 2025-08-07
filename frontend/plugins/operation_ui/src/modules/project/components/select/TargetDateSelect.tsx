@@ -1,4 +1,4 @@
-import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
+import { ProjectHotKeyScope } from '@/project/types';
 import { format, differenceInDays } from 'date-fns';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import {

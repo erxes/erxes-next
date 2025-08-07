@@ -1,5 +1,5 @@
 import { IconPlus } from '@tabler/icons-react';
-import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
+import { ProjectHotKeyScope } from '@/project/types';
 import {
   Button,
   Kbd,
