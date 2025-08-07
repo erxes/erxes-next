@@ -59,7 +59,19 @@ export const useLoginMagicLink = () => {
     loginWithGoogle({
       onCompleted: (data) => {
         if (data && data.loginWithGoogle) {
-          window.location.href = data.loginWithGoogle;
+          try {
+            const url = new URL(data.loginWithGoogle);
+            if (url.protocol === 'https:' || url.protocol === 'http:') {
+              window.location.href = data.loginWithGoogle;
+            } else {
+              throw new Error('Invalid URL protocol');
+            }
+          } catch (error) {
+            toast({
+              title: 'Something went wrong',
+              description: 'Invalid redirect URL received',
+            });
+          }
         }
       },
       onError: ({ message }) => {

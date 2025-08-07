@@ -13,11 +13,11 @@ export const saveValidatedToken = (token: string, user: IUserDocument) => {
   return redis.set(`user_token_${user._id}_${token}`, 1, 'EX', 24 * 60 * 60);
 };
 
-function isEmail(email: string): boolean {
+export function isEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function isValidEmail(email: string | undefined | null): boolean {
+export function isValidEmail(email: string | undefined | null): boolean {
   if (!email || typeof email !== 'string') return false;
 
   const trimmedEmail = email.trim();
@@ -55,8 +55,6 @@ export const sendSaasMagicLinkEmail = async ({
     data.whiteLabel = true;
     data.organizationName = organization.name || '';
     data.organizationDomain = organization.domain || '';
-
-    hasCompanyFromEmail = true;
   } else {
     hasCompanyFromEmail = false;
   }
@@ -67,8 +65,6 @@ export const sendSaasMagicLinkEmail = async ({
     ? `Noreply <${COMPANY_EMAIL_FROM}>`
     : 'noreply@erxes.io';
 
-  console.log({ fromEmail });
-
   sendgridMail.setApiKey(SENDGRID_API_KEY);
   return await sendgridMail
     .send({
@@ -77,16 +73,11 @@ export const sendSaasMagicLinkEmail = async ({
       subject: 'Login to erxes',
       html,
     })
-    .then(
-      () => {},
-      (error) => {
-        console.error(error);
-
-        if (error.response) {
-          console.error(error.response.body);
-        }
-      },
-    );
+    .catch((error) => {
+      const errorMessage =
+        error.response?.body || error.message || 'Failed to send email';
+      throw new Error(`Failed to send magic link email: ${errorMessage}`);
+    });
 };
 
 export const getCallbackRedirectUrl = (

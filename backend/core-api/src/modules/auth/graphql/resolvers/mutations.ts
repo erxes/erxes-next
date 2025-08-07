@@ -10,6 +10,7 @@ import { WorkOS } from '@workos-inc/node';
 import * as jwt from 'jsonwebtoken';
 import {
   getCallbackRedirectUrl,
+  isValidEmail,
   sendSaasMagicLinkEmail,
 } from '~/modules/auth/utils';
 import { assertSaasEnvironment } from '~/utils/saas';
@@ -184,8 +185,14 @@ export const authMutations = {
     const WORKOS_API_KEY = getEnv({ name: 'WORKOS_API_KEY', subdomain });
     const workosClient = new WorkOS(WORKOS_API_KEY);
 
+    if (!isValidEmail(email)) {
+      throw new Error(
+        'Invalid email address provided. Please enter a valid email.',
+      );
+    }
+
     const user = await models.Users.findOne({
-      email: { $regex: new RegExp(`^${email}$`, 'i') },
+      email,
     });
 
     if (!user) {
