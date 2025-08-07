@@ -9,7 +9,7 @@ import { memo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSetAtom } from 'jotai';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconCrane, IconGavel, IconTrashX } from '@tabler/icons-react';
+import { IconCrane, IconGavel, IconStopwatch, IconTrashX } from '@tabler/icons-react';
 import { useAdjustInventoryDetail } from '../hooks/useAdjustInventoryDetail';
 import { useAdjustInventoryDetails } from '../hooks/useAdjustInventoryDetails';
 import { ADJ_INV_STATUSES } from '~/modules/adjustments/inventories/types/AdjustInventory';
@@ -86,11 +86,23 @@ export const AdjustInventoryDetail = () => {
             PUBLISH
           </Button>
         )
+      case ADJ_INV_STATUSES.RUNNING:
+        return (
+          <Button
+            // disabled={true}
+            onClick={handleRun}
+          >
+            <IconStopwatch />
+            Stop
+          </Button>
+
+        )
+
       default:
         return null;
     }
   }
-  console.log(adjustInventoryDetails, 'kkkkkkkkkkkkkk')
+
   return (
     <>
       <div className="m-3 flex-auto">
@@ -98,6 +110,12 @@ export const AdjustInventoryDetail = () => {
           Inventory Adjustment Detail
         </h3>
         <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-accent-foreground">Status:</span>
+            <span className="text-primary font-bold">
+              {adjustInventory?.status}
+            </span>
+          </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="text-accent-foreground">Begin Date:</span>
             <span className="text-primary font-bold">
