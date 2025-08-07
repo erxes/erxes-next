@@ -24,6 +24,37 @@ export const types = `
     pageInfo: PageInfo
     totalCount: Int,
   }
+
+  input CreateTaskInput {
+    name: String!
+    description: String
+    teamId: String!
+    status: String
+    priority: Int
+    labelIds: [String]
+    tagIds: [String]
+    assigneeId: String
+    cycleId: String
+    projectId: String
+    estimatedPoint: Int
+  
+  }
+
+  input UpdateTaskInput {
+    _id: String!
+    name: String
+    description: String
+    teamId: String!
+    status: String
+    priority: Int
+    labelIds: [String]
+    tagIds: [String]
+    assigneeId: String
+    cycleId: String
+    projectId: String
+    estimatedPoint: Int
+  }
+    
 `;
 
 const taskFilterParams = `
@@ -48,7 +79,7 @@ export const queries = `
 `;
 
 export const mutations = `
-  createTask(name: String!, description: String, teamId: String!, status: String, priority: Int, labelIds: [String], tagIds: [String], assigneeId: String, cycleId: String, projectId: String, estimatedPoint: Int): Task
-  updateTask(_id: String!, name: String, description: String, teamId: String!, status: String, priority: Int, labelIds: [String], tagIds: [String], assigneeId: String, cycleId: String, projectId: String, estimatedPoint: Int): Task
+  createTask(input: CreateTaskInput!): Task
+  updateTask(input: UpdateTaskInput!): Task
   removeTask(_id: String!): Task
 `;

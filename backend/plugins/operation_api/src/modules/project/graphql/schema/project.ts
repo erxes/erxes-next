@@ -23,6 +23,31 @@ type ProjectListResponse {
     totalCount: Int,
 }
 
+input CreateProjectInput {
+  name: String!
+  leadId: String
+  icon: String
+  description: String
+  status: Int
+  priority: Int
+  teamIds: [String!]!
+  startDate: Date
+  targetDate: Date
+}
+
+input UpdateProjectInput {
+  _id: String!
+  name: String
+  leadId: String
+  icon: String
+  description: String
+  status: Int
+  priority: Int
+  teamIds: [String!]
+  startDate: Date
+  targetDate: Date
+}
+
 `;
 
 const projectFilterParams = `
@@ -44,7 +69,7 @@ export const queries = `
 `;
 
 export const mutations = `
-    createProject(name: String!,leadId: String, icon: String, description: String, status: Int, teamIds: [String]!, priority: Int, startDate: Date, targetDate: Date): Project
-    updateProject(_id: String!, name: String, leadId: String, icon: String, description: String, status: Int, priority: Int, teamIds: [String], startDate: Date, targetDate: Date): Project
-    removeProject(_id: String!): JSON
+  createProject(input: CreateProjectInput!): Project
+  updateProject(input: UpdateProjectInput!): Project
+  removeProject(_id: String!): JSON
 `;
