@@ -10,8 +10,6 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { SelectStatus } from '@/project/components/select/SelectStatus';
-import { TargetDateSelect } from '@/project/components/select/TargetDateSelect';
 import {
   Badge,
   Input,
@@ -22,11 +20,9 @@ import {
 } from 'erxes-ui';
 import { IProject } from '@/project/types';
 import { useState } from 'react';
-import { ProjectHotKeyScope } from '@/project/types';
-import { SelectPriority } from '@/project/components/select/SelectPriority';
-import { SelectLead } from '@/project/components/select/SelectLead';
+import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ITeam } from '@/team/types';
-import { SelectTeam } from '@/project/components/select/SelectTeam';
+import { SelectPriority, SelectStatus, SelectTeam, SelectLead, DateSelect } from '@/project/components/select';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
@@ -157,7 +153,7 @@ export const projectsColumns = (
       cell: ({ cell }) => {
         const targetDate = cell.getValue() as string;
         return (
-          <TargetDateSelect
+          <DateSelect.InlineCell
             value={targetDate ? new Date(targetDate) : undefined}
             id={cell.row.original._id}
           />

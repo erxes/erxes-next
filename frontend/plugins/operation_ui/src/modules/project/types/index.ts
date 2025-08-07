@@ -1,3 +1,6 @@
+import { addProjectSchema } from '@/project/types/validations';
+import { z } from 'zod';
+
 export interface IProject {
   _id: string;
   name: string;
@@ -16,10 +19,5 @@ export enum ProjectPageTypes {
   Team = 'team',
 }
 
-export enum ProjectHotKeyScope {
-  ProjectsPage = 'projects-page',
-  ProjectDetailPage = 'project-detail-page',
-  ProjectAddSheet = 'project-add-sheet',
-  ProjectEditSheet = 'project-edit-sheet',
-  ProjectTableCell = 'project-table-cell',
-}
+export type TAddProject = z.infer<typeof addProjectSchema>;
+export * from '@/project/types/validations';

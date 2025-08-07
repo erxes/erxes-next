@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Button,
   cn,
   Combobox,
   Command,
@@ -87,7 +88,13 @@ export const SelectStatusProvider = ({
   );
 };
 
-const SelectStatusValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectStatusValue = ({
+  placeholder,
+  className,
+}: {
+  placeholder?: string;
+  className?: string;
+}) => {
   const { statusIds } = useSelectStatusContext();
 
   const selectedStatuses = PROJECT_STATUS_OPTIONS.filter((status) =>
@@ -95,7 +102,7 @@ const SelectStatusValue = ({ placeholder }: { placeholder?: string }) => {
   );
   if (selectedStatuses.length === 0) {
     return (
-      <span className="text-muted-foreground">
+      <span className="text-accent-foreground/80">
         {placeholder || 'Select status...'}
       </span>
     );
@@ -110,7 +117,9 @@ const SelectStatusValue = ({ placeholder }: { placeholder?: string }) => {
             color={status.IconColor}
             stroke={2}
           />
-          <p className="font-medium text-base">{status.name}</p>
+          <p className={cn('font-medium text-base ', className)}>
+            {status.name}
+          </p>
         </div>
       ))}
     </div>
@@ -314,29 +323,48 @@ export const SelectStatusInlineCell = ({
   );
 };
 
-export const SelectStatusFormItem = ({
-  onValueChange,
-  className,
-  placeholder,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectStatusProvider>, 'children'> & {
-  className?: string;
-  placeholder?: string;
-}) => {
+export const SelectStatusFormItem = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectStatusProvider>,
+    'children' | 'onValueChange' | 'value'
+  > & {
+    className?: string;
+    placeholder?: string;
+    value?: number | string;
+    onChange?: (value: number) => void;
+  }
+>(({ onChange, className, placeholder, value, ...props }, ref) => {
   const [open, setOpen] = useState(false);
+
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
+
   return (
     <SelectStatusProvider
+      value={stringValue}
       onValueChange={(value) => {
-        onValueChange?.(value);
+        const numValue =
+          typeof value === 'string' ? parseInt(value, 10) : Number(value);
+        onChange?.(numValue);
         setOpen(false);
       }}
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
-          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectStatusValue placeholder={placeholder} />
-          </Combobox.Trigger>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-full shadow-xs', className)}
+            asChild
+          >
+            <Button variant="secondary">
+              <SelectStatusValue
+                placeholder={placeholder}
+                className={value === 0 ? 'text-muted-foreground' : undefined}
+              />
+            </Button>
+          </Combobox.TriggerBase>
         </Form.Control>
         <Combobox.Content>
           <SelectStatusContent />
@@ -344,7 +372,7 @@ export const SelectStatusFormItem = ({
       </Popover>
     </SelectStatusProvider>
   );
-};
+});
 
 SelectStatusFormItem.displayName = 'SelectStatusFormItem';
 

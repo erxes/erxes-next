@@ -1,5 +1,5 @@
 import { IconPlus } from '@tabler/icons-react';
-import { ProjectHotKeyScope } from '@/project/types';
+import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import {
   Button,
   Kbd,
@@ -37,7 +37,7 @@ export const AddProjectSheet = () => {
         </Button>
       </Sheet.Trigger>
       <Sheet.View
-        className="sm:max-w-lg p-0"
+        className="sm:max-w-3xl w-full p-0"
         onEscapeKeyDown={(e) => {
           e.preventDefault();
         }}

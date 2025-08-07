@@ -15,10 +15,12 @@ import {
   useQueryState,
   Badge,
   IconComponent,
+  Button,
+  TextOverflowTooltip,
 } from 'erxes-ui';
 import { IconUsers } from '@tabler/icons-react';
 import { ITeam } from '@/team/types';
-import { useGetTeams } from '@/team/hooks/useGetTeams';
+import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { useDebounce } from 'use-debounce';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 
@@ -70,13 +72,28 @@ export const SelectTeamProvider = ({
 
     const arrayValue = Array.isArray(value) ? value : [];
     const isTeamSelected = arrayValue.includes(team._id);
+
+    // Prevent deselecting the last team
+    if (isTeamSelected && arrayValue.length === 1) {
+      return;
+    }
+
     const newSelectedTeamIds = isTeamSelected
       ? arrayValue.filter((id) => id !== team._id)
       : [...arrayValue, team._id];
 
-    setTeams((prev) =>
-      [...prev, team].filter((t) => newSelectedTeamIds.includes(t._id)),
-    );
+    setTeams((prev) => {
+      // Remove duplicates and ensure we only have teams that are in newSelectedTeamIds
+      const existingTeams = prev.filter((t) =>
+        newSelectedTeamIds.includes(t._id),
+      );
+      const newTeam =
+        newSelectedTeamIds.includes(team._id) &&
+        !prev.some((t) => t._id === team._id)
+          ? team
+          : null;
+      return newTeam ? [...existingTeams, newTeam] : existingTeams;
+    });
     onValueChange?.(newSelectedTeamIds);
   };
 
@@ -98,7 +115,7 @@ export const SelectTeamProvider = ({
   );
 };
 
-const SelectTeamValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectTeamBadgeValue = ({ placeholder }: { placeholder?: string }) => {
   const { teamIds, teams } = useSelectTeamContext();
   const selectedTeams = teams.filter((team) => teamIds.includes(team._id));
   if (selectedTeams.length === 0) {
@@ -151,13 +168,14 @@ const SelectTeamContent = ({ providedTeams }: { providedTeams?: ITeam[] }) => {
   const { teams: selectedTeams, loading: contextLoading } =
     useSelectTeamContext();
 
-  const { teams: searchedTeams = [], loading: searchLoading } = useGetTeams({
-    variables: {
-      searchValue: debouncedSearch,
-      userId: currentUser?._id,
-    },
-    skip: !!providedTeams,
-  });
+  const { teams: searchedTeams = [], loading: searchLoading } =
+    useGetCurrentUsersTeams({
+      variables: {
+        searchValue: debouncedSearch,
+        userId: currentUser?._id,
+      },
+      skip: !!providedTeams,
+    });
 
   const teams = providedTeams || searchedTeams;
   const filteredTeams = providedTeams
@@ -243,14 +261,9 @@ export const SelectTeamFilterBar = ({
   onValueChange?: (value: string[] | string) => void;
   queryKey?: string;
 }) => {
-  const currentUser = useAtomValue(currentUserState);
   const [team, setTeam] = useQueryState<string>(queryKey || 'team');
   const [open, setOpen] = useState(false);
-  const { teams } = useGetTeams({
-    variables: {
-      userId: currentUser?._id,
-    },
-  });
+  const { teams } = useGetCurrentUsersTeams();
   if (!team) {
     return null;
   }
@@ -279,7 +292,7 @@ export const SelectTeamFilterBar = ({
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
             <Filter.BarButton filterKey={queryKey || 'team'}>
-              <SelectTeamValue />
+              <SelectTeamBadgeValue />
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>
@@ -441,7 +454,7 @@ export const SelectTeamInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectTeamValue placeholder={''} />
+          <SelectTeamBadgeValue placeholder={''} />
         </RecordTableCellTrigger>
         <RecordTableCellContent>
           <SelectTeamContent providedTeams={teams} />
@@ -451,29 +464,56 @@ export const SelectTeamInlineCell = ({
   );
 };
 
-export const SelectTeamFormItem = ({
-  onValueChange,
-  className,
-  placeholder,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectTeamProvider>, 'children'> & {
-  className?: string;
-  placeholder?: string;
-}) => {
-  const [open, setOpen] = useState(false);
+const SelectTeamValue = () => {
+  const { teamIds, teams } = useSelectTeamContext();
+  const selectedTeams = teams.filter((team) => teamIds.includes(team._id));
+  if (selectedTeams.length === 0) return null;
+
+  const teamNames = selectedTeams.map((team) => team.name).join(', ');
+
+  return (
+    <div className="flex items-center gap-2 max-w-[200px]">
+      <IconComponent
+        name={selectedTeams[0].icon}
+        className="size-3 flex-shrink-0"
+      />
+      <TextOverflowTooltip
+        className="text-base font-medium"
+        value={teamNames}
+      />
+    </div>
+  );
+};
+
+export const SelectTeamFormItem = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectTeamProvider>,
+    'children' | 'onValueChange'
+  > & {
+    className?: string;
+    onChange?: (value: string | string[]) => void;
+  }
+>(({ onChange, className, ...props }, ref) => {
+  const [open, setOpen] = useState(false);  
   return (
     <SelectTeamProvider
       onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
+        onChange?.(value);
       }}
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
-          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectTeamValue placeholder={placeholder} />
-          </Combobox.Trigger>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-min shadow-xs ', className)}
+            asChild
+          >
+            <Button variant="secondary">
+              <SelectTeamValue />
+            </Button>
+          </Combobox.TriggerBase>
         </Form.Control>
         <Combobox.Content>
           <SelectTeamContent />
@@ -481,7 +521,7 @@ export const SelectTeamFormItem = ({
       </Popover>
     </SelectTeamProvider>
   );
-};
+});
 
 SelectTeamFormItem.displayName = 'SelectTeamFormItem';
 
@@ -509,7 +549,7 @@ const SelectTeamRoot = React.forwardRef<
           variant="outline"
           {...props}
         >
-          <SelectTeamValue placeholder={placeholder} />
+          <SelectTeamBadgeValue placeholder={placeholder} />
         </Combobox.Trigger>
         <Combobox.Content>
           <SelectTeamContent />
@@ -523,7 +563,7 @@ SelectTeamRoot.displayName = 'SelectTeamRoot';
 
 export const SelectTeam = Object.assign(SelectTeamRoot, {
   Provider: SelectTeamProvider,
-  Value: SelectTeamValue,
+  Value: SelectTeamBadgeValue,
   Content: SelectTeamContent,
   FilterItem: SelectTeamFilterItem,
   FilterView: SelectTeamFilterView,

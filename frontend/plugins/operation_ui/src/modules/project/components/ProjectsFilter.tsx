@@ -1,7 +1,7 @@
 import { IconSearch } from '@tabler/icons-react';
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
-import { ProjectHotKeyScope } from '@/project/types';
+import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ProjectsTotalCount } from '@/project/components/ProjectsTotalCount';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { SelectLead } from '@/project/components/select/SelectLead';

@@ -83,7 +83,6 @@ export const useProjects = (
     if (!validateFetchMore({ direction, pageInfo })) {
       return;
     }
-
     fetchMore({
       variables: {
         cursor:

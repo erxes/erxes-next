@@ -10,7 +10,6 @@ import {
   IconCircleCheck,
   IconCircleX,
 } from '@tabler/icons-react';
-
 export const PROJECTS_CURSOR_SESSION_KEY = 'projects_cursor_session_key';
 
 export const PROJECT_PRIORITIES_OPTIONS = [
@@ -58,3 +57,7 @@ export const PROJECT_STATUS_OPTIONS = [
     IconColor: '#EF4444',
   },
 ];
+
+
+
+export * from './ProjectHotKeyScope';

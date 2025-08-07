@@ -1,0 +1,370 @@
+import React, { useState } from 'react';
+import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
+import { format, differenceInDays } from 'date-fns';
+import { useUpdateProject } from '@/project/hooks/useUpdateProject';
+import {
+  Calendar,
+  RecordTablePopover,
+  RecordTableCellTrigger,
+  RecordTableCellContent,
+  cn,
+  Popover,
+  Filter,
+  Form,
+  useFilterContext,
+  useQueryState,
+  Combobox,
+  Button,
+} from 'erxes-ui';
+import { IconCalendarQuestion, IconCalendarTime, IconCalendarUp } from '@tabler/icons-react';
+
+interface DateSelectContextType {
+  value?: Date;
+  onSelect: (date?: Date) => void;
+  loading: boolean;
+  error: any;
+}
+
+const DateSelectContext =
+  React.createContext<DateSelectContextType | null>(null);
+
+const useDateSelectContext = () => {
+  const context = React.useContext(DateSelectContext);
+  if (!context) {
+    throw new Error(
+      'useDateSelectContext must be used within DateSelectProvider',
+    );
+  }
+  return context;
+};
+
+const getDateColorClass = (date: Date): string => {
+  const today = new Date();
+  const daysUntil = differenceInDays(date, today);
+
+  if (daysUntil < 0) {
+    return 'text-red-500';
+  } else if (daysUntil <= 3) {
+    return 'text-amber-500';
+  } else if (daysUntil <= 7) {
+    return 'text-yellow-500';
+  } else if (daysUntil <= 14) {
+    return 'text-blue-500';
+  } else {
+    return 'text-green-500';
+  }
+};
+
+export const DateSelectProvider = ({
+  children,
+  value,
+  onValueChange,
+}: {
+  children: React.ReactNode;
+  value?: Date;
+  onValueChange: (value?: Date) => void;
+}) => {
+  const onSelect = (date?: Date) => {
+    onValueChange?.(date);
+  };
+
+  return (
+    <DateSelectContext.Provider
+      value={{
+        value,
+        onSelect,
+        loading: false,
+        error: null,
+      }}
+    >
+      {children}
+    </DateSelectContext.Provider>
+  );
+};
+
+const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
+  const { value } = useDateSelectContext();
+
+  if (!value) {
+    return (
+      <span className="text-accent-foreground/80">
+        {placeholder || 'Select date...'}
+      </span>
+    );
+  }
+
+  return (
+    <span className="flex items-center justify-center gap-2">
+      <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
+      {format(value, 'MMM d, yyyy')}
+    </span>
+  );
+};
+
+const DateSelectFormItemValue = ({placeholder, type}: {placeholder?: string, type?: 'start' | 'target'}) => {
+  const { value } = useDateSelectContext();
+
+  if (!value) {
+    return (
+      <span className="text-accent-foreground/80 flex items-center justify-center gap-2">
+       {type === 'start' ? <IconCalendarUp className="size-4" /> : <IconCalendarQuestion className="size-4" />}
+        {placeholder || 'Select date'}
+      </span>
+    );
+  }
+
+  return (
+    <span className="flex items-center justify-center gap-2">
+      <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
+      {format(value, 'MMM d, yyyy')}
+    </span>
+  );
+};
+const DateSelectContent = () => {
+  const { value, onSelect } = useDateSelectContext();
+
+  return (
+    <Calendar
+      mode="single"
+      selected={value}
+      onSelect={onSelect}
+      defaultMonth={value}
+    />
+  );
+};
+
+
+
+export const DateSelectFilterItem = () => {
+  return (
+    <Filter.Item value="Date">
+      <IconCalendarTime />
+       Date
+    </Filter.Item>
+  );
+};
+
+export const DateSelectFilterView = ({
+  onValueChange,
+  queryKey,
+}: {
+  onValueChange?: (value?: Date) => void;
+  queryKey?: string;
+}) => {
+  const [date, setDate] = useQueryState<string>(
+    queryKey || 'Date',
+  );
+  const { resetFilterState } = useFilterContext();
+
+  const dateValue = date ? new Date(date) : undefined;
+
+  return (
+    <Filter.View filterKey={queryKey || 'Date'}>
+      <DateSelectProvider
+        value={dateValue}
+        onValueChange={(value) => {
+          setDate(value?.toISOString() || null);
+          resetFilterState();
+          onValueChange?.(value);
+        }}
+      >
+        <div className="w-fit">
+          <DateSelectContent />
+        </div>
+      </DateSelectProvider>
+    </Filter.View>
+  );
+};
+
+export const DateSelectFilterBar = ({
+  iconOnly,
+  onValueChange,
+  queryKey,
+}: {
+  iconOnly?: boolean;
+  onValueChange?: (value?: Date) => void;
+  queryKey?: string;
+}) => {
+  const [date, setDate] = useQueryState<string>(
+    queryKey || 'Date',
+  );
+  const [open, setOpen] = useState(false);
+
+  if (!date) return null;
+
+  const dateValue = new Date(date);
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarName>
+        <IconCalendarTime />
+        {!iconOnly && ' Date'}
+      </Filter.BarName>
+      <DateSelectProvider
+        value={dateValue}
+        onValueChange={(value) => {
+          if (value) {
+            setDate(value.toISOString());
+          } else {
+            setDate(null);
+          }
+          setOpen(false);
+          onValueChange?.(value);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Combobox.TriggerBase asChild>
+            <Filter.BarButton filterKey={queryKey || 'Date'}>
+              <DateSelectValue />
+            </Filter.BarButton>
+          </Combobox.TriggerBase>
+          <Popover.Content className="w-fit">
+            <DateSelectContent />
+          </Popover.Content>
+        </Popover>
+      </DateSelectProvider>
+      <Filter.BarClose filterKey={queryKey || 'Date'} />
+    </Filter.BarItem>
+  );
+};
+
+export const DateSelectInlineCell = ({
+  value,
+  id,
+  onValueChange,
+  scope,
+}: {
+  value?: Date;
+  id?: string;
+  onValueChange?: (value?: Date) => void;
+  scope?: string;
+}) => {
+  const { updateProject } = useUpdateProject();
+  const [open, setOpen] = useState(false);
+
+  const handleValueChange = (value?: Date) => {
+    if (id) {
+      updateProject({
+        variables: {
+          _id: id,
+          Date: value?.toISOString(),
+        },
+      });
+    }
+    onValueChange?.(value);
+    setOpen(false);
+  };
+
+  const finalScope =
+    scope ||
+    (id
+      ? `${ProjectHotKeyScope.ProjectTableCell}.${id}.Date`
+      : undefined);
+
+  return (
+    <DateSelectProvider value={value} onValueChange={handleValueChange}>
+      <RecordTablePopover
+        open={open}
+        onOpenChange={setOpen}
+        scope={finalScope}
+        closeOnEnter
+      >
+        <RecordTableCellTrigger>
+          <DateSelectValue placeholder="not specified" />
+        </RecordTableCellTrigger>
+        <RecordTableCellContent className="w-fit">
+          <DateSelectContent />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+    </DateSelectProvider>
+  );
+};
+
+export const DateSelectFormItem = React.forwardRef<
+  HTMLButtonElement,
+  {
+    className?: string;
+    placeholder?: string;
+    value?: Date;
+    onChange?: (value?: Date) => void;
+    type?: 'start' | 'target';
+  }
+>(({ onChange, className, placeholder, value, type }, ref) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <DateSelectProvider
+      value={value}
+      onValueChange={(value) => {
+        onChange?.(value);
+        setOpen(false);
+      }}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-full shadow-xs', className)}
+            asChild
+          >
+            <Button variant="secondary">
+              <DateSelectFormItemValue placeholder={placeholder} type={type} />
+            </Button>
+          </Combobox.TriggerBase>
+        </Form.Control>
+        <Popover.Content className="w-fit">
+          <DateSelectContent />
+        </Popover.Content>
+      </Popover>
+    </DateSelectProvider>
+  );
+});
+
+DateSelectFormItem.displayName = 'DateSelectFormItem';
+
+const DateSelectRoot = React.forwardRef<
+  HTMLButtonElement,
+  {
+    onValueChange?: (value?: Date) => void;
+    className?: string;
+    value?: Date;
+    placeholder?: string;
+  }
+>(({ onValueChange, className, value, placeholder, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <DateSelectProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      value={value}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Popover.Trigger
+          ref={ref}
+          className={cn('w-full shadow-xs', className)}
+          {...props}
+        >
+          <DateSelectValue placeholder={placeholder} />
+        </Popover.Trigger>
+        <Popover.Content className="w-fit">
+          <DateSelectContent />
+        </Popover.Content>
+      </Popover>
+    </DateSelectProvider>
+  );
+});
+
+DateSelectRoot.displayName = 'DateSelectRoot';
+
+export const DateSelect = Object.assign(DateSelectRoot, {
+  Provider: DateSelectProvider,
+  Value: DateSelectValue,
+  Content: DateSelectContent,
+  FilterItem: DateSelectFilterItem,
+  FilterView: DateSelectFilterView,
+  FilterBar: DateSelectFilterBar,
+  InlineCell: DateSelectInlineCell,
+  FormItem: DateSelectFormItem,
+});

@@ -2,20 +2,13 @@ import { projectsColumns } from '@/project/components/ProjectsColumn';
 import { RecordTable, PageSubHeader } from 'erxes-ui';
 import { useProjects } from '@/project/hooks/useGetProjects';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
-import { useGetTeams } from '@/team/hooks/useGetTeams';
-import { useAtomValue } from 'jotai';
-import { currentUserState } from 'ui-modules';
+import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ProjectsFilter } from '@/project/components/ProjectsFilter';
 
 export const ProjectsRecordTable = ({ type }: { type: string }) => {
   const { projects, handleFetchMore, pageInfo, loading } = useProjects();
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
-  const currentUser = useAtomValue(currentUserState);
-  const { teams } = useGetTeams({
-    variables: {
-      userId: currentUser?._id,
-    },
-  });
+  const { teams } = useGetCurrentUsersTeams();
   return (
     <div className="flex flex-col overflow-hidden h-full">
       <PageSubHeader>

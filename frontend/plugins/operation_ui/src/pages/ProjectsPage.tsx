@@ -3,7 +3,7 @@ import { PageHeader } from 'ui-modules';
 import { Breadcrumb, Button } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { IconBox } from '@tabler/icons-react';
-
+import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 import { ProjectPageTypes } from '@/project/types';
 
 export const ProjectsPage = ({ type }: { type: ProjectPageTypes }) => {
@@ -22,6 +22,7 @@ export const ProjectsPage = ({ type }: { type: ProjectPageTypes }) => {
             </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>
+        <AddProjectSheet />
       </PageHeader>
 
       <ProjectsRecordTable type={type} />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Button,
   cn,
   Combobox,
   Command,
@@ -242,17 +243,13 @@ export const SelectLeadInlineCell = ({
   );
 };
 
-export const SelectLeadFormItem = ({
-  onValueChange,
-  className,
-  placeholder,
-  teamIds,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> & {
-  className?: string;
-  placeholder?: string;
-  teamIds?: string[] | string;
-}) => {
+export const SelectLeadFormItem = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> & {
+    className?: string;
+    teamIds?: string[] | string;
+  }
+>(({ onValueChange, className, teamIds, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <SelectLeadProvider
@@ -264,9 +261,15 @@ export const SelectLeadFormItem = ({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
-          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectLeadValue placeholder={placeholder} />
-          </Combobox.Trigger>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-full shadow-xs', className)}
+            asChild
+          >
+            <Button variant="secondary">
+              <SelectLeadValue placeholder={'Select lead'} />
+            </Button>
+          </Combobox.TriggerBase>
         </Form.Control>
         <Combobox.Content>
           <SelectLeadContent teamIds={teamIds} />
@@ -274,7 +277,7 @@ export const SelectLeadFormItem = ({
       </Popover>
     </SelectLeadProvider>
   );
-};
+});
 
 SelectLeadFormItem.displayName = 'SelectLeadFormItem';
 

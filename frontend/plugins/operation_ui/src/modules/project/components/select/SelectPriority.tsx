@@ -12,6 +12,7 @@ import {
   useFilterContext,
   useQueryState,
   Badge,
+  Button,
 } from 'erxes-ui';
 import { IconAlertSquareRounded } from '@tabler/icons-react';
 import { PROJECT_PRIORITIES_OPTIONS } from '@/project/constants';
@@ -90,7 +91,11 @@ export const SelectPriorityProvider = ({
   );
 };
 
-const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectPriorityBadgeValue = ({
+  placeholder,
+}: {
+  placeholder?: string;
+}) => {
   const { priorityIds } = useSelectPriorityContext();
 
   const selectedPriorities = PROJECT_PRIORITIES_OPTIONS.filter((priority) =>
@@ -99,7 +104,7 @@ const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
 
   if (selectedPriorities.length === 0) {
     return (
-      <span className="text-muted-foreground">
+      <span className="text-accent-foreground/80">
         {placeholder || 'Select priority...'}
       </span>
     );
@@ -131,6 +136,43 @@ const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
     </div>
   );
 };
+const SelectPriorityValue = ({
+  placeholder,
+}: {
+  placeholder?: string;
+}) => {
+  const { priorityIds } = useSelectPriorityContext();
+
+  const selectedPriorities = PROJECT_PRIORITIES_OPTIONS.filter((priority) =>
+    priorityIds.includes(priority.value.toString()),
+  );
+
+  if (selectedPriorities.length === 0) {
+    return (
+      <span className="text-accent-foreground/80">
+        {placeholder || 'Select priority...'}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex gap-1 flex-wrap">
+      {selectedPriorities.map((priority) => (
+        <div className="flex items-center gap-2" key={priority.value}>
+          {priority.value !== 0 && (
+            <priority.Icon
+              className="w-3 h-3"
+              color={priority.IconColor}
+              stroke={2}
+            />
+          )}
+          <p className={cn("font-medium text-base", priority.value === 0 && "text-muted-foreground")}>{priority.name}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
 const SelectPriorityCommandItem = ({
   priority,
@@ -260,7 +302,7 @@ export const SelectPriorityFilterBar = ({
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
             <Filter.BarButton filterKey={queryKey || 'priority'}>
-              <SelectPriorityValue />
+              <SelectPriorityBadgeValue />
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>
@@ -323,7 +365,7 @@ export const SelectPriorityInlineCell = ({
         closeOnEnter
       >
         <RecordTableCellTrigger>
-          <SelectPriorityValue placeholder={''} />
+          <SelectPriorityBadgeValue placeholder={''} />
         </RecordTableCellTrigger>
         <RecordTableCellContent className="max-w-72">
           <SelectPriorityContent />
@@ -333,29 +375,45 @@ export const SelectPriorityInlineCell = ({
   );
 };
 
-export const SelectPriorityFormItem = ({
-  onValueChange,
-  className,
-  placeholder,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectPriorityProvider>, 'children'> & {
-  className?: string;
-  placeholder?: string;
-}) => {
+export const SelectPriorityFormItem = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectPriorityProvider>,
+    'children' | 'onValueChange' | 'value'
+  > & {
+    className?: string;
+    placeholder?: string;
+    value?: number | string;
+    onChange?: (value: number) => void;
+  }
+>(({ onChange, className, placeholder, value, ...props }, ref) => {
   const [open, setOpen] = useState(false);
+
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
+
   return (
     <SelectPriorityProvider
+      value={stringValue}
       onValueChange={(value) => {
-        onValueChange?.(value);
+        const numValue =
+          typeof value === 'string' ? parseInt(value, 10) : Number(value);
+        onChange?.(numValue);
         setOpen(false);
       }}
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
-          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-full shadow-xs', className)}
+            asChild
+          >
+            <Button variant="secondary">
             <SelectPriorityValue placeholder={placeholder} />
-          </Combobox.Trigger>
+            </Button>
+          </Combobox.TriggerBase>
         </Form.Control>
         <Combobox.Content>
           <SelectPriorityContent />
@@ -363,7 +421,7 @@ export const SelectPriorityFormItem = ({
       </Popover>
     </SelectPriorityProvider>
   );
-};
+});
 
 SelectPriorityFormItem.displayName = 'SelectPriorityFormItem';
 
@@ -391,7 +449,7 @@ const SelectPriorityRoot = React.forwardRef<
           variant="outline"
           {...props}
         >
-          <SelectPriorityValue placeholder={placeholder} />
+          <SelectPriorityBadgeValue placeholder={placeholder} />
         </Combobox.Trigger>
         <Combobox.Content>
           <SelectPriorityContent />
@@ -405,7 +463,7 @@ SelectPriorityRoot.displayName = 'SelectPriorityRoot';
 
 export const SelectPriority = Object.assign(SelectPriorityRoot, {
   Provider: SelectPriorityProvider,
-  Value: SelectPriorityValue,
+  Value: SelectPriorityBadgeValue,
   Content: SelectPriorityContent,
   FilterItem: SelectPriorityFilterItem,
   FilterView: SelectPriorityFilterView,
