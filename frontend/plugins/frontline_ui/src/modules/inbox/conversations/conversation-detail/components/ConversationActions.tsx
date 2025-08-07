@@ -24,12 +24,7 @@ export const ConversationActions = () => {
       onPressedChange={handleChangeConversationStatus}
       disabled={loading}
     >
-      {loading && <Spinner size="small" />}
-      {loading
-        ? 'Resolving'
-        : status === ConversationStatus.CLOSED
-        ? 'Open'
-        : 'Resolve'}
+      {status === ConversationStatus.CLOSED ? 'Open' : 'Resolve'}
     </Toggle>
   );
 };
