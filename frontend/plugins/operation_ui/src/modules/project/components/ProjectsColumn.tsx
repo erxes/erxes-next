@@ -7,10 +7,11 @@ import {
   IconLabelFilled,
   IconProgressCheck,
   IconUser,
+  IconUsersGroup,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { StatusSelect } from '@/project/components/StatusSelect';
-import { TargetDateSelect } from '@/project/components/TargetDateSelect';
+import { SelectStatus } from '@/project/components/select/SelectStatus';
+import { TargetDateSelect } from '@/project/components/select/TargetDateSelect';
 import {
   Badge,
   Input,
@@ -22,10 +23,10 @@ import {
 import { IProject } from '@/project/types';
 import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/ProjectHotKeyScope';
-import { PrioritySelect } from '@/project/components/PrioritySelect';
-import { LeadSelect } from '@/project/components/LeadSelect';
+import { SelectPriority } from '@/project/components/select/SelectPriority';
+import { SelectLead } from '@/project/components/select/SelectLead';
 import { ITeam } from '@/team/types';
-import TeamsSelect from '@/project/components/TeamsSelect';
+import { SelectTeam } from '@/project/components/select/SelectTeam';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
@@ -92,7 +93,7 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <PrioritySelect
+          <SelectPriority.InlineCell
             value={cell.row.original.priority || 0}
             id={cell.row.original._id}
           />
@@ -108,7 +109,7 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <StatusSelect
+          <SelectStatus.InlineCell
             value={cell.row.original.status || 0}
             id={cell.row.original._id}
           />
@@ -118,10 +119,12 @@ export const projectsColumns = (
     },
     {
       id: 'teamIds',
-      header: () => <RecordTable.InlineHead label="Team" icon={IconUser} />,
+      header: () => (
+        <RecordTable.InlineHead label="Team" icon={IconUsersGroup} />
+      ),
       cell: ({ cell }) => {
         return (
-          <TeamsSelect
+          <SelectTeam.InlineCell
             id={cell.row.original._id}
             value={cell.row.original.teamIds || []}
             teams={_teams || []}
@@ -135,7 +138,7 @@ export const projectsColumns = (
       header: () => <RecordTable.InlineHead label="Lead" icon={IconUser} />,
       cell: ({ cell }) => {
         return (
-          <LeadSelect
+          <SelectLead.InlineCell
             id={cell.row.original._id}
             value={cell.row.original.leadId}
             teamIds={cell.row.original.teamIds}

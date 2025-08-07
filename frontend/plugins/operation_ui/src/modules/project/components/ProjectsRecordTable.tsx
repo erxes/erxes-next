@@ -4,7 +4,7 @@ import { useProjects } from '@/project/hooks/useGetProjects';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
-import { currentUserState } from 'ui-modules/states';
+import { currentUserState } from 'ui-modules';
 
 export const ProjectsRecordTable = ({ type }: { type: string }) => {
   const { projects, handleFetchMore, pageInfo, loading } = useProjects();
@@ -12,10 +12,9 @@ export const ProjectsRecordTable = ({ type }: { type: string }) => {
   const currentUser = useAtomValue(currentUserState);
   const { teams } = useGetTeams({
     variables: {
-      teamIds: [currentUser?._id],
+      userId: currentUser?._id,
     },
   });
-
   return (
     <div className="flex flex-col overflow-hidden h-full">
       <RecordTable.Provider

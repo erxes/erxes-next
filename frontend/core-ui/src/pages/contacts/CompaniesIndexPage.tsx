@@ -9,7 +9,7 @@ export const CompaniesIndexPage = () => {
     <PageContainer>
       <CompaniesHeader />
       <PageSubHeader>
-        <CompaniesFilter />
+        <CompaniesFilter /> 
       </PageSubHeader>
       <CompaniesRecordTable />
       <CompanyDetail />
