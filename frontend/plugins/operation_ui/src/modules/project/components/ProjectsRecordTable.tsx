@@ -1,10 +1,11 @@
 import { projectsColumns } from '@/project/components/ProjectsColumn';
-import { RecordTable } from 'erxes-ui';
+import { RecordTable, PageSubHeader } from 'erxes-ui';
 import { useProjects } from '@/project/hooks/useGetProjects';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
+import { ProjectsFilter } from '@/project/components/ProjectsFilter';
 
 export const ProjectsRecordTable = ({ type }: { type: string }) => {
   const { projects, handleFetchMore, pageInfo, loading } = useProjects();
@@ -17,6 +18,9 @@ export const ProjectsRecordTable = ({ type }: { type: string }) => {
   });
   return (
     <div className="flex flex-col overflow-hidden h-full">
+      <PageSubHeader>
+        <ProjectsFilter />
+      </PageSubHeader>
       <RecordTable.Provider
         columns={projectsColumns(teams)}
         data={projects || [{}]}

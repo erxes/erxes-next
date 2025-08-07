@@ -1,9 +1,9 @@
 import { ProjectsRecordTable } from '@/project/components/ProjectsRecordTable';
 import { PageHeader } from 'ui-modules';
-import { Breadcrumb, Button, PageSubHeader } from 'erxes-ui';
+import { Breadcrumb, Button } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { IconBox } from '@tabler/icons-react';
-import { ProjectsFilter } from '@/project/components/ProjectsFilter';
+
 import { ProjectPageTypes } from '@/project/types';
 
 export const ProjectsPage = ({ type }: { type: ProjectPageTypes }) => {
@@ -23,9 +23,7 @@ export const ProjectsPage = ({ type }: { type: ProjectPageTypes }) => {
           </Breadcrumb.List>
         </Breadcrumb>
       </PageHeader>
-      <PageSubHeader>
-        <ProjectsFilter />
-      </PageSubHeader>
+
       <ProjectsRecordTable type={type} />
     </>
   );
