@@ -1,5 +1,6 @@
 import { NodeData } from '@/automations/types';
 import { onDisconnect } from '@/automations/utils/automationConnectionUtils';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { IconScissors } from '@tabler/icons-react';
 import {
   BaseEdge,
@@ -11,6 +12,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { Button } from 'erxes-ui';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 
@@ -38,11 +40,24 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
     Node<NodeData>,
     Edge<EdgeProps>
   >();
-  const { actions = [], triggers = [] } = useWatch({ name: 'detail' });
+  const [triggers = [], actions = []] = useWatch<TAutomationBuilderForm>({
+    name: ['triggers', 'actions'],
+  });
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} />
+      <AnimatePresence>
+        <motion.g
+          key={id}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <BaseEdge id={id} path={edgePath} />
+        </motion.g>
+      </AnimatePresence>
+
       <EdgeLabelRenderer>
         <div
           className="absolute text-xs pointer-events-auto nodrag nopan"
@@ -50,24 +65,34 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
         >
-          {selected && (
-            <Button
-              variant="outline"
-              className="rounded-full"
-              size="icon"
-              onClick={() => {
-                onDisconnect({
-                  edge,
-                  setEdges,
-                  nodes: getNodes(),
-                  triggers,
-                  actions,
-                });
-              }}
-            >
-              <IconScissors className="w-4 h-4 text-red-500" />
-            </Button>
-          )}
+          <AnimatePresence>
+            {selected && (
+              <motion.div
+                key="scissors"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  variant="outline"
+                  className="rounded-full"
+                  size="icon"
+                  onClick={() => {
+                    onDisconnect({
+                      edge,
+                      setEdges,
+                      nodes: getNodes(),
+                      triggers,
+                      actions,
+                    });
+                  }}
+                >
+                  <IconScissors className="w-4 h-4 text-red-500" />
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </EdgeLabelRenderer>
     </>

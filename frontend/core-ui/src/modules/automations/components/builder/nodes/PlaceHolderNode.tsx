@@ -1,11 +1,12 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { IconBolt, IconPlus, IconSettings } from '@tabler/icons-react';
+import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
+import { IconBolt, IconPlus } from '@tabler/icons-react';
+import { Node, NodeProps } from '@xyflow/react';
 import { Button, Card } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
 import { memo } from 'react';
-import { useFormContext } from 'react-hook-form';
 
-export const PlaceHolderNode = memo(() => {
-  const { setValue } = useFormContext<TAutomationProps>();
+export const PlaceHolderNode = memo((props: NodeProps<Node<any>>) => {
+  const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
 
   return (
     <Card className="w-80 bg-background shadow-lg border-0 relative">
@@ -27,7 +28,7 @@ export const PlaceHolderNode = memo(() => {
         <Button
           variant="ghost"
           className="border-2 border-dashed border-foreground/30 w-full h-12"
-          onClick={() => setValue('isMinimized', false)}
+          onClick={toggleSideBarOpen}
         >
           <IconPlus className="w-12 h-12 text-foreground/40" />
         </Button>

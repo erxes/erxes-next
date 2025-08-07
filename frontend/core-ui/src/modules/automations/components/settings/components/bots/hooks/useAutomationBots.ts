@@ -3,8 +3,7 @@ import {
   AUTOMATIONS_BOTS_CONSTANTS,
 } from '@/automations/components/settings/components/bots/graphql/automationsBotsQueries';
 import { IAutomationBotsConstantsQueryResponse } from '@/automations/components/settings/components/bots/types/automationBots';
-import { gql, useQuery } from '@apollo/client';
-import { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
 
 export const useAutomationBots = () => {
   const { data, loading, error } =

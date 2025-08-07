@@ -16,6 +16,7 @@ export const AutomationActionContentSidebar = () => {
     control,
     setQueryParams,
     setValue,
+    toggleSideBarOpen,
   } = useAutomationActionContentSidebar();
 
   if (!currentAction || currentIndex === -1) {
@@ -29,9 +30,9 @@ export const AutomationActionContentSidebar = () => {
       currentAction?.type || '',
     );
     const onSaveActionConfig = (config: any) => {
-      setValue(`detail.actions.${currentIndex}.config`, config);
+      setValue(`actions.${currentIndex}.config`, config);
       setQueryParams({ activeNodeId: null });
-      setValue('isMinimized', true);
+      toggleSideBarOpen();
       toast({
         title: 'Action configuration added successfully.',
       });
@@ -81,7 +82,7 @@ export const AutomationActionContentSidebar = () => {
         )}
       >
         <Form.Field
-          name={`detail.actions.${currentIndex}.config`}
+          name={`actions.${currentIndex}.config`}
           control={control}
           render={({ field }) => (
             <Component

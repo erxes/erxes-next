@@ -8,16 +8,15 @@ import dayjs from 'dayjs';
 import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
 import {
-  IAction,
   IAutomationHistory,
-  IAutomationsTriggerConfigConstants,
   IAutomationsActionConfigConstants,
-  ITrigger,
+  IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
 import PrimaryEdge from '../../edges/PrimaryEdge';
 import ActionNode from '../../nodes/ActionNode';
 import TriggerNode from '../../nodes/TriggerNode';
 import { ExecutionActionResult } from './AutomationHistoryByTable';
+import { AutomationNodeType } from '@/automations/types';
 
 const nodeTypes = {
   trigger: TriggerNode as any,
@@ -28,7 +27,7 @@ const edgeTypes = {
 };
 
 const useBeforeTitleContent = (history: IAutomationHistory) => {
-  const beforeTitleContent = (id: string, type: 'action' | 'trigger') => {
+  const beforeTitleContent = (id: string, type: AutomationNodeType) => {
     const statusesMap = {
       success: { icon: IconCheck, color: 'success' },
       error: { icon: IconX, color: 'error' },
@@ -98,11 +97,11 @@ export const AutomationHistoryByFlow = ({
   return (
     <div className="h-full">
       <ReactFlow
-        nodes={generateNodes(
-          { triggers: triggers, actions: actions },
-          { constants, beforeTitleContent },
-        )}
-        edges={generateEdges({ triggers, actions })}
+        nodes={generateNodes(triggers, actions, {
+          constants,
+          beforeTitleContent,
+        })}
+        edges={generateEdges(triggers, actions)}
         fitView
         fitViewOptions={{ padding: 4, minZoom: 0.8 }}
         nodeTypes={nodeTypes}

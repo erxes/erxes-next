@@ -1,5 +1,7 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { useAutomation } from '@/automations/context/AutomationProvider';
+import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { useSetAtom } from 'jotai';
 import { lazy } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -42,10 +44,11 @@ const Actions: Record<
 
 export const useAutomationActionContentSidebar = () => {
   const { queryParams, setQueryParams } = useAutomation();
-  const { control, setValue } = useFormContext<TAutomationProps>();
+  const { control, setValue } = useFormContext<TAutomationBuilderForm>();
+  const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
 
   // Watch all actions once
-  const actions = useWatch({ control, name: 'detail.actions' }) || [];
+  const actions = useWatch({ control, name: 'actions' }) || [];
 
   // Find the index of the active node by id
   const currentIndex = actions.findIndex(
@@ -65,5 +68,6 @@ export const useAutomationActionContentSidebar = () => {
     currentAction,
     setQueryParams,
     setValue,
+    toggleSideBarOpen,
   };
 };
