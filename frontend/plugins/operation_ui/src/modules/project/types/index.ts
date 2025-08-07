@@ -14,9 +14,12 @@ export interface IProject {
   teamIds: string[];
 }
 
-export enum ProjectPageTypes {
+
+
+export enum TaskPageTypes {
   All = 'all',
   Team = 'team',
+  Project = 'project',
 }
 
 export type TAddProject = z.infer<typeof addProjectSchema>;

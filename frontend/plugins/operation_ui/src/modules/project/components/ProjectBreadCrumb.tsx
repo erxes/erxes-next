@@ -22,58 +22,58 @@ export const ProjectBreadCrumb = () => {
   return (
     <PageHeader>
       <Breadcrumb>
-          <Breadcrumb.List className="gap-1">
-            {teamId ? (
-              <>
-                <Breadcrumb.Item>
-                  <Button variant="ghost" asChild>
-                    <Link to={`/operation/team/${teamId}`}>
-                      <IconComponent name={project?.icon} />
-                      {project?.name}
-                    </Link>
-                  </Button>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                  <Button variant="ghost" asChild>
-                    <Link to={`/operation/team/${teamId}/projects`}>
-                      <IconBox />
-                      Projects
-                    </Link>
-                  </Button>
-                </Breadcrumb.Item>
-              </>
-            ) : (
+        <Breadcrumb.List className="gap-1">
+          {teamId ? (
+            <>
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to={`/operation/projects`}>
+                  <Link to={`/operation/team/${teamId}`}>
+                    <IconComponent name={project?.icon} />
+                    {project?.name}
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to={`/operation/team/${teamId}/projects`}>
                     <IconBox />
                     Projects
                   </Link>
                 </Button>
               </Breadcrumb.Item>
-            )}
-            <Separator.Inline />
+            </>
+          ) : (
             <Breadcrumb.Item>
               <Button variant="ghost" asChild>
-                <Link to={`${basePath}/overview`}>
-                  <IconComponent name={project?.icon} />
-                  {project?.name}
+                <Link to={`/operation/projects`}>
+                  <IconBox />
+                  Projects
                 </Link>
               </Button>
             </Breadcrumb.Item>
-            <Separator.Inline />
-            <Breadcrumb.Item>
-              <Button variant="ghost" asChild>
-                <Link to={`${basePath}/overview`}>Overview</Link>
-              </Button>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Button variant="ghost" asChild>
-                <Link to={`${basePath}/tasks`}>Tasks</Link>
-              </Button>
-            </Breadcrumb.Item>
-          </Breadcrumb.List>
-          <AddProjectSheet />
+          )}
+          <Separator.Inline />
+          <Breadcrumb.Item>
+            <Button variant="ghost" asChild>
+              <Link to={`${basePath}/overview`}>
+                <IconComponent name={project?.icon} />
+                {project?.name}
+              </Link>
+            </Button>
+          </Breadcrumb.Item>
+          <Separator.Inline />
+          <Breadcrumb.Item>
+            <Button variant="ghost" asChild>
+              <Link to={`${basePath}/overview`}>Overview</Link>
+            </Button>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Button variant="ghost" asChild>
+              <Link to={`${basePath}/tasks`}>Tasks</Link>
+            </Button>
+          </Breadcrumb.Item>
+        </Breadcrumb.List>
+        <AddProjectSheet />
       </Breadcrumb>
     </PageHeader>
   );

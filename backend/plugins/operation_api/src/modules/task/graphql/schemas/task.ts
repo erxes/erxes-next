@@ -11,6 +11,8 @@ export const types = `
     tagIds: [String]
     assigneeId: String
     createdBy: String
+    startDate: Date
+    targetDate: Date
     createdAt: Date
     updatedAt: Date
     cycleId: String
@@ -34,8 +36,8 @@ const taskFilterParams = `
   cycleId: String
   labelIds: [String]
   tagIds: [String]
-  createdAt: Date
-  updatedAt: Date
+  startDate: Date
+  targetDate: Date
   projectId: String 
   teamId: String
   estimatedPoint: Int
@@ -50,6 +52,8 @@ const createTaskParams = `
   priority: Int
   labelIds: [String]
   tagIds: [String]
+  startDate: Date
+  targetDate: Date
   assigneeId: String
   cycleId: String
   projectId: String
@@ -66,6 +70,8 @@ const updateTaskParams = `
   labelIds: [String]
   tagIds: [String]
   assigneeId: String
+  startDate: Date
+  targetDate: Date
   cycleId: String
   projectId: String
   estimatedPoint: Int
