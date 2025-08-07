@@ -11,6 +11,7 @@ import {
   NestBlockButton,
   TextAlignButton,
   UnnestBlockButton,
+  TableCellMergeButton,
 } from '@blocknote/react';
 
 export const Toolbar = () => {
@@ -55,6 +56,7 @@ export const Toolbar = () => {
           <NestBlockButton key={'nestBlockButton'} />
           <UnnestBlockButton key={'unnestBlockButton'} />
           <CreateLinkButton key={'createLinkButton'} />
+          <TableCellMergeButton key={'mergeTableCellButton'} />
         </FormattingToolbar>
       )}
     />

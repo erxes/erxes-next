@@ -1,10 +1,14 @@
-import { Sidebar } from 'erxes-ui';
+import { NavigationMenuGroup, NavigationMenuLinkItem, Sidebar } from 'erxes-ui';
 import { Organization } from './Organization';
-import { SidebarNavigation } from './SidebarNavigation';
 import { SidebarNavigationFavorites } from './SidebarNavigationFavorites';
-import { User } from './User';
-import { SidebarNavigationComponents } from './SidebarNavigationComponents';
 import { MyInboxMainNavigationBarItem } from '@/notification/my-inbox/components/MyInboxMainNavigationBarItem';
+import { NavigationCoreModules } from '@/navigation/components/NavigationCoreModules';
+import {
+  NavigationPluginActions,
+  NavigationPluginExitButton,
+  NavigationPlugins,
+} from '@/navigation/components/NavigationPlugins';
+import { IconCode } from '@tabler/icons-react';
 
 export const MainNavigationBar = () => {
   return (
@@ -19,18 +23,28 @@ export const MainNavigationBar = () => {
       <Sidebar.Separator className="mx-0" />
 
       <Sidebar.Content className="gap-0">
-        {process.env.NODE_ENV === 'development' && (
-          <SidebarNavigationComponents />
-        )}
+        <NavigationPluginExitButton />
         <MyInboxMainNavigationBarItem />
-
+        {process.env.NODE_ENV === 'development' && <DevelopmentNavigation />}
         <SidebarNavigationFavorites />
-        <SidebarNavigation />
+        <NavigationPlugins />
+        <NavigationCoreModules />
+        <NavigationPluginActions />
       </Sidebar.Content>
-      <Sidebar.Separator className="mx-0" />
-      <Sidebar.Footer className="pb-4 px-0">
-        <User />
-      </Sidebar.Footer>
     </>
   );
 };
+
+export const DevelopmentNavigation = () => {
+  return (
+    <NavigationMenuGroup name="Development">
+      <NavigationMenuLinkItem
+        name="components"
+        icon={IconCode}
+        path="components"
+      />
+    </NavigationMenuGroup>
+  );
+};
+
+export default MainNavigationBar;
