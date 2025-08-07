@@ -1,4 +1,4 @@
-import { Spinner, Toggle } from 'erxes-ui';
+import { Toggle } from 'erxes-ui';
 import { useChangeConversationStatus } from '@/inbox/conversations/hooks/useChangeConversationStatus';
 import { useConversationContext } from '@/inbox/conversations/hooks/useConversationContext';
 import { ConversationStatus } from '@/inbox/types/Conversation';
