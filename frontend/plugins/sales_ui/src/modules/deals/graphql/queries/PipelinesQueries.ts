@@ -24,6 +24,12 @@ export const GET_PIPELINE_DETAIL = gql`
       paymentIds
       paymentTypes
       erxesAppToken
+      visibility
+      memberIds
+      departmentIds
+      branchIds
+      boardId
+      tagId
     }
   }
 `;
@@ -56,23 +62,52 @@ export const GET_PIPELINE_LABEL_DETAIL = gql`
   }
 `;
 
+const commonParams = `
+  $boardId: String, 
+  $isAll: Boolean, 
+  $limit: Int, 
+  $cursor: String, 
+  $cursorMode: CURSOR_MODE, 
+  $direction: CURSOR_DIRECTION, 
+  $orderBy: JSON
+`;
+
+const commonParamDefs = `
+  boardId: $boardId,
+  isAll: $isAll,
+  limit: $limit,
+  cursor: $cursor,
+  cursorMode: $cursorMode,
+  direction: $direction,
+  orderBy: $orderBy,
+`;
+
 export const GET_PIPELINES = gql`
-  query SalesPipelines($boardId: String, $isAll: Boolean) {
-    salesPipelines(boardId: $boardId, isAll: $isAll) {
-      _id
-      name
-      boardId
-      state
-      startDate
-      endDate
-      status
-      createdAt
-      createdUser {
-        details {
-          fullName
+  query SalesPipelines(${commonParams}) {
+    salesPipelines(${commonParamDefs}) {
+      list {
+        _id
+        name
+        boardId
+        state
+        startDate
+        endDate
+        status
+        createdAt
+        createdUser {
+          details {
+            fullName
+          }
         }
+        itemsTotalCount
       }
-      itemsTotalCount
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
     }
   }
 `;

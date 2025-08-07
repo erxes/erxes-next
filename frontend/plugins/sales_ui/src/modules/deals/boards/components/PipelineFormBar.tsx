@@ -1,23 +1,47 @@
-import { Button, Form, Sheet } from 'erxes-ui';
+import { Button, Form, Sheet, Spinner, useToast } from 'erxes-ui';
 import { IconGitBranch, IconPlus } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import { PipelineForm } from './PipelineForm';
 import { PipelineHotKeyScope } from '@/deals/types/pipelines';
-import React from 'react';
+import { TPipelineForm } from '@/deals/types/pipelines';
+import { usePipelineAdd } from '@/deals/boards/hooks/usePipelines';
 import { usePipelineForm } from '@/deals/boards/hooks/usePipelineForm';
 import { usePreviousHotkeyScope } from 'erxes-ui';
 import { useScopedHotkeys } from 'erxes-ui';
 import { useSetHotkeyScope } from 'erxes-ui';
-import { useState } from 'react';
 
 export function PipelineFormBar() {
   const {
     methods,
-    // methods: { handleSubmit },
+    methods: { reset, handleSubmit },
   } = usePipelineForm();
+
+  const { toast } = useToast();
   const [open, setOpen] = useState<boolean>(false);
+
+  const { addPipeline, loading } = usePipelineAdd();
 
   const setHotkeyScope = useSetHotkeyScope();
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const searchParams = new URLSearchParams(location.search);
+  const pipelineId = searchParams.get('pipelineId');
+
+  const submitHandler = (data: TPipelineForm) => {
+    addPipeline({
+      variables: data,
+      onCompleted: () => {
+        toast({ title: 'Pipeline added successfully.' });
+        reset();
+        setOpen(false);
+      },
+    });
+  };
 
   const onOpen = () => {
     setOpen(true);
@@ -29,7 +53,20 @@ export function PipelineFormBar() {
   const onClose = () => {
     setHotkeyScope(PipelineHotKeyScope.PipelineSettingsPage);
     setOpen(false);
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete('pipelineId');
+    navigate(`${location.pathname}?${searchParams.toString()}`, {
+      replace: true,
+    });
   };
+
+  useEffect(() => {
+    if (pipelineId) {
+      onOpen();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, pipelineId]);
 
   useScopedHotkeys(
     `c`,
@@ -42,42 +79,44 @@ export function PipelineFormBar() {
     PipelineHotKeyScope.PipelineAddSheet,
   );
 
+  const title = pipelineId ? 'Edit Pipeline' : 'Add Pipeline';
+
   return (
     <div className="ml-auto flex items-center gap-3">
       <Sheet onOpenChange={(open) => (open ? onOpen() : onClose())} open={open}>
         <Sheet.Trigger asChild>
           <Button>
-            <IconPlus /> Add Pipeline
+            <IconPlus /> {title}
           </Button>
         </Sheet.Trigger>
         <Sheet.View
-          className="p-0"
+          className="p-0 sm:max-w-3xl"
           onEscapeKeyDown={(e) => {
             e.preventDefault();
           }}
         >
           <Form {...methods}>
             <form
-              // onSubmit={handleSubmit(submitHandler)}
+              onSubmit={handleSubmit(submitHandler)}
               className=" flex flex-col gap-0 w-full h-full"
             >
               <Sheet.Header>
                 <Sheet.Title className="text-lg text-foreground flex items-center gap-1">
                   <IconGitBranch size={16} />
-                  Add Pipeline
+                  {title}
                 </Sheet.Title>
                 <Sheet.Close />
               </Sheet.Header>
-              <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-                {/* <PipelineForm /> */}
+              <Sheet.Content className="grow size-full h-auto flex flex-col overflow-hidden">
+                <PipelineForm form={methods} />
               </Sheet.Content>
               <Sheet.Footer>
-                <Button variant={'ghost'} onClick={() => setOpen(false)}>
+                <Button variant={'ghost'} onClick={onClose}>
                   Cancel
                 </Button>
-                {/* <Button type="submit" disabled={loading}>
-                {loading ? <Spinner /> : 'Create'}
-              </Button> */}
+                <Button type="submit" disabled={loading}>
+                  {loading ? <Spinner /> : 'Create'}
+                </Button>
               </Sheet.Footer>
             </form>
           </Form>

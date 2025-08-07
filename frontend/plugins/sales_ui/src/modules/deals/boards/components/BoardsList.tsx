@@ -1,13 +1,30 @@
 import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar, Skeleton, useConfirm, useQueryState } from 'erxes-ui';
 import { useBoardRemove, useBoards } from '@/deals/boards/hooks/useBoards';
 
 import { BoardForm } from './BoardForm';
 import { IBoard } from '@/deals/types/boards';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const BoardsList = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const activeBoardId = searchParams.get('activeBoardId');
+
   const { boards, loading } = useBoards();
+
+  useEffect(() => {
+    if (!loading && boards && boards.length > 0 && !activeBoardId) {
+      const firstBoardId = boards[0]._id;
+      searchParams.set('activeBoardId', firstBoardId);
+      navigate(`${location.pathname}?${searchParams.toString()}`, {
+        replace: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boards, loading, activeBoardId, navigate, location]);
 
   return (
     <Sidebar collapsible="none" className="flex-none border-r">

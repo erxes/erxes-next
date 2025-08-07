@@ -240,7 +240,7 @@ const PipelineRecordTable = () => {
 
   const { contentType, searchValue } = queries;
 
-  const { pipelines, loading } = usePipelines({
+  const { pipelines, loading, pageInfo, handleFetchMore } = usePipelines({
     variables: {
       type: contentType || '',
       searchValue: searchValue ?? undefined,
@@ -261,12 +261,12 @@ const PipelineRecordTable = () => {
             <RecordTable.Body>
               <RecordTable.RowList Row={RecordTableTree.Row} />
               {loading && <RecordTable.RowSkeleton rows={30} />}
-              {/* {!loading && pageInfo?.hasNextPage && (
+              {!loading && pageInfo?.hasNextPage && (
                 <RecordTable.RowSkeleton
                   rows={1}
                   handleInView={handleFetchMore}
                 />
-              )} */}
+              )}
             </RecordTable.Body>
           </RecordTable>
         </RecordTable.Scroll>

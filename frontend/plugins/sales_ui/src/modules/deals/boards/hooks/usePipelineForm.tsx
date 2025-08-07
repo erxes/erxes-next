@@ -7,7 +7,7 @@ export const usePipelineForm = () => {
   const methods = useForm<TPipelineForm>({
     mode: 'onBlur',
     defaultValues: {
-      title: '',
+      name: '',
     },
     resolver: zodResolver(PIPELINE_CREATE_SCHEMA),
   });

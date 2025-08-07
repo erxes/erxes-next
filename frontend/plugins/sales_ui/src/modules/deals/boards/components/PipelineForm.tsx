@@ -1,26 +1,62 @@
-import { Form, Input } from 'erxes-ui';
+import { Button, Spinner, Tabs } from 'erxes-ui';
 
-import { TPipelineForm } from '@/deals/types/pipelines';
-import { useFormContext } from 'react-hook-form';
+import GeneralForm from './detail/GeneralForm';
+import { IPipeline } from '@/deals/types/pipelines';
+import { usePipelineDetail } from '@/deals/boards/hooks/usePipelines';
 
-export const PipelineForm = () => {
-  const { control } = useFormContext<TPipelineForm>();
+export const PipelineForm = ({ form }: { form: any }) => {
+  const { pipelineDetail = {} as IPipeline, loading: pipelineDetailLoading } =
+    usePipelineDetail();
+  console.log('pipelineDetail', pipelineDetail);
+
+  if (pipelineDetailLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-2 gap-2">
-      <Form.Field
-        control={control}
-        name="title"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>{field.name}</Form.Label>
-            <Form.Control>
-              <Input {...field} placeholder="Title" />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-        )}
-      />
-    </div>
+    <Tabs defaultValue="general" className="flex flex-col h-full shadow-none">
+      <Tabs.List className="flex justify-center">
+        <Tabs.Trigger asChild value="general">
+          <Button
+            variant={'outline'}
+            className="bg-transparent data-[state=active]:bg-background data-[state=inactive]:shadow-none"
+          >
+            General
+          </Button>
+        </Tabs.Trigger>
+        <Tabs.Trigger asChild value="stages">
+          <Button
+            variant={'outline'}
+            className="bg-transparent data-[state=active]:bg-background data-[state=inactive]:shadow-none"
+          >
+            Stages
+          </Button>
+        </Tabs.Trigger>
+        <Tabs.Trigger asChild value="productConfig">
+          <Button
+            variant={'outline'}
+            className="bg-transparent data-[state=active]:bg-background data-[state=inactive]:shadow-none"
+          >
+            Product config
+          </Button>
+        </Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="general" className="h-full py-4 px-5 overflow-auto">
+        <GeneralForm form={form} pipeline={pipelineDetail} />
+      </Tabs.Content>
+      <Tabs.Content value="stages" className="h-full py-4 px-5 overflow-auto">
+        hi
+      </Tabs.Content>
+      <Tabs.Content
+        value="productConfig"
+        className="h-full py-4 px-5 overflow-auto"
+      >
+        hi
+      </Tabs.Content>
+    </Tabs>
   );
 };
