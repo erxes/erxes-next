@@ -40,7 +40,7 @@ export const ssocallback = async (req: any, res) => {
   try {
     const sub = subdomain || (await getSubdomain(req));
     const models = await generateModels(sub);
-    const FRONT_DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
     const { profile } = await workosClient.sso.getProfileAndToken({
       code: code.toString(),
       clientId: getEnv({ name: 'WORKOS_PROJECT_ID' }),
@@ -59,7 +59,7 @@ export const ssocallback = async (req: any, res) => {
     });
 
     if (!user) {
-      return res.redirect(FRONT_DOMAIN);
+      return res.redirect(DOMAIN);
     }
 
     const [token] = await models.Users.createTokens(
@@ -69,7 +69,7 @@ export const ssocallback = async (req: any, res) => {
 
     await setCookie(res, user, subdomain, token.toString());
 
-    return res.redirect(FRONT_DOMAIN);
+    return res.redirect(DOMAIN);
   } catch (e) {
     console.error(`Error occurred when logging in via google: "${e.message}"`);
     throw new Error(e);
@@ -116,8 +116,11 @@ export const magiclinkCallback = async (
 
     await setCookie(res, user, subdomain, stateStr);
 
-    // return res.redirect(`https://${subdomain}.app.erxes.io`);
-    return res.redirect('http://localhost:3001');
+    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+    const NODE_ENV = getEnv({ name: 'NODE_ENV', subdomain });
+    const isProduction = NODE_ENV === 'production';
+
+    return res.redirect(isProduction ? DOMAIN : 'http://localhost:3001');
   } catch (e: any) {
     console.error(e.message);
 

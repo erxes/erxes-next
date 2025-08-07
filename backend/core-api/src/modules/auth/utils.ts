@@ -95,7 +95,7 @@ export const getCallbackRedirectUrl = (
 ) => {
   const isProduction = process.env.NODE_ENV === 'production';
 
-  if (!isProduction) {
+  if (isProduction) {
     return `https://${subdomain}.api.erxes.io/api/${callbackUrl}`;
   }
 
