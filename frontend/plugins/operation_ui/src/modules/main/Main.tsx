@@ -6,6 +6,7 @@ import { MyTasksPage } from '~/pages/MyTasksPage';
 import { ProjectsPage } from '~/pages/ProjectsPage';
 import { ProjectDetailPage } from '~/pages/ProjectDetailPage';
 import { ProjectLayout } from '@/project/components/ProjectLayout';
+import { ProjectPageTypes } from '@/project/types';
 
 const taskMain = () => {
   return (
@@ -20,7 +21,10 @@ const taskMain = () => {
         >
           <Route path="/" element={<Navigate to="my-tasks" replace />} />
           <Route path="my-tasks" element={<MyTasksPage />} />
-          <Route path="projects" element={<ProjectsPage />} />
+          <Route
+            path="projects"
+            element={<ProjectsPage type={ProjectPageTypes.All} />}
+          />
           <Route path="projects/:projectId" element={<ProjectLayout />}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<ProjectDetailPage />} />

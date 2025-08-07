@@ -10,3 +10,8 @@ export interface IProject {
   leadId: string;
   teamIds: string[];
 }
+
+export enum ProjectPageTypes {
+  All = 'all',
+  Team = 'team',
+}

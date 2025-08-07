@@ -4,8 +4,9 @@ import { Breadcrumb, Button, PageSubHeader } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { IconBox } from '@tabler/icons-react';
 import { ProjectsFilter } from '@/project/components/ProjectsFilter';
+import { ProjectPageTypes } from '@/project/types';
 
-export const ProjectsPage = () => {
+export const ProjectsPage = ({ type }: { type: ProjectPageTypes }) => {
   return (
     <>
       <PageHeader>
@@ -25,7 +26,7 @@ export const ProjectsPage = () => {
       <PageSubHeader>
         <ProjectsFilter />
       </PageSubHeader>
-      <ProjectsRecordTable type="all" />
+      <ProjectsRecordTable type={type} />
     </>
   );
 };
