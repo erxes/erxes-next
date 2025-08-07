@@ -12,7 +12,7 @@ export interface ITask {
   priority?: string;
   labelIds?: string[];
   tagIds?: string[];
-  assignee?: string;
+  assigneeId?: string;
   createdBy?: string;
   cycleId?: string;
   projectId?: string;

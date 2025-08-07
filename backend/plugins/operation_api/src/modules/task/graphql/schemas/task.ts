@@ -9,7 +9,7 @@ export const types = `
     priority: Int
     labelIds: [String]
     tagIds: [String]
-    assignee: String
+    assigneeId: String
     createdBy: String
     createdAt: Date
     updatedAt: Date
@@ -29,7 +29,7 @@ export const types = `
 const taskFilterParams = `
   status: String
   priority: Int
-  assignee: String
+  assigneeId: String
   createdBy: String
   cycleId: String
   labelIds: [String]
@@ -48,7 +48,7 @@ export const queries = `
 `;
 
 export const mutations = `
-  createTask(name: String!, description: String, teamId: String!, status: String, priority: Int, labelIds: [String], tagIds: [String], assignee: String, cycleId: String, projectId: String, estimatedPoint: Int): Task
-  updateTask(_id: String!, name: String, description: String, teamId: String!, status: String, priority: Int, labelIds: [String], tagIds: [String], assignee: String, cycleId: String, projectId: String, estimatedPoint: Int): Task
+  createTask(name: String!, description: String, teamId: String!, status: String, priority: Int, labelIds: [String], tagIds: [String], assigneeId: String, cycleId: String, projectId: String, estimatedPoint: Int): Task
+  updateTask(_id: String!, name: String, description: String, teamId: String!, status: String, priority: Int, labelIds: [String], tagIds: [String], assigneeId: String, cycleId: String, projectId: String, estimatedPoint: Int): Task
   removeTask(_id: String!): Task
 `;
