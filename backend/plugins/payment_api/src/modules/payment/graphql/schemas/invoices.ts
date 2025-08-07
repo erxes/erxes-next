@@ -36,6 +36,7 @@ export const types = `
     paymentIds: [String]
     
     data: JSON
+    warningText: String
 
     transactions: [PaymentTransaction]
   }
@@ -61,6 +62,7 @@ export const inputs = `
     redirectUri: String
     paymentIds: [String]
     data: JSON
+    warningText: String
     callback: String
     currency: String
   }

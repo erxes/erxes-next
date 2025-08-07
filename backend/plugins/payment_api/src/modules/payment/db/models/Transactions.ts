@@ -1,4 +1,5 @@
 import { Model } from 'mongoose';
+import ErxesPayment from '~/apis/ErxesPayment';
 import { IModels } from '~/connectionResolvers';
 import { ITransactionDocument } from '~/modules/payment/@types/transactions';
 import { transactionSchema } from '~/modules/payment/db/definitions/transactions';

@@ -1,0 +1,70 @@
+import { usePayment } from '../hooks/use-payment';
+import QrPayment from './payments/QrPayment';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
+import { useIsMobile } from '../hooks/use-mobile';
+import { cn } from '../lib/utils';
+
+const Content = () => {
+  const isMobile = useIsMobile();
+  const {
+    isOpen,
+    onClose,
+    kind = 'default',
+    apiDomain,
+    invoiceDetail,
+  } = usePayment();
+
+  if (!isOpen) return null;
+
+  const renderBody = () => {
+    switch (kind) {
+      case 'default':
+        return null;
+      case 'qpay':
+        return <QrPayment />;
+      case 'minupay':
+        return null;
+      case 'storepay':
+        return null;
+      case 'khanbank':
+        return null;
+      case 'stripe':
+        return null;
+      default:
+        return (
+          <>
+            <QrPayment />
+          </>
+        );
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className={cn("overflow-y-auto", isMobile ? 'max-h-screen' : 'max-h-[80vh]')}>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <img
+              src={`${apiDomain}/pl:payment/static/images/payments/${kind}.png`}
+              alt={kind}
+              className="w-8 h-8 rounded-md"
+            />
+            <h2 className="font-semibold text-lg leading-snug">{kind}</h2>
+          </DialogTitle>
+        </DialogHeader>
+        {renderBody()}
+        {invoiceDetail.warningText && (
+          <DialogDescription>{invoiceDetail.warningText}</DialogDescription>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default Content;

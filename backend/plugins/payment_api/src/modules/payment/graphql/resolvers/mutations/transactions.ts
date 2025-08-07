@@ -2,12 +2,12 @@ import { IContext } from '~/connectionResolvers';
 
 const mutations = {
   async paymentTransactionsAdd(_root, args: any, { models, subdomain }: IContext) {
-
-    const invoice = await models.Invoices.getInvoice({_id: args.invoiceId}, true);
+    const { input } = args;
+    const invoice = await models.Invoices.getInvoice({_id: input.invoiceId}, true);
 
     const description = invoice.description || invoice.invoiceNumber;
 
-    return models.Transactions.createTransaction({ ...args, subdomain, description, details: {...args.details, ...invoice.data} });
+    return models.Transactions.createTransaction({ ...input, subdomain, description, details: {...input.details, ...invoice.data} });
   },
 };
 

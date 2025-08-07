@@ -37,12 +37,12 @@ const mutations = {
 
   async invoiceCreate(
     _root,
-    params: IInvoice,
+    {input}: {input: IInvoice},
     { models, subdomain }: IContext
   ) {
     const invoice = await models.Invoices.createInvoice(
       {
-        ...params,
+        ...input,
       },
       subdomain
     );

@@ -18,6 +18,7 @@ export interface IInvoice {
   redirectUri?: string;
   paymentIds: string[];
   callback?: string;
+  warningText?: string;
   data?: any;
 }
 export interface IInvoiceDocument extends IInvoice, Document {

@@ -1,10 +1,11 @@
 import { startPlugin } from 'erxes-api-shared/utils';
+import express from 'express';
+import path from 'path';
 import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/trpc/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
-import express from 'express';
-import path from 'path';
+
 
 startPlugin({
   name: 'payment',
@@ -34,7 +35,6 @@ startPlugin({
   },
 
   onServerInit: async (app) => {
-    app.use('/static', express.static(path.join(__dirname, '/public')));
+    app.use('/static', express.static(path.join(__dirname, '/public')));  
   },
 });
-
