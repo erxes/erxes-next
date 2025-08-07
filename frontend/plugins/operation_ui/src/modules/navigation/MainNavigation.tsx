@@ -16,11 +16,11 @@ export const MainNavigation = () => {
         variant="ghost"
         className={cn(
           'w-full justify-start flex-none',
-          isActive('/operation/my-tasks') && 'bg-muted',
+          isActive('/operation/tasks') && 'bg-muted',
         )}
         asChild
       >
-        <Link to="/operation/my-tasks">
+        <Link to="/operation/tasks">
           <IconUserFilled className="text-accent-foreground" />
           My tasks
         </Link>

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { MainLayout } from '@/main/MainLayout';
 import { Outlet } from 'react-router-dom';
-import { MyTasksPage } from '~/pages/MyTasksPage';
+import { TasksPage } from '~/pages/TasksPage';
 import { ProjectsPage } from '~/pages/ProjectsPage';
 import { ProjectDetailPage } from '~/pages/ProjectDetailPage';
 import { ProjectLayout } from '@/project/components/ProjectLayout';
@@ -19,8 +19,8 @@ const taskMain = () => {
             </div>
           }
         >
-          <Route path="/" element={<Navigate to="my-tasks" replace />} />
-          <Route path="my-tasks" element={<MyTasksPage />} />
+          <Route path="/" element={<Navigate to="tasks" replace />} />
+          <Route path="tasks" element={<TasksPage />} />
           <Route
             path="projects"
             element={<ProjectsPage type={ProjectPageTypes.All} />}
