@@ -17,6 +17,10 @@ export interface ITask {
   cycleId?: string;
   projectId?: string;
   estimatedPoint?: number;
+  userId?: string;
+  startDate?: Date;
+  targetDate?: Date;
+  createdAt?: Date;
 }
 
 export interface ITaskDocument extends ITask, Document {

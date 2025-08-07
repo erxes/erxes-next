@@ -16,6 +16,12 @@ export enum ProjectPageTypes {
   Team = 'team',
 }
 
+export enum TaskPageTypes {
+  All = 'all',
+  Team = 'team',
+  Project = 'project',
+}
+
 export enum ProjectHotKeyScope {
   ProjectsPage = 'projects-page',
   ProjectDetailPage = 'project-detail-page',

@@ -7,31 +7,25 @@ import {
 
 export const GET_TASKS = gql`
   query GetTasks(
-    status: String
-    priority: Int
-    assigneeId: String
-    createdBy: String
-    cycleId: String
-    labelIds: [String]
-    tagIds: [String]
-    createdAt: Date
-    updatedAt: Date
-    projectId: String 
-    teamId: String
-    estimatedPoint: Int
-    orderBy: JSON
+    $assigneeId: String
+    $createdBy: String
+    $status: String
+    $priority: Int
+    $startDate: Date
+    $targetDate: Date
+    $projectId: String 
+    $teamId: String
+    $estimatedPoint: Int
+    $orderBy: JSON
     ${GQL_CURSOR_PARAM_DEFS}
   ) {
     getTasks(
+      assigneeId: $assigneeId
+      createdBy: $createdBy
       status: $status
       priority: $priority
-      assigneeId: $assignee
-      createdBy: $createdBy
-      cycleId: $cycleId
-      labelIds: $labelIds
-      tagIds: $tagIds
-      createdAt: $createdAt
-      updatedAt: $updatedAt
+      startDate: $startDate
+      targetDate: $targetDate
       projectId: $projectId
       teamId: $teamId
       estimatedPoint: $estimatedPoint
@@ -44,15 +38,15 @@ export const GET_TASKS = gql`
         description
         status
         priority
-        assignee
-        createdBy
-        cycleId
-        labelIds
-        tagIds
+        teamId
+        assigneeId
+        startDate
+        targetDate
         createdAt
         updatedAt
+        createdBy 
+        cycleId
         projectId
-        teamId
         estimatedPoint
       } 
       ${GQL_PAGE_INFO}
