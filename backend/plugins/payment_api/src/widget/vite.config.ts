@@ -6,7 +6,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   root: __dirname, // Set root to `src/widget`
-  // base: '/pl:payment/widget/',
+  base: '/pl:payment/widget/',
   build: {
     outDir: '../public/widget',
     emptyOutDir: true,

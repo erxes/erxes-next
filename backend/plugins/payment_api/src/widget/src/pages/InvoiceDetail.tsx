@@ -1,16 +1,13 @@
+import { useMutation, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
+import Loader from '../components/Loader';
+import Payment from '../components/Payment';
 import {
   ADD_TRANSACTION,
   CHECK_INVOICE,
   INVOICE,
-  INVOICE_SUBSCRIPTION,
-  PAYMENTS_QRY,
-  TRANSACTION_SUBSCRIPTION,
+  PAYMENTS_QRY
 } from '../lib/graphql';
-import { useMutation, useQuery, useSubscription } from '@apollo/client';
-import Loader from '../components/Loader';
-import React from 'react';
-import Payment from '../components/Payment';
 
 const InvoiceDetail = () => {
   const { id } = useParams();

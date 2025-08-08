@@ -11,6 +11,11 @@ import { useIsMobile } from '../hooks/use-mobile';
 import { cn } from '../lib/utils';
 import CheckPayment from './CheckPayment';
 import CloseButton from './CloseButton';
+import Minupay from './payments/Minupay';
+import StorePay from './payments/StorePay';
+import Stripe from './payments/Stripe';
+import KhanbankForm from './payments/KhanbankForm';
+import GolomtForm from './payments/GolomtForm';
 
 const Content = () => {
   const isMobile = useIsMobile();
@@ -26,22 +31,19 @@ const Content = () => {
 
   const renderBody = () => {
     switch (kind) {
-      case 'default':
-        return null;
-      case 'qpay':
-        return <QrPayment />;
       case 'minupay':
-        return null;
-      case 'storepay':
-        return null;
-      case 'khanbank':
-        return null;
+        return <Minupay />;
+      case 'golomt':
+        return <GolomtForm />;
       case 'stripe':
-        return null;
+        return <Stripe />;
+      case 'khanbank':
+        return <KhanbankForm />;
       default:
         return (
           <>
             <QrPayment />
+            <StorePay />
           </>
         );
     }

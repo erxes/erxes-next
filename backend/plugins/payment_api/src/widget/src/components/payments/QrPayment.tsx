@@ -6,11 +6,10 @@ import Loader from '../Loader';
 const QrPayment = () => {
   const isMobile = useIsMobile();
   const { kind, transactionLoading, apiResponse } = usePayment();
-  console.log(apiResponse);
   if (kind === 'storepay') return null;
 
   const { urls = [], qrData } = apiResponse || {};
-  console.log(urls);
+
   return (
     <>
       <div className="p-4">
