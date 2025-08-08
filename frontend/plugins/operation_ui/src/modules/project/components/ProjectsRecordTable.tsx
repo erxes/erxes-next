@@ -4,11 +4,25 @@ import { useProjects } from '@/project/hooks/useGetProjects';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ProjectsFilter } from '@/project/components/ProjectsFilter';
+import { useParams } from 'react-router-dom';
+import { useAtomValue } from 'jotai';
+import { currentUserState } from 'ui-modules';
 
-export const ProjectsRecordTable = ({ type }: { type: string }) => {
-  const { projects, handleFetchMore, pageInfo, loading } = useProjects();
+export const ProjectsRecordTable = () => {
+  const { teamId } = useParams();
+  const currentUser = useAtomValue(currentUserState);
+
+  const variables = {
+    teamIds: teamId ? [teamId] : undefined,
+    userId: currentUser?._id,
+  };
+
+  const { projects, handleFetchMore, pageInfo, loading } = useProjects({
+    variables,
+  });
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
   const { teams } = useGetCurrentUsersTeams();
+
   return (
     <div className="flex flex-col overflow-hidden h-full">
       <PageSubHeader>

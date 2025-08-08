@@ -24,6 +24,15 @@ export const teamQueries = {
     params: ITeamFilter,
     { models }: IContext,
   ) => {
+    if (params.teamIds && params.teamIds.length > 0) {
+      return models.Team.find({ _id: { $in: params.teamIds } });
+    }
+    if (params.userId) {
+      const teamIds = await models.TeamMember.find({
+        memberId: params.userId,
+      }).distinct('teamId');
+      return models.Team.find({ _id: { $in: teamIds } });
+    }
     return models.Team.getTeams(params);
   },
 

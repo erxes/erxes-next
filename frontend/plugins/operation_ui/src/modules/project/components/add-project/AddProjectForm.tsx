@@ -23,10 +23,14 @@ import {
 } from '@/project/components/select';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
+import { useParams } from 'react-router-dom';
 
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
+  const { teamId } = useParams();
   const { createProject } = useCreateProject();
-  const { teams } = useGetCurrentUsersTeams();
+  const { teams } = useGetCurrentUsersTeams({
+    variables: { teamIds: teamId ? [teamId] : undefined },
+  });
   const editor = useBlockEditor();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const form = useForm<TAddProject>({

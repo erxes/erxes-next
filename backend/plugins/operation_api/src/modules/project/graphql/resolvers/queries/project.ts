@@ -44,7 +44,10 @@ export const projectQueries = {
       filter.teamIds = { $in: params.teamIds };
     }
 
-    if (params.userId) {
+    if (
+      (params.teamIds && params.teamIds.length <= 0 && params.userId) ||
+      !params.teamIds
+    ) {
       const teamIds = await models.TeamMember.find({
         memberId: params.userId,
       }).distinct('teamId');

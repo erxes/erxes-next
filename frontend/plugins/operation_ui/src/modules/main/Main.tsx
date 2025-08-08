@@ -6,7 +6,7 @@ import { ProjectsPage } from '~/pages/ProjectsPage';
 import { ProjectDetailPage } from '~/pages/ProjectDetailPage';
 import { ProjectLayout } from '@/project/components/ProjectLayout';
 import { TaskPageTypes } from '@/task/types';
-import { ProjectPageTypes } from '@/project/types';
+
 import { TasksLayout } from '@/task/components/TasksLayout';
 
 const taskMain = () => {
@@ -17,14 +17,17 @@ const taskMain = () => {
         <Route path="tasks" element={<TasksLayout />}>
           <Route index element={<TasksPage type={TaskPageTypes.All} />} />
         </Route>
-        <Route
-          path="projects"
-          element={<ProjectsPage type={ProjectPageTypes.All} />}
-        />
+        <Route path="projects" element={<ProjectsPage />} />
         <Route path="projects/:projectId" element={<ProjectLayout />}>
           <Route index element={<Navigate to="overview" replace />} />
           <Route path="overview" element={<ProjectDetailPage />} />
           <Route path="tasks" element={<ProjectDetailPage />} />
+        </Route>
+
+        <Route path="team/:teamId">
+          <Route index element={<Navigate to="projects" replace />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="tasks" element={<TasksLayout />} />
         </Route>
       </Routes>
     </Suspense>

@@ -8,8 +8,11 @@ import { SelectLead } from '@/project/components/select/SelectLead';
 import { SelectTeam } from '@/project/components/select/SelectTeam';
 import { SelectPriority } from '@/project/components/select/SelectPriority';
 import { SelectStatus } from '@/project/components/select/SelectStatus';
+import { useParams } from 'react-router-dom';
 
 const ProjectsFilterPopover = () => {
+  const { teamId } = useParams();
+
   const [queries] = useMultiQueryState<{
     searchValue: string;
     lead: string;
@@ -41,7 +44,7 @@ const ProjectsFilterPopover = () => {
                 </Filter.Item>
                 <Command.Separator className="my-1" />
                 <SelectLead.FilterItem />
-                <SelectTeam.FilterItem />
+                {!teamId && <SelectTeam.FilterItem />}
                 <SelectPriority.FilterItem />
                 <SelectStatus.FilterItem />
               </Command.List>
@@ -63,6 +66,8 @@ const ProjectsFilterPopover = () => {
 };
 
 export const ProjectsFilter = () => {
+  const { teamId } = useParams();
+
   const [queries] = useMultiQueryState<{
     searchValue: string;
     lead: string;
@@ -88,7 +93,7 @@ export const ProjectsFilter = () => {
           </Filter.BarItem>
         )}
         <SelectLead.FilterBar />
-        <SelectTeam.FilterBar />
+        {!teamId && <SelectTeam.FilterBar />}
         <SelectPriority.FilterBar />
         <SelectStatus.FilterBar />
         <ProjectsFilterPopover />

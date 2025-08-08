@@ -1,5 +1,6 @@
 import { IconBox, IconUserFilled } from '@tabler/icons-react';
 import { NavigationMenuLinkItem } from 'erxes-ui';
+import { TeamsNavigation } from '@/navigation/TeamsNavigation';
 
 export const MainNavigation = () => {
   return (
@@ -16,6 +17,7 @@ export const MainNavigation = () => {
         pathPrefix="operation"
         path="projects"
       />
+      <TeamsNavigation />
     </>
   );
 };
