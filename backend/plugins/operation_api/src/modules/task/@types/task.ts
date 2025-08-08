@@ -12,9 +12,15 @@ export interface ITask {
   priority?: string;
   labelIds?: string[];
   tagIds?: string[];
-  assignee?: string;
+  assigneeId?: string;
+  createdBy?: string;
   cycleId?: string;
-  projectId: string;
+  projectId?: string;
+  estimatedPoint?: number;
+  userId?: string;
+  startDate?: Date;
+  targetDate?: Date;
+  createdAt?: Date;
 }
 
 export interface ITaskDocument extends ITask, Document {
