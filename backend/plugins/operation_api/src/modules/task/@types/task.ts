@@ -8,7 +8,7 @@ export interface ITask {
   name: string;
   teamId: string;
   description?: string;
-  status: string;
+  status?: string;
   priority?: string;
   labelIds?: string[];
   tagIds?: string[];
@@ -21,6 +21,10 @@ export interface ITask {
   startDate?: Date;
   targetDate?: Date;
   createdAt?: Date;
+}
+
+export interface ITaskUpdate extends ITask {
+  _id: string;
 }
 
 export interface ITaskDocument extends ITask, Document {

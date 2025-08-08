@@ -1,13 +1,18 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { taskSchema } from '@/task/db/definitions/task';
-import { ITask, ITaskDocument, ITaskFilter } from '@/task/@types/task';
+import {
+  ITask,
+  ITaskDocument,
+  ITaskFilter,
+  ITaskUpdate,
+} from '@/task/@types/task';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
   getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
   createTask(doc: ITask): Promise<ITaskDocument>;
-  updateTask(_id: string, doc: ITask): Promise<ITaskDocument>;
+  updateTask(doc: ITaskUpdate): Promise<ITaskDocument>;
   removeTask(TaskId: string): Promise<{ ok: number }>;
 }
 
@@ -71,8 +76,9 @@ export const loadTaskClass = (models: IModels) => {
       return models.Task.insertOne(doc);
     }
 
-    public static async updateTask(_id: string, doc: ITask) {
-      return await models.Task.findOneAndUpdate({ _id }, { $set: { ...doc } });
+    public static async updateTask(doc: ITaskUpdate) {
+      const { _id, ...rest } = doc;
+      return await models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
     }
 
     public static async removeTask(TaskId: string[]) {

@@ -1,25 +1,22 @@
 import { IContext } from '~/connectionResolvers';
+import { ITaskUpdate } from '@/task/@types/task';
 
 export const taskMutations = {
   createTask: async (
     _parent: undefined,
-    { name, teamId, status },
+    { params }: { params: ITaskUpdate },
     { models, user }: IContext,
   ) => {
-    return models.Task.createTask({
-      name,
-      teamId,
-      status,
-      createdBy: user._id,
-    });
+    params.createdBy = user._id;
+    return models.Task.createTask(params);
   },
 
   updateTask: async (
     _parent: undefined,
-    { _id, name, teamId, status },
+    { params }: { params: ITaskUpdate },
     { models }: IContext,
   ) => {
-    return models.Task.updateTask(_id, { name, teamId, status });
+    return models.Task.updateTask(params);
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {
