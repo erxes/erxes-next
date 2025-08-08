@@ -4,14 +4,16 @@ import {
   Sheet,
   IconPicker,
   Button,
-  Textarea,
   Separator,
+  useBlockEditor,
+  BlockEditor,
 } from 'erxes-ui';
 import { TAddProject, addProjectSchema } from '@/project/types';
 import { useCreateProject } from '@/project/hooks/useCreateProject';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Block } from '@blocknote/core';
 import {
   SelectStatus,
   SelectTeam,
@@ -25,6 +27,8 @@ import { IconChevronRight } from '@tabler/icons-react';
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { createProject } = useCreateProject();
   const { teams } = useGetCurrentUsersTeams();
+  const editor = useBlockEditor();
+  const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const form = useForm<TAddProject>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
@@ -44,10 +48,25 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
     }
   }, [teams, form]);
 
-  const onSubmit = (data: TAddProject) => {
+  const handleDescriptionChange = async () => {
+    const content = await editor?.document;
+    if (content) {
+      content.pop();
+      setDescriptionContent(content as Block[]);
+    }
+  };
+
+  const onSubmit = async (data: TAddProject) => {
+    let descriptionHtml = '';
+    if (descriptionContent && descriptionContent.length > 0) {
+      descriptionHtml =
+        (await editor?.blocksToHTMLLossy(descriptionContent)) || '';
+    }
+
     createProject({
       variables: {
         ...data,
+        description: descriptionHtml,
       },
     });
     onClose();
@@ -175,22 +194,13 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             />
           </div>
           <Separator className="my-4" />
-          <Form.Field
-            name="description"
-            control={form.control}
-            render={({ field }) => (
-              <Form.Item className="h-full space-y-0">
-                <Form.Label className="sr-only">Description</Form.Label>
-                <Form.Control>
-                  <Textarea
-                    {...field}
-                    className="h-full focus-visible:shadow-none shadow-none text-xl"
-                    placeholder="Write a description, a project brief, or collect ideas…"
-                  />
-                </Form.Control>
-              </Form.Item>
-            )}
-          />
+          <div className="h-full">
+            <BlockEditor
+              editor={editor}
+              onChange={handleDescriptionChange}
+              className="h-full text-xl"
+            />
+          </div>
         </Sheet.Content>
         <Sheet.Footer className="flex justify-end flex-shrink-0 gap-1 px-5">
           <Button
@@ -200,6 +210,8 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             onClick={() => {
               onClose();
               form.reset();
+              editor?.removeBlocks(editor?.document);
+              setDescriptionContent(undefined);
             }}
           >
             Cancel
