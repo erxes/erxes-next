@@ -16,7 +16,5 @@ export const useGetTeam = (options?: QueryHookOptions<IUseGetTeamResponse>) => {
 
   const team = data?.getTeam;
 
-  console.log('12313', '====', team);
-
   return { team, loading, refetch };
 };

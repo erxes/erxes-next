@@ -10,15 +10,20 @@ import { Link } from 'react-router-dom';
 import { IconBox } from '@tabler/icons-react';
 import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 import { useParams } from 'react-router-dom';
-import { useGetTeam } from '~/modules/team/hooks/useGetTeam';
+import { useGetTeams } from '@/team/hooks/useGetTeams';
+import { useAtomValue } from 'jotai';
+import { currentUserState } from 'ui-modules';
 
 export const ProjectsListBreadCrumb = () => {
   const { teamId } = useParams();
 
-  const { team, loading } = useGetTeam({
-    variables: { _id: teamId },
-    skip: !teamId,
+  const currentUser = useAtomValue(currentUserState);
+
+  const { teams, loading } = useGetTeams({
+    variables: { userId: currentUser?._id },
   });
+
+  const team = teams?.find((team) => team._id === teamId);
 
   return (
     <PageHeader>

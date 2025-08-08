@@ -28,15 +28,14 @@ import { useParams } from 'react-router-dom';
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
   const { createProject } = useCreateProject();
-  const { teams } = useGetCurrentUsersTeams({
-    variables: { teamIds: teamId ? [teamId] : undefined },
-  });
+  const { teams } = useGetCurrentUsersTeams({});
+
   const editor = useBlockEditor();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const form = useForm<TAddProject>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
-      teamIds: [],
+      teamIds: [teamId],
       icon: 'IconBox',
       name: '',
       status: 0,
