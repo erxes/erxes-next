@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { currentUserState } from 'ui-modules/states';
-import { useAtomValue } from 'jotai';
 import {
   cn,
   Combobox,
@@ -21,7 +19,6 @@ import {
 import { IconUsers } from '@tabler/icons-react';
 import { ITeam } from '@/team/types';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
-import { useDebounce } from 'use-debounce';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 
 interface SelectTeamContextType {
@@ -63,6 +60,27 @@ export const SelectTeamProvider = ({
   const [_teams, setTeams] = useState<ITeam[]>(teams || []);
   const isSingleMode = mode === 'single';
 
+  useEffect(() => {
+    if (teams) {
+      setTeams(teams);
+    }
+  }, [teams]);
+
+  useEffect(() => {
+    if (teams && value) {
+      const teamIds = Array.isArray(value) ? value : [value];
+      const selectedTeams = teams.filter((team) => teamIds.includes(team._id));
+
+      setTeams((prev) => {
+        const existingIds = prev.map((t) => t._id);
+        const newTeams = selectedTeams.filter(
+          (team) => !existingIds.includes(team._id),
+        );
+        return newTeams.length > 0 ? [...prev, ...newTeams] : prev;
+      });
+    }
+  }, [teams, value]);
+
   const onSelect = (team: ITeam) => {
     if (!team) return;
     if (isSingleMode) {
@@ -73,7 +91,6 @@ export const SelectTeamProvider = ({
     const arrayValue = Array.isArray(value) ? value : [];
     const isTeamSelected = arrayValue.includes(team._id);
 
-    // Prevent deselecting the last team
     if (isTeamSelected && arrayValue.length === 1) {
       return;
     }
@@ -83,7 +100,6 @@ export const SelectTeamProvider = ({
       : [...arrayValue, team._id];
 
     setTeams((prev) => {
-      // Remove duplicates and ensure we only have teams that are in newSelectedTeamIds
       const existingTeams = prev.filter((t) =>
         newSelectedTeamIds.includes(t._id),
       );
@@ -162,40 +178,20 @@ const SelectTeamCommandItem = ({ team }: { team: ITeam }) => {
 };
 
 const SelectTeamContent = ({ providedTeams }: { providedTeams?: ITeam[] }) => {
-  const currentUser = useAtomValue(currentUserState);
-  const [search, setSearch] = React.useState('');
-  const [debouncedSearch] = useDebounce(search, 500);
   const { teams: selectedTeams, loading: contextLoading } =
     useSelectTeamContext();
 
   const { teams: searchedTeams = [], loading: searchLoading } =
     useGetCurrentUsersTeams({
-      variables: {
-        searchValue: debouncedSearch,
-        userId: currentUser?._id,
-      },
       skip: !!providedTeams,
     });
 
   const teams = providedTeams || searchedTeams;
-  const filteredTeams = providedTeams
-    ? teams.filter((team) =>
-        team.name.toLowerCase().includes(search.toLowerCase()),
-      )
-    : teams;
 
   const loading = contextLoading || searchLoading;
 
   return (
     <Command shouldFilter={false} id="team-command-menu">
-      <Command.Input
-        value={search}
-        onValueChange={setSearch}
-        variant="secondary"
-        wrapperClassName="flex-auto"
-        placeholder="Search team..."
-        className="h-9"
-      />
       <Command.List>
         <Combobox.Empty loading={loading} />
         {selectedTeams.length > 0 && (
@@ -206,7 +202,7 @@ const SelectTeamContent = ({ providedTeams }: { providedTeams?: ITeam[] }) => {
             <Command.Separator className="my-1" />
           </>
         )}
-        {filteredTeams
+        {teams
           .filter((team) => !selectedTeams.some((t) => t._id === team._id))
           .map((team) => (
             <SelectTeamCommandItem key={team._id} team={team} />
@@ -495,7 +491,7 @@ export const SelectTeamFormItem = React.forwardRef<
     onChange?: (value: string | string[]) => void;
   }
 >(({ onChange, className, ...props }, ref) => {
-  const [open, setOpen] = useState(false);  
+  const [open, setOpen] = useState(false);
   return (
     <SelectTeamProvider
       onValueChange={(value) => {

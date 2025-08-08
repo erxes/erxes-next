@@ -268,10 +268,9 @@ export const SelectLeadFormItem = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
   Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> & {
     className?: string;
+    teamIds?: string[] | string;
   }
->(({ onValueChange, className, ...props }, ref) => {
-  const { teams } = useGetCurrentUsersTeams();
-  const teamIds = teams?.map((team) => team._id);
+>(({ onValueChange, className, teamIds, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <SelectLeadProvider

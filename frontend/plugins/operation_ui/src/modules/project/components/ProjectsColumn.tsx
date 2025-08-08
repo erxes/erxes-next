@@ -22,7 +22,13 @@ import { IProject } from '@/project/types';
 import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ITeam } from '@/team/types';
-import { SelectPriority, SelectStatus, SelectTeam, SelectLead, DateSelect } from '@/project/components/select';
+import {
+  SelectPriority,
+  SelectStatus,
+  SelectTeam,
+  SelectLead,
+  DateSelect,
+} from '@/project/components/select';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
@@ -143,7 +149,23 @@ export const projectsColumns = (
       },
       size: 240,
     },
-
+    {
+      id: 'startDate',
+      accessorKey: 'startDate',
+      header: () => (
+        <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
+      ),
+      cell: ({ cell }) => {
+        const startDate = cell.getValue() as string;
+        return (
+          <DateSelect.InlineCell
+            value={startDate ? new Date(startDate) : undefined}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 240,
+    },
     {
       id: 'targetDate',
       accessorKey: 'targetDate',

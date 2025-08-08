@@ -8,6 +8,7 @@ import {
   EnumCursorDirection,
   ICursorListResponse,
   useMultiQueryState,
+  useToast,
 } from 'erxes-ui';
 import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { currentUserState } from 'ui-modules/states';
@@ -58,6 +59,7 @@ export const useProjects = (
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
   });
   const setProjectTotalCount = useSetAtom(projectTotalCountAtom);
+  const { toast } = useToast();
   const { data, loading, fetchMore } = useQuery<ICursorListResponse<IProject>>(
     GET_PROJECTS,
     {
@@ -65,6 +67,13 @@ export const useProjects = (
       variables: useProjectsVariables(options?.variables)
         ?.projectsQueryVariables,
       skip: cursor === undefined,
+      onError: (e) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+          variant: 'destructive',
+        });
+      },
     },
   );
 

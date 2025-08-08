@@ -1,4 +1,3 @@
-// NOT FINISHED
 import {
   Form,
   Input,
@@ -9,6 +8,7 @@ import {
   Separator,
 } from 'erxes-ui';
 import { TAddProject, addProjectSchema } from '@/project/types';
+import { useCreateProject } from '@/project/hooks/useCreateProject';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
@@ -22,7 +22,8 @@ import {
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 
-export const AddProjectForm = () => {
+export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
+  const { createProject } = useCreateProject();
   const { teams } = useGetCurrentUsersTeams();
   const form = useForm<TAddProject>({
     resolver: zodResolver(addProjectSchema),
@@ -32,21 +33,24 @@ export const AddProjectForm = () => {
       name: '',
       status: 0,
       priority: 0,
-      leadId: '',
+      leadId: undefined,
       targetDate: undefined,
     },
   });
 
   useEffect(() => {
     if (teams && teams.length > 0 && !form.getValues('teamIds').length) {
-      console.log("fsudvaghjy")
       form.setValue('teamIds', [teams[0]._id]);
     }
   }, [teams, form]);
 
-  console.log({ teamIds: form.getValues('teamIds') });
   const onSubmit = (data: TAddProject) => {
-    console.log({ data });
+    createProject({
+      variables: {
+        ...data,
+      },
+    });
+    onClose();
   };
   return (
     <Form {...form}>
@@ -130,7 +134,14 @@ export const AddProjectForm = () => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Lead</Form.Label>
-                  <SelectLead.FormItem {...field} />
+                  <SelectLead.FormItem
+                    {...field}
+                    value={field.value}
+                    onValueChange={(value: any) => {
+                      field.onChange(value);
+                    }}
+                    teamIds={form.getValues('teamIds')}
+                  />
                 </Form.Item>
               )}
             />
@@ -186,6 +197,10 @@ export const AddProjectForm = () => {
             type="button"
             variant="ghost"
             className="bg-background hover:bg-background/90"
+            onClick={() => {
+              onClose();
+              form.reset();
+            }}
           >
             Cancel
           </Button>
