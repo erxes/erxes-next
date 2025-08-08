@@ -4,4 +4,5 @@ export enum ProductHotKeyScope {
   ProductEditSheet = 'product-edit-sheet',
   ProductAddSheetDescriptionField = 'product-add-sheet-description-field',
   ProductAddSheetBarcodeDescriptionField = 'product-add-sheet-barcode-description-field',
+  CategoriesPage = 'categories-page',
 }

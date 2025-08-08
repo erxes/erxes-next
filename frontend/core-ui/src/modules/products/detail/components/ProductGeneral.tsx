@@ -7,7 +7,6 @@ import { useUom } from '@/products/hooks/useUom';
 import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import { FileUploadSection } from './FileUploadSection';
 import { ProductEditorField } from './ProductEditor';
-import { Spinner } from 'erxes-ui';
 import { ProductBasicFields } from './ProductBasicField';
 import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 import { useProductFormData } from '../hooks/useProductFormData';
@@ -19,18 +18,18 @@ interface ProductDetailFormProps {
 export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
   form,
 }) => {
-  const { productDetail, loading, error } = useProductDetail();
-  const { uoms } = useUom({});
+  const { productDetail, error } = useProductDetail();
+  const { uoms } = useUom();
 
   useProductFormData(productDetail, form);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full space-y-4">
-        <Spinner />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center h-full space-y-4">
+  //       <Spinner />
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (

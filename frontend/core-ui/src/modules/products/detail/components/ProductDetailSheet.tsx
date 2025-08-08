@@ -3,8 +3,8 @@ import { Button, cn, Sheet, useSetHotkeyScope } from 'erxes-ui';
 import { renderingProductDetailAtom } from '../../states/productDetailStates';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { useSearchParams } from 'react-router-dom';
 import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
+import { useQueryState } from 'erxes-ui';
 
 export const ProductDetailSheet = ({
   children,
@@ -13,9 +13,7 @@ export const ProductDetailSheet = ({
 }) => {
   const [activeTab] = useAtom(renderingProductDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const productId = searchParams.get('product_id');
+  const [productId, setProductId] = useQueryState('productId');
 
   useEffect(() => {
     if (productId) {
@@ -24,13 +22,11 @@ export const ProductDetailSheet = ({
   }, [productId, setHotkeyScope]);
 
   const setOpen = (newProductId: string | null) => {
-    const newSearchParams = new URLSearchParams(searchParams);
     if (newProductId) {
-      newSearchParams.set('product_id', newProductId);
+      setProductId(newProductId);
     } else {
-      newSearchParams.delete('product_id');
+      setProductId(null);
     }
-    setSearchParams(newSearchParams);
 
     if (!newProductId) {
       setHotkeyScope(ProductHotKeyScope.ProductsPage);

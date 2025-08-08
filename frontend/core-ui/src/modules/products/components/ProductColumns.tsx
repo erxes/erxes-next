@@ -1,3 +1,6 @@
+import { useProductsEdit } from '@/products/hooks/useProductsEdit';
+import { renderingProductDetailAtom } from '@/products/states/productDetailStates';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import {
   IconCategory,
   IconCurrencyDollar,
@@ -12,21 +15,64 @@ import {
   RecordTableCellDisplay,
   CurrencyFormatedDisplay,
   CurrencyCode,
+  useQueryState,
+  RecordTablePopover,
+  RecordTableCellTrigger,
+  Badge,
+  RecordTableCellContent,
+  Input,
 } from 'erxes-ui';
-import { IProduct } from 'ui-modules';
-import { productMoreColumn } from './ProductMoreColumn';
+import { useSetAtom } from 'jotai';
+import { useState } from 'react';
+import { IProduct, SelectCategory } from 'ui-modules';
 export const productColumns: ColumnDef<IProduct>[] = [
-  productMoreColumn,
   RecordTable.checkboxColumn as ColumnDef<IProduct>,
   {
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTable.InlineHead icon={IconLabel} label="Name" />,
     cell: ({ cell }) => {
+      const name = cell.getValue() as string;
+      const [value, setValue] = useState(name);
+      const [, setProductId] = useQueryState('productId');
+      const setRenderingProductDetail = useSetAtom(renderingProductDetailAtom);
+      const { productsEdit } = useProductsEdit();
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        <RecordTablePopover
+          scope={`${ProductHotKeyScope.ProductsPage}-name-${cell.row.original._id}`}
+          onOpenChange={(open) => {
+            if (!open) {
+              productsEdit({
+                variables: {
+                  _id: cell.row.original._id,
+                  name: value,
+                },
+              });
+            }
+          }}
+          closeOnEnter
+        >
+          <RecordTableCellTrigger>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setRenderingProductDetail(true);
+                setProductId(cell.row.original._id);
+              }}
+            >
+              {name}
+            </Badge>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent className="min-w-72">
+            <Input
+              value={value || ''}
+              onChange={(e) => {
+                setValue(e.target.value);
+              }}
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },
@@ -53,7 +99,7 @@ export const productColumns: ColumnDef<IProduct>[] = [
         <RecordTableCellDisplay>
           <CurrencyFormatedDisplay
             currencyValue={{
-              amountMicros: (cell.getValue() as number),
+              amountMicros: cell.getValue() as number,
               currencyCode: CurrencyCode.MNT,
             }}
           />
@@ -80,12 +126,23 @@ export const productColumns: ColumnDef<IProduct>[] = [
       <RecordTable.InlineHead icon={IconCategory} label="Category" />
     ),
     cell: ({ cell }) => {
+      const { productsEdit } = useProductsEdit();
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip
-            value={cell.row.original?.category?.name || ''}
-          />
-        </RecordTableCellDisplay>
+        <SelectCategory.InlineCell
+          mode="single"
+          value={cell.getValue() as string}
+          onValueChange={(value) => {
+            productsEdit({
+              variables: {
+                _id: cell.row.original._id,
+                categoryId: value,
+              },
+            });
+          }}
+          categories={
+            cell.row.original.category ? [cell.row.original.category] : []
+          }
+        />
       );
     },
   },

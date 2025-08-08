@@ -1,10 +1,11 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-
 import { productsQueries } from '@/products/graphql';
 import {
   EnumCursorDirection,
   IRecordTableCursorPageInfo,
   mergeCursorData,
+  parseDateRangeFromString,
+  useMultiQueryState,
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
@@ -16,6 +17,42 @@ export const useProducts = (options?: QueryHookOptions) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: PRODUCTS_CURSOR_SESSION_KEY,
   });
+  const [{ searchValue, tags, created, updated, lastSeen, brand }] =
+    useMultiQueryState<{
+      searchValue: string;
+      tags: string[];
+      created: string;
+      updated: string;
+      lastSeen: string;
+      brand: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen', 'brand']);
+
+  const productsQueryVariables = {
+    limit: PRODUCTS_PER_PAGE,
+    orderBy: {
+      createdAt: -1,
+    },
+    cursor,
+    searchValue,
+    tagIds: tags?.length ? tags : undefined,
+    brandIds: brand || undefined,
+    dateFilters: JSON.stringify({
+      createdAt: {
+        gte: parseDateRangeFromString(created)?.from,
+        lte: parseDateRangeFromString(created)?.to,
+      },
+      updatedAt: {
+        gte: parseDateRangeFromString(updated)?.from,
+        lte: parseDateRangeFromString(updated)?.to,
+      },
+      lastSeenAt: {
+        gte: parseDateRangeFromString(lastSeen)?.from,
+        lte: parseDateRangeFromString(lastSeen)?.to,
+      },
+    }),
+    ...options?.variables,
+  };
+
   const { data, loading, fetchMore } = useQuery<{
     productsMain: {
       list: IProduct[];
@@ -23,12 +60,9 @@ export const useProducts = (options?: QueryHookOptions) => {
       pageInfo: IRecordTableCursorPageInfo;
     };
   }>(productsQueries.productsMain, {
+    variables: productsQueryVariables,
+    skip: cursor === undefined,
     ...options,
-    variables: {
-      limit: PRODUCTS_PER_PAGE,
-      cursor,
-      ...options?.variables,
-    },
   });
 
   const { list: productsMain, totalCount, pageInfo } = data?.productsMain || {};
@@ -75,5 +109,6 @@ export const useProducts = (options?: QueryHookOptions) => {
     totalCount,
     handleFetchMore,
     pageInfo,
+    productsQueryVariables,
   };
 };

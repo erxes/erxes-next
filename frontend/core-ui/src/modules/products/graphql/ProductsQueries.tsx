@@ -12,6 +12,7 @@ const productsMain = gql`
     $searchValue: String
     $vendorId: String
     $brandIds: [String]
+    $orderBy: JSON
     $tagIds: [String]
     $segment: String
     $segmentData: String
@@ -25,6 +26,7 @@ const productsMain = gql`
       searchValue: $searchValue
       vendorId: $vendorId
       brandIds: $brandIds
+      orderBy: $orderBy
       tagIds: $tagIds
       segment: $segment
       segmentData: $segmentData
@@ -46,6 +48,7 @@ const productsMain = gql`
         category {
           _id
           name
+          code
         }
         name
         shortName
@@ -63,7 +66,7 @@ const productsMain = gql`
 `;
 
 const productCategories = gql`
-  query ProductCategories {
+  query ProductCategoryDetail {
     productCategories {
       _id
       parentId

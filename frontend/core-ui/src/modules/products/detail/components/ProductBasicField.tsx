@@ -109,7 +109,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
               <SelectCategory
                 selected={field.value}
                 onSelect={field.onChange}
-                className="w-full border border-gray-300"
+                className="w-full"
                 size="lg"
               />
             </Form.Control>
@@ -253,7 +253,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         <Label className={formLabelClassName}>PDF</Label>
         <Button
           variant="outline"
-          className="w-full justify-between h-8"
+          className="w-full justify-between h-8 shadow-xs"
           type="button"
         >
           Upload a PDF

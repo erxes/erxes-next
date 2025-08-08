@@ -64,6 +64,7 @@ export const GET_COMPANIES = gql`
         ownerId
         tagIds
         score
+        cursor
       }
       ${GQL_PAGE_INFO}
     }
