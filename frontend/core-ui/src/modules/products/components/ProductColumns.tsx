@@ -1,5 +1,6 @@
 import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 import { renderingProductDetailAtom } from '@/products/states/productDetailStates';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import {
   IconCategory,
   IconCurrencyDollar,
@@ -22,6 +23,7 @@ import {
   Input,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
+import { useState } from 'react';
 import { IProduct, SelectCategory } from 'ui-modules';
 export const productColumns: ColumnDef<IProduct>[] = [
   RecordTable.checkboxColumn as ColumnDef<IProduct>,
@@ -31,10 +33,25 @@ export const productColumns: ColumnDef<IProduct>[] = [
     header: () => <RecordTable.InlineHead icon={IconLabel} label="Name" />,
     cell: ({ cell }) => {
       const name = cell.getValue() as string;
+      const [value, setValue] = useState(name);
       const [, setProductId] = useQueryState('productId');
       const setRenderingProductDetail = useSetAtom(renderingProductDetailAtom);
+      const { productsEdit } = useProductsEdit();
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          scope={`${ProductHotKeyScope.ProductsPage}-name-${cell.row.original._id}`}
+          onOpenChange={(open) => {
+            if (!open) {
+              productsEdit({
+                variables: {
+                  _id: cell.row.original._id,
+                  name: value,
+                },
+              });
+            }
+          }}
+          closeOnEnter
+        >
           <RecordTableCellTrigger>
             <Badge
               variant="secondary"
@@ -48,7 +65,12 @@ export const productColumns: ColumnDef<IProduct>[] = [
             </Badge>
           </RecordTableCellTrigger>
           <RecordTableCellContent className="min-w-72">
-            <Input value={name || ''} />
+            <Input
+              value={value || ''}
+              onChange={(e) => {
+                setValue(e.target.value);
+              }}
+            />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -77,7 +99,7 @@ export const productColumns: ColumnDef<IProduct>[] = [
         <RecordTableCellDisplay>
           <CurrencyFormatedDisplay
             currencyValue={{
-              amountMicros: (cell.getValue() as number),
+              amountMicros: cell.getValue() as number,
               currencyCode: CurrencyCode.MNT,
             }}
           />

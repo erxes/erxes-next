@@ -10,7 +10,9 @@ export const ProductsFilter = () => {
     created: string;
     updated: string;
     lastSeen: string;
-  }>(['searchValue', 'created', 'updated', 'lastSeen']);
+    brandId: string;
+    categoryId: string;
+  }>(['searchValue', 'created', 'updated', 'lastSeen', 'brandId', 'categoryId']);
   const { searchValue } = queries || {};
 
   return (
@@ -43,7 +45,9 @@ const ProductsFilterPopover = () => {
     created: string;
     updated: string;
     lastSeen: string;
-  }>(['searchValue', 'created', 'updated', 'lastSeen']);
+    brandId: string;
+    categoryId: string;
+  }>(['searchValue', 'created', 'updated', 'lastSeen', 'brandId', 'categoryId']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,
