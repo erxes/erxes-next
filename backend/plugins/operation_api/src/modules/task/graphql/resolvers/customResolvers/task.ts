@@ -5,6 +5,7 @@ import { TeamEstimateTypes } from '@/team/@types/team';
 export const Task = {
   async estimateChoices(
     task: ITaskDocument,
+    _params: undefined,
     { models }: IContext,
   ): Promise<{ value: number; label: string }[] | null> {
     const team = await models.Team.getTeam(task.teamId);
