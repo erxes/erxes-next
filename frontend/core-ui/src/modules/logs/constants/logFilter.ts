@@ -104,4 +104,5 @@ export const LOGS_COMMON_FILTER_FIELD_NAMES = [
   'actionOperator',
   'userIdsOperator',
   'createdAtOperator',
+  'logId',
 ];
