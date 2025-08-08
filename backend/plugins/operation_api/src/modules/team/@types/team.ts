@@ -33,3 +33,10 @@ export interface ITeamMember {
 export interface ITeamMemberDocument extends ITeamMember, Document {
   _id: string;
 }
+
+export enum TeamEstimateTypes {
+  NOT_IN_USE = 1,
+  DEFAULT = 2,
+  FIBONACCI = 3,
+  EXPONENTIAL = 4,
+}

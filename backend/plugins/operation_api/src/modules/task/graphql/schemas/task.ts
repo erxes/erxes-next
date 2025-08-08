@@ -19,6 +19,8 @@ export const types = `
     projectId: String
     teamId: String
     estimatedPoint: Int
+
+    estimateChoises: JSON
   }
 
   type TaskListResponse {
@@ -41,6 +43,7 @@ const taskFilterParams = `
   projectId: String 
   teamId: String
   estimatedPoint: Int
+
   ${GQL_CURSOR_PARAM_DEFS}
 `;
 
@@ -75,6 +78,7 @@ const updateTaskParams = `
   cycleId: String
   projectId: String
   estimatedPoint: Int
+
 `;
 
 export const queries = `
