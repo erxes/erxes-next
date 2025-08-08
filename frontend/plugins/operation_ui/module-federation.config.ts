@@ -15,7 +15,7 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'operation_ui',
   exposes: {
-    './config': './src/config.ts',
+    './config': './src/config.tsx',
     './operation': './src/modules/main/Main.tsx',
     './teamSettings': './src/modules/team/Settings.tsx',
     './widgets': './src/widgets/Widgets.tsx',

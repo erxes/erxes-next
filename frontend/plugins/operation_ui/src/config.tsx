@@ -1,10 +1,25 @@
 import { IconUserSquare, IconListCheck } from '@tabler/icons-react';
 
 import { IUIConfig } from 'erxes-ui/types';
+import { lazy, Suspense } from 'react';
+
+const MainNavigation = lazy(() =>
+  import('./modules/navigation/MainNavigation').then((module) => ({
+    default: module.MainNavigation,
+  })),
+);
 
 export const CONFIG: IUIConfig = {
   name: 'operation',
-  icon: IconListCheck,
+  navigationGroup: {
+    name: 'operation',
+    icon: IconListCheck,
+    content: () => (
+      <Suspense fallback={<div />}>
+        <MainNavigation />
+      </Suspense>
+    ),
+  },
   modules: [
     {
       name: 'operation',

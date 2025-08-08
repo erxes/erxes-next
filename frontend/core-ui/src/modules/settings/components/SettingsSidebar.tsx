@@ -1,13 +1,8 @@
 import { useNavigate } from 'react-router';
 
-import { Icon, IconChevronLeft } from '@tabler/icons-react';
+import { IconChevronLeft } from '@tabler/icons-react';
 
-import {
-  Sidebar,
-  IUIConfig,
-  NavigationMenuLinkItem,
-  NavigationMenuGroup,
-} from 'erxes-ui';
+import { Sidebar, IUIConfig, NavigationMenuLinkItem } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
