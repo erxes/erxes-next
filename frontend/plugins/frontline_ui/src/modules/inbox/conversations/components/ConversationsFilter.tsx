@@ -119,7 +119,7 @@ export const ConversationFilterBar = ({
     awaitingResponse: boolean;
     participated: boolean;
     created: Date;
-    channel: string;
+    channelId: string;
     integrationType: string;
   }>([
     'status',
@@ -127,7 +127,7 @@ export const ConversationFilterBar = ({
     'awaitingResponse',
     'participated',
     'created',
-    'channel',
+    'channelId',
     'integrationType',
   ]);
 

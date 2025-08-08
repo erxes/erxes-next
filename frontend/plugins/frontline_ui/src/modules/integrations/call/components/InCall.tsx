@@ -25,7 +25,7 @@ export const InCall = () => {
 
   return (
     <>
-      <div className="text-center space-y-2 p-2 pb-6 pt-3">
+      <div className="text-center space-y-2 px-2 py-6">
         <CallInfo />
       </div>
       <Transfer />
