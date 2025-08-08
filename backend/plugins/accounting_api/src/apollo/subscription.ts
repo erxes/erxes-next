@@ -1,9 +1,9 @@
-import { withFilter } from 'graphql-subscriptions';
+// import { withFilter } from 'graphql-subscriptions';
 
 export default {
   name: 'accounting',
   typeDefs: `
-			accountingAdjustInventoryChanged(adjustId: String!): accountingAdjustInventoryChangedResponse
+			accountingAdjustInventoryChanged(adjustId: String!): AdjustInventory
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
