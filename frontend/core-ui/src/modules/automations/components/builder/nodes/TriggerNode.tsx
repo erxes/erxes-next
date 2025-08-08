@@ -1,12 +1,12 @@
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
 import { NodeData } from '@/automations/types';
-import { IconAdjustmentsAlt, IconSunElectricity } from '@tabler/icons-react';
-import { Node } from '@xyflow/react';
-import { cn } from 'erxes-ui';
+import { IconAdjustmentsAlt } from '@tabler/icons-react';
+import { Node, NodeProps } from '@xyflow/react';
+import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
-import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
+import { ErrorState } from '@/automations/utils/ErrorState';
 
 const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   if (data?.error) {
@@ -26,7 +26,7 @@ const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   return (
     <div className="p-3">
       <div className="flex items-center gap-2 text-primary/90 pb-2">
-        <IconAdjustmentsAlt className="w-4 h-4" />
+        <IconAdjustmentsAlt className="size-4" />
         <p className="text-sm font-semibold">Configuration</p>
       </div>
       <div className="rounded border bg-muted overflow-x-auto text-muted-foreground text-xs font-mono">
@@ -39,7 +39,7 @@ const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   );
 };
 
-const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
+const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
   const { beforeTitleContent, actionId } = data;
 
   return (
@@ -59,9 +59,9 @@ const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
           <div className="flex items-center gap-2 text-primary">
             {beforeTitleContent && beforeTitleContent(id, 'trigger')}
             <div
-              className={`h-6 w-6 rounded-full flex items-center justify-center`}
+              className={`size-6 rounded-full flex items-center justify-center`}
             >
-              <IconSunElectricity />
+              <IconComponent className="size-4" name={data.icon} />
             </div>
             <div>
               <p className="font-medium ">{data.label}</p>
@@ -77,7 +77,6 @@ const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
             {data.description}
           </span>
 
-          {/* {renderContent(data)} */}
           <TriggerNodeContent data={data} />
         </div>
 

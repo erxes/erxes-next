@@ -71,7 +71,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
             </div>
           </RecordTableCellTrigger>
           <RecordTableCellContent className="w-24 h-12 flex justify-center items-center space-x-2">
-            <Label htmlFor="mode">InActive</Label>
+            <Label htmlFor="mode">Inactive</Label>
             <Switch
               id="mode"
               onCheckedChange={(open) =>
@@ -199,33 +199,26 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     accessorKey: 'tagIds',
     header: () => <RecordTable.InlineHead label="Tags" />,
     cell: ({ cell }) => {
-      const [selectedTags, setSelectedTags] = useState<string[]>(
-        cell.row.original.tagIds || [],
-      );
-      const [open, setOpen] = useState(false);
-
       return (
-        <SelectTags
+        <SelectTags.InlineCell
           tagType="core:automation"
           mode="multiple"
-          value={selectedTags}
+          value={cell.row.original.tagIds}
           targetIds={[cell.row.original._id]}
-          onValueChange={(tags) => {
-            if (Array.isArray(tags)) {
-              setSelectedTags(tags);
-              setOpen(false);
-            }
-          }}
-        >
-          <RecordTablePopover open={open} onOpenChange={setOpen}>
-            <RecordTableCellTrigger>
-              <SelectTags.List />
-            </RecordTableCellTrigger>
-            <RecordTableCellContent className="w-96">
-              <SelectTags.Content />
-            </RecordTableCellContent>
-          </RecordTablePopover>
-        </SelectTags>
+          options={(newSelectedTagIds) => ({
+            update: (cache) => {
+              cache.modify({
+                id: cache.identify({
+                  __typename: 'Automation',
+                  _id: cell.row.original._id,
+                }),
+                fields: {
+                  tagIds: () => newSelectedTagIds,
+                },
+              });
+            },
+          })}
+        />
       );
     },
   },

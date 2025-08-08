@@ -8,10 +8,15 @@ import {
   IAutomationDocument,
   IAutomationExecutionDocument,
 } from 'erxes-api-shared/core-modules';
+import {
+  IAutomationWaitingActionDocument,
+  waitingActionsToExecuteSchema,
+} from '@/mongo/waitingActionsToExecute';
 
 export interface IModels {
   Automations: Model<IAutomationDocument>;
   Executions: Model<IAutomationExecutionDocument>;
+  WaitingActions: Model<IAutomationWaitingActionDocument>;
 }
 
 export interface IContext extends IMainContext {
@@ -32,9 +37,17 @@ export const loadClasses = (db: Connection, subdomain: string): IModels => {
     Model<IAutomationExecutionDocument>
   >('automations_executions', automationExecutionSchema);
 
+  models.WaitingActions = db.model<
+    IAutomationWaitingActionDocument,
+    Model<IAutomationWaitingActionDocument>
+  >('automations_waiting_actions_execute', waitingActionsToExecuteSchema);
+
   return models;
 };
 
 export const generateModels = createGenerateModels<IModels>(loadClasses, {
-  ignoreModels: ['automations_executions'],
+  ignoreModels: [
+    'automations_executions',
+    'automations_waiting_actions_execute',
+  ],
 });

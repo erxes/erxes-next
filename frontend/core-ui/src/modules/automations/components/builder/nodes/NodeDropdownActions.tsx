@@ -2,7 +2,7 @@ import { useNodeDropDownActions } from './hooks/useNodeDropDownActions';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Dispatch, SetStateAction } from 'react';
-import { NodeData } from '../../../types';
+import { AutomationNodesType, NodeData } from '../../../types';
 import { EditForm } from './NodeEditForm';
 
 export const NodeDropdownActions = ({
@@ -32,7 +32,7 @@ export const NodeDropdownActions = ({
     >
       <DropdownMenu.Trigger asChild>
         <Button variant="ghost">
-          <IconDotsVertical className="w-4 h-4" />
+          <IconDotsVertical className="size-4" />
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="w-42">
@@ -61,8 +61,8 @@ const NodeRemoveActionDialog = ({
   return (
     <AlertDialog>
       <AlertDialog.Trigger asChild>
-        <Button variant="ghost" className="w-full justify-start">
-          <IconTrash className="h-4 w-4 text-red-500" />
+        <Button variant="ghost" size="sm" className="w-full justify-start">
+          <IconTrash className="size-4 text-destructive" />
           Delete
         </Button>
       </AlertDialog.Trigger>
@@ -95,7 +95,7 @@ const NodeEditForm = ({
   setOpenDialog: Dispatch<SetStateAction<boolean>>;
   data: NodeData;
   id: string;
-  fieldName: 'triggers' | 'actions';
+  fieldName: AutomationNodesType;
 }) => {
   return (
     <Dialog
@@ -105,8 +105,8 @@ const NodeEditForm = ({
       }}
     >
       <Dialog.Trigger asChild>
-        <Button variant="ghost" className="w-full justify-start">
-          <IconEdit className="w-4 h-4" />
+        <Button variant="ghost" size="sm" className="w-full justify-start">
+          <IconEdit className="size-4" />
           Edit
         </Button>
       </Dialog.Trigger>

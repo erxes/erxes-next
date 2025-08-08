@@ -200,7 +200,6 @@ export const loadClass = (models: IModels) => {
           isCustomerRead: { $ne: true },
         },
         { $set: { isCustomerRead: true } },
-        { multi: true },
       );
     }
 

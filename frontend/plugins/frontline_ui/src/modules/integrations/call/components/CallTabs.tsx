@@ -86,7 +86,11 @@ export const CallButton = () => {
   const phoneNumber = useAtomValue(callNumberState);
   const { startCall } = useSip();
   return (
-    <Button className="my-3 w-full" onClick={() => startCall(phoneNumber)}>
+    <Button
+      className="my-3 w-full"
+      disabled={!phoneNumber || !phoneNumber.length}
+      onClick={() => startCall(phoneNumber)}
+    >
       Call
     </Button>
   );

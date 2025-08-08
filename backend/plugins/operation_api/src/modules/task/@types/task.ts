@@ -5,15 +5,16 @@ import {
 } from 'erxes-api-shared/core-types';
 
 export interface ITask {
-  name?: string;
+  name: string;
+  teamId: string;
   description?: string;
-  status?: string;
+  status: string;
   priority?: string;
   labelIds?: string[];
   tagIds?: string[];
   assignee?: string;
   cycleId?: string;
-  projectId?: string;
+  projectId: string;
 }
 
 export interface ITaskDocument extends ITask, Document {

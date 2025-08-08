@@ -1,5 +1,5 @@
 import { IAutomationBot } from '@/automations/components/settings/components/bots/types/automationBots';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 
 export const AutomationBotIntegrationContent = ({
   botIntegrationConstant,
@@ -7,9 +7,8 @@ export const AutomationBotIntegrationContent = ({
   botIntegrationConstant: IAutomationBot;
 }) => {
   return (
-    <RenderPluginsComponent
-      pluginName={`${botIntegrationConstant.pluginName}_ui`}
-      remoteModuleName="automations"
+    <RenderPluginsComponentWrapper
+      pluginName={botIntegrationConstant.pluginName}
       moduleName={botIntegrationConstant.moduleName}
       props={{
         componentType: 'automationBotsContent',

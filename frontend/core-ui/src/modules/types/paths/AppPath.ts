@@ -15,14 +15,21 @@ export enum AppPath {
 
   Contacts = 'contacts',
   ContactsCatchAll = `/${Contacts}/*`,
+
   Segments = 'segments',
   SegmentsCatchAll = `/${Segments}/*`,
   Automations = 'automations',
-  AutoamtionsCatchAll = `/${Automations}/*`,
+  AutomationsCatchAll = `/${Automations}/*`,
+  MyInbox = 'my-inbox',
+  MyInboxCatchAll = `/${MyInbox}/*`,
   Logs = 'logs',
   LogsCatchAll = `/${Logs}/*`,
+
   Marketplace = 'marketplace',
   MarketplaceCatchAll = `/${Marketplace}/*`,
+
+  Documents = 'documents',
+  DocumentsCatchAll = `/${Documents}/*`,
 
   //not found
 
