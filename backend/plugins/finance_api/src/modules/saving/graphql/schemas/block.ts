@@ -32,6 +32,7 @@ const queryParams = `
 
 export const queries = `
   savingsBlocks(${queryParams}): SavingBlockListResponse
+  savingBlockDetail(_id: String!): SavingBlock
 `;
 
 const mutationParams = `

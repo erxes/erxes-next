@@ -95,7 +95,7 @@ export const loadBlockClass = (models: IModels) => {
             { $set: { blockAmount: oldTr.contractReaction?.blockAmount } },
           );
 
-          await models.Blocks.deleteOne({ _id: oldTr._id });
+          return await models.Blocks.deleteOne({ _id: oldTr._id });
         }
       }
     }

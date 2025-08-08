@@ -22,8 +22,6 @@ export const contractMutations = {
     doc: IContract,
     { models }: IContext,
   ) => {
-    console.log(doc);
-
     return await models.Contracts.createContract(doc);
   },
 
@@ -157,7 +155,7 @@ export const contractMutations = {
   /**
    * Updates a contract
    */
-  savingsContractEdit: async (
+  savingsContractsEdit: async (
     _root: undefined,
     { _id, ...doc }: IContractDocument,
     { models }: IContext,

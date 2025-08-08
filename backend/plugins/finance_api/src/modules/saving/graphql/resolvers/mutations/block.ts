@@ -25,16 +25,16 @@ const blockMutations = {
   /**
    * Removes blocks
    */
-  savingsBlockRemove: async (
+  savingsBlocksRemove: async (
     _root: undefined,
-    { transactionIds }: { transactionIds: string[] },
+    { contractIds }: { contractIds: string[] },
     { models }: IContext,
   ) => {
-    const blocks = await models.Blocks.find({ _id: { $in: transactionIds } });
+    const blocks = await models.Blocks.find({ _id: { $in: contractIds } });
 
     await models.Blocks.removeBlocks(blocks.map((a) => a._id));
 
-    return transactionIds;
+    return contractIds;
   },
 };
 

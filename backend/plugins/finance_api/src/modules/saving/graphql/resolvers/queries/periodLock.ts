@@ -71,7 +71,7 @@ const periodLockQueries = {
    * Get one periodLock
    */
   savingsPeriodLockDetail: async (
-    _root,
+    _root: undefined,
     { _id }: IPeriodLockDocument,
     { models }: IContext,
   ) => {

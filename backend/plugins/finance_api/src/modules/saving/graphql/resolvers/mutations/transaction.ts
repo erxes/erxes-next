@@ -5,6 +5,7 @@ import {
   ITransaction,
   ITransactionDocument,
 } from '~/modules/saving/@types/transactions';
+import { savingsContractChanged } from '~/modules/saving/graphql/resolvers/mutations/contract';
 
 const transactionMutations = {
   /**
@@ -70,7 +71,7 @@ const transactionMutations = {
   /**
    * Updates a transaction
    */
-  savingsTransactionEdit: async (
+  savingsTransactionsEdit: async (
     _root: undefined,
     { _id, ...doc }: ITransactionDocument,
     { models }: IContext,
@@ -81,18 +82,18 @@ const transactionMutations = {
       const contract = await models.Contracts.findOne({
         _id: updated.contractId,
       });
-
-      //   if (contract) {
-      //     await savingsContractChanged(contract)
-      //   }
+      if (contract) {
+        await savingsContractChanged(contract);
+      }
     }
+
     return updated;
   },
 
   /**
    * Change a transaction
    */
-  savingsTransactionChange: async (
+  savingsTransactionsChange: async (
     _root: undefined,
     { _id, ...doc }: ITransactionDocument,
     { models }: IContext,
@@ -103,25 +104,32 @@ const transactionMutations = {
       const contract = await models.Contracts.findOne({
         _id: updated.contractId,
       });
-
-      //   if (contract) {
-      //     await savingsContractChanged(contract)
-      //   }
+      if (contract) {
+        await savingsContractChanged(contract);
+      }
     }
+
     return updated;
   },
 
   /**
    * Removes transactions
    */
-  savingsTransactionRemove: async (
+  savingsTransactionsRemove: async (
     _root: undefined,
     { transactionIds }: { transactionIds: string[] },
     { models }: IContext,
   ) => {
     // TODO: contracts check
 
-    return await models.Transactions.removeTransaction(transactionIds);
+    const transactions = await models.Transactions.find({
+      _id: transactionIds,
+    }).lean();
+    await models.Transactions.removeTransactions(
+      transactions.map((a) => a._id),
+    );
+
+    return transactionIds;
   },
 };
 

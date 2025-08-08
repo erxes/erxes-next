@@ -56,7 +56,7 @@ export const queries = `
     savingsTransactionDetail(_id: String!): SavingTransaction
 `;
 
-const commonFields = `
+const mutationParams = `
     contractId: String,
     customerId: String,
     copmanyId: String,
@@ -87,9 +87,9 @@ const changeFields = `
 `;
 
 export const mutations = `
-  savingsTransactionsAdd(${commonFields}): SavingTransaction
-  clientSavingsTransactionsAdd(${commonFields}${clientFields}): SavingTransaction
-  savingsTransactionsEdit(_id: String!, ${commonFields}): SavingTransaction
+  savingsTransactionsAdd(${mutationParams}): SavingTransaction
+  clientSavingsTransactionsAdd(${mutationParams}${clientFields}): SavingTransaction
+  savingsTransactionsEdit(_id: String!, ${mutationParams}): SavingTransaction
   savingsTransactionsChange(_id: String!, ${changeFields}): SavingTransaction
   savingsTransactionsRemove(transactionIds: [String]): [String]
 `;

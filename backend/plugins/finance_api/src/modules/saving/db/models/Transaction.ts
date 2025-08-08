@@ -27,7 +27,7 @@ export interface ITransactionModel extends Model<ITransactionDocument> {
     _id: string,
     doc: ITransaction,
   ): Promise<ITransactionDocument>;
-  removeTransaction(_ids: string[]): Promise<ITransaction>;
+  removeTransactions(_ids: string[]): Promise<ITransaction>;
 }
 
 export const loadTransactionClass = (models: IModels) => {
@@ -45,6 +45,8 @@ export const loadTransactionClass = (models: IModels) => {
       if (!transaction) {
         throw new Error('Transaction not found');
       }
+
+      return transaction;
     }
 
     /**
@@ -123,7 +125,8 @@ export const loadTransactionClass = (models: IModels) => {
 
       if (
         periodLock &&
-        !periodLock?.excludeContracts.includes(doc.contractId || 'undefined')
+        doc.contractId &&
+        !periodLock?.excludeContracts.includes(doc.contractId)
       ) {
         throw new Error(
           'At this moment transaction can not been created because this date closed',
@@ -136,16 +139,13 @@ export const loadTransactionClass = (models: IModels) => {
         _id: doc.contractId,
       }).lean();
 
-      if (!contract || !contract._id) {
-        await models.Transactions.updateOne({ _id }, { $set: { ...doc } });
-        return models.Transactions.getTransaction({ _id });
+      if (contract && contract._id) {
+        await removeTransactionAfterSchedule(models, oldTr);
       }
 
-      await removeTransactionAfterSchedule(models, oldTr);
+      await models.Transactions.updateOne({ _id }, { $set: { ...doc } });
 
-      const newTransaction = await models.Transactions.getTransaction({
-        _id,
-      });
+      const newTransaction = await models.Transactions.getTransaction({ _id });
 
       return newTransaction;
     }
@@ -195,7 +195,7 @@ export const loadTransactionClass = (models: IModels) => {
     /**
      * Remove Transaction
      */
-    public static async removeTransaction(_ids: string[]) {
+    public static async removeTransactions(_ids: string[]) {
       const transactions: ITransactionDocument[] =
         await models.Transactions.find({ _id: _ids })
           .sort({ payDate: -1 })

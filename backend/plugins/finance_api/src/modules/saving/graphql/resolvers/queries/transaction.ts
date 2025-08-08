@@ -56,6 +56,8 @@ const transactionQueries = {
     { _id },
     { models }: IContext,
   ) => {
+    console.log('_id', _id);
+
     return models.Transactions.getTransaction({ _id });
   },
 };
