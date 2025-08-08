@@ -3,7 +3,7 @@ import { IContext } from '~/connectionResolvers';
 import { TeamEstimateTypes } from '@/team/@types/team';
 
 export const Task = {
-  async estimateChoises(
+  async estimateChoices(
     task: ITaskDocument,
     { models }: IContext,
   ): Promise<{ value: number; label: string }[] | null> {

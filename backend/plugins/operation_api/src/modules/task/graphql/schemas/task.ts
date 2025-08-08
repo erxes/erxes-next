@@ -20,7 +20,7 @@ export const types = `
     teamId: String
     estimatedPoint: Int
 
-    estimateChoises: JSON
+    estimateChoices: JSON
   }
 
   type TaskListResponse {
