@@ -1,16 +1,14 @@
-import React from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  useStripe,
-  useElements,
-  CardElement,
-} from '@stripe/react-stripe-js';
-import { usePayment } from './Payments';
-import ModalHeader from './ModalHeader';
-import CloseButton from './CloseButton';
-import { Button } from '../common/button';
 import { gql, useQuery } from '@apollo/client';
+import {
+  CardElement,
+  Elements,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { usePayment } from '../../hooks/use-payment';
+import { Button } from '../ui/button';
+
 
 const QUERY = gql`
   query Query($id: String!) {
@@ -56,7 +54,6 @@ const CheckoutForm = () => {
 
   return (
     <>
-      <ModalHeader />
       <form onSubmit={handleSubmit}>
         <CardElement
           options={{
@@ -113,9 +110,6 @@ const StripePayment = () => {
       <Elements stripe={stripePromise}>
         <CheckoutForm />
       </Elements>
-      <div style={{ marginBottom: '10px' }}>
-        <CloseButton />
-      </div>
     </div>
   );
 };

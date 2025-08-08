@@ -1,11 +1,6 @@
-import React from 'react';
-import { usePayment } from './Payments';
-import ModalHeader from './ModalHeader';
-import CloseButton from './CloseButton';
-import { Input } from '../common/input';
-import CheckPayment from './checkPayment';
+import { usePayment } from "../../hooks/use-payment";
+import { Input } from "../ui/input";
 
-type Props = {};
 
 const LabelInputRow = ({
   label,
@@ -40,7 +35,7 @@ const LabelInputRow = ({
   </div>
 );
 
-const KhanbankForm = (props: Props) => {
+const KhanbankForm = () => {
   const { transaction, apiResponse, invoiceDetail, apiDomain } = usePayment();
 
   if (!transaction) return null;
@@ -54,7 +49,6 @@ const KhanbankForm = (props: Props) => {
 
   return (
     <div className='p-4'>
-      <ModalHeader />
 
       <LabelInputRow
         label='Дансны дугаар'
@@ -90,11 +84,6 @@ const KhanbankForm = (props: Props) => {
         onCopy={() => copyToClipboard(apiResponse.description)}
         apiDomain={apiDomain}
       />
-
-      <div className='sticky bottom-0 bg-white -mx-4 px-4 pb-4 mt-4'>
-        <CheckPayment />
-        <CloseButton />
-      </div>
     </div>
   );
 };

@@ -1,8 +1,7 @@
-import { usePayment } from '../../hooks/use-payment';
-import { cn } from '../../lib/utils';
-import Loader from '../Loader';
-import { getShortName } from '../../lib/utils';
 import { useIsMobile } from '../../hooks/use-mobile';
+import { usePayment } from '../../hooks/use-payment';
+import { cn, getShortName } from '../../lib/utils';
+import Loader from '../Loader';
 
 const QrPayment = () => {
   const isMobile = useIsMobile();
@@ -53,10 +52,7 @@ const QrPayment = () => {
         </div>
       </div>
 
-      <div className="sticky -bottom-4 bg-white -mx-4 px-4 pb-4 mt-4 -mb-4">
-        {/* <CheckPayment /> */}
-        {/* <CloseButton /> */}
-      </div>
+  
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { usePayment } from './Payments';
+import { usePayment } from "../../hooks/use-payment";
 
 const Minupay = () => {
   const { transaction, apiResponse } = usePayment();

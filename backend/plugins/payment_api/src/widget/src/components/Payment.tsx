@@ -111,6 +111,12 @@ const Payment = (props: Props) => {
               <PaymentDialog />
             </div>
           </div>
+          <div className="text-right border-t border-dashed pt-3">
+            <p className="text-neutral-500 text-sm">Payment Amount</p>
+            <div className="font-bold text-2xl">
+              {invoiceDetail.amount.toLocaleString()} {invoiceDetail.currency}
+            </div>
+          </div>
         </div>
       </PaymentContext.Provider>
     </main>
