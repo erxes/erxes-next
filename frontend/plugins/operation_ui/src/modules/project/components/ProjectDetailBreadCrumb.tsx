@@ -5,7 +5,7 @@ import { PageHeader } from 'ui-modules';
 import { IconBox } from '@tabler/icons-react';
 import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 
-export const ProjectBreadCrumb = () => {
+export const ProjectDetailBreadCrumb = () => {
   const { teamId, projectId } = useParams<{
     teamId?: string;
     projectId: string;

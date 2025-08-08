@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import { ProjectBreadCrumb } from '@/project/components/ProjectBreadCrumb';
+import { ProjectsListBreadCrumb } from '@/project/components/ProjectsListBreadCrumb';
 
 export const ProjectLayout = () => {
   return (
     <div>
-      <ProjectBreadCrumb />
+      <ProjectsListBreadCrumb />
       <Outlet />
     </div>
   );

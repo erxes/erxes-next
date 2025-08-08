@@ -28,6 +28,11 @@ const taskMain = () => {
           <Route index element={<Navigate to="projects" replace />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="tasks" element={<TasksLayout />} />
+          <Route path="projects/:projectId" element={<ProjectLayout />}>
+            <Route index element={<Navigate to="overview" replace />} />
+            <Route path="overview" element={<ProjectDetailPage />} />
+            <Route path="tasks" element={<ProjectDetailPage />} />
+          </Route>
         </Route>
       </Routes>
     </Suspense>

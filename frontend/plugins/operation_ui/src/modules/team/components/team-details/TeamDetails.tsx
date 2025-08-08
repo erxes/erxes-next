@@ -8,8 +8,10 @@ import { IconTrash } from '@tabler/icons-react';
 import { Button, useToast } from 'erxes-ui';
 import { useRemoveTeam } from '@/team/hooks/useRemoveTeam';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 export const TeamDetails = () => {
-  const { team, loading } = useGetTeam();
+  const { teamId } = useParams();
+  const { team, loading } = useGetTeam({ variables: { _id: teamId } });
   const { removeTeam } = useRemoveTeam();
   const { toast } = useToast();
 

@@ -67,7 +67,7 @@ export const projectsColumns = (
                 variant="secondary"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/operation/projects/${cell.row.original._id}`);
+                  navigate(`${cell.row.original._id}/overview`);
                 }}
               >
                 {name}
