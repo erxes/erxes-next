@@ -69,6 +69,7 @@ export const NavigationMenuGroup = ({
 }) => {
   return (
     <>
+      {separate && <Sidebar.Separator />}
       <Collapsible defaultOpen className={cn('group/collapsible', className)}>
         <Sidebar.Group>
           <Sidebar.GroupLabel asChild>
@@ -86,7 +87,6 @@ export const NavigationMenuGroup = ({
           </Collapsible.Content>
         </Sidebar.Group>
       </Collapsible>
-      {separate && <Sidebar.Separator />}
     </>
   );
 };
