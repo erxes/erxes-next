@@ -1,14 +1,15 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import { IContext } from '~/connectionResolvers';
-import { IPipelineLabelDocument, IStageDocument } from '~/modules/sales/@types';
 import {
   CLOSE_DATE_TYPES,
   PRIORITIES,
   SALES_STATUSES,
 } from '~/modules/sales/constants';
+import { IPipelineLabelDocument, IStageDocument } from '~/modules/sales/@types';
+
+import { IContext } from '~/connectionResolvers';
+import { IUserDocument } from 'erxes-api-shared/core-types';
 import { getCloseDateByType } from '~/modules/sales/utils';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export const boardQueries = {
   /**
@@ -116,10 +117,7 @@ export const boardQueries = {
 
   async salesItemsCountByAssignedUser(
     _root,
-    {
-      pipelineId,
-      stackBy,
-    }: { pipelineId: string; type: string; stackBy: string },
+    { pipelineId, stackBy }: { pipelineId: string; stackBy: string },
     { models }: IContext,
   ) {
     const { Stages, PipelineLabels } = models;
@@ -283,21 +281,10 @@ export const boardQueries = {
 
   async salesBoardLogs(_root, args, { models }: IContext) {
     const { Deals, Stages } = models;
-    const { action, content, contentType, contentId } = args;
-
-    const type = contentType.split(':')[0];
+    const { action, content, contentId } = args;
 
     if (action === 'moved') {
-      let item = {};
-
-      switch (type) {
-        case 'deal':
-          item = await Deals.getDeal(contentId);
-          break;
-
-        default:
-          break;
-      }
+      const item = await Deals.getDeal(contentId);
 
       const { oldStageId, destinationStageId } = content;
 
@@ -499,4 +486,4 @@ export const boardQueries = {
   },
 };
 
-moduleRequireLogin(boardQueries);
+// moduleRequireLogin(boardQueries);

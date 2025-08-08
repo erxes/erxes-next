@@ -1,18 +1,14 @@
-import { can } from 'erxes-api-shared/core-modules';
-import { IUserDocument } from 'erxes-api-shared/core-types';
+import * as _ from 'underscore';
+
 import {
   checkUserIds,
+  cursorPaginate,
   getNextMonth,
   getToday,
   regexSearchText,
   sendTRPCMessage,
-  USER_ROLES,
   validSearchText,
 } from 'erxes-api-shared/utils';
-import moment from 'moment';
-import { DeleteResult } from 'mongoose';
-import * as _ from 'underscore';
-import { IModels } from '~/connectionResolvers';
 import {
   IArchiveArgs,
   IDeal,
@@ -23,6 +19,12 @@ import {
   IStageDocument,
 } from './@types';
 import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
+
+import { can } from 'erxes-api-shared/core-modules';
+import { IUserDocument } from 'erxes-api-shared/core-types';
+import moment from 'moment';
+import { DeleteResult } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
 import { generateFilter } from './graphql/resolvers/queries/deals';
 
 export const configReplacer = (config) => {
@@ -497,31 +499,24 @@ const generateArchivedItemsFilter = (
   return filter;
 };
 
-export const archivedItems = async (
-  models: IModels,
-  params: IArchiveArgs,
-  collection: any,
-) => {
-  const { pipelineId, ...listArgs } = params;
-
-  const { page = 0, perPage = 0 } = listArgs;
+export const archivedItems = async (models: IModels, params: IArchiveArgs) => {
+  const { pipelineId } = params;
 
   const stages = await models.Stages.find({ pipelineId }).lean();
 
   if (stages.length > 0) {
     const filter = generateArchivedItemsFilter(params, stages);
 
-    return collection
-      .find(filter)
-      .sort({
-        modifiedAt: -1,
-      })
-      .skip(page || 0)
-      .limit(perPage || 20)
-      .lean();
+    const { list, pageInfo, totalCount } = await cursorPaginate({
+      model: models.Deals,
+      params,
+      query: filter,
+    });
+
+    return { list, pageInfo, totalCount };
   }
 
-  return [];
+  return {};
 };
 
 export const archivedItemsCount = async (
@@ -586,15 +581,15 @@ export const checkItemPermByUser = async (
   ]);
   const isUserInBranch = compareDepartmentIds(branchIds, userBranchIds);
 
-  if (
-    visibility === 'private' &&
-    !(memberIds || []).includes(user._id) &&
-    !hasUserInDepartment &&
-    !isUserInBranch &&
-    user?.role !== USER_ROLES.SYSTEM
-  ) {
-    throw new Error('You do not have permission to view.');
-  }
+  // if (
+  //   visibility === 'private' &&
+  //   !(memberIds || []).includes(user._id) &&
+  //   !hasUserInDepartment &&
+  //   !isUserInBranch &&
+  //   user?.role !== USER_ROLES.SYSTEM
+  // ) {
+  //   throw new Error('You do not have permission to view.');
+  // }
 
   const isSuperVisorInDepartment = compareDepartmentIds(
     departmentIds,
@@ -626,108 +621,15 @@ export const getItemList = async (
   filter: any,
   args: IDealQueryParams,
   user: IUserDocument,
-  type: string,
-  extraFields?: { [key: string]: number },
   getExtraFields?: (item: any) => { [key: string]: any },
-  serverTiming?,
 ) => {
-  const { page, perPage, sortField, sortDirection } = args;
-
-  let limit = args.limit !== undefined ? args.limit : 10;
-
-  let sort: any = { order: 1, createdAt: -1 };
-
-  if (sortField && sortDirection) {
-    sort = { [sortField]: sortDirection, order: 1, createdAt: -1 };
-  }
-
-  const pipelines: any[] = [
-    {
-      $match: filter,
-    },
-    {
-      $sort: sort,
-    },
-    {
-      $skip: args.skip || 0,
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'assignedUserIds',
-        foreignField: '_id',
-        as: 'users_doc',
-      },
-    },
-    {
-      $lookup: {
-        from: 'sales_stages',
-        localField: 'stageId',
-        foreignField: '_id',
-        as: 'stages_doc',
-      },
-    },
-    {
-      $lookup: {
-        from: 'sales_pipeline_labels',
-        localField: 'labelIds',
-        foreignField: '_id',
-        as: 'labels_doc',
-      },
-    },
-    {
-      $project: {
-        assignedUsers: '$users_doc',
-        labels: '$labels_doc',
-        stage: { $arrayElemAt: ['$stages_doc', 0] },
-        name: 1,
-        isComplete: 1,
-        startDate: 1,
-        closeDate: 1,
-        relations: 1,
-        createdAt: 1,
-        modifiedAt: 1,
-        priority: 1,
-        number: 1,
-        watchedUserIds: 1,
-        customFieldsData: 1,
-        stageChangedDate: 1,
-        tagIds: 1,
-        status: 1,
-        branchIds: 1,
-        departmentIds: 1,
-        userId: 1,
-        ...(extraFields || {}),
-      },
-    },
-  ];
-
-  if (page && perPage) {
-    pipelines[2] = {
-      $skip: (page - 1) * perPage,
-    };
-    limit = perPage;
-  }
-
-  if (limit > 0) {
-    pipelines.splice(3, 0, { $limit: limit });
-  }
-
-  if (serverTiming) {
-    serverTiming.startTime('getItemsPipelineAggregate');
-  }
-
-  const list = await models.Deals.aggregate(pipelines);
-
-  if (serverTiming) {
-    serverTiming.endTime('getItemsPipelineAggregate');
-  }
+  const { list, pageInfo, totalCount } = await cursorPaginate<IDealDocument>({
+    model: models.Deals,
+    params: args,
+    query: filter,
+  });
 
   // const ids = list.map((item) => item._id);
-
-  if (serverTiming) {
-    serverTiming.startTime('conformities');
-  }
 
   // const conformities = await sendCoreMessage({
   //   subdomain,
@@ -740,10 +642,6 @@ export const getItemList = async (
   //   isRPC: true,
   //   defaultValue: [],
   // });
-
-  if (serverTiming) {
-    serverTiming.endTime('conformities');
-  }
 
   const companyIds: string[] = [];
   const customerIds: string[] = [];
@@ -809,10 +707,6 @@ export const getItemList = async (
   //   }
   // }
 
-  if (serverTiming) {
-    serverTiming.startTime('getItemsCompanies');
-  }
-
   const companies = await sendTRPCMessage({
     pluginName: 'core',
     method: 'query',
@@ -832,14 +726,6 @@ export const getItemList = async (
     },
     defaultValue: [],
   });
-
-  if (serverTiming) {
-    serverTiming.endTime('getItemsCompanies');
-  }
-
-  if (serverTiming) {
-    serverTiming.startTime('getItemsCustomers');
-  }
 
   const customers = await sendTRPCMessage({
     pluginName: 'core',
@@ -864,10 +750,6 @@ export const getItemList = async (
     defaultValue: [],
   });
 
-  if (serverTiming) {
-    serverTiming.endTime('getItemsCustomers');
-  }
-
   const getCocsByItemId = (
     itemId: string,
     cocIdsByItemId: any,
@@ -884,10 +766,6 @@ export const getItemList = async (
 
   const updatedList: any[] = [];
 
-  if (serverTiming) {
-    serverTiming.startTime('getItemsNotifications');
-  }
-
   // const notifications = await sendNotificationsMessage({
   //   subdomain,
   //   action: 'find',
@@ -903,14 +781,6 @@ export const getItemList = async (
   //   defaultValue: []
   // });
 
-  if (serverTiming) {
-    serverTiming.endTime('getItemsNotifications');
-  }
-
-  if (serverTiming) {
-    serverTiming.startTime('getItemsFields');
-  }
-
   const fields = await sendTRPCMessage({
     pluginName: 'core',
     method: 'query',
@@ -919,32 +789,24 @@ export const getItemList = async (
     input: {
       query: {
         showInCard: true,
-        contentType: `sales:${type}`,
+        contentType: `sales:deal`,
       },
     },
     defaultValue: [],
   });
 
-  if (serverTiming) {
-    serverTiming.endTime('getItemsFields');
-  }
-
   // add just incremented order to each item in list, not from db
   let order = 0;
   for (const item of list) {
-    if (
-      item.customFieldsData &&
-      item.customFieldsData.length > 0 &&
-      fields.length > 0
-    ) {
+    if (item.customFieldsData?.length && fields?.length) {
       item.customProperties = [];
 
       fields.forEach((field) => {
-        const fieldData = item.customFieldsData.find(
+        const fieldData = (item.customFieldsData || []).find(
           (f) => f.field === field._id,
         );
 
-        if (fieldData) {
+        if (item.customProperties && fieldData) {
           item.customProperties.push({
             name: `${field.text} - ${fieldData.value}`,
           });
@@ -965,7 +827,7 @@ export const getItemList = async (
     });
   }
 
-  return updatedList;
+  return { list: updatedList, pageInfo, totalCount };
 };
 
 // comparing pipelines departmentIds and current user departmentIds
@@ -1582,11 +1444,7 @@ export const copyPipelineLabels = async (
     updatedLabelIds.push(newLabel._id);
   }
 
-  await models.PipelineLabels.labelsLabel(
-    newStage.pipelineId,
-    item._id,
-    updatedLabelIds,
-  );
+  await models.PipelineLabels.labelsLabel(item._id, updatedLabelIds);
 };
 
 /**
