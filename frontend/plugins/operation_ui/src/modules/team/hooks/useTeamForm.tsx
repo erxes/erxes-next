@@ -4,10 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TTeamForm } from '@/team/types';
 import { TEAM_FORM_SCHEMA } from '@/team/schemas';
 
-export const useTeamCreateForm = () => {
+export const useTeamForm = ({
+  defaultValues,
+}: {
+  defaultValues?: TTeamForm;
+}) => {
   const form = useForm<TTeamForm>({
     mode: 'onBlur',
-    defaultValues: {
+    defaultValues: defaultValues || {
       name: '',
       description: '',
       icon: 'IconBuildingSkyscraper',
