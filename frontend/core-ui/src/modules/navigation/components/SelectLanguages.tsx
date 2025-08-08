@@ -1,22 +1,27 @@
-import { IconLanguage } from '@tabler/icons-react';
-
+import { IconChevronRight, IconLanguage } from '@tabler/icons-react';
 import { DropdownMenu } from 'erxes-ui';
-
+import { INTL_LANGUAGES } from 'erxes-ui/constants/IntlLanguages';
 import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
 
 export const SelectLanguages = () => {
   const { currentLanguage, languages, switchLanguage } = useSwitchLanguage();
 
+  const getLanguageName = (language: AvailableLanguage) => {
+    return (
+      Object.entries(INTL_LANGUAGES).find(([_, code]) =>
+        code.includes(language + '-'),
+      )?.[0] || language
+    );
+  };
+
   return (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger>
-        <IconLanguage />
-        <span>Language ({currentLanguage})</span>
+        Change Language
+        <IconChevronRight className="ml-auto" />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.SubContent>
-          <DropdownMenu.Label>Language</DropdownMenu.Label>
-          <DropdownMenu.Separator />
+        <DropdownMenu.SubContent className="min-w-56" sideOffset={8}>
           <DropdownMenu.RadioGroup
             value={currentLanguage}
             onValueChange={(value) =>
@@ -25,7 +30,7 @@ export const SelectLanguages = () => {
           >
             {languages.map((language) => (
               <DropdownMenu.RadioItem key={language} value={language}>
-                {language}
+                {getLanguageName(language)}
               </DropdownMenu.RadioItem>
             ))}
           </DropdownMenu.RadioGroup>
