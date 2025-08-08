@@ -16,8 +16,7 @@ const config: ModuleFederationConfig = {
   name: 'operation_ui',
   exposes: {
     './config': './src/config.ts',
-    './task': './src/modules/task/Main.tsx',
-    './taskSettings': './src/modules/task/Settings.tsx',
+    './operation': './src/modules/main/Main.tsx',
     './teamSettings': './src/modules/team/Settings.tsx',
     './widgets': './src/widgets/Widgets.tsx',
   },
