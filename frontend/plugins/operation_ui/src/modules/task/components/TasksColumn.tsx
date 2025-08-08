@@ -11,7 +11,7 @@ import {
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import { SelectStatus } from '@/project/components/select/SelectStatus';
-import { TargetDateSelect } from '@/project/components/select/TargetDateSelect';
+// import { TargetDateSelect } from '@/project/components/select/TargetDateSelect';
 import {
   Badge,
   Input,
@@ -22,7 +22,7 @@ import {
 } from 'erxes-ui';
 import { IProject } from '@/project/types';
 import { useState } from 'react';
-import { ProjectHotKeyScope } from '@/project/types';
+// import { ProjectHotKeyScope } from '@/project/types';
 import { SelectPriority } from '@/project/components/select/SelectPriority';
 import { SelectLead } from '@/project/components/select/SelectLead';
 import { ITeam } from '@/team/types';
@@ -46,10 +46,8 @@ export const tasksColumns = (
         return (
           <RecordTablePopover
             scope={
-              ProjectHotKeyScope.ProjectTableCell +
-              '.' +
-              cell.row.original._id +
-              '.Name'
+              //   ProjectHotKeyScope.ProjectTableCell +
+              '.' + cell.row.original._id + '.Name'
             }
             closeOnEnter
             onOpenChange={(open) => {
@@ -157,10 +155,11 @@ export const tasksColumns = (
       cell: ({ cell }) => {
         const targetDate = cell.getValue() as string;
         return (
-          <TargetDateSelect
-            value={targetDate ? new Date(targetDate) : undefined}
-            id={cell.row.original._id}
-          />
+          <div>123</div>
+          //   <TargetDateSelect
+          //     value={targetDate ? new Date(targetDate) : undefined}
+          //     id={cell.row.original._id}
+          //   />
         );
       },
       size: 240,

@@ -6,7 +6,8 @@ import { TasksPage } from '~/pages/TasksPage';
 import { ProjectsPage } from '~/pages/ProjectsPage';
 import { ProjectDetailPage } from '~/pages/ProjectDetailPage';
 import { ProjectLayout } from '@/project/components/ProjectLayout';
-import { ProjectPageTypes, TaskPageTypes } from '@/project/types';
+import { TaskPageTypes } from '@/task/types';
+import { ProjectPageTypes } from '@/project/types';
 import { TasksLayout } from '@/task/components/TasksLayout';
 
 const taskMain = () => {

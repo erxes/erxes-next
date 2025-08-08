@@ -16,3 +16,9 @@ export interface ITask {
   teamId: string;
   estimatedPoint: number;
 }
+
+export enum TaskPageTypes {
+  All = 'all',
+  Project = 'project',
+  Team = 'team',
+}
