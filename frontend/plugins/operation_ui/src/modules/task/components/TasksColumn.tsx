@@ -22,7 +22,7 @@ import {
 } from 'erxes-ui';
 import { IProject } from '@/project/types';
 import { useState } from 'react';
-import { ProjectHotKeyScope } from '@/project/types';
+// import { TaskHotKeyScope } from '@/task/types';
 import { SelectPriority } from '@/project/components/select/SelectPriority';
 import { SelectLead } from '@/project/components/select/SelectLead';
 import { ITeam } from '@/team/types';
@@ -46,10 +46,8 @@ export const tasksColumns = (
         return (
           <RecordTablePopover
             scope={
-              ProjectHotKeyScope.ProjectTableCell +
-              '.' +
-              cell.row.original._id +
-              '.Name'
+              // ProjectHotKeyScope.ProjectTableCell +
+              '.' + cell.row.original._id + '.Name'
             }
             closeOnEnter
             onOpenChange={(open) => {
@@ -155,7 +153,7 @@ export const tasksColumns = (
         <RecordTable.InlineHead label="Target Date" icon={IconCalendarFilled} />
       ),
       cell: ({ cell }) => {
-        const targetDate = cell.getValue() as string;
+        // const targetDate = cell.getValue() as string;
         return <div>13</div>;
       },
       size: 240,
