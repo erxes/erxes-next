@@ -101,12 +101,12 @@ const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
   );
 };
 
-const DateSelectFormItemValue = ({placeholder, type}: {placeholder?: string, type?: 'start' | 'target'}) => {
+const DateSelectFormItemValue = ({placeholder, type  }: {placeholder?: string, type?: 'start' | 'target'}) => {
   const { value } = useDateSelectContext();
 
   if (!value) {
     return (
-      <span className="text-accent-foreground/80 flex items-center justify-center gap-2">
+      <span className="text-muted-foreground font-medium text-base flex items-center justify-center gap-2 ">
        {type === 'start' ? <IconCalendarUp className="size-4" /> : <IconCalendarQuestion className="size-4" />}
         {placeholder || 'Select date'}
       </span>
@@ -116,7 +116,7 @@ const DateSelectFormItemValue = ({placeholder, type}: {placeholder?: string, typ
   return (
     <span className="flex items-center justify-center gap-2">
       <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
-      {format(value, 'MMM d, yyyy')}
+      <p className="font-medium text-base text-foreground">{format(value, 'MMM d, yyyy')}</p>
     </span>
   );
 };

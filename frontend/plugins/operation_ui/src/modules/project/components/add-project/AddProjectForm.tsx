@@ -11,6 +11,7 @@ import {
 import { TAddProject, addProjectSchema } from '@/project/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import {
   SelectStatus,
   SelectTeam,
@@ -26,7 +27,7 @@ export const AddProjectForm = () => {
   const form = useForm<TAddProject>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
-      teamIds: [teams?.[0]?._id],
+      teamIds: [],
       icon: 'IconBox',
       name: '',
       status: 0,
@@ -36,6 +37,14 @@ export const AddProjectForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (teams && teams.length > 0 && !form.getValues('teamIds').length) {
+      console.log("fsudvaghjy")
+      form.setValue('teamIds', [teams[0]._id]);
+    }
+  }, [teams, form]);
+
+  console.log({ teamIds: form.getValues('teamIds') });
   const onSubmit = (data: TAddProject) => {
     console.log({ data });
   };
@@ -131,7 +140,11 @@ export const AddProjectForm = () => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Start Date</Form.Label>
-                  <DateSelect.FormItem {...field} type="start" placeholder="Start Date"/>
+                  <DateSelect.FormItem
+                    {...field}
+                    type="start"
+                    placeholder="Start Date"
+                  />
                 </Form.Item>
               )}
             />
@@ -141,7 +154,11 @@ export const AddProjectForm = () => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Target Date</Form.Label>
-                  <DateSelect.FormItem {...field} type="target" placeholder="Target Date" />
+                  <DateSelect.FormItem
+                    {...field}
+                    type="target"
+                    placeholder="Target Date"
+                  />
                 </Form.Item>
               )}
             />

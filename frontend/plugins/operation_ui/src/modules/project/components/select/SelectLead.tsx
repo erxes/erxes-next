@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import {
   Button,
   cn,
@@ -19,6 +20,7 @@ import {
   currentUserState,
   IUser,
   useSelectMemberContext,
+  MembersInline,
 } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
@@ -112,14 +114,13 @@ export const SelectLeadFilterItem = () => {
 export const SelectLeadFilterView = ({
   onValueChange,
   queryKey,
-  teamIds,
 }: {
   onValueChange?: (value: string) => void;
   queryKey?: string;
-  teamIds?: string[] | string;
 }) => {
   const [lead, setLead] = useQueryState<string>(queryKey || 'lead');
   const { resetFilterState } = useFilterContext();
+  const { teams } = useGetCurrentUsersTeams();
 
   return (
     <Filter.View filterKey={queryKey || 'lead'}>
@@ -132,7 +133,7 @@ export const SelectLeadFilterView = ({
           onValueChange?.(value as string);
         }}
       >
-        <SelectLeadContent teamIds={teamIds} />
+        <SelectLeadContent teamIds={teams?.map((team) => team._id)} />
       </SelectLeadProvider>
     </Filter.View>
   );
@@ -243,13 +244,34 @@ export const SelectLeadInlineCell = ({
   );
 };
 
+const SelectLeadFormValue = () => {
+  const { members, memberIds, setMembers } = useSelectMemberContext();
+  if (members.length === 0)
+    return (
+      <span className="flex items-center gap-2">
+        <IconUser className="size-4" />
+        <p className="text-muted-foreground font-medium text-base">Lead</p>
+      </span>
+    );
+
+  return (
+    <MembersInline
+      memberIds={memberIds}
+      members={members}
+      updateMembers={setMembers}
+      className="font-medium text-base text-foreground"
+    />
+  );
+};
+
 export const SelectLeadFormItem = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
   Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> & {
     className?: string;
-    teamIds?: string[] | string;
   }
->(({ onValueChange, className, teamIds, ...props }, ref) => {
+>(({ onValueChange, className, ...props }, ref) => {
+  const { teams } = useGetCurrentUsersTeams();
+  const teamIds = teams?.map((team) => team._id);
   const [open, setOpen] = useState(false);
   return (
     <SelectLeadProvider
@@ -267,7 +289,7 @@ export const SelectLeadFormItem = React.forwardRef<
             asChild
           >
             <Button variant="secondary">
-              <SelectLeadValue placeholder={'Select lead'} />
+              <SelectLeadFormValue />
             </Button>
           </Combobox.TriggerBase>
         </Form.Control>

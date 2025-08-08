@@ -24,12 +24,14 @@ export const MembersInlineRoot = ({
   memberIds,
   placeholder,
   updateMembers,
+  className,
   size,
 }: {
   members?: IUser[];
   memberIds?: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
+  className?: string;
   size?: AvatarProps['size'];
 }) => {
   return (
@@ -41,7 +43,7 @@ export const MembersInlineRoot = ({
       size={size}
     >
       <MembersInlineAvatar size={size} />
-      <MembersInlineTitle />
+      <MembersInlineTitle className={className}/>
     </MembersInlineProvider>
   );
 };
@@ -221,7 +223,11 @@ export const MembersInlineAvatar = ({
   );
 };
 
-export const MembersInlineTitle = () => {
+export const MembersInlineTitle = ({
+  className,
+}: {
+  className?: string;
+}) => {
   const { members, loading, placeholder } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
   const isCurrentUser = members.some((m) => m._id === currentUser._id);
@@ -251,6 +257,7 @@ export const MembersInlineTitle = () => {
       value={getDisplayValue()}
       loading={loading}
       placeholder={placeholder}
+      className={className}
     />
   );
 };
