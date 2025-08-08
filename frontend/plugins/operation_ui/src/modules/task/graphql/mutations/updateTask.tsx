@@ -5,27 +5,33 @@ export const UPDATE_TASK_MUTATION = gql`
     $_id: String!
     $name: String
     $description: String
-    $status: Int
-    $priority: Int
     $teamId: String
+    $status: String
+    $priority: Int
+    $labelIds: [String]
+    $tagIds: [String]
+    $assigneeId: String
     $startDate: Date
     $targetDate: Date
+    $cycleId: String
     $projectId: String
-    $assigneeId: String
     $estimatedPoint: Int
   ) {
     updateTask(
       _id: $_id
       name: $name
       description: $description
+      teamId: $teamId
       status: $status
       priority: $priority
-      teamId: $teamId
-      estimatedPoint: $estimatedPoint
+      labelIds: $labelIds
+      tagIds: $tagIds
+      assigneeId: $assigneeId
       startDate: $startDate
       targetDate: $targetDate
+      cycleId: $cycleId
       projectId: $projectId
-      assigneeId: $assigneeId
+      estimatedPoint: $estimatedPoint
     ) {
       _id
     }

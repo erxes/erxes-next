@@ -25,12 +25,12 @@ import {
 import { useAtomValue } from 'jotai';
 import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
 import { useDebounce } from 'use-debounce';
-import { useUpdateProject } from '@/project/hooks/useUpdateProject';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { IconUser } from '@tabler/icons-react';
 
-export const SelectLeadProvider = SelectMember.Provider;
+export const SelectAssigneeProvider = SelectMember.Provider;
 
-const SelectLeadValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectAssigneeValue = ({ placeholder }: { placeholder?: string }) => {
   return <SelectMember.Value placeholder={placeholder} />;
 };
 
@@ -41,29 +41,33 @@ export const SelectTeamMemberContent = ({
   teamIds?: string[] | string;
   exclude: boolean;
 }) => {
-  const { members: teamMembers } = useGetTeamMembers({ teamIds });
+  const { members: teamMembers } = useGetTeamMembers({
+    teamIds,
+  });
   const excludeIds = teamMembers?.map((member) => member.memberId);
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
   const currentUser = useAtomValue(currentUserState) as IUser;
   const { memberIds, members } = useSelectMemberContext();
-  const filteredIds = excludeIds?.filter((id) => id !== currentUser._id);
+
   const { users, loading, handleFetchMore, totalCount, error } = useUsers({
     variables: {
       searchValue: debouncedSearch,
       excludeIds: exclude,
-      ids: filteredIds,
+      ids: excludeIds?.filter((id) => id !== currentUser._id),
     },
-    skip: !excludeIds || !filteredIds?.length,
+    skip: !excludeIds,
   });
   const membersList = exclude
-    ? [currentUser, ...users].filter(
+    ? users.filter(
         (user) =>
           !memberIds?.find((memberId) => memberId === user._id) &&
           !excludeIds?.find((excludeId) => excludeId === user._id),
       )
     : [currentUser, ...users].filter(
-        (user) => !members.find((member) => member._id === user._id),
+        (user) =>
+          !members.find((member) => member._id === user._id) &&
+          user._id !== currentUser._id,
       );
   return (
     <Command shouldFilter={false}>
@@ -100,48 +104,52 @@ export const SelectTeamMemberContent = ({
   );
 };
 
-const SelectLeadContent = ({ teamIds }: { teamIds?: string[] | string }) => {
+const SelectAssigneeContent = ({
+  teamIds,
+}: {
+  teamIds?: string[] | string;
+}) => {
   return <SelectTeamMemberContent teamIds={teamIds} exclude={false} />;
 };
 
-export const SelectLeadFilterItem = () => {
+export const SelectAssigneeFilterItem = () => {
   return (
-    <Filter.Item value="lead">
+    <Filter.Item value="assignee">
       <IconUser />
-      Lead
+      Assignee
     </Filter.Item>
   );
 };
 
-export const SelectLeadFilterView = ({
+export const SelectAssigneeFilterView = ({
   onValueChange,
   queryKey,
 }: {
   onValueChange?: (value: string) => void;
   queryKey?: string;
 }) => {
-  const [lead, setLead] = useQueryState<string>(queryKey || 'lead');
+  const [assignee, setAssignee] = useQueryState<string>(queryKey || 'assignee');
   const { resetFilterState } = useFilterContext();
   const { teams } = useGetCurrentUsersTeams();
 
   return (
-    <Filter.View filterKey={queryKey || 'lead'}>
-      <SelectLeadProvider
+    <Filter.View filterKey={queryKey || 'assignee'}>
+      <SelectAssigneeProvider
         mode="single"
-        value={lead || ''}
+        value={assignee || ''}
         onValueChange={(value) => {
-          setLead(value as string);
+          setAssignee(value as string);
           resetFilterState();
           onValueChange?.(value as string);
         }}
       >
-        <SelectLeadContent teamIds={teams?.map((team) => team._id)} />
-      </SelectLeadProvider>
+        <SelectAssigneeContent teamIds={teams?.map((team) => team._id)} />
+      </SelectAssigneeProvider>
     </Filter.View>
   );
 };
 
-export const SelectLeadFilterBar = ({
+export const SelectAssigneeFilterBar = ({
   iconOnly,
   onValueChange,
   queryKey,
@@ -152,10 +160,10 @@ export const SelectLeadFilterBar = ({
   queryKey?: string;
   teamIds?: string[] | string;
 }) => {
-  const [lead, setLead] = useQueryState<string>(queryKey || 'lead');
+  const [assignee, setAssignee] = useQueryState<string>(queryKey || 'assignee');
   const [open, setOpen] = useState(false);
 
-  if (!lead) {
+  if (!assignee) {
     return null;
   }
 
@@ -163,16 +171,16 @@ export const SelectLeadFilterBar = ({
     <Filter.BarItem>
       <Filter.BarName>
         <IconUser />
-        {!iconOnly && 'Lead'}
+        {!iconOnly && 'Assignee'}
       </Filter.BarName>
-      <SelectLeadProvider
+      <SelectAssigneeProvider
         mode="single"
-        value={lead || ''}
+        value={assignee || ''}
         onValueChange={(value) => {
           if (value) {
-            setLead(value as string);
+            setAssignee(value as string);
           } else {
-            setLead(null);
+            setAssignee(null);
           }
           setOpen(false);
           onValueChange?.(value as string);
@@ -180,21 +188,21 @@ export const SelectLeadFilterBar = ({
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
-            <Filter.BarButton filterKey={queryKey || 'lead'}>
-              <SelectLeadValue />
+            <Filter.BarButton filterKey={queryKey || 'assignee'}>
+              <SelectAssigneeValue />
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>
-            <SelectLeadContent teamIds={teamIds} />
+            <SelectAssigneeContent teamIds={teamIds} />
           </Combobox.Content>
         </Popover>
-      </SelectLeadProvider>
-      <Filter.BarClose filterKey={queryKey || 'lead'} />
+      </SelectAssigneeProvider>
+      <Filter.BarClose filterKey={queryKey || 'assignee'} />
     </Filter.BarItem>
   );
 };
 
-export const SelectLeadInlineCell = ({
+export const SelectAssigneeInlineCell = ({
   teamIds,
   value,
   id,
@@ -208,18 +216,18 @@ export const SelectLeadInlineCell = ({
   onValueChange?: (value: string | string[]) => void;
   scope?: string;
 } & Omit<
-  React.ComponentProps<typeof SelectLeadProvider>,
+  React.ComponentProps<typeof SelectAssigneeProvider>,
   'children' | 'onValueChange' | 'value'
 >) => {
-  const { updateProject } = useUpdateProject();
+  const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
   const handleValueChange = (value: string | string[]) => {
     if (id) {
-      updateProject({
+      updateTask({
         variables: {
           _id: id,
-          leadId: value,
+          assigneeId: value,
         },
       });
     }
@@ -228,7 +236,7 @@ export const SelectLeadInlineCell = ({
   };
 
   return (
-    <SelectLeadProvider
+    <SelectAssigneeProvider
       mode="single"
       value={value || ''}
       onValueChange={handleValueChange}
@@ -236,23 +244,25 @@ export const SelectLeadInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectLeadValue placeholder="Lead not specified" />
+          <SelectAssigneeValue
+            placeholder={id ? 'Assignee not specified' : ''}
+          />
         </RecordTableCellTrigger>
         <RecordTableCellContent>
-          <SelectLeadContent teamIds={teamIds} />
+          <SelectAssigneeContent teamIds={teamIds} />
         </RecordTableCellContent>
       </RecordTablePopover>
-    </SelectLeadProvider>
+    </SelectAssigneeProvider>
   );
 };
 
-const SelectLeadFormValue = () => {
+const SelectAssigneeFormValue = () => {
   const { members, memberIds, setMembers } = useSelectMemberContext();
   if (members.length === 0)
     return (
       <span className="flex items-center gap-2">
         <IconUser className="size-4" />
-        <p className="text-muted-foreground font-medium text-base">Lead</p>
+        <p className="text-muted-foreground font-medium text-base">Assignee</p>
       </span>
     );
 
@@ -266,16 +276,16 @@ const SelectLeadFormValue = () => {
   );
 };
 
-export const SelectLeadFormItem = React.forwardRef<
+export const SelectAssigneeFormItem = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
-  Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> & {
+  Omit<React.ComponentProps<typeof SelectAssigneeProvider>, 'children'> & {
     className?: string;
     teamIds?: string[] | string;
   }
 >(({ onValueChange, className, teamIds, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
-    <SelectLeadProvider
+    <SelectAssigneeProvider
       onValueChange={(value) => {
         onValueChange?.(value);
         setOpen(false);
@@ -290,23 +300,23 @@ export const SelectLeadFormItem = React.forwardRef<
             asChild
           >
             <Button variant="secondary">
-              <SelectLeadFormValue />
+              <SelectAssigneeFormValue />
             </Button>
           </Combobox.TriggerBase>
         </Form.Control>
         <Combobox.Content>
-          <SelectLeadContent teamIds={teamIds} />
+          <SelectAssigneeContent teamIds={teamIds} />
         </Combobox.Content>
       </Popover>
-    </SelectLeadProvider>
+    </SelectAssigneeProvider>
   );
 });
 
-SelectLeadFormItem.displayName = 'SelectLeadFormItem';
+SelectAssigneeFormItem.displayName = 'SelectAssigneeFormItem';
 
-const SelectLeadRoot = React.forwardRef<
+const SelectAssigneeRoot = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
-  Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> &
+  Omit<React.ComponentProps<typeof SelectAssigneeProvider>, 'children'> &
     React.ComponentProps<typeof Combobox.Trigger> & {
       placeholder?: string;
       teamIds?: string[] | string;
@@ -318,7 +328,7 @@ const SelectLeadRoot = React.forwardRef<
   ) => {
     const [open, setOpen] = useState(false);
     return (
-      <SelectLeadProvider
+      <SelectAssigneeProvider
         onValueChange={(value) => {
           onValueChange?.(value);
           setOpen(false);
@@ -333,26 +343,26 @@ const SelectLeadRoot = React.forwardRef<
             variant="outline"
             {...props}
           >
-            <SelectLeadValue placeholder={placeholder} />
+            <SelectAssigneeValue placeholder={placeholder} />
           </Combobox.Trigger>
           <Combobox.Content>
-            <SelectLeadContent teamIds={teamIds} />
+            <SelectAssigneeContent teamIds={teamIds} />
           </Combobox.Content>
         </Popover>
-      </SelectLeadProvider>
+      </SelectAssigneeProvider>
     );
   },
 );
 
-SelectLeadRoot.displayName = 'SelectLeadRoot';
+SelectAssigneeRoot.displayName = 'SelectAssigneeRoot';
 
-export const SelectLead = Object.assign(SelectLeadRoot, {
-  Provider: SelectLeadProvider,
-  Value: SelectLeadValue,
-  Content: SelectLeadContent,
-  FilterItem: SelectLeadFilterItem,
-  FilterView: SelectLeadFilterView,
-  FilterBar: SelectLeadFilterBar,
-  InlineCell: SelectLeadInlineCell,
-  FormItem: SelectLeadFormItem,
+export const SelectAssignee = Object.assign(SelectAssigneeRoot, {
+  Provider: SelectAssigneeProvider,
+  Value: SelectAssigneeValue,
+  Content: SelectAssigneeContent,
+  FilterItem: SelectAssigneeFilterItem,
+  FilterView: SelectAssigneeFilterView,
+  FilterBar: SelectAssigneeFilterBar,
+  InlineCell: SelectAssigneeInlineCell,
+  FormItem: SelectAssigneeFormItem,
 });

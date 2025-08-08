@@ -7,6 +7,7 @@ import {
   Separator,
   useBlockEditor,
   BlockEditor,
+  cn,
 } from 'erxes-ui';
 import { TAddProject, addProjectSchema } from '@/project/types';
 import { useCreateProject } from '@/project/hooks/useCreateProject';
@@ -87,7 +88,21 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             render={({ field }) => (
               <Form.Item className="space-y-0">
                 <Form.Label className="sr-only">Team</Form.Label>
-                <SelectTeam.FormItem {...field} teams={teams} className="m-0" />
+                <SelectTeam.FormItem
+                  {...field}
+                  teams={teams}
+                  className={cn(
+                    'm-0',
+                    teamId && 'hover:bg-background cursor-default',
+                  )}
+                  onClick={
+                    teamId
+                      ? (e) => {
+                          e.preventDefault();
+                        }
+                      : undefined
+                  }
+                />
               </Form.Item>
             )}
           />

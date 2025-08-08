@@ -17,7 +17,6 @@ export interface IProject {
 export enum ProjectPageTypes {
   All = 'all',
   Team = 'team',
-  Project = 'project',
 }
 
 export type TAddProject = z.infer<typeof addProjectSchema>;

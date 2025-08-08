@@ -45,6 +45,15 @@ export const projectsColumns = (
         const [value, setValue] = useState(name);
         const { updateProject } = useUpdateProject();
         const navigate = useNavigate();
+
+        const handleUpdate = () => {
+          if (value !== name) {
+            updateProject({
+              variables: { _id: cell.row.original._id, name: value },
+            });
+          }
+        };
+
         return (
           <RecordTablePopover
             scope={
@@ -55,10 +64,8 @@ export const projectsColumns = (
             }
             closeOnEnter
             onOpenChange={(open) => {
-              if (!open && value !== name) {
-                updateProject({
-                  variables: { _id: cell.row.original._id, name: value },
-                });
+              if (!open) {
+                handleUpdate();
               }
             }}
           >
@@ -77,6 +84,13 @@ export const projectsColumns = (
               <Input
                 value={value || ''}
                 onChange={(e) => setValue(e.target.value)}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleUpdate();
+                  }
+                }}
               />
             </RecordTableCellContent>
           </RecordTablePopover>
@@ -157,8 +171,10 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         const startDate = cell.getValue() as string;
+        console.log(startDate);
         return (
           <DateSelect.InlineCell
+            type="start"
             value={startDate ? new Date(startDate) : undefined}
             id={cell.row.original._id}
           />
@@ -176,6 +192,7 @@ export const projectsColumns = (
         const targetDate = cell.getValue() as string;
         return (
           <DateSelect.InlineCell
+            type="target"
             value={targetDate ? new Date(targetDate) : undefined}
             id={cell.row.original._id}
           />

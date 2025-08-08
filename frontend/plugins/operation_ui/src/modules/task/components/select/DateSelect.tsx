@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { format, differenceInDays } from 'date-fns';
-import { useUpdateProject } from '@/project/hooks/useUpdateProject';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   Calendar,
   RecordTablePopover,
@@ -21,6 +20,7 @@ import {
   IconCalendarTime,
   IconCalendarUp,
 } from '@tabler/icons-react';
+import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 
 interface DateSelectContextType {
   value?: Date;
@@ -252,12 +252,12 @@ export const DateSelectInlineCell = ({
   scope?: string;
   type?: 'start' | 'target';
 }) => {
-  const { updateProject } = useUpdateProject();
+  const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
   const handleValueChange = (value?: Date) => {
     if (id) {
-      updateProject({
+      updateTask({
         variables: {
           _id: id,
           startDate: type === 'start' ? value?.toISOString() : undefined,
@@ -271,9 +271,7 @@ export const DateSelectInlineCell = ({
 
   const finalScope =
     scope ||
-    (id
-      ? `${ProjectHotKeyScope.ProjectTableCell}.${id}.${type}Date`
-      : undefined);
+    (id ? `${TaskHotKeyScope.TaskTableCell}.${id}.${type}Date` : undefined);
 
   return (
     <DateSelectProvider value={value} onValueChange={handleValueChange}>

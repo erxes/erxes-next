@@ -9,6 +9,7 @@ import {
   ICursorListResponse,
   useMultiQueryState,
   useToast,
+  isUndefinedOrNull,
 } from 'erxes-ui';
 import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { currentUserState } from 'ui-modules/states';
@@ -21,12 +22,13 @@ const PROJECTS_PER_PAGE = 30;
 export const useProjectsVariables = (
   variables?: QueryHookOptions<ICursorListResponse<IProject>>['variables'],
 ) => {
-  const [{ searchValue, team, priority, status }] = useMultiQueryState<{
+  const [{ searchValue, team, priority, status, lead }] = useMultiQueryState<{
     searchValue: string;
     team: string[];
     priority: string;
     status: string;
-  }>(['searchValue', 'team', 'priority', 'status']);
+    lead: string;
+  }>(['searchValue', 'team', 'priority', 'status', 'lead']);
   const currentUser = useAtomValue(currentUserState);
   const { cursor } = useRecordTableCursor({
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
@@ -42,6 +44,7 @@ export const useProjectsVariables = (
     teamIds: team || undefined,
     priority: priority || undefined,
     status: status || undefined,
+    leadId: lead || undefined,
     ...variables,
     ...(!variables?.teamIds &&
       !variables?.userIds &&
@@ -80,7 +83,7 @@ export const useProjects = (
   const { list: projects, pageInfo, totalCount } = data?.getProjects || {};
 
   useEffect(() => {
-    if (!totalCount) return;
+    if (isUndefinedOrNull(totalCount)) return;
     setProjectTotalCount(totalCount);
   }, [totalCount, setProjectTotalCount]);
 

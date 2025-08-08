@@ -17,17 +17,21 @@ export const useUpdateProject = () => {
         });
       },
       update: (cache, { data }) => {
-        cache.modify({
-          id: cache.identify(data?.updateProject),
-          fields: Object.keys(options?.variables || {}).reduce(
-            (fields: Record<string, () => any>, field) => {
-              fields[field] = () => (options?.variables || {})[field];
-              return fields;
-            },
-            {},
-          ),
-          optimistic: true,
-        });
+        try {
+          cache.modify({
+            id: cache.identify(data?.updateProject),
+            fields: Object.keys(options?.variables || {}).reduce(
+              (fields: Record<string, () => any>, field) => {
+                fields[field] = () => (options?.variables || {})[field];
+                return fields;
+              },
+              {},
+            ),
+            optimistic: true,
+          });
+        } catch (error) {
+          console.log(error);
+        }
       },
     });
   };

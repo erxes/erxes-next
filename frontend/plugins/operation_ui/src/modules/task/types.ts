@@ -1,21 +1,23 @@
+export interface IEstimateChoice {
+  label: string;
+  value: number;
+}
+
 export interface ITask {
   _id: string;
   name: string;
-  description: string;
-
-  status: string;
-  priority: number;
-  assigneeId: string;
-  createdBy: string;
-  cycleId: string;
-  labelIds: string[];
   tagIds: string[];
   createdAt: string;
-  updatedAt: string;
-  projectId: string;
+  priority: number;
+  status: number;
+  targetDate: string;
+  assigneeId: string;
   teamId: string;
+  projectId: string;
   estimatedPoint: number;
+  estimateChoices: IEstimateChoice[];
 }
+
 
 export enum TaskPageTypes {
   All = 'all',

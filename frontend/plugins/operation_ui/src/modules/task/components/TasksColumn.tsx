@@ -10,8 +10,13 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { SelectStatus } from '@/project/components/select/SelectStatus';
-// import { TargetDateSelect } from '@/project/components/select/TargetDateSelect';
+import {
+  SelectStatus,
+  SelectPriority,
+  SelectAssignee,
+  SelectTeam,
+  DateSelect,
+} from '@/task/components/select';
 import {
   Badge,
   Input,
@@ -20,17 +25,14 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
 } from 'erxes-ui';
-import { IProject } from '@/project/types';
+import { ITask } from '@/task/types';
 import { useState } from 'react';
-// import { TaskHotKeyScope } from '@/task/types';
-import { SelectPriority } from '@/project/components/select/SelectPriority';
-import { SelectLead } from '@/project/components/select/SelectLead';
 import { ITeam } from '@/team/types';
-import { SelectTeam } from '@/project/components/select/SelectTeam';
+import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
-): ColumnDef<IProject>[] => {
+): ColumnDef<ITask>[] => {
   return [
     {
       id: 'name',
@@ -43,20 +45,29 @@ export const tasksColumns = (
         const [value, setValue] = useState(name);
         const { updateTask } = useUpdateTask();
         const navigate = useNavigate();
+
+        const handleUpdate = () => {
+          if (value !== name) {
+            updateTask({
+              variables: { _id: cell.row.original._id, name: value },
+            });
+          }
+        };
+
         return (
           <RecordTablePopover
-            scope={
-              // ProjectHotKeyScope.ProjectTableCell +
-              '.' + cell.row.original._id + '.Name'
-            }
             closeOnEnter
             onOpenChange={(open) => {
-              if (!open && value !== name) {
-                updateTask({
-                  variables: { _id: cell.row.original._id, name: value },
-                });
+              if (!open) {
+                handleUpdate();
               }
             }}
+            scope={
+              TaskHotKeyScope.TaskTableCell +
+              '.' +
+              cell.row.original._id +
+              '.Name'
+            }
           >
             <RecordTableCellTrigger>
               <Badge
@@ -73,6 +84,13 @@ export const tasksColumns = (
               <Input
                 value={value || ''}
                 onChange={(e) => setValue(e.target.value)}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleUpdate();
+                  }
+                }}
               />
             </RecordTableCellContent>
           </RecordTablePopover>
@@ -116,7 +134,7 @@ export const tasksColumns = (
       size: 170,
     },
     {
-      id: 'teamIds',
+      id: 'teamId',
       header: () => (
         <RecordTable.InlineHead label="Team" icon={IconUsersGroup} />
       ),
@@ -124,28 +142,46 @@ export const tasksColumns = (
         return (
           <SelectTeam.InlineCell
             id={cell.row.original._id}
-            value={cell.row.original.teamIds || []}
+            value={cell.row.original.teamId}
             teams={_teams || []}
+            mode="single"
           />
         );
       },
       size: 240,
     },
     {
-      id: 'leadId',
-      header: () => <RecordTable.InlineHead label="Lead" icon={IconUser} />,
+      id: 'assigneeId',
+      header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
       cell: ({ cell }) => {
         return (
-          <SelectLead.InlineCell
+          <SelectAssignee.InlineCell
             id={cell.row.original._id}
-            value={cell.row.original.leadId}
-            teamIds={cell.row.original.teamIds}
+            value={cell.row.original.assigneeId}
+            teamIds={cell.row.original.teamId}
           />
         );
       },
       size: 240,
     },
-
+    {
+      id: 'startDate',
+      accessorKey: 'startDate',
+      header: () => (
+        <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
+      ),
+      cell: ({ cell }) => {
+        const startDate = cell.getValue() as string;
+        return (
+          <DateSelect.InlineCell
+            type="start"
+            value={startDate ? new Date(startDate) : undefined}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 240,
+    },
     {
       id: 'targetDate',
       accessorKey: 'targetDate',
@@ -153,8 +189,14 @@ export const tasksColumns = (
         <RecordTable.InlineHead label="Target Date" icon={IconCalendarFilled} />
       ),
       cell: ({ cell }) => {
-        // const targetDate = cell.getValue() as string;
-        return <div>13</div>;
+        const targetDate = cell.getValue() as string;
+        return (
+          <DateSelect.InlineCell
+            type="target"
+            value={targetDate ? new Date(targetDate) : undefined}
+            id={cell.row.original._id}
+          />
+        );
       },
       size: 240,
     },
