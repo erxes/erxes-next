@@ -6,6 +6,7 @@ import {
 import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { PageHeader } from 'ui-modules';
+import InvoiceTable from '~/modules/payment/components/InvoiceTable';
 
 export const IndexPage = () => {
   return (
@@ -38,7 +39,7 @@ export const IndexPage = () => {
       </PageHeader>
       <div className="flex h-full overflow-hidden">
         <div className="flex flex-col h-full overflow-hidden flex-auto">
-          <h1>payment</h1>
+          <InvoiceTable />
         </div>
       </div>
     </div>

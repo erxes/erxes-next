@@ -103,7 +103,6 @@ const Payment = (props: Props) => {
                   name={payment.name}
                   iconUrl={`${apiDomain}/pl:payment/static/images/payments/${payment.kind}.png`}
                   onClick={() => {
-                    console.log('onClick', payment);
                     openDialog(payment);
                   }}
                 />

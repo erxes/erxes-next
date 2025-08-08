@@ -11,7 +11,6 @@ type Props = {
 };
 
 const PaymentTable = ({ payments, onEdit, onDelete }: Props) => {
-  console.log(payments);
   return (
     <div className="bg-white rounded-lg border">
       <div className="overflow-x-auto">

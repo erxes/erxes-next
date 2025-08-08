@@ -193,15 +193,8 @@ const PaymentForm = ({ payment, onSave, onCancel }: Props) => {
     }
   }, [payment, form, getDefaultValues]);
 
-  const values = watch(); // watch all fields
-
-  React.useEffect(() => {
-    console.log('Form values changed:', values);
-  }, [values]);
-
 
   const onSubmit = (data: any) => {
-    console.log("data", data)
     const input: IPayment = {
       name: data.name,
       kind: data.kind,
