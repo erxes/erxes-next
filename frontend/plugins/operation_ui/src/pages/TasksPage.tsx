@@ -1,5 +1,5 @@
 import { TasksRecordTable } from '@/task/components/TasksRecordTable';
-import { TaskPageTypes } from '@/project/types';
+import { TaskPageTypes } from '@/task/types';
 
 export const TasksPage = ({ type }: { type: TaskPageTypes }) => {
   return (
