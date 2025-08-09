@@ -23,7 +23,7 @@ export function SettingsSidebar() {
 
         Object.values(pluginsMetaData).forEach((plugin) => {
           const settingsModules = plugin.modules
-            .filter((module) => module.hasSettings)
+            .filter((module) => module.hasSettings || module.settingsOnly)
             .map((module) => ({
               ...module,
               pluginName: plugin.name,

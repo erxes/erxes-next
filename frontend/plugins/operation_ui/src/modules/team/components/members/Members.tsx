@@ -9,7 +9,7 @@ import { useTeamMemberRemove } from '@/team/hooks/useTeamMemberRemove';
 
 export function Members() {
   const { id: teamId } = useParams();
-  const { members, loading } = useGetTeamMembers({ teamId });
+  const { members, loading } = useGetTeamMembers({ teamIds: teamId });
   const { updateTeamMember } = useTeamMemberUpdate();
   const { removeTeamMember } = useTeamMemberRemove();
 
@@ -92,7 +92,7 @@ export function Members() {
                         onClick={() => removeHandler(member._id)}
                         className="hidden group-hover:flex "
                       >
-                        <IconX className="size-4"/>
+                        <IconX className="size-4" />
                       </Button>
                     </Table.Cell>
                   </Table.Row>

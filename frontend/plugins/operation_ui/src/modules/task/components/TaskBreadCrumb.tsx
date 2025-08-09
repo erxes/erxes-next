@@ -16,36 +16,38 @@ export const TaskBreadCrumb = () => {
 
   return (
     <PageHeader>
-      <Breadcrumb>
-        <Breadcrumb.List className="gap-1">
-          {teamId ? (
-            <>
+      <PageHeader.Start>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            {teamId ? (
+              <>
+                <Breadcrumb.Item>
+                  <Button variant="ghost" asChild>
+                    <Link to={`/operation/team/${teamId}`}>Tasks</Link>
+                  </Button>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>
+                  <Button variant="ghost" asChild>
+                    <Link to={`/operation/team/${teamId}/tasks`}>
+                      <IconBox />
+                      Tasks
+                    </Link>
+                  </Button>
+                </Breadcrumb.Item>
+              </>
+            ) : (
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to={`/operation/team/${teamId}`}>Tasks</Link>
-                </Button>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <Button variant="ghost" asChild>
-                  <Link to={`/operation/team/${teamId}/tasks`}>
+                  <Link to={`${basePath}`}>
                     <IconBox />
                     Tasks
                   </Link>
                 </Button>
               </Breadcrumb.Item>
-            </>
-          ) : (
-            <Breadcrumb.Item>
-              <Button variant="ghost" asChild>
-                <Link to={`${basePath}`}>
-                  <IconBox />
-                  Tasks
-                </Link>
-              </Button>
-            </Breadcrumb.Item>
-          )}
-        </Breadcrumb.List>
-      </Breadcrumb>
+            )}
+          </Breadcrumb.List>
+        </Breadcrumb>
+      </PageHeader.Start>
     </PageHeader>
   );
 };

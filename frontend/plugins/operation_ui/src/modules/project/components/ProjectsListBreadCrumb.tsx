@@ -21,45 +21,49 @@ export const ProjectsListBreadCrumb = () => {
 
   return (
     <PageHeader>
-      <Breadcrumb>
-        <Breadcrumb.List className="gap-1">
-          {teamId ? (
-            <>
-              {loading ? (
-                <Skeleton className="w-12 h-[1lh]" />
-              ) : (
+      <PageHeader.Start>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            {teamId ? (
+              <>
+                {loading ? (
+                  <Skeleton className="w-12 h-[1lh]" />
+                ) : (
+                  <Breadcrumb.Item>
+                    <Button variant="ghost" asChild>
+                      <Link to={`/operation/team/${teamId}`}>
+                        <IconComponent name={team?.icon} />
+                        {team?.name}
+                      </Link>
+                    </Button>
+                  </Breadcrumb.Item>
+                )}
+                <Separator.Inline />
                 <Breadcrumb.Item>
                   <Button variant="ghost" asChild>
-                    <Link to={`/operation/team/${teamId}`}>
-                      <IconComponent name={team?.icon} />
-                      {team?.name}
+                    <Link to={`/operation/team/${teamId}/projects`}>
+                      <IconBox />
+                      Projects
                     </Link>
                   </Button>
                 </Breadcrumb.Item>
-              )}
-              <Separator.Inline />
+              </>
+            ) : (
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to={`/operation/team/${teamId}/projects`}>
+                  <Link to="/operation/projects">
                     <IconBox />
                     Projects
                   </Link>
                 </Button>
               </Breadcrumb.Item>
-            </>
-          ) : (
-            <Breadcrumb.Item>
-              <Button variant="ghost" asChild>
-                <Link to="/operation/projects">
-                  <IconBox />
-                  Projects
-                </Link>
-              </Button>
-            </Breadcrumb.Item>
-          )}
-        </Breadcrumb.List>
-      </Breadcrumb>
-      <AddProjectSheet />
+            )}
+          </Breadcrumb.List>
+        </Breadcrumb>
+      </PageHeader.Start>
+      <PageHeader.End>
+        <AddProjectSheet />
+      </PageHeader.End>
     </PageHeader>
   );
 };

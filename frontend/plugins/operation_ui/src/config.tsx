@@ -9,6 +9,12 @@ const MainNavigation = lazy(() =>
   })),
 );
 
+const TeamsNavigation = lazy(() =>
+  import('./modules/navigation/TeamsNavigation').then((mod) => ({
+    default: mod.TeamsNavigation,
+  })),
+);
+
 export const CONFIG: IUIConfig = {
   name: 'operation',
   navigationGroup: {
@@ -17,6 +23,11 @@ export const CONFIG: IUIConfig = {
     content: () => (
       <Suspense fallback={<div />}>
         <MainNavigation />
+      </Suspense>
+    ),
+    subGroups: () => (
+      <Suspense fallback={<div />}>
+        <TeamsNavigation />
       </Suspense>
     ),
   },
@@ -28,6 +39,11 @@ export const CONFIG: IUIConfig = {
       hasSettings: false,
       hasRelationWidget: false,
       hasFloatingWidget: false,
+    },
+    {
+      name: 'team',
+      path: 'operation/team',
+      settingsOnly: true,
     },
   ],
 };
