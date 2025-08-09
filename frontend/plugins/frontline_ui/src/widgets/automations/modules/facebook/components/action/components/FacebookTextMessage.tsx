@@ -38,7 +38,7 @@ export const FacebookTextMessage = ({
           <Form.Item>
             <Form.Label className="flex flex-row justify-between">
               Buttons
-              <InputTextCounter count={field.value?.length || 0} limit={13} />
+              <InputTextCounter count={field.value?.length || 0} limit={3} />
             </Form.Label>
             <Form.Control>
               <FacebookMessageButtonsGenerator

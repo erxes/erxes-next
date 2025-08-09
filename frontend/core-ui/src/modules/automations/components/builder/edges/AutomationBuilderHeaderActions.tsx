@@ -51,12 +51,12 @@ export const AutomationBuilderHeaderActions = () => {
         )}
       />
 
-      <Button variant="secondary" onClick={togglePanelOpen}>
+      <Button variant="ghost" onClick={togglePanelOpen}>
         {`${isPanelOpen ? 'Hide Inspect' : 'Show Inspect'}`}
         <Command.Shortcut>{isMac ? '⌘' : 'Ctrl'}I</Command.Shortcut>
       </Button>
 
-      <Button variant="secondary" onClick={toggleSideBarOpen}>
+      <Button variant="ghost" onClick={toggleSideBarOpen}>
         {`${isOpenSideBar ? 'Hide Menu' : 'Show Menu'}`}
         <Command.Shortcut>{isMac ? '⌘' : 'Ctrl'}G</Command.Shortcut>
       </Button>

@@ -1,4 +1,4 @@
-import { IconUpload } from '@tabler/icons-react';
+import { IconPlus, IconUpload } from '@tabler/icons-react';
 import { Avatar, Form, Textarea } from 'erxes-ui';
 import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 import { TBotMessageButton } from '~/widgets/automations/modules/facebook/components/action/states/replyMessageActionForm';
@@ -40,7 +40,12 @@ export const FacebookQuickRepliesMessage = ({
                   limit={13}
                   buttons={field.value || []}
                   setButtons={field.onChange}
-                  addButtonText="+ add quick reply"
+                  addButtonContent={
+                    <>
+                      <IconPlus />
+                      add quick reply
+                    </>
+                  }
                   ContentBeforeInput={QuickReplyImageUploader}
                 />
               </Form.Control>
