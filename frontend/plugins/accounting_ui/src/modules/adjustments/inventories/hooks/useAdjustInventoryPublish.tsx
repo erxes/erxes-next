@@ -1,18 +1,18 @@
 import { OperationVariables, useMutation } from '@apollo/client';
-import { ADJUST_INVENTORY_PUBLISH, ADJUST_INVENTORY_CANCEL, ADJUST_INVENTORY_RUN } from '../graphql/adjustInventoryChange';
+import { ADJUST_INVENTORY_PUBLISH } from '../graphql/adjustInventoryChange';
 import { toast } from 'erxes-ui';
 import { ADJUST_INVENTORY_DETAIL_QUERY, ADJUST_INVENTORY_DETAILS_QUERY } from '../graphql/adjustInventoryQueries';
 import { ACC_TRS__PER_PAGE } from '@/transactions/types/constants';
 
-export const useAdjustInventoryRun = (adjustId: string, options?: OperationVariables) => {
-  const [_runMutation, { loading }] = useMutation(
-    ADJUST_INVENTORY_RUN,
+export const useAdjustInventoryPublish = (adjustId: string, options?: OperationVariables) => {
+  const [_publishMutation, { loading }] = useMutation(
+    ADJUST_INVENTORY_PUBLISH,
     options,
   );
 
-  const runAdjust = (options?: OperationVariables) => {
+  const publishAdjust = (options?: OperationVariables) => {
 
-    return _runMutation({
+    return _publishMutation({
       ...options,
       variables: {
         adjustId,
@@ -54,7 +54,7 @@ export const useAdjustInventoryRun = (adjustId: string, options?: OperationVaria
   };
 
   return {
-    runAdjust,
+    publishAdjust,
     loading,
   };
 };

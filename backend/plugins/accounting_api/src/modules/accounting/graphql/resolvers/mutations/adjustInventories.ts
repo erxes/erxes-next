@@ -44,18 +44,39 @@ const adjustInventoryMutations = {
     return adjusting;
   },
 
-  async adjustInventoryPublish(_root, { _id }: { _id: string }, { models }: IContext) {
-    const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
+  async adjustInventoryPublish(_root, { adjustId }: { adjustId: string }, { models, user }: IContext) {
+    const adjusting = await models.AdjustInventories.getAdjustInventory(adjustId);
     if (adjusting.status === ADJ_INV_STATUSES.PUBLISH) {
       throw new Error('this adjusting is published');
     }
+    if (adjusting.status !== ADJ_INV_STATUSES.COMPLETE) {
+      throw new Error('This adjusting cannot be published yet.');
+    }
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.PUBLISH, modifiedBy: user._id } });
+    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+      accountingAdjustInventoryChanged: {
+        adjustId: adjustId,
+        type: 'accounting:invAdjust',
+      },
+    });
+
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
   },
 
-  async adjustInventoryCancel(_root, { _id }: { _id: string }, { models }: IContext) {
-    const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
-    if (adjusting.status === ADJ_INV_STATUSES.PUBLISH) {
-      throw new Error('this adjusting is published');
+  async adjustInventoryCancel(_root, { adjustId }: { adjustId: string }, { models, user }: IContext) {
+    const adjusting = await models.AdjustInventories.getAdjustInventory(adjustId);
+    if (adjusting.status !== ADJ_INV_STATUSES.PUBLISH) {
+      throw new Error('this adjusting cannot be cancel yet, it has not been published.');
     }
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.DRAFT, modifiedBy: user._id } });
+    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+      accountingAdjustInventoryChanged: {
+        adjustId: adjustId,
+        type: 'accounting:invAdjust',
+      },
+    });
+
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
   },
 
   async adjustInventoryRemove(_root, { _id }: { _id: string }, { models }: IContext) {

@@ -1,19 +1,17 @@
+import { IconCrane, IconGavel, IconStopwatch, IconTrashX } from '@tabler/icons-react';
 import {
   Button,
-  Spinner,
   DatePicker,
-  useQueryState,
   RecordTable,
+  Spinner,
+  useQueryState,
 } from 'erxes-ui';
-import { memo, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useSetAtom } from 'jotai';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IconCrane, IconGavel, IconStopwatch, IconTrashX } from '@tabler/icons-react';
+import { useAdjustInventoryCancel } from '../hooks/useAdjustInventoryCancel';
 import { useAdjustInventoryDetail } from '../hooks/useAdjustInventoryDetail';
 import { useAdjustInventoryDetails } from '../hooks/useAdjustInventoryDetails';
-import { ADJ_INV_STATUSES } from '~/modules/adjustments/inventories/types/AdjustInventory';
+import { useAdjustInventoryPublish } from '../hooks/useAdjustInventoryPublish';
 import { useAdjustInventoryRun } from '../hooks/useAdjustInventoryRun';
+import { ADJ_INV_STATUSES } from '../types/AdjustInventory';
 import { adjustDetailTableColumns } from './AdjustInventoryDetailColumns';
 
 export const AdjustInventoryDetail = () => {
@@ -31,6 +29,8 @@ export const AdjustInventoryDetail = () => {
   });
 
   const { runAdjust, loading: runLoading } = useAdjustInventoryRun(id ?? '');
+  const { publishAdjust, loading: publishLoading } = useAdjustInventoryPublish(id ?? '');
+  const { cancelAdjust, loading: cancelLoading } = useAdjustInventoryCancel(id ?? '');
 
   if (loading || detailsLoading) {
     return <Spinner />;
@@ -44,11 +44,23 @@ export const AdjustInventoryDetail = () => {
     runAdjust();
   }
 
+  const handlePublish = () => {
+    publishAdjust();
+  }
+
+  const handleCancel = () => {
+    cancelAdjust();
+  }
+
+  const handleDelete = () => {
+    console.log('delete')
+  }
+
   const renderEvents = () => {
     const status = adjustInventory?.status || ADJ_INV_STATUSES.DRAFT;
     switch (status) {
       case ADJ_INV_STATUSES.DRAFT:
-      case ADJ_INV_STATUSES.CANCEL:
+      case ADJ_INV_STATUSES.PROCESS:
         return (
           <>
             <Button
@@ -60,6 +72,7 @@ export const AdjustInventoryDetail = () => {
             <Button
               variant="secondary"
               className="text-destructive"
+              onClick={handleDelete}
             >
               <IconTrashX />
               Delete
@@ -71,7 +84,7 @@ export const AdjustInventoryDetail = () => {
           <Button
             variant="secondary"
             className="text-destructive"
-          // onClick={handleDelete}
+            onClick={handleCancel}
           >
             <IconTrashX />
             Draft
@@ -80,7 +93,7 @@ export const AdjustInventoryDetail = () => {
       case ADJ_INV_STATUSES.COMPLETE:
         return (
           <Button
-          // onClick={handleDelete}
+            onClick={handlePublish}
           >
             <IconGavel />
             PUBLISH

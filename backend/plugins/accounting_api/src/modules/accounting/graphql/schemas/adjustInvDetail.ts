@@ -89,8 +89,8 @@ export const queries = `
 
 export const mutations = `
   adjustInventoryAdd(${adjustInvParams}): AdjustInventory
-  adjustInventoryPublish(_id: String!): AdjustInventory
-  adjustInventoryCancel(_id: String!): AdjustInventory
-  adjustInventoryRemove(_id: String!): String
+  adjustInventoryPublish(adjustId: String!): AdjustInventory
+  adjustInventoryCancel(adjustId: String!): AdjustInventory
+  adjustInventoryRemove(adjustId: String!): String
   adjustInventoryRun(adjustId: String!): AdjustInventory
 `;
