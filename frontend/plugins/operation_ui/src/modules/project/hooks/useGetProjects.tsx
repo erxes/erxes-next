@@ -12,7 +12,7 @@ import {
   isUndefinedOrNull,
 } from 'erxes-ui';
 import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
-import { currentUserState } from 'ui-modules/states';
+import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
@@ -33,7 +33,6 @@ export const useProjectsVariables = (
   const { cursor } = useRecordTableCursor({
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
   });
-
   const projectsQueryVariables = {
     limit: PROJECTS_PER_PAGE,
     orderBy: {
@@ -46,11 +45,9 @@ export const useProjectsVariables = (
     status: status || undefined,
     leadId: lead || undefined,
     ...variables,
-    ...(!variables?.teamIds &&
-      !variables?.userIds &&
-      currentUser?._id && {
-        userIds: [currentUser._id],
-      }),
+    ...(variables?.teamIds || variables?.userId || !currentUser?._id
+      ? {}
+      : { userId: currentUser._id }),
   };
   return { projectsQueryVariables };
 };

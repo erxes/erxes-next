@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   IconAlertSquareRounded,
+  IconBox,
   IconCalendarFilled,
+  IconHash,
   IconLabelFilled,
   IconProgressCheck,
   IconUser,
@@ -17,6 +19,7 @@ import {
   SelectTeam,
   DateSelect,
 } from '@/task/components/select';
+import { SelectProject } from '@/task/components/select/SelectProject';
 import {
   Badge,
   Input,
@@ -29,6 +32,7 @@ import { ITask } from '@/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
+import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPoint';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
@@ -134,6 +138,27 @@ export const tasksColumns = (
       size: 170,
     },
     {
+      id: 'project',
+      accessorKey: 'project',
+      header: () => (
+        <RecordTable.InlineHead label="Project" icon={IconBox} />
+      ),
+      cell: ({ cell }) => {
+        const { updateTask } = useUpdateTask();
+        return (
+          <SelectProject.InlineCell
+            value={cell.row.original.projectId || ''}
+            onValueChange={(value) => {
+              updateTask({
+                variables: { _id: cell.row.original._id, projectId: value },
+              });
+            }}
+          />
+        );
+      },
+      size: 240,
+    },
+    {
       id: 'teamId',
       header: () => (
         <RecordTable.InlineHead label="Team" icon={IconUsersGroup} />
@@ -194,6 +219,23 @@ export const tasksColumns = (
           <DateSelect.InlineCell
             type="target"
             value={targetDate ? new Date(targetDate) : undefined}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 240,
+    },
+    {
+      id: 'estimatedPoint',
+      accessorKey: 'estimatedPoint',
+      header: () => (
+        <RecordTable.InlineHead label="Estimated Point" icon={IconHash} />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <SelectEstimatedPoint.InlineCell
+            estimateChoices={cell.row.original.estimateChoices}
+            value={cell.row.original.estimatedPoint || 0}
             id={cell.row.original._id}
           />
         );

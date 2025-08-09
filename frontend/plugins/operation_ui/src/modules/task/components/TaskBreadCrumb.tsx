@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { PageHeader } from 'ui-modules';
 import { IconBox } from '@tabler/icons-react';
+import { AddTasksheet } from '@/task/components/add-task/AddTaskSheet';
 
 export const TaskBreadCrumb = () => {
   const { teamId } = useParams<{
@@ -48,6 +49,7 @@ export const TaskBreadCrumb = () => {
           </Breadcrumb.List>
         </Breadcrumb>
       </PageHeader.Start>
+      <AddTasksheet />
     </PageHeader>
   );
 };

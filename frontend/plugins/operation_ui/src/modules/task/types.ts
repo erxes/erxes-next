@@ -1,3 +1,6 @@
+import { addTaskSchema } from '@/task/types/validations';
+import { z } from 'zod';
+
 export interface IEstimateChoice {
   label: string;
   value: number;
@@ -18,9 +21,11 @@ export interface ITask {
   estimateChoices: IEstimateChoice[];
 }
 
-
 export enum TaskPageTypes {
   All = 'all',
   Project = 'project',
   Team = 'team',
 }
+
+export type TAddTask = z.infer<typeof addTaskSchema>;
+export * from '@/task/types/validations';

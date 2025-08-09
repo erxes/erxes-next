@@ -17,9 +17,11 @@ export const ProjectsRecordTable = () => {
     userId: currentUser?._id,
   };
 
-  const { projects, handleFetchMore, pageInfo, loading } = useProjects({
+  const { projects, handleFetchMore, pageInfo, loading } = useProjects(
+    {
     variables,
-  });
+  }
+);
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
   const { teams } = useGetCurrentUsersTeams();
 

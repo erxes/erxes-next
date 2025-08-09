@@ -398,8 +398,9 @@ export const SelectTeamFormItem = React.forwardRef<
   > & {
     className?: string;
     onChange?: (value: string | string[]) => void;
+    onClick?: (e: React.MouseEvent) => void;
   }
->(({ onChange, className, ...props }, ref) => {
+>(({ onChange, className, onClick, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <SelectTeamProvider
@@ -415,7 +416,7 @@ export const SelectTeamFormItem = React.forwardRef<
             className={cn('w-min shadow-xs ', className)}
             asChild
           >
-            <Button variant="secondary">
+            <Button variant="secondary" onClick={onClick}>
               <SelectTeamValue />
             </Button>
           </Combobox.TriggerBase>
