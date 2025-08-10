@@ -184,7 +184,9 @@ export const SelectEstimatedPointInlineCell = ({
   const [open, setOpen] = useState(false);
 
   if (!estimateChoices) {
-    return <div>Team does not enabled estimate</div>;
+    return (
+      <div className="text-muted-foreground p-2">Not enabled estimate</div>
+    );
   }
 
   const handleValueChange = (value: string | string[]) => {

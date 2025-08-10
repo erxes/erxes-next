@@ -138,6 +138,20 @@ export const tasksColumns = (
       size: 170,
     },
     {
+      id: 'assigneeId',
+      header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
+      cell: ({ cell }) => {
+        return (
+          <SelectAssignee.InlineCell
+            id={cell.row.original._id}
+            value={cell.row.original.assigneeId}
+            teamIds={[cell.row.original.teamId]}
+          />
+        );
+      },
+      size: 240,
+    },
+    {
       id: 'project',
       accessorKey: 'project',
       header: () => (
@@ -158,6 +172,7 @@ export const tasksColumns = (
       },
       size: 240,
     },
+
     {
       id: 'teamId',
       header: () => (
@@ -170,20 +185,6 @@ export const tasksColumns = (
             value={cell.row.original.teamId}
             teams={_teams || []}
             mode="single"
-          />
-        );
-      },
-      size: 240,
-    },
-    {
-      id: 'assigneeId',
-      header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
-      cell: ({ cell }) => {
-        return (
-          <SelectAssignee.InlineCell
-            id={cell.row.original._id}
-            value={cell.row.original.assigneeId}
-            teamIds={[cell.row.original.teamId]}
           />
         );
       },
