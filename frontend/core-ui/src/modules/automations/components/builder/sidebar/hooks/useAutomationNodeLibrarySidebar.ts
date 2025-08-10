@@ -1,4 +1,7 @@
-import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
+import {
+  CoreComponentType,
+  isCoreAutomationActionType,
+} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
 import { AutomationNodeType } from '@/automations/types';
@@ -42,8 +45,10 @@ export const useAutomationNodeLibrarySidebar = () => {
 
     return actionsConst.filter(
       (action) =>
-        coreActionNames.includes(action?.type) ||
-        connectableActionTypes.includes(action.type),
+        isCoreAutomationActionType(
+          action?.type as any,
+          CoreComponentType.Sidebar,
+        ) || connectableActionTypes.includes(action.type),
     );
   }, [awaitingToConnectNodeId, triggers, actions, actionsConst, triggersConst]);
 

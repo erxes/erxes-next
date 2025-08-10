@@ -56,7 +56,7 @@ const AwaitToConnectButton = memo(
             transition={{ duration: 0.2 }}
           >
             <IconLinkPlus
-              className={cn('size-4', {
+              className={cn('size-4 text-accent-foreground', {
                 'text-primary': nodeType === 'trigger',
                 'text-success': nodeType === 'action',
               })}
@@ -70,13 +70,13 @@ const AwaitToConnectButton = memo(
             exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
             transition={{ duration: 0.2 }}
           >
-            <IconPlus className="size-4" />
+            <IconPlus className="size-4 text-accent-foreground" />
           </motion.div>
         )}
       </AnimatePresence>
     );
     return (
-      <div className="absolute flex items-center top-1/2 -translate-y-1/2 translate-x-4 pointer-events-none">
+      <div className="absolute flex items-center top-1/2 -translate-y-1/2 translate-x-3 pointer-events-none ml-0.5">
         <div className="bg-accent-foreground h-px w-10 -z-1" />
         <div className="nodrag nopan pointer-events-auto">
           <Button

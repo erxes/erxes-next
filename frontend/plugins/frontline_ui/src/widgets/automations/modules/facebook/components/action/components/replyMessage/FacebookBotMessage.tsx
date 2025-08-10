@@ -3,9 +3,9 @@ import { CSS } from '@dnd-kit/utilities';
 import { IconGripVertical, IconTrash } from '@tabler/icons-react';
 import { Button, Card, Collapsible, Separator } from 'erxes-ui';
 import { FieldPath } from 'react-hook-form';
-import { REPLY_MESSAGE_ACTION_BUTTONS } from '../constants/ReplyMessage';
-import { TBotMessage } from '../states/replyMessageActionForm';
-import { FacebookMessageContent } from '~/widgets/automations/modules/facebook/components/action/components/FacebookMessageContent';
+import { REPLY_MESSAGE_ACTION_BUTTONS } from '../../constants/ReplyMessage';
+import { TBotMessage } from '../../states/replyMessageActionForm';
+import { FacebookMessageContent } from '~/widgets/automations/modules/facebook/components/action/components/replyMessage/FacebookMessageContent';
 
 export const FacebookBotMessage = ({
   index,

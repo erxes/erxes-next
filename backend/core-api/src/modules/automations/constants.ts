@@ -83,6 +83,13 @@ export const UI_ACTIONS = [
     emailRecipientsConst: EMAIL_RECIPIENTS_TYPES,
     isAvailable: true,
   },
+  {
+    type: 'waitEvent',
+    icon: 'IconClockPlay',
+    label: 'Wait event',
+    description: 'Delay until event is triggered',
+    isAvailable: true,
+  },
 ];
 
 export const UI_TRIGGERS = [

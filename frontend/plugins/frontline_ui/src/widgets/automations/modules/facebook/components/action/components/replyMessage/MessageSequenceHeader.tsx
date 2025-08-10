@@ -1,7 +1,7 @@
 import { Badge, Button, Label } from 'erxes-ui';
 import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
-import { REPLY_MESSAGE_ACTION_BUTTONS } from '../constants/ReplyMessage';
-import { MessageActionTypeNames } from '../types/messageActionForm';
+import { REPLY_MESSAGE_ACTION_BUTTONS } from '../../constants/ReplyMessage';
+import { MessageActionTypeNames } from '../../types/messageActionForm';
 export const MessageSequenceHeader = () => {
   const { messages, addMessage } = useReplyMessageAction();
 

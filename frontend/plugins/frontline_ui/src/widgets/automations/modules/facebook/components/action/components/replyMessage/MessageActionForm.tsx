@@ -3,13 +3,13 @@ import { toast } from 'erxes-ui';
 import { useEffect, useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
 import { AutomationActionFormProps } from 'ui-modules';
-import { FacebookMessages } from '~/widgets/automations/modules/facebook/components/action/components/FacebookMessages';
-import { MessageSequenceHeader } from '~/widgets/automations/modules/facebook/components/action/components/MessageSequenceHeader';
+import { FacebookMessages } from '~/widgets/automations/modules/facebook/components/action/components/replyMessage/FacebookMessages';
+import { MessageSequenceHeader } from '~/widgets/automations/modules/facebook/components/action/components/replyMessage/MessageSequenceHeader';
 import { ReplyMessageProvider } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 import {
   replyMessageFormSchema,
   TMessageActionForm,
-} from '../states/replyMessageActionForm';
+} from '../../states/replyMessageActionForm';
 
 export const MessageActionForm = ({
   formRef,
@@ -24,7 +24,8 @@ export const MessageActionForm = ({
 
   useImperativeHandle(formRef, () => ({
     submit: () => {
-      handleSubmit(onSaveActionConfig, () => {
+      handleSubmit(onSaveActionConfig, (error) => {
+        console.log({ error });
         toast({
           title: 'There is some error in the form',
           variant: 'destructive',

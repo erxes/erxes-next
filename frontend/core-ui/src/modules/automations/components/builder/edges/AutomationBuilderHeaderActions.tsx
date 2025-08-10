@@ -1,3 +1,4 @@
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
   automationBuilderActiveTabState,
   automationBuilderPanelOpenState,
@@ -6,7 +7,8 @@ import {
   toggleAutomationBuilderOpenSidebar,
 } from '@/automations/states/automationState';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
-import { Button, Command, Form, Label, Switch } from 'erxes-ui';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
+import { Badge, Button, Command, Form, Label, Switch } from 'erxes-ui';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -30,6 +32,22 @@ export const AutomationBuilderHeaderActions = () => {
 
   return (
     <div className="flex flex-row justify-between items-center gap-4">
+      <ToggleButton
+        isOpen={isPanelOpen}
+        onToggle={togglePanelOpen}
+        openLabel="Hide Inspect"
+        closedLabel="Show Inspect"
+        shortcut={`${isMac ? '⌘' : 'Ctrl'}I`}
+      />
+
+      <ToggleButton
+        isOpen={isOpenSideBar}
+        onToggle={toggleSideBarOpen}
+        openLabel="Hide Menu"
+        closedLabel="Show Menu"
+        shortcut={`${isMac ? '⌘' : 'Ctrl'}G`}
+      />
+
       <Form.Field
         control={control}
         name="status"
@@ -50,16 +68,39 @@ export const AutomationBuilderHeaderActions = () => {
           </Form.Item>
         )}
       />
-
-      <Button variant="ghost" onClick={togglePanelOpen}>
-        {`${isPanelOpen ? 'Hide Inspect' : 'Show Inspect'}`}
-        <Command.Shortcut>{isMac ? '⌘' : 'Ctrl'}I</Command.Shortcut>
-      </Button>
-
-      <Button variant="ghost" onClick={toggleSideBarOpen}>
-        {`${isOpenSideBar ? 'Hide Menu' : 'Show Menu'}`}
-        <Command.Shortcut>{isMac ? '⌘' : 'Ctrl'}G</Command.Shortcut>
-      </Button>
     </div>
+  );
+};
+
+const ToggleButton = ({
+  isOpen,
+  onToggle,
+  openLabel,
+  closedLabel,
+  shortcut,
+}: {
+  isOpen: boolean;
+  onToggle: () => void;
+  openLabel: React.ReactNode;
+  closedLabel: React.ReactNode;
+  shortcut: string;
+}) => {
+  return (
+    <Button variant="ghost" onClick={onToggle}>
+      {isOpen ? (
+        <>
+          <IconEyeOff />
+          {openLabel}
+        </>
+      ) : (
+        <>
+          <IconEye />
+          {closedLabel}
+        </>
+      )}
+      <Badge variant="secondary">
+        <Command.Shortcut>{shortcut}</Command.Shortcut>
+      </Badge>
+    </Button>
   );
 };

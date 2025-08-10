@@ -75,7 +75,7 @@ export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
               {activeTab === 'history' && (
                 <Tabs.Content
                   value="history"
-                  className="flex-1 flex flex-col h-full"
+                  className="flex-1 flex flex-col min-h-0"
                 >
                   <AutomationHistories />
                 </Tabs.Content>

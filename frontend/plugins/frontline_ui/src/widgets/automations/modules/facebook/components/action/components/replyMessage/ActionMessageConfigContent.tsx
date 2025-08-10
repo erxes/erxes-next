@@ -1,8 +1,8 @@
 import { IconChevronDown, IconLink } from '@tabler/icons-react';
 import { Button, Collapsible, readImage } from 'erxes-ui';
 import { Link } from 'react-router';
-import { REPLY_MESSAGE_ACTION_BUTTONS } from '../constants/ReplyMessage';
-import { TBotMessage } from '../states/replyMessageActionForm';
+import { REPLY_MESSAGE_ACTION_BUTTONS } from '../../constants/ReplyMessage';
+import { TBotMessage } from '../../states/replyMessageActionForm';
 import { AutomationActionNodeConfigProps } from 'ui-modules';
 import { TMessageTriggerForm } from '~/widgets/automations/modules/facebook/components/trigger/states/messageTriggerFormSchema';
 
@@ -43,20 +43,22 @@ const ActionConfigMessage = ({
     | (({ optionalId }: { optionalId: string }) => React.ReactNode)
     | null;
 }) => {
-  const { _id, type, text, cards = [], buttons, quickReplies, input } = message;
+  if (message.type === 'text') {
+  }
+  const { _id, type } = message;
   switch (type) {
     case 'text':
       return (
         <ActionConfigMessageCard
           _id={_id}
           type={type}
-          text={text}
-          buttons={buttons}
+          text={message.text}
+          buttons={message.buttons}
           OptionConnectHandle={OptionConnectHandle}
         />
       );
     case 'card':
-      return cards.map((card) => (
+      return message.cards.map((card) => (
         <ActionConfigMessageCard
           key={card._id}
           type={type}
@@ -69,8 +71,8 @@ const ActionConfigMessage = ({
         <ActionConfigMessageCard
           _id={_id}
           type={type}
-          text={text}
-          buttons={quickReplies}
+          text={message.text}
+          buttons={message.quickReplies}
           OptionConnectHandle={OptionConnectHandle}
         />
       );
@@ -96,9 +98,9 @@ const ActionConfigMessage = ({
         <ActionConfigMessageCard
           _id={_id}
           type={type}
-          text={input?.text}
-          subtitle={`Input expires in: ${input?.value || 0} ${
-            input?.type || ''
+          text={message.input?.text}
+          subtitle={`Input expires in: ${message.input?.value || 0} ${
+            message.input?.type || ''
           }`}
           buttons={[
             { _id: botId, text: 'If Reply' },

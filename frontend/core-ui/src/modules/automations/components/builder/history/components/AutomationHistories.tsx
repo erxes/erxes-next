@@ -10,8 +10,6 @@ export const AutomationHistories = () => {
     list,
     loading,
     totalCount,
-    triggersConst,
-    actionsConst,
     handleFetchMore,
     hasNextPage,
     hasPreviousPage,
@@ -19,7 +17,7 @@ export const AutomationHistories = () => {
   } = useAutomationHistories();
 
   return (
-    <>
+    <div className="flex flex-col flex-1 min-h-0">
       <PageSubHeader>
         <AutomationHistoriesRecordTableFilter />
         <div className="text-muted-foreground font-medium text-sm whitespace-nowrap h-7 leading-7">
@@ -31,11 +29,11 @@ export const AutomationHistories = () => {
           <IconRefresh />
         </Button>
       </PageSubHeader>
-      <div className="flex-1">
+      <div className="flex-1 overflow-auto">
         <RecordTable.Provider
-          columns={automationHistoriesColumns({ triggersConst, actionsConst })}
+          columns={automationHistoriesColumns}
           data={list}
-          className="mt-1.5 h-full overflow-auto"
+          className="mt-1.5 flex-1 h-fit "
           stickyColumns={['more']}
         >
           <RecordTable.CursorProvider
@@ -60,6 +58,6 @@ export const AutomationHistories = () => {
           </RecordTable.CursorProvider>
         </RecordTable.Provider>
       </div>
-    </>
+    </div>
   );
 };

@@ -1,5 +1,9 @@
-import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
-import { SendEmail } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmail';
+import {
+  CoreComponentType,
+  isCoreAutomationActionType,
+} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { AutomationSendEmailActionResult } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailActionResult';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 import { format, isValid } from 'date-fns';
 import { isEnabled, RelativeDateDisplay, Table } from 'erxes-ui';
@@ -7,8 +11,6 @@ import {
   getAutomationTypes,
   IAutomationHistory,
   IAutomationHistoryAction,
-  IAutomationsActionConfigConstants,
-  IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
 
 export const ExecutionActionResult = ({
@@ -45,10 +47,13 @@ export const ExecutionActionResult = ({
   }
 
   if (action.actionType === 'sendEmail') {
-    return <SendEmail.ActionResult result={result} />;
+    return <AutomationSendEmailActionResult result={result} />;
   }
 
-  const isCoreAction = coreActionNames.includes(action?.actionType);
+  const isCoreAction = isCoreAutomationActionType(
+    action?.actionType as any,
+    CoreComponentType.ActionResult,
+  );
 
   const [pluginName, moduleName] = getAutomationTypes(action?.actionType);
 
@@ -70,16 +75,11 @@ export const ExecutionActionResult = ({
 };
 
 export const AutomationHistoryByTable = ({
-  constants,
   history,
 }: {
   history: IAutomationHistory;
-  constants: {
-    triggersConst: IAutomationsTriggerConfigConstants[];
-    actionsConst: IAutomationsActionConfigConstants[];
-  };
 }) => {
-  const { actionsConst } = constants;
+  const { actionsConst } = useAutomation();
   const { actions = [] } = history;
 
   return (

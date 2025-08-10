@@ -1,9 +1,10 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
 import {
-  coreActionNames,
-  coreActions,
-} from '@/automations/components/builder/nodes/actions/CoreActions';
+  CoreComponentType,
+  getCoreAutomationActionComponent,
+  isCoreAutomationActionType,
+} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { NodeData } from '@/automations/types';
 import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 import { Handle, Position } from '@xyflow/react';
@@ -17,8 +18,6 @@ export const useActionNodeConfiguration = (data: NodeData) => {
   const [pluginName, moduleName] = getAutomationTypes(type);
   const { trigger } = useAutomationTrigger(id);
 
-  const isCoreAction = coreActionNames.includes(type);
-
   let Component = null;
 
   const actionNodeProps: AutomationActionNodeConfigProps = {
@@ -28,7 +27,18 @@ export const useActionNodeConfiguration = (data: NodeData) => {
     trigger,
   };
 
-  if (!isCoreAction && pluginName !== 'core') {
+  if (isCoreAutomationActionType(type as any, CoreComponentType.NodeContent)) {
+    const CoreActionComponent = getCoreAutomationActionComponent(
+      type as any,
+      CoreComponentType.NodeContent,
+    );
+
+    Component = (
+      <div className="px-4 py-2">
+        {CoreActionComponent ? <CoreActionComponent config={config} /> : <></>}
+      </div>
+    );
+  } else {
     const { actionsConst = [] } = useAutomation();
 
     const { isAvailableOptionalConnect } =
@@ -47,15 +57,6 @@ export const useActionNodeConfiguration = (data: NodeData) => {
         }}
       />
     );
-  } else {
-    if (type in coreActions) {
-      const CoreActionComponent = coreActions[type as keyof typeof coreActions];
-      Component = (
-        <div className="px-4 py-2">
-          <CoreActionComponent config={config} />
-        </div>
-      );
-    }
   }
 
   return { Component };

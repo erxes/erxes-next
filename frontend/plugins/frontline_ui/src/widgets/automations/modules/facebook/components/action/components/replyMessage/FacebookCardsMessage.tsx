@@ -1,16 +1,16 @@
-import { IconPhotoScan, IconTrash, IconX } from '@tabler/icons-react';
+import { IconPhotoScan, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import { Button, Card, Form, Input, Label, Tabs, Textarea } from 'erxes-ui';
 import { generateAutomationElementId } from 'ui-modules';
-import { TBotMessageCard } from '../states/replyMessageActionForm';
-import { FacebookMessageProps } from '../types/messageActionForm';
-import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
-import { InputTextCounter } from './InputTextCounter';
+import { TBotMessageCard } from '../../states/replyMessageActionForm';
+import { FacebookMessageProps } from '../../types/messageActionForm';
+import { FacebookMessageButtonsGenerator } from '../FacebookMessageButtonsGenerator';
+import { InputTextCounter } from '../InputTextCounter';
 import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 
 export const FacebookCardsMessage = ({
   message,
   index,
-}: FacebookMessageProps) => {
+}: FacebookMessageProps<{ type: 'card' }>) => {
   const { control } = useReplyMessageAction();
   const { cards = [] } = message || {};
 
@@ -59,13 +59,13 @@ export const FacebookCardsMessage = ({
                 disabled={cards.length >= 10}
                 onClick={() => addPage(field.onChange)}
               >
-                <IconX className="size-3" /> add page
+                <IconPlus className="size-3" /> Add page
               </Button>
             </div>
           </div>
-          <Tabs>
+          <Tabs value={'0'}>
             <div className="overflow-x-auto p-2">
-              <Tabs.List defaultValue={cards?.length === 1 ? '1' : undefined}>
+              <Tabs.List>
                 {cards.map((_, index) => (
                   <Tabs.Trigger key={index} value={String(index)}>{`${
                     index + 1

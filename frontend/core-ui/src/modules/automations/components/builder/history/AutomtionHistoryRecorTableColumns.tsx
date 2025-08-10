@@ -1,5 +1,6 @@
 import { AutomationHistoryDetail } from '@/automations/components/builder/history/components/AutomationHistoryDetail';
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { StatusBadgeValue } from '@/automations/types';
 import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 import { IconCalendarTime, IconInfoTriangle } from '@tabler/icons-react';
@@ -11,25 +12,12 @@ import {
   RecordTableCellDisplay,
   RelativeDateDisplay,
 } from 'erxes-ui';
-import {
-  getAutomationTypes,
-  IAutomationHistory,
-  IAutomationsActionConfigConstants,
-  IAutomationsTriggerConfigConstants,
-} from 'ui-modules';
+import { getAutomationTypes, IAutomationHistory } from 'ui-modules';
 
-export const automationHistoriesColumns = (constants: {
-  triggersConst: IAutomationsTriggerConfigConstants[];
-  actionsConst: IAutomationsActionConfigConstants[];
-}): ColumnDef<IAutomationHistory>[] => [
+export const automationHistoriesColumns: ColumnDef<IAutomationHistory>[] = [
   {
     id: 'more',
-    cell: ({ cell }) => (
-      <AutomationHistoryDetail
-        history={cell.row.original}
-        constants={constants}
-      />
-    ),
+    cell: ({ cell }) => <AutomationHistoryDetail history={cell.row.original} />,
     size: 33,
   },
   {
@@ -83,8 +71,9 @@ export const automationHistoriesColumns = (constants: {
     header: () => <RecordTable.InlineHead label="Trigger" />,
     cell: ({ cell }) => {
       const triggerType = cell.row?.original?.triggerType;
+      const { triggersConst } = useAutomation();
 
-      const triggerLabel = constants.triggersConst.find(
+      const triggerLabel = triggersConst.find(
         ({ type }) => type === triggerType,
       )?.label;
 
