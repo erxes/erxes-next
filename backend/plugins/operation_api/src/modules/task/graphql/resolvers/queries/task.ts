@@ -70,7 +70,7 @@ export const taskQueries = {
 
     const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
       model: models.Task,
-      params,
+      params: { orderBy: { createdAt: -1 } },
       query: filter,
     });
 
