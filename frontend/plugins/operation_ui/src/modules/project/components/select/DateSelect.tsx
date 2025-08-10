@@ -43,9 +43,21 @@ const useDateSelectContext = () => {
   return context;
 };
 
-const getDateColorClass = (date: Date): string => {
+const getDateColorClass = (
+  date: Date,
+  type?: 'start' | 'target',
+  status?: number,
+): string => {
   const today = new Date();
   const daysUntil = differenceInDays(date, today);
+
+  if (type === 'start') {
+    return '';
+  }
+
+  if (status && (status === 3 || status === 4)) {
+    return '';
+  }
 
   if (daysUntil < 0) {
     return 'text-red-500';
@@ -87,7 +99,15 @@ export const DateSelectProvider = ({
   );
 };
 
-const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
+const DateSelectValue = ({
+  placeholder,
+  type,
+  status,
+}: {
+  placeholder?: string;
+  type?: 'start' | 'target';
+  status?: number;
+}) => {
   const { value } = useDateSelectContext();
 
   if (!value) {
@@ -100,7 +120,9 @@ const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <span className="flex items-center justify-center gap-2">
-      <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
+      <IconCalendarTime
+        className={`size-4 ${getDateColorClass(value, type, status)}`}
+      />
       {format(value, 'MMM d, yyyy')}
     </span>
   );
@@ -245,12 +267,14 @@ export const DateSelectInlineCell = ({
   onValueChange,
   scope,
   type,
+  status,
 }: {
   value?: Date;
   id?: string;
   onValueChange?: (value?: Date) => void;
   scope?: string;
   type?: 'start' | 'target';
+  status?: number;
 }) => {
   const { updateProject } = useUpdateProject();
   const [open, setOpen] = useState(false);
@@ -284,7 +308,11 @@ export const DateSelectInlineCell = ({
         closeOnEnter
       >
         <RecordTableCellTrigger>
-          <DateSelectValue placeholder="not specified" />
+          <DateSelectValue
+            placeholder="not specified"
+            type={type}
+            status={status}
+          />
         </RecordTableCellTrigger>
         <RecordTableCellContent className="w-fit">
           <DateSelectContent />

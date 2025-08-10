@@ -171,10 +171,11 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         const startDate = cell.getValue() as string;
-        console.log(startDate);
+
         return (
           <DateSelect.InlineCell
             type="start"
+            status={cell.row.original.status || 0}
             value={startDate ? new Date(startDate) : undefined}
             id={cell.row.original._id}
           />
@@ -190,9 +191,11 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         const targetDate = cell.getValue() as string;
+
         return (
           <DateSelect.InlineCell
             type="target"
+            status={cell.row.original.status || 0}
             value={targetDate ? new Date(targetDate) : undefined}
             id={cell.row.original._id}
           />

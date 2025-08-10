@@ -25,9 +25,13 @@ import { SelectProject } from '@/task/components/select/SelectProject';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
+import { useAtomValue } from 'jotai';
+import { currentUserState } from 'ui-modules';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
+  const currentUser = useAtomValue(currentUserState);
+
   const { createTask } = useCreateTask();
   const { teams } = useGetCurrentUsersTeams({});
 
@@ -40,7 +44,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
       name: '',
       status: '0',
       priority: 0,
-      assigneeId: undefined,
+      assigneeId: teamId ? undefined : currentUser?._id,
       projectId: undefined,
       startDate: undefined,
       targetDate: undefined,

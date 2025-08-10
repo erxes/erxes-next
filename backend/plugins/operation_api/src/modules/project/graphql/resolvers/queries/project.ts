@@ -58,7 +58,7 @@ export const projectQueries = {
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IProjectDocument>({
         model: models.Project,
-        params,
+        params: { orderBy: { status: 1 } },
         query: filter,
       });
 

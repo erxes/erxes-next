@@ -25,8 +25,8 @@ import {
 import { useAtomValue } from 'jotai';
 import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
 import { useDebounce } from 'use-debounce';
-import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import { IconUser } from '@tabler/icons-react';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 
 export const SelectAssigneeProvider = SelectMember.Provider;
 
@@ -215,12 +215,12 @@ export const SelectAssigneeInlineCell = ({
   React.ComponentProps<typeof SelectAssigneeProvider>,
   'children' | 'onValueChange' | 'value'
 >) => {
-  const { updateProject } = useUpdateProject();
+  const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
   const handleValueChange = (value: string | string[]) => {
     if (id) {
-      updateProject({
+      updateTask({
         variables: {
           _id: id,
           assigneeId: value,
