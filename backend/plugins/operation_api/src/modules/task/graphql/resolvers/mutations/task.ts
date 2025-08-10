@@ -4,7 +4,7 @@ import { ITaskUpdate } from '@/task/@types/task';
 export const taskMutations = {
   createTask: async (
     _parent: undefined,
-    { params }: { params: ITaskUpdate },
+    params: ITaskUpdate,
     { models, user }: IContext,
   ) => {
     params.createdBy = user._id;
@@ -13,7 +13,7 @@ export const taskMutations = {
 
   updateTask: async (
     _parent: undefined,
-    { params }: { params: ITaskUpdate },
+    params: ITaskUpdate,
     { models }: IContext,
   ) => {
     return models.Task.updateTask(params);
