@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom';
-import { TaskBreadCrumb } from '@/task/components/TaskBreadCrumb';
+import { TasksListBreadCrumb } from '~/modules/task/components/TasksListBreadCrumb';
 import { PageContainer } from 'erxes-ui';
 
 export const TasksLayout = () => {
   return (
     <PageContainer>
-      <TaskBreadCrumb />
+      <TasksListBreadCrumb />
 
       <Outlet />
     </PageContainer>

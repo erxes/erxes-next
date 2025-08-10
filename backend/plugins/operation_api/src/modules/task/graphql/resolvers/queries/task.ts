@@ -48,8 +48,8 @@ export const taskQueries = {
       filter.createdBy = params.createdBy;
     }
 
-    if (params.userId) {
-      filter.assigneeId = params.userId;
+    if (params.assigneeId) {
+      filter.assigneeId = params.assigneeId;
     }
 
     if (params.cycleId) {
@@ -62,6 +62,10 @@ export const taskQueries = {
 
     if (params.estimatedPoint) {
       filter.estimatedPoint = params.estimatedPoint;
+    }
+
+    if (params.userId && !params.teamId && !params.assigneeId) {
+      filter.assigneeId = params.userId;
     }
 
     const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({

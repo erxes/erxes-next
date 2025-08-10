@@ -43,6 +43,7 @@ const taskFilterParams = `
   projectId: String 
   teamId: String
   estimatedPoint: Int
+  userId: String
 
   ${GQL_CURSOR_PARAM_DEFS}
 `;

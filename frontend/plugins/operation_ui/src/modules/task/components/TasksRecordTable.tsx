@@ -6,11 +6,23 @@ import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 // import { TasksFilter } from '@/task/components/TasksFilter';
+import { useParams } from 'react-router-dom';
 
-export const TasksRecordTable = ({ type }: { type: string }) => {
-  const { tasks, handleFetchMore, pageInfo, loading } = useTasks();
-  const { hasPreviousPage, hasNextPage } = pageInfo || {};
+export const TasksRecordTable = () => {
+  const { teamId } = useParams();
   const currentUser = useAtomValue(currentUserState);
+
+  const variables = {
+    teamId: teamId || undefined,
+    userId: currentUser?._id,
+  };
+
+  const { tasks, handleFetchMore, pageInfo, loading } = useTasks({
+    variables,
+  });
+
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
+
   const { teams } = useGetTeams({
     variables: {
       userId: currentUser?._id,

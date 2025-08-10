@@ -5,18 +5,14 @@ import { TasksPage } from '~/pages/TasksPage';
 import { ProjectsPage } from '~/pages/ProjectsPage';
 import { ProjectDetailPage } from '~/pages/ProjectDetailPage';
 import { ProjectLayout } from '@/project/components/ProjectLayout';
-import { TaskPageTypes } from '@/task/types';
-
-import { TasksLayout } from '@/task/components/TasksLayout';
 
 const taskMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
         <Route path="/" element={<Navigate to="tasks" replace />} />
-        <Route path="tasks" element={<TasksLayout />}>
-          <Route index element={<TasksPage type={TaskPageTypes.All} />} />
-        </Route>
+        <Route path="tasks" element={<TasksPage />} />
+
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="projects/:projectId" element={<ProjectLayout />}>
           <Route index element={<Navigate to="overview" replace />} />
@@ -27,7 +23,8 @@ const taskMain = () => {
         <Route path="team/:teamId">
           <Route index element={<Navigate to="projects" replace />} />
           <Route path="projects" element={<ProjectsPage />} />
-          <Route path="tasks" element={<TasksLayout />} />
+          <Route path="tasks" element={<TasksPage />} />
+
           <Route path="projects/:projectId" element={<ProjectLayout />}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<ProjectDetailPage />} />

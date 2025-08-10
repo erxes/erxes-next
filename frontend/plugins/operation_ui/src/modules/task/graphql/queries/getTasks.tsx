@@ -17,6 +17,7 @@ export const GET_TASKS = gql`
     $teamId: String
     $estimatedPoint: Int
     $orderBy: JSON
+    $userId: String
     ${GQL_CURSOR_PARAM_DEFS}
   ) {
     getTasks(
@@ -30,6 +31,7 @@ export const GET_TASKS = gql`
       teamId: $teamId
       estimatedPoint: $estimatedPoint
       orderBy: $orderBy
+      userId: $userId
       ${GQL_CURSOR_PARAMS}
     ) {
       list {
