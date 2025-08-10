@@ -2,7 +2,7 @@ import { Breadcrumb, Button, IconComponent, Separator } from 'erxes-ui';
 import { Link, useParams } from 'react-router-dom';
 import { useGetProject } from '@/project/hooks/useGetProject';
 import { PageHeader } from 'ui-modules';
-import { IconBox } from '@tabler/icons-react';
+import { IconClipboard } from '@tabler/icons-react';
 import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 
 export const ProjectDetailBreadCrumb = () => {
@@ -36,7 +36,7 @@ export const ProjectDetailBreadCrumb = () => {
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
                   <Link to={`/operation/team/${teamId}/projects`}>
-                    <IconBox />
+                    <IconClipboard />
                     Projects
                   </Link>
                 </Button>
@@ -46,7 +46,7 @@ export const ProjectDetailBreadCrumb = () => {
             <Breadcrumb.Item>
               <Button variant="ghost" asChild>
                 <Link to={`/operation/projects`}>
-                  <IconBox />
+                  <IconClipboard />
                   Projects
                 </Link>
               </Button>

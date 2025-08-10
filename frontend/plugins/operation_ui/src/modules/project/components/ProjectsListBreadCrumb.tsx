@@ -7,7 +7,7 @@ import {
   Skeleton,
 } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { IconBox } from '@tabler/icons-react';
+import { IconClipboard } from '@tabler/icons-react';
 import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 import { useParams } from 'react-router-dom';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
@@ -42,7 +42,7 @@ export const ProjectsListBreadCrumb = () => {
                 <Breadcrumb.Item>
                   <Button variant="ghost" asChild>
                     <Link to={`/operation/team/${teamId}/projects`}>
-                      <IconBox />
+                      <IconClipboard />
                       Projects
                     </Link>
                   </Button>
@@ -52,7 +52,7 @@ export const ProjectsListBreadCrumb = () => {
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
                   <Link to="/operation/projects">
-                    <IconBox />
+                    <IconClipboard />
                     Projects
                   </Link>
                 </Button>

@@ -20,7 +20,7 @@ import {
   SelectProjectContext,
   useSelectProjectContext,
 } from '@/project/contexts/SelectProjectContext';
-import { IconBox } from '@tabler/icons-react';
+import { IconClipboard } from '@tabler/icons-react';
 
 interface ProjectsInlineProps {
   projectIds?: string[];
@@ -52,7 +52,7 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
     const project = displayProjects[0];
     return (
       <div className={cn('flex items-center gap-2', className)}>
-        <IconBox className="h-4 w-4" />
+        <IconClipboard className="h-4 w-4" />
         <span className="truncate">{project.name}</span>
       </div>
     );
@@ -62,7 +62,7 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
     <div className={cn('flex items-center gap-1 flex-wrap', className)}>
       {displayProjects.slice(0, 2).map((project) => (
         <Badge key={project._id} variant="secondary" className="text-xs">
-          <IconBox className="h-3 w-3 mr-1" />
+          <IconClipboard className="h-3 w-3 mr-1" />
           {project.name}
         </Badge>
       ))}
@@ -151,7 +151,7 @@ const SelectProjectCommandItem = ({ project }: { project: IProject }) => {
       }}
     >
       <div className="flex items-center gap-2">
-        <IconBox className="h-4 w-4" />
+        <IconClipboard className="h-4 w-4" />
         <span className="truncate">{project.name}</span>
       </div>
       <Combobox.Check checked={projectIds.includes(project._id)} />
@@ -204,7 +204,7 @@ const SelectProjectContent = () => {
 export const SelectProjectFilterItem = () => {
   return (
     <Filter.Item value="project">
-      <IconBox />
+      <IconClipboard />
       Project
     </Filter.Item>
   );
@@ -264,7 +264,7 @@ export const SelectProjectFilterBar = ({
   return (
     <Filter.BarItem>
       <Filter.BarName>
-        <IconBox />
+        <IconClipboard />
         {!iconOnly && 'Project'}
       </Filter.BarName>
       <SelectProjectProvider

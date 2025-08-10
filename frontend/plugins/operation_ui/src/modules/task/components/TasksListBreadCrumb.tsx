@@ -2,7 +2,7 @@ import { Breadcrumb, Button } from 'erxes-ui';
 import { Link, useParams } from 'react-router-dom';
 
 import { PageHeader } from 'ui-modules';
-import { IconBox } from '@tabler/icons-react';
+import { IconCheckbox } from '@tabler/icons-react';
 import { AddTasksheet } from '@/task/components/add-task/AddTaskSheet';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconComponent } from 'erxes-ui';
@@ -44,7 +44,7 @@ export const TasksListBreadCrumb = () => {
                 <Breadcrumb.Item>
                   <Button variant="ghost" asChild>
                     <Link to={`/operation/team/${teamId}/tasks`}>
-                      <IconBox />
+                      <IconCheckbox />
                       Tasks
                     </Link>
                   </Button>
@@ -54,7 +54,7 @@ export const TasksListBreadCrumb = () => {
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
                   <Link to={`${basePath}`}>
-                    <IconBox />
+                    <IconCheckbox />
                     Tasks
                   </Link>
                 </Button>

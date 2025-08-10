@@ -183,6 +183,10 @@ export const SelectEstimatedPointInlineCell = ({
   const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
+  if (!estimateChoices) {
+    return <div>Team does not enabled estimate</div>;
+  }
+
   const handleValueChange = (value: string | string[]) => {
     if (id) {
       updateTask({

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   IconAlertSquareRounded,
-  IconBox,
+  IconClipboard,
   IconCalendarFilled,
   IconHash,
   IconLabelFilled,
@@ -141,7 +141,7 @@ export const tasksColumns = (
       id: 'project',
       accessorKey: 'project',
       header: () => (
-        <RecordTable.InlineHead label="Project" icon={IconBox} />
+        <RecordTable.InlineHead label="Project" icon={IconClipboard} />
       ),
       cell: ({ cell }) => {
         const { updateTask } = useUpdateTask();

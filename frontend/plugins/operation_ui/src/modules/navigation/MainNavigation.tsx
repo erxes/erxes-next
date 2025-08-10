@@ -1,4 +1,4 @@
-import { IconBox, IconUserFilled } from '@tabler/icons-react';
+import { IconClipboard, IconUserFilled } from '@tabler/icons-react';
 import { NavigationMenuLinkItem } from 'erxes-ui';
 
 export const MainNavigation = () => {
@@ -12,7 +12,7 @@ export const MainNavigation = () => {
       />
       <NavigationMenuLinkItem
         name="Projects"
-        icon={IconBox}
+        icon={IconClipboard}
         pathPrefix="operation"
         path="projects"
       />
