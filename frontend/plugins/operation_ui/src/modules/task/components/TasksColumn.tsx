@@ -152,6 +152,23 @@ export const tasksColumns = (
       size: 240,
     },
     {
+      id: 'estimatedPoint',
+      accessorKey: 'estimatedPoint',
+      header: () => (
+        <RecordTable.InlineHead label="Estimated Point" icon={IconHash} />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <SelectEstimatedPoint.InlineCell
+            estimateChoices={cell.row.original.estimateChoices}
+            value={cell.row.original.estimatedPoint || 0}
+            id={cell.row.original._id}
+          />
+        );
+      },
+      size: 240,
+    },
+    {
       id: 'project',
       accessorKey: 'project',
       header: () => (
@@ -220,23 +237,6 @@ export const tasksColumns = (
           <DateSelect.InlineCell
             type="target"
             value={targetDate ? new Date(targetDate) : undefined}
-            id={cell.row.original._id}
-          />
-        );
-      },
-      size: 240,
-    },
-    {
-      id: 'estimatedPoint',
-      accessorKey: 'estimatedPoint',
-      header: () => (
-        <RecordTable.InlineHead label="Estimated Point" icon={IconHash} />
-      ),
-      cell: ({ cell }) => {
-        return (
-          <SelectEstimatedPoint.InlineCell
-            estimateChoices={cell.row.original.estimateChoices}
-            value={cell.row.original.estimatedPoint || 0}
             id={cell.row.original._id}
           />
         );
