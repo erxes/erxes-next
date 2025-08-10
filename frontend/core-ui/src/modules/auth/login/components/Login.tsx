@@ -6,7 +6,6 @@ export const Login = () => {
     <Card className="shadow-xl border-none p-6 mt-10 bg-background w-full">
       <div className="w-full h-full">
         <Card.Header className="flex flex-col items-center p-3">
-          {' '}
           <Card.Title className="mt-2 md:mt-3 mb-1">Welcome</Card.Title>
           <Card.Description className="text-center text-accent-foreground">
             Please sign in to your account to continue
@@ -54,8 +53,8 @@ export const Login = () => {
         <span className="text-sm font-medium text-center">
           <a className="text-primary font-semibold hover:underline" href="#">
             Terms of use
-          </a>{' '}
-          and{' '}
+          </a>
+          and
           <a className="text-primary font-semibold hover:underline" href="#">
             Privacy policy
           </a>
