@@ -47,6 +47,7 @@ export const CONFIG: IUIConfig = {
     {
       name: 'team',
       path: 'operation/team',
+      settingsOnly: true,
     },
   ],
 
