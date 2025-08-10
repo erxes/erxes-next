@@ -25,7 +25,7 @@ import {
 import { useAtomValue } from 'jotai';
 import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
 import { useDebounce } from 'use-debounce';
-import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import { IconUser } from '@tabler/icons-react';
 
 export const SelectAssigneeProvider = SelectMember.Provider;
@@ -41,33 +41,29 @@ export const SelectTeamMemberContent = ({
   teamIds?: string[] | string;
   exclude: boolean;
 }) => {
-  const { members: teamMembers } = useGetTeamMembers({
-    teamIds,
-  });
+  const { members: teamMembers } = useGetTeamMembers({ teamIds });
   const excludeIds = teamMembers?.map((member) => member.memberId);
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
   const currentUser = useAtomValue(currentUserState) as IUser;
   const { memberIds, members } = useSelectMemberContext();
-
+  const filteredIds = excludeIds?.filter((id) => id !== currentUser._id);
   const { users, loading, handleFetchMore, totalCount, error } = useUsers({
     variables: {
       searchValue: debouncedSearch,
       excludeIds: exclude,
-      ids: excludeIds?.filter((id) => id !== currentUser._id),
+      ids: filteredIds,
     },
-    skip: !excludeIds,
+    skip: !excludeIds || !filteredIds?.length,
   });
   const membersList = exclude
-    ? users.filter(
+    ? [currentUser, ...users].filter(
         (user) =>
           !memberIds?.find((memberId) => memberId === user._id) &&
           !excludeIds?.find((excludeId) => excludeId === user._id),
       )
     : [currentUser, ...users].filter(
-        (user) =>
-          !members.find((member) => member._id === user._id) &&
-          user._id !== currentUser._id,
+        (user) => !members.find((member) => member._id === user._id),
       );
   return (
     <Command shouldFilter={false}>
@@ -219,12 +215,12 @@ export const SelectAssigneeInlineCell = ({
   React.ComponentProps<typeof SelectAssigneeProvider>,
   'children' | 'onValueChange' | 'value'
 >) => {
-  const { updateTask } = useUpdateTask();
+  const { updateProject } = useUpdateProject();
   const [open, setOpen] = useState(false);
 
   const handleValueChange = (value: string | string[]) => {
     if (id) {
-      updateTask({
+      updateProject({
         variables: {
           _id: id,
           assigneeId: value,
@@ -244,9 +240,7 @@ export const SelectAssigneeInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectAssigneeValue
-            placeholder={id ? 'Assignee not specified' : ''}
-          />
+          <SelectAssigneeValue placeholder="Assignee not specified" />
         </RecordTableCellTrigger>
         <RecordTableCellContent>
           <SelectAssigneeContent teamIds={teamIds} />

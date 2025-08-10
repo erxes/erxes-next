@@ -67,4 +67,13 @@ export const teamQueries = {
 
     return models.TeamMember.find({ teamId });
   },
+
+  getTeamEstimateChoises: async (
+    _parent: undefined,
+    { teamId }: { teamId: string },
+    { models }: IContext,
+  ) => {
+    const team = await models.Team.getTeam(teamId);
+    return team.estimateType;
+  },
 };

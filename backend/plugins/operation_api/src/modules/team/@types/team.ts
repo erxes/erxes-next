@@ -40,3 +40,8 @@ export enum TeamEstimateTypes {
   FIBONACCI = 3,
   EXPONENTIAL = 4,
 }
+
+export interface IEstimateChoice {
+  value: number;
+  label: string;
+}

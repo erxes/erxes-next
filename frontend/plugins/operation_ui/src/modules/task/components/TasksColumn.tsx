@@ -183,7 +183,7 @@ export const tasksColumns = (
           <SelectAssignee.InlineCell
             id={cell.row.original._id}
             value={cell.row.original.assigneeId}
-            teamIds={cell.row.original.teamId}
+            teamIds={[cell.row.original.teamId]}
           />
         );
       },
