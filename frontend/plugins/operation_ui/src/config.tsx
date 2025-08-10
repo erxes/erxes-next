@@ -1,4 +1,8 @@
-import { IconListCheck } from '@tabler/icons-react';
+import {
+  IconListCheck,
+  IconChecklist,
+  IconClipboard,
+} from '@tabler/icons-react';
 
 import { IUIConfig } from 'erxes-ui/types';
 import { lazy, Suspense } from 'react';
@@ -37,13 +41,23 @@ export const CONFIG: IUIConfig = {
       icon: IconListCheck,
       path: 'operation',
       hasSettings: false,
-      hasRelationWidget: false,
+      hasRelationWidget: true,
       hasFloatingWidget: false,
     },
     {
       name: 'team',
       path: 'operation/team',
-      settingsOnly: true,
+    },
+  ],
+
+  relationWidgets: [
+    {
+      name: 'tasks',
+      icon: IconChecklist,
+    },
+    {
+      name: 'projects',
+      icon: IconClipboard,
     },
   ],
 };

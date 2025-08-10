@@ -70,7 +70,8 @@ export const CustomerDetailActions = () => {
               title={item.name}
             >
               <RelationWidget
-                module={item}
+                module={item.name}
+                pluginName={item.pluginName}
                 contentId={contactId || ''}
                 contentType="core:customer"
               />

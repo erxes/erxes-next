@@ -22,8 +22,8 @@ export const types = `
 `;
 
 export const queries = `
-    getRelationsByEntity(contentType: String!, contentId: String!): [Relation!]!
-    getRelationsByEntities(contentTypes: [String!]!, contentIds: [String!]!): [Relation!]!
+    getRelationsByEntity(contentType: String!, contentId: String!): [Relation!]
+    getRelationsByEntities(contentTypes: [String!]!, contentIds: [String!]!): [Relation!]
 `;
 
 export const mutations = `
