@@ -15,13 +15,13 @@ export const conversationTrpcRouter = t.router({
     tag: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
       const { models } = ctx;
 
-      const { targetIds, tagIds, _ids, action } = input;
+      const { targetIds, tagIds, action } = input;
 
       let response = {};
 
       if (action === 'count') {
         response = await models.Conversations.countDocuments({
-          tagIds: { $in: _ids },
+          tagIds: { $in: tagIds },
         });
       }
 

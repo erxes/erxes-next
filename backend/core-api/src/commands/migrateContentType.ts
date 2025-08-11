@@ -56,12 +56,10 @@ const command = async () => {
     }
   } catch (e) {
     console.log(`Error occurred: ${e.message}`);
-    client.close();
+    await client.close();
   }
 
-  console.log(`Process finished at: ${new Date()}`);
-
-  process.exit();
+  console.log(`Process finished at: ${new Date().toISOString()}`);
 };
 
 command();
