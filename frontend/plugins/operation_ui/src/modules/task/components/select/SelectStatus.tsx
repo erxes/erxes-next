@@ -8,7 +8,6 @@ import {
   Form,
   Popover,
   RecordTableInlineCell,
-  Popover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -103,7 +102,7 @@ const SelectStatusValue = ({
   const { statusIds, statuses } = useSelectStatusContext();
 
   const selectedStatuses = statuses.filter((status) =>
-    statusIds.includes(status.value.toString()),    
+    statusIds.includes(status.value.toString()),
   );
   if (selectedStatuses.length === 0) {
     return (
@@ -348,53 +347,48 @@ export const SelectStatusFormItem = React.forwardRef<
     onChange?: (value: number) => void;
     teamId: string;
   }
->(
-  (
-    { onChange, className, placeholder, value, teamId, ...props },
-    ref,
-  ) => {
-    const [open, setOpen] = useState(false);
-    const { statuses } = useGetStatusByTeam({
-      variables: { teamId: teamId },
-    });
-    const stringValue =
-      typeof value === 'number' ? value.toString() : value || '';
+>(({ onChange, className, placeholder, value, teamId, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { statuses } = useGetStatusByTeam({
+    variables: { teamId: teamId },
+  });
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
 
-    return (
-      <SelectStatusProvider
-        value={stringValue}
-        onValueChange={(value) => {
-          const numValue =
-            typeof value === 'string' ? parseInt(value, 10) : Number(value);
-          onChange?.(numValue);
-          setOpen(false);
-        }}
-        statuses={statuses}
-        {...props}
-      >
-        <Popover open={open} onOpenChange={setOpen}>
-          <Form.Control>
-            <Combobox.TriggerBase
-              ref={ref}
-              className={cn('w-full shadow-xs', className)}
-              asChild
-            >
-              <Button variant="secondary" className="h-7">
-                <SelectStatusValue
-                  placeholder={placeholder}
-                  className={value === 0 ? 'text-muted-foreground' : undefined}
-                />
-              </Button>
-            </Combobox.TriggerBase>
-          </Form.Control>
-          <Combobox.Content>
-            <SelectStatusContent />
-          </Combobox.Content>
-        </Popover>
-      </SelectStatusProvider>
-    );
-  },
-);
+  return (
+    <SelectStatusProvider
+      value={stringValue}
+      onValueChange={(value) => {
+        const numValue =
+          typeof value === 'string' ? parseInt(value, 10) : Number(value);
+        onChange?.(numValue);
+        setOpen(false);
+      }}
+      statuses={statuses}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-full shadow-xs', className)}
+            asChild
+          >
+            <Button variant="secondary" className="h-7">
+              <SelectStatusValue
+                placeholder={placeholder}
+                className={value === 0 ? 'text-muted-foreground' : undefined}
+              />
+            </Button>
+          </Combobox.TriggerBase>
+        </Form.Control>
+        <Combobox.Content>
+          <SelectStatusContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectStatusProvider>
+  );
+});
 
 SelectStatusFormItem.displayName = 'SelectStatusFormItem';
 

@@ -9,7 +9,6 @@ import {
   Form,
   Popover,
   RecordTableInlineCell,
-  Popover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
