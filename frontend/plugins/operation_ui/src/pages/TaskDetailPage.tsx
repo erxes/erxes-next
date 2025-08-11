@@ -8,7 +8,11 @@ import { AddProjectSheet } from '@/project/components/add-project/AddProjectShee
 import { TaskBreadCrump } from '~/modules/task/components/breadcrump/TaskBreadCrump';
 
 export const TaskDetailPage = () => {
-  const { teamId } = useParams();
+  const { teamId, taskId } = useParams<{ teamId?: string; taskId: string }>();
+
+  if (!taskId) {
+    return null;
+  }
 
   return (
     <>
@@ -35,7 +39,7 @@ export const TaskDetailPage = () => {
           <AddProjectSheet />
         </PageHeader.End>
       </PageHeader>
-      <TaskDetails />
+      <TaskDetails taskId={taskId} />
     </>
   );
 };

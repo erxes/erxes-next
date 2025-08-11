@@ -4,9 +4,9 @@ import { PageHeader } from 'ui-modules';
 import { Breadcrumb, Separator } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 
-import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 import { ProjectBreadCrumb } from '@/project/components/breadcumb/ProjectBreadCrumb';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
+import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 
 export const ProjectLayout = () => {
   const { teamId } = useParams<{
@@ -37,7 +37,7 @@ export const ProjectLayout = () => {
           </Breadcrumb>
         </PageHeader.Start>
         <PageHeader.End>
-          <AddProjectSheet />
+          <AddTaskSheet />
         </PageHeader.End>
       </PageHeader>
       <Outlet />

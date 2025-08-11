@@ -2,7 +2,7 @@ import { Breadcrumb } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 
 import { PageHeader } from 'ui-modules';
-import { AddTasksheet } from '@/task/components/add-task/AddTaskSheet';
+import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 import { Separator } from 'erxes-ui';
 import { TaskBreadCrump } from '@/task/components/breadcrump/TaskBreadCrump';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
@@ -32,7 +32,7 @@ export const TasksPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
         </PageHeader.Start>
-        <AddTasksheet />
+        <AddTaskSheet />
       </PageHeader>
       <TasksRecordTable />
     </>
