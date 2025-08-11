@@ -21,6 +21,7 @@ import {
   useSelectProjectContext,
 } from '@/project/contexts/SelectProjectContext';
 import { IconClipboard } from '@tabler/icons-react';
+import { useParams } from 'react-router-dom';
 
 interface ProjectsInlineProps {
   projectIds?: string[];
@@ -161,12 +162,17 @@ const SelectProjectCommandItem = ({ project }: { project: IProject }) => {
 
 const SelectProjectContent = () => {
   const { projects: selectedProjects } = useSelectProjectContext();
+  const { teamId } = useParams();
   const {
     projects = [],
     loading,
     handleFetchMore: _handleFetchMore,
     totalCount = 0,
-  } = useProjects();
+  } = useProjects({
+    variables: {
+      teamIds: teamId ? [teamId] : undefined,
+    },
+  });
 
   const handleFetchMore = () => {
     _handleFetchMore({ direction: EnumCursorDirection.FORWARD });

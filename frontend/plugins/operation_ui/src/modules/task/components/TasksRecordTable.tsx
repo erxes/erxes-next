@@ -9,11 +9,12 @@ import { currentUserState } from 'ui-modules';
 import { useParams } from 'react-router-dom';
 
 export const TasksRecordTable = () => {
-  const { teamId } = useParams();
+  const { teamId, projectId } = useParams();
   const currentUser = useAtomValue(currentUserState);
 
   const variables = {
     teamId: teamId || undefined,
+    projectId: projectId || undefined,
     userId: currentUser?._id,
   };
 
@@ -28,6 +29,7 @@ export const TasksRecordTable = () => {
       userId: currentUser?._id,
     },
   });
+
   return (
     <div className="flex flex-col overflow-hidden h-full">
       {/* <PageSubHeader>
