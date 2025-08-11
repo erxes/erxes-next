@@ -271,7 +271,6 @@ export const projectQueries = {
         },
       },
       {
-        // Merge facet results into per-assignee objects
         $project: {
           merged: {
             $map: {
@@ -325,6 +324,7 @@ export const projectQueries = {
       },
       { $unwind: '$merged' },
       { $replaceRoot: { newRoot: '$merged' } },
+      { $sort: { totalScope: -1 } },
     ]);
 
     return result;
