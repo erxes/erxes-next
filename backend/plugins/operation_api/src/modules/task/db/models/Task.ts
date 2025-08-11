@@ -8,6 +8,8 @@ import {
   ITaskUpdate,
 } from '@/task/@types/task';
 
+import { STATUS_TYPES } from '@/status/constants/types';
+
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
   getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
@@ -88,7 +90,7 @@ export const loadTaskClass = (models: IModels) => {
       if (doc.status && doc.status !== task.status) {
         const status = await models.Status.getStatus(doc.status);
 
-        if (status && status.type == 'completed') {
+        if (status && status.type == STATUS_TYPES.COMPLETED) {
           rest.complatedDate = new Date();
         }
       }
