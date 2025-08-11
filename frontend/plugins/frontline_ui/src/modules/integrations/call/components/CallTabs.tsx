@@ -14,42 +14,33 @@ import {
 import { Button, Tabs } from 'erxes-ui';
 import { useAtom, useAtomValue } from 'jotai';
 
-export const CallTabs = ({
-  children,
-  keypad,
-}: {
-  children: React.ReactNode;
-  keypad: React.ReactNode;
-}) => {
+export const CallTabs = ({ keypad }: { keypad: React.ReactNode }) => {
   const [callUi, setCallUi] = useAtom(callUiAtom);
 
   return (
-    <>
-      <div className="text-center">{children}</div>
-      <Tabs defaultValue="keypad" value={callUi} onValueChange={setCallUi}>
-        <Tabs.Content value="history">
-          <CallHistory />
-        </Tabs.Content>
-        <Tabs.Content value="keypad">{keypad}</Tabs.Content>
-        <Tabs.Content value="address-book">
-          <CallContacts />
-        </Tabs.Content>
-        <Tabs.List className="grid grid-cols-3 p-1 border-t border-b-0">
-          <CallTabsTrigger value="history">
-            <IconHistory />
-            Call history
-          </CallTabsTrigger>
-          <CallTabsTrigger value="keypad">
-            <IconDialpadFilled />
-            Call
-          </CallTabsTrigger>
-          <CallTabsTrigger value="address-book">
-            <IconAddressBook />
-            Contact
-          </CallTabsTrigger>
-        </Tabs.List>
-      </Tabs>
-    </>
+    <Tabs defaultValue="keypad" value={callUi} onValueChange={setCallUi}>
+      <Tabs.Content value="history">
+        <CallHistory />
+      </Tabs.Content>
+      <Tabs.Content value="keypad">{keypad}</Tabs.Content>
+      <Tabs.Content value="address-book">
+        <CallContacts />
+      </Tabs.Content>
+      <Tabs.List className="grid grid-cols-3 p-1 border-t border-b-0">
+        <CallTabsTrigger value="history">
+          <IconHistory />
+          Call history
+        </CallTabsTrigger>
+        <CallTabsTrigger value="keypad">
+          <IconDialpadFilled />
+          Call
+        </CallTabsTrigger>
+        <CallTabsTrigger value="address-book">
+          <IconAddressBook />
+          Contact
+        </CallTabsTrigger>
+      </Tabs.List>
+    </Tabs>
   );
 };
 
@@ -73,7 +64,7 @@ const CallTabsTrigger = ({
 
 export const Dialpad = () => {
   return (
-    <div className="px-3">
+    <div className="px-3 pt-3">
       <CallSipActions />
       <CallNumberInput />
       <SelectPhoneCallFrom />
@@ -86,7 +77,11 @@ export const CallButton = () => {
   const phoneNumber = useAtomValue(callNumberState);
   const { startCall } = useSip();
   return (
-    <Button className="my-3 w-full" onClick={() => startCall(phoneNumber)}>
+    <Button
+      className="my-3 w-full"
+      disabled={!phoneNumber || !phoneNumber.length}
+      onClick={() => startCall(phoneNumber)}
+    >
       Call
     </Button>
   );

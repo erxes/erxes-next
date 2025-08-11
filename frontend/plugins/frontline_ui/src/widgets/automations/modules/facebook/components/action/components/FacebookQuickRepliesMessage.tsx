@@ -1,15 +1,15 @@
+import { IconUpload } from '@tabler/icons-react';
 import { Avatar, Form, Textarea } from 'erxes-ui';
+import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
+import { TBotMessageButton } from '~/widgets/automations/modules/facebook/components/action/states/replyMessageActionForm';
 import { FacebookMessageProps } from '../types/messageActionForm';
 import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
 import { InputTextCounter } from './InputTextCounter';
-import { TBotMessageButton } from '~/widgets/automations/modules/facebook/components/action/states/replyMessageActionForm';
-import { AvatarFallback } from '@radix-ui/react-avatar';
-import { IconUpload } from '@tabler/icons-react';
 
 export const FacebookQuickRepliesMessage = ({
   index,
-  control,
 }: FacebookMessageProps) => {
+  const { control } = useReplyMessageAction();
   return (
     <>
       <Form.Field

@@ -1,4 +1,4 @@
-import { Combobox, Command, Filter } from 'erxes-ui';
+import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import {
   IconCalendarPlus,
@@ -113,6 +113,27 @@ export const ConversationFilterBar = ({
   const [participated] = useQueryState<boolean>('participated');
   const [created] = useQueryState<Date>('created');
   const inboxLayout = useAtomValue(inboxLayoutState);
+  const [filterStates] = useMultiQueryState<{
+    status: ConversationStatus;
+    unassigned: boolean;
+    awaitingResponse: boolean;
+    participated: boolean;
+    created: Date;
+    channelId: string;
+    integrationType: string;
+  }>([
+    'status',
+    'unassigned',
+    'awaitingResponse',
+    'participated',
+    'created',
+    'channelId',
+    'integrationType',
+  ]);
+
+  if (Object.values(filterStates).filter((qs: any) => !!qs).length === 0) {
+    return null;
+  }
 
   return (
     <Filter.Bar className={inboxLayout === 'list' ? 'pl-2' : 'pt-1'}>

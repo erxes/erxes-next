@@ -32,10 +32,11 @@ export type IAction<TConfig = any> = {
   nextActionId?: string;
   isAvailable?: boolean;
   style?: any;
-  config?: TConfig & IConfig;
+  config: TConfig & IConfig;
   position?: any;
   isAvailableOptionalConnect?: boolean;
   workflowId?: string;
+  isCustom?: boolean;
 
   count?: number;
 };

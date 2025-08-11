@@ -1,8 +1,8 @@
 import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
 
 import {
-  IAutomationDocument,
   AUTOMATION_STATUSES,
+  IAutomationDocument,
   IAutomationExecutionDocument,
   IAutomationsActionConfig,
   IAutomationsTriggerConfig,

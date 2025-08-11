@@ -321,7 +321,6 @@ const FacebookPageInfo = memo(
     if (!accountId || !pageId) {
       return (
         <Label className="text-lg flex gap-2 items-center">
-          {' '}
           <IconInfoTriangle className="size-3 text-destructive" /> Select a Page
         </Label>
       );

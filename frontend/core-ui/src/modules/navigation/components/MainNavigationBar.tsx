@@ -1,10 +1,20 @@
 import { Sidebar } from 'erxes-ui';
 import { Organization } from './Organization';
-import { SidebarNavigation } from './SidebarNavigation';
 import { SidebarNavigationFavorites } from './SidebarNavigationFavorites';
-import { User } from './User';
-import { SidebarNavigationComponents } from './SidebarNavigationComponents';
-import { MyInboxMainNavigationBarItem } from '@/notification/my-inbox/components/MyInboxMainNavigationBarItem';
+import { NavigationCoreModules } from '@/navigation/components/NavigationCoreModules';
+import {
+  NavigationPluginExitButton,
+  NavigationPlugins,
+} from '@/navigation/components/NavigationPlugins';
+import { lazy } from 'react';
+
+const SHOW_COMPONENTS = false;
+
+export const DevelopmentNavigation = lazy(() =>
+  import('./DevelopmentMenus').then((m) => ({
+    default: m.DevelopmentNavigation,
+  })),
+);
 
 export const MainNavigationBar = () => {
   return (
@@ -17,20 +27,17 @@ export const MainNavigationBar = () => {
         </Sidebar.Menu>
       </Sidebar.Header>
       <Sidebar.Separator className="mx-0" />
-
       <Sidebar.Content className="gap-0">
-        {process.env.NODE_ENV === 'development' && (
-          <SidebarNavigationComponents />
+        <NavigationPluginExitButton />
+        {process.env.NODE_ENV === 'development' && SHOW_COMPONENTS && (
+          <DevelopmentNavigation />
         )}
-        <MyInboxMainNavigationBarItem />
-
         <SidebarNavigationFavorites />
-        <SidebarNavigation />
+        <NavigationPlugins />
+        <NavigationCoreModules />
       </Sidebar.Content>
-      <Sidebar.Separator className="mx-0" />
-      <Sidebar.Footer className="pb-4 px-0">
-        <User />
-      </Sidebar.Footer>
     </>
   );
 };
+
+export default MainNavigationBar;

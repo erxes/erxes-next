@@ -71,7 +71,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
             </div>
           </RecordTableCellTrigger>
           <RecordTableCellContent className="w-24 h-12 flex justify-center items-center space-x-2">
-            <Label htmlFor="mode">InActive</Label>
+            <Label htmlFor="mode">Inactive</Label>
             <Switch
               id="mode"
               onCheckedChange={(open) =>

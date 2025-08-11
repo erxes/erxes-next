@@ -1,12 +1,12 @@
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
 import { NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt } from '@tabler/icons-react';
-import { Node } from '@xyflow/react';
+import { Node, NodeProps } from '@xyflow/react';
 import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
-import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
+import { ErrorState } from '@/automations/utils/ErrorState';
 
 const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   if (data?.error) {
@@ -39,7 +39,7 @@ const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   );
 };
 
-const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
+const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
   const { beforeTitleContent, actionId } = data;
 
   return (
@@ -77,7 +77,6 @@ const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
             {data.description}
           </span>
 
-          {/* {renderContent(data)} */}
           <TriggerNodeContent data={data} />
         </div>
 
