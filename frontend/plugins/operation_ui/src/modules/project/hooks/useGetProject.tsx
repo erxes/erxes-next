@@ -6,16 +6,10 @@ interface IGetProjectQueryResponse {
   getProject: IProject;
 }
 
-export const useGetProject = ({ projectId, options }: { projectId: string, options?: QueryHookOptions }) => {
+export const useGetProject = (options: QueryHookOptions) => {
   const { data, loading, refetch } = useQuery<IGetProjectQueryResponse>(
     GET_PROJECT,
-    {
-      variables: {
-        _id: projectId,
-        ...options?.variables,
-      },
-      ...options,
-    },
+    options,
   );
 
   const project = data?.getProject;

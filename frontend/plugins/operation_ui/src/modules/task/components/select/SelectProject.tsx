@@ -42,7 +42,7 @@ const ProjectsInlineEffectComponent = ({
   updateProjects?: React.Dispatch<React.SetStateAction<IProject[]>>;
   projects?: IProject[];
 }) => {
-  const { project } = useGetProject({ projectId });
+  const { project } = useGetProject({ variables: { _id: projectId } });
 
   useEffect(() => {
     const newProjects = [...(projects || [])].filter(
@@ -336,7 +336,7 @@ export const SelectProjectFilterBar = ({
         value={project || (mode === 'single' ? '' : [])}
         onValueChange={(value: string[] | string) => {
           if (value.length > 0) {
-            setProject(value  );
+            setProject(value);
           } else {
             setProject(null);
           }
@@ -409,7 +409,7 @@ export const SelectProjectFormItem = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
           <Combobox.TriggerBase className="w-full shadow-xs" asChild>
-            <Button variant="secondary" className={cn("h-7", className)}>
+            <Button variant="secondary" className={cn('h-7', className)}>
               <SelectProjectValue placeholder={placeholder} />
             </Button>
           </Combobox.TriggerBase>
