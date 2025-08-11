@@ -47,7 +47,7 @@ const taskFilterParams = `
   estimatePoint: Int
   userId: String
   name:String
-  estimateType: String
+  statusType: String
   estimate: String
 
   ${GQL_CURSOR_PARAM_DEFS}

@@ -68,6 +68,7 @@ export const queries = `
     getProjectProgress(_id: String!): JSON
     getProjectProgressByMember(_id: String!): JSON
     getProjectProgressByTeam(_id: String!): JSON
+    getProjectProgressChart(_id: String!): JSON
 `;
 
 export const mutations = `

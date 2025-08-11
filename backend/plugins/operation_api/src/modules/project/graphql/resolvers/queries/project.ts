@@ -476,4 +476,80 @@ export const projectQueries = {
       { $sort: { totalScope: -1 } },
     ]);
   },
+
+  getProjectProgressChart: async (
+    _parent: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
+
+    const startedStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.STARTED] },
+    }).distinct('_id');
+
+    const completedStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.COMPLETED] },
+    }).distinct('_id');
+
+    const tasks = await models.Task.find({
+      projectId: _id,
+    });
+
+    console.log(tasks);
+
+    return models.Task.aggregate([
+      {
+        $match: {
+          projectId: _id,
+          status: { $in: [...startedStatusIds, ...completedStatusIds] },
+          statusChangedDate: { $ne: null },
+        },
+      },
+      {
+        // Determine month/year string
+        $addFields: {
+          month: {
+            $dateToString: { format: '%Y-%m-%d', date: '$statusChangedDate' },
+          },
+          isStarted: { $in: ['$status', startedStatusIds] },
+          isCompleted: { $in: ['$status', completedStatusIds] },
+          estimateValue: {
+            $cond: [
+              {
+                $or: [
+                  { $eq: ['$estimatePoint', null] },
+                  { $eq: ['$estimatePoint', 0] },
+                ],
+              },
+              1,
+              '$estimatePoint',
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$month',
+          started: {
+            $sum: { $cond: ['$isStarted', '$estimateValue', 0] },
+          },
+          completed: {
+            $sum: { $cond: ['$isCompleted', '$estimateValue', 0] },
+          },
+        },
+      },
+      { $sort: { _id: 1 } },
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          started: 1,
+          completed: 1,
+        },
+      },
+    ]);
+  },
 };
