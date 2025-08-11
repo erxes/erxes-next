@@ -21,6 +21,7 @@ export interface ITask {
   startDate?: Date;
   targetDate?: Date;
   createdAt?: Date;
+  complatedDate?: Date;
 }
 
 export interface ITaskUpdate extends ITask {

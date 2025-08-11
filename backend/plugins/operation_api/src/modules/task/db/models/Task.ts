@@ -78,7 +78,22 @@ export const loadTaskClass = (models: IModels) => {
 
     public static async updateTask(doc: ITaskUpdate) {
       const { _id, ...rest } = doc;
-      return await models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
+
+      const task = await models.Task.findOne({ _id });
+
+      if (!task) {
+        throw new Error('Task not found');
+      }
+
+      if (doc.status && doc.status !== task.status) {
+        const status = await models.Status.getStatus(doc.status);
+
+        if (status && status.type == 'completed') {
+          rest.complatedDate = new Date();
+        }
+      }
+
+      return models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
     }
 
     public static async removeTask(TaskId: string[]) {

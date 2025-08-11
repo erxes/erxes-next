@@ -20,6 +20,7 @@ export const taskSchema = schemaWrapper(
       cycleId: { type: String, label: 'Cycle ID' },
       projectId: { type: String, label: 'Project ID' },
       estimatedPoint: { type: Number, label: 'Estimated Point', default: 0 },
+      complatedDate: { type: Date, label: 'Complated Date' },
     },
     {
       timestamps: true,
