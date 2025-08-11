@@ -8,7 +8,6 @@ import {
   Form,
   Popover,
   RecordTableInlineCell,
-  Popover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -357,7 +356,7 @@ export const SelectStatusFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary" className='h-7'>
+            <Button variant="secondary" className="h-7">
               <SelectStatusValue
                 placeholder={placeholder}
                 className={value === 0 ? 'text-muted-foreground' : undefined}

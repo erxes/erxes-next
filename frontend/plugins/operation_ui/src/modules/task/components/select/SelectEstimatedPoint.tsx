@@ -8,7 +8,6 @@ import {
   Form,
   Popover,
   RecordTableInlineCell,
-  Popover,
 } from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';

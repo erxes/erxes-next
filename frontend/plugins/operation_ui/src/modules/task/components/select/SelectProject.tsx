@@ -6,7 +6,6 @@ import {
   Form,
   Popover,
   RecordTableInlineCell,
-  Popover,
   useFilterContext,
   useQueryState,
   EnumCursorDirection,

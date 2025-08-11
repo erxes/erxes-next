@@ -3,10 +3,9 @@ import { format, differenceInDays } from 'date-fns';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   Calendar,
-  Popover,
   RecordTableInlineCell,
-  cn,
   Popover,
+  cn,
   Filter,
   Form,
   useFilterContext,
@@ -19,7 +18,6 @@ import {
   IconCalendarTime,
   IconCalendarUp,
 } from '@tabler/icons-react';
-import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 
 interface DateSelectContextType {
   value?: Date;
@@ -268,17 +266,17 @@ export const DateSelectInlineCell = ({
     setOpen(false);
   };
 
-  const finalScope =
-    scope ||
-    (id ? `${TaskHotKeyScope.TaskTableCell}.${id}.${type}Date` : undefined);
+  // const finalScope =
+  //   scope ||
+  //   (id ? `${TaskHotKeyScope.TaskTableCell}.${id}.${type}Date` : undefined);
 
   return (
     <DateSelectProvider value={value} onValueChange={handleValueChange}>
       <Popover
         open={open}
         onOpenChange={setOpen}
-        scope={finalScope}
-        closeOnEnter
+        // scope={finalScope}
+        // closeOnEnter
       >
         <RecordTableInlineCell.Trigger>
           <DateSelectValue placeholder="not specified" />

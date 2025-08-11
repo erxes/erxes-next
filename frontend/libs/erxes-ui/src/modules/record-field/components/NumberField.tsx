@@ -1,5 +1,11 @@
-import { ButtonProps, Input, TextOverflowTooltip } from 'erxes-ui/components';
-import { RecordTableInlineCell, Popover } from 'erxes-ui/modules/record-table';
+import {
+  ButtonProps,
+  Input,
+  TextOverflowTooltip,
+  Popover,
+} from 'erxes-ui/components';
+import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
+
 import React, { useState } from 'react';
 
 export const NumberField = React.forwardRef<
