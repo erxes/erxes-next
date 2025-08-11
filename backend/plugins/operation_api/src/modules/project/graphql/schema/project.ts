@@ -66,6 +66,7 @@ export const queries = `
     getProject(_id: String!): Project
     getProjects(${projectFilterParams}): ProjectListResponse
     getProjectProgress(_id: String!): JSON
+    getProjectProgressByMember(_id: String!): JSON
 `;
 
 export const mutations = `

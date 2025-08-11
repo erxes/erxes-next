@@ -176,4 +176,157 @@ export const projectQueries = {
 
     return result;
   },
+
+  getProjectProgressByMember: async (
+    _parent: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
+
+    const startedStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.STARTED] },
+    }).distinct('_id');
+
+    const completedStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.COMPLETED] },
+    }).distinct('_id');
+
+    const result = await models.Task.aggregate([
+      {
+        $match: {
+          projectId: _id,
+          status: { $in: [...startedStatusIds, ...completedStatusIds] },
+        },
+      },
+      {
+        $facet: {
+          totalScope: [
+            {
+              $group: {
+                _id: '$assigneeId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          started: [
+            { $match: { status: { $in: startedStatusIds } } },
+            {
+              $group: {
+                _id: '$assigneeId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          completed: [
+            { $match: { status: { $in: completedStatusIds } } },
+            {
+              $group: {
+                _id: '$assigneeId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        // Merge facet results into per-assignee objects
+        $project: {
+          merged: {
+            $map: {
+              input: '$totalScope',
+              as: 'ts',
+              in: {
+                assigneeId: '$$ts._id',
+                totalScope: '$$ts.totalScope',
+                totalStartedScope: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$started',
+                              as: 'st',
+                              cond: { $eq: ['$$st._id', '$$ts._id'] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ['$$match.totalScope', 0] },
+                  },
+                },
+                totalCompletedScope: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$completed',
+                              as: 'cm',
+                              cond: { $eq: ['$$cm._id', '$$ts._id'] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ['$$match.totalScope', 0] },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      { $unwind: '$merged' },
+      { $replaceRoot: { newRoot: '$merged' } },
+    ]);
+
+    return result;
+  },
 };
