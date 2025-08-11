@@ -83,7 +83,7 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    const result = await models.Task.aggregate([
+    return models.Task.aggregate([
       {
         $match: {
           projectId: _id,
@@ -173,8 +173,6 @@ export const projectQueries = {
         },
       },
     ]);
-
-    return result;
   },
 
   getProjectProgressByMember: async (
@@ -194,7 +192,7 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    const result = await models.Task.aggregate([
+    return models.Task.aggregate([
       {
         $match: {
           projectId: _id,
@@ -326,7 +324,5 @@ export const projectQueries = {
       { $replaceRoot: { newRoot: '$merged' } },
       { $sort: { totalScope: -1 } },
     ]);
-
-    return result;
   },
 };
