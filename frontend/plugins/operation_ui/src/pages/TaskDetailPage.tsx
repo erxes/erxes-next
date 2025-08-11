@@ -5,7 +5,7 @@ import { Breadcrumb, Separator } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
 import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
-import { TaskBreadCrump } from '~/modules/task/components/breadcrump/TaskBreadCrump';
+import { TaskBreadCrump } from '@/task/components/breadcrump/TaskBreadCrump';
 
 export const TaskDetailPage = () => {
   const { teamId, taskId } = useParams<{ teamId?: string; taskId: string }>();

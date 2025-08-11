@@ -1,6 +1,6 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_TASKS } from '@/task/graphql/queries/getTasks';
-import { ITask } from '~/modules/task/types';
+import { ITask } from '@/task/types';
 import {
   useRecordTableCursor,
   mergeCursorData,

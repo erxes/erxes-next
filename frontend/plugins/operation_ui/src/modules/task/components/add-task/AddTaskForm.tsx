@@ -8,7 +8,7 @@ import {
   BlockEditor,
   cn,
 } from 'erxes-ui';
-import { TAddTask, addTaskSchema } from '~/modules/task/types';
+import { TAddTask, addTaskSchema } from '@/task/types';
 import { useCreateTask } from '@/task/hooks/useCreateTask';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

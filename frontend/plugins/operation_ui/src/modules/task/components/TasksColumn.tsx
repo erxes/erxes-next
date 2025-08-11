@@ -27,7 +27,7 @@ import {
   RecordTableInlineCell,
   Popover,
 } from 'erxes-ui';
-import { ITask } from '~/modules/task/types';
+import { ITask } from '@/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';

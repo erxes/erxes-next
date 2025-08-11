@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IEstimateChoice } from '~/modules/task/types';
+import { IEstimateChoice } from '@/task/types';
 import {
   Button,
   cn,
