@@ -1,3 +1,4 @@
+import { ChartContainer, ChartConfig } from 'erxes-ui';
 import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
 export const ProgressChart = ({ projectId }: { projectId: string }) => {
@@ -10,43 +11,51 @@ export const ProgressChart = ({ projectId }: { projectId: string }) => {
     { month: 'June', desktop: 214, mobile: 140 },
   ];
 
-  return (
-    <div>
-      {projectId}
-      <div className="w-full h-[200px]">
-        <LineChart
-          accessibilityLayer
-          data={chartData}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
+  const chartConfig = {
+    desktop: {
+      label: 'Desktop',
+      color: 'var(--chart-1)',
+    },
+    mobile: {
+      label: 'Mobile',
+      color: 'var(--chart-2)',
+    },
+  } satisfies ChartConfig;
 
-          <Line
-            dataKey="desktop"
-            type="monotone"
-            stroke="var(--color-desktop)"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="mobile"
-            type="monotone"
-            stroke="var(--color-mobile)"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
-      </div>
-    </div>
+  return (
+    <ChartContainer config={chartConfig}>
+      <LineChart
+        accessibilityLayer
+        data={chartData}
+        margin={{
+          left: 12,
+          right: 12,
+        }}
+      >
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="month"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={(value) => value.slice(0, 3)}
+        />
+
+        <Line
+          dataKey="desktop"
+          type="monotone"
+          stroke="var(--color-desktop)"
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          dataKey="mobile"
+          type="monotone"
+          stroke="var(--color-mobile)"
+          strokeWidth={2}
+          dot={false}
+        />
+      </LineChart>
+    </ChartContainer>
   );
 };
