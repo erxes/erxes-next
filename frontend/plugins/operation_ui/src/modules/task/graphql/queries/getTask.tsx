@@ -18,7 +18,7 @@ export const GET_TASK = gql`
       createdBy
       cycleId
       projectId
-      estimatedPoint
+      estimatePoint
     }
   }
 `;

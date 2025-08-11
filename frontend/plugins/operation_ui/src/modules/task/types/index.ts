@@ -18,7 +18,7 @@ export interface ITask {
   assigneeId: string;
   teamId: string;
   projectId: string;
-  estimatedPoint: number;
+  estimatePoint: number;
   estimateChoices: IEstimateChoice[];
 }
 
@@ -28,7 +28,6 @@ export interface IStatus {
   color: string;
   type: TeamStatusTypes;
 }
-
 
 export type TAddTask = z.infer<typeof addTaskSchema>;
 export * from '@/task/types/validations';

@@ -3,6 +3,7 @@ import { IProjectFilter } from '@/project/@types/project';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IProjectDocument } from '@/project/@types/project';
 import { FilterQuery } from 'mongoose';
+import { STATUS_TYPES } from '@/status/constants';
 
 export const projectQueries = {
   getProject: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -63,5 +64,117 @@ export const projectQueries = {
       });
 
     return { list, totalCount, pageInfo };
+  },
+
+  getProjectProgress: async (
+    _parent: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
+
+    const startedStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.STARTED] },
+    }).distinct('_id');
+
+    const completedStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.COMPLETED] },
+    }).distinct('_id');
+
+    const result = await models.Task.aggregate([
+      {
+        $match: {
+          projectId: _id,
+          teamId: { $in: teamIds },
+          status: { $in: [...startedStatusIds, ...completedStatusIds] }, // filter all relevant statuses
+        },
+      },
+      {
+        $facet: {
+          totalScope: [
+            {
+              $group: {
+                _id: null,
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          started: [
+            { $match: { status: { $in: startedStatusIds } } },
+            {
+              $group: {
+                _id: null,
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          completed: [
+            { $match: { status: { $in: completedStatusIds } } },
+            {
+              $group: {
+                _id: null,
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      1,
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalScope: {
+            $ifNull: [{ $arrayElemAt: ['$totalScope.totalScope', 0] }, 0],
+          },
+          totalStartedScope: {
+            $ifNull: [{ $arrayElemAt: ['$started.totalScope', 0] }, 0],
+          },
+          totalCompletedScope: {
+            $ifNull: [{ $arrayElemAt: ['$completed.totalScope', 0] }, 0],
+          },
+        },
+      },
+    ]);
+
+    return result;
   },
 };

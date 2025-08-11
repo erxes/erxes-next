@@ -16,7 +16,7 @@ export interface ITask {
   createdBy?: string;
   cycleId?: string;
   projectId?: string;
-  estimatedPoint?: number;
+  estimatePoint?: number;
   userId?: string;
   startDate?: Date;
   targetDate?: Date;

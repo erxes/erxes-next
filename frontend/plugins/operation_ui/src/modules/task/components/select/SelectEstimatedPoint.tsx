@@ -192,7 +192,7 @@ export const SelectEstimatedPointInlineCell = ({
       updateTask({
         variables: {
           _id: id,
-          estimatedPoint:
+          estimatePoint:
             typeof value === 'string'
               ? parseInt(value, 10)
               : parseInt(value[0], 10),

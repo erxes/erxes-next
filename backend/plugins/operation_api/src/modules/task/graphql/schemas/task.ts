@@ -18,7 +18,7 @@ export const types = `
     cycleId: String
     projectId: String
     teamId: String
-    estimatedPoint: Int
+    estimatePoint: Int
     statusChangedDate: Date
     number: Int
 
@@ -44,7 +44,7 @@ const taskFilterParams = `
   targetDate: Date
   projectId: String 
   teamId: String
-  estimatedPoint: Int
+  estimatePoint: Int
   userId: String
 
   ${GQL_CURSOR_PARAM_DEFS}
@@ -63,7 +63,7 @@ const createTaskParams = `
   assigneeId: String
   cycleId: String
   projectId: String
-  estimatedPoint: Int
+  estimatePoint: Int
 `;
 
 const updateTaskParams = `
@@ -80,7 +80,7 @@ const updateTaskParams = `
   targetDate: Date
   cycleId: String
   projectId: String
-  estimatedPoint: Int
+  estimatePoint: Int
 
 `;
 

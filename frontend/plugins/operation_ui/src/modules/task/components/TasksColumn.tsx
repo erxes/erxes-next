@@ -152,16 +152,16 @@ export const tasksColumns = (
       size: 240,
     },
     {
-      id: 'estimatedPoint',
-      accessorKey: 'estimatedPoint',
+      id: 'estimatePoint',
+      accessorKey: 'estimatePoint',
       header: () => (
-        <RecordTable.InlineHead label="Estimated Point" icon={IconHash} />
+        <RecordTable.InlineHead label="Estimate Point" icon={IconHash} />
       ),
       cell: ({ cell }) => {
         return (
           <SelectEstimatedPoint.InlineCell
             estimateChoices={cell.row.original.estimateChoices}
-            value={cell.row.original.estimatedPoint || 0}
+            value={cell.row.original.estimatePoint || 0}
             id={cell.row.original._id}
           />
         );

@@ -15,7 +15,7 @@ export const GET_TASKS = gql`
     $targetDate: Date
     $projectId: String 
     $teamId: String
-    $estimatedPoint: Int
+    $estimatePoint: Int
     $orderBy: JSON
     $userId: String
     ${GQL_CURSOR_PARAM_DEFS}
@@ -29,7 +29,7 @@ export const GET_TASKS = gql`
       targetDate: $targetDate
       projectId: $projectId
       teamId: $teamId
-      estimatedPoint: $estimatedPoint
+      estimatePoint: $estimatePoint
       orderBy: $orderBy
       userId: $userId
       ${GQL_CURSOR_PARAMS}
@@ -49,7 +49,7 @@ export const GET_TASKS = gql`
         createdBy 
         cycleId
         projectId
-        estimatedPoint
+        estimatePoint
         estimateChoices
       } 
       ${GQL_PAGE_INFO}

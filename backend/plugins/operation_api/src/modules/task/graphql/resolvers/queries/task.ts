@@ -60,8 +60,8 @@ export const taskQueries = {
       filter.projectId = params.projectId;
     }
 
-    if (params.estimatedPoint) {
-      filter.estimatedPoint = params.estimatedPoint;
+    if (params.estimatePoint) {
+      filter.estimatePoint = params.estimatePoint;
     }
 
     if (params.userId && !params.teamId && !params.assigneeId) {
