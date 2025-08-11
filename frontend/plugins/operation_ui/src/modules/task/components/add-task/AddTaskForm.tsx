@@ -146,6 +146,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     {...field}
                     value={field.value ? parseInt(field.value) : 0}
                     onChange={(value) => field.onChange(value.toString())}
+                    teamId={form.getValues('teamId')}
                   />
                 </Form.Item>
               )}

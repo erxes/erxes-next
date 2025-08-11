@@ -104,7 +104,7 @@ const SelectStatusValue = ({
   const { statusIds, statuses } = useSelectStatusContext();
 
   const selectedStatuses = statuses.filter((status) =>
-    statusIds.includes(status.value.toString()),
+    statusIds.includes(status.value.toString()),    
   );
   if (selectedStatuses.length === 0) {
     return (
@@ -347,15 +347,17 @@ export const SelectStatusFormItem = React.forwardRef<
     placeholder?: string;
     value?: number | string;
     onChange?: (value: number) => void;
-    statuses?: IStatus[];
+    teamId: string;
   }
 >(
   (
-    { onChange, className, placeholder, value, statuses = [], ...props },
+    { onChange, className, placeholder, value, teamId, ...props },
     ref,
   ) => {
     const [open, setOpen] = useState(false);
-
+    const { statuses } = useGetStatusByTeam({
+      variables: { teamId: teamId },
+    });
     const stringValue =
       typeof value === 'number' ? value.toString() : value || '';
 
@@ -378,7 +380,7 @@ export const SelectStatusFormItem = React.forwardRef<
               className={cn('w-full shadow-xs', className)}
               asChild
             >
-              <Button variant="secondary">
+              <Button variant="secondary" className="h-7">
                 <SelectStatusValue
                   placeholder={placeholder}
                   className={value === 0 ? 'text-muted-foreground' : undefined}
