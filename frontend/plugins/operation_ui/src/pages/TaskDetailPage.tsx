@@ -1,12 +1,13 @@
+import { TaskDetails } from '@/task/components/detail/TaskDetails';
+import { TaskDetailBreadCrump } from '@/task/components/breadcrump/TaskDetailBreadCrump';
 import { PageHeader } from 'ui-modules';
 import { Breadcrumb, Separator } from 'erxes-ui';
-import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 import { useParams } from 'react-router-dom';
-import { ProjectBreadCrumb } from '@/project/components/breadcumb/ProjectBreadCrumb';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
-import { ProjectsRecordTable } from '@/project/components/ProjectsRecordTable';
+import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
+import { TaskBreadCrump } from '~/modules/task/components/breadcrump/TaskBreadCrump';
 
-export const ProjectsPage = () => {
+export const TaskDetailPage = () => {
   const { teamId } = useParams();
 
   return (
@@ -15,19 +16,18 @@ export const ProjectsPage = () => {
         <PageHeader.Start>
           <Breadcrumb>
             <Breadcrumb.List className="gap-1">
-              {teamId && (
+              {teamId ? (
                 <>
                   <TeamBreadCrumb />
                   <Separator.Inline />
+                  <TaskBreadCrump link={`/operation/team/${teamId}/tasks`} />
                 </>
+              ) : (
+                <TaskBreadCrump link={`/operation/tasks`} />
               )}
-              <ProjectBreadCrumb
-                link={
-                  teamId
-                    ? `/operation/team/${teamId}/projects`
-                    : `/operation/projects`
-                }
-              />
+              <Separator.Inline />
+
+              <TaskDetailBreadCrump />
             </Breadcrumb.List>
           </Breadcrumb>
         </PageHeader.Start>
@@ -35,8 +35,7 @@ export const ProjectsPage = () => {
           <AddProjectSheet />
         </PageHeader.End>
       </PageHeader>
-
-      <ProjectsRecordTable />
+      <TaskDetails />
     </>
   );
 };

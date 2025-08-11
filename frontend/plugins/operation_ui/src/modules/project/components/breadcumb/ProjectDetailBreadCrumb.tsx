@@ -15,9 +15,10 @@ export const ProjectDetailBreadCrumb = () => {
   }>();
   const { pathname } = useLocation();
 
-  const { project, loading } = useGetProject({ projectId: projectId || '' });
-
-  if (!projectId) return null;
+  const { project, loading } = useGetProject({
+    variables: { _id: projectId },
+    skip: !projectId,
+  });
 
   if (loading) {
     return <Skeleton className="w-12 h-[1lh]" />;

@@ -1,19 +1,16 @@
 import { IProject } from '@/project/types';
 import { useQuery } from '@apollo/client';
 import { GET_PROJECT } from '@/project/graphql/queries/getProject';
+import { QueryHookOptions } from '@apollo/client';
 
 interface IGetProjectQueryResponse {
   getProject: IProject;
 }
 
-export const useGetProject = ({ projectId }: { projectId: string }) => {
+export const useGetProject = (options: QueryHookOptions) => {
   const { data, loading, refetch } = useQuery<IGetProjectQueryResponse>(
     GET_PROJECT,
-    {
-      variables: {
-        _id: projectId,
-      },
-    },
+    options,
   );
 
   const project = data?.getProject;
