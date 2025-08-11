@@ -319,7 +319,7 @@ export const DateSelectFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary">
+            <Button variant="secondary" className="h-7">
               <DateSelectFormItemValue placeholder={placeholder} type={type} />
             </Button>
           </Combobox.TriggerBase>

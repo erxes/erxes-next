@@ -81,13 +81,15 @@ export const SelectTeamMemberContent = ({
             {members.map((member) => (
               <SelectMember.CommandItem key={member._id} user={member} />
             ))}
-            <Command.Separator className="my-1" />
           </>
         )}
 
         {!loading &&
           membersList.map((user) => (
-            <SelectMember.CommandItem key={user._id} user={user} />
+            <>
+              <Command.Separator className="my-1" />
+              <SelectMember.CommandItem key={user._id} user={user} />
+            </>
           ))}
 
         <Combobox.FetchMore
@@ -293,7 +295,7 @@ export const SelectAssigneeFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary">
+            <Button variant="secondary" className="h-7">
               <SelectAssigneeFormValue />
             </Button>
           </Combobox.TriggerBase>

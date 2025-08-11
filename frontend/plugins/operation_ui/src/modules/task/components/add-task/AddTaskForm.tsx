@@ -8,7 +8,7 @@ import {
   BlockEditor,
   cn,
 } from 'erxes-ui';
-import { TAddTask, addTaskSchema } from '@/task/types';
+import { TAddTask, addTaskSchema } from '~/modules/task/types';
 import { useCreateTask } from '@/task/hooks/useCreateTask';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -128,14 +128,14 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Control>
                   <Input
                     {...field}
-                    className="shadow-none focus-visible:shadow-none h-8 text-2xl"
+                    className="shadow-none focus-visible:shadow-none h-8 text-xl"
                     placeholder="Task Name"
                   />
                 </Form.Control>
               </Form.Item>
             )}
           />
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full flex-wrap">
             <Form.Field
               name="status"
               control={form.control}
@@ -230,7 +230,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="h-full text-xl"
+              className="h-full"
             />
           </div>
         </Sheet.Content>

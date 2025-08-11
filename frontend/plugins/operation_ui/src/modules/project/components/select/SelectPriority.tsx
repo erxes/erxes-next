@@ -136,11 +136,7 @@ const SelectPriorityBadgeValue = ({
     </div>
   );
 };
-const SelectPriorityValue = ({
-  placeholder,
-}: {
-  placeholder?: string;
-}) => {
+const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
   const { priorityIds } = useSelectPriorityContext();
 
   const selectedPriorities = PROJECT_PRIORITIES_OPTIONS.filter((priority) =>
@@ -166,13 +162,19 @@ const SelectPriorityValue = ({
               stroke={2}
             />
           )}
-          <p className={cn("font-medium text-base", priority.value === 0 && "text-muted-foreground")}>{priority.name}</p>
+          <p
+            className={cn(
+              'font-medium text-base',
+              priority.value === 0 && 'text-muted-foreground',
+            )}
+          >
+            {priority.name}
+          </p>
         </div>
       ))}
     </div>
   );
 };
-
 
 const SelectPriorityCommandItem = ({
   priority,
@@ -410,8 +412,8 @@ export const SelectPriorityFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary">
-            <SelectPriorityValue placeholder={placeholder} />
+            <Button variant="secondary" className="h-7">
+              <SelectPriorityValue placeholder={placeholder} />
             </Button>
           </Combobox.TriggerBase>
         </Form.Control>

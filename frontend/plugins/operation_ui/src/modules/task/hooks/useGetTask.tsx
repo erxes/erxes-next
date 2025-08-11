@@ -1,4 +1,4 @@
-import { ITask } from '@/task/types';
+import { ITask } from '~/modules/task/types';
 import { useQuery } from '@apollo/client';
 import { GET_TASK } from '@/task/graphql/queries/getTask';
 import { QueryHookOptions } from '@apollo/client';

@@ -24,7 +24,7 @@ export const types = `
 
 export const queries = `
    getStatus(_id: String!): Status
-   getStatusesByTeam(teamId: String!): [Status]
+   getStatusesChoicesByTeam(teamId: String!): JSON
    getStatusesByType(type: String!, teamId: String!): [Status]
 `;
 

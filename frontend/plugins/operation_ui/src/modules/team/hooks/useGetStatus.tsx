@@ -10,7 +10,7 @@ interface IUseGetStatusByTypeResponse {
 }
 
 interface IUseGetStatusByTeamResponse {
-  getStatusesByTeam: ITeamStatus[];
+  getStatusesChoicesByTeam: ITeamStatus[];
   loading: boolean;
   refetch: any;
 }
@@ -43,7 +43,7 @@ export const useGetStatusesByTeam = ({ teamId }: { teamId: string }) => {
     },
   );
 
-  const statuses = data?.getStatusesByTeam;
+  const statuses = data?.getStatusesChoicesByTeam;
 
   return { statuses, loading, refetch };
 };

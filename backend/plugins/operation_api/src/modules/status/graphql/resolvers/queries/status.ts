@@ -7,16 +7,25 @@ export const statusQueries = {
     return models.Status.getStatus(_id);
   },
 
-  getStatusesByTeam: async (
+  getStatusesChoicesByTeam: async (
     _parent: undefined,
     { teamId }: IStatusFilter,
     { models }: IContext,
   ) => {
-    const statuses = Object.values(STATUS_TYPES).map((type) => {
-      return models.Status.getStatuses(teamId, type);
-    });
+    const statuses = await Promise.all(
+      Object.values(STATUS_TYPES).map((type) =>
+        models.Status.getStatuses(teamId, type),
+      ),
+    );
 
-    return statuses;
+    return statuses
+      .flat() // flatten nested arrays into one array
+      .map(({ name, _id, color, type }) => ({
+        label: name,
+        value: _id,
+        color,
+        type,
+      }));
   },
 
   getStatusesByType: async (
