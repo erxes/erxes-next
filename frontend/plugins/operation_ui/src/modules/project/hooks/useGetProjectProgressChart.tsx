@@ -5,7 +5,7 @@ interface IGetProjectQueryResponse {
   getProjectProgressChart: any;
 }
 
-export const useGetProjectProcessChart = (options: QueryHookOptions) => {
+export const useGetProjectProgressChart = (options: QueryHookOptions) => {
   const { data, loading, refetch } = useQuery<IGetProjectQueryResponse>(
     GET_PROJECT_PROGRESS_CHART,
     options,

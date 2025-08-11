@@ -1,6 +1,6 @@
 import { ChartContainer, ChartConfig, Card } from 'erxes-ui';
 import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
-import { useGetProjectProcessChart } from '@/project/hooks/useGetProjectProcessChart';
+import { useGetProjectProgressChart } from '~/modules/project/hooks/useGetProjectProgressChart';
 import { IProject } from '@/project/types';
 import { addDays, format, parseISO, differenceInCalendarDays } from 'date-fns';
 
@@ -22,7 +22,7 @@ export const ProgressChart = ({
     },
   } satisfies ChartConfig;
 
-  const { getProjectProgressChart = [] } = useGetProjectProcessChart({
+  const { getProjectProgressChart = [] } = useGetProjectProgressChart({
     variables: { _id: projectId },
   });
 
