@@ -56,6 +56,7 @@ const command = async () => {
     }
   } catch (e) {
     console.log(`Error occurred: ${e.message}`);
+    client.close();
   }
 
   console.log(`Process finished at: ${new Date()}`);

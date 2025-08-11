@@ -29,7 +29,6 @@ export const conversationTrpcRouter = t.router({
         await models.Conversations.updateMany(
           { _id: { $in: targetIds } },
           { $set: { tagIds } },
-          { multi: true },
         );
 
         response = await models.Conversations.find({

@@ -33,15 +33,7 @@ export const generateFilter = async (params: any, models: IModels) => {
   }
 
   if (ids?.length) {
-    if (excludeIds) {
-      filter['ids'] = {
-        $nin: ids,
-      };
-    } else {
-      filter['ids'] = {
-        $in: ids,
-      };
-    }
+    filter['_id'] = excludeIds ? { $nin: ids } : { $in: ids };
   }
 
   if (brandIds || integrationIds || integrationTypes) {
