@@ -1,5 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { ITeamFilter } from '@/team/@types/team';
+import { getTeamEstimateChoises } from '~/modules/team/utils';
 
 export const teamQueries = {
   getTeam: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -42,7 +43,7 @@ export const teamQueries = {
     { models }: IContext,
   ) => {
     if (teamIds && teamIds.length > 0) {
-      const uniqueMembers = await models.TeamMember.aggregate([
+      return models.TeamMember.aggregate([
         {
           $match: {
             teamId: { $in: teamIds },
@@ -61,8 +62,6 @@ export const teamQueries = {
           $replaceRoot: { newRoot: '$doc' },
         },
       ]);
-
-      return uniqueMembers;
     }
 
     return models.TeamMember.find({ teamId });
@@ -74,6 +73,7 @@ export const teamQueries = {
     { models }: IContext,
   ) => {
     const team = await models.Team.getTeam(teamId);
-    return team.estimateType;
+
+    return getTeamEstimateChoises(team.estimateType);
   },
 };
