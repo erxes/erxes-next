@@ -4,6 +4,7 @@ import {
   IconComponent,
   Separator,
   Skeleton,
+  ToggleGroup,
 } from 'erxes-ui';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useGetProject } from '@/project/hooks/useGetProject';
@@ -29,10 +30,6 @@ export const ProjectDetailBreadCrumb = () => {
     ? `/operation/team/${teamId}/projects/${projectId}`
     : `/operation/projects/${projectId}`;
 
-  const isActive = (path: string) => {
-    return pathname.startsWith(`${basePath}/${path}`);
-  };
-
   return (
     <Breadcrumb>
       <Breadcrumb.List className="gap-1">
@@ -45,25 +42,14 @@ export const ProjectDetailBreadCrumb = () => {
           </Button>
         </Breadcrumb.Item>
         <Separator.Inline />
-
-        <Breadcrumb.Item>
-          <Button
-            variant={isActive('overview') ? 'secondary' : 'ghost'}
-            asChild
-            className={`rounded-lg border`}
-          >
+        <ToggleGroup type="single" value={pathname}>
+          <ToggleGroup.Item value={`${basePath}/overview`} asChild>
             <Link to={`${basePath}/overview`}>Overview</Link>
-          </Button>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <Button
-            variant={isActive('tasks') ? 'secondary' : 'ghost'}
-            asChild
-            className={`rounded-lg border`}
-          >
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value={`${basePath}/tasks`} asChild>
             <Link to={`${basePath}/tasks`}>Tasks</Link>
-          </Button>
-        </Breadcrumb.Item>
+          </ToggleGroup.Item>
+        </ToggleGroup>
       </Breadcrumb.List>
     </Breadcrumb>
   );
