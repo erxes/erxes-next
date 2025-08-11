@@ -494,12 +494,6 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    const tasks = await models.Task.find({
-      projectId: _id,
-    });
-
-    console.log(tasks);
-
     return models.Task.aggregate([
       {
         $match: {
@@ -509,9 +503,16 @@ export const projectQueries = {
         },
       },
       {
-        // Determine month/year string
+        // Keep monthDate as real Date, make monthStr only for display
         $addFields: {
-          month: {
+          monthDate: {
+            $dateFromParts: {
+              year: { $year: '$statusChangedDate' },
+              month: { $month: '$statusChangedDate' },
+              day: 1,
+            },
+          },
+          monthStr: {
             $dateToString: { format: '%Y-%m-%d', date: '$statusChangedDate' },
           },
           isStarted: { $in: ['$status', startedStatusIds] },
@@ -532,20 +533,17 @@ export const projectQueries = {
       },
       {
         $group: {
-          _id: '$month',
-          started: {
-            $sum: { $cond: ['$isStarted', '$estimateValue', 0] },
-          },
-          completed: {
-            $sum: { $cond: ['$isCompleted', '$estimateValue', 0] },
-          },
+          _id: '$monthDate', // group by actual date object
+          started: { $sum: { $cond: ['$isStarted', '$estimateValue', 0] } },
+          completed: { $sum: { $cond: ['$isCompleted', '$estimateValue', 0] } },
+          monthStr: { $first: '$monthStr' },
         },
       },
-      { $sort: { _id: 1 } },
+      { $sort: { _id: 1 } }, // now sorts chronologically
       {
         $project: {
           _id: 0,
-          date: '$_id',
+          date: '$monthStr', // display short month
           started: 1,
           completed: 1,
         },

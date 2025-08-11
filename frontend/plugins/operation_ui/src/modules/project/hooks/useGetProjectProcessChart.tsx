@@ -1,17 +1,17 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_PROJECT_PROCESS_CHART } from '@/project/graphql/queries/getProjectProcessChart';
+import { GET_PROJECT_PROGRESS_CHART } from '~/modules/project/graphql/queries/getProjectProgressChart';
 
 interface IGetProjectQueryResponse {
-  getProjectProcessChart: any;
+  getProjectProgressChart: any;
 }
 
 export const useGetProjectProcessChart = (options: QueryHookOptions) => {
   const { data, loading, refetch } = useQuery<IGetProjectQueryResponse>(
-    GET_PROJECT_PROCESS_CHART,
+    GET_PROJECT_PROGRESS_CHART,
     options,
   );
 
-  const projectProcessChart = data?.getProjectProcessChart;
+  const getProjectProgressChart = data?.getProjectProgressChart;
 
-  return { projectProcessChart, loading, refetch };
+  return { getProjectProgressChart, loading, refetch };
 };

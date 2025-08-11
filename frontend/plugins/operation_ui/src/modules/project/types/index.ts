@@ -9,11 +9,11 @@ export interface IProject {
   createdAt: string;
   priority: number;
   status: number;
-  targetDate: string;
+  targetDate: Date;
+  startDate: Date;
   leadId: string;
   teamIds: string[];
 }
-
 
 export enum ProjectPageTypes {
   All = 'all',
