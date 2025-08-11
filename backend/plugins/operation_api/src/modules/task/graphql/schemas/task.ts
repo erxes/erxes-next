@@ -20,6 +20,7 @@ export const types = `
     teamId: String
     estimatedPoint: Int
     statusChangedDate: Date
+    number: Int
 
     estimateChoices: JSON
   }
