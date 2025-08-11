@@ -73,7 +73,17 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async createTask(doc: ITask): Promise<ITaskDocument> {
-      return models.Task.insertOne(doc);
+      const [result] = await models.Task.aggregate([
+        { $match: { teamId: doc.teamId } },
+        { $group: { _id: null, maxNumber: { $max: '$number' } } },
+      ]);
+
+      const nextNumber = (result?.maxNumber || 0) + 1;
+
+      return models.Task.insertOne({
+        ...doc,
+        number: nextNumber,
+      });
     }
 
     public static async updateTask(doc: ITaskUpdate) {
@@ -108,6 +118,17 @@ export const loadTaskClass = (models: IModels) => {
         if (project && !project.teamIds.includes(doc.teamId)) {
           throw new Error('Task project is not in this team');
         }
+      }
+
+      if (doc.teamId && doc.teamId !== task.teamId) {
+        const [result] = await models.Task.aggregate([
+          { $match: { teamId: doc.teamId } },
+          { $group: { _id: null, maxNumber: { $max: '$number' } } },
+        ]);
+
+        const nextNumber = (result?.maxNumber || 0) + 1;
+
+        rest.number = nextNumber;
       }
 
       return models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });

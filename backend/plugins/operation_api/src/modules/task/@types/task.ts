@@ -26,6 +26,7 @@ export interface ITask {
 
 export interface ITaskUpdate extends ITask {
   _id: string;
+  number?: number;
 }
 
 export interface ITaskDocument extends ITask, Document {
