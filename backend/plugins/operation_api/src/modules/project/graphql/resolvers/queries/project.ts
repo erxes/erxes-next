@@ -503,17 +503,13 @@ export const projectQueries = {
         },
       },
       {
-        // Keep monthDate as real Date, make monthStr only for display
         $addFields: {
-          monthDate: {
+          dayDate: {
             $dateFromParts: {
               year: { $year: '$statusChangedDate' },
               month: { $month: '$statusChangedDate' },
-              day: 1,
+              day: { $dayOfMonth: '$statusChangedDate' },
             },
-          },
-          monthStr: {
-            $dateToString: { format: '%Y-%m-%d', date: '$statusChangedDate' },
           },
           isStarted: { $in: ['$status', startedStatusIds] },
           isCompleted: { $in: ['$status', completedStatusIds] },
@@ -533,17 +529,18 @@ export const projectQueries = {
       },
       {
         $group: {
-          _id: '$monthDate', // group by actual date object
+          _id: '$dayDate',
           started: { $sum: { $cond: ['$isStarted', '$estimateValue', 0] } },
           completed: { $sum: { $cond: ['$isCompleted', '$estimateValue', 0] } },
-          monthStr: { $first: '$monthStr' },
         },
       },
-      { $sort: { _id: 1 } }, // now sorts chronologically
+      { $sort: { _id: 1 } },
       {
         $project: {
           _id: 0,
-          date: '$monthStr', // display short month
+          date: {
+            $dateToString: { format: '%Y-%m-%d', date: '$_id' },
+          },
           started: 1,
           completed: 1,
         },
