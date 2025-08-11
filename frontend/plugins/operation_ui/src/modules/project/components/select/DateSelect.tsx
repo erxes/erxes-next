@@ -4,9 +4,8 @@ import { format, differenceInDays } from 'date-fns';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import {
   Calendar,
-  RecordTablePopover,
-  RecordTableCellTrigger,
-  RecordTableCellContent,
+  Popover,
+  RecordTableInlineCell,
   cn,
   Popover,
   Filter,
@@ -301,23 +300,23 @@ export const DateSelectInlineCell = ({
 
   return (
     <DateSelectProvider value={value} onValueChange={handleValueChange}>
-      <RecordTablePopover
+      <Popover
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >
-        <RecordTableCellTrigger>
+        <RecordTableInlineCell.Trigger>
           <DateSelectValue
             placeholder="not specified"
             type={type}
             status={status}
           />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="w-fit">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="w-fit">
           <DateSelectContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </DateSelectProvider>
   );
 };

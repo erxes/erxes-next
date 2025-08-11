@@ -5,9 +5,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
   EnumCursorDirection,
@@ -312,14 +311,14 @@ export const SelectProjectInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectProjectValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectProjectContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectProjectProvider>
   );
 };

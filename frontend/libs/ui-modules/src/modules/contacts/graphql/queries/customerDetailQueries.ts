@@ -35,3 +35,16 @@ export const CUSTOMER_DETAIL = gql`
     }
   }
 `;
+
+export const CUSTOMER_INLINE = gql`
+  query CustomerInline($_id: String!) {
+    customerDetail(_id: $_id) {
+      _id
+      firstName
+      lastName
+      primaryEmail
+      primaryPhone
+      avatar
+    }
+  }
+`;

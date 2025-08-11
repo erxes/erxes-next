@@ -6,9 +6,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
   Badge,
@@ -385,8 +384,8 @@ export const SelectTeamInlineCell = ({
     );
 
     return (
-      <RecordTablePopover open={open} onOpenChange={onOpenChange} closeOnEnter>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={onOpenChange} closeOnEnter>
+        <RecordTableInlineCell.Trigger>
           <div className="flex gap-1 min-h-[24px] items-center">
             {selectedTeams.length > 0 ? (
               selectedTeams.map((team) => (
@@ -405,8 +404,8 @@ export const SelectTeamInlineCell = ({
               </span>
             )}
           </div>
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <Command shouldFilter={false}>
             <Command.Input
               value={search}
@@ -435,8 +434,8 @@ export const SelectTeamInlineCell = ({
               ))}
             </Command.List>
           </Command>
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     );
   }
 
@@ -448,14 +447,14 @@ export const SelectTeamInlineCell = ({
       teams={teams}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectTeamBadgeValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectTeamContent providedTeams={teams} />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectTeamProvider>
   );
 };

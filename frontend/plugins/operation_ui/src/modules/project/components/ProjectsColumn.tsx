@@ -14,9 +14,8 @@ import {
   Badge,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
 } from 'erxes-ui';
 import { IProject } from '@/project/types';
 import { useState } from 'react';
@@ -55,7 +54,7 @@ export const projectsColumns = (
         };
 
         return (
-          <RecordTablePopover
+          <Popover
             scope={
               ProjectHotKeyScope.ProjectTableCell +
               '.' +
@@ -69,7 +68,7 @@ export const projectsColumns = (
               }
             }}
           >
-            <RecordTableCellTrigger>
+            <RecordTableInlineCell.Trigger>
               <Badge
                 variant="secondary"
                 onClick={(e) => {
@@ -79,8 +78,8 @@ export const projectsColumns = (
               >
                 {name}
               </Badge>
-            </RecordTableCellTrigger>
-            <RecordTableCellContent className="min-w-72">
+            </RecordTableInlineCell.Trigger>
+            <RecordTableInlineCell.Content className="min-w-72">
               <Input
                 value={value || ''}
                 onChange={(e) => setValue(e.target.value)}
@@ -92,8 +91,8 @@ export const projectsColumns = (
                   }
                 }}
               />
-            </RecordTableCellContent>
-          </RecordTablePopover>
+            </RecordTableInlineCell.Content>
+          </Popover>
         );
       },
       size: 240,

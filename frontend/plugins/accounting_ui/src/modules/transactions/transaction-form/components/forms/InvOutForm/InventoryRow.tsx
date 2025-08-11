@@ -8,11 +8,10 @@ import {
   CurrencyField,
   Form,
   InputNumber,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
+  RecordTableInlineCell,
+  RecordTableInlineCell,
   RecordTableHotKeyControl,
-  RecordTablePopover,
+  Popover,
   Table,
 } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
@@ -57,17 +56,19 @@ export const InventoryRow = ({
       departmentId: trDoc.departmentId,
       productIds: [detail.productId],
     },
-    skip: (
+    skip:
       !detail.productId ||
       !trDoc.branchId ||
       !trDoc.departmentId ||
-      !detail.accountId
-    ) || (
-        initProductId.current && detail.productId === initProductId.current &&
-        initBranchId.current && trDoc.branchId === initBranchId.current &&
-        initDepartmentId.current && trDoc.departmentId === initDepartmentId.current &&
-        initAccountId.current && detail.accountId === initAccountId.current
-      )
+      !detail.accountId ||
+      (initProductId.current &&
+        detail.productId === initProductId.current &&
+        initBranchId.current &&
+        trDoc.branchId === initBranchId.current &&
+        initDepartmentId.current &&
+        trDoc.departmentId === initDepartmentId.current &&
+        initAccountId.current &&
+        detail.accountId === initAccountId.current),
   });
 
   // 🚨 Unit price-г зөвхөн дараа нь өөрчлөгдсөн тохиолдолд шинэчилнэ
@@ -85,9 +86,9 @@ export const InventoryRow = ({
 
   const handleAmountChange = (
     value: number,
-    onChange: (value: number) => void
+    onChange: (value: number) => void,
   ) => {
-    onChange(value)
+    onChange(value);
     const newUnitPrice = count ? value / count : 0;
     form.setValue(getFieldName('unitPrice'), newUnitPrice);
   };
@@ -113,9 +114,12 @@ export const InventoryRow = ({
     onChange(value);
   };
 
-  const handleProduct = (productId: string, onChange: (productId: string) => void) => {
+  const handleProduct = (
+    productId: string,
+    onChange: (productId: string) => void,
+  ) => {
     onChange(productId);
-  }
+  };
 
   return (
     <Table.Row
@@ -133,7 +137,7 @@ export const InventoryRow = ({
             'rounded-bl-lg': detailIndex === trDoc.details.length - 1,
           })}
         >
-          <RecordTableCellDisplay className="justify-center">
+          <RecordTableInlineCell className="justify-center">
             <Form.Field
               control={form.control}
               name={`trDocs.${journalIndex}.details.${detailIndex}.checked`}
@@ -149,7 +153,7 @@ export const InventoryRow = ({
                 </Form.Item>
               )}
             />
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         </Table.Cell>
       </RecordTableHotKeyControl>
 
@@ -183,7 +187,7 @@ export const InventoryRow = ({
               <SelectProduct
                 value={field.value || ''}
                 onValueChange={(productId) => {
-                  handleProduct(productId as string, field.onChange)
+                  handleProduct(productId as string, field.onChange);
                 }}
                 variant="ghost"
                 scope={AccountingHotkeyScope.TransactionFormPage}
@@ -198,24 +202,24 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.count`}
             render={({ field }) => (
-              <RecordTablePopover
+              <Popover
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.count`}
                 closeOnEnter
               >
                 <Form.Control>
-                  <RecordTableCellTrigger>
+                  <RecordTableInlineCell.Trigger>
                     {field.value?.toLocaleString() || 0}
-                  </RecordTableCellTrigger>
+                  </RecordTableInlineCell.Trigger>
                 </Form.Control>
-                <RecordTableCellContent>
+                <RecordTableInlineCell.Content>
                   <InputNumber
                     value={field.value ?? 0}
                     onChange={(value) =>
                       handleCountChange(value || 0, field.onChange)
                     }
                   />
-                </RecordTableCellContent>
-              </RecordTablePopover>
+                </RecordTableInlineCell.Content>
+              </Popover>
             )}
           />
         </Table.Cell>
@@ -226,24 +230,24 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
             render={({ field }) => (
-              <RecordTablePopover
+              <Popover
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
                 closeOnEnter
               >
                 <Form.Control>
-                  <RecordTableCellTrigger>
+                  <RecordTableInlineCell.Trigger>
                     {field.value?.toLocaleString() || 0}
-                  </RecordTableCellTrigger>
+                  </RecordTableInlineCell.Trigger>
                 </Form.Control>
-                <RecordTableCellContent>
+                <RecordTableInlineCell.Content>
                   <CurrencyField.ValueInput
                     value={field.value || 0}
                     onChange={(value) =>
                       handleUnitPriceChange(value || 0, field.onChange)
                     }
                   />
-                </RecordTableCellContent>
-              </RecordTablePopover>
+                </RecordTableInlineCell.Content>
+              </Popover>
             )}
           />
         </Table.Cell>
@@ -254,24 +258,24 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
             render={({ field }) => (
-              <RecordTablePopover
+              <Popover
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
                 closeOnEnter
               >
                 <Form.Control>
-                  <RecordTableCellTrigger>
+                  <RecordTableInlineCell.Trigger>
                     {field.value?.toLocaleString() || 0}
-                  </RecordTableCellTrigger>
+                  </RecordTableInlineCell.Trigger>
                 </Form.Control>
-                <RecordTableCellContent>
+                <RecordTableInlineCell.Content>
                   <CurrencyField.ValueInput
                     value={field.value || 0}
                     onChange={(value) =>
                       handleAmountChange(value || 0, field.onChange)
                     }
                   />
-                </RecordTableCellContent>
-              </RecordTablePopover>
+                </RecordTableInlineCell.Content>
+              </Popover>
             )}
           />
         </Table.Cell>

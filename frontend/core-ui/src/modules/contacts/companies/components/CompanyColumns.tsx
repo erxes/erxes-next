@@ -12,12 +12,10 @@ import {
   EmailListField,
   Input,
   PhoneField,
+  Popover,
   readImage,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   TextOverflowTooltip,
   TPhones,
   useQueryState,
@@ -66,8 +64,8 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       const setRenderingCompanyDetail = useSetAtom(renderingCompanyDetailAtom);
       const [, setCompanyDetail] = useQueryState('companyId');
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
+        <Popover>
+          <RecordTableInlineCell.Trigger>
             <Badge
               variant="secondary"
               onClick={(e) => {
@@ -78,11 +76,11 @@ export const companyColumns: ColumnDef<TCompany>[] = [
             >
               {primaryName}
             </Badge>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent className="min-w-72">
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content className="min-w-72">
             <Input value={primaryName || ''} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -124,11 +122,11 @@ export const companyColumns: ColumnDef<TCompany>[] = [
           index === self.findIndex((t) => t.email === email.email),
       );
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
+        <Popover>
+          <RecordTableInlineCell.Trigger>
             <EmailDisplay emails={_emails} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent className="min-w-72">
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content className="min-w-72">
             <EmailListField
               noValidation
               recordId={_id}
@@ -161,8 +159,8 @@ export const companyColumns: ColumnDef<TCompany>[] = [
               }}
               emails={_emails}
             />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
   },
@@ -270,9 +268,9 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     header: () => <RecordTable.InlineHead label="Plan" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -312,9 +310,9 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     header: () => <RecordTable.InlineHead label="Last Seen" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -325,9 +323,9 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       <RecordTable.InlineHead icon={IconUser} label="Profile Score" />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
+      <RecordTableInlineCell>
         <TextOverflowTooltip value={cell.getValue() as string} />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   },
   ...['position', 'department', 'leadStatus'].map((field) => ({
@@ -335,9 +333,9 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     accessorKey: field,
     header: () => <RecordTable.InlineHead icon={IconAlignLeft} label={field} />,
     cell: ({ cell }: { cell: { getValue: () => unknown } }) => (
-      <RecordTableCellDisplay>
+      <RecordTableInlineCell>
         <TextOverflowTooltip value={cell.getValue() as string} />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   })),
 ];

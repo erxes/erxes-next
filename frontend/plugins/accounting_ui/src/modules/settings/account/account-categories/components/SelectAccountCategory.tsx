@@ -1,9 +1,8 @@
 import {
   Combobox,
   Command,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   SelectTree,
   TextOverflowTooltip,
 } from 'erxes-ui';
@@ -53,20 +52,20 @@ export const SelectAccountCategory = React.forwardRef<
 
   return (
     <SelectTree.Provider id="select-account-category" ordered>
-      <RecordTablePopover
+      <Popover
         open={open}
         onOpenChange={setOpen}
         scope={`select-account-category.${recordId}`}
       >
-        <RecordTableCellTrigger>
+        <RecordTableInlineCell.Trigger>
           <SelectAccountCategoryTrigger
             ref={ref}
             {...props}
             selectedCategory={selectedCategory}
             loading={loading}
           />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectAccountCommand
             nullable={nullable}
             exclude={exclude}
@@ -81,8 +80,8 @@ export const SelectAccountCategory = React.forwardRef<
               setOpen(false);
             }}
           />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectTree.Provider>
   );
 });

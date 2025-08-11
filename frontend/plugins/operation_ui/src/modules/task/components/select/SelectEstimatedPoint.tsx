@@ -7,9 +7,8 @@ import {
   Command,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
 } from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
@@ -218,19 +217,19 @@ export const SelectEstimatedPointInlineCell = ({
       estimateChoices={estimateChoices || []}
       {...props}
     >
-      <RecordTablePopover
+      <Popover
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >
-        <RecordTableCellTrigger>
+        <RecordTableInlineCell.Trigger>
           <SelectEstimatedPointValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="max-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="max-w-72">
           <SelectEstimatedPointContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectEstimatedPointProvider>
   );
 };

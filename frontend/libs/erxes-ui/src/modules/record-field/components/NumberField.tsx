@@ -1,9 +1,5 @@
 import { ButtonProps, Input, TextOverflowTooltip } from 'erxes-ui/components';
-import {
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-} from 'erxes-ui/modules/record-table';
+import { RecordTableInlineCell, Popover } from 'erxes-ui/modules/record-table';
 import React, { useState } from 'react';
 
 export const NumberField = React.forwardRef<
@@ -30,7 +26,7 @@ export const NumberField = React.forwardRef<
     };
 
     return (
-      <RecordTablePopover
+      <Popover
         scope={scope}
         open={isOpen}
         onOpenChange={(open: boolean) => {
@@ -40,11 +36,11 @@ export const NumberField = React.forwardRef<
           }
         }}
       >
-        <RecordTableCellTrigger {...props} ref={ref}>
+        <RecordTableInlineCell.Trigger {...props} ref={ref}>
           {children}
           <TextOverflowTooltip value={editingValue.toString() ?? placeholder} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent asChild>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content asChild>
           <form onSubmit={handleAction}>
             <Input
               type="number"
@@ -62,8 +58,8 @@ export const NumberField = React.forwardRef<
               Save
             </button>
           </form>
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     );
   },
 );

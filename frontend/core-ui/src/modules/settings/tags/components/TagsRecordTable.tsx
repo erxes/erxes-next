@@ -7,10 +7,7 @@ import {
   Input,
   Popover,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   RecordTableTree,
   useConfirm,
   useMultiQueryState,
@@ -105,7 +102,7 @@ export const tagsColumns: ColumnDef<
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -114,7 +111,7 @@ export const tagsColumns: ColumnDef<
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <RecordTableTree.Trigger
               order={cell.row.original.order || ''}
               name={cell.getValue() as string}
@@ -122,11 +119,11 @@ export const tagsColumns: ColumnDef<
             >
               {cell.getValue() as string}
             </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_name} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 300,
@@ -166,11 +163,11 @@ export const tagsColumns: ColumnDef<
     accessorKey: 'totalObjectCount',
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge variant={'secondary'}>
             {(cell.getValue() as number) || 0}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -179,11 +176,11 @@ export const tagsColumns: ColumnDef<
     accessorKey: 'objectCount',
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge variant={'secondary'}>
             {(cell.getValue() as number) || 0}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -192,9 +189,9 @@ export const tagsColumns: ColumnDef<
     accessorKey: 'type',
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge>{cell.getValue() as string}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 250,

@@ -5,10 +5,9 @@ import { Link } from 'react-router-dom';
 import {
   RecordTable,
   Input,
-  RecordTablePopover,
-  RecordTableCellTrigger,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
+  Popover,
+  RecordTableInlineCell,
+  RecordTableInlineCell,
   CurrencyFormatedDisplay,
   CurrencyCode,
 } from 'erxes-ui';
@@ -20,55 +19,57 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-description`}>
-      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+    <Popover scope={`transaction-${_id}-description`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as string}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </Popover>
   );
 };
 
 // const DateCell = ({ getValue }: any) => {
 //   return (
-//     <RecordTableCellDisplay>
+//     <RecordTableInlineCell>
 //       {dayjs(new Date(getValue())).format('YYYY-MM-DD')}
-//     </RecordTableCellDisplay>
+//     </RecordTableInlineCell>
 //   );
 // };
 
 const ProductCell = ({ row }: any) => {
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {`${row.original.product?.code} - ${row.original.product?.name}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
 const AccountCell = ({ row }: any) => {
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {`${row.original.account?.code} - ${row.original.account?.name}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
 const BranchCell = ({ row }: any) => {
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {`${row.original.branch?.code} - ${row.original.branch?.title}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
 const DepartmentCell = ({ row }: any) => {
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {`${row.original.department?.code} - ${row.original.department?.title}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -76,14 +77,14 @@ const NumberCell = ({ getValue }: any) => {
   const value = getValue() as number;
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       <CurrencyFormatedDisplay
         currencyValue={{
           currencyCode: CurrencyCode.MNT,
           amountMicros: value,
         }}
       />
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -95,9 +96,7 @@ const TransactionMoreColumnCell = ({
   const { _id } = cell.row.original;
 
   return (
-    <Link
-      to={`/accounting/adjustment/inventory/detail?id=${_id}`}
-    >
+    <Link to={`/accounting/adjustment/inventory/detail?id=${_id}`}>
       <RecordTable.MoreButton className="w-full h-full" />
     </Link>
   );
@@ -137,9 +136,7 @@ export const adjustDetailTableColumns: ColumnDef<IAdjustInventory>[] = [
   },
   {
     id: 'branch',
-    header: () => (
-      <RecordTable.InlineHead icon={IconMoneybag} label="Branch" />
-    ),
+    header: () => <RecordTable.InlineHead icon={IconMoneybag} label="Branch" />,
     accessorKey: 'branch',
     cell: ({ row }) => <BranchCell row={row} />,
     size: 200,
@@ -159,9 +156,7 @@ export const adjustDetailTableColumns: ColumnDef<IAdjustInventory>[] = [
       <RecordTable.InlineHead icon={IconMoneybag} label="Remainder" />
     ),
     accessorKey: 'remainder',
-    cell: ({ getValue, row }) => (
-      <NumberCell getValue={getValue} />
-    ),
+    cell: ({ getValue, row }) => <NumberCell getValue={getValue} />,
   },
   {
     id: 'unitCost',
@@ -169,9 +164,7 @@ export const adjustDetailTableColumns: ColumnDef<IAdjustInventory>[] = [
       <RecordTable.InlineHead icon={IconMoneybag} label="Unit Cost" />
     ),
     accessorKey: 'unitCost',
-    cell: ({ getValue, row }) => (
-      <NumberCell getValue={getValue} />
-    ),
+    cell: ({ getValue, row }) => <NumberCell getValue={getValue} />,
   },
   {
     id: 'cost',
@@ -179,9 +172,7 @@ export const adjustDetailTableColumns: ColumnDef<IAdjustInventory>[] = [
       <RecordTable.InlineHead icon={IconMoneybag} label="Sum Cost" />
     ),
     accessorKey: 'cost',
-    cell: ({ getValue, row }) => (
-      <NumberCell getValue={getValue} />
-    ),
+    cell: ({ getValue, row }) => <NumberCell getValue={getValue} />,
   },
   {
     id: 'description',
@@ -193,5 +184,5 @@ export const adjustDetailTableColumns: ColumnDef<IAdjustInventory>[] = [
       <DescriptionCell getValue={getValue} row={row} />
     ),
     size: 300,
-  }
+  },
 ];

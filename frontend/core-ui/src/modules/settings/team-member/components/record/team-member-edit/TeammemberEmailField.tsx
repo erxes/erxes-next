@@ -2,13 +2,7 @@ import { useUserEdit } from '@/settings/team-member/hooks/useUserEdit';
 import { IUser } from '@/settings/team-member/types';
 import { IconCircleDashed, IconCircleDashedCheck } from '@tabler/icons-react';
 import { Cell } from '@tanstack/table-core';
-import {
-  Badge,
-  Input,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-} from 'erxes-ui';
+import { Badge, Input, RecordTableInlineCell, Popover } from 'erxes-ui';
 import React, { useState } from 'react';
 
 export const TeamMemberEmailField = ({
@@ -39,7 +33,7 @@ export const TeamMemberEmailField = ({
   };
 
   return (
-    <RecordTablePopover
+    <Popover
       open={open}
       onOpenChange={(open) => {
         setOpen(open);
@@ -48,16 +42,16 @@ export const TeamMemberEmailField = ({
         }
       }}
     >
-      <RecordTableCellTrigger>
+      <RecordTableInlineCell.Trigger>
         <Badge variant={'secondary'} className="flex items-center gap-1">
           <EmailStatus status={status} />
           {_email}
         </Badge>
-      </RecordTableCellTrigger>
-      <RecordTableCellContent>
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input key={_id} value={_email} onChange={onChange} />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </Popover>
   );
 };
 

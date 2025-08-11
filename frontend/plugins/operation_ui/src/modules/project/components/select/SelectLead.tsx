@@ -8,9 +8,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -234,14 +233,14 @@ export const SelectLeadInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectLeadValue placeholder="Lead not specified" />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectLeadContent teamIds={teamIds} />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectLeadProvider>
   );
 };

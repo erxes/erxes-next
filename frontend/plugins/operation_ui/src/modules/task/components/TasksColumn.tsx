@@ -24,9 +24,8 @@ import {
   Badge,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
 } from 'erxes-ui';
 import { ITask } from '@/task/types';
 import { useState } from 'react';
@@ -59,7 +58,7 @@ export const tasksColumns = (
         };
 
         return (
-          <RecordTablePopover
+          <Popover
             closeOnEnter
             onOpenChange={(open) => {
               if (!open) {
@@ -73,7 +72,7 @@ export const tasksColumns = (
               '.Name'
             }
           >
-            <RecordTableCellTrigger>
+            <RecordTableInlineCell.Trigger>
               <Badge
                 variant="secondary"
                 onClick={(e) => {
@@ -83,8 +82,8 @@ export const tasksColumns = (
               >
                 {name}
               </Badge>
-            </RecordTableCellTrigger>
-            <RecordTableCellContent className="min-w-72">
+            </RecordTableInlineCell.Trigger>
+            <RecordTableInlineCell.Content className="min-w-72">
               <Input
                 value={value || ''}
                 onChange={(e) => setValue(e.target.value)}
@@ -96,8 +95,8 @@ export const tasksColumns = (
                   }
                 }}
               />
-            </RecordTableCellContent>
-          </RecordTablePopover>
+            </RecordTableInlineCell.Content>
+          </Popover>
         );
       },
       size: 240,

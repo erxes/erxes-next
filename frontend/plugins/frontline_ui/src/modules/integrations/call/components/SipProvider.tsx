@@ -655,18 +655,13 @@ const SipProvider = ({
 
   // Initialize audio element and JsSIP on mount
   useEffect(() => {
-    console.log('sipState', sipState);
-    console.log('callInfo', callInfo);
-    console.log('callConfig', callConfig);
     if (
       sipState.sipStatus === SipStatusEnum.REGISTERED &&
       callInfo?.isUnregistered
     ) {
-      console.log('unregisterSip');
       unregisterSip();
     }
     if (callConfig && !callConfig.isAvailable) {
-      console.log('return');
       return;
     }
 

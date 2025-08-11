@@ -102,9 +102,6 @@ export const useConversations = (
         // }
         // return { ...prev, conversations: { ...prev.conversations, list } };
       },
-      onError: (error) => {
-        console.log('error', error);
-      },
     });
 
     return () => {

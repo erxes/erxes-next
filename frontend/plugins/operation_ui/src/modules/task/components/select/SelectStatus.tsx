@@ -7,9 +7,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -306,19 +305,19 @@ export const SelectStatusInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <RecordTablePopover
+      <Popover
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >
-        <RecordTableCellTrigger>
+        <RecordTableInlineCell.Trigger>
           <SelectStatusValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="max-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="max-w-72">
           <SelectStatusContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectStatusProvider>
   );
 };

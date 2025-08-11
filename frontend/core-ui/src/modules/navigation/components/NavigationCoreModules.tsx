@@ -12,7 +12,12 @@ export const NavigationCoreModules = () => {
   return (
     <NavigationMenuGroup name="Core modules" separate={activePlugin !== null}>
       {CORE_MODULES.filter((item) => !item.settingsOnly).map((item) => (
-        <NavigationMenuLinkItem key={item.name} {...item} />
+        <NavigationMenuLinkItem
+          key={item.name}
+          name={item.name}
+          icon={item.icon}
+          path={item.path}
+        />
       ))}
     </NavigationMenuGroup>
   );

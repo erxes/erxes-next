@@ -6,9 +6,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
   Badge,
@@ -360,19 +359,19 @@ export const SelectPriorityInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <RecordTablePopover
+      <Popover
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >
-        <RecordTableCellTrigger>
+        <RecordTableInlineCell.Trigger>
           <SelectPriorityBadgeValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="max-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="max-w-72">
           <SelectPriorityContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectPriorityProvider>
   );
 };

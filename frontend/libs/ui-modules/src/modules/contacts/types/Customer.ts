@@ -1,6 +1,7 @@
 import { SexCode } from 'erxes-ui';
 import { CountryCode } from 'libphonenumber-js';
 import { ICompany } from './Company';
+import { IUser } from 'ui-modules/modules/team-members';
 
 export interface ICustomerInline {
   _id: string;
@@ -28,6 +29,7 @@ export interface ICustomer extends ICustomerInline {
     countryCode?: CountryCode | undefined;
   };
   sex?: SexCode;
+  owner?: IUser;
 }
 
 export interface ICustomerDetail extends ICustomer {

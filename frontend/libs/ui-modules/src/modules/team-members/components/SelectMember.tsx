@@ -5,9 +5,7 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   cn,
   useFilterContext,
   useQueryState,
@@ -267,32 +265,32 @@ export const SelectMemberFilterBar = ({
   );
 };
 
-export const SelectMemberInlineCell = ({
-  onValueChange,
-  scope,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
-  scope?: string;
-}) => {
+export const SelectMemberInlineCell = React.forwardRef<
+  React.ComponentRef<typeof RecordTableInlineCell.Trigger>,
+  Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> &
+    React.ComponentProps<typeof RecordTableInlineCell.Trigger>
+>(({ mode, value, onValueChange, members, size = 'lg', ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <SelectMemberProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-      }}
-      {...props}
+      mode={mode}
+      value={value}
+      onValueChange={onValueChange}
+      members={members}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
-          <SelectMemberValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+      <Popover open={open} onOpenChange={setOpen}>
+        <RecordTableInlineCell.Trigger ref={ref} {...props}>
+          <SelectMemberValue placeholder={''} size={size} />
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectMemberContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectMemberProvider>
   );
-};
+});
+
+SelectMemberInlineCell.displayName = 'SelectMemberInlineCell';
 
 export const SelectMemberFormItem = ({
   onValueChange,
@@ -353,7 +351,7 @@ export const SelectMemberDetail = ({
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
-        <Popover.Trigger>
+        <Popover.Trigger asChild>
           {!value ? (
             <Button
               className={cn(

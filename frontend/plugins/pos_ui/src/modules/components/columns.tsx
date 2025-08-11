@@ -5,13 +5,13 @@ import {
   IconMobiledata,
   IconPhone,
   IconClock,
-  IconUser
+  IconUser,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
   RecordTable,
   TextOverflowTooltip,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   Badge,
 } from 'erxes-ui';
 import { posMoreColumn } from './posMoreColumn';
@@ -26,39 +26,41 @@ export const posColumns: ColumnDef<IPos>[] = [
     header: () => <RecordTable.InlineHead icon={IconLabel} label="Name" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
   {
     id: 'isOnline',
     accessorKey: 'isOnline',
-    header: () => <RecordTable.InlineHead icon={IconMobiledata} label="Status" />,
+    header: () => (
+      <RecordTable.InlineHead icon={IconMobiledata} label="Status" />
+    ),
     cell: ({ cell }) => {
       const value = cell.getValue() as boolean;
       return (
-        <RecordTableCellDisplay>
-          <Badge variant={value ? "success" : "secondary"}>
+        <RecordTableInlineCell>
+          <Badge variant={value ? 'success' : 'secondary'}>
             {value ? 'Online' : 'Offline'}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
   {
     id: 'onServer',
     accessorKey: 'onServer',
-    header: () => <RecordTable.InlineHead icon={IconPhone} label="Server Status" />,
+    header: () => (
+      <RecordTable.InlineHead icon={IconPhone} label="Server Status" />
+    ),
     cell: ({ cell }) => {
       const value = cell.getValue() as boolean;
       return (
-        <RecordTableCellDisplay>
-          <Badge variant="default">
-            {value ? 'On Server' : 'Local Only'}
-          </Badge>
-        </RecordTableCellDisplay>
+        <RecordTableInlineCell>
+          <Badge variant="default">{value ? 'On Server' : 'Local Only'}</Badge>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -68,36 +70,40 @@ export const posColumns: ColumnDef<IPos>[] = [
     header: () => <RecordTable.InlineHead icon={IconBuilding} label="Branch" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
   {
     id: 'departmentTitle',
     accessorKey: 'departmentTitle',
-    header: () => <RecordTable.InlineHead icon={IconChartBar} label="Department" />,
+    header: () => (
+      <RecordTable.InlineHead icon={IconChartBar} label="Department" />
+    ),
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
-    header: () => <RecordTable.InlineHead icon={IconClock} label="Created at" />,
+    header: () => (
+      <RecordTable.InlineHead icon={IconClock} label="Created at" />
+    ),
     cell: ({ cell }) => {
       const rawDate = cell.getValue() as string;
       const formattedDate = new Date(rawDate).toLocaleString();
-      
+
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={formattedDate} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -107,9 +113,9 @@ export const posColumns: ColumnDef<IPos>[] = [
     header: () => <RecordTable.InlineHead icon={IconUser} label="Created by" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

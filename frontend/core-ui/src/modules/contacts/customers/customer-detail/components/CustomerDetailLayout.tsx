@@ -22,9 +22,7 @@ export const CustomerDetailLayout = ({
   otherState?: 'loading' | 'not-found';
 }) => {
   return (
-    <CustomerDetailSheet
-      className={!otherState ? undefined : 'sm:max-w-screen-lg'}
-    >
+    <CustomerDetailSheet className="sm:max-w-screen-lg">
       <Sheet.Content>
         {otherState === 'loading' && (
           <div className="flex items-center justify-center h-full">

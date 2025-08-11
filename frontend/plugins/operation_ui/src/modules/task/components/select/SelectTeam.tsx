@@ -6,9 +6,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
   Badge,
@@ -346,8 +345,8 @@ export const SelectTeamInlineCell = ({
       teams={teams}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <div className="flex gap-1 min-h-[24px] items-center">
             {selectedTeam ? (
               <Badge variant="secondary" className="flex items-center gap-1">
@@ -360,11 +359,11 @@ export const SelectTeamInlineCell = ({
               </span>
             )}
           </div>
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectTeamContent providedTeams={teams} />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectTeamProvider>
   );
 };

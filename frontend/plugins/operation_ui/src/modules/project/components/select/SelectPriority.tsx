@@ -6,9 +6,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   useFilterContext,
   useQueryState,
   Badge,
@@ -136,11 +135,7 @@ const SelectPriorityBadgeValue = ({
     </div>
   );
 };
-const SelectPriorityValue = ({
-  placeholder,
-}: {
-  placeholder?: string;
-}) => {
+const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
   const { priorityIds } = useSelectPriorityContext();
 
   const selectedPriorities = PROJECT_PRIORITIES_OPTIONS.filter((priority) =>
@@ -166,13 +161,19 @@ const SelectPriorityValue = ({
               stroke={2}
             />
           )}
-          <p className={cn("font-medium text-base", priority.value === 0 && "text-muted-foreground")}>{priority.name}</p>
+          <p
+            className={cn(
+              'font-medium text-base',
+              priority.value === 0 && 'text-muted-foreground',
+            )}
+          >
+            {priority.name}
+          </p>
         </div>
       ))}
     </div>
   );
 };
-
 
 const SelectPriorityCommandItem = ({
   priority,
@@ -358,19 +359,19 @@ export const SelectPriorityInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <RecordTablePopover
+      <Popover
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >
-        <RecordTableCellTrigger>
+        <RecordTableInlineCell.Trigger>
           <SelectPriorityBadgeValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="max-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="max-w-72">
           <SelectPriorityContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectPriorityProvider>
   );
 };
@@ -411,7 +412,7 @@ export const SelectPriorityFormItem = React.forwardRef<
             asChild
           >
             <Button variant="secondary">
-            <SelectPriorityValue placeholder={placeholder} />
+              <SelectPriorityValue placeholder={placeholder} />
             </Button>
           </Combobox.TriggerBase>
         </Form.Control>

@@ -5,10 +5,9 @@ import { Link } from 'react-router-dom';
 import {
   RecordTable,
   Input,
-  RecordTablePopover,
-  RecordTableCellTrigger,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
+  Popover,
+  RecordTableInlineCell,
+  RecordTableInlineCell,
 } from 'erxes-ui';
 import { IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -18,23 +17,25 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-description`}>
-      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+    <Popover scope={`transaction-${_id}-description`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as string}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </Popover>
   );
 };
 
 const DateCell = ({ getValue }: any) => {
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {dayjs(new Date(getValue())).format('YYYY-MM-DD')}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -46,9 +47,7 @@ const TransactionMoreColumnCell = ({
   const { _id } = cell.row.original;
 
   return (
-    <Link
-      to={`/accounting/adjustment/inventory/detail?id=${_id}`}
-    >
+    <Link to={`/accounting/adjustment/inventory/detail?id=${_id}`}>
       <RecordTable.MoreButton className="w-full h-full" />
     </Link>
   );
@@ -78,5 +77,5 @@ export const adjustTableColumns: ColumnDef<IAdjustInventory>[] = [
       <DescriptionCell getValue={getValue} row={row} />
     ),
     size: 300,
-  }
+  },
 ];

@@ -1,9 +1,4 @@
-import {
-  PhoneInput,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-} from 'erxes-ui';
+import { PhoneInput, Popover, RecordTableInlineCell } from 'erxes-ui';
 import { formatPhoneNumber } from 'erxes-ui/utils/format';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { useRef, useState } from 'react';
@@ -46,8 +41,8 @@ export const PhoneFieldCustomer = ({
   };
 
   return (
-    <RecordTablePopover
-      scope={`customer-${_id}-primaryPhone`}
+    <Popover
+      // scope={`customer-${_id}-primaryPhone`}
       open={isOpen}
       onOpenChange={(open) => {
         setIsOpen(open);
@@ -61,10 +56,10 @@ export const PhoneFieldCustomer = ({
         }
       }}
     >
-      <RecordTableCellTrigger className="shadow-sm rounded-sm text-sm">
+      <RecordTableInlineCell.Trigger className="shadow-sm rounded-sm text-sm">
         {formatPhoneNumber({ value: primaryPhone || '' })}
-      </RecordTableCellTrigger>
-      <RecordTableCellContent>
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <PhoneInput
           value={editingValue}
           ref={phoneInputRef}
@@ -74,7 +69,7 @@ export const PhoneFieldCustomer = ({
           onKeyDown={handleKeyDown}
           onValidationChange={(isValid) => setIsPhoneValid(isValid)}
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </Popover>
   );
 };

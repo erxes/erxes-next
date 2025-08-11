@@ -10,7 +10,7 @@ export const FrontlineSubGroups = () => {
   }
 
   return (
-    <NavigationMenuGroup name="Inbox">
+    <NavigationMenuGroup name="Integration types">
       <ChooseIntegrationTypeContent />
     </NavigationMenuGroup>
   );

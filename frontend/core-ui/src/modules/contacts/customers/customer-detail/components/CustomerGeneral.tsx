@@ -1,13 +1,12 @@
 import { Label, Switch, Textarea } from 'erxes-ui';
-import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
 import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
 import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
-import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/components/CustomerDetailAssignedTo';
-import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { PhoneFieldCustomer } from '@/contacts/customers/customer-edit/components/PhoneFieldCustomer';
+import { CustomerOwner, useCustomerEdit } from 'ui-modules';
+import { useCustomerDetailWithParams } from '../hooks/useCustomerDetailWithParams';
 
 export const CustomerGeneral = () => {
-  const { customerDetail } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetailWithParams();
   const { customerEdit } = useCustomerEdit();
   if (!customerDetail) return;
 
@@ -18,16 +17,19 @@ export const CustomerGeneral = () => {
     ownerId,
     code,
     _id,
-    score,
     isSubscribed,
     description,
+    score,
   } = customerDetail;
 
   return (
     <>
       <div className="py-8 space-y-6">
         <CustomerDetailSelectTag tagIds={tagIds || []} customerId={_id} />
-        <CustomerDetailAssignedTo ownerId={ownerId} customerId={_id} />
+        <div className="px-8 space-y-2">
+          <Label>Owner</Label>
+          <CustomerOwner _id={_id} ownerId={ownerId} />
+        </div>
         <div className="px-8 font-medium flex gap-5 flex-col">
           <div className="grid grid-cols-2 gap-5 col-span-5">
             <DataListItem label="Code">
@@ -72,7 +74,17 @@ export const CustomerGeneral = () => {
             />
           </DataListItem>
           <DataListItem label="Description">
-            <Textarea value={description || ''} />
+            <Textarea
+              value={description || ''}
+              onChange={(e) => {
+                customerEdit({
+                  variables: {
+                    _id,
+                    description: e.target.value,
+                  },
+                });
+              }}
+            />
           </DataListItem>
         </div>
       </div>
