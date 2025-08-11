@@ -73,12 +73,65 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async createTask(doc: ITask): Promise<ITaskDocument> {
-      return models.Task.insertOne(doc);
+      const [result] = await models.Task.aggregate([
+        { $match: { teamId: doc.teamId } },
+        { $group: { _id: null, maxNumber: { $max: '$number' } } },
+      ]);
+
+      const nextNumber = (result?.maxNumber || 0) + 1;
+
+      return models.Task.insertOne({
+        ...doc,
+        number: nextNumber,
+      });
     }
 
     public static async updateTask(doc: ITaskUpdate) {
       const { _id, ...rest } = doc;
-      return await models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
+
+      const task = await models.Task.findOne({ _id });
+
+      if (!task) {
+        throw new Error('Task not found');
+      }
+
+      if (doc.status && doc.status !== task.status) {
+        rest.statusChangedDate = new Date();
+      }
+
+      if (task.projectId && doc.teamId && doc.teamId !== task.teamId) {
+        const project = await models.Project.findOne({ _id: task.projectId });
+
+        if (project && !project.teamIds.includes(doc.teamId)) {
+          throw new Error('Task project is not in this team');
+        }
+      }
+
+      if (
+        task.teamId &&
+        doc.teamId &&
+        task.teamId !== doc.teamId &&
+        task.projectId
+      ) {
+        const project = await models.Project.findOne({ _id: task.projectId });
+
+        if (project && !project.teamIds.includes(doc.teamId)) {
+          throw new Error('Task project is not in this team');
+        }
+      }
+
+      if (doc.teamId && doc.teamId !== task.teamId) {
+        const [result] = await models.Task.aggregate([
+          { $match: { teamId: doc.teamId } },
+          { $group: { _id: null, maxNumber: { $max: '$number' } } },
+        ]);
+
+        const nextNumber = (result?.maxNumber || 0) + 1;
+
+        rest.number = nextNumber;
+      }
+
+      return models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
     }
 
     public static async removeTask(TaskId: string[]) {

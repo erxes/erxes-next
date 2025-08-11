@@ -357,7 +357,7 @@ export const SelectStatusFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary">
+            <Button variant="secondary" className='h-7'>
               <SelectStatusValue
                 placeholder={placeholder}
                 className={value === 0 ? 'text-muted-foreground' : undefined}

@@ -10,7 +10,7 @@ import {
 } from 'erxes-ui';
 import { useState } from 'react';
 import { AddTaskForm } from './AddTaskForm';
-export const AddTasksheet = () => {
+export const AddTaskSheet = () => {
   const setHotkeyScope = useSetHotkeyScope();
   const [open, setOpen] = useState<boolean>(false);
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
@@ -48,7 +48,7 @@ export const AddTasksheet = () => {
   );
 };
 
-export const AddTasksheetHeader = () => {
+export const AddTaskSheetHeader = () => {
   return (
     <Sheet.Header className="p-5">
       <Sheet.Title>Add task</Sheet.Title>

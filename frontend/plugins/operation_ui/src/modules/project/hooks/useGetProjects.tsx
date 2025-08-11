@@ -36,7 +36,7 @@ export const useProjectsVariables = (
   const projectsQueryVariables = {
     limit: PROJECTS_PER_PAGE,
     orderBy: {
-      createdAt: -1,
+      status: 1,
     },
     cursor,
     searchValue: searchValue || undefined,

@@ -288,7 +288,7 @@ export const SelectLeadFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary">
+            <Button variant="secondary" className="h-7">
               <SelectLeadFormValue />
             </Button>
           </Combobox.TriggerBase>

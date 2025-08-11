@@ -13,14 +13,16 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { IconProgressCheck } from '@tabler/icons-react';
-import { PROJECT_STATUS_OPTIONS } from '@/project/constants';
+import { IStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
+import { TeamStatusIcons } from '@/team/constants';
 
 interface SelectStatusContextType {
-  statuses: typeof PROJECT_STATUS_OPTIONS;
+  statuses: IStatus[];
   statusIds: string[];
-  onSelect: (status: (typeof PROJECT_STATUS_OPTIONS)[0]) => void;
-  setStatuses: (statuses: typeof PROJECT_STATUS_OPTIONS) => void;
+  onSelect: (status: IStatus) => void;
+  setStatuses: (statuses: IStatus[]) => void;
   loading: boolean;
   error: any;
 }
@@ -44,18 +46,18 @@ export const SelectStatusProvider = ({
   mode = 'single',
   value,
   onValueChange,
+  statuses = [],
 }: {
   children: React.ReactNode;
   mode?: 'single' | 'multiple';
   value?: string[] | string;
   onValueChange: (value: string[] | string) => void;
+  statuses?: IStatus[];
 }) => {
-  const [_statuses, setStatuses] = useState<typeof PROJECT_STATUS_OPTIONS>(
-    PROJECT_STATUS_OPTIONS,
-  );
+  const [_statuses, setStatuses] = useState<IStatus[]>(statuses);
   const isSingleMode = mode === 'single';
 
-  const onSelect = (status: (typeof PROJECT_STATUS_OPTIONS)[0]) => {
+  const onSelect = (status: IStatus) => {
     if (!status) return;
     if (isSingleMode) {
       onValueChange?.(status.value.toString());
@@ -70,6 +72,10 @@ export const SelectStatusProvider = ({
 
     onValueChange?.(newSelectedStatusIds);
   };
+
+  React.useEffect(() => {
+    setStatuses(statuses);
+  }, [statuses]);
 
   return (
     <SelectStatusContext.Provider
@@ -94,10 +100,10 @@ const SelectStatusValue = ({
   placeholder?: string;
   className?: string;
 }) => {
-  const { statusIds } = useSelectStatusContext();
+  const { statusIds, statuses } = useSelectStatusContext();
 
-  const selectedStatuses = PROJECT_STATUS_OPTIONS.filter((status) =>
-    statusIds.includes(status.value.toString()),
+  const selectedStatuses = statuses.filter((status) =>
+    statusIds.includes(status.value.toString()),    
   );
   if (selectedStatuses.length === 0) {
     return (
@@ -111,13 +117,12 @@ const SelectStatusValue = ({
     <div className="flex gap-1 ">
       {selectedStatuses.map((status) => (
         <div className="flex items-center gap-2" key={status.value}>
-          <status.Icon
-            className="w-3 h-3"
-            color={status.IconColor}
-            stroke={2}
-          />
+          {(() => {
+            const Icon = TeamStatusIcons[status.type];
+            return <Icon className="w-3 h-3" color={status.color} stroke={2} />;
+          })()}
           <p className={cn('font-medium text-base ', className)}>
-            {status.name}
+            {status.label}
           </p>
         </div>
       ))}
@@ -125,11 +130,7 @@ const SelectStatusValue = ({
   );
 };
 
-const SelectStatusCommandItem = ({
-  status,
-}: {
-  status: (typeof PROJECT_STATUS_OPTIONS)[0];
-}) => {
+const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
   const { onSelect, statusIds } = useSelectStatusContext();
 
   return (
@@ -140,12 +141,11 @@ const SelectStatusCommandItem = ({
       }}
     >
       <div className="flex items-center gap-2 flex-1">
-        <status.Icon
-          className="w-4 h-4"
-          color={status.IconColor}
-          stroke={1.8}
-        />
-        <span className="font-medium">{status.name}</span>
+        {(() => {
+          const Icon = TeamStatusIcons[status.type];
+          return <Icon className="w-3 h-3" color={status.color} stroke={2} />;
+        })()}
+        <span className="font-medium">{status.label}</span>
       </div>
       <Combobox.Check checked={statusIds.includes(status.value.toString())} />
     </Command.Item>
@@ -153,10 +153,12 @@ const SelectStatusCommandItem = ({
 };
 
 const SelectStatusContent = () => {
+  const { statuses } = useSelectStatusContext();
+
   return (
     <Command shouldFilter={false} id="status-command-menu">
       <Command.List>
-        {PROJECT_STATUS_OPTIONS.map((status) => (
+        {statuses.map((status) => (
           <SelectStatusCommandItem key={status.value} status={status} />
         ))}
       </Command.List>
@@ -177,10 +179,12 @@ export const SelectStatusFilterView = ({
   onValueChange,
   queryKey,
   mode = 'single',
+  statuses = [],
 }: {
   onValueChange?: (value: string[] | string) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
+  statuses?: IStatus[];
 }) => {
   const [status, setStatus] = useQueryState<number>(queryKey || 'status');
   const { resetFilterState } = useFilterContext();
@@ -199,6 +203,7 @@ export const SelectStatusFilterView = ({
           resetFilterState();
           onValueChange?.(value);
         }}
+        statuses={statuses}
       >
         <SelectStatusContent />
       </SelectStatusProvider>
@@ -211,11 +216,13 @@ export const SelectStatusFilterBar = ({
   onValueChange,
   queryKey,
   mode = 'single',
+  statuses = [],
 }: {
   iconOnly?: boolean;
   onValueChange?: (value: string[] | string) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
+  statuses?: IStatus[];
 }) => {
   const [status, setStatus] = useQueryState<number>(queryKey || 'status');
   const [open, setOpen] = useState(false);
@@ -245,6 +252,7 @@ export const SelectStatusFilterBar = ({
           setOpen(false);
           onValueChange?.(value);
         }}
+        statuses={statuses}
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
@@ -267,19 +275,24 @@ export const SelectStatusInlineCell = ({
   id,
   onValueChange,
   scope,
+  teamId,
   ...props
 }: {
   value?: number | string;
   id?: string;
   onValueChange?: (value: string | string[]) => void;
   scope?: string;
+  teamId: string;
 } & Omit<
   React.ComponentProps<typeof SelectStatusProvider>,
-  'children' | 'onValueChange' | 'value'
+  'children' | 'onValueChange' | 'value' | 'statuses'
 >) => {
   const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
-
+  const { statuses } = useGetStatusByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
   const handleValueChange = (value: string | string[]) => {
     if (id) {
       updateTask({
@@ -303,6 +316,7 @@ export const SelectStatusInlineCell = ({
       mode="single"
       value={stringValue}
       onValueChange={handleValueChange}
+      statuses={statuses || []}
       {...props}
     >
       <Popover
@@ -332,46 +346,55 @@ export const SelectStatusFormItem = React.forwardRef<
     placeholder?: string;
     value?: number | string;
     onChange?: (value: number) => void;
+    teamId: string;
   }
->(({ onChange, className, placeholder, value, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
+>(
+  (
+    { onChange, className, placeholder, value, teamId, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    const { statuses } = useGetStatusByTeam({
+      variables: { teamId: teamId },
+    });
+    const stringValue =
+      typeof value === 'number' ? value.toString() : value || '';
 
-  const stringValue =
-    typeof value === 'number' ? value.toString() : value || '';
-
-  return (
-    <SelectStatusProvider
-      value={stringValue}
-      onValueChange={(value) => {
-        const numValue =
-          typeof value === 'string' ? parseInt(value, 10) : Number(value);
-        onChange?.(numValue);
-        setOpen(false);
-      }}
-      {...props}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <Form.Control>
-          <Combobox.TriggerBase
-            ref={ref}
-            className={cn('w-full shadow-xs', className)}
-            asChild
-          >
-            <Button variant="secondary">
-              <SelectStatusValue
-                placeholder={placeholder}
-                className={value === 0 ? 'text-muted-foreground' : undefined}
-              />
-            </Button>
-          </Combobox.TriggerBase>
-        </Form.Control>
-        <Combobox.Content>
-          <SelectStatusContent />
-        </Combobox.Content>
-      </Popover>
-    </SelectStatusProvider>
-  );
-});
+    return (
+      <SelectStatusProvider
+        value={stringValue}
+        onValueChange={(value) => {
+          const numValue =
+            typeof value === 'string' ? parseInt(value, 10) : Number(value);
+          onChange?.(numValue);
+          setOpen(false);
+        }}
+        statuses={statuses}
+        {...props}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Form.Control>
+            <Combobox.TriggerBase
+              ref={ref}
+              className={cn('w-full shadow-xs', className)}
+              asChild
+            >
+              <Button variant="secondary" className="h-7">
+                <SelectStatusValue
+                  placeholder={placeholder}
+                  className={value === 0 ? 'text-muted-foreground' : undefined}
+                />
+              </Button>
+            </Combobox.TriggerBase>
+          </Form.Control>
+          <Combobox.Content>
+            <SelectStatusContent />
+          </Combobox.Content>
+        </Popover>
+      </SelectStatusProvider>
+    );
+  },
+);
 
 SelectStatusFormItem.displayName = 'SelectStatusFormItem';
 
@@ -381,33 +404,39 @@ const SelectStatusRoot = React.forwardRef<
     React.ComponentProps<typeof Combobox.Trigger> & {
       placeholder?: string;
     }
->(({ onValueChange, className, mode, value, placeholder, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectStatusProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      mode={mode}
-      value={value}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <Combobox.Trigger
-          ref={ref}
-          className={cn('w-full inline-flex', className)}
-          variant="outline"
-          {...props}
-        >
-          <SelectStatusValue placeholder={placeholder} />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectStatusContent />
-        </Combobox.Content>
-      </Popover>
-    </SelectStatusProvider>
-  );
-});
+>(
+  (
+    { onValueChange, className, mode, value, placeholder, statuses, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <SelectStatusProvider
+        onValueChange={(value) => {
+          onValueChange?.(value);
+          setOpen(false);
+        }}
+        mode={mode}
+        value={value}
+        statuses={statuses}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Combobox.Trigger
+            ref={ref}
+            className={cn('w-full inline-flex', className)}
+            variant="outline"
+            {...props}
+          >
+            <SelectStatusValue placeholder={placeholder} />
+          </Combobox.Trigger>
+          <Combobox.Content>
+            <SelectStatusContent />
+          </Combobox.Content>
+        </Popover>
+      </SelectStatusProvider>
+    );
+  },
+);
 
 SelectStatusRoot.displayName = 'SelectStatusRoot';
 

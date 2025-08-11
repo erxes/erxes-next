@@ -1,10 +1,45 @@
 import { Outlet } from 'react-router-dom';
-import { ProjectsListBreadCrumb } from '@/project/components/ProjectsListBreadCrumb';
+import { ProjectDetailBreadCrumb } from '@/project/components/breadcumb/ProjectDetailBreadCrumb';
+import { PageHeader } from 'ui-modules';
+import { Breadcrumb, Separator } from 'erxes-ui';
+import { useParams } from 'react-router-dom';
+
+import { ProjectBreadCrumb } from '@/project/components/breadcumb/ProjectBreadCrumb';
+import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
+import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 
 export const ProjectLayout = () => {
+  const { teamId } = useParams<{
+    teamId?: string;
+  }>();
+
   return (
     <div>
-      <ProjectsListBreadCrumb />
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              {teamId ? (
+                <>
+                  <TeamBreadCrumb />
+                  <Separator.Inline />
+                  <ProjectBreadCrumb
+                    link={`/operation/team/${teamId}/projects`}
+                  />
+                </>
+              ) : (
+                <ProjectBreadCrumb link={`/operation/projects`} />
+              )}
+              <Separator.Inline />
+
+              <ProjectDetailBreadCrumb />
+            </Breadcrumb.List>
+          </Breadcrumb>
+        </PageHeader.Start>
+        <PageHeader.End>
+          <AddTaskSheet />
+        </PageHeader.End>
+      </PageHeader>
       <Outlet />
     </div>
   );

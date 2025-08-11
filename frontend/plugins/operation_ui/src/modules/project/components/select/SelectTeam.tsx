@@ -506,7 +506,7 @@ export const SelectTeamFormItem = React.forwardRef<
             className={cn('w-min shadow-xs ', className)}
             asChild
           >
-            <Button variant="secondary" onClick={onClick}>
+            <Button variant="secondary" className="h-7" onClick={onClick}>
               <SelectTeamValue />
             </Button>
           </Combobox.TriggerBase>

@@ -36,7 +36,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const form = useForm<TAddProject>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
-      teamIds: [teamId],
+      teamIds: teamId ? [teamId] : [],
       icon: 'IconBox',
       name: '',
       status: 0,
@@ -137,19 +137,19 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Control>
                   <Input
                     {...field}
-                    className="shadow-none focus-visible:shadow-none h-8 text-2xl"
+                    className="shadow-none focus-visible:shadow-none h-8 text-xl"
                     placeholder="Project Name"
                   />
                 </Form.Control>
               </Form.Item>
             )}
           />
-          <div className="flex gap-2">
+          <div className="gap-2 flex flex-wrap w-full">
             <Form.Field
               name="status"
               control={form.control}
               render={({ field }) => (
-                <Form.Item>
+                <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Status</Form.Label>
                   <SelectStatus.FormItem {...field} />
                 </Form.Item>
@@ -159,7 +159,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               name="priority"
               control={form.control}
               render={({ field }) => (
-                <Form.Item>
+                <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Priority</Form.Label>
                   <SelectPriority.FormItem {...field} />
                 </Form.Item>
@@ -169,7 +169,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               name="leadId"
               control={form.control}
               render={({ field }) => (
-                <Form.Item>
+                <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Lead</Form.Label>
                   <SelectLead.FormItem
                     {...field}
@@ -186,7 +186,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               name="startDate"
               control={form.control}
               render={({ field }) => (
-                <Form.Item>
+                <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Start Date</Form.Label>
                   <DateSelect.FormItem
                     {...field}
@@ -200,7 +200,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               name="targetDate"
               control={form.control}
               render={({ field }) => (
-                <Form.Item>
+                <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Target Date</Form.Label>
                   <DateSelect.FormItem
                     {...field}
@@ -216,7 +216,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="h-full text-xl"
+              className="h-full"
             />
           </div>
         </Sheet.Content>

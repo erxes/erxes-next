@@ -14,6 +14,7 @@ export interface IProject {
   teamIds: string[];
 }
 
+
 export enum ProjectPageTypes {
   All = 'all',
   Team = 'team',

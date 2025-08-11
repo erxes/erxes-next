@@ -21,10 +21,12 @@ export interface ITask {
   startDate?: Date;
   targetDate?: Date;
   createdAt?: Date;
+  statusChangedDate?: Date;
 }
 
 export interface ITaskUpdate extends ITask {
   _id: string;
+  number?: number;
 }
 
 export interface ITaskDocument extends ITask, Document {

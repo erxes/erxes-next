@@ -411,7 +411,7 @@ export const SelectPriorityFormItem = React.forwardRef<
             className={cn('w-full shadow-xs', className)}
             asChild
           >
-            <Button variant="secondary">
+            <Button variant="secondary" className="h-7">
               <SelectPriorityValue placeholder={placeholder} />
             </Button>
           </Combobox.TriggerBase>

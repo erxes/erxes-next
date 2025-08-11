@@ -27,7 +27,7 @@ import {
   RecordTableInlineCell,
   Popover,
 } from 'erxes-ui';
-import { ITask } from '@/task/types';
+import { ITask } from '~/modules/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
@@ -129,6 +129,7 @@ export const tasksColumns = (
       cell: ({ cell }) => {
         return (
           <SelectStatus.InlineCell
+            teamId={cell.row.original.teamId}
             value={cell.row.original.status || 0}
             id={cell.row.original._id}
           />
@@ -175,6 +176,7 @@ export const tasksColumns = (
       ),
       cell: ({ cell }) => {
         const { updateTask } = useUpdateTask();
+
         return (
           <SelectProject.InlineCell
             value={cell.row.original.projectId || ''}

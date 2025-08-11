@@ -11,15 +11,18 @@ import {
   useQueryState,
   EnumCursorDirection,
   Badge,
+  Button,
 } from 'erxes-ui';
 import { useProjects } from '@/project/hooks/useGetProjects';
+import { useGetProject } from '@/project/hooks/useGetProject';
 import { IProject } from '@/project/types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SelectProjectContext,
   useSelectProjectContext,
 } from '@/project/contexts/SelectProjectContext';
 import { IconClipboard } from '@tabler/icons-react';
+import { useParams } from 'react-router-dom';
 
 interface ProjectsInlineProps {
   projectIds?: string[];
@@ -29,9 +32,35 @@ interface ProjectsInlineProps {
   className?: string;
 }
 
+const ProjectsInlineEffectComponent = ({
+  projectId,
+  updateProjects,
+  projects,
+}: {
+  projectId: string;
+  updateProjects?: React.Dispatch<React.SetStateAction<IProject[]>>;
+  projects?: IProject[];
+}) => {
+  const { project } = useGetProject({ variables: { _id: projectId } });
+
+  useEffect(() => {
+    const newProjects = [...(projects || [])].filter(
+      (p) => p._id !== projectId,
+    );
+
+    if (project) {
+      updateProjects?.([...newProjects, project]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
+
+  return null;
+};
+
 const ProjectsInline: React.FC<ProjectsInlineProps> = ({
   projectIds = [],
   projects = [],
+  updateProjects,
   placeholder = 'Select project...',
   className,
 }) => {
@@ -39,7 +68,7 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
     projectIds.includes(project._id),
   );
 
-  if (displayProjects.length === 0) {
+  if (projectIds.length === 0) {
     return (
       <div className={cn('text-muted-foreground text-sm', className)}>
         {placeholder}
@@ -47,30 +76,49 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
     );
   }
 
-  if (displayProjects.length === 1) {
-    const project = displayProjects[0];
+  if (projectIds.length === 1) {
+    const project = projects.find((p) => p._id === projectIds[0]);
     return (
-      <div className={cn('flex items-center gap-2', className)}>
-        <IconClipboard className="h-4 w-4" />
-        <span className="truncate">{project.name}</span>
-      </div>
+      <>
+        <div className={cn('flex items-center gap-2', className)}>
+          <IconClipboard className="h-4 w-4" />
+          <span className="truncate text-base font-medium">
+            {project?.name}
+          </span>
+        </div>
+        <ProjectsInlineEffectComponent
+          projectId={projectIds[0]}
+          updateProjects={updateProjects}
+          projects={projects}
+        />
+      </>
     );
   }
 
   return (
-    <div className={cn('flex items-center gap-1 flex-wrap', className)}>
-      {displayProjects.slice(0, 2).map((project) => (
-        <Badge key={project._id} variant="secondary" className="text-xs">
-          <IconClipboard className="h-3 w-3 mr-1" />
-          {project.name}
-        </Badge>
+    <>
+      <div className={cn('flex items-center gap-1 flex-wrap', className)}>
+        {displayProjects.slice(0, 2).map((project) => (
+          <Badge key={project._id} variant="secondary" className="text-xs">
+            <IconClipboard className="h-3 w-3 mr-1" />
+            {project.name}
+          </Badge>
+        ))}
+        {displayProjects.length > 2 && (
+          <Badge variant="secondary" className="text-xs">
+            +{displayProjects.length - 2} more
+          </Badge>
+        )}
+      </div>
+      {projectIds?.map((projectId) => (
+        <ProjectsInlineEffectComponent
+          key={projectId}
+          projectId={projectId}
+          updateProjects={updateProjects}
+          projects={projects}
+        />
       ))}
-      {displayProjects.length > 2 && (
-        <Badge variant="secondary" className="text-xs">
-          +{displayProjects.length - 2} more
-        </Badge>
-      )}
-    </div>
+    </>
   );
 };
 
@@ -88,6 +136,7 @@ export const SelectProjectProvider = ({
   projects?: IProject[];
 }) => {
   const [_projects, setProjects] = useState<IProject[]>(projects || []);
+
   const isSingleMode = mode === 'single';
 
   const onSelect = (project: IProject) => {
@@ -110,6 +159,17 @@ export const SelectProjectProvider = ({
     onValueChange?.(newSelectedProjectIds);
   };
 
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      setProjects((prev) => {
+        const existingIds = prev.map((p) => p._id);
+        const newProjects = projects.filter(
+          (p) => !existingIds.includes(p._id),
+        );
+        return [...prev, ...newProjects];
+      });
+    }
+  }, [projects]);
   return (
     <SelectProjectContext.Provider
       value={{
@@ -128,7 +188,6 @@ export const SelectProjectProvider = ({
 
 const SelectProjectValue = ({ placeholder }: { placeholder?: string }) => {
   const { projectIds, projects, setProjects } = useSelectProjectContext();
-
   return (
     <ProjectsInline
       projectIds={projectIds}
@@ -151,7 +210,7 @@ const SelectProjectCommandItem = ({ project }: { project: IProject }) => {
     >
       <div className="flex items-center gap-2">
         <IconClipboard className="h-4 w-4" />
-        <span className="truncate">{project.name}</span>
+        <span className="truncate font-medium">{project.name}</span>
       </div>
       <Combobox.Check checked={projectIds.includes(project._id)} />
     </Command.Item>
@@ -160,12 +219,17 @@ const SelectProjectCommandItem = ({ project }: { project: IProject }) => {
 
 const SelectProjectContent = () => {
   const { projects: selectedProjects } = useSelectProjectContext();
+  const { teamId } = useParams();
   const {
     projects = [],
     loading,
     handleFetchMore: _handleFetchMore,
     totalCount = 0,
-  } = useProjects();
+  } = useProjects({
+    variables: {
+      teamIds: teamId ? [teamId] : undefined,
+    },
+  });
 
   const handleFetchMore = () => {
     _handleFetchMore({ direction: EnumCursorDirection.FORWARD });
@@ -228,8 +292,8 @@ export const SelectProjectFilterView = ({
       <SelectProjectProvider
         mode={mode}
         value={project || (mode === 'single' ? '' : [])}
-        onValueChange={(value) => {
-          setProject(value as string[] | string);
+        onValueChange={(value: string[] | string) => {
+          setProject(value);
           resetFilterState();
           onValueChange?.(value);
         }}
@@ -269,9 +333,9 @@ export const SelectProjectFilterBar = ({
       <SelectProjectProvider
         mode={mode}
         value={project || (mode === 'single' ? '' : [])}
-        onValueChange={(value) => {
+        onValueChange={(value: string[] | string) => {
           if (value.length > 0) {
-            setProject(value as string[] | string);
+            setProject(value);
           } else {
             setProject(null);
           }
@@ -305,7 +369,7 @@ export const SelectProjectInlineCell = ({
   const [open, setOpen] = useState(false);
   return (
     <SelectProjectProvider
-      onValueChange={(value) => {
+      onValueChange={(value: string[] | string) => {
         onValueChange?.(value);
         setOpen(false);
       }}
@@ -335,7 +399,7 @@ export const SelectProjectFormItem = ({
   const [open, setOpen] = useState(false);
   return (
     <SelectProjectProvider
-      onValueChange={(value) => {
+      onValueChange={(value: string[] | string) => {
         onValueChange?.(value);
         setOpen(false);
       }}
@@ -343,9 +407,11 @@ export const SelectProjectFormItem = ({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
-          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectProjectValue placeholder={placeholder} />
-          </Combobox.Trigger>
+          <Combobox.TriggerBase className="w-full shadow-xs" asChild>
+            <Button variant="secondary" className={cn('h-7', className)}>
+              <SelectProjectValue placeholder={placeholder} />
+            </Button>
+          </Combobox.TriggerBase>
         </Form.Control>
 
         <Combobox.Content>
