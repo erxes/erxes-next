@@ -68,20 +68,22 @@ export const MemberGeneral = () => {
             </DataListItem>
           </div>
 
-          <div className="space-x-2 flex items-center">
-            <Label asChild>
-              <legend>Joined date</legend>
-            </Label>
+          <div className="grid grid-cols-2">
+            <div className="space-x-2 flex items-center">
+              <Label asChild>
+                <legend>Joined date</legend>
+              </Label>
 
-            <UserDateField
-              value={details?.workStartedDate || ''}
-              field="workStartedDate"
-              className='w-min my-2'
-              details={details || {}}
-              _id={_id}
-            />
+              <UserDateField
+                value={details?.workStartedDate || ''}
+                field="workStartedDate"
+                className="w-min my-2"
+                details={details || {}}
+                _id={_id}
+              />
+            </div>
+            <FieldSubscribeSwitch isSubscribed={isSubscribed} />
           </div>
-          <FieldSubscribeSwitch isSubscribed={isSubscribed} />
 
           <DataListItem label="Description">
             <TextareaField
@@ -123,8 +125,11 @@ const FieldSubscribeSwitch = ({
   const initialValue = currentValue || false;
 
   return (
-    <DataListItem label="Subscribed">
+    <div className="space-x-2 flex items-center gap-2">
+      <Label asChild>
+        <legend>Subscribed</legend>
+      </Label>
       <Switch checked={initialValue} />
-    </DataListItem>
+    </div>
   );
 };

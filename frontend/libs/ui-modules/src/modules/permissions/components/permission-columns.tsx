@@ -13,6 +13,10 @@ import {
 import { IPermission } from 'ui-modules/modules/permissions/types/permission';
 import { usePermissionsRemove } from 'ui-modules/modules/permissions/hooks/usePermissionsMutations';
 import { IconTrash } from '@tabler/icons-react';
+import {
+  SelectMember,
+  SelectUsersGroup,
+} from 'ui-modules/modules/team-members';
 
 export const PermissionsColumnsMoreCell = ({
   cell,
@@ -74,7 +78,7 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
         <TextOverflowTooltip value={cell.getValue() as string} />
       </RecordTableCellDisplay>
     ),
-    size: 250,
+    size: 200,
   },
   {
     id: 'action',
@@ -98,30 +102,35 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
         </RecordTableCellDisplay>
       );
     },
+    size: 250,
   },
   {
-    id: 'user',
-    accessorKey: 'user',
-    header: () => <RecordTable.InlineHead label="Email" />,
+    id: 'userId',
+    accessorKey: 'userId',
+    header: () => <RecordTable.InlineHead label="User" />,
     cell: ({ cell }) => {
-      const { user } = cell.row.original || {};
+      const { userId } = cell.row.original || {};
       return (
         <RecordTableCellDisplay>
-          {user ? <Badge>{user.email}</Badge> : '-'}
+          <SelectMember.Provider value={userId}>
+            <SelectMember.Value placeholder="No users selected" />
+          </SelectMember.Provider>
         </RecordTableCellDisplay>
       );
     },
     size: 250,
   },
   {
-    id: 'group',
-    accessorKey: 'group',
+    id: 'groupId',
+    accessorKey: 'groupId',
     header: () => <RecordTable.InlineHead label="Group" />,
     cell: ({ cell }) => {
-      const { group } = cell.row.original || {};
+      const { groupId } = cell.row.original || {};
       return (
         <RecordTableCellDisplay>
-          {group ? <Badge>{group.name}</Badge> : '-'}
+          <SelectUsersGroup.Provider value={groupId}>
+            <SelectUsersGroup.Value placeholder="No groups selected" />
+          </SelectUsersGroup.Provider>
         </RecordTableCellDisplay>
       );
     },
