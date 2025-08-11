@@ -22,7 +22,7 @@ export function useAddCustomer() {
     customersAdd({
       ...options,
       onCompleted: (data) => {
-        setCursor(null);
+        setCursor('');
         options?.onCompleted?.(data);
       },
     });

@@ -34,28 +34,28 @@ export const ContactsBreadcrumb = () => {
             <ToggleGroup.Item
               value="/contacts/customers"
               asChild
-              onClick={() => setCursor(null)}
+              onClick={() => setCursor('')}
             >
               <Link to="/contacts/customers">Customers</Link>
             </ToggleGroup.Item>
             <ToggleGroup.Item
               value="/contacts/companies"
               asChild
-              onClick={() => setCursor(null)}
+              onClick={() => setCursor('')}
             >
               <Link to="/contacts/companies">Companies</Link>
             </ToggleGroup.Item>
             <ToggleGroup.Item
               value="/contacts/leads"
               asChild
-              onClick={() => setCursor(null)}
+              onClick={() => setCursor('')}
             >
               <Link to="/contacts/leads">Leads</Link>
             </ToggleGroup.Item>
             <ToggleGroup.Item
               value="/contacts/clients"
               asChild
-              onClick={() => setCursor(null)}
+              onClick={() => setCursor('')}
             >
               <Link to="/contacts/clients">Clients</Link>
             </ToggleGroup.Item>
