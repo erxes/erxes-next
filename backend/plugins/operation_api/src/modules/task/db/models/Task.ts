@@ -8,8 +8,6 @@ import {
   ITaskUpdate,
 } from '@/task/@types/task';
 
-import { STATUS_TYPES } from '@/status/constants/types';
-
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
   getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
@@ -88,10 +86,27 @@ export const loadTaskClass = (models: IModels) => {
       }
 
       if (doc.status && doc.status !== task.status) {
-        const status = await models.Status.getStatus(doc.status);
+        rest.statusChangedDate = new Date();
+      }
 
-        if (status && status.type == STATUS_TYPES.COMPLETED) {
-          rest.complatedDate = new Date();
+      if (task.projectId && doc.teamId && doc.teamId !== task.teamId) {
+        const project = await models.Project.findOne({ _id: task.projectId });
+
+        if (project && !project.teamIds.includes(doc.teamId)) {
+          throw new Error('Task project is not in this team');
+        }
+      }
+
+      if (
+        task.teamId &&
+        doc.teamId &&
+        task.teamId !== doc.teamId &&
+        task.projectId
+      ) {
+        const project = await models.Project.findOne({ _id: task.projectId });
+
+        if (project && !project.teamIds.includes(doc.teamId)) {
+          throw new Error('Task project is not in this team');
         }
       }
 

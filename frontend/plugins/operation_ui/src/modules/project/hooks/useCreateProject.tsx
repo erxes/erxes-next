@@ -3,6 +3,8 @@ import { CREATE_PROJECT_MUTATION } from '@/project/graphql/mutation/createProjec
 import { useToast } from 'erxes-ui';
 import { useRecordTableCursor } from 'erxes-ui';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
+import { GET_PROJECTS } from '@/project/graphql/queries/getProjects';
+
 export const useCreateProject = () => {
   const { toast } = useToast();
   const { setCursor } = useRecordTableCursor({
@@ -10,7 +12,9 @@ export const useCreateProject = () => {
   });
   const [createProjectMutation, { loading, error }] = useMutation(
     CREATE_PROJECT_MUTATION,
+
     {
+      refetchQueries: [GET_PROJECTS],
       onCompleted: () => {
         toast({
           title: 'Success',

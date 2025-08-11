@@ -19,7 +19,7 @@ export const types = `
     projectId: String
     teamId: String
     estimatedPoint: Int
-    complatedDate: Date
+    statusChangedDate: Date
 
     estimateChoices: JSON
   }
