@@ -104,7 +104,7 @@ const SelectPriorityBadgeValue = ({
   if (selectedPriorities.length === 0) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select priority...'}
+        {placeholder || 'Select priority'}
       </span>
     );
   }
@@ -122,13 +122,11 @@ const SelectPriorityBadgeValue = ({
               : undefined
           }
         >
-          {priority.value !== 0 && (
-            <priority.Icon
-              className="w-3 h-3"
-              color={priority.IconColor}
-              stroke={2}
-            />
-          )}
+          <priority.Icon
+            className="w-3 h-3"
+            color={priority.IconColor}
+            stroke={2}
+          />
           {priority.name}
         </Badge>
       ))}
@@ -145,7 +143,7 @@ const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
   if (selectedPriorities.length === 0) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select priority...'}
+        {placeholder || 'Select priority'}
       </span>
     );
   }
@@ -154,21 +152,12 @@ const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
     <div className="flex gap-1 flex-wrap">
       {selectedPriorities.map((priority) => (
         <div className="flex items-center gap-2" key={priority.value}>
-          {priority.value !== 0 && (
-            <priority.Icon
-              className="w-3 h-3"
-              color={priority.IconColor}
-              stroke={2}
-            />
-          )}
-          <p
-            className={cn(
-              'font-medium text-base',
-              priority.value === 0 && 'text-muted-foreground',
-            )}
-          >
-            {priority.name}
-          </p>
+          <priority.Icon
+            className="w-3 h-3"
+            color={priority.IconColor}
+            stroke={2}
+          />
+          <p className={cn('font-medium text-base')}>{priority.name}</p>
         </div>
       ))}
     </div>
@@ -462,6 +451,65 @@ const SelectPriorityRoot = React.forwardRef<
 
 SelectPriorityRoot.displayName = 'SelectPriorityRoot';
 
+export const SelectPriorityDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectPriorityProvider>,
+    'children' | 'onValueChange' | 'value'
+  > & {
+    className?: string;
+    placeholder?: string;
+    value?: number | string;
+    id?: string;
+  }
+>(({ className, placeholder, value, id, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
+
+  const handleValueChange = (value: number) => {
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          priority: value,
+        },
+      });
+    }
+    setOpen(false);
+  };
+
+  return (
+    <SelectPriorityProvider
+      value={stringValue}
+      onValueChange={(value) => {
+        const numValue =
+          typeof value === 'string' ? parseInt(value, 10) : Number(value);
+        handleValueChange(numValue);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectPriorityValue placeholder={placeholder} />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectPriorityContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectPriorityProvider>
+  );
+});
+
+SelectPriorityDetail.displayName = 'SelectPriorityDetail';
+
 export const SelectPriority = Object.assign(SelectPriorityRoot, {
   Provider: SelectPriorityProvider,
   Value: SelectPriorityBadgeValue,
@@ -471,4 +519,5 @@ export const SelectPriority = Object.assign(SelectPriorityRoot, {
   FilterBar: SelectPriorityFilterBar,
   InlineCell: SelectPriorityInlineCell,
   FormItem: SelectPriorityFormItem,
+  Detail: SelectPriorityDetail,
 });

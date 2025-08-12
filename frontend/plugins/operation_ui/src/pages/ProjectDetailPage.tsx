@@ -6,5 +6,9 @@ export const ProjectDetailPage = () => {
 
   if (!projectId) return null;
 
-  return <ProjectDetails projectId={projectId} />;
+  return (
+    <div className="flex h-screen w-full">
+      <ProjectDetails projectId={projectId} />
+    </div>
+  );
 };

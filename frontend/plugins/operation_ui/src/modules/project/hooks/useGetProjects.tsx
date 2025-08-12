@@ -22,6 +22,9 @@ const PROJECTS_PER_PAGE = 30;
 export const useProjectsVariables = (
   variables?: QueryHookOptions<ICursorListResponse<IProject>>['variables'],
 ) => {
+  const { cursor } = useRecordTableCursor({
+    sessionKey: PROJECTS_CURSOR_SESSION_KEY,
+  });
   const [{ name, team, priority, status, lead }] = useMultiQueryState<{
     name: string;
     team: string[];
@@ -30,10 +33,7 @@ export const useProjectsVariables = (
     lead: string;
   }>(['name', 'team', 'priority', 'status', 'lead']);
   const currentUser = useAtomValue(currentUserState);
-  const { cursor } = useRecordTableCursor({
-    sessionKey: PROJECTS_CURSOR_SESSION_KEY,
-  });
-  const projectsQueryVariables = {
+  return {
     limit: PROJECTS_PER_PAGE,
     orderBy: {
       status: 1,
@@ -49,24 +49,20 @@ export const useProjectsVariables = (
       ? {}
       : { userId: currentUser._id }),
   };
-  return { projectsQueryVariables };
 };
 
 export const useProjects = (
   options?: QueryHookOptions<ICursorListResponse<IProject>>,
 ) => {
-  const { cursor } = useRecordTableCursor({
-    sessionKey: PROJECTS_CURSOR_SESSION_KEY,
-  });
   const setProjectTotalCount = useSetAtom(projectTotalCountAtom);
   const { toast } = useToast();
+  const variables = useProjectsVariables(options?.variables);
   const { data, loading, fetchMore } = useQuery<ICursorListResponse<IProject>>(
     GET_PROJECTS,
     {
       ...options,
-      variables: useProjectsVariables(options?.variables)
-        ?.projectsQueryVariables,
-      skip: cursor === undefined,
+      variables,
+      skip: options?.skip || variables.cursor === undefined,
       onError: (e) => {
         toast({
           title: 'Error',

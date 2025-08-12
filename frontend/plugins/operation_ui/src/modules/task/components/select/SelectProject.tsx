@@ -23,6 +23,7 @@ import {
 } from '@/project/contexts/SelectProjectContext';
 import { IconClipboard } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 
 interface ProjectsInlineProps {
   projectIds?: string[];
@@ -471,6 +472,57 @@ const SelectProjectRoot = React.forwardRef<
 
 SelectProjectRoot.displayName = 'SelectProjectRoot';
 
+export const SelectProjectDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectProjectProvider>, 'children' | 'onValueChange' > & {
+    className?: string;
+    placeholder?: string;
+    id?: string;
+    onValueChange?: (value: string | string[]) => void;
+  }
+>(({ onValueChange, className, placeholder, id, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+
+  const handleValueChange = (value: string | string[]) => {
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          projectId: typeof value === 'string' ? value : value[0],
+        },
+      });
+    }
+    onValueChange?.(value);
+    setOpen(false);
+  };
+
+  return (
+    <SelectProjectProvider
+      onValueChange={handleValueChange}
+      mode="single"
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectProjectValue placeholder={placeholder} />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectProjectContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectProjectProvider>
+  );
+});
+
+SelectProjectDetail.displayName = 'SelectProjectDetail';
+
 export const SelectProject = Object.assign(SelectProjectRoot, {
   Provider: SelectProjectProvider,
   Value: SelectProjectValue,
@@ -480,4 +532,5 @@ export const SelectProject = Object.assign(SelectProjectRoot, {
   FilterBar: SelectProjectFilterBar,
   InlineCell: SelectProjectInlineCell,
   FormItem: SelectProjectFormItem,
+  Detail: SelectProjectDetail,
 });

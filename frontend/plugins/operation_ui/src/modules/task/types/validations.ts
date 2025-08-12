@@ -10,4 +10,5 @@ export const addTaskSchema = z.object({
   targetDate: z.date().optional(),
   assigneeId: z.string().optional(),
   projectId: z.string().optional(),
+  estimatePoint: z.number().optional(),
 });

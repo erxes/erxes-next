@@ -38,7 +38,7 @@ export const useTasksVariables = (
     sessionKey: TASKS_CURSOR_SESSION_KEY,
   });
 
-  const tasksQueryVariables = {
+  return {
     limit: TASKS_PER_PAGE,
     orderBy: {
       createdAt: -1,
@@ -58,23 +58,20 @@ export const useTasksVariables = (
         userIds: [currentUser._id],
       }),
   };
-  return { tasksQueryVariables };
 };
 
 export const useTasks = (
   options?: QueryHookOptions<ICursorListResponse<ITask>>,
 ) => {
-  const { cursor } = useRecordTableCursor({
-    sessionKey: TASKS_CURSOR_SESSION_KEY,
-  });
   const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
+  const variables = useTasksVariables(options?.variables);
   const { toast } = useToast();
   const { data, loading, fetchMore } = useQuery<ICursorListResponse<ITask>>(
     GET_TASKS,
     {
       ...options,
-      variables: useTasksVariables(options?.variables)?.tasksQueryVariables,
-      skip: cursor === undefined,
+      variables,
+      skip: options?.skip || isUndefinedOrNull(variables.cursor),
       onError: (e) => {
         toast({
           title: 'Error',

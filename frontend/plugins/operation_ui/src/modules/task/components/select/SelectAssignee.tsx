@@ -65,7 +65,7 @@ export const SelectTeamMemberContent = ({
         (user) => !members.find((member) => member._id === user._id),
       );
   return (
-    <Command shouldFilter={false}>  
+    <Command shouldFilter={false}>
       <Command.Input
         value={search}
         onValueChange={setSearch}
@@ -80,7 +80,9 @@ export const SelectTeamMemberContent = ({
             {members.map((member) => (
               <SelectMember.CommandItem key={member._id} user={member} />
             ))}
-          {!loading && membersList.length > 0 &&  <Command.Separator className="my-1" />}
+            {!loading && membersList.length > 0 && (
+              <Command.Separator className="my-1" />
+            )}
           </>
         )}
 
@@ -349,6 +351,57 @@ const SelectAssigneeRoot = React.forwardRef<
 
 SelectAssigneeRoot.displayName = 'SelectAssigneeRoot';
 
+export const SelectAssigneeDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectAssigneeProvider>, 'children'> & {
+    className?: string;
+    placeholder?: string;
+    teamIds?: string[] | string;
+    id?: string;
+  }
+>(({ onValueChange, className, placeholder, teamIds, id, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+
+  const handleValueChange = (value: string | string[]) => {
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          assigneeId: value,
+        },
+      });
+    }
+    onValueChange?.(value);
+    setOpen(false);
+  };
+
+  return (
+    <SelectAssigneeProvider
+      onValueChange={handleValueChange}
+      mode="single"
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectAssigneeFormValue />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectAssigneeContent teamIds={teamIds} />
+        </Combobox.Content>
+      </Popover>
+    </SelectAssigneeProvider>
+  );
+});
+
+SelectAssigneeDetail.displayName = 'SelectAssigneeDetail';
+
 export const SelectAssignee = Object.assign(SelectAssigneeRoot, {
   Provider: SelectAssigneeProvider,
   Value: SelectAssigneeValue,
@@ -358,4 +411,5 @@ export const SelectAssignee = Object.assign(SelectAssigneeRoot, {
   FilterBar: SelectAssigneeFilterBar,
   InlineCell: SelectAssigneeInlineCell,
   FormItem: SelectAssigneeFormItem,
+  Detail: SelectAssigneeDetail,
 });

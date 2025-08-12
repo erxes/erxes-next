@@ -399,6 +399,56 @@ const DateSelectRoot = React.forwardRef<
 
 DateSelectRoot.displayName = 'DateSelectRoot';
 
+export const DateSelectDetail = React.forwardRef<
+  HTMLButtonElement,
+  {
+    className?: string;
+    placeholder?: string;
+    value?: Date;
+    onValueChange?: (value?: Date) => void;
+    type?: 'start' | 'target';
+    id?: string;
+  }
+>(({ onValueChange, className, placeholder, value, type, id }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateProject } = useUpdateProject();
+
+  const handleValueChange = (value?: Date) => {
+    if (id) {
+      updateProject({
+        variables: {
+          _id: id,
+          startDate: type === 'start' ? value?.toISOString() : undefined,
+          targetDate: type === 'target' ? value?.toISOString() : undefined,
+        },
+      });
+    }
+    onValueChange?.(value);
+    setOpen(false);
+  };
+
+  return (
+    <DateSelectProvider value={value} onValueChange={handleValueChange}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <DateSelectFormItemValue placeholder={placeholder} type={type} />
+          </Button>
+        </Combobox.TriggerBase>
+        <Popover.Content className="w-fit">
+          <DateSelectContent />
+        </Popover.Content>
+      </Popover>
+    </DateSelectProvider>
+  );
+});
+
+DateSelectDetail.displayName = 'DateSelectDetail';
+
 export const DateSelect = Object.assign(DateSelectRoot, {
   Provider: DateSelectProvider,
   Value: DateSelectValue,
@@ -408,4 +458,5 @@ export const DateSelect = Object.assign(DateSelectRoot, {
   FilterBar: DateSelectFilterBar,
   InlineCell: DateSelectInlineCell,
   FormItem: DateSelectFormItem,
+  Detail: DateSelectDetail,
 });

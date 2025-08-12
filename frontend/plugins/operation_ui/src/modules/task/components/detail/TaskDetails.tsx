@@ -1,10 +1,13 @@
-import { useGetTask } from '@/task/hooks/useGetTask';
+import { TaskFields } from '@/task/components/detail/TaskFields';
 
 export const TaskDetails = ({ taskId }: { taskId: string }) => {
-  const { task } = useGetTask({
-    variables: { _id: taskId },
-    skip: !taskId,
-  });
-
-  return <div>{task?.name}</div>;
+  return (
+    <div className="h-full w-full flex overflow-hidden">
+      <div className="h-full flex flex-auto justify-center mt-12 px-6">
+        <div className="w-full xl:max-w-3xl">
+          <TaskFields taskId={taskId} />
+        </div>
+      </div>
+    </div>
+  );
 };
