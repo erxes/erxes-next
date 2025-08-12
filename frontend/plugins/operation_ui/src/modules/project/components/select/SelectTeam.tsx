@@ -55,27 +55,20 @@ export const SelectTeamProvider = ({
   onValueChange: (value: string[] | string) => void;
   teams?: ITeam[];
 }) => {
-  const [_teams, setTeams] = useState<ITeam[]>(teams || []);
+  const [_teams, setTeams] = useState<ITeam[]>([]);
   const isSingleMode = mode === 'single';
 
   useEffect(() => {
     if (teams) {
-      setTeams(teams);
-    }
-  }, [teams]);
-
-  useEffect(() => {
-    if (teams && value) {
-      const teamIds = Array.isArray(value) ? value : [value];
-      const selectedTeams = teams.filter((team) => teamIds.includes(team._id));
-
-      setTeams((prev) => {
-        const existingIds = prev.map((t) => t._id);
-        const newTeams = selectedTeams.filter(
-          (team) => !existingIds.includes(team._id),
+      if (value) {
+        const teamIds = Array.isArray(value) ? value : [value];
+        const selectedTeams = teams.filter((team) =>
+          teamIds.includes(team._id),
         );
-        return newTeams.length > 0 ? [...prev, ...newTeams] : prev;
-      });
+        setTeams(selectedTeams);
+      } else {
+        setTeams([]);
+      }
     }
   }, [teams, value]);
 

@@ -5,13 +5,6 @@ import {
 } from '@/team/schemas';
 import { z } from 'zod';
 import { IUser } from 'ui-modules';
-import {
-  IconCircleDashed,
-  IconCircle,
-  IconCircleDot,
-  IconCircleCheck,
-  IconCircleX,
-} from '@tabler/icons-react';
 
 export enum TeamHotKeyScope {
   TeamSettingsPage = 'operation-team-page',
@@ -33,43 +26,6 @@ export enum TeamStatusTypes {
   Cancelled = 'cancelled',
 }
 
-export const DEFAULT_TEAM_STATUSES = [
-  {
-    name: 'backlog',
-    type: TeamStatusTypes.Backlog,
-    color: '#6B7280',
-    value: 0,
-    Icon: IconCircleDashed,
-  },
-  {
-    name: 'todo',
-    type: TeamStatusTypes.Unstarted,
-    color: '#3B82F6',
-    value: 1,
-    Icon: IconCircle,
-  },
-  {
-    name: 'in progress',
-    type: TeamStatusTypes.Started,
-    color: '#F59E0B',
-    value: 2,
-    Icon: IconCircleDot,
-  },
-  {
-    name: 'done',
-    type: TeamStatusTypes.Completed,
-    color: '#10B981',
-    value: 3,
-    Icon: IconCircleCheck,
-  },
-  {
-    name: 'cancelled',
-    type: TeamStatusTypes.Cancelled,
-    color: '#EF4444',
-    value: 4,
-    Icon: IconCircleX,
-  },
-];
 
 export interface ITeam {
   _id: string;

@@ -8,7 +8,10 @@ import {
   EnumCursorDirection,
   ICursorListResponse,
   useMultiQueryState,
+  useToast,
+  isUndefinedOrNull,
 } from 'erxes-ui';
+import { useParams } from 'react-router-dom';
 import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
 import { currentUserState } from 'ui-modules/states';
 import { useSetAtom, useAtomValue } from 'jotai';
@@ -20,13 +23,16 @@ const TASKS_PER_PAGE = 30;
 export const useTasksVariables = (
   variables?: QueryHookOptions<ICursorListResponse<ITask>>['variables'],
 ) => {
-  const [{ searchValue, team, priority, status }] = useMultiQueryState<{
-    searchValue: string;
-    team: string[];
-    priority: string;
-    status: string;
-  }>(['searchValue', 'team', 'priority', 'status']);
-
+  const { teamId } = useParams();
+  const [{ searchValue, assignee, team, priority, statusType, status }] =
+    useMultiQueryState<{
+      searchValue: string;
+      assignee: string;
+      team: string;
+      priority: string;
+      status: string;
+      statusType: string;
+    }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
   const currentUser = useAtomValue(currentUserState);
   const { cursor } = useRecordTableCursor({
     sessionKey: TASKS_CURSOR_SESSION_KEY,
@@ -39,12 +45,15 @@ export const useTasksVariables = (
     },
     cursor,
     searchValue: searchValue || undefined,
-    teamIds: team || undefined,
+    assigneeId: assignee || undefined,
+    teamId: teamId || team,
     priority: priority || undefined,
     status: status || undefined,
+    statusType: statusType || undefined,
     ...variables,
-    ...(!variables?.teamIds &&
+    ...(!variables?.teamId &&
       !variables?.userIds &&
+      !assignee &&
       currentUser?._id && {
         userIds: [currentUser._id],
       }),
@@ -59,19 +68,27 @@ export const useTasks = (
     sessionKey: TASKS_CURSOR_SESSION_KEY,
   });
   const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
+  const { toast } = useToast();
   const { data, loading, fetchMore } = useQuery<ICursorListResponse<ITask>>(
     GET_TASKS,
     {
       ...options,
       variables: useTasksVariables(options?.variables)?.tasksQueryVariables,
       skip: cursor === undefined,
+      onError: (e) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+          variant: 'destructive',
+        });
+      },
     },
   );
 
   const { list: tasks, pageInfo, totalCount } = data?.getTasks || {};
 
   useEffect(() => {
-    if (!totalCount) return;
+    if (isUndefinedOrNull(totalCount)) return;
     setTaskTotalCount(totalCount);
   }, [totalCount, setTaskTotalCount]);
 

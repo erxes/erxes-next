@@ -1,19 +1,18 @@
 import { tasksColumns } from '@/task/components/TasksColumn';
-import { RecordTable } from 'erxes-ui';
+import { PageSubHeader, RecordTable } from 'erxes-ui';
 import { useTasks } from '@/task/hooks/useGetTasks';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
 import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
-// import { TasksFilter } from '@/task/components/TasksFilter';
+import { TasksFilter } from '@/task/components/TasksFilter';
 import { useParams } from 'react-router-dom';
 
 export const TasksRecordTable = () => {
-  const { teamId, projectId } = useParams();
+  const { projectId } = useParams();
   const currentUser = useAtomValue(currentUserState);
 
   const variables = {
-    teamId: teamId || undefined,
     projectId: projectId || undefined,
     userId: currentUser?._id,
   };
@@ -32,9 +31,9 @@ export const TasksRecordTable = () => {
 
   return (
     <div className="flex flex-col overflow-hidden h-full">
-      {/* <PageSubHeader>
+      <PageSubHeader>
         <TasksFilter />
-      </PageSubHeader> */}
+      </PageSubHeader>
       <RecordTable.Provider
         columns={tasksColumns(teams)}
         data={tasks || [{}]}

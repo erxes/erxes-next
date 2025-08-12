@@ -64,7 +64,7 @@ export const SelectTeamMemberContent = ({
         (user) => !members.find((member) => member._id === user._id),
       );
   return (
-    <Command shouldFilter={false}>
+    <Command shouldFilter={false}>  
       <Command.Input
         value={search}
         onValueChange={setSearch}
@@ -79,15 +79,13 @@ export const SelectTeamMemberContent = ({
             {members.map((member) => (
               <SelectMember.CommandItem key={member._id} user={member} />
             ))}
+          {!loading && membersList.length > 0 &&  <Command.Separator className="my-1" />}
           </>
         )}
 
         {!loading &&
-          membersList.map((user) => (
-            <>
-              <Command.Separator className="my-1" />
-              <SelectMember.CommandItem key={user._id} user={user} />
-            </>
+          membersList.map((user: IUser) => (
+            <SelectMember.CommandItem key={user._id} user={user} />
           ))}
 
         <Combobox.FetchMore
@@ -252,7 +250,7 @@ export const SelectAssigneeInlineCell = ({
 
 const SelectAssigneeFormValue = () => {
   const { members, memberIds, setMembers } = useSelectMemberContext();
-  if (members.length === 0)
+  if (memberIds?.length === 0)
     return (
       <span className="flex items-center gap-2">
         <IconUser className="size-4" />
