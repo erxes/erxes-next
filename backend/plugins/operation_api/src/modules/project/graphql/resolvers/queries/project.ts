@@ -93,7 +93,6 @@ export const projectQueries = {
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] }, // filter all relevant statuses
         },
       },
       {
@@ -204,7 +203,6 @@ export const projectQueries = {
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] },
         },
       },
       {
