@@ -8,6 +8,7 @@ import {
   Filter,
   Form,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
   useFilterContext,
   useQueryState,
@@ -232,14 +233,14 @@ export const SelectLeadInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectLeadValue placeholder="Lead not specified" />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectLeadContent teamIds={teamIds} />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectLeadProvider>
   );
 };

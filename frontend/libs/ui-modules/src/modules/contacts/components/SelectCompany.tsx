@@ -12,6 +12,7 @@ import {
   Combobox,
   Command,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
 } from 'erxes-ui';
 import { CompaniesInline } from './CompaniesInline';
@@ -157,14 +158,14 @@ const SelectCompanyInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectCompany.Value />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectCompany.Content />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectCompanyProvider>
   );
 };

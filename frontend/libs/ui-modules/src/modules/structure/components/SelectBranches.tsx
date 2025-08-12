@@ -288,14 +288,14 @@ export const SelectBranchesInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectBranchesValue />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content className="min-w-72">
           <SelectBranchesContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectBranchesProvider>
   );
 };

@@ -10,6 +10,7 @@ import {
   Command,
   Form,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
 } from 'erxes-ui';
 import { CustomersInline } from './CustomersInline';
@@ -160,14 +161,14 @@ const SelectCustomerInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectCustomer.Value />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectCustomer.Content />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectCustomerProvider>
   );
 };

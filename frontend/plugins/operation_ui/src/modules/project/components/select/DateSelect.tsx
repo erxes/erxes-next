@@ -13,6 +13,7 @@ import {
   useQueryState,
   Combobox,
   Button,
+  PopoverScoped,
 } from 'erxes-ui';
 import {
   IconCalendarQuestion,
@@ -299,7 +300,7 @@ export const DateSelectInlineCell = ({
 
   return (
     <DateSelectProvider value={value} onValueChange={handleValueChange}>
-      <Popover
+      <PopoverScoped
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
@@ -315,7 +316,7 @@ export const DateSelectInlineCell = ({
         <RecordTableInlineCell.Content className="w-fit">
           <DateSelectContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </DateSelectProvider>
   );
 };

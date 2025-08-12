@@ -15,7 +15,6 @@ import {
   DropdownMenu,
   Separator,
   TextOverflowTooltip,
-  Popover,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
@@ -29,7 +28,7 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { usePhoneFields } from '../hooks/usePhoneFields';
 import { PhoneFieldsContext } from '../contexts/PhoneFieldsContext';
-import { RecordTableInlineCell } from 'erxes-ui/modules';
+import { PopoverScoped, RecordTableInlineCell } from 'erxes-ui/modules';
 
 export interface IPhoneField {
   phone?: string;
@@ -470,7 +469,7 @@ const PhoneListFieldInlineCell = forwardRef<
         className={className}
         {...props}
       >
-        <Popover scope={scope}>
+        <PopoverScoped scope={scope}>
           <RecordTableInlineCell.Trigger>
             <PhonesBadgeDisplay phones={phones} />
           </RecordTableInlineCell.Trigger>
@@ -480,7 +479,7 @@ const PhoneListFieldInlineCell = forwardRef<
             </PhoneListContainer>
             <PhoneForm />
           </RecordTableInlineCell.Content>
-        </Popover>
+        </PopoverScoped>
       </PhoneFieldsProvider>
     );
   },

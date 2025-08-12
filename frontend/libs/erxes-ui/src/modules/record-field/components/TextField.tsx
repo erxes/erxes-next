@@ -13,6 +13,7 @@ export interface ITextFieldContainerProps {
   field: string;
   fieldId?: string;
   _id: string;
+  scope?: string;
 }
 
 export const TextField = React.forwardRef<
@@ -20,7 +21,7 @@ export const TextField = React.forwardRef<
   ButtonProps & {
     placeholder?: string;
     value: string;
-    scope: string;
+    scope?: string;
     onValueChange?: (value: string) => void;
     onSave?: (value: string) => void;
   }

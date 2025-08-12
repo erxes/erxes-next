@@ -15,6 +15,7 @@ import {
   Separator,
   TextOverflowTooltip,
   Form,
+  Popover,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
@@ -32,6 +33,8 @@ import { emailSchema } from '../validations/emailValidation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
+import { EmailDisplay } from 'erxes-ui/modules/display';
 
 export interface IEmailField {
   email?: string;
@@ -55,7 +58,14 @@ export const EmailFieldsProvider = ({
   onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
 }) => {
   return (
-    <EmailFieldsContext.Provider value={{ recordId, onValueChange, noValidation, onValidationStatusChange }}>
+    <EmailFieldsContext.Provider
+      value={{
+        recordId,
+        onValueChange,
+        noValidation,
+        onValidationStatusChange,
+      }}
+    >
       {children}
     </EmailFieldsContext.Provider>
   );
@@ -84,11 +94,76 @@ export const EmailListField = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, setEmails]);
   return (
-    <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange} noValidation={noValidation} onValidationStatusChange={onValidationStatusChange}>
+    <EmailFieldsProvider
+      recordId={recordId}
+      onValueChange={onValueChange}
+      noValidation={noValidation}
+      onValidationStatusChange={onValidationStatusChange}
+    >
       <div className="p-1 space-y-1">
         <EmailList />
       </div>
       <EmailForm />
+    </EmailFieldsProvider>
+  );
+};
+
+export const EmailsField = ({
+  emails,
+  onValueChange,
+  onValidationStatusChange,
+  noValidation,
+  primaryEmail,
+  emailValidationStatus,
+  _id,
+}: {
+  emails: TEmails;
+  onValueChange: (emails: TEmails) => void;
+  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  noValidation?: boolean;
+  _id: string;
+  primaryEmail: string;
+  emailValidationStatus: 'valid' | 'invalid';
+}) => {
+  const _emails = [
+    ...(primaryEmail
+      ? [
+          {
+            email: primaryEmail,
+            status: emailValidationStatus as 'verified' | 'unverified',
+            isPrimary: true,
+          },
+        ]
+      : []),
+    ...(emails || []).map((email) => ({
+      email,
+      status: emailValidationStatus as 'verified' | 'unverified',
+    })),
+  ].filter(
+    (email, index, self) =>
+      index === self.findIndex((t) => t.email === email.email),
+  );
+  return (
+    <EmailFieldsProvider
+      recordId={_id}
+      onValueChange={onValueChange}
+      noValidation={noValidation}
+      onValidationStatusChange={onValidationStatusChange}
+    >
+      <Popover>
+        <RecordTableInlineCell.Trigger>
+          <EmailDisplay emails={_emails as TEmails} />
+        </RecordTableInlineCell.Trigger>
+        <Popover.Content>
+          <EmailListField
+            recordId={_id}
+            emails={_emails as TEmails}
+            onValueChange={onValueChange}
+            noValidation={noValidation}
+            onValidationStatusChange={onValidationStatusChange}
+          />
+        </Popover.Content>
+      </Popover>
     </EmailFieldsProvider>
   );
 };
@@ -146,7 +221,8 @@ const EmailOptions = ({
   status,
   isPrimary,
 }: IEmailField & { isPrimary?: boolean }) => {
-  const { recordId, onValueChange, noValidation, onValidationStatusChange } = useEmailFields();
+  const { recordId, onValueChange, noValidation, onValidationStatusChange } =
+    useEmailFields();
   const emails = useAtomValue(emailsFamilyState(recordId));
   const setEditingEmail = useSetAtom(editingEmailFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
@@ -167,9 +243,7 @@ const EmailOptions = ({
   const handleVerificationChange = (value: string) => {
     if (noValidation) return;
     if (value === status) return;
-    onValidationStatusChange?.(
-      value as 'verified' | 'unverified',
-    );
+    onValidationStatusChange?.(value as 'verified' | 'unverified');
   };
   const handleDeleteClick = () => {
     onValueChange?.(emails.filter((e) => e.email !== email));
@@ -208,7 +282,10 @@ const EmailOptions = ({
         {isPrimary && !noValidation && (
           <>
             <DropdownMenu.Separator />
-            <DropdownMenu.RadioGroup value={status} onValueChange={handleVerificationChange}>
+            <DropdownMenu.RadioGroup
+              value={status}
+              onValueChange={handleVerificationChange}
+            >
               <DropdownMenu.RadioItem value="verified">
                 <IconCircleDashedCheck className="text-success data-[state=active]:bg-muted " />
                 Verified
@@ -331,7 +408,7 @@ const EmailForm = () => {
           <Button
             variant="secondary"
             className="w-full"
-            type='submit'
+            type="submit"
             onClick={(e) => {
               if (!showEmailInput) {
                 e.preventDefault();

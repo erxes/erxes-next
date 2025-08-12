@@ -5,6 +5,7 @@ import {
   Filter,
   Form,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
   cn,
   useFilterContext,
@@ -268,27 +269,43 @@ export const SelectMemberFilterBar = ({
 export const SelectMemberInlineCell = React.forwardRef<
   React.ComponentRef<typeof RecordTableInlineCell.Trigger>,
   Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> &
-    React.ComponentProps<typeof RecordTableInlineCell.Trigger>
->(({ mode, value, onValueChange, members, size = 'lg', ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectMemberProvider
-      mode={mode}
-      value={value}
-      onValueChange={onValueChange}
-      members={members}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <RecordTableInlineCell.Trigger ref={ref} {...props}>
-          <SelectMemberValue placeholder={''} size={size} />
-        </RecordTableInlineCell.Trigger>
-        <RecordTableInlineCell.Content>
-          <SelectMemberContent />
-        </RecordTableInlineCell.Content>
-      </Popover>
-    </SelectMemberProvider>
-  );
-});
+    React.ComponentProps<typeof RecordTableInlineCell.Trigger> & {
+      scope?: string;
+      placeholder?: string;
+    }
+>(
+  (
+    {
+      mode,
+      value,
+      onValueChange,
+      members,
+      size = 'lg',
+      scope,
+      placeholder,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <SelectMemberProvider
+        mode={mode}
+        value={value}
+        onValueChange={onValueChange}
+        members={members}
+      >
+        <PopoverScoped scope={scope}>
+          <RecordTableInlineCell.Trigger ref={ref} {...props}>
+            <SelectMemberValue placeholder={placeholder} size={size} />
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
+            <SelectMemberContent />
+          </RecordTableInlineCell.Content>
+        </PopoverScoped>
+      </SelectMemberProvider>
+    );
+  },
+);
 
 SelectMemberInlineCell.displayName = 'SelectMemberInlineCell';
 

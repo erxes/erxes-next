@@ -12,8 +12,7 @@ import {
   Input,
   RecordTable,
   RecordTableInlineCell,
-  RecordTableInlineCell,
-  Popover,
+  PopoverScoped,
 } from 'erxes-ui';
 
 // Create named components for cell renderers to fix React Hook usage
@@ -22,7 +21,7 @@ const NumberCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`tbalance-${_id}-number`}>
+    <PopoverScoped scope={`tbalance-${_id}-number`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -33,7 +32,7 @@ const NumberCell = ({ getValue, row }: any) => {
           className="w-full"
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -42,7 +41,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`tbalance-${_id}-description`}>
+    <PopoverScoped scope={`tbalance-${_id}-description`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -53,7 +52,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
           className="w-full"
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 

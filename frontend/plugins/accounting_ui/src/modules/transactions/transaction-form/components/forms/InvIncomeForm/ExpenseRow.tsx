@@ -17,6 +17,7 @@ import {
   Popover,
   Select,
   Table,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -151,7 +152,7 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.title`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.title`}
                 closeOnEnter
               >
@@ -167,7 +168,7 @@ export const ExpenseRow = ({
                     onChange={field.onChange}
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -178,7 +179,7 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.rule`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.rule`}
                 closeOnEnter
               >
@@ -197,7 +198,7 @@ export const ExpenseRow = ({
                     ))}
                   </Select.Content>
                 </Select>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -208,7 +209,7 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.amount`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.amount`}
                 closeOnEnter
               >
@@ -223,7 +224,7 @@ export const ExpenseRow = ({
                     onChange={field.onChange}
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -234,7 +235,7 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.accountId`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.amount`}
                 closeOnEnter
               >
@@ -257,7 +258,7 @@ export const ExpenseRow = ({
                   scope={AccountingHotkeyScope.TransactionFormSubPage}
                   onCallback={(account) => setAccount(account)}
                 />
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>

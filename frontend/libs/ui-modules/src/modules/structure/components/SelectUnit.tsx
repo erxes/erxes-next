@@ -209,14 +209,14 @@ export const SelectUnitInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectUnitValue placeholder="Select unit" />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content className="min-w-72">
           <SelectUnitContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectUnitProvider>
   );
 };

@@ -15,7 +15,7 @@ import {
   Input,
   RecordTable,
   RecordTableInlineCell,
-  Popover,
+  PopoverScoped,
 } from 'erxes-ui';
 import { IProject } from '@/project/types';
 import { useState } from 'react';
@@ -28,6 +28,7 @@ import {
   SelectLead,
   DateSelect,
 } from '@/project/components/select';
+import clsx from 'clsx';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
@@ -54,13 +55,12 @@ export const projectsColumns = (
         };
 
         return (
-          <Popover
-            scope={
-              ProjectHotKeyScope.ProjectTableCell +
-              '.' +
-              cell.row.original._id +
-              '.Name'
-            }
+          <PopoverScoped
+            scope={clsx(
+              ProjectHotKeyScope.ProjectTableCell,
+              cell.row.original._id,
+              'Name',
+            )}
             closeOnEnter
             onOpenChange={(open) => {
               if (!open) {
@@ -92,7 +92,7 @@ export const projectsColumns = (
                 }}
               />
             </RecordTableInlineCell.Content>
-          </Popover>
+          </PopoverScoped>
         );
       },
       size: 240,

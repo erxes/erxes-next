@@ -2,9 +2,9 @@ import {
   Combobox,
   Command,
   RecordTableInlineCell,
-  Popover,
   SelectTree,
   TextOverflowTooltip,
+  PopoverScoped,
 } from 'erxes-ui';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAccountCategories } from '../hooks/useAccountCategories';
@@ -52,7 +52,7 @@ export const SelectAccountCategory = React.forwardRef<
 
   return (
     <SelectTree.Provider id="select-account-category" ordered>
-      <Popover
+      <PopoverScoped
         open={open}
         onOpenChange={setOpen}
         scope={`select-account-category.${recordId}`}
@@ -81,7 +81,7 @@ export const SelectAccountCategory = React.forwardRef<
             }}
           />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectTree.Provider>
   );
 });

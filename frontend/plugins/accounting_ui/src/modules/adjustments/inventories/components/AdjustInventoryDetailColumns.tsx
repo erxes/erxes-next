@@ -1,17 +1,15 @@
-import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import { IAdjustInventory } from '../types/AdjustInventory';
 import { Link } from 'react-router-dom';
 import {
   RecordTable,
   Input,
-  Popover,
-  RecordTableInlineCell,
   RecordTableInlineCell,
   CurrencyFormatedDisplay,
   CurrencyCode,
+  PopoverScoped,
 } from 'erxes-ui';
-import { IconFile, IconCalendar, IconMoneybag } from '@tabler/icons-react';
+import { IconFile, IconMoneybag } from '@tabler/icons-react';
 import { useState } from 'react';
 
 const DescriptionCell = ({ getValue, row }: any) => {
@@ -19,7 +17,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`transaction-${_id}-description`}>
+    <PopoverScoped scope={`transaction-${_id}-description`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -29,7 +27,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
           onChange={(e) => setDescription(e.target.value)}
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 

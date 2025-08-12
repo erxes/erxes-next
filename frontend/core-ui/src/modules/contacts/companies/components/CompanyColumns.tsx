@@ -28,6 +28,7 @@ import { useToast } from 'erxes-ui';
 import { SelectMember, SelectTags } from 'ui-modules';
 import { useSetAtom } from 'jotai';
 import { renderingCompanyDetailAtom } from '@/contacts/states/companyDetailStates';
+import clsx from 'clsx';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   RecordTable.checkboxColumn as ColumnDef<TCompany>,
@@ -242,12 +243,11 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       const { companiesEdit } = useCompaniesEdit();
       return (
         <SelectMember.InlineCell
-          scope={
-            ContactsHotKeyScope.CompaniesPage +
-            '.' +
-            cell.row.original._id +
-            '.Owner'
-          }
+          scope={clsx(
+            ContactsHotKeyScope.CompaniesPage,
+            cell.row.original._id,
+            'Owner',
+          )}
           value={cell.getValue() as string}
           onValueChange={(value) =>
             companiesEdit(

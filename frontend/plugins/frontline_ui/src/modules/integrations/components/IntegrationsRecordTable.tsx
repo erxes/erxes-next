@@ -4,7 +4,7 @@ import {
   Input,
   RecordTable,
   RecordTableInlineCell,
-  Popover,
+  PopoverScoped,
 } from 'erxes-ui';
 import { IIntegrationDetail } from '../types/Integration';
 import { useIntegrations } from '../hooks/useIntegrations';
@@ -14,6 +14,8 @@ import { useIntegrationEditField } from '@/integrations/hooks/useIntegrationEdit
 import { useState } from 'react';
 import { ArchiveIntegration } from '@/integrations/components/ArchiveIntegration';
 import { RemoveIntegration } from '@/integrations/components/RemoveIntegration';
+import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
+import clsx from 'clsx';
 
 export const IntegrationsRecordTable = ({
   Actions,
@@ -73,20 +75,24 @@ const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
   };
 
   return (
-    <Popover
+    <PopoverScoped
       onOpenChange={(open) => {
         if (!open) {
           handleSave();
         }
       }}
-      // scope={`${InboxHotkeyScope.IntegrationSettingsPage}_${cell.row.original._id}_name`}
-      // closeOnEnter
+      scope={clsx(
+        InboxHotkeyScope.IntegrationSettingsPage,
+        cell.row.original._id,
+        'name',
+      )}
+      closeOnEnter
     >
       <RecordTableInlineCell.Trigger>{name}</RecordTableInlineCell.Trigger>
       <RecordTableInlineCell.Content>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 

@@ -4,10 +4,9 @@ import { IconUpload } from '@tabler/icons-react';
 
 import { Form, Input, Upload, Editor } from 'erxes-ui';
 
-import { BrandField } from '@/products/add-products/components/BrandField';
 import { ProductFormValues } from './formSchema';
 import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
-import { SelectCompany } from 'ui-modules';
+import { SelectBrand, SelectCompany } from 'ui-modules';
 
 export const ProductAddMoreFields = ({
   form,
@@ -84,9 +83,10 @@ export const ProductAddMoreFields = ({
             <Form.Item className="flex flex-col">
               <Form.Label>BRAND</Form.Label>
               <Form.Control>
-                <BrandField
-                  value={field.value?.[0] || ''}
-                  onChange={(brandId) => field.onChange([brandId])}
+                <SelectBrand
+                  value={field.value || []}
+                  onValueChange={field.onChange}
+                  mode="multiple"
                 />
               </Form.Control>
               <Form.Message className="text-destructive" />

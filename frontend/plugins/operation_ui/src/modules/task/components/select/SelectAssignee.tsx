@@ -8,6 +8,7 @@ import {
   Filter,
   Form,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
   useFilterContext,
   useQueryState,
@@ -238,14 +239,14 @@ export const SelectAssigneeInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectAssigneeValue placeholder="Assignee not specified" />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectAssigneeContent teamIds={teamIds} />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectAssigneeProvider>
   );
 };

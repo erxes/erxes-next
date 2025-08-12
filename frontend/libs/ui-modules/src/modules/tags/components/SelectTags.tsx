@@ -287,14 +287,14 @@ export const SelectTagsInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectTagsValue placeholder="" />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content className="min-w-72">
           <SelectTagsContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectTagsProvider>
   );
 };

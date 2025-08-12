@@ -25,13 +25,14 @@ import {
   Input,
   RecordTable,
   RecordTableInlineCell,
-  Popover,
+  PopoverScoped,
 } from 'erxes-ui';
 import { ITask } from '@/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPoint';
+import clsx from 'clsx';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
@@ -58,19 +59,18 @@ export const tasksColumns = (
         };
 
         return (
-          <Popover
+          <PopoverScoped
             closeOnEnter
             onOpenChange={(open) => {
               if (!open) {
                 handleUpdate();
               }
             }}
-            scope={
-              TaskHotKeyScope.TaskTableCell +
-              '.' +
-              cell.row.original._id +
-              '.Name'
-            }
+            scope={clsx(
+              TaskHotKeyScope.TaskTableCell,
+              cell.row.original._id,
+              'Name',
+            )}
           >
             <RecordTableInlineCell.Trigger>
               <Badge
@@ -96,7 +96,7 @@ export const tasksColumns = (
                 }}
               />
             </RecordTableInlineCell.Content>
-          </Popover>
+          </PopoverScoped>
         );
       },
       size: 240,

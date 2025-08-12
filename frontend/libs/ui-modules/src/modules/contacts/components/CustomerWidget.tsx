@@ -11,6 +11,7 @@ import { CustomerName } from './CustomerName';
 import { useCustomerDetail } from '../hooks';
 import { CustomerOwner } from './CustomerOwner';
 import { CustomerEmails } from './CustomerEmails';
+import clsx from 'clsx';
 
 export const CustomerWidget = ({
   customerId,
@@ -66,7 +67,7 @@ export const CustomerWidget = ({
                   firstName={firstName || ''}
                   lastName={lastName || ''}
                   middleName={middleName || ''}
-                  scope={scope + '.Name'}
+                  scope={clsx(scope, 'Name')}
                   className="rounded font-medium text-base"
                 />
               </div>

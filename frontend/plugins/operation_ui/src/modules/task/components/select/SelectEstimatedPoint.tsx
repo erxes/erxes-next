@@ -7,6 +7,7 @@ import {
   Command,
   Form,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
 } from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
@@ -216,7 +217,7 @@ export const SelectEstimatedPointInlineCell = ({
       estimateChoices={estimateChoices || []}
       {...props}
     >
-      <Popover
+      <PopoverScoped
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
@@ -228,7 +229,7 @@ export const SelectEstimatedPointInlineCell = ({
         <RecordTableInlineCell.Content className="max-w-72">
           <SelectEstimatedPointContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectEstimatedPointProvider>
   );
 };

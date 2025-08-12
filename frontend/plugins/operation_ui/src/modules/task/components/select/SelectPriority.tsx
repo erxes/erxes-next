@@ -11,6 +11,7 @@ import {
   useQueryState,
   Badge,
   Button,
+  PopoverScoped,
 } from 'erxes-ui';
 import { IconAlertSquareRounded } from '@tabler/icons-react';
 import { PROJECT_PRIORITIES_OPTIONS } from '@/project/constants';
@@ -358,7 +359,7 @@ export const SelectPriorityInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <Popover
+      <PopoverScoped
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
@@ -370,7 +371,7 @@ export const SelectPriorityInlineCell = ({
         <RecordTableInlineCell.Content className="max-w-72">
           <SelectPriorityContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectPriorityProvider>
   );
 };

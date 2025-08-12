@@ -9,11 +9,9 @@ import {
   RecordTable,
   Input,
   CurrencyCode,
-  CurrencyField,
   CurrencyFormatedDisplay,
-  Popover,
   RecordTableInlineCell,
-  RecordTableInlineCell,
+  PopoverScoped,
 } from 'erxes-ui';
 
 // Create named components for cell renderers to fix React Hook usage
@@ -22,7 +20,7 @@ const NumberCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`accounting-${_id}-number`}>
+    <PopoverScoped scope={`accounting-${_id}-number`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -33,7 +31,7 @@ const NumberCell = ({ getValue, row }: any) => {
           className="w-full"
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -42,7 +40,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`accounting-${_id}-description`}>
+    <PopoverScoped scope={`accounting-${_id}-description`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -53,7 +51,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
           className="w-full"
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -72,7 +70,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`accounting-${_id}-sumDt`}>
+    <PopoverScoped scope={`accounting-${_id}-sumDt`}>
       <RecordTableInlineCell.Trigger>
         <CurrencyFormatedDisplay
           currencyValue={{
@@ -81,7 +79,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
           }}
         />
       </RecordTableInlineCell.Trigger>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -90,7 +88,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`accounting-${_id}-sumCt`}>
+    <PopoverScoped scope={`accounting-${_id}-sumCt`}>
       <RecordTableInlineCell.Trigger>
         <CurrencyFormatedDisplay
           currencyValue={{
@@ -99,7 +97,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
           }}
         />
       </RecordTableInlineCell.Trigger>
-    </Popover>
+    </PopoverScoped>
   );
 };
 

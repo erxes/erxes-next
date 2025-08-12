@@ -1,9 +1,5 @@
-import {
-  ButtonProps,
-  Input,
-  TextOverflowTooltip,
-  Popover,
-} from 'erxes-ui/components';
+import { ButtonProps, Input, TextOverflowTooltip } from 'erxes-ui/components';
+import { PopoverScoped } from 'erxes-ui/modules/hotkey';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
 
 import React, { useState } from 'react';
@@ -32,7 +28,7 @@ export const NumberField = React.forwardRef<
     };
 
     return (
-      <Popover
+      <PopoverScoped
         scope={scope}
         open={isOpen}
         onOpenChange={(open: boolean) => {
@@ -65,7 +61,7 @@ export const NumberField = React.forwardRef<
             </button>
           </form>
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     );
   },
 );

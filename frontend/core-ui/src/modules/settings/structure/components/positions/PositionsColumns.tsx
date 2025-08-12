@@ -23,6 +23,7 @@ import {
   useRemovePosition,
 } from '../../hooks/usePositionActions';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -191,12 +192,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
       const { positionsEdit } = usePositionInlineEdit();
       return (
         <SelectPositions.InlineCell
-          scope={
-            SettingsHotKeyScope.PositionsPage +
-            '.' +
-            cell.row.original._id +
-            '.parentId'
-          }
+          scope={clsx(SettingsHotKeyScope.PositionsPage, _id, 'parentId')}
           mode="single"
           value={cell.getValue() as string[]}
           onValueChange={(value) =>

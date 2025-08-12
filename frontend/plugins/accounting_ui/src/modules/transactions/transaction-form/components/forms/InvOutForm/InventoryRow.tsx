@@ -9,9 +9,8 @@ import {
   Form,
   InputNumber,
   RecordTableInlineCell,
-  RecordTableInlineCell,
   RecordTableHotKeyControl,
-  Popover,
+  PopoverScoped,
   Table,
 } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
@@ -202,7 +201,7 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.count`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.count`}
                 closeOnEnter
               >
@@ -219,7 +218,7 @@ export const InventoryRow = ({
                     }
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -230,7 +229,7 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
                 closeOnEnter
               >
@@ -247,7 +246,7 @@ export const InventoryRow = ({
                     }
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -258,7 +257,7 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
                 closeOnEnter
               >
@@ -275,7 +274,7 @@ export const InventoryRow = ({
                     }
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>

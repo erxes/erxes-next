@@ -7,6 +7,7 @@ import {
   Filter,
   Form,
   Popover,
+  PopoverScoped,
   RecordTableInlineCell,
   useFilterContext,
   useQueryState,
@@ -304,7 +305,7 @@ export const SelectStatusInlineCell = ({
       onValueChange={handleValueChange}
       {...props}
     >
-      <Popover
+      <PopoverScoped
         open={open}
         onOpenChange={setOpen}
         scope={finalScope}
@@ -316,7 +317,7 @@ export const SelectStatusInlineCell = ({
         <RecordTableInlineCell.Content className="max-w-72">
           <SelectStatusContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectStatusProvider>
   );
 };

@@ -31,6 +31,7 @@ import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { format } from 'date-fns';
 import { ApolloError } from '@apollo/client';
 import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
+import clsx from 'clsx';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -116,11 +117,10 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       return (
         <FullNameField
-          scope={SettingsHotKeyScope.UsersPage + '.' + _id + '.Name'}
+          scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Name')}
           firstName={firstName}
           lastName={lastName}
-          onClose={onSave}
-          closeOnEnter
+          onSave={onSave}
           onClick={(e) => {
             e.stopPropagation();
             setDetailOpen(_id);
@@ -220,12 +220,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       return (
         <SelectPositions.InlineCell
-          scope={
-            SettingsHotKeyScope.UsersPage +
-            '.' +
-            cell.row.original._id +
-            '.Position'
-          }
+          scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Position')}
           mode="multiple"
           value={cell.getValue() as string[]}
           onValueChange={(value) =>

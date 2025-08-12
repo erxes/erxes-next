@@ -1,4 +1,9 @@
-import { PhoneInput, Popover, RecordTableInlineCell } from 'erxes-ui';
+import {
+  PhoneInput,
+  Popover,
+  PopoverScoped,
+  RecordTableInlineCell,
+} from 'erxes-ui';
 import { formatPhoneNumber } from 'erxes-ui/utils/format';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { useRef, useState } from 'react';
@@ -6,11 +11,13 @@ import { useRef, useState } from 'react';
 interface PhoneFieldCustomerProps {
   _id: string;
   primaryPhone: string;
+  scope: string;
 }
 
 export const PhoneFieldCustomer = ({
   _id,
   primaryPhone,
+  scope,
 }: PhoneFieldCustomerProps) => {
   const { customersEdit } = useCustomersEdit();
   const phoneInputRef = useRef<HTMLInputElement>(null);
@@ -41,8 +48,8 @@ export const PhoneFieldCustomer = ({
   };
 
   return (
-    <Popover
-      // scope={`customer-${_id}-primaryPhone`}
+    <PopoverScoped
+      scope={scope}
       open={isOpen}
       onOpenChange={(open) => {
         setIsOpen(open);
@@ -70,6 +77,6 @@ export const PhoneFieldCustomer = ({
           onValidationChange={(isValid) => setIsPhoneValid(isValid)}
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };

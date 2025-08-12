@@ -1,12 +1,12 @@
 import { ApolloError } from '@apollo/client';
+import clsx from 'clsx';
 import {
   EmailDisplay,
   EmailListField,
-  Popover,
+  PopoverScoped,
   RecordTableInlineCell,
   useToast,
 } from 'erxes-ui';
-import { useState } from 'react';
 import { useCustomerEdit } from 'ui-modules/modules/contacts/hooks';
 
 export const CustomerEmails = ({
@@ -14,6 +14,7 @@ export const CustomerEmails = ({
   _id,
   emailValidationStatus: _emailValidationStatus,
   emails,
+  scope,
 }: {
   primaryEmail: string;
   _id: string;
@@ -46,11 +47,11 @@ export const CustomerEmails = ({
   );
 
   return (
-    <Popover
-    // scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Emails'}
-    // scopeOptions={{
-    //   preventDefault: false,
-    // }}
+    <PopoverScoped
+      scope={clsx(scope, _id, 'Emails')}
+      scopeOptions={{
+        preventDefault: false,
+      }}
     >
       <RecordTableInlineCell.Trigger>
         <EmailDisplay emails={_emails} />
@@ -100,6 +101,6 @@ export const CustomerEmails = ({
           emails={_emails}
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };

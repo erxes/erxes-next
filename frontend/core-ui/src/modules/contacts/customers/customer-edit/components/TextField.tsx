@@ -5,11 +5,13 @@ interface TextFieldProps {
   field: string;
   fieldId?: string;
   _id: string;
+  scope: string;
 }
 
 export const TextFieldCustomer = ({
   field,
   _id,
+  scope,
   ...props
 }: Omit<React.ComponentProps<typeof TextField>, 'scope' | 'onValueChange'> &
   TextFieldProps) => {
@@ -27,7 +29,7 @@ export const TextFieldCustomer = ({
     <TextField
       {...props}
       value={props.value}
-      scope={`customer-${_id}-${field}`}
+      scope={scope}
       onSave={onSave}
       className={cn('shadow-sm rounded-sm text-sm', props.className)}
     />

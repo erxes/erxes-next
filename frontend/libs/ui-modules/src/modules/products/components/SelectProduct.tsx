@@ -161,14 +161,14 @@ const SelectProductInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectProductValue />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectProductContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectProductProvider>
   );
 };

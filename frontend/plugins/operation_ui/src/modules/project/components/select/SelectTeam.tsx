@@ -13,6 +13,7 @@ import {
   IconComponent,
   Button,
   TextOverflowTooltip,
+  PopoverScoped,
 } from 'erxes-ui';
 import { IconUsers } from '@tabler/icons-react';
 import { ITeam } from '@/team/types';
@@ -383,7 +384,12 @@ export const SelectTeamInlineCell = ({
     );
 
     return (
-      <Popover open={open} onOpenChange={onOpenChange} closeOnEnter>
+      <PopoverScoped
+        open={open}
+        onOpenChange={onOpenChange}
+        closeOnEnter
+        scope={scope}
+      >
         <RecordTableInlineCell.Trigger>
           <div className="flex gap-1 min-h-[24px] items-center">
             {selectedTeams.length > 0 ? (
@@ -434,7 +440,7 @@ export const SelectTeamInlineCell = ({
             </Command.List>
           </Command>
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     );
   }
 
@@ -446,14 +452,14 @@ export const SelectTeamInlineCell = ({
       teams={teams}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectTeamBadgeValue placeholder={''} />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectTeamContent providedTeams={teams} />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectTeamProvider>
   );
 };

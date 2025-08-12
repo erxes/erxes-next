@@ -26,6 +26,7 @@ import {
   readImage,
   useQueryState,
   useToast,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useState } from 'react';
 import {
@@ -38,6 +39,7 @@ import {
 import { useSetAtom } from 'jotai';
 import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
+import clsx from 'clsx';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -92,7 +94,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           firstName={firstName}
           lastName={lastName}
           middleName={middleName}
-          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Name'}
+          scope={clsx(ContactsHotKeyScope.CustomersPage, _id, 'Name')}
         />
       );
     },
@@ -244,8 +246,8 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       const [open, setOpen] = useState(false);
       const { _id } = cell.row.original;
       return (
-        <Popover
-          // scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Sex'}
+        <PopoverScoped
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Sex'}
           open={open}
           onOpenChange={setOpen}
         >
@@ -268,7 +270,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
               }}
             />
           </RecordTableInlineCell.Content>
-        </Popover>
+        </PopoverScoped>
       );
     },
   },

@@ -8,10 +8,10 @@ import {
   Form,
   InputNumber,
   RecordTableInlineCell,
-  RecordTableInlineCell,
   RecordTableHotKeyControl,
   Popover,
   Table,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
@@ -223,7 +223,7 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.count`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.count`}
                 closeOnEnter
               >
@@ -240,7 +240,7 @@ export const InventoryRow = ({
                     }
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -251,7 +251,7 @@ export const InventoryRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
             render={({ field }) => (
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
                 closeOnEnter
               >
@@ -268,14 +268,14 @@ export const InventoryRow = ({
                     }
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
       </RecordTableHotKeyControl>
       <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
-          <Popover
+          <PopoverScoped
             scope={`trDocs.${journalIndex}.details.${detailIndex}.tempAmount`}
             closeOnEnter
           >
@@ -288,7 +288,7 @@ export const InventoryRow = ({
                 onChange={(value) => handleAmountChange(value || 0)}
               />
             </RecordTableInlineCell.Content>
-          </Popover>
+          </PopoverScoped>
         </Table.Cell>
       </RecordTableHotKeyControl>
 
@@ -364,7 +364,7 @@ export const InventoryRow = ({
         <>
           <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
             <Table.Cell>
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
                 closeOnEnter
               >
@@ -381,7 +381,7 @@ export const InventoryRow = ({
                     }
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             </Table.Cell>
           </RecordTableHotKeyControl>
 
@@ -392,7 +392,7 @@ export const InventoryRow = ({
                 'rounded-br-lg': detailIndex === trDoc.details.length - 1,
               })}
             >
-              <Popover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
                 closeOnEnter
               >
@@ -405,7 +405,7 @@ export const InventoryRow = ({
                     onChange={(value) => handleTaxValueChange('amount', value)}
                   />
                 </RecordTableInlineCell.Content>
-              </Popover>
+              </PopoverScoped>
             </Table.Cell>
           </RecordTableHotKeyControl>
         </>

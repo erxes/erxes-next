@@ -8,9 +8,8 @@ import {
   CurrencyCode,
   CurrencyField,
   CurrencyFormatedDisplay,
-  Popover,
   RecordTableInlineCell,
-  RecordTableInlineCell,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingTransactionDetailState } from '../states/renderingTransactionDetailStates';
@@ -23,7 +22,7 @@ const NumberCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`transaction-${_id}-number`}>
+    <PopoverScoped scope={`transaction-${_id}-number`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -34,7 +33,7 @@ const NumberCell = ({ getValue, row }: any) => {
           className="w-full"
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -43,7 +42,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`transaction-${_id}-description`}>
+    <PopoverScoped scope={`transaction-${_id}-description`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as string}
       </RecordTableInlineCell.Trigger>
@@ -53,7 +52,7 @@ const DescriptionCell = ({ getValue, row }: any) => {
           onChange={(e) => setDescription(e.target.value)}
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -62,7 +61,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`transaction-${_id}-sumDt`}>
+    <PopoverScoped scope={`transaction-${_id}-sumDt`}>
       <RecordTableInlineCell.Trigger>
         {
           <CurrencyFormatedDisplay
@@ -79,7 +78,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
           onChange={(value) => setSumDt(value)}
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -88,7 +87,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`transaction-${_id}-sumCt`}>
+    <PopoverScoped scope={`transaction-${_id}-sumCt`}>
       <RecordTableInlineCell.Trigger>
         {
           <CurrencyFormatedDisplay
@@ -105,7 +104,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
           onChange={(value) => setSumCt(value)}
         />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 
@@ -114,14 +113,14 @@ const BranchCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <Popover scope={`transaction-${_id}-branchId`}>
+    <PopoverScoped scope={`transaction-${_id}-branchId`}>
       <RecordTableInlineCell.Trigger>
         {getValue() as any}
       </RecordTableInlineCell.Trigger>
       <RecordTableInlineCell.Content>
         <Input value={branch} onChange={(e) => setBranch(e.target.value)} />
       </RecordTableInlineCell.Content>
-    </Popover>
+    </PopoverScoped>
   );
 };
 

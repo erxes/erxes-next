@@ -11,6 +11,7 @@ import {
   EnumCursorDirection,
   Badge,
   Button,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useProjects } from '@/project/hooks/useGetProjects';
 import { useGetProject } from '@/project/hooks/useGetProject';
@@ -374,14 +375,14 @@ export const SelectProjectInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectProjectValue placeholder={''} />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
           <SelectProjectContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectProjectProvider>
   );
 };

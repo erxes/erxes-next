@@ -296,14 +296,14 @@ export const SelectDepartmentsInlineCell = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableInlineCell.Trigger>
           <SelectDepartmentsValue />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content className="min-w-72">
           <SelectDepartmentsContent />
         </RecordTableInlineCell.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectDepartmentsProvider>
   );
 };
