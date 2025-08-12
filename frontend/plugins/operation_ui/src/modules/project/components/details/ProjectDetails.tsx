@@ -19,7 +19,7 @@ export const ProjectDetails = ({ projectId }: { projectId: string }) => {
       <Progress projectId={projectId} />
       <ProgressByMember projectId={projectId} />
       <ProgressByTeam projectId={projectId} />
-      <ProgressChart projectId={projectId} project={project} />
+      <ProgressChart projectId={projectId} />
     </div>
   );
 };

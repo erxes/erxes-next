@@ -96,7 +96,7 @@ export const loadTaskClass = (models: IModels) => {
       }
 
       if (doc.status && doc.status !== task.status) {
-        rest.statusChangedDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        rest.statusChangedDate = new Date();
       }
 
       if (task.projectId && doc.teamId && doc.teamId !== task.teamId) {
