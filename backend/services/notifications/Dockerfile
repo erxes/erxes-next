@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY tsconfig.base.json nx.json ./
 COPY ./backend/erxes-api-shared/package.json ./backend/erxes-api-shared/
-COPY ./backend/services/logs/package.json ./backend/services/logs/
+COPY ./backend/services/notifications/package.json ./backend/services/notifications/
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
@@ -19,19 +19,19 @@ COPY ./backend/erxes-api-shared ./backend/erxes-api-shared
 WORKDIR /app/backend/erxes-api-shared
 RUN npx nx build
 
-# 3. Build stage for logs
-FROM builder AS logs-builder
+# 3. Build stage for notifications
+FROM builder AS notifications-builder
 
 # Copy built shared library
 COPY --from=shared-builder /app/backend/erxes-api-shared /app/backend/erxes-api-shared
 
-# Copy logs source code (excluding dist folder if it exists)
-COPY ./backend/services/logs ./backend/services/logs
+# Copy notifications source code (excluding dist folder if it exists)
+COPY ./backend/services/notifications ./backend/services/notifications
 
 # Create proper module symlinks
 RUN ln -s /app/backend/erxes-api-shared /app/node_modules/erxes-api-shared
 
-WORKDIR /app/backend/services/logs
+WORKDIR /app/backend/services/notifications
 
 # Environment settings
 ENV NX_DAEMON=false
@@ -41,8 +41,8 @@ ENV NODE_PATH=/app/node_modules
 # Clear caches and build
 RUN rm -rf node_modules/.cache/nx && \
     npx nx reset && \
-    npx nx build:packageJson logs-service --verbose && \
-    npx nx build logs-service --verbose
+    npx nx build:packageJson notifications-service --verbose && \
+    npx nx build notifications-service --verbose
 
 # 4. Final production image
 FROM node:22-alpine
@@ -50,7 +50,7 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Copy built artifacts
-COPY --from=logs-builder --chown=1000:1000 /app/backend/services/logs/dist ./dist
+COPY --from=notifications-builder --chown=1000:1000 /app/backend/services/notifications/dist ./dist
 COPY --from=shared-builder --chown=1000:1000 /app/backend/erxes-api-shared/dist ./node_modules/erxes-api-shared
 
 # Install production dependencies
