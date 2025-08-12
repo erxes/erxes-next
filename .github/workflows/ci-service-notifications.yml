@@ -5,20 +5,21 @@ on:
     branches:
       - main
     paths:
-      - 'backend/services/notfications/**'
+      - 'backend/services/notifications/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-service-notfications.yml'
+      - '.github/workflows/ci-service-notifications.yml'
   pull_request:
     paths:
-      - 'backend/services/notfications/**'
+      - 'backend/services/notifications/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-service-notfications.yml'
+      - '.github/workflows/ci-service-notifications.yml'
 
 jobs:
-  notfications-ci:
+  notifications-ci:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -46,11 +47,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
+        if: github.event_name != 'pull_request'
         run: |
           export NX_DAEMON=false
-          pnpm nx docker-build notfications-service
-          docker tag erxes/erxes-next-notfications erxes/erxes-next-notfications:latest
-          docker tag erxes/erxes-next-notfications erxes/erxes-next-notfications:${{ github.sha }}
-          docker push erxes/erxes-next-notfications:latest
-          docker push erxes/erxes-next-notfications:${{ github.sha }}
-        if: github.event_name != 'pull_request'
+          pnpm nx docker-build notifications-service
+          docker tag erxes/erxes-next-notifications erxes/erxes-next-notifications:latest
+          docker tag erxes/erxes-next-notifications erxes/erxes-next-notifications:${{ github.sha }}
+          docker push erxes/erxes-next-notifications:latest
+          docker push erxes/erxes-next-notifications:${{ github.sha }}
