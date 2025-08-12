@@ -1,10 +1,7 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { IconDots } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui';
-import {
-  CallWidgetDraggableRoot,
-  DraggableHandle,
-} from '@/integrations/call/components/CallWidgetDraggable';
+import { CallWidgetDraggableRoot } from '@/integrations/call/components/CallWidgetDraggable';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
 import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
@@ -22,25 +19,21 @@ import {
   IncomingCall,
 } from '@/integrations/call/components/IncomingCall';
 
-export const CallWidgetContent = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const CallWidgetContent = () => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
 
   if (sipState.callStatus === CallStatusEnum.IDLE) {
-    return <CallTabs keypad={<Dialpad />}>{children}</CallTabs>;
+    return <CallTabs keypad={<Dialpad />} />;
   }
 
   if (
     sipState.callDirection === CallDirectionEnum.INCOMING &&
     sipState.callStatus === CallStatusEnum.STARTING
   ) {
-    return <IncomingCall>{children}</IncomingCall>;
+    return <IncomingCall />;
   }
 
-  return <CallTabs keypad={<InCall />}>{children}</CallTabs>;
+  return <CallTabs keypad={<InCall />} />;
 };
 
 export const CallWidgetMoreActions = () => {
@@ -85,10 +78,8 @@ export const CallWidget = () => {
       <PopoverPrimitive.Root open={open}>
         <CallWidgetDraggableRoot>
           <PopoverPrimitive.Content
-            side="top"
             align="end"
             sideOffset={12}
-            avoidCollisions={false}
             onOpenAutoFocus={(e) => {
               e.preventDefault();
             }}
@@ -100,9 +91,7 @@ export const CallWidget = () => {
             }
             className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
           >
-            <CallWidgetContent>
-              <DraggableHandle />
-            </CallWidgetContent>
+            <CallWidgetContent></CallWidgetContent>
           </PopoverPrimitive.Content>
         </CallWidgetDraggableRoot>
       </PopoverPrimitive.Root>

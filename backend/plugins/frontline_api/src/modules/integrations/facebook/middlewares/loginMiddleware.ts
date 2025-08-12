@@ -99,7 +99,7 @@ export const loginMiddleware = async (req, res) => {
       });
 
       for (const integration of integrations) {
-        await repairIntegrations(subdomain, models, integration.erxesApiId);
+        await repairIntegrations(subdomain, integration.erxesApiId);
       }
     } else {
       await models.FacebookAccounts.create({

@@ -1,24 +1,18 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import {
-  IconGripHorizontal,
-  IconPhoneFilled,
-  IconX,
-} from '@tabler/icons-react';
+import { IconPhoneFilled, IconX } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
-import { DndContext, useDraggable } from '@dnd-kit/core';
-import { createContext, useContext, useMemo, memo, useCallback } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { useMemo, memo, useCallback } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
 import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
-
-// Memoize context to prevent recreating on every render
-const DragContext = createContext<{
-  listeners: any;
-  attributes: any;
-}>({
-  listeners: {},
-  attributes: {},
-});
 
 // Memoize draggable component
 export const CallWidgetDraggable = memo(
@@ -44,72 +38,68 @@ export const CallWidgetDraggable = memo(
       [position.x, position.y, transform?.x, transform?.y],
     );
 
-    // Memoize context value to prevent child rerenders
-    const contextValue = useMemo(
-      () => ({
-        listeners,
-        attributes,
-      }),
-      [listeners, attributes],
-    );
-
     return (
-      <DragContext.Provider value={contextValue}>
+      <>
         <PopoverPrimitive.Trigger ref={setNodeRef} style={style} asChild>
           <Button
             variant="secondary"
             size="icon"
             className="fixed bottom-10 right-10 z-50 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
             onClick={() => setOpen(!open)}
+            {...listeners}
+            {...attributes}
           >
             {open ? <IconX /> : <IconPhoneFilled className="text-primary" />}
           </Button>
         </PopoverPrimitive.Trigger>
 
         {children}
-      </DragContext.Provider>
+      </>
     );
   },
 );
 
 CallWidgetDraggable.displayName = 'CallWidgetDraggable';
 
-// Memoize drag handle
-export const DraggableHandle = memo(() => {
-  const { listeners, attributes } = useContext(DragContext);
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      {...listeners}
-      {...attributes}
-      className="cursor-move text-accent-foreground my-1 h-5"
-    >
-      <IconGripHorizontal />
-    </Button>
-  );
-});
-
-DraggableHandle.displayName = 'DraggableHandle';
-
 export const CallWidgetDraggableRoot = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  const setOpen = useSetAtom(callWidgetOpenAtom);
   const [position, setPosition] = useAtom(callWidgetPositionState);
 
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
   // Memoize drag end handler to prevent recreating function
-  const handleDragEnd = useCallback((event: any) => {
-    const { delta } = event;
-    setPosition((prev) => ({
-      x: prev.x + delta.x,
-      y: prev.y + delta.y,
-    }));
-  }, []);
+  const handleDragEnd = useCallback(
+    (event: any) => {
+      const { delta } = event;
+      setPosition((prev) => ({
+        x: Math.min(window.innerWidth - 100, prev.x + delta.x),
+        y: Math.max((window.innerHeight - 100) * -1, prev.y + delta.y),
+      }));
+    },
+    [setPosition],
+  );
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragStart={() => setOpen(false)}
+      sensors={sensors}
+    >
       <CallWidgetDraggable position={position}>{children}</CallWidgetDraggable>
     </DndContext>
   );
