@@ -1,9 +1,4 @@
-import {
-  IAction,
-  ITrigger,
-} from '@/core-modules/automations/definitions/automations';
-import { IAutomationExecution } from '@/core-modules/automations/definitions/executions';
-// import { IAutomationExecution } from './definitions/executions';
+import { IAction, ITrigger, IAutomationExecution } from './definitions';
 
 type IContext = {
   subdomain: string;
