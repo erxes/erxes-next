@@ -13,7 +13,7 @@ export interface ITask {
   tagIds: string[];
   createdAt: string;
   priority: number;
-  status: number;
+  status: string;
   targetDate: string;
   assigneeId: string;
   teamId: string;
@@ -23,7 +23,7 @@ export interface ITask {
 }
 
 export interface IStatus {
-  value: number;
+  value: string;
   label: string;
   color: string;
   type: TeamStatusTypes;

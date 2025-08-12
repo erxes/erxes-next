@@ -1,8 +1,9 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECT_PROGRESS } from '~/modules/project/graphql/queries/getProjectProgress';
+import { IProjectProgress } from '~/modules/project/types';
 
 interface IGetProjectQueryResponse {
-  getProjectProcess: any;
+  getProjectProgress: IProjectProgress;
 }
 
 export const useGetProjectProgress = (options: QueryHookOptions) => {
@@ -11,7 +12,7 @@ export const useGetProjectProgress = (options: QueryHookOptions) => {
     options,
   );
 
-  const getProjectProgress = data?.getProjectProcess;
+  const projcetProgress = data?.getProjectProgress;
 
-  return { getProjectProgress, loading, refetch };
+  return { projcetProgress, loading, refetch };
 };

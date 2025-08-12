@@ -61,7 +61,7 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
   projectIds = [],
   projects = [],
   updateProjects,
-  placeholder = 'Select project...',
+  placeholder = 'Select project',
   className,
 }) => {
   const displayProjects = projects.filter((project) =>
@@ -70,7 +70,9 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
 
   if (projectIds.length === 0) {
     return (
-      <div className={cn('text-muted-foreground text-sm', className)}>
+      <div
+        className={cn('text-muted-foreground text-base font-medium', className)}
+      >
         {placeholder}
       </div>
     );
@@ -159,17 +161,17 @@ export const SelectProjectProvider = ({
     onValueChange?.(newSelectedProjectIds);
   };
 
-  useEffect(() => {
-    if (projects && projects.length > 0) {
-      setProjects((prev) => {
-        const existingIds = prev.map((p) => p._id);
-        const newProjects = projects.filter(
-          (p) => !existingIds.includes(p._id),
-        );
-        return [...prev, ...newProjects];
-      });
-    }
-  }, [projects]);
+  // useEffect(() => {
+  //   if (projects && projects.length > 0) {
+  //     setProjects((prev) => {
+  //       const existingIds = prev.map((p) => p._id);
+  //       const newProjects = projects.filter(
+  //         (p) => !existingIds.includes(p._id),
+  //       );
+  //       return [...prev, ...newProjects];
+  //     });
+  //   }
+  // }, [projects]);
   return (
     <SelectProjectContext.Provider
       value={{
@@ -218,7 +220,7 @@ const SelectProjectCommandItem = ({ project }: { project: IProject }) => {
 };
 
 const SelectProjectContent = () => {
-  const { projects: selectedProjects } = useSelectProjectContext();
+  const { projects: selectedProjects, projectIds } = useSelectProjectContext();
   const { teamId } = useParams();
   const {
     projects = [],
@@ -234,12 +236,11 @@ const SelectProjectContent = () => {
   const handleFetchMore = () => {
     _handleFetchMore({ direction: EnumCursorDirection.FORWARD });
   };
-
   return (
     <Command shouldFilter={false} id="project-command-menu">
       <Command.List>
         <Combobox.Empty loading={loading} />
-        {selectedProjects.length > 0 && (
+        {projectIds.length > 0 && (
           <>
             {selectedProjects?.map((project) => (
               <SelectProjectCommandItem key={project._id} project={project} />
@@ -391,14 +392,24 @@ export const SelectProjectFormItem = ({
   onValueChange,
   className,
   placeholder,
+  teamId,
   ...props
 }: Omit<React.ComponentProps<typeof SelectProjectProvider>, 'children'> & {
   className?: string;
   placeholder?: string;
+  teamId?: string;
 }) => {
   const [open, setOpen] = useState(false);
+  const { projects } = useProjects({
+    variables: {
+      teamIds: [teamId],
+    },
+    skip: !teamId,
+  });
   return (
     <SelectProjectProvider
+      projects={projects}
+      mode="single"
       onValueChange={(value: string[] | string) => {
         onValueChange?.(value);
         setOpen(false);

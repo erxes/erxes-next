@@ -22,3 +22,23 @@ export enum ProjectPageTypes {
 
 export type TAddProject = z.infer<typeof addProjectSchema>;
 export * from '@/project/types/validations';
+
+export interface IProjectProgress {
+  totalScope: number;
+  totalStartedScope: number;
+  totalCompletedScope: number;
+}
+
+export interface IProjectProgressByMember {
+  assigneeId: string;
+  totalScope: number;
+  totalStartedScope: number;
+  totalCompletedScope: number;
+}
+
+export interface IProjectProgressByTeam {
+  teamId: string;
+  totalScope: number;
+  totalStartedScope: number;
+  totalCompletedScope: number;
+}

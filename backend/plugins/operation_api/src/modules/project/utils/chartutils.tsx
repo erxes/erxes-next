@@ -28,6 +28,7 @@ export const fillMissingDays = (
   totalDays = 7,
 ) => {
   const filledData: { date: Date; started: number; completed: number }[] = [];
+
   const mapDateToData = new Map(
     data.map((item) => [new Date(item.date).toDateString(), item]),
   );
@@ -65,6 +66,34 @@ export const fillFromLastDate = (
       started: 0,
       completed: 0,
     });
+  }
+
+  return filledData;
+};
+
+export const fillMissingDaysWithStartDate = (
+  data: { date: Date; started: number; completed: number }[],
+  startDate: Date,
+  totalDays = 7,
+) => {
+  const filledData: { date: Date; started: number; completed: number }[] = [];
+
+  const mapDateToData = new Map(
+    data.map((item) => [new Date(item.date).toDateString(), item]),
+  );
+
+  for (let i = 0; i < totalDays; i++) {
+    const date = addDays(startDate, i);
+    const item = mapDateToData.get(date.toDateString());
+    if (item) {
+      filledData.push(item);
+    } else {
+      filledData.push({
+        date,
+        started: 0,
+        completed: 0,
+      });
+    }
   }
 
   return filledData;

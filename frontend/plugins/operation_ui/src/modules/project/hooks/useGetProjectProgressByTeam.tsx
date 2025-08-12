@@ -1,8 +1,9 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECT_PROGRESS_BY_TEAM } from '~/modules/project/graphql/queries/getProjectProgressByTeam';
+import { IProjectProgressByTeam } from '@/project/types';
 
 interface IGetProjectQueryResponse {
-  getProjectProgressByTeam: any;
+  getProjectProgressByTeam: IProjectProgressByTeam[];
 }
 
 export const useGetProjectProgressByTeam = (options: QueryHookOptions) => {
@@ -11,7 +12,7 @@ export const useGetProjectProgressByTeam = (options: QueryHookOptions) => {
     options,
   );
 
-  const getProjectProgressByTeam = data?.getProjectProgressByTeam;
+  const projectProgressByTeam = data?.getProjectProgressByTeam;
 
-  return { getProjectProgressByTeam, loading, refetch };
+  return { projectProgressByTeam, loading, refetch };
 };

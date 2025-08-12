@@ -16,11 +16,12 @@ import { IconProgressCheck } from '@tabler/icons-react';
 import { IStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { TeamStatusIcons } from '@/team/constants';
+import { DEFAULT_TEAM_STATUSES, TeamStatusIcons } from '@/team/constants';
+import { useParams } from 'react-router-dom';
 
 interface SelectStatusContextType {
   statuses: IStatus[];
-  statusIds: string[];
+  statusId: string;
   onSelect: (status: IStatus) => void;
   setStatuses: (statuses: IStatus[]) => void;
   loading: boolean;
@@ -43,34 +44,20 @@ const useSelectStatusContext = () => {
 
 export const SelectStatusProvider = ({
   children,
-  mode = 'single',
   value,
   onValueChange,
   statuses = [],
 }: {
   children: React.ReactNode;
-  mode?: 'single' | 'multiple';
-  value?: string[] | string;
-  onValueChange: (value: string[] | string) => void;
+  value?: string;
+  onValueChange: (value: string) => void;
   statuses?: IStatus[];
 }) => {
   const [_statuses, setStatuses] = useState<IStatus[]>(statuses);
-  const isSingleMode = mode === 'single';
 
   const onSelect = (status: IStatus) => {
     if (!status) return;
-    if (isSingleMode) {
-      onValueChange?.(status.value.toString());
-      return;
-    }
-
-    const arrayValue = Array.isArray(value) ? value : [];
-    const isStatusSelected = arrayValue.includes(status.value.toString());
-    const newSelectedStatusIds = isStatusSelected
-      ? arrayValue.filter((id) => id !== status.value.toString())
-      : [...arrayValue, status.value.toString()];
-
-    onValueChange?.(newSelectedStatusIds);
+    onValueChange?.(status.value.toString());
   };
 
   React.useEffect(() => {
@@ -81,7 +68,7 @@ export const SelectStatusProvider = ({
     <SelectStatusContext.Provider
       value={{
         statuses: _statuses,
-        statusIds: !value ? [] : Array.isArray(value) ? value : [value],
+        statusId: value || '',
         onSelect,
         setStatuses,
         loading: false,
@@ -100,38 +87,34 @@ const SelectStatusValue = ({
   placeholder?: string;
   className?: string;
 }) => {
-  const { statusIds, statuses } = useSelectStatusContext();
+  const { statusId, statuses } = useSelectStatusContext();
+  const selectedStatus = statuses.find((status) => status.value === statusId);
 
-  const selectedStatuses = statuses.filter((status) =>
-    statusIds.includes(status.value.toString()),
-  );
-  if (selectedStatuses.length === 0) {
+  if (!selectedStatus) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select status...'}
+        {placeholder || 'Status'}
       </span>
     );
   }
 
   return (
-    <div className="flex gap-1 ">
-      {selectedStatuses.map((status) => (
-        <div className="flex items-center gap-2" key={status.value}>
-          {(() => {
-            const Icon = TeamStatusIcons[status.type];
-            return <Icon className="w-3 h-3" color={status.color} stroke={2} />;
-          })()}
-          <p className={cn('font-medium text-base ', className)}>
-            {status.label}
-          </p>
-        </div>
-      ))}
+    <div className="flex items-center gap-2">
+      {(() => {
+        const Icon = TeamStatusIcons[selectedStatus.type];
+        return (
+          <Icon className="w-4 h-4" color={selectedStatus.color} stroke={2} />
+        );
+      })()}
+      <p className={cn('font-medium text-base ', className)}>
+        {selectedStatus.label}
+      </p>
     </div>
   );
 };
 
 const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
-  const { onSelect, statusIds } = useSelectStatusContext();
+  const { onSelect, statusId } = useSelectStatusContext();
 
   return (
     <Command.Item
@@ -147,14 +130,13 @@ const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
         })()}
         <span className="font-medium">{status.label}</span>
       </div>
-      <Combobox.Check checked={statusIds.includes(status.value.toString())} />
+      <Combobox.Check checked={statusId === status.value.toString()} />
     </Command.Item>
   );
 };
 
 const SelectStatusContent = () => {
   const { statuses } = useSelectStatusContext();
-
   return (
     <Command shouldFilter={false} id="status-command-menu">
       <Command.List>
@@ -167,8 +149,9 @@ const SelectStatusContent = () => {
 };
 
 export const SelectStatusFilterItem = () => {
+  const { teamId } = useParams();
   return (
-    <Filter.Item value="status">
+    <Filter.Item value={teamId ? 'status' : 'statusType'}>
       <IconProgressCheck />
       Status
     </Filter.Item>
@@ -178,32 +161,57 @@ export const SelectStatusFilterItem = () => {
 export const SelectStatusFilterView = ({
   onValueChange,
   queryKey,
-  mode = 'single',
-  statuses = [],
+  teamId,
 }: {
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string) => void;
   queryKey?: string;
-  mode?: 'single' | 'multiple';
-  statuses?: IStatus[];
+  teamId: string;
 }) => {
-  const [status, setStatus] = useQueryState<number>(queryKey || 'status');
+  const [status, setStatus] = useQueryState<string>(queryKey || 'status');
   const { resetFilterState } = useFilterContext();
-
+  const { statuses } = useGetStatusByTeam({
+    variables: {
+      teamId,
+    },
+  });
   return (
     <Filter.View filterKey={queryKey || 'status'}>
       <SelectStatusProvider
-        mode={mode}
-        value={
-          status !== null ? status.toString() : mode === 'single' ? '' : []
-        }
+        statuses={statuses}
+        value={status || ''}
         onValueChange={(value) => {
-          const numValue =
-            typeof value === 'string' ? parseInt(value, 10) : null;
-          setStatus(numValue);
+          setStatus(value);
           resetFilterState();
           onValueChange?.(value);
         }}
-        statuses={statuses}
+      >
+        <SelectStatusContent />
+      </SelectStatusProvider>
+    </Filter.View>
+  );
+};
+
+export const SelectStatusTypeFilterView = ({
+  onValueChange,
+  queryKey,
+}: {
+  onValueChange?: (value: string) => void;
+  queryKey?: string;
+}) => {
+  const [statusType, setStatusType] = useQueryState<string>(
+    queryKey || 'statusType',
+  );
+  const { resetFilterState } = useFilterContext();
+  return (
+    <Filter.View filterKey={queryKey || 'statusType'}>
+      <SelectStatusProvider
+        statuses={DEFAULT_TEAM_STATUSES}
+        value={statusType || ''}
+        onValueChange={(value) => {
+          setStatusType(value);
+          resetFilterState();
+          onValueChange?.(value);
+        }}
       >
         <SelectStatusContent />
       </SelectStatusProvider>
@@ -215,16 +223,14 @@ export const SelectStatusFilterBar = ({
   iconOnly,
   onValueChange,
   queryKey,
-  mode = 'single',
   statuses = [],
 }: {
   iconOnly?: boolean;
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string) => void;
   queryKey?: string;
-  mode?: 'single' | 'multiple';
   statuses?: IStatus[];
 }) => {
-  const [status, setStatus] = useQueryState<number>(queryKey || 'status');
+  const [status, setStatus] = useQueryState<string>(queryKey || 'statusType');
   const [open, setOpen] = useState(false);
 
   if (status === null) return null;
@@ -236,16 +242,10 @@ export const SelectStatusFilterBar = ({
         {!iconOnly && 'Status'}
       </Filter.BarName>
       <SelectStatusProvider
-        mode={mode}
-        value={
-          status !== null ? status.toString() : mode === 'single' ? '' : []
-        }
+        value={status || ''}
         onValueChange={(value) => {
-          const hasValue = Array.isArray(value) ? value.length > 0 : !!value;
-          if (hasValue) {
-            const numValue =
-              typeof value === 'string' ? parseInt(value, 10) : null;
-            setStatus(numValue);
+          if (value) {
+            setStatus(value);
           } else {
             setStatus(null);
           }
@@ -274,15 +274,15 @@ export const SelectStatusInlineCell = ({
   value,
   id,
   onValueChange,
-  scope,
   teamId,
+  scope,
   ...props
 }: {
-  value?: number | string;
+  value?: string;
   id?: string;
-  onValueChange?: (value: string | string[]) => void;
-  scope?: string;
+  onValueChange?: (value: string) => void;
   teamId: string;
+  scope?: string;
 } & Omit<
   React.ComponentProps<typeof SelectStatusProvider>,
   'children' | 'onValueChange' | 'value' | 'statuses'
@@ -293,12 +293,12 @@ export const SelectStatusInlineCell = ({
     variables: { teamId },
     skip: !teamId,
   });
-  const handleValueChange = (value: string | string[]) => {
+  const handleValueChange = (value: string) => {
     if (id) {
       updateTask({
         variables: {
           _id: id,
-          status: typeof value === 'string' ? value : value[0],
+          status: value,
         },
       });
     }
@@ -306,15 +306,9 @@ export const SelectStatusInlineCell = ({
     setOpen(false);
   };
 
-  const stringValue =
-    typeof value === 'number' ? value.toString() : value || '';
-  const finalScope =
-    scope || (id ? `ProjectTableCell.${id}.Status` : undefined);
-
   return (
     <SelectStatusProvider
-      mode="single"
-      value={stringValue}
+      value={value || ''}
       onValueChange={handleValueChange}
       statuses={statuses || []}
       {...props}
@@ -322,7 +316,7 @@ export const SelectStatusInlineCell = ({
       <PopoverScoped
         open={open}
         onOpenChange={setOpen}
-        scope={finalScope}
+        scope={scope}
         closeOnEnter
       >
         <RecordTableInlineCell.Trigger>
@@ -344,25 +338,18 @@ export const SelectStatusFormItem = React.forwardRef<
   > & {
     className?: string;
     placeholder?: string;
-    value?: number | string;
-    onChange?: (value: number) => void;
-    teamId: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    statuses?: IStatus[];
   }
->(({ onChange, className, placeholder, value, teamId, ...props }, ref) => {
+>(({ onChange, className, placeholder, value, statuses, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const { statuses } = useGetStatusByTeam({
-    variables: { teamId: teamId },
-  });
-  const stringValue =
-    typeof value === 'number' ? value.toString() : value || '';
 
   return (
     <SelectStatusProvider
-      value={stringValue}
+      value={value || ''}
       onValueChange={(value) => {
-        const numValue =
-          typeof value === 'string' ? parseInt(value, 10) : Number(value);
-        onChange?.(numValue);
+        onChange?.(value);
         setOpen(false);
       }}
       statuses={statuses}
@@ -378,7 +365,7 @@ export const SelectStatusFormItem = React.forwardRef<
             <Button variant="secondary" className="h-7">
               <SelectStatusValue
                 placeholder={placeholder}
-                className={value === 0 ? 'text-muted-foreground' : undefined}
+                className={!value ? 'text-muted-foreground' : undefined}
               />
             </Button>
           </Combobox.TriggerBase>
@@ -401,7 +388,7 @@ const SelectStatusRoot = React.forwardRef<
     }
 >(
   (
-    { onValueChange, className, mode, value, placeholder, statuses, ...props },
+    { onValueChange, className, value, placeholder, statuses, ...props },
     ref,
   ) => {
     const [open, setOpen] = useState(false);
@@ -411,7 +398,6 @@ const SelectStatusRoot = React.forwardRef<
           onValueChange?.(value);
           setOpen(false);
         }}
-        mode={mode}
         value={value}
         statuses={statuses}
       >
@@ -444,4 +430,5 @@ export const SelectStatus = Object.assign(SelectStatusRoot, {
   FilterBar: SelectStatusFilterBar,
   InlineCell: SelectStatusInlineCell,
   FormItem: SelectStatusFormItem,
+  TypeFilterView: SelectStatusTypeFilterView,
 });

@@ -22,13 +22,13 @@ const PROJECTS_PER_PAGE = 30;
 export const useProjectsVariables = (
   variables?: QueryHookOptions<ICursorListResponse<IProject>>['variables'],
 ) => {
-  const [{ searchValue, team, priority, status, lead }] = useMultiQueryState<{
-    searchValue: string;
+  const [{ name, team, priority, status, lead }] = useMultiQueryState<{
+    name: string;
     team: string[];
     priority: string;
     status: string;
     lead: string;
-  }>(['searchValue', 'team', 'priority', 'status', 'lead']);
+  }>(['name', 'team', 'priority', 'status', 'lead']);
   const currentUser = useAtomValue(currentUserState);
   const { cursor } = useRecordTableCursor({
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
@@ -39,7 +39,7 @@ export const useProjectsVariables = (
       status: 1,
     },
     cursor,
-    searchValue: searchValue || undefined,
+    name: name || undefined,
     teamIds: team || undefined,
     priority: priority || undefined,
     status: status || undefined,

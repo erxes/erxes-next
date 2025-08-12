@@ -6,7 +6,6 @@ import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 import { Separator } from 'erxes-ui';
 import { TaskBreadCrump } from '@/task/components/breadcrump/TaskBreadCrump';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
-
 import { TasksRecordTable } from '@/task/components/TasksRecordTable';
 
 export const TasksPage = () => {

@@ -1,12 +1,16 @@
 import { useGetProjectProgress } from '~/modules/project/hooks/useGetProjectProgress';
 
 export const Progress = ({ projectId }: { projectId: string }) => {
-  const { getProjectProgress } = useGetProjectProgress({
+  const { projcetProgress } = useGetProjectProgress({
     variables: { _id: projectId },
     skip: !projectId,
   });
 
-  console.log(getProjectProgress);
-
-  return <div>Progress</div>;
+  return (
+    <div>
+      <span>total: {projcetProgress?.totalScope || 0}</span>
+      <span>started: {projcetProgress?.totalStartedScope || 0}</span>
+      <span>completed: {projcetProgress?.totalCompletedScope || 0}</span>
+    </div>
+  );
 };

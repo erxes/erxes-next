@@ -27,14 +27,17 @@ import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
+import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
+  const { teams } = useGetCurrentUsersTeams();
+  const { statuses } = useGetStatusByTeam({
+    variables: { teamId: teamId || teams?.[0]?._id },
+    skip: !teamId && !teams?.[0]?._id,
+  });
   const currentUser = useAtomValue(currentUserState);
-
   const { createTask } = useCreateTask();
-  const { teams } = useGetCurrentUsersTeams({});
-
   const editor = useBlockEditor();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const form = useForm<TAddTask>({
@@ -42,7 +45,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     defaultValues: {
       teamId: teamId || '',
       name: '',
-      status: '0',
+      status: statuses?.[0]?.value || '',
       priority: 0,
       assigneeId: teamId ? undefined : currentUser?._id,
       projectId: undefined,
@@ -52,11 +55,14 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   });
 
   useEffect(() => {
+    if (statuses?.length && !form.getValues('status')) {
+      form.setValue('status', statuses?.[0]?.value || '');
+    }
+
     if (teams && teams.length > 0 && !form.getValues('teamId')) {
       form.setValue('teamId', teams[0]._id);
     }
-  }, [teams, form]);
-
+  }, [teams, form, teamId, statuses, currentUser]);
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
     if (content) {
@@ -82,7 +88,6 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     });
     onClose();
   };
-
   return (
     <Form {...form}>
       <form
@@ -98,6 +103,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Label className="sr-only">Team</Form.Label>
                 <SelectTeam.FormItem
                   {...field}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    form.resetField('projectId');
+                  }}
                   mode="single"
                   teams={teams}
                   className={cn(
@@ -144,9 +153,9 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   <Form.Label className="sr-only">Status</Form.Label>
                   <SelectStatus.FormItem
                     {...field}
-                    value={field.value ? parseInt(field.value) : 0}
+                    value={field.value}
                     onChange={(value) => field.onChange(value.toString())}
-                    teamId={form.getValues('teamId')}
+                    statuses={statuses}
                   />
                 </Form.Item>
               )}
@@ -192,6 +201,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     onValueChange={(value: any) => {
                       field.onChange(value);
                     }}
+                    teamId={form.getValues('teamId') || undefined}
                     placeholder="Project"
                   />
                 </Form.Item>

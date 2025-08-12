@@ -14,12 +14,12 @@ const ProjectsFilterPopover = () => {
   const { teamId } = useParams();
 
   const [queries] = useMultiQueryState<{
-    searchValue: string;
+    name: string;
     lead: string;
     team: string[];
     priority: string;
     status: string;
-  }>(['searchValue', 'lead', 'team', 'priority', 'status']);
+  }>(['name', 'lead', 'team', 'priority', 'status']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,
@@ -38,7 +38,7 @@ const ProjectsFilterPopover = () => {
                 className="bg-background"
               />
               <Command.List className="p-1">
-                <Filter.Item value="searchValue" inDialog>
+                <Filter.Item value="name" inDialog>
                   <IconSearch />
                   Search
                 </Filter.Item>
@@ -57,8 +57,8 @@ const ProjectsFilterPopover = () => {
         </Combobox.Content>
       </Filter.Popover>
       <Filter.Dialog>
-        <Filter.View filterKey="searchValue" inDialog>
-          <Filter.DialogStringView filterKey="searchValue" />
+        <Filter.View filterKey="name" inDialog>
+          <Filter.DialogStringView filterKey="name" />
         </Filter.View>
       </Filter.Dialog>
     </>
@@ -69,27 +69,27 @@ export const ProjectsFilter = () => {
   const { teamId } = useParams();
 
   const [queries] = useMultiQueryState<{
-    searchValue: string;
+    name: string;
     lead: string;
     team: string[];
     priority: string;
     status: string;
-  }>(['searchValue', 'lead', 'team', 'priority', 'status']);
-  const { searchValue } = queries || {};
+  }>(['name', 'lead', 'team', 'priority', 'status']);
+  const { name } = queries || {};
 
   return (
     <Filter id="Projects-filter" sessionKey={PROJECTS_CURSOR_SESSION_KEY}>
       <Filter.Bar>
-        {searchValue && (
+        {name && (
           <Filter.BarItem>
             <Filter.BarName>
               <IconSearch />
               Search
             </Filter.BarName>
-            <Filter.BarButton filterKey="searchValue" inDialog>
-              {searchValue}
+            <Filter.BarButton filterKey="name" inDialog>
+              {name}
             </Filter.BarButton>
-            <Filter.BarClose filterKey="searchValue" />
+            <Filter.BarClose filterKey="name" />
           </Filter.BarItem>
         )}
         <SelectLead.FilterBar />

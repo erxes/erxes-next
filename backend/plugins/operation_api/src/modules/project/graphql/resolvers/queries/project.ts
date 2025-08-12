@@ -9,6 +9,7 @@ import {
   fillUntilTargetDate,
   fillFromLastDate,
 } from '@/project/utils/chartutils';
+import { differenceInCalendarDays } from 'date-fns';
 
 export const projectQueries = {
   getProject: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -88,11 +89,10 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    return models.Task.aggregate([
+    const result = await models.Task.aggregate([
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] }, // filter all relevant statuses
         },
       },
       {
@@ -178,6 +178,8 @@ export const projectQueries = {
         },
       },
     ]);
+
+    return result?.[0] || {};
   },
 
   getProjectProgressByMember: async (
@@ -201,7 +203,6 @@ export const projectQueries = {
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] },
         },
       },
       {
@@ -352,7 +353,6 @@ export const projectQueries = {
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] },
         },
       },
       {
@@ -505,7 +505,40 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    const chartsData = await models.Task.aggregate([
+    const [totalScopeResult] = await models.Task.aggregate([
+      {
+        $match: { projectId: _id },
+      },
+      {
+        $group: {
+          _id: null,
+          totalScope: {
+            $sum: {
+              $cond: [
+                {
+                  $or: [
+                    { $eq: ['$estimatePoint', null] },
+                    { $eq: ['$estimatePoint', 0] },
+                  ],
+                },
+                1,
+                '$estimatePoint',
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalScope: { $ifNull: ['$totalScope', 0] },
+        },
+      },
+    ]);
+
+    const totalScope = totalScopeResult?.totalScope || 0;
+
+    const chartDataAggregation = await models.Task.aggregate([
       {
         $match: {
           projectId: _id,
@@ -557,31 +590,99 @@ export const projectQueries = {
         },
       },
     ]);
+    const chartData: {
+      totalScope: number;
+      chartData: { date: Date; started: number; completed: number }[];
+    } = {
+      totalScope,
+      chartData: [],
+    };
+
     const baseDate = project.startDate || project.createdAt;
 
-    if (chartsData && chartsData.length === 0) {
-      return fillMissingDays([], baseDate, 7);
+    if (chartDataAggregation && chartDataAggregation.length === 0) {
+      let totalDays = 7;
+      if (
+        project.targetDate &&
+        new Date(baseDate) < new Date(project.targetDate)
+      ) {
+        totalDays = differenceInCalendarDays(
+          new Date(project.targetDate),
+          baseDate,
+        );
+      }
+      chartData.chartData = fillMissingDays([], baseDate, totalDays);
     }
-    if (chartsData.length > 0 && project.targetDate) {
+    if (
+      chartDataAggregation.length > 0 &&
+      project.targetDate &&
+      !project.startDate
+    ) {
       const targetDate = new Date(project.targetDate);
-      const lastDataDate = new Date(chartsData[chartsData.length - 1].date);
+      const lastDataDate = new Date(
+        chartDataAggregation[chartDataAggregation.length - 1].date,
+      );
 
       if (targetDate < lastDataDate) {
-        console.log(chartsData);
-
-        if (chartsData.length < 7) {
-          return fillMissingDays(chartsData, baseDate, 7);
+        if (chartDataAggregation.length < 7) {
+          chartData.chartData = fillMissingDays(
+            chartDataAggregation,
+            baseDate,
+            7,
+          );
         }
 
-        return chartsData;
+        chartData.chartData = chartDataAggregation;
+        return chartData;
       }
 
-      return fillUntilTargetDate(chartsData, targetDate);
+      chartData.chartData = fillUntilTargetDate(
+        chartDataAggregation,
+        targetDate,
+      );
+      return chartData;
     }
-    if (chartsData.length > 0 && chartsData.length < 7) {
-      return fillFromLastDate(chartsData, 7);
+    if (chartDataAggregation.length > 0 && project.startDate) {
+      const startDate = new Date(project.startDate);
+      const firstDate = new Date(chartDataAggregation[0].date);
+      let totalDays = 7;
+
+      if (startDate < firstDate && !project.targetDate) {
+        totalDays = differenceInCalendarDays(firstDate, startDate);
+
+        chartData.chartData = fillMissingDays(
+          chartDataAggregation,
+          startDate,
+          totalDays,
+        );
+        return chartData;
+      } else if (startDate < firstDate && project.targetDate) {
+        const targetDate = new Date(project.targetDate);
+        const lastDataDate = new Date(
+          chartDataAggregation[chartDataAggregation.length - 1].date,
+        );
+        totalDays = 7;
+
+        if (lastDataDate > targetDate) {
+          totalDays = differenceInCalendarDays(lastDataDate, startDate);
+        } else {
+          totalDays = differenceInCalendarDays(targetDate, startDate);
+        }
+
+        chartData.chartData = fillMissingDays(
+          chartDataAggregation,
+          startDate,
+          totalDays,
+        );
+        return chartData;
+      }
+    }
+    if (chartDataAggregation.length > 0 && chartDataAggregation.length < 7) {
+      chartData.chartData = fillFromLastDate(chartDataAggregation, 7);
+
+      return chartData;
     }
 
-    return chartsData;
+    return chartData;
   },
 };

@@ -1,8 +1,9 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECT_PROGRESS_BY_MEMBER } from '~/modules/project/graphql/queries/getProjectProgressByMember';
+import { IProjectProgressByMember } from '@/project/types';
 
 interface IGetProjectQueryResponse {
-  getProjectProgressByMember: any;
+  getProjectProgressByMember: IProjectProgressByMember[];
 }
 
 export const useGetProjectProgressByMember = (options: QueryHookOptions) => {
@@ -11,7 +12,8 @@ export const useGetProjectProgressByMember = (options: QueryHookOptions) => {
     options,
   );
 
-  const getProjectProgressByMember = data?.getProjectProgressByMember;
+  const projectProgressByMember =
+    data?.getProjectProgressByMember || ([] as IProjectProgressByMember[]);
 
-  return { getProjectProgressByMember, loading, refetch };
+  return { projectProgressByMember, loading, refetch };
 };
