@@ -24,6 +24,7 @@ export const handleCreateNotification = async (
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
+  console.log({ data });
 
   for (const userId of data?.userIds || []) {
     try {

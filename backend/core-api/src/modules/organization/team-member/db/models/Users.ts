@@ -1146,6 +1146,15 @@ export const loadUserMovemmentClass = (models: IModels, subdomain: string) => {
           );
 
           if (contentType && contentTypeId && createdBy) {
+            console.log({
+              fromUserId: createdBy,
+              userIds: targetUserIds,
+              notificationType:
+                contentType === 'department'
+                  ? 'departmentAssigneeChanged'
+                  : 'branchAssigneeChanged',
+              message,
+            });
             sendNotification(subdomain, {
               title,
               message,
