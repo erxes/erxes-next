@@ -277,24 +277,29 @@ export const facebookCreateIntegration = async (
   models: IModels,
   { accountId, integrationId, data, kind },
 ): Promise<{ status: 'success' | 'failed'; error?: any }> => {
-  const { pageIds: facebookPageIds } = JSON.parse(data);
-  const account = await models.FacebookAccounts.getAccount({ _id: accountId });
-
-  const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
-  const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
-  const domain =
-    process.env.NODE_ENV === 'production'
-      ? `${DOMAIN}/gateway/pl:facebook`
-      : `${DOMAIN}/pl:facebook`;
-
   let integration;
   try {
+    const facebookPageIds = JSON.parse(data).pageIds;
+    if (!Array.isArray(facebookPageIds) || facebookPageIds.length === 0) {
+      throw new Error('pageIds must be a non-empty array');
+    }
+    const account = await models.FacebookAccounts.getAccount({
+      _id: accountId,
+    });
+
     integration = await models.FacebookIntegrations.create({
       kind,
       accountId,
       erxesApiId: integrationId,
       facebookPageIds,
     });
+    const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
+    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+
+    const domain =
+      process.env.NODE_ENV === 'production'
+        ? `${DOMAIN}/gateway/pl:facebook`
+        : `${DOMAIN}/pl:facebook`;
 
     if (ENDPOINT_URL) {
       try {
@@ -340,7 +345,6 @@ export const facebookCreateIntegration = async (
 
     return { status: 'success' };
   } catch (error) {
-    console.error('Error creating integration:', error);
-    return { status: 'failed', error };
+    return { status: 'failed', error: error.message };
   }
 };
