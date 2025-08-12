@@ -8,11 +8,14 @@ import {
 } from '@/integrations/facebook/utils';
 import fetch from 'node-fetch';
 import { getEnv, resetConfigsCache } from 'erxes-api-shared/utils';
+import { generateModels } from '~/connectionResolvers';
+
 export const removeIntegration = async (
   subdomain: string,
-  models: IModels,
   integrationErxesApiId: string,
 ): Promise<string> => {
+  const models = await generateModels(subdomain);
+
   const integration = await models.FacebookIntegrations.findOne({
     erxesApiId: integrationErxesApiId,
   });
@@ -111,9 +114,10 @@ export const removeIntegration = async (
 
 export const removeAccount = async (
   subdomain: string,
-  models: IModels,
   _id: string,
 ): Promise<{ erxesApiIds: string[] }> => {
+  const models = await generateModels(subdomain);
+
   const account = await models.FacebookAccounts.findOne({ _id });
 
   if (!account) {
@@ -127,15 +131,18 @@ export const removeAccount = async (
   });
 
   if (integrations.length > 0) {
-    const results = await Promise.all(
-      integrations.map((integration) =>
-        removeIntegration(subdomain, models, integration.erxesApiId),
-      ),
-    );
-
-    erxesApiIds.push(...results);
+    for (const integration of integrations) {
+      try {
+        const response = await removeIntegration(
+          subdomain,
+          integration.erxesApiId,
+        );
+        erxesApiIds.push(response);
+      } catch (e) {
+        throw e;
+      }
+    }
   }
-
   await models.FacebookAccounts.deleteOne({ _id });
 
   return { erxesApiIds };
@@ -143,9 +150,10 @@ export const removeAccount = async (
 
 export const repairIntegrations = async (
   subdomain: string,
-  models: IModels,
   integrationId: string,
 ): Promise<true | Error> => {
+  const models = await generateModels(subdomain);
+
   const integration = await models.FacebookIntegrations.findOne({
     erxesApiId: integrationId,
   });
@@ -197,88 +205,24 @@ export const repairIntegrations = async (
   return true;
 };
 
-export const removeCustomers = async (models: IModels, params) => {
-  const { customerIds } = params;
-  const selector = { erxesApiId: { $in: customerIds } };
-
-  await models.FacebookCustomers.deleteMany(selector);
-};
-
 export const updateConfigs = async (
-  models: IModels,
+  subdomain: string,
   configsMap,
 ): Promise<void> => {
+  const models = await generateModels(subdomain);
+
   await models.FacebookConfigs.updateConfigs(configsMap);
 
   await resetConfigsCache();
 };
 
-export const routeErrorHandling = (fn, callback?: any) => {
-  return async (req, res, next) => {
-    try {
-      await fn(req, res, next);
-    } catch (e) {
-      if (callback) {
-        return callback(res, e, next);
-      }
-
-      debugError(e.message);
-
-      return next(e);
-    }
-  };
-};
-
-export const facebookGetCustomerPosts = async (
-  models: IModels,
-  { customerId },
-) => {
-  const customer = await models.FacebookCustomers.findOne({
-    erxesApiId: customerId,
-  });
-
-  if (!customer) {
-    return [];
-  }
-
-  const result = await models.FacebookCommentConversation.aggregate([
-    { $match: { senderId: customer.userId } },
-    {
-      $lookup: {
-        from: 'posts_conversations_facebooks',
-        localField: 'postId',
-        foreignField: 'postId',
-        as: 'post',
-      },
-    },
-    {
-      $unwind: {
-        path: '$post',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $addFields: {
-        conversationId: '$post.erxesApiId',
-      },
-    },
-    {
-      $project: { _id: 0, conversationId: 1 },
-    },
-  ]);
-
-  const conversationIds = result.map((conv) => conv.conversationId);
-
-  return conversationIds;
-};
-
 export const facebookCreateIntegration = async (
   subdomain: string,
-  models: IModels,
   { accountId, integrationId, data, kind },
 ): Promise<{ status: 'success' }> => {
   // Parse the pageIds from the data string
   const facebookPageIds = JSON.parse(data).pageIds;
+  const models = await generateModels(subdomain);
 
   // Create a new Facebook integration in the database
   try {

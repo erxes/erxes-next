@@ -60,7 +60,6 @@ export const facebookSubscription = async (req, res) => {
     models,
     'FACEBOOK_VERIFY_TOKEN',
   );
-  console.log(FACEBOOK_VERIFY_TOKEN, 'FACEBOOK_VERIFY_TOKEN');
 
   // when the endpoint is registered as a webhook, it must echo back
   // the 'hub.challenge' value it receives in the query arguments
@@ -85,8 +84,6 @@ export const facebookWebhook = async (req, res, next) => {
   for (const entry of data.entry) {
     // receive chat
     try {
-      console.log(entry, 'entry');
-
       if (entry.messaging) {
         await processMessagingEvent(
           entry,
@@ -152,15 +149,12 @@ export async function processMessagingEvent(
   subdomain: string,
   accessTokensByPageId: Record<string, string>,
 ) {
-  console.log(entry, 'entry');
   debugFacebook(`Received messenger data: ${JSON.stringify(entry)}`);
 
   try {
     const messagingEvents = Array.isArray(entry.messaging)
       ? entry.messaging
       : [];
-
-    console.log(messagingEvents, 'messagingEvents');
 
     if (messagingEvents.length === 0) {
       debugFacebook('No messaging events found in entry.');
@@ -174,7 +168,6 @@ export async function processMessagingEvent(
       }
 
       const pageId = activity.recipient.id;
-      console.log(pageId, 'pageId');
 
       // Find the related Facebook integration
       const integration = await models.FacebookIntegrations.getIntegration({
@@ -183,18 +176,15 @@ export async function processMessagingEvent(
           { kind: INTEGRATION_KINDS.MESSENGER },
         ],
       });
-      console.log(integration, 'integration');
 
       if (!integration) {
         debugFacebook(`No integration found for pageId: ${pageId}`);
         continue;
       }
-      console.log(integration, 'integration');
 
       const facebookAccounts = await models.FacebookAccounts.getAccount({
         _id: integration.accountId,
       });
-      console.log(facebookAccounts, 'facebookAccounts');
 
       if (!facebookAccounts) {
         debugFacebook(
@@ -232,7 +222,6 @@ export async function processMessagingEvent(
         type: 'message',
         text: activity.message?.text || '',
       };
-      console.log(activityData, 'activityData');
       debugFacebook(`Processing activity: ${JSON.stringify(activityData)}`);
       console.log(activityData, 'activityData');
 
