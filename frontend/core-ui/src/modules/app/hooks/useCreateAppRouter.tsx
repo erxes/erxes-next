@@ -1,4 +1,5 @@
 import {
+  Navigate,
   Route,
   createBrowserRouter,
   createRoutesFromElements,
@@ -21,7 +22,6 @@ import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 import { lazy } from 'react';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
-import { OnBoarding } from '~/pages/onboarding/Onboarding';
 import { Providers } from '~/providers';
 import { DocumentsRoutes } from '../components/DocumentsRoutes';
 
@@ -47,7 +47,10 @@ export const useCreateAppRouter = () => {
 
           <Route element={<UserProvider />}>
             <Route element={<DefaultLayout />}>
-              <Route path={AppPath.Index} element={<OnBoarding />} />
+              <Route
+                path={AppPath.Index}
+                element={<Navigate to={AppPath.MyInbox} />}
+              />
               <Route
                 path={AppPath.SettingsCatchAll}
                 element={<SettingsRoutes />}
