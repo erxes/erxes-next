@@ -4,6 +4,11 @@ import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IProjectDocument } from '@/project/@types/project';
 import { FilterQuery } from 'mongoose';
 import { STATUS_TYPES } from '@/status/constants';
+import {
+  fillMissingDays,
+  fillUntilTargetDate,
+  fillFromLastDate,
+} from '@/project/utils/chartutils';
 
 export const projectQueries = {
   getProject: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -482,7 +487,13 @@ export const projectQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
+    const project = await models.Project.findOne({ _id });
+
+    if (!project) {
+      return [];
+    }
+
+    const teamIds = project?.teamIds || [];
 
     const startedStatusIds = await models.Status.find({
       teamId: { $in: teamIds },
@@ -494,7 +505,7 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    return models.Task.aggregate([
+    const chartsData = await models.Task.aggregate([
       {
         $match: {
           projectId: _id,
@@ -546,5 +557,31 @@ export const projectQueries = {
         },
       },
     ]);
+    const baseDate = project.startDate || project.createdAt;
+
+    if (chartsData && chartsData.length === 0) {
+      return fillMissingDays([], baseDate, 7);
+    }
+    if (chartsData.length > 0 && project.targetDate) {
+      const targetDate = new Date(project.targetDate);
+      const lastDataDate = new Date(chartsData[chartsData.length - 1].date);
+
+      if (targetDate < lastDataDate) {
+        console.log(chartsData);
+
+        if (chartsData.length < 7) {
+          return fillMissingDays(chartsData, baseDate, 7);
+        }
+
+        return chartsData;
+      }
+
+      return fillUntilTargetDate(chartsData, targetDate);
+    }
+    if (chartsData.length > 0 && chartsData.length < 7) {
+      return fillFromLastDate(chartsData, 7);
+    }
+
+    return chartsData;
   },
 };

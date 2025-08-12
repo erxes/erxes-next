@@ -8,5 +8,5 @@ export const Progress = ({ projectId }: { projectId: string }) => {
 
   console.log(getProjectProgress);
 
-  return <div>Prograess</div>;
+  return <div>Progress</div>;
 };
