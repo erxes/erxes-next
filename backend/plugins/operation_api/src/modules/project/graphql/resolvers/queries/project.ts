@@ -89,7 +89,7 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    return models.Task.aggregate([
+    const result = await models.Task.aggregate([
       {
         $match: {
           projectId: _id,
@@ -179,6 +179,8 @@ export const projectQueries = {
         },
       },
     ]);
+
+    return result?.[0] || {};
   },
 
   getProjectProgressByMember: async (

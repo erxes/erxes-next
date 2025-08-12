@@ -6,7 +6,7 @@ export const Progress = ({ projectId }: { projectId: string }) => {
     skip: !projectId,
   });
 
-  console.log(getProjectProgress);
+  console.log(getProjectProgress, '123123');
 
   return <div>Progress</div>;
 };
