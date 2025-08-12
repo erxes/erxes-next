@@ -1,4 +1,4 @@
-import { Spinner, Toggle } from 'erxes-ui';
+import { Toggle } from 'erxes-ui';
 import { useChangeConversationStatus } from '@/inbox/conversations/hooks/useChangeConversationStatus';
 import { useConversationContext } from '@/inbox/conversations/hooks/useConversationContext';
 import { ConversationStatus } from '@/inbox/types/Conversation';
@@ -24,12 +24,7 @@ export const ConversationActions = () => {
       onPressedChange={handleChangeConversationStatus}
       disabled={loading}
     >
-      {loading && <Spinner size="small" />}
-      {loading
-        ? 'Resolving'
-        : status === ConversationStatus.CLOSED
-        ? 'Open'
-        : 'Resolve'}
+      {status === ConversationStatus.CLOSED ? 'Open' : 'Resolve'}
     </Toggle>
   );
 };

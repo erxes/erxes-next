@@ -38,7 +38,6 @@ const InboxIndexPage = () => {
       </PageHeader>
       <InboxLayout
         conversations={<Conversations />}
-        mainFilters={<InboxMainFilter />}
         conversationDetail={<ConversationDetail />}
       />
     </div>

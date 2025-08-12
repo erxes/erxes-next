@@ -39,7 +39,7 @@ const corsOptions = {
     ...(process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean),
   ],
 };
-
+// cors
 app.use(cors(corsOptions));
 
 // Health check endpoint

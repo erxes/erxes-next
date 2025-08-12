@@ -9,7 +9,8 @@ export const createTransporter = async (config: IEmailTransportConfig) => {
   if (config.sendgrid) {
     const { apiKey } = config.sendgrid || {};
 
-    return sendgridMail.setApiKey(apiKey);
+    sendgridMail.setApiKey(apiKey);
+    return sendgridMail;
   }
 
   if (config.ses) {

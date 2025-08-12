@@ -8,6 +8,18 @@ const FrontlineNavigation = lazy(() =>
   })),
 );
 
+const FrontlineSubGroups = lazy(() =>
+  import('./modules/FrontlineSubGroups').then((module) => ({
+    default: module.FrontlineSubGroups,
+  })),
+);
+
+const FrontlineActions = lazy(() =>
+  import('./modules/FrontlineActions').then((module) => ({
+    default: module.FrontlineActions,
+  })),
+);
+
 export const CONFIG: IUIConfig = {
   name: 'frontline',
   navigationGroup: {
@@ -16,6 +28,16 @@ export const CONFIG: IUIConfig = {
     content: () => (
       <Suspense fallback={<div />}>
         <FrontlineNavigation />
+      </Suspense>
+    ),
+    subGroups: () => (
+      <Suspense fallback={<div />}>
+        <FrontlineSubGroups />
+      </Suspense>
+    ),
+    actions: () => (
+      <Suspense fallback={<div />}>
+        <FrontlineActions />
       </Suspense>
     ),
   },
