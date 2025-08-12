@@ -353,7 +353,6 @@ export const projectQueries = {
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] },
         },
       },
       {
