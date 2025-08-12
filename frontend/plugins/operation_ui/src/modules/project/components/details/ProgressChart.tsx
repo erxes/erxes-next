@@ -19,13 +19,15 @@ export const ProgressChart = ({ projectId }: { projectId: string }) => {
     variables: { _id: projectId },
   });
 
+  const chartData = getProjectProgressChart?.chartData || [];
+
   return (
     <Card>
       <Card.Content>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={getProjectProgressChart}
+            data={chartData}
             margin={{
               left: 12,
               right: 12,
