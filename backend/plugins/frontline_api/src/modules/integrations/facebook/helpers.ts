@@ -8,11 +8,14 @@ import {
 } from '@/integrations/facebook/utils';
 import fetch from 'node-fetch';
 import { getEnv, resetConfigsCache } from 'erxes-api-shared/utils';
+import { generateModels } from '~/connectionResolvers';
+
 export const removeIntegration = async (
   subdomain: string,
-  models: IModels,
   integrationErxesApiId: string,
 ): Promise<string> => {
+  const models = await generateModels(subdomain);
+
   const integration = await models.FacebookIntegrations.findOne({
     erxesApiId: integrationErxesApiId,
   });
@@ -111,9 +114,10 @@ export const removeIntegration = async (
 
 export const removeAccount = async (
   subdomain: string,
-  models: IModels,
   _id: string,
 ): Promise<{ erxesApiIds: string[] }> => {
+  const models = await generateModels(subdomain);
+
   const account = await models.FacebookAccounts.findOne({ _id });
 
   if (!account) {
@@ -127,15 +131,18 @@ export const removeAccount = async (
   });
 
   if (integrations.length > 0) {
-    const results = await Promise.all(
-      integrations.map((integration) =>
-        removeIntegration(subdomain, models, integration.erxesApiId),
-      ),
-    );
-
-    erxesApiIds.push(...results);
+    for (const integration of integrations) {
+      try {
+        const response = await removeIntegration(
+          subdomain,
+          integration.erxesApiId,
+        );
+        erxesApiIds.push(response);
+      } catch (e) {
+        throw e;
+      }
+    }
   }
-
   await models.FacebookAccounts.deleteOne({ _id });
 
   return { erxesApiIds };
@@ -143,9 +150,10 @@ export const removeAccount = async (
 
 export const repairIntegrations = async (
   subdomain: string,
-  models: IModels,
   integrationId: string,
 ): Promise<true | Error> => {
+  const models = await generateModels(subdomain);
+
   const integration = await models.FacebookIntegrations.findOne({
     erxesApiId: integrationId,
   });
@@ -197,110 +205,45 @@ export const repairIntegrations = async (
   return true;
 };
 
-export const removeCustomers = async (models: IModels, params) => {
-  const { customerIds } = params;
-  const selector = { erxesApiId: { $in: customerIds } };
-
-  await models.FacebookCustomers.deleteMany(selector);
-};
-
 export const updateConfigs = async (
-  models: IModels,
+  subdomain: string,
   configsMap,
 ): Promise<void> => {
+  const models = await generateModels(subdomain);
+
   await models.FacebookConfigs.updateConfigs(configsMap);
 
   await resetConfigsCache();
 };
 
-export const routeErrorHandling = (fn, callback?: any) => {
-  return async (req, res, next) => {
-    try {
-      await fn(req, res, next);
-    } catch (e) {
-      if (callback) {
-        return callback(res, e, next);
-      }
-
-      debugError(e.message);
-
-      return next(e);
-    }
-  };
-};
-
-export const facebookGetCustomerPosts = async (
-  models: IModels,
-  { customerId },
-) => {
-  const customer = await models.FacebookCustomers.findOne({
-    erxesApiId: customerId,
-  });
-
-  if (!customer) {
-    return [];
-  }
-
-  const result = await models.FacebookCommentConversation.aggregate([
-    { $match: { senderId: customer.userId } },
-    {
-      $lookup: {
-        from: 'posts_conversations_facebooks',
-        localField: 'postId',
-        foreignField: 'postId',
-        as: 'post',
-      },
-    },
-    {
-      $unwind: {
-        path: '$post',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $addFields: {
-        conversationId: '$post.erxesApiId',
-      },
-    },
-    {
-      $project: { _id: 0, conversationId: 1 },
-    },
-  ]);
-
-  const conversationIds = result.map((conv) => conv.conversationId);
-
-  return conversationIds;
-};
-
 export const facebookCreateIntegration = async (
   subdomain: string,
-  models: IModels,
   { accountId, integrationId, data, kind },
-): Promise<{ status: 'success' | 'failed'; error?: any }> => {
-  let integration;
-  try {
-    const facebookPageIds = JSON.parse(data).pageIds;
-    if (!Array.isArray(facebookPageIds) || facebookPageIds.length === 0) {
-      throw new Error('pageIds must be a non-empty array');
-    }
-    const account = await models.FacebookAccounts.getAccount({
-      _id: accountId,
-    });
+): Promise<{ status: 'success' }> => {
+  // Parse the pageIds from the data string
+  const facebookPageIds = JSON.parse(data).pageIds;
+  const models = await generateModels(subdomain);
 
-    integration = await models.FacebookIntegrations.create({
+  // Create a new Facebook integration in the database
+  try {
+    const integration = await models.FacebookIntegrations.create({
       kind,
       accountId,
       erxesApiId: integrationId,
       facebookPageIds,
     });
+    console.log('Integration created:', integration);
+    // Retrieve environment variables for endpoint and domain
     const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
     const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-    const domain =
-      process.env.NODE_ENV === 'production'
-        ? `${DOMAIN}/gateway/pl:facebook`
-        : `${DOMAIN}/pl:facebook`;
+    // Set domain based on environment (production vs non-production)
+    let domain = `${DOMAIN}/gateway/pl:facebook`;
+    if (process.env.NODE_ENV !== 'production') {
+      domain = `${DOMAIN}/pl:facebook`;
+    }
 
+    // Register the endpoint if ENDPOINT_URL is defined
     if (ENDPOINT_URL) {
       try {
         await fetch(`${ENDPOINT_URL}/register-endpoint`, {
@@ -313,38 +256,56 @@ export const facebookCreateIntegration = async (
           headers: { 'Content-Type': 'application/json' },
         });
       } catch (e) {
+        // Delete the integration if endpoint registration fails
         await models.FacebookIntegrations.deleteOne({ _id: integration._id });
         throw e;
       }
     }
 
-    const facebookPageTokensMap: Record<string, string> = {};
+    // Initialize a map to store page IDs and their access tokens
+    const facebookPageTokensMap: { [key: string]: string } = {};
+    // Retrieve the Facebook account details
+    const account = await models.FacebookAccounts.getAccount({
+      _id: accountId,
+    });
 
+    // Process each page ID to get access token and subscribe the page
     for (const pageId of facebookPageIds) {
       try {
+        // Get the access token for the page
         const pageAccessToken = await getPageAccessToken(pageId, account.token);
         facebookPageTokensMap[pageId] = pageAccessToken;
 
-        await subscribePage(models, pageId, pageAccessToken);
-        debugFacebook(`Successfully subscribed page ${pageId}`);
-      } catch (e) {
-        debugError(
-          `Error occurred while handling page ${pageId}: ${e.message || e}`,
-        );
-        if (integration?._id) {
-          await models.FacebookIntegrations.deleteOne({ _id: integration._id });
+        try {
+          // Subscribe the page using the access token
+          await subscribePage(models, pageId, pageAccessToken);
+          debugFacebook(`Successfully subscribed page ${pageId}`);
+        } catch (e) {
+          // Log and throw error if subscription fails
+          debugError(
+            `Error occurred while trying to subscribe page ${e.message || e}`,
+          );
+          throw e;
         }
+      } catch (e) {
+        // Log and throw error if token retrieval fails
+        debugError(
+          `Error occurred while trying to get page access token with ${
+            e.message || e
+          }`,
+        );
         throw e;
       }
     }
 
-    if (integration) {
-      integration.facebookPageTokensMap = facebookPageTokensMap;
-      await integration.save();
-    }
+    // Save the page tokens map to the integration
+    integration.facebookPageTokensMap = facebookPageTokensMap;
+    await integration.save();
 
+    // Return success status
     return { status: 'success' };
-  } catch (error) {
-    return { status: 'failed', error: error.message };
+  } catch (e) {
+    console.error('Error in FacebookIntegrations.create:', e);
+    throw e;
   }
 };
