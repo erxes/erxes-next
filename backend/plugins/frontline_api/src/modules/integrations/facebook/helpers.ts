@@ -276,76 +276,71 @@ export const facebookCreateIntegration = async (
   subdomain: string,
   models: IModels,
   { accountId, integrationId, data, kind },
-): Promise<{ status: 'success' }> => {
-  const facebookPageIds = JSON.parse(data).pageIds;
-
+): Promise<{ status: 'success' | 'failed'; error?: any }> => {
+  const { pageIds: facebookPageIds } = JSON.parse(data);
   const account = await models.FacebookAccounts.getAccount({ _id: accountId });
-
-  const integration = await models.FacebookIntegrations.create({
-    kind,
-    accountId,
-    erxesApiId: integrationId,
-    facebookPageIds,
-  });
 
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+  const domain =
+    process.env.NODE_ENV === 'production'
+      ? `${DOMAIN}/gateway/pl:facebook`
+      : `${DOMAIN}/pl:facebook`;
 
-  let domain = `${DOMAIN}/gateway/pl:facebook`;
+  let integration;
+  try {
+    integration = await models.FacebookIntegrations.create({
+      kind,
+      accountId,
+      erxesApiId: integrationId,
+      facebookPageIds,
+    });
 
-  if (process.env.NODE_ENV !== 'production') {
-    domain = `${DOMAIN}/pl:facebook`;
-  }
-
-  if (ENDPOINT_URL) {
-    // send domain to core endpoints
-    try {
-      await fetch(`${ENDPOINT_URL}/register-endpoint`, {
-        method: 'POST',
-        body: JSON.stringify({
-          domain,
-          facebookPageIds,
-          fbPageIds: facebookPageIds,
-        }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-    } catch (e) {
-      await models.FacebookIntegrations.deleteOne({ _id: integration._id });
-      throw e;
-    }
-  }
-
-  const facebookPageTokensMap: { [key: string]: string } = {};
-
-  for (const pageId of facebookPageIds) {
-    try {
-      const pageAccessToken = await getPageAccessToken(pageId, account.token);
-
-      facebookPageTokensMap[pageId] = pageAccessToken;
-
+    if (ENDPOINT_URL) {
       try {
+        await fetch(`${ENDPOINT_URL}/register-endpoint`, {
+          method: 'POST',
+          body: JSON.stringify({
+            domain,
+            facebookPageIds,
+            fbPageIds: facebookPageIds,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } catch (e) {
+        await models.FacebookIntegrations.deleteOne({ _id: integration._id });
+        throw e;
+      }
+    }
+
+    const facebookPageTokensMap: Record<string, string> = {};
+
+    for (const pageId of facebookPageIds) {
+      try {
+        const pageAccessToken = await getPageAccessToken(pageId, account.token);
+        facebookPageTokensMap[pageId] = pageAccessToken;
+
         await subscribePage(models, pageId, pageAccessToken);
         debugFacebook(`Successfully subscribed page ${pageId}`);
       } catch (e) {
         debugError(
-          `Error ocurred while trying to subscribe page ${e.message || e}`,
+          `Error occurred while handling page ${pageId}: ${e.message || e}`,
         );
+        if (integration?._id) {
+          await models.FacebookIntegrations.deleteOne({ _id: integration._id });
+        }
         throw e;
       }
-    } catch (e) {
-      debugError(
-        `Error ocurred while trying to get page access token with ${
-          e.message || e
-        }`,
-      );
-
-      throw e;
     }
+
+    if (integration) {
+      integration.facebookPageTokensMap = facebookPageTokensMap;
+      await integration.save();
+    }
+
+    return { status: 'success' };
+  } catch (error) {
+    console.error('Error creating integration:', error);
+    return { status: 'failed', error };
   }
-
-  integration.facebookPageTokensMap = facebookPageTokensMap;
-
-  await integration.save();
-
-  return { status: 'success' };
 };
