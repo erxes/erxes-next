@@ -106,11 +106,6 @@ const CustomerDetailTabs = ({ children }: { children: React.ReactNode }) => {
           <Sidebar.Separator />
           <Sidebar.Group></Sidebar.Group>
         </Sidebar>
-        {/* <Tabs.VerticalTrigger value="overview">Overview</Tabs.VerticalTrigger>
-        <Tabs.VerticalTrigger value="plugins">Plugins</Tabs.VerticalTrigger>
-        <Tabs.VerticalTrigger value="properties">
-          Properties
-        </Tabs.VerticalTrigger> */}
       </Tabs.List>
       {children}
     </Tabs>

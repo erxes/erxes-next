@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { ProjectBreadCrumb } from '@/project/components/breadcumb/ProjectBreadCrumb';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
 import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
+import { ProjectSideMenu } from '@/project/components/details/ProjectSideMenu';
 
 export const ProjectLayout = () => {
   const { teamId } = useParams<{
@@ -41,6 +42,7 @@ export const ProjectLayout = () => {
         </PageHeader.End>
       </PageHeader>
       <Outlet />
+      <ProjectSideMenu />
     </div>
   );
 };
