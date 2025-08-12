@@ -60,6 +60,7 @@ export const facebookSubscription = async (req, res) => {
     models,
     'FACEBOOK_VERIFY_TOKEN',
   );
+  console.log(FACEBOOK_VERIFY_TOKEN, 'FACEBOOK_VERIFY_TOKEN');
 
   // when the endpoint is registered as a webhook, it must echo back
   // the 'hub.challenge' value it receives in the query arguments
@@ -84,6 +85,8 @@ export const facebookWebhook = async (req, res, next) => {
   for (const entry of data.entry) {
     // receive chat
     try {
+      console.log(entry, 'entry');
+
       if (entry.messaging) {
         await processMessagingEvent(
           entry,
@@ -149,14 +152,19 @@ export async function processMessagingEvent(
   subdomain: string,
   accessTokensByPageId: Record<string, string>,
 ) {
-  debugFacebook(`Received messenger data ${JSON.stringify(entry)}`);
+  console.log(entry, 'entry');
+  debugFacebook(`Received messenger data: ${JSON.stringify(entry)}`);
 
   try {
-    const messagingEvents = entry.messaging;
+    const messagingEvents = Array.isArray(entry.messaging)
+      ? entry.messaging
+      : [];
 
-    if (!Array.isArray(messagingEvents)) {
-      debugFacebook('Invalid format: entry.messaging is not an array.');
-      return next();
+    console.log(messagingEvents, 'messagingEvents');
+
+    if (messagingEvents.length === 0) {
+      debugFacebook('No messaging events found in entry.');
+      return; // Just return, do not call next here — next only for middleware chains
     }
 
     for (const activity of messagingEvents) {
@@ -164,7 +172,9 @@ export async function processMessagingEvent(
         debugFacebook('Skipping activity with missing recipient ID.');
         continue;
       }
+
       const pageId = activity.recipient.id;
+      console.log(pageId, 'pageId');
 
       // Find the related Facebook integration
       const integration = await models.FacebookIntegrations.getIntegration({
@@ -173,15 +183,18 @@ export async function processMessagingEvent(
           { kind: INTEGRATION_KINDS.MESSENGER },
         ],
       });
+      console.log(integration, 'integration');
 
       if (!integration) {
         debugFacebook(`No integration found for pageId: ${pageId}`);
         continue;
       }
+      console.log(integration, 'integration');
 
       const facebookAccounts = await models.FacebookAccounts.getAccount({
         _id: integration.accountId,
       });
+      console.log(facebookAccounts, 'facebookAccounts');
 
       if (!facebookAccounts) {
         debugFacebook(
@@ -189,6 +202,7 @@ export async function processMessagingEvent(
         );
         continue;
       }
+
       const { facebookPageTokensMap = {} } = integration;
       try {
         accessTokensByPageId[pageId] = getPageAccessTokenFromMap(
@@ -196,42 +210,36 @@ export async function processMessagingEvent(
           facebookPageTokensMap,
         );
       } catch (e) {
-        debugFacebook(
-          `Error occurred while getting page access token: ${e.message}`,
-        );
+        debugFacebook(`Error getting page access token: ${e.message}`);
         continue;
       }
 
-      // Create activity object for processing
-      const activityData: Activity = {
+      const activityData = {
         channelId: 'facebook',
         timestamp: new Date(activity.timestamp),
         conversation: {
-          id: activity.sender.id,
+          id: activity.sender?.id || '',
         },
         from: {
-          id: activity.sender.id,
-          name: activity.sender.id, // Name could be fetched via API if needed
+          id: activity.sender?.id || '',
+          name: activity.sender?.name || activity.sender?.id || '',
         },
         recipient: {
-          id: activity.recipient.id,
-          name: activity.recipient.id,
+          id: activity.recipient?.id || '',
+          name: activity.recipient?.name || activity.recipient?.id || '',
         },
         channelData: activity,
         type: 'message',
         text: activity.message?.text || '',
       };
-
+      console.log(activityData, 'activityData');
       debugFacebook(`Processing activity: ${JSON.stringify(activityData)}`);
+      console.log(activityData, 'activityData');
 
-      // Process the message
       await receiveMessage(models, subdomain, integration, activityData);
     }
-
-    res.status(200).send('EVENT_RECEIVED');
   } catch (e) {
     debugFacebook(`Failed to process messaging event: ${(e as Error).message}`);
-    res.status(200).send('EVENT_RECEIVED'); // Always respond with 200 for webhook
   }
 }
 
