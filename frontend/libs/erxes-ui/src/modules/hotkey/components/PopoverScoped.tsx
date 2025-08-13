@@ -6,6 +6,7 @@ import {
 } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { Key } from 'erxes-ui/types';
 import { useState } from 'react';
+import { PopoverProps } from '@radix-ui/react-popover';
 
 export const PopoverScoped = ({
   scope,
@@ -16,7 +17,7 @@ export const PopoverScoped = ({
   options,
   open,
   ...props
-}: React.ComponentPropsWithoutRef<typeof Popover> & {
+}: PopoverProps & {
   scope?: string;
   onEnter?: () => void;
   closeOnEnter?: boolean;

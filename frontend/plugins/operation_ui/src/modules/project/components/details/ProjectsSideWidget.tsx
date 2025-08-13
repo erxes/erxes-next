@@ -1,9 +1,23 @@
 import { IconCaretRightFilled, IconChartHistogram } from '@tabler/icons-react';
-import { Button, SideMenu, Collapsible } from 'erxes-ui';
+import {
+  Button,
+  SideMenu,
+  Collapsible,
+  Tabs,
+  ToggleGroup,
+  Separator,
+} from 'erxes-ui';
 import { ProgressChart } from '@/project/components/details/ProgressChart';
 import { Progress } from '@/project/components/details/Progress';
 import { ProgressByMember } from '@/project/components/details/ProgressByMember';
 import { ProgressByTeam } from '@/project/components/details/ProgressByTeam';
+import { useState } from 'react';
+
+export enum ProjectsSideWidgetTabsEnum {
+  Assignees = 'assignees',
+  Teams = 'teams',
+}
+
 export const ProjectsSideWidget = ({ projectId }: { projectId: string }) => {
   return (
     <SideMenu defaultValue="project">
@@ -28,8 +42,14 @@ export const ProjectsSideWidget = ({ projectId }: { projectId: string }) => {
               </Collapsible.Content>
             </Collapsible>
           </div>
-          <ProgressByMember projectId={projectId} />
-          <ProgressByTeam projectId={projectId} />
+          <ProjectsSideWidgetTabs>
+            <Tabs.Content value={ProjectsSideWidgetTabsEnum.Assignees}>
+              <ProgressByMember projectId={projectId} />
+            </Tabs.Content>
+            <Tabs.Content value={ProjectsSideWidgetTabsEnum.Teams}>
+              <ProgressByTeam projectId={projectId} />
+            </Tabs.Content>
+          </ProjectsSideWidgetTabs>
         </>
       </SideMenu.Content>
       <SideMenu.Sidebar>
@@ -40,5 +60,51 @@ export const ProjectsSideWidget = ({ projectId }: { projectId: string }) => {
         />
       </SideMenu.Sidebar>
     </SideMenu>
+  );
+};
+
+export const ProjectsSideWidgetTabs = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [value, setValue] = useState<ProjectsSideWidgetTabsEnum>(
+    ProjectsSideWidgetTabsEnum.Assignees,
+  );
+  return (
+    <>
+      <div className="p-4 space-y-3">
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          defaultValue={ProjectsSideWidgetTabsEnum.Assignees}
+          value={value}
+          onValueChange={(value) => {
+            if (!value) {
+              return null;
+            }
+            setValue(value as ProjectsSideWidgetTabsEnum);
+          }}
+        >
+          <ToggleGroup.Item
+            value={ProjectsSideWidgetTabsEnum.Assignees}
+            className="flex-auto"
+          >
+            Assignees
+          </ToggleGroup.Item>
+          <ToggleGroup.Item
+            value={ProjectsSideWidgetTabsEnum.Teams}
+            className="flex-auto"
+          >
+            Teams
+          </ToggleGroup.Item>
+        </ToggleGroup>
+        <Tabs value={value} defaultValue={ProjectsSideWidgetTabsEnum.Teams}>
+          {children}
+        </Tabs>
+      </div>
+      <Separator />
+    </>
   );
 };

@@ -46,21 +46,19 @@ export const TasksRecordTable = () => {
           dataLength={tasks?.length}
           sessionKey={TASKS_CURSOR_SESSION_KEY}
         >
-          <RecordTable.Scroll>
-            <RecordTable>
-              <RecordTable.Header />
-              <RecordTable.Body>
-                <RecordTable.CursorBackwardSkeleton
-                  handleFetchMore={handleFetchMore}
-                />
-                {loading && <RecordTable.RowSkeleton rows={40} />}
-                <RecordTable.RowList />
-                <RecordTable.CursorForwardSkeleton
-                  handleFetchMore={handleFetchMore}
-                />
-              </RecordTable.Body>
-            </RecordTable>
-          </RecordTable.Scroll>
+          <RecordTable>
+            <RecordTable.Header />
+            <RecordTable.Body>
+              <RecordTable.CursorBackwardSkeleton
+                handleFetchMore={handleFetchMore}
+              />
+              {loading && <RecordTable.RowSkeleton rows={40} />}
+              <RecordTable.RowList />
+              <RecordTable.CursorForwardSkeleton
+                handleFetchMore={handleFetchMore}
+              />
+            </RecordTable.Body>
+          </RecordTable>
         </RecordTable.CursorProvider>
       </RecordTable.Provider>
     </div>

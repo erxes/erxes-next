@@ -12,7 +12,7 @@ export const NavigationPluginExitButton = () => {
 
   return (
     <>
-      <Sidebar.Menu className="px-4 py-2.5">
+      <Sidebar.Menu className="px-4 py-2">
         <Sidebar.MenuItem>
           <Sidebar.MenuButton onClick={() => setActivePlugin(null)}>
             <IconChevronLeft className="text-accent-foreground" />

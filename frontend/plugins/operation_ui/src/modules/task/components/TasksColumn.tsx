@@ -130,7 +130,7 @@ export const tasksColumns = (
         return (
           <SelectStatus.InlineCell
             teamId={cell.row.original.teamId}
-            value={cell.row.original.status || 0}
+            value={cell.row.original.status || '0'}
             id={cell.row.original._id}
           />
         );

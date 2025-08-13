@@ -122,7 +122,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
         />
       </div>
       <Separator className="my-4" />
-      <div className="h-[60vh] overflow-y-auto">
+      <div className="h-[60vh] overflow-y-auto overflow-x-hidden">
         <BlockEditor
           editor={editor}
           onChange={handleDescriptionChange}

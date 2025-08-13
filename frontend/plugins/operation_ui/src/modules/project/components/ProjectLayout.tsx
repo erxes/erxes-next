@@ -16,7 +16,7 @@ export const ProjectLayout = () => {
   }>();
 
   return (
-    <div>
+    <>
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>
@@ -42,11 +42,10 @@ export const ProjectLayout = () => {
           <AddTaskSheet />
         </PageHeader.End>
       </PageHeader>
-      <div className="flex h-screen w-full">
+      <div className="flex overflow-hidden w-full">
         <Outlet />
-
         <ProjectsSideWidget projectId={projectId || ''} />
       </div>
-    </div>
+    </>
   );
 };

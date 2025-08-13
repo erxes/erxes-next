@@ -11,8 +11,8 @@ import { forwardRef, useState } from 'react';
 export const SideMenuRoot = forwardRef<
   React.ElementRef<typeof Tabs>,
   React.ComponentProps<typeof Tabs>
->(({ className, ...props }, ref) => {
-  const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
+>(({ className, defaultValue, ...props }, ref) => {
+  const [activeTab, setActiveTab] = useState<string | undefined>(defaultValue);
   return (
     <SideMenuContext.Provider value={{ activeTab, setActiveTab }}>
       <Tabs
@@ -64,7 +64,10 @@ export const SideMenuContentHeader = forwardRef<
     <>
       <div
         ref={ref}
-        className={cn('h-12 px-5 flex items-center gap-2', className)}
+        className={cn(
+          'h-11 px-5 flex items-center gap-2 bg-sidebar',
+          className,
+        )}
         {...props}
       >
         {!!Icon && (

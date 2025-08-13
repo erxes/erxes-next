@@ -1,8 +1,6 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import {
-  GET_ASSIGNED_CUSTOMERS,
-  GET_CUSTOMERS,
-} from '../graphql/queries/getCustomers';
+import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
+import { CUSTOMER_INLINE } from '../graphql/queries/customerDetailQueries';
 import { ICustomer } from '../types';
 import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
@@ -56,12 +54,13 @@ export const useCustomers = (
   };
 };
 
-export const useCustomersInline = (
-  options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
+export const useCustomerInline = (
+  options?: QueryHookOptions<{ customerDetail: ICustomer }>,
 ) => {
-  const { data, loading, error } = useQuery<ICursorListResponse<ICustomer>>(
-    GET_ASSIGNED_CUSTOMERS,
+  const { data, loading, error } = useQuery<{ customerDetail: ICustomer }>(
+    CUSTOMER_INLINE,
     options,
   );
-  return { customers: data?.customers?.list ?? [], loading, error };
+  const { customerDetail } = data || {};
+  return { customer: customerDetail, loading, error };
 };
