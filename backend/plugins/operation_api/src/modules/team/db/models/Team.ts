@@ -3,6 +3,7 @@ import {
   ITeam,
   ITeamDocument,
   ITeamMember,
+  TeamEstimateTypes,
   TeamMemberRoles,
 } from '@/team/@types/team';
 import { ITeamFilter } from '@/team/@types/team';
@@ -104,6 +105,26 @@ export const loadTeamClass = (models: IModels) => {
     }
 
     public static async updateTeam(_id: string, doc: ITeam) {
+      const team = await models.Team.findOne({ _id });
+
+      if (!team) {
+        throw new Error('Team not found');
+      }
+
+      if (doc.estimateType !== team.estimateType) {
+        switch (doc.estimateType) {
+          case TeamEstimateTypes.NOT_IN_USE:
+            await models.Task.updateMany(
+              { teamId: _id },
+              { $set: { estimatePoint: null } },
+            );
+            break;
+
+          default:
+            break;
+        }
+      }
+
       return await models.Team.findOneAndUpdate({ _id }, { $set: { ...doc } });
     }
 
