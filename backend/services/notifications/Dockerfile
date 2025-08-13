@@ -5,23 +5,23 @@
     
     # Copy workspace manifests
     COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-    COPY ./backend/services/automations/package.json /app/backend/services/automations/
+    COPY ./backend/services/notifications/package.json /app/backend/services/notifications/
     COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
     
     # Install pnpm and deps
     RUN npm install -g pnpm && pnpm install --frozen-lockfile
     
     # Copy source code
-    COPY ./backend/services/automations /app/backend/services/automations
+    COPY ./backend/services/notifications /app/backend/services/notifications
     COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
     
     # Build the service
     ENV NX_DAEMON=false
-    RUN npx nx build:packageJson automations-service \
-     && npx nx build automations-service
+    RUN npx nx build:packageJson notifications-service \
+     && npx nx build notifications-service
     
     # Install only production deps for dist
-    WORKDIR /app/backend/services/automations/dist
+    WORKDIR /app/backend/services/notifications/dist
     RUN pnpm install --prod --frozen-lockfile
     
     # ---------- Runtime Stage ----------
@@ -30,7 +30,7 @@
     WORKDIR /app
     
     # Copy built code & production node_modules only
-    COPY --from=build /app/backend/services/automations/dist /app
+    COPY --from=build /app/backend/services/notifications/dist /app
     
     ENV NODE_ENV=production
     USER 1000
