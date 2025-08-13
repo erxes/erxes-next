@@ -1,36 +1,31 @@
-# ---------- Build Stage ----------
+# ---------- Base Build Stage ----------
     FROM --platform=linux/amd64 node:22-alpine AS build
 
     WORKDIR /app
     
-    # Copy workspace manifests
-    COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-    COPY ./backend/services/logs/package.json /app/backend/services/logs/
-    COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
+    COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json ./
+    COPY ./backend/services/logs/package.json ./backend/services/logs/
+    COPY ./backend/erxes-api-shared/package.json ./backend/erxes-api-shared/
     
-    # Install pnpm and deps
     RUN npm install -g pnpm && pnpm install --frozen-lockfile
     
-    # Copy source code
-    COPY ./backend/services/logs /app/backend/services/logs
-    COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
+    # Copy only source needed for this service + shared
+    COPY ./backend/services/logs ./backend/services/logs
+    COPY ./backend/erxes-api-shared ./backend/erxes-api-shared
     
-    # Build the service
+    WORKDIR /app/backend/services/logs
     ENV NX_DAEMON=false
-    RUN npx nx build:packageJson logs-service \
-     && npx nx build logs-service
+    RUN npx nx build:packageJson logs-service && npx nx build logs-service
     
-    # Install only production deps for dist
+    # Install prod deps for dist
     WORKDIR /app/backend/services/logs/dist
     RUN pnpm install --prod --frozen-lockfile
     
-    # ---------- Runtime Stage ----------
+    # ---------- Final Runtime Stage ----------
     FROM --platform=linux/amd64 node:22-alpine AS runtime
     
     WORKDIR /app
-    
-    # Copy built code & production node_modules only
-    COPY --from=build /app/backend/services/logs/dist /app
+    COPY --from=build /app/backend/services/logs/dist ./
     
     ENV NODE_ENV=production
     USER 1000
