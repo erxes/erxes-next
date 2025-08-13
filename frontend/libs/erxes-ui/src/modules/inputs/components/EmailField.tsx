@@ -36,9 +36,14 @@ import { z } from 'zod';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
 import { EmailDisplay } from 'erxes-ui/modules/display';
 
+export enum IEmailStatus {
+  Verified = 'verified',
+  Unverified = 'unverified',
+}
+
 export interface IEmailField {
   email?: string;
-  status?: 'verified' | 'unverified';
+  status?: IEmailStatus.Verified | IEmailStatus.Unverified;
   isPrimary?: boolean;
 }
 
@@ -55,7 +60,9 @@ export const EmailFieldsProvider = ({
   recordId: string;
   onValueChange: (emails: TEmails) => void;
   noValidation?: boolean;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValidationStatusChange?: (
+    status: IEmailStatus.Verified | IEmailStatus.Unverified,
+  ) => void;
 }) => {
   return (
     <EmailFieldsContext.Provider
@@ -81,7 +88,7 @@ export const EmailListField = ({
   recordId: string;
   emails: TEmails;
   onValueChange: (emails: TEmails) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValidationStatusChange?: (status: IEmailStatus) => void;
   noValidation?: boolean;
 }) => {
   const setEmails = useSetAtom(emailsFamilyState(recordId));
@@ -104,66 +111,6 @@ export const EmailListField = ({
         <EmailList />
       </div>
       <EmailForm />
-    </EmailFieldsProvider>
-  );
-};
-
-export const EmailsField = ({
-  emails,
-  onValueChange,
-  onValidationStatusChange,
-  noValidation,
-  primaryEmail,
-  emailValidationStatus,
-  _id,
-}: {
-  emails: TEmails;
-  onValueChange: (emails: TEmails) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
-  noValidation?: boolean;
-  _id: string;
-  primaryEmail: string;
-  emailValidationStatus: 'valid' | 'invalid';
-}) => {
-  const _emails = [
-    ...(primaryEmail
-      ? [
-          {
-            email: primaryEmail,
-            status: emailValidationStatus as 'verified' | 'unverified',
-            isPrimary: true,
-          },
-        ]
-      : []),
-    ...(emails || []).map((email) => ({
-      email,
-      status: emailValidationStatus as 'verified' | 'unverified',
-    })),
-  ].filter(
-    (email, index, self) =>
-      index === self.findIndex((t) => t.email === email.email),
-  );
-  return (
-    <EmailFieldsProvider
-      recordId={_id}
-      onValueChange={onValueChange}
-      noValidation={noValidation}
-      onValidationStatusChange={onValidationStatusChange}
-    >
-      <Popover>
-        <RecordTableInlineCell.Trigger>
-          <EmailDisplay emails={_emails as TEmails} />
-        </RecordTableInlineCell.Trigger>
-        <Popover.Content>
-          <EmailListField
-            recordId={_id}
-            emails={_emails as TEmails}
-            onValueChange={onValueChange}
-            noValidation={noValidation}
-            onValidationStatusChange={onValidationStatusChange}
-          />
-        </Popover.Content>
-      </Popover>
     </EmailFieldsProvider>
   );
 };
@@ -205,7 +152,7 @@ const EmailField = ({ email, status, isPrimary }: IEmailField) => {
       )}
       size="lg"
     >
-      {status === 'verified' ? (
+      {status === IEmailStatus.Verified ? (
         <IconCircleDashedCheck className="text-success" />
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
@@ -243,7 +190,7 @@ const EmailOptions = ({
   const handleVerificationChange = (value: string) => {
     if (noValidation) return;
     if (value === status) return;
-    onValidationStatusChange?.(value as 'verified' | 'unverified');
+    onValidationStatusChange?.(value as IEmailStatus);
   };
   const handleDeleteClick = () => {
     onValueChange?.(emails.filter((e) => e.email !== email));
@@ -362,9 +309,11 @@ const EmailForm = () => {
   };
   const onEmailAdd = (email: string) => {
     if (emails.length === 0) {
-      onValueChange?.([{ email, status: 'unverified', isPrimary: true }]);
+      onValueChange?.([
+        { email, status: IEmailStatus.Unverified, isPrimary: true },
+      ]);
     } else {
-      onValueChange?.([...emails, { email, status: 'unverified' }]);
+      onValueChange?.([...emails, { email, status: IEmailStatus.Unverified }]);
     }
     form.reset();
   };

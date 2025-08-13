@@ -1,9 +1,14 @@
-import { Label, Switch, Textarea } from 'erxes-ui';
+import { Combobox, Label, Switch, Textarea } from 'erxes-ui';
 import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
 import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
-import { PhoneFieldCustomer } from '@/contacts/customers/customer-edit/components/PhoneFieldCustomer';
-import { CustomerOwner, useCustomerEdit } from 'ui-modules';
+import {
+  CustomerEmails,
+  CustomerOwner,
+  useCustomerEdit,
+  CustomerPhones,
+} from 'ui-modules';
 import { useCustomerDetailWithParams } from '../hooks/useCustomerDetailWithParams';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 export const CustomerGeneral = () => {
   const { customerDetail } = useCustomerDetailWithParams();
@@ -13,6 +18,8 @@ export const CustomerGeneral = () => {
   const {
     primaryEmail,
     primaryPhone,
+    emails,
+    emailValidationStatus,
     tagIds,
     ownerId,
     code,
@@ -20,6 +27,8 @@ export const CustomerGeneral = () => {
     isSubscribed,
     description,
     score,
+    phones,
+    phoneValidationStatus,
   } = customerDetail;
 
   return (
@@ -40,16 +49,25 @@ export const CustomerGeneral = () => {
                 _id={_id}
               />
             </DataListItem>
-            <DataListItem label="Primary Email">
-              <TextFieldCustomer
-                value={primaryEmail || ''}
-                placeholder="Add Primary Email"
-                field="primaryEmail"
+            <DataListItem label="Emails">
+              <CustomerEmails
                 _id={_id}
+                primaryEmail={primaryEmail || ''}
+                emails={emails || []}
+                emailValidationStatus={emailValidationStatus || 'valid'}
+                Trigger={(props) => <Combobox.TriggerBase {...props} />}
+                scope={ContactsHotKeyScope.CustomersPage}
               />
             </DataListItem>
-            <DataListItem label="Primary Phone">
-              <PhoneFieldCustomer _id={_id} primaryPhone={primaryPhone || ''} />
+            <DataListItem label="phones">
+              <CustomerPhones
+                _id={_id}
+                primaryPhone={primaryPhone || ''}
+                phones={phones || []}
+                phoneValidationStatus={phoneValidationStatus || 'valid'}
+                scope={ContactsHotKeyScope.CustomersPage}
+                Trigger={Combobox.TriggerBase}
+              />
             </DataListItem>
             <DataListItem label="Score">
               <TextFieldCustomer

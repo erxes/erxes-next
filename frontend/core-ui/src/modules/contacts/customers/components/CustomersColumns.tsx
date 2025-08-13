@@ -1,5 +1,4 @@
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
-import { ApolloError } from '@apollo/client';
 import {
   IconCalendarPlus,
   IconChartBar,
@@ -14,18 +13,14 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import {
   Avatar,
-  PhoneField,
   RecordTable,
   RecordTableInlineCell,
-  Popover,
   RelativeDateDisplay,
   SexCode,
   SexDisplay,
   SexField,
-  TPhones,
   readImage,
   useQueryState,
-  useToast,
   PopoverScoped,
 } from 'erxes-ui';
 import { useState } from 'react';
@@ -33,12 +28,13 @@ import {
   CustomerEmails,
   CustomerName,
   CustomerOwner,
+  CustomerPhones,
   ICustomer,
   SelectTags,
+  useCustomerEdit,
 } from 'ui-modules';
 import { useSetAtom } from 'jotai';
 import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
-import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import clsx from 'clsx';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
@@ -113,6 +109,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           _id={_id}
           emailValidationStatus={emailValidationStatus || 'valid'}
           emails={emails || []}
+          Trigger={RecordTableInlineCell.Trigger}
         />
       );
     },
@@ -123,86 +120,17 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'primaryPhone',
     header: () => <RecordTable.InlineHead label="Phones" icon={IconPhone} />,
     cell: ({ cell }) => {
-      const {
-        _id,
-        primaryPhone,
-        phones: _phones,
-        phoneValidationStatus: _phoneValidationStatus,
-      } = cell.row.original;
-      const phoneValidationStatus =
-        _phoneValidationStatus === 'valid' ? 'verified' : 'unverified';
-      const { customersEdit } = useCustomersEdit();
-      const { toast } = useToast();
-      const phones = [
-        ...(primaryPhone
-          ? [
-              {
-                phone: primaryPhone,
-                status: phoneValidationStatus as 'verified' | 'unverified',
-                isPrimary: true,
-              },
-            ]
-          : []),
-        ...(_phones || []).map((_phone) => ({
-          phone: _phone,
-          status: 'unverified' as 'verified' | 'unverified',
-        })),
-      ].filter(
-        (phone, index, self) =>
-          index === self.findIndex((t) => t.phone === phone.phone),
-      );
-      const onValueChange = (newPhones: TPhones) => {
-        const primaryPhone = newPhones.find((phone) => phone.isPrimary);
-        let newPhoneValidationStatus;
-        if (primaryPhone?.status !== phoneValidationStatus) {
-          newPhoneValidationStatus =
-            primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
-        }
-        customersEdit(
-          {
-            variables: {
-              _id,
-              primaryPhone: primaryPhone?.phone || null,
-              phones: newPhones
-                .filter((phone) => !phone.isPrimary)
-                .map((phone) => phone.phone),
-              phoneValidationStatus: newPhoneValidationStatus,
-            },
-            onError: (e: ApolloError) => {
-              toast({
-                title: 'Error',
-                description: e.message,
-              });
-            },
-          },
-          ['primaryPhone', 'phones'],
-        );
-      };
-      const onValidationStatusChange = (status: 'verified' | 'unverified') => {
-        customersEdit(
-          {
-            variables: {
-              _id,
-              phoneValidationStatus:
-                status === 'verified' ? 'valid' : 'invalid',
-            },
-            onError: (e: ApolloError) => {
-              toast({
-                title: 'Error',
-                description: e.message,
-              });
-            },
-          },
-          ['phoneValidationStatus'],
-        );
-      };
+      const { _id, primaryPhone, phones, phoneValidationStatus } =
+        cell.row.original;
+
       return (
-        <PhoneField.InlineCell
-          recordId={_id}
-          phones={phones}
-          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Phones'}
-          onValueChange={onValueChange}
-          onValidationStatusChange={onValidationStatusChange}
+        <CustomerPhones
+          _id={_id}
+          primaryPhone={primaryPhone || ''}
+          phones={phones || []}
+          phoneValidationStatus={phoneValidationStatus || 'valid'}
+          scope={clsx(ContactsHotKeyScope.CustomersPage, _id, 'Phones')}
+          Trigger={RecordTableInlineCell.Trigger}
         />
       );
     },
@@ -242,7 +170,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'sex',
     header: () => <RecordTable.InlineHead label="Sex" icon={IconGenderMale} />,
     cell: ({ cell }) => {
-      const { customersEdit } = useCustomersEdit();
+      const { customerEdit } = useCustomerEdit();
       const [open, setOpen] = useState(false);
       const { _id } = cell.row.original;
       return (
@@ -259,12 +187,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
               value={cell.getValue() as SexCode}
               onValueChange={(value) => {
                 if (value !== (cell.getValue() as SexCode)) {
-                  customersEdit(
-                    {
-                      variables: { _id, sex: value },
-                    },
-                    ['sex'],
-                  );
+                  customerEdit({
+                    variables: { _id, sex: value },
+                  });
                 }
                 setOpen(false);
               }}

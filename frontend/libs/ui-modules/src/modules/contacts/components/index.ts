@@ -6,3 +6,4 @@ export * from './CustomerWidget';
 export * from './CustomerName';
 export * from './CustomerOwner';
 export * from './CustomerEmails';
+export * from './CustomerPhones';

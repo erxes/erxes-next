@@ -33,12 +33,17 @@ export const CustomerName = ({
       }
       scope={scope}
       onSave={(newFirstName: string, newLastName: string) => {
-        if (newFirstName !== firstName || newLastName !== lastName) {
+        if (
+          newFirstName !== firstName ||
+          newLastName !== lastName ||
+          middleName
+        ) {
           customerEdit({
             variables: {
               _id,
               firstName: newFirstName,
               lastName: newLastName,
+              ...(middleName ? { middleName: '' } : {}),
             },
           });
         }

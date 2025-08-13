@@ -3,7 +3,9 @@ import {
   Avatar,
   Button,
   Collapsible,
+  Combobox,
   Label,
+  Separator,
   readImage,
   Spinner,
 } from 'erxes-ui';
@@ -11,6 +13,7 @@ import { CustomerName } from './CustomerName';
 import { useCustomerDetail } from '../hooks';
 import { CustomerOwner } from './CustomerOwner';
 import { CustomerEmails } from './CustomerEmails';
+import { CustomerPhones } from './CustomerPhones';
 import clsx from 'clsx';
 
 export const CustomerWidget = ({
@@ -35,6 +38,9 @@ export const CustomerWidget = ({
     primaryEmail,
     emailValidationStatus,
     emails,
+    primaryPhone,
+    phones,
+    phoneValidationStatus,
   } = customerDetail || {};
 
   return (
@@ -50,7 +56,7 @@ export const CustomerWidget = ({
             Overview
           </Button>
         </Collapsible.Trigger>
-        <Collapsible.Content className="p-2 pl-8">
+        <Collapsible.Content className="pt-2">
           {loading ? (
             <Spinner containerClassName="py-20" />
           ) : (
@@ -73,7 +79,11 @@ export const CustomerWidget = ({
               </div>
               <div className="space-y-2">
                 <Label>Owner</Label>
-                <CustomerOwner _id={customerId} ownerId={ownerId || ''} />
+                <CustomerOwner
+                  _id={customerId}
+                  ownerId={ownerId || ''}
+                  scope={clsx(scope, 'Owner')}
+                />
               </div>
               <div className="space-y-2">
                 <Label>Emails</Label>
@@ -82,12 +92,25 @@ export const CustomerWidget = ({
                   _id={customerId}
                   emailValidationStatus={emailValidationStatus || 'valid'}
                   emails={emails || []}
+                  Trigger={Combobox.TriggerBase}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Phones</Label>
+                <CustomerPhones
+                  _id={customerId}
+                  primaryPhone={primaryPhone || ''}
+                  phones={phones || []}
+                  phoneValidationStatus={phoneValidationStatus || 'valid'}
+                  scope={clsx(scope, 'Phones')}
+                  Trigger={Combobox.TriggerBase}
                 />
               </div>
             </div>
           )}
         </Collapsible.Content>
       </div>
+      <Separator />
     </Collapsible>
   );
 };

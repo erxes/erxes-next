@@ -5,10 +5,12 @@ export const CustomerOwner = ({
   _id,
   ownerId,
   inTable = false,
+  scope,
 }: {
   _id: string;
   ownerId?: string;
   inTable?: boolean;
+  scope?: string;
 }) => {
   const { customerEdit } = useCustomerEdit();
 
@@ -19,6 +21,7 @@ export const CustomerOwner = ({
       mode="single"
       value={ownerId}
       size="lg"
+      scope={scope}
       onValueChange={(value) => {
         customerEdit({
           variables: {

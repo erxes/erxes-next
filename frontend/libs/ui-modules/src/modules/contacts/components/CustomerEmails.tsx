@@ -1,106 +1,129 @@
 import { ApolloError } from '@apollo/client';
-import clsx from 'clsx';
 import {
   EmailDisplay,
   EmailListField,
+  IEmailField,
+  IEmailStatus,
   PopoverScoped,
   RecordTableInlineCell,
+  TEmails,
   useToast,
 } from 'erxes-ui';
 import { useCustomerEdit } from 'ui-modules/modules/contacts/hooks';
 
-export const CustomerEmails = ({
-  primaryEmail,
-  _id,
-  emailValidationStatus: _emailValidationStatus,
-  emails,
-  scope,
-}: {
+interface CustomerEmailsProps {
   primaryEmail: string;
   _id: string;
   emailValidationStatus: 'valid' | 'invalid';
   emails: string[];
   scope?: string;
-}) => {
-  const emailValidationStatus =
-    _emailValidationStatus === 'valid' ? 'verified' : 'unverified';
+  Trigger: React.ComponentType<{ children: React.ReactNode }>;
+}
 
+export function CustomerEmails({
+  primaryEmail,
+  _id,
+  emailValidationStatus: _emailValidationStatus,
+  emails,
+  scope,
+  Trigger,
+}: CustomerEmailsProps) {
   const { customerEdit } = useCustomerEdit();
   const { toast } = useToast();
-  const _emails = [
+
+  const emailValidationStatus: IEmailStatus =
+    _emailValidationStatus === 'valid'
+      ? IEmailStatus.Verified
+      : IEmailStatus.Unverified;
+
+  const formattedEmails = formatEmails(
+    primaryEmail,
+    emails,
+    emailValidationStatus,
+  );
+
+  const handleValidationStatusChange = (status: 'verified' | 'unverified') => {
+    customerEdit({
+      variables: {
+        _id,
+        emailValidationStatus: status === 'verified' ? 'valid' : 'invalid',
+      },
+      onError: (error: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+        });
+      },
+    });
+  };
+
+  const handleValueChange = (newEmails: TEmails) => {
+    const primaryEmail = newEmails.find((email) => email.isPrimary);
+
+    let newEmailValidationStatus;
+    if (primaryEmail?.status !== emailValidationStatus) {
+      newEmailValidationStatus =
+        primaryEmail?.status === 'verified' ? 'valid' : 'invalid';
+    }
+
+    customerEdit({
+      variables: {
+        _id,
+        primaryEmail: primaryEmail?.email || null,
+        emails: newEmails
+          .filter((email) => !email.isPrimary)
+          .map((email) => email.email),
+        emailValidationStatus: newEmailValidationStatus,
+      },
+      onError: (error: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+        });
+      },
+    });
+  };
+
+  return (
+    <PopoverScoped scope={scope || ''} modal dd>
+      <Trigger>
+        <EmailDisplay emails={formattedEmails} />
+      </Trigger>
+      <RecordTableInlineCell.Content className="w-72">
+        <EmailListField
+          recordId={_id}
+          emails={formattedEmails}
+          onValueChange={handleValueChange}
+          onValidationStatusChange={handleValidationStatusChange}
+        />
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
+  );
+}
+
+function formatEmails(
+  primaryEmail: string,
+  emails: string[],
+  emailValidationStatus: IEmailStatus,
+): TEmails {
+  const formattedEmails: IEmailField[] = [
     ...(primaryEmail
       ? [
           {
             email: primaryEmail,
-            status: emailValidationStatus as 'verified' | 'unverified',
+            status: emailValidationStatus,
             isPrimary: true,
           },
         ]
       : []),
     ...(emails || []).map((email) => ({
       email,
-      status: emailValidationStatus as 'verified' | 'unverified',
+      status: emailValidationStatus,
     })),
-  ].filter(
+  ];
+
+  return formattedEmails.filter(
     (email, index, self) =>
       index === self.findIndex((t) => t.email === email.email),
   );
-
-  return (
-    <PopoverScoped
-      scope={clsx(scope, _id, 'Emails')}
-      scopeOptions={{
-        preventDefault: false,
-      }}
-    >
-      <RecordTableInlineCell.Trigger>
-        <EmailDisplay emails={_emails} />
-      </RecordTableInlineCell.Trigger>
-      <RecordTableInlineCell.Content className="w-72">
-        <EmailListField
-          recordId={_id}
-          onValidationStatusChange={(status) => {
-            customerEdit({
-              variables: {
-                _id,
-                emailValidationStatus:
-                  status === 'verified' ? 'valid' : 'invalid',
-              },
-              onError: (e: ApolloError) => {
-                toast({
-                  title: 'Error',
-                  description: e.message,
-                });
-              },
-            });
-          }}
-          onValueChange={(newEmails) => {
-            const primaryEmail = newEmails.find((email) => email.isPrimary);
-            let newEmailValidationStatus;
-            if (primaryEmail?.status !== emailValidationStatus) {
-              newEmailValidationStatus =
-                primaryEmail?.status === 'verified' ? 'valid' : 'invalid';
-            }
-            customerEdit({
-              variables: {
-                _id,
-                primaryEmail: primaryEmail?.email || null,
-                emails: newEmails
-                  .filter((email) => !email.isPrimary)
-                  .map((email) => email.email),
-                emailValidationStatus: newEmailValidationStatus,
-              },
-              onError(e: ApolloError) {
-                toast({
-                  title: 'Error',
-                  description: e.message,
-                });
-              },
-            });
-          }}
-          emails={_emails}
-        />
-      </RecordTableInlineCell.Content>
-    </PopoverScoped>
-  );
-};
+}

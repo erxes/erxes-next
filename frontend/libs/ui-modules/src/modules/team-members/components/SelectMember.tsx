@@ -398,11 +398,13 @@ export const SelectMemberRoot = ({
   className,
   size,
   placeholder,
+  scope,
   ...props
 }: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
   className?: string;
   size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
   placeholder?: string;
+  scope?: string;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -413,7 +415,7 @@ export const SelectMemberRoot = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <Combobox.Trigger
           className={cn('w-full inline-flex', className)}
           variant="outline"
@@ -423,7 +425,7 @@ export const SelectMemberRoot = ({
         <Combobox.Content>
           <SelectMemberContent />
         </Combobox.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectMemberProvider>
   );
 };

@@ -16,7 +16,7 @@ export const PopoverScoped = ({
   options,
   open,
   ...props
-}: React.ComponentProps<typeof Popover> & {
+}: React.ComponentPropsWithoutRef<typeof Popover> & {
   scope?: string;
   onEnter?: () => void;
   closeOnEnter?: boolean;

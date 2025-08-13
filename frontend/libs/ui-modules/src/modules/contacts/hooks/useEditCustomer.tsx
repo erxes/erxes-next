@@ -1,8 +1,10 @@
 import { MutationHookOptions, useMutation } from '@apollo/client';
 import { EDIT_CUSTOMERS } from '../graphql/mutations/editCustomers';
+import { useToast } from 'erxes-ui';
 
 export const useCustomerEdit = () => {
   const [customerEdit, { loading }] = useMutation(EDIT_CUSTOMERS);
+  const { toast } = useToast();
 
   const mutate = ({ variables, ...options }: MutationHookOptions) => {
     customerEdit({
@@ -19,6 +21,12 @@ export const useCustomerEdit = () => {
             {},
           ),
           optimistic: true,
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description: error.message,
         });
       },
     });
