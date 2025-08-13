@@ -3,6 +3,7 @@ import * as _ from 'underscore';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { IModels } from '~/connectionResolvers';
 import { fixDate } from 'erxes-api-shared/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 interface IIn {
   $in: string[];
@@ -86,7 +87,31 @@ export default class Builder {
   }
 
   // filter by segment
-  // incomplete
+  public async segmentFilter(segmentId: string): Promise<{ _id: IIn }> {
+    const selector = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'segments',
+      action: 'fetchSegment',
+      input: {
+        segmentId,
+        options: {
+          returnFields: ['_id'],
+          page: 1,
+          perPage: this.params.limit ? this.params.limit + 1 : 11,
+          sortField: 'updatedAt',
+          sortDirection: -1,
+        },
+      },
+      defaultValue: [],
+    });
+
+    const Ids = _.pluck(selector, '_id');
+
+    return {
+      _id: { $in: Ids },
+    };
+  }
 
   public userRelevanceQuery() {
     return [
@@ -115,55 +140,81 @@ export default class Builder {
   }
 
   public async intersectIntegrationIds(
-    ...queries: Array<{ integrationId?: { $in: string[] } }>
-  ): Promise<{ integrationId: { $in: string[] } }> {
-    const inQueries = queries
-      .map((q) => q.integrationId?.$in)
-      .filter((ids): ids is string[] => Array.isArray(ids) && ids.length > 0);
+    ...queries: any[]
+  ): Promise<{ integrationId: IIn }> {
+    // filter only queries with $in field
+    const withIn = queries.filter(
+      (q) =>
+        q.integrationId &&
+        q.integrationId.$in &&
+        q.integrationId.$in.length > 0,
+    );
 
-    const intersectedIds = inQueries.length ? _.intersection(...inQueries) : [];
+    // [{$in: ['id1', 'id2']}, {$in: ['id3', 'id1', 'id4']}]
+    const $ins = _.pluck(withIn, 'integrationId');
 
-    return { integrationId: { $in: intersectedIds } };
+    // [['id1', 'id2'], ['id3', 'id1', 'id4']]
+    const nestedIntegrationIds = _.pluck($ins, '$in');
+
+    // ['id1']
+    const integrationids: string[] = _.intersection(...nestedIntegrationIds);
+
+    return {
+      integrationId: { $in: integrationids },
+    };
   }
 
   /*
    * find integrationIds from channel && brand
    */
   public async integrationsFilter(): Promise<IIntersectIntegrationIds> {
-    const isSystemUser = this.user.role === 'system';
-    const channelQuery = isSystemUser ? {} : { memberIds: this.user._id };
+    // find all posssible integrations
+    let availIntegrationIds: string[] = [];
+
+    const channelQuery =
+      this.user.role && this.user.role === 'system'
+        ? {}
+        : {
+            memberIds: this.user._id,
+          };
 
     const channels = await this.models.Channels.find(channelQuery);
 
-    if (!channels.length) {
-      return { integrationId: { $in: [] } };
+    if (channels.length === 0) {
+      return {
+        integrationId: { $in: [] },
+      };
     }
 
-    // Get all active integrationIds from channels
-    const availIntegrationIds = _.chain(channels)
-      .map('integrationIds')
-      .flatten()
-      .uniq()
-      .filter((id) => this.activeIntegrationIds.includes(id))
-      .value();
+    channels.forEach((channel) => {
+      availIntegrationIds = _.union(
+        availIntegrationIds,
+        (channel.integrationIds || []).filter((id) =>
+          this.activeIntegrationIds.includes(id),
+        ),
+      );
+    });
 
-    const nestedQueries: Array<{ integrationId: { $in: string[] } }> = [
+    const nestedIntegrationIds: Array<{ integrationId: { $in: string[] } }> = [
       { integrationId: { $in: availIntegrationIds } },
     ];
 
+    // filter by channel
     if (this.params.channelId) {
-      const channelFilter = await this.channelFilter(this.params.channelId);
-      nestedQueries.push(channelFilter);
+      const _channelQuery = await this.channelFilter(this.params.channelId);
+      nestedIntegrationIds.push(_channelQuery);
     }
 
+    // filter by brand
     if (this.params.brandId) {
-      const brandFilter = await this.brandFilter(this.params.brandId);
-      if (brandFilter) {
-        nestedQueries.push(brandFilter);
+      const brandQuery = await this.brandFilter(this.params.brandId);
+
+      if (brandQuery) {
+        nestedIntegrationIds.push(brandQuery);
       }
     }
 
-    return this.intersectIntegrationIds(...nestedQueries);
+    return this.intersectIntegrationIds(...nestedIntegrationIds);
   }
 
   // filter by channel
@@ -203,6 +254,7 @@ export default class Builder {
     }
 
     const integrationIds = _.pluck(integrations, '_id');
+
     return {
       integrationId: { $in: integrationIds },
     };
@@ -267,7 +319,29 @@ export default class Builder {
   }
 
   // filter by tag
-  //incomplete
+  public async tagFilter(tagIds: string[]): Promise<{ tagIds: IIn }> {
+    let ids: string[] = [];
+
+    const tags = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'tags',
+      action: 'find',
+      input: {
+        _id: { $in: tagIds },
+      },
+    });
+
+    for (const tag of tags) {
+      ids.push(tag._id);
+      ids = ids.concat(tag.relatedIds || []);
+    }
+
+    return {
+      tagIds: { $in: ids },
+    };
+  }
+
   public dateFilter(startDate: string, endDate: string): IOR {
     return {
       $or: [
@@ -290,6 +364,7 @@ export default class Builder {
   public async extendedQueryFilter({ integrationType }: IListArgs) {
     return {
       $and: [
+        { $or: this.userRelevanceQuery() },
         ...(integrationType
           ? await this.integrationTypeFilter(integrationType)
           : []),
@@ -352,6 +427,9 @@ export default class Builder {
     }
 
     // filter by tag
+    if (this.params.tag) {
+      this.queries.tag = await this.tagFilter(this.params.tag.split(','));
+    }
 
     if (this.params.startDate && this.params.endDate) {
       this.queries.createdAt = this.dateFilter(
@@ -361,6 +439,9 @@ export default class Builder {
     }
 
     // filter by segment
+    if (this.params.segment) {
+      this.queries.segments = await this.segmentFilter(this.params.segment);
+    }
 
     this.queries.extended = await this.extendedQueryFilter(this.params);
   }

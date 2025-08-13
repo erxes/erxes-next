@@ -223,7 +223,6 @@ export async function processMessagingEvent(
         text: activity.message?.text || '',
       };
       debugFacebook(`Processing activity: ${JSON.stringify(activityData)}`);
-      console.log(activityData, 'activityData');
 
       await receiveMessage(models, subdomain, integration, activityData);
     }

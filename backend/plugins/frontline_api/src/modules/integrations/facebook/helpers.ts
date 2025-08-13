@@ -232,7 +232,6 @@ export const facebookCreateIntegration = async (
       erxesApiId: integrationId,
       facebookPageIds,
     });
-    console.log('Integration created:', integration);
     // Retrieve environment variables for endpoint and domain
     const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
     const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
