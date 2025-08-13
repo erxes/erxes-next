@@ -1,37 +1,53 @@
-# Stage 1: Build the application
-FROM --platform=linux/amd64 node:22-alpine AS builder
+# Base image for common dependencies
+FROM --platform=linux/amd64 node:22-alpine AS build
 
+# Set working directory
 WORKDIR /app
 
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
+
+COPY ./backend/services/logs/package.json /app/backend/services/logs/
+COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
+
+# Install pnpm and dependencies
 RUN npm install -g pnpm
+RUN pnpm install
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
-COPY ./backend/erxes-api-shared/package.json ./backend/erxes-api-shared/
-COPY ./backend/services/logs/package.json ./backend/services/logs/
+# Build the test project
+FROM --platform=linux/amd64 build AS logs-service-build
 
-RUN pnpm install --frozen-lockfile
+# Copy source code
+COPY ./backend/services/logs /app/backend/services/logs
+COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
-COPY ./backend/erxes-api-shared ./backend/erxes-api-shared
-COPY ./backend/services/logs ./backend/services/logs
-
+# Build following exact sequence
 WORKDIR /app/backend/services/logs
+
 ENV NX_DAEMON=false
 RUN npx nx build:packageJson logs-service
 RUN npx nx build logs-service
 
-# Stage 2: Production image
-FROM --platform=linux/amd64 node:22-alpine
+# Final stage: Run the application
+FROM --platform=linux/amd64 node:22-alpine as logs-service
 
 WORKDIR /app
 
-COPY --from=builder /app/backend/services/logs/dist ./dist
-COPY --from=builder /app/backend/services/logs/package.json ./
-COPY --from=builder /app/node_modules ./node_modules
+# Copy built applications from previous stages
+COPY --chown=1000 --from=logs-service-build /app /app
 
-RUN npm install --omit=dev
+# Install pnpm for production
+RUN npm install -g pnpm
 
+# Install production dependencies
+WORKDIR /app/backend/services/logs/dist
+RUN pnpm install
+
+# Set environment variables
 ENV NODE_ENV=production
 
+# Use non root user
 USER 1000
 
-CMD ["node", "dist/src/main.js"]
+# Start the application
+CMD ["node", "src/main.js"]
+
