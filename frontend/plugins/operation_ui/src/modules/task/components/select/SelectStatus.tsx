@@ -345,13 +345,14 @@ export const SelectStatusFormItem = React.forwardRef<
   const [open, setOpen] = useState(false);
   const { statuses } = useGetStatusByTeam({
     variables: { teamId },
-    skip: !teamId,
   });
+
   useEffect(() => {
-    if (statuses?.length && !value) {
+    if (teamId && statuses?.length) {
       onChange?.(statuses?.[0]?.value);
     }
-  }, [statuses, value, onChange]);
+  }, [teamId, onChange, statuses]);
+
   return (
     <SelectStatusProvider
       value={value || ''}

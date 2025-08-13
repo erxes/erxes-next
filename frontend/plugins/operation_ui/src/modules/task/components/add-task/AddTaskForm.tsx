@@ -28,23 +28,38 @@ import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
+import { useGetProject } from '@/project/hooks/useGetProject';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
-  const { teamId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId?: string;
+    projectId?: string;
+  }>();
+
   const { teams } = useGetCurrentUsersTeams();
   const currentUser = useAtomValue(currentUserState);
   const { createTask } = useCreateTask();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const editor = useBlockEditor();
+
+  const { project } = useGetProject({
+    variables: { _id: projectId || '' },
+    skip: !projectId,
+  });
+
+  const [_teamId, _setTeamId] = useState<string | undefined>(
+    teamId ? teamId : project?.teamIds?.[0] ? project?.teamIds?.[0] : undefined,
+  );
+
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
     defaultValues: {
-      teamId: teamId || '',
+      teamId: _teamId || undefined,
       name: '',
       status: '',
       priority: 0,
       assigneeId: teamId ? undefined : currentUser?._id,
-      projectId: undefined,
+      projectId: projectId || undefined,
       startDate: undefined,
       targetDate: undefined,
       estimatePoint: undefined,
@@ -52,10 +67,12 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   });
 
   useEffect(() => {
-    if (teams && teams.length > 0 && !form.getValues('teamId')) {
+    if (teams && teams.length > 0 && !form.getValues('teamId') && !teamId) {
       form.setValue('teamId', teams[0]._id);
+      _setTeamId(teams[0]._id);
     }
   }, [teams, form, teamId, currentUser]);
+
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
     if (content) {
@@ -72,9 +89,12 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
         priority: data.priority || 0,
         status: data.status || '0',
       },
+      onCompleted: () => {
+        onClose();
+      },
     });
-    onClose();
   };
+
   return (
     <Form {...form}>
       <form
@@ -142,7 +162,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     {...field}
                     value={field.value}
                     onChange={(value) => field.onChange(value.toString())}
-                    teamId={teamId || form.getValues('teamId')}
+                    teamId={form.getValues('teamId') || _teamId}
                   />
                 </Form.Item>
               )}
@@ -170,7 +190,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     onValueChange={(value: any) => {
                       field.onChange(value);
                     }}
-                    teamIds={form.getValues('teamId')}
+                    teamIds={form.getValues('teamId') || _teamId}
                   />
                 </Form.Item>
               )}
@@ -232,7 +252,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     {...field}
                     mode="single"
                     value={field.value || ''}
-                    teamId={teamId || form.getValues('teamId')}
+                    teamId={form.getValues('teamId') || _teamId}
                   />
                 </Form.Item>
               )}

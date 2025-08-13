@@ -28,12 +28,21 @@ export const teamQueries = {
     if (params.teamIds && params.teamIds.length > 0) {
       return models.Team.find({ _id: { $in: params.teamIds } });
     }
+
+    if (params.projectId) {
+      const teamIds = await models.Project.findOne({
+        _id: params.projectId,
+      }).distinct('teamIds');
+      return models.Team.find({ _id: { $in: teamIds } });
+    }
+
     if (params.userId) {
       const teamIds = await models.TeamMember.find({
         memberId: params.userId,
       }).distinct('teamId');
       return models.Team.find({ _id: { $in: teamIds } });
     }
+
     return models.Team.getTeams(params);
   },
 

@@ -16,6 +16,7 @@ export interface ITeamDocument extends ITeam, Document {
 export interface ITeamFilter extends ITeam {
   userId: string;
   teamIds: string[];
+  projectId: string;
 }
 
 export enum TeamMemberRoles {

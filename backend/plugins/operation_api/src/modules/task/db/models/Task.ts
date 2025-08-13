@@ -80,6 +80,14 @@ export const loadTaskClass = (models: IModels) => {
 
       const nextNumber = (result?.maxNumber || 0) + 1;
 
+      if (doc.projectId && doc.teamId) {
+        const project = await models.Project.findOne({ _id: doc.projectId });
+
+        if (project && !project.teamIds.includes(doc.teamId)) {
+          throw new Error('Task project is not in this team');
+        }
+      }
+
       return models.Task.insertOne({
         ...doc,
         number: nextNumber,

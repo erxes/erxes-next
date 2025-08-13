@@ -260,6 +260,11 @@ export const SelectEstimatedPointFormItem = React.forwardRef<
       onChange?.(estimateChoices?.[0]?.value || 0);
     }
   }, [estimateChoices, value, onChange]);
+
+  if (!estimateChoices || !estimateChoices?.length) {
+    return null;
+  }
+
   return (
     <SelectEstimatedPointProvider
       value={stringValue}

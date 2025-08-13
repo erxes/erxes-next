@@ -17,7 +17,9 @@ import {
   DateSelect,
 } from '@/project/components/select';
 import { useGetProject } from '@/project/hooks/useGetProject';
-import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
+import { useGetTeams } from '@/team/hooks/useGetTeams';
+import { useAtomValue } from 'jotai';
+import { currentUserState } from 'ui-modules';
 
 export const ProjectFields = ({ projectId }: { projectId: string }) => {
   const { project } = useGetProject({
@@ -42,8 +44,16 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     initialContent: descriptionContent,
   });
   const { updateProject } = useUpdateProject();
+  const currentUser = useAtomValue(currentUserState);
+
   const [name, setName] = useState(_name);
-  const { teams } = useGetCurrentUsersTeams();
+
+  const { teams } = useGetTeams({
+    variables: {
+      userId: currentUser?._id,
+    },
+  });
+
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
     if (content) {
