@@ -18,7 +18,6 @@ export const ProjectDetails = ({ projectId }: { projectId: string }) => {
           <ProjectFields projectId={projectId} />
         </div>
       </div>
-      <ProjectsSideWidget projectId={projectId} />
     </div>
   );
 };

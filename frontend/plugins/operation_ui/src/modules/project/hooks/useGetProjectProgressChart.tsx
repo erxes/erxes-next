@@ -2,7 +2,14 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECT_PROGRESS_CHART } from '~/modules/project/graphql/queries/getProjectProgressChart';
 
 interface IGetProjectQueryResponse {
-  getProjectProgressChart: any;
+  getProjectProgressChart: {
+    totalScope: number;
+    chartData: {
+      date: string;
+      started: number;
+      completed: number;
+    }[];
+  };
 }
 
 export const useGetProjectProgressChart = (options: QueryHookOptions) => {

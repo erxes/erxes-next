@@ -6,12 +6,12 @@ import { ProgressByMember } from '@/project/components/details/ProgressByMember'
 import { ProgressByTeam } from '@/project/components/details/ProgressByTeam';
 export const ProjectsSideWidget = ({ projectId }: { projectId: string }) => {
   return (
-    <SideMenu>
+    <SideMenu defaultValue="project">
       <SideMenu.Content value="project">
-        <SideMenu.Header Icon={IconChartHistogram} label="Project Details" />
+        <SideMenu.Header Icon={IconChartHistogram} label="Project Report" />
         <>
           <div className="p-4 border-b">
-            <Collapsible className="group/collapsible-menu">
+            <Collapsible className="group/collapsible-menu" defaultOpen>
               <Collapsible.Trigger asChild>
                 <Button
                   variant="secondary"
@@ -19,7 +19,7 @@ export const ProjectsSideWidget = ({ projectId }: { projectId: string }) => {
                   size="sm"
                 >
                   <IconCaretRightFilled className="transition-transform group-data-[state=open]/collapsible-menu:rotate-90" />
-                  Overview
+                  Progress
                 </Button>
               </Collapsible.Trigger>
               <Collapsible.Content>
@@ -35,7 +35,7 @@ export const ProjectsSideWidget = ({ projectId }: { projectId: string }) => {
       <SideMenu.Sidebar>
         <SideMenu.Trigger
           value="project"
-          label="Project Details"
+          label="Project Report"
           Icon={IconChartHistogram}
         />
       </SideMenu.Sidebar>

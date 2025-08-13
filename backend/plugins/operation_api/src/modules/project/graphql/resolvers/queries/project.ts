@@ -89,6 +89,12 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
+    const tasks = await models.Task.countDocuments({
+      projectId: _id,
+      status: { $in: completedStatusIds },
+    });
+    console.log(tasks);
+
     const result = await models.Task.aggregate([
       {
         $match: {
@@ -155,7 +161,7 @@ export const projectQueries = {
                         ],
                       },
                       1,
-                      1,
+                      '$estimatePoint',
                     ],
                   },
                 },

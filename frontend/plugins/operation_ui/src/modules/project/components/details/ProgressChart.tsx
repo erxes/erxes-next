@@ -1,7 +1,7 @@
-import { ChartContainer, ChartConfig, Card } from 'erxes-ui';
-import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
+import { ChartContainer, ChartConfig } from 'erxes-ui';
+import { CartesianGrid, XAxis, AreaChart, Area, YAxis } from 'recharts';
 import { useGetProjectProgressChart } from '~/modules/project/hooks/useGetProjectProgressChart';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, endOfDay, isAfter } from 'date-fns';
 
 export const ProgressChart = ({ projectId }: { projectId: string }) => {
   const chartConfig = {
@@ -15,50 +15,77 @@ export const ProgressChart = ({ projectId }: { projectId: string }) => {
     },
   } satisfies ChartConfig;
 
-  const { getProjectProgressChart = [] } = useGetProjectProgressChart({
+  const { getProjectProgressChart } = useGetProjectProgressChart({
     variables: { _id: projectId },
   });
 
-  const chartData = getProjectProgressChart?.chartData || [];
+  const rawData = getProjectProgressChart?.chartData || [];
+  const totalScopeValue = getProjectProgressChart?.totalScope || 0;
+
+  const todayEnd = endOfDay(new Date());
+
+  const chartData = rawData.map((item) => {
+    if (isAfter(parseISO(item.date), todayEnd)) {
+      return {
+        ...item,
+        totalScope: totalScopeValue,
+        started: null,
+        completed: null,
+      };
+    }
+    return { ...item, totalScope: totalScopeValue };
+  });
 
   return (
-    <Card>
-      <Card.Content>
-        <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => format(parseISO(value), 'M d')}
-            />
-
-            <Line
-              dataKey="started"
-              type="monotone"
-              stroke="hsl(var(--chart-1))"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              dataKey="completed"
-              type="monotone"
-              stroke="hsl(var(--chart-2))"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      </Card.Content>
-    </Card>
+    <div>
+      <ChartContainer config={chartConfig}>
+        <AreaChart accessibilityLayer data={chartData} margin={{ top: 10 }}>
+          <CartesianGrid vertical={false} strokeDasharray="3 3" />
+          <XAxis
+            dataKey="date"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => format(parseISO(value), 'MMM d')}
+          />
+          <YAxis
+            domain={[0, totalScopeValue]}
+            hide={true} // хэрэв харагдахгүй байхыг хүсвэл
+            allowDecimals={false}
+          />
+          <Area
+            dataKey="totalScope"
+            type="monotone"
+            stroke="hsl(var(--chart-3))"
+            fill="hsl(var(--chart-3) / 0.15)"
+            strokeWidth={2}
+            connectNulls={true}
+            strokeLinecap="round"
+            dot={false}
+            activeDot={false}
+          />
+          <Area
+            dataKey="started"
+            type="monotone"
+            stroke="hsl(var(--chart-1))"
+            fill="hsl(var(--chart-1) / 0.15)"
+            strokeWidth={2}
+            dot={false}
+            connectNulls={false}
+            strokeLinecap="round"
+          />
+          <Area
+            dataKey="completed"
+            type="monotone"
+            stroke="hsl(var(--chart-2))"
+            fill="hsl(var(--chart-2) / 0.15)"
+            strokeWidth={2}
+            dot={false}
+            connectNulls={false}
+            strokeLinecap="round"
+          />
+        </AreaChart>
+      </ChartContainer>
+    </div>
   );
 };

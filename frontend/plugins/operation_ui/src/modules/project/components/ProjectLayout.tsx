@@ -7,11 +7,12 @@ import { useParams } from 'react-router-dom';
 import { ProjectBreadCrumb } from '@/project/components/breadcumb/ProjectBreadCrumb';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
 import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
-import { ProjectSideMenu } from '@/project/components/details/ProjectSideMenu';
+import { ProjectsSideWidget } from '@/project/components/details/ProjectsSideWidget';
 
 export const ProjectLayout = () => {
-  const { teamId } = useParams<{
+  const { teamId, projectId } = useParams<{
     teamId?: string;
+    projectId: string;
   }>();
 
   return (
@@ -41,8 +42,11 @@ export const ProjectLayout = () => {
           <AddTaskSheet />
         </PageHeader.End>
       </PageHeader>
-      <Outlet />
-      <ProjectSideMenu />
+      <div className="flex h-screen w-full">
+        <Outlet />
+
+        <ProjectsSideWidget projectId={projectId || ''} />
+      </div>
     </div>
   );
 };
