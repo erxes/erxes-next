@@ -1,6 +1,5 @@
 import { useGetProject } from '@/project/hooks/useGetProject';
 import { ProjectFields } from '@/project/components/details/ProjectFields';
-import { ProjectsSideWidget } from '@/project/components/details/ProjectsSideWidget';
 
 export const ProjectDetails = ({ projectId }: { projectId: string }) => {
   const { project } = useGetProject({
