@@ -27,12 +27,13 @@ export const useProjectsVariables = (
   });
   const [{ name, team, priority, status, lead }] = useMultiQueryState<{
     name: string;
-    team: string[];
+    team: string;
     priority: string;
     status: string;
     lead: string;
   }>(['name', 'team', 'priority', 'status', 'lead']);
   const currentUser = useAtomValue(currentUserState);
+
   return {
     limit: PROJECTS_PER_PAGE,
     orderBy: {
@@ -40,7 +41,7 @@ export const useProjectsVariables = (
     },
     cursor,
     name: name || undefined,
-    teamIds: team || undefined,
+
     priority: priority || undefined,
     status: status || undefined,
     leadId: lead || undefined,
@@ -48,6 +49,7 @@ export const useProjectsVariables = (
     ...(variables?.teamIds || variables?.userId || !currentUser?._id
       ? {}
       : { userId: currentUser._id }),
+    teamIds: team ? [team] : variables?.teamIds,
   };
 };
 
@@ -57,6 +59,7 @@ export const useProjects = (
   const setProjectTotalCount = useSetAtom(projectTotalCountAtom);
   const { toast } = useToast();
   const variables = useProjectsVariables(options?.variables);
+
   const { data, loading, fetchMore } = useQuery<ICursorListResponse<IProject>>(
     GET_PROJECTS,
     {
