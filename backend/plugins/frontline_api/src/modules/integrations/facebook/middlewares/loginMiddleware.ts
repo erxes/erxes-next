@@ -111,7 +111,7 @@ export const loginMiddleware = async (req, res) => {
     const reactAppUrl = !DOMAIN.includes('zrok')
       ? DOMAIN
       : 'http://localhost:3001';
-    const url = `${reactAppUrl}/settings/fb-authorization?fbAuthorized=true`;
+    const url = `${reactAppUrl}/settings/inbox/integrations/facebook-messenger?fbAuthorized=true`;
 
     debugResponse(debugFacebook, req, url);
 
