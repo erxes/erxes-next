@@ -20,6 +20,7 @@ import {
   SelectPriority,
   SelectAssignee,
   DateSelect,
+  SelectEstimatedPoint,
 } from '@/task/components/select';
 import { SelectProject } from '@/task/components/select/SelectProject';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
@@ -27,42 +28,34 @@ import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
-import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
   const { teams } = useGetCurrentUsersTeams();
-  const { statuses } = useGetStatusByTeam({
-    variables: { teamId: teamId || teams?.[0]?._id },
-    skip: !teamId && !teams?.[0]?._id,
-  });
   const currentUser = useAtomValue(currentUserState);
   const { createTask } = useCreateTask();
-  const editor = useBlockEditor();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
+  const editor = useBlockEditor();
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
     defaultValues: {
       teamId: teamId || '',
       name: '',
-      status: statuses?.[0]?.value || '',
+      status: '',
       priority: 0,
       assigneeId: teamId ? undefined : currentUser?._id,
       projectId: undefined,
       startDate: undefined,
       targetDate: undefined,
+      estimatePoint: undefined,
     },
   });
 
   useEffect(() => {
-    if (statuses?.length && !form.getValues('status')) {
-      form.setValue('status', statuses?.[0]?.value || '');
-    }
-
     if (teams && teams.length > 0 && !form.getValues('teamId')) {
       form.setValue('teamId', teams[0]._id);
     }
-  }, [teams, form, teamId, statuses, currentUser]);
+  }, [teams, form, teamId, currentUser]);
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
     if (content) {
@@ -72,16 +65,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   const onSubmit = async (data: TAddTask) => {
-    let descriptionHtml = '';
-    if (descriptionContent && descriptionContent.length > 0) {
-      descriptionHtml =
-        (await editor?.blocksToHTMLLossy(descriptionContent)) || '';
-    }
-
     createTask({
       variables: {
         ...data,
-        description: descriptionHtml,
+        description: JSON.stringify(descriptionContent),
         priority: data.priority || 0,
         status: data.status || '0',
       },
@@ -155,7 +142,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     {...field}
                     value={field.value}
                     onChange={(value) => field.onChange(value.toString())}
-                    statuses={statuses}
+                    teamId={teamId || form.getValues('teamId')}
                   />
                 </Form.Item>
               )}
@@ -235,13 +222,28 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 </Form.Item>
               )}
             />
+            <Form.Field
+              name="estimatePoint"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="sr-only">Estimate Point</Form.Label>
+                  <SelectEstimatedPoint.FormItem
+                    {...field}
+                    mode="single"
+                    value={field.value || ''}
+                    teamId={teamId || form.getValues('teamId')}
+                  />
+                </Form.Item>
+              )}
+            />
           </div>
           <Separator className="my-4" />
-          <div className="h-full">
+          <div className="h-[60vh] overflow-y-auto">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="h-full"
+              className="min-h-full"
             />
           </div>
         </Sheet.Content>

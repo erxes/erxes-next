@@ -21,12 +21,18 @@ import {
   types as StatusTypes,
   mutations as StatusMutations,
 } from '@/status/graphql/schema/status';
+import {
+  queries as NoteQueries,
+  types as NoteTypes,
+  mutations as NoteMutations,
+} from '@/note/graphql/schemas/note';
 
 export const types = `
   ${TaskTypes}
   ${ProjectTypes}
   ${TeamTypes}
   ${StatusTypes}
+  ${NoteTypes}
 `;
 
 export const queries = `
@@ -34,13 +40,15 @@ export const queries = `
   ${ProjectQueries}
   ${TeamQueries}
   ${StatusQueries}
+  ${NoteQueries}
 `;
 
 export const mutations = `
   ${TaskMutations}
-  ${ProjectMutations}
+  ${ProjectMutations} 
   ${TeamMutations}
   ${StatusMutations}
+  ${NoteMutations}
 `;
 
 export default { types, queries, mutations };

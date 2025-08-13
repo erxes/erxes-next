@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IEstimateChoice } from '@/task/types';
 import {
   Button,
@@ -12,6 +12,7 @@ import {
 } from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { useGetEstimateChoiceByTeam } from '~/modules/task/hooks/useGetEstimateChoiceByTeam';
 
 interface SelectEstimatedPointContextType {
   estimateChoices: IEstimateChoice[];
@@ -244,53 +245,55 @@ export const SelectEstimatedPointFormItem = React.forwardRef<
     placeholder?: string;
     value?: number | string;
     onChange?: (value: number) => void;
-    estimateChoices?: IEstimateChoice[];
+    teamId?: string;
   }
->(
-  (
-    { onChange, className, placeholder, value, estimateChoices, ...props },
-    ref,
-  ) => {
-    const [open, setOpen] = useState(false);
-
-    const stringValue =
-      typeof value === 'number' ? value.toString() : value || '';
-
-    return (
-      <SelectEstimatedPointProvider
-        value={stringValue}
-        onValueChange={(value) => {
-          const numValue =
-            typeof value === 'string' ? parseInt(value, 10) : Number(value);
-          onChange?.(numValue);
-          setOpen(false);
-        }}
-        estimateChoices={estimateChoices || []}
-        {...props}
-      >
-        <Popover open={open} onOpenChange={setOpen}>
-          <Form.Control>
-            <Combobox.TriggerBase
-              ref={ref}
-              className={cn('w-full shadow-xs', className)}
-              asChild
-            >
-              <Button variant="secondary">
-                <SelectEstimatedPointValue
-                  placeholder={placeholder}
-                  className={value === 0 ? 'text-muted-foreground' : undefined}
-                />
-              </Button>
-            </Combobox.TriggerBase>
-          </Form.Control>
-          <Combobox.Content>
-            <SelectEstimatedPointContent />
-          </Combobox.Content>
-        </Popover>
-      </SelectEstimatedPointProvider>
-    );
-  },
-);
+>(({ onChange, className, placeholder, value, teamId, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { estimateChoices } = useGetEstimateChoiceByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
+  useEffect(() => {
+    if (estimateChoices?.length && !value) {
+      onChange?.(estimateChoices?.[0]?.value || 0);
+    }
+  }, [estimateChoices, value, onChange]);
+  return (
+    <SelectEstimatedPointProvider
+      value={stringValue}
+      onValueChange={(value) => {
+        const numValue =
+          typeof value === 'string' ? parseInt(value, 10) : Number(value);
+        onChange?.(numValue);
+        setOpen(false);
+      }}
+      estimateChoices={estimateChoices || []}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.TriggerBase
+            ref={ref}
+            className={cn('w-full shadow-xs', className)}
+            asChild
+          >
+            <Button variant="secondary" className="h-7">
+              <SelectEstimatedPointValue
+                placeholder={placeholder}
+                className={value === 0 ? 'text-muted-foreground' : undefined}
+              />
+            </Button>
+          </Combobox.TriggerBase>
+        </Form.Control>
+        <Combobox.Content>
+          <SelectEstimatedPointContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectEstimatedPointProvider>
+  );
+});
 
 SelectEstimatedPointFormItem.displayName = 'SelectEstimatedPointFormItem';
 
@@ -344,10 +347,86 @@ const SelectEstimatedPointRoot = React.forwardRef<
 
 SelectEstimatedPointRoot.displayName = 'SelectEstimatedPointRoot';
 
+export const SelectEstimatedPointDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectEstimatedPointProvider>,
+    'children' | 'onValueChange' | 'value' | 'estimateChoices'
+  > & {
+    className?: string;
+    placeholder?: string;
+    value?: number | string;
+    id?: string;
+    estimateChoices?: IEstimateChoice[];
+  }
+>(({ className, placeholder, value, id, estimateChoices, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
+
+  const handleValueChange = (value: string | string[]) => {
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          estimatePoint:
+            typeof value === 'string'
+              ? parseInt(value, 10)
+              : parseInt(value[0], 10),
+        },
+      });
+    }
+    setOpen(false);
+  };
+
+  if (!estimateChoices) {
+    return (
+      <Button
+        variant="secondary"
+        className="h-7 text-muted-foreground"
+        disabled
+      >
+        Not enabled estimate
+      </Button>
+    );
+  }
+
+  return (
+    <SelectEstimatedPointProvider
+      value={stringValue}
+      onValueChange={handleValueChange}
+      estimateChoices={estimateChoices || []}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectEstimatedPointValue
+              placeholder={placeholder}
+              className={value === 0 ? 'text-muted-foreground' : undefined}
+            />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectEstimatedPointContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectEstimatedPointProvider>
+  );
+});
+
+SelectEstimatedPointDetail.displayName = 'SelectEstimatedPointDetail';
+
 export const SelectEstimatedPoint = Object.assign(SelectEstimatedPointRoot, {
   Provider: SelectEstimatedPointProvider,
   Value: SelectEstimatedPointValue,
   Content: SelectEstimatedPointContent,
   InlineCell: SelectEstimatedPointInlineCell,
   FormItem: SelectEstimatedPointFormItem,
+  Detail: SelectEstimatedPointDetail,
 });

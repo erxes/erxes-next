@@ -13,6 +13,7 @@ export interface IProject {
   startDate: Date;
   leadId: string;
   teamIds: string[];
+  description: string;
 }
 
 export enum ProjectPageTypes {

@@ -191,7 +191,9 @@ const SelectTeamContent = ({ providedTeams }: { providedTeams?: ITeam[] }) => {
             {selectedTeams?.map((team) => (
               <SelectTeamCommandItem key={team._id} team={team} />
             ))}
-            <Command.Separator className="my-1" />
+            {teams.filter(
+              (team) => !selectedTeams.some((t) => t._id === team._id),
+            ).length > 0 && <Command.Separator className="my-1" />}
           </>
         )}
         {teams
@@ -460,9 +462,9 @@ export const SelectTeamInlineCell = ({
 const SelectTeamValue = () => {
   const { teamIds, teams } = useSelectTeamContext();
   const selectedTeams = teams.filter((team) => teamIds.includes(team._id));
-  if (selectedTeams.length === 0) return null;
-
   const teamNames = selectedTeams.map((team) => team.name).join(', ');
+  if (selectedTeams.length === 0)
+    return <span className="text-accent-foreground text-sm">{'Team'}</span>;
 
   return (
     <div className="flex items-center gap-2 max-w-[200px]">
@@ -519,6 +521,53 @@ export const SelectTeamFormItem = React.forwardRef<
 
 SelectTeamFormItem.displayName = 'SelectTeamFormItem';
 
+export const SelectTeamDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectTeamProvider>,
+    'children' | 'onValueChange'
+  > & {
+    className?: string;
+    onChange?: (value: string | string[]) => void;
+    onClick?: (e: React.MouseEvent) => void;
+    id?: string;
+  }
+>(({ onChange, className, onClick, id, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateProject } = useUpdateProject();
+
+  const handleValueChange = (value: string[] | string) => {
+    onChange?.(value);
+    updateProject({
+      variables: {
+        _id: id,
+        teamIds: value as string[],
+      },
+    });
+    setOpen(false);
+  };
+  return (
+    <SelectTeamProvider onValueChange={handleValueChange} {...props}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs ', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7" onClick={onClick}>
+            <SelectTeamValue />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectTeamContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectTeamProvider>
+  );
+});
+
+SelectTeamDetail.displayName = 'SelectTeamDetail';
+
 const SelectTeamRoot = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
   Omit<React.ComponentProps<typeof SelectTeamProvider>, 'children'> &
@@ -564,4 +613,5 @@ export const SelectTeam = Object.assign(SelectTeamRoot, {
   FilterBar: SelectTeamFilterBar,
   InlineCell: SelectTeamInlineCell,
   FormItem: SelectTeamFormItem,
+  Detail: SelectTeamDetail,
 });

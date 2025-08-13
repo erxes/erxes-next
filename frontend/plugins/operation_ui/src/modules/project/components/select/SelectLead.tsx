@@ -345,6 +345,52 @@ const SelectLeadRoot = React.forwardRef<
 
 SelectLeadRoot.displayName = 'SelectLeadRoot';
 
+export const SelectLeadDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectLeadProvider>, 'children'> & {
+    className?: string;
+    teamIds?: string[] | string;
+    id?: string;
+  }
+>(({ onValueChange, className, teamIds, id, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateProject } = useUpdateProject();
+
+  const handleValueChange = (value: string | string[]) => {
+    if (id) {
+      updateProject({
+        variables: {
+          _id: id,
+          leadId: value,
+        },
+      });
+    }
+    onValueChange?.(value);
+    setOpen(false);
+  };
+
+  return (
+    <SelectLeadProvider onValueChange={handleValueChange} {...props}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectLeadFormValue />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectLeadContent teamIds={teamIds} />
+        </Combobox.Content>
+      </Popover>
+    </SelectLeadProvider>
+  );
+});
+
+SelectLeadDetail.displayName = 'SelectLeadDetail';
+
 export const SelectLead = Object.assign(SelectLeadRoot, {
   Provider: SelectLeadProvider,
   Value: SelectLeadValue,
@@ -354,4 +400,5 @@ export const SelectLead = Object.assign(SelectLeadRoot, {
   FilterBar: SelectLeadFilterBar,
   InlineCell: SelectLeadInlineCell,
   FormItem: SelectLeadFormItem,
+  Detail: SelectLeadDetail,
 });

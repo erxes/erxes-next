@@ -15,7 +15,7 @@ export const GET_TASKS = gql`
     $targetDate: Date
     $projectId: String 
     $teamId: String
-    $statusType: String
+    $statusType: Int
     $estimatePoint: Int
     $orderBy: JSON
     $userId: String

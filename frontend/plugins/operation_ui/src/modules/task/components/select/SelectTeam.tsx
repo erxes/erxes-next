@@ -170,10 +170,8 @@ const SelectTeamCommandItem = ({ team }: { team: ITeam }) => {
 };
 
 const SelectTeamContent = ({ providedTeams }: { providedTeams?: ITeam[] }) => {
-  const {
-    teams: selectedTeams,
-    loading: contextLoading,
-  } = useSelectTeamContext();
+  const { teams: selectedTeams, loading: contextLoading } =
+    useSelectTeamContext();
 
   const { teams: searchedTeams = [], loading: searchLoading } =
     useGetCurrentUsersTeams({
@@ -460,6 +458,62 @@ const SelectTeamRoot = React.forwardRef<
 
 SelectTeamRoot.displayName = 'SelectTeamRoot';
 
+export const SelectTeamDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectTeamProvider>,
+    'children' | 'onValueChange'
+  > & {
+    className?: string;
+    placeholder?: string;
+    id?: string;
+    teams?: ITeam[];
+  }
+>(({ className, placeholder, id, teams, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+
+  const handleValueChange = (value: string | string[]) => {
+    const stringValue = typeof value === 'string' ? value : value[0] || '';
+
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          teamId: stringValue,
+        },
+      });
+    }
+    setOpen(false);
+  };
+
+  return (
+    <SelectTeamProvider
+      onValueChange={handleValueChange}
+      mode="single"
+      teams={teams}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectTeamValue />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectTeamContent providedTeams={teams} />
+        </Combobox.Content>
+      </Popover>
+    </SelectTeamProvider>
+  );
+});
+
+SelectTeamDetail.displayName = 'SelectTeamDetail';
+
 export const SelectTeam = Object.assign(SelectTeamRoot, {
   Provider: SelectTeamProvider,
   Value: SelectTeamBadgeValue,
@@ -469,4 +523,5 @@ export const SelectTeam = Object.assign(SelectTeamRoot, {
   FilterBar: SelectTeamFilterBar,
   InlineCell: SelectTeamInlineCell,
   FormItem: SelectTeamFormItem,
+  Detail: SelectTeamDetail,
 });

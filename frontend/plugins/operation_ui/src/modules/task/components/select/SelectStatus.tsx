@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   cn,
@@ -59,7 +59,6 @@ export const SelectStatusProvider = ({
     if (!status) return;
     onValueChange?.(status.value.toString());
   };
-
   React.useEffect(() => {
     setStatuses(statuses);
   }, [statuses]);
@@ -340,11 +339,19 @@ export const SelectStatusFormItem = React.forwardRef<
     placeholder?: string;
     value?: string;
     onChange?: (value: string) => void;
-    statuses?: IStatus[];
+    teamId?: string;
   }
->(({ onChange, className, placeholder, value, statuses, ...props }, ref) => {
+>(({ onChange, className, placeholder, value, teamId, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-
+  const { statuses } = useGetStatusByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
+  useEffect(() => {
+    if (statuses?.length && !value) {
+      onChange?.(statuses?.[0]?.value);
+    }
+  }, [statuses, value, onChange]);
   return (
     <SelectStatusProvider
       value={value || ''}
@@ -421,6 +428,68 @@ const SelectStatusRoot = React.forwardRef<
 
 SelectStatusRoot.displayName = 'SelectStatusRoot';
 
+export const SelectStatusDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectStatusProvider>,
+    'children' | 'onValueChange' | 'value' | 'statuses'
+  > & {
+    className?: string;
+    placeholder?: string;
+    value?: string;
+    id?: string;
+    teamId: string | undefined;
+  }
+>(({ className, placeholder, value, id, teamId, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+  const { statuses } = useGetStatusByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
+
+  const handleValueChange = (value: string) => {
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          status: value,
+        },
+      });
+    }
+    setOpen(false);
+  };
+
+  return (
+    <SelectStatusProvider
+      value={value || ''}
+      onValueChange={handleValueChange}
+      statuses={statuses || []}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectStatusValue
+              placeholder={placeholder}
+              className={!value ? 'text-muted-foreground' : undefined}
+            />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectStatusContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectStatusProvider>
+  );
+});
+
+SelectStatusDetail.displayName = 'SelectStatusDetail';
+
 export const SelectStatus = Object.assign(SelectStatusRoot, {
   Provider: SelectStatusProvider,
   Value: SelectStatusValue,
@@ -431,4 +500,5 @@ export const SelectStatus = Object.assign(SelectStatusRoot, {
   InlineCell: SelectStatusInlineCell,
   FormItem: SelectStatusFormItem,
   TypeFilterView: SelectStatusTypeFilterView,
+  Detail: SelectStatusDetail,
 });

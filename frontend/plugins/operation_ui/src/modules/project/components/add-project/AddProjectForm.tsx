@@ -29,8 +29,7 @@ import { useParams } from 'react-router-dom';
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
   const { createProject } = useCreateProject();
-  const { teams } = useGetCurrentUsersTeams({});
-
+  const { teams } = useGetCurrentUsersTeams();
   const editor = useBlockEditor();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const form = useForm<TAddProject>({
@@ -61,16 +60,10 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   const onSubmit = async (data: TAddProject) => {
-    let descriptionHtml = '';
-    if (descriptionContent && descriptionContent.length > 0) {
-      descriptionHtml =
-        (await editor?.blocksToHTMLLossy(descriptionContent)) || '';
-    }
-
     createProject({
       variables: {
         ...data,
-        description: descriptionHtml,
+        description: JSON.stringify(descriptionContent),
       },
     });
     onClose();
@@ -212,11 +205,11 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             />
           </div>
           <Separator className="my-4" />
-          <div className="h-full">
+          <div className="h-[60vh] overflow-y-auto">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="h-full"
+              className="min-h-full"
             />
           </div>
         </Sheet.Content>

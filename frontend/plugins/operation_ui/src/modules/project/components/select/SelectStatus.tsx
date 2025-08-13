@@ -358,10 +358,7 @@ export const SelectStatusFormItem = React.forwardRef<
             asChild
           >
             <Button variant="secondary" className="h-7">
-              <SelectStatusValue
-                placeholder={placeholder}
-                className={value === 0 ? 'text-muted-foreground' : undefined}
-              />
+              <SelectStatusValue placeholder={placeholder} />
             </Button>
           </Combobox.TriggerBase>
         </Form.Control>
@@ -411,6 +408,65 @@ const SelectStatusRoot = React.forwardRef<
 
 SelectStatusRoot.displayName = 'SelectStatusRoot';
 
+export const SelectStatusDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<
+    React.ComponentProps<typeof SelectStatusProvider>,
+    'children' | 'onValueChange' | 'value'
+  > & {
+    className?: string;
+    placeholder?: string;
+    value?: number | string;
+    id?: string;
+  }
+>(({ className, placeholder, value, id, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const { updateProject } = useUpdateProject();
+  const stringValue =
+    typeof value === 'number' ? value.toString() : value || '';
+
+  const handleValueChange = (value: number) => {
+    if (id) {
+      updateProject({
+        variables: {
+          _id: id,
+          status: value,
+        },
+      });
+    }
+    setOpen(false);
+  };
+
+  return (
+    <SelectStatusProvider
+      value={stringValue}
+      onValueChange={(value) => {
+        const numValue =
+          typeof value === 'string' ? parseInt(value, 10) : Number(value);
+        handleValueChange(numValue);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          ref={ref}
+          className={cn('w-min shadow-xs', className)}
+          asChild
+        >
+          <Button variant="secondary" className="h-7">
+            <SelectStatusValue placeholder={placeholder} />
+          </Button>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectStatusContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectStatusProvider>
+  );
+});
+
+SelectStatusDetail.displayName = 'SelectStatusDetail';
+
 export const SelectStatus = Object.assign(SelectStatusRoot, {
   Provider: SelectStatusProvider,
   Value: SelectStatusValue,
@@ -420,4 +476,5 @@ export const SelectStatus = Object.assign(SelectStatusRoot, {
   FilterBar: SelectStatusFilterBar,
   InlineCell: SelectStatusInlineCell,
   FormItem: SelectStatusFormItem,
+  Detail: SelectStatusDetail,
 });
