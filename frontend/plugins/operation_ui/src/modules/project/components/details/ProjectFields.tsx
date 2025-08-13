@@ -37,6 +37,8 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     targetDate,
     description,
   } = project || {};
+
+  console.log(project);
   const [descriptionContent, setDescriptionContent] = useState<
     Block[] | undefined
   >(description ? JSON.parse(description) : undefined);

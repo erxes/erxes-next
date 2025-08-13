@@ -4,7 +4,6 @@ import { PageHeader } from 'ui-modules';
 import { Breadcrumb, Separator } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
-import { AddProjectSheet } from '@/project/components/add-project/AddProjectSheet';
 import { TaskBreadCrump } from '@/task/components/breadcrump/TaskBreadCrump';
 
 export const TaskDetailPage = () => {
@@ -35,9 +34,6 @@ export const TaskDetailPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
         </PageHeader.Start>
-        <PageHeader.End>
-          <AddProjectSheet />
-        </PageHeader.End>
       </PageHeader>
       <TaskDetails taskId={taskId} />
     </>

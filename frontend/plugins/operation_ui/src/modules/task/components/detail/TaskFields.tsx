@@ -1,9 +1,4 @@
-import {
-  Input,
-  Separator,
-  useBlockEditor,
-  BlockEditor,
-} from 'erxes-ui';
+import { Input, Separator, useBlockEditor, BlockEditor } from 'erxes-ui';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useDebounce } from 'use-debounce';
 import { useEffect, useState } from 'react';
@@ -17,15 +12,12 @@ import {
   SelectProject,
   SelectEstimatedPoint,
 } from '@/task/components/select';
-import { useGetTask } from '@/task/hooks/useGetTask';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
+import { ITask } from '@/task/types';
 
-export const TaskFields = ({ taskId }: { taskId: string }) => {
-  const { task } = useGetTask({
-    variables: { _id: taskId },
-  });
-
+export const TaskFields = ({ task }: { task: ITask }) => {
   const {
+    _id: taskId,
     teamId,
     priority,
     status,
@@ -60,7 +52,6 @@ export const TaskFields = ({ taskId }: { taskId: string }) => {
 
   const [debouncedDescriptionContent] = useDebounce(descriptionContent, 1000);
   const [debouncedName] = useDebounce(name, 1000);
-
   useEffect(() => {
     if (!debouncedName || debouncedName === _name) return;
     updateTask({
@@ -71,7 +62,6 @@ export const TaskFields = ({ taskId }: { taskId: string }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
-
   useEffect(() => {
     if (
       !debouncedDescriptionContent ||
@@ -96,7 +86,11 @@ export const TaskFields = ({ taskId }: { taskId: string }) => {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="gap-2 flex flex-wrap w-full">
-        <SelectStatus.Detail value={status} id={taskId} teamId={teamId || undefined} />
+        <SelectStatus.Detail
+          value={status}
+          id={taskId}
+          teamId={teamId || undefined}
+        />
         <SelectPriority.Detail value={priority} id={taskId} />
         <SelectAssignee.Detail
           value={assigneeId}
