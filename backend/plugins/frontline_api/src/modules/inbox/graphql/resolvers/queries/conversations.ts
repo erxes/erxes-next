@@ -45,7 +45,8 @@ export const conversationQueries = {
     });
 
     await qb.buildAllQueries();
-
+    const query = await qb.mainQuery();
+    console.log(query, 'query');
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
@@ -54,7 +55,7 @@ export const conversationQueries = {
           orderBy: { createdAt: -1 },
           limit: params.limit || 20,
         },
-        query: qb.mainQuery(),
+        query: [],
       });
 
     return { list, totalCount, pageInfo };
