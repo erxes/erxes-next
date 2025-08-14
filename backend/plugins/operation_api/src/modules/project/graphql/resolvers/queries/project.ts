@@ -533,10 +533,12 @@ export const projectQueries = {
         $match: { projectId: _id },
       },
       {
+        $match: { status: { $nin: canceledStatusIds } },
+      },
+      {
         $group: {
           _id: null,
           totalScope: {
-            $match: { status: { $nin: canceledStatusIds } },
             $sum: {
               $cond: [
                 {
