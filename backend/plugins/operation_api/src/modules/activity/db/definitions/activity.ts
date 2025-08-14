@@ -2,10 +2,15 @@ import { Schema } from 'mongoose';
 
 import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
-const metadataSchema = new Schema({
-  newValue: { type: String, label: 'New Value' },
-  previousValue: { type: String, label: 'Previous Value' },
-});
+const metadataSchema = new Schema(
+  {
+    newValue: { type: String, label: 'New Value' },
+    previousValue: { type: String, label: 'Previous Value' },
+  },
+  {
+    _id: false,
+  },
+);
 
 export const activitySchema = schemaWrapper(
   new Schema(

@@ -8,7 +8,7 @@ import {
   fillMissingDays,
   fillUntilTargetDate,
   fillFromLastDate,
-} from '@/project/utils/chartutils';
+} from '@/project/utils/charUtils';
 import { differenceInCalendarDays } from 'date-fns';
 
 export const projectQueries = {

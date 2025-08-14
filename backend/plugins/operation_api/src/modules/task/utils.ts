@@ -2,6 +2,7 @@ import { IModels } from '~/connectionResolvers';
 import { ITask, ITaskDocument } from '@/task/@types/task';
 
 const TASK_ACTIVITY_ACTIONS = {
+  NAME_CHANGED: 'NAME_CHANGED',
   STATUS_CHANGED: 'STATUS_CHANGED',
   ASSIGNEE_CHANGED: 'ASSIGNEE_CHANGED',
   REMOVED_ASSIGNEE: 'REMOVED_ASSIGNEE',
@@ -18,6 +19,7 @@ const TASK_ACTIVITY_ACTIONS = {
 } as const;
 
 const TASK_ACTIVITY_MODULES = {
+  NAME: 'NAME',
   STATUS: 'STATUS',
   ASSIGNEE: 'ASSIGNEE',
   PRIORITY: 'PRIORITY',
@@ -31,6 +33,7 @@ const TASK_ACTIVITY_MODULES = {
 type TaskFieldChange = {
   field: keyof ITask;
   module: string;
+  defaultValue?: string | number;
   getAction: (newValue: any, oldValue: any) => string | null;
 };
 
@@ -67,6 +70,12 @@ export const createTaskActivity = async ({
 
   const fieldChanges: TaskFieldChange[] = [
     {
+      field: 'name',
+      module: TASK_ACTIVITY_MODULES.NAME,
+      getAction: (newValue, oldValue) =>
+        newValue !== oldValue ? TASK_ACTIVITY_ACTIONS.NAME_CHANGED : null,
+    },
+    {
       field: 'status',
       module: TASK_ACTIVITY_MODULES.STATUS,
       getAction: (newValue, oldValue) =>
@@ -90,6 +99,7 @@ export const createTaskActivity = async ({
     },
     {
       field: 'estimatePoint',
+      defaultValue: 0,
       module: TASK_ACTIVITY_MODULES.ESTIMATE_POINT,
       getAction: (newValue, oldValue) =>
         newValue !== oldValue
@@ -136,13 +146,16 @@ export const createTaskActivity = async ({
     },
   ];
 
-  for (const { field, module, getAction } of fieldChanges) {
+  for (const { field, module, getAction, defaultValue } of fieldChanges) {
     const newValue = doc[field];
     const oldValue = task[field];
-    const action = getAction(newValue, oldValue);
 
-    if (action) {
-      await createActivity(action, newValue, oldValue, module);
+    if (oldValue !== defaultValue && newValue && newValue !== oldValue) {
+      const action = getAction(newValue, oldValue);
+
+      if (action) {
+        await createActivity(action, newValue, oldValue, module);
+      }
     }
   }
 };
