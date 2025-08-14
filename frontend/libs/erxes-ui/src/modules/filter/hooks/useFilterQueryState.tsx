@@ -17,7 +17,7 @@ export function useFilterQueryState<T>(
     (value: T | null) => {
       setQuery(value);
       if (cursorKey) {
-        setCursor(null);
+        setCursor('');
       }
     },
   ];

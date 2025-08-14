@@ -8,7 +8,11 @@ export const PageContainer = React.forwardRef<
   }
 >(({ children, className, ...props }, ref) => {
   return (
-    <div ref={ref} className={cn('flex flex-col h-full', className)} {...props}>
+    <div
+      ref={ref}
+      className={cn('flex flex-col h-full overflow-hidden', className)}
+      {...props}
+    >
       {children || 'Page'}
     </div>
   );

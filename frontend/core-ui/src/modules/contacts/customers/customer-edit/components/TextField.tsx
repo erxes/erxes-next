@@ -1,5 +1,7 @@
 import { cn, TextField } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
+import clsx from 'clsx';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { useCustomerEdit } from 'ui-modules';
 
 interface TextFieldProps {
   field: string;
@@ -13,21 +15,18 @@ export const TextFieldCustomer = ({
   ...props
 }: Omit<React.ComponentProps<typeof TextField>, 'scope' | 'onValueChange'> &
   TextFieldProps) => {
-  const { customersEdit } = useCustomersEdit();
+  const { customerEdit } = useCustomerEdit();
   const onSave = (newValue: string) => {
-    customersEdit(
-      {
-        variables: { _id, [field]: newValue },
-      },
-      [field],
-    );
+    customerEdit({
+      variables: { _id, [field]: newValue },
+    });
   };
 
   return (
     <TextField
       {...props}
       value={props.value}
-      scope={`customer-${_id}-${field}`}
+      scope={clsx(ContactsHotKeyScope.CustomersPage, field, _id)}
       onSave={onSave}
       className={cn('shadow-sm rounded-sm text-sm', props.className)}
     />

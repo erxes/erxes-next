@@ -1,5 +1,5 @@
 import { IconDeviceLaptop, IconMoon, IconSun } from '@tabler/icons-react';
-import { DropdownMenu, ToggleGroup, Tooltip } from 'erxes-ui';
+import { ToggleGroup, Tooltip } from 'erxes-ui';
 import { ThemeOption, themeState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 
