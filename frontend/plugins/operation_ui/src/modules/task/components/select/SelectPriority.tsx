@@ -9,13 +9,17 @@ import {
   RecordTableInlineCell,
   useFilterContext,
   useQueryState,
-  Badge,
   Button,
   PopoverScoped,
 } from 'erxes-ui';
 import { IconAlertSquareRounded } from '@tabler/icons-react';
 import { PROJECT_PRIORITIES_OPTIONS } from '@/project/constants';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import {
+  PriorityBadge,
+  PriorityIcon,
+  PriorityTitle,
+} from '@/task/components/select/PriorityInline';
 
 interface SelectPriorityContextType {
   priorities: typeof PROJECT_PRIORITIES_OPTIONS;
@@ -112,23 +116,7 @@ const SelectPriorityBadgeValue = ({
   return (
     <div className="flex gap-1 flex-wrap">
       {selectedPriorities.map((priority) => (
-        <Badge
-          key={priority.value}
-          variant="secondary"
-          className="flex items-center gap-1"
-          style={
-            priority.value !== 0
-              ? { backgroundColor: `${priority.IconColor}25` }
-              : undefined
-          }
-        >
-          <priority.Icon
-            className="w-3 h-3"
-            color={priority.IconColor}
-            stroke={2}
-          />
-          {priority.name}
-        </Badge>
+        <PriorityBadge key={priority.value} priority={priority.value} />
       ))}
     </div>
   );
@@ -152,12 +140,8 @@ const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
     <div className="flex gap-1 flex-wrap">
       {selectedPriorities.map((priority) => (
         <div className="flex items-center gap-2" key={priority.value}>
-          <priority.Icon
-            className="w-3 h-3"
-            color={priority.IconColor}
-            stroke={2}
-          />
-          <p className={cn('font-medium text-base')}>{priority.name}</p>
+          <PriorityIcon priority={priority.value} />
+          <PriorityTitle priority={priority.value} />
         </div>
       ))}
     </div>
@@ -179,12 +163,8 @@ const SelectPriorityCommandItem = ({
       }}
     >
       <div className="flex items-center gap-2 flex-1">
-        <priority.Icon
-          className="w-4 h-4"
-          color={priority.IconColor}
-          stroke={1.8}
-        />
-        <span className="font-medium">{priority.name}</span>
+        <PriorityIcon priority={priority.value} />
+        <PriorityTitle priority={priority.value} />
       </div>
       <Combobox.Check
         checked={priorityIds.includes(priority.value.toString())}

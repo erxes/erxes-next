@@ -53,6 +53,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
 
   const [debouncedDescriptionContent] = useDebounce(descriptionContent, 1000);
   const [debouncedName] = useDebounce(name, 1000);
+
   useEffect(() => {
     if (!debouncedName || debouncedName === _name) return;
     updateTask({
@@ -63,6 +64,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
+
   useEffect(() => {
     if (
       !debouncedDescriptionContent ||
@@ -117,7 +119,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         />
       </div>
       <Separator className="my-4" />
-      <div className="h-[60vh] overflow-y-auto">
+      <div className="min-h-56 overflow-y-auto">
         <BlockEditor
           editor={editor}
           onChange={handleDescriptionChange}
