@@ -13,9 +13,7 @@ import {
   Form,
   Popover,
   PopoverScoped,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   SelectTree,
   TextOverflowTooltip,
   useFilterContext,
@@ -293,14 +291,14 @@ export const SelectBranchesInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectBranchesValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectBranchesContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectBranchesProvider>
   );
 };
@@ -396,17 +394,17 @@ export const SelectBranchesCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconGitBranch />
             Branch
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectBranchesContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectBranchesProvider>
   );
 };

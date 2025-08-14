@@ -15,6 +15,7 @@ import {
   Separator,
   TextOverflowTooltip,
   Form,
+  Popover,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
@@ -32,10 +33,17 @@ import { emailSchema } from '../validations/emailValidation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
+import { EmailDisplay } from 'erxes-ui/modules/display';
+
+export enum IEmailStatus {
+  Verified = 'verified',
+  Unverified = 'unverified',
+}
 
 export interface IEmailField {
   email?: string;
-  status?: 'verified' | 'unverified';
+  status?: IEmailStatus.Verified | IEmailStatus.Unverified;
   isPrimary?: boolean;
 }
 
@@ -52,10 +60,19 @@ export const EmailFieldsProvider = ({
   recordId: string;
   onValueChange: (emails: TEmails) => void;
   noValidation?: boolean;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValidationStatusChange?: (
+    status: IEmailStatus.Verified | IEmailStatus.Unverified,
+  ) => void;
 }) => {
   return (
-    <EmailFieldsContext.Provider value={{ recordId, onValueChange, noValidation, onValidationStatusChange }}>
+    <EmailFieldsContext.Provider
+      value={{
+        recordId,
+        onValueChange,
+        noValidation,
+        onValidationStatusChange,
+      }}
+    >
       {children}
     </EmailFieldsContext.Provider>
   );
@@ -71,7 +88,7 @@ export const EmailListField = ({
   recordId: string;
   emails: TEmails;
   onValueChange: (emails: TEmails) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValidationStatusChange?: (status: IEmailStatus) => void;
   noValidation?: boolean;
 }) => {
   const setEmails = useSetAtom(emailsFamilyState(recordId));
@@ -84,7 +101,12 @@ export const EmailListField = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, setEmails]);
   return (
-    <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange} noValidation={noValidation} onValidationStatusChange={onValidationStatusChange}>
+    <EmailFieldsProvider
+      recordId={recordId}
+      onValueChange={onValueChange}
+      noValidation={noValidation}
+      onValidationStatusChange={onValidationStatusChange}
+    >
       <div className="p-1 space-y-1">
         <EmailList />
       </div>
@@ -130,7 +152,7 @@ const EmailField = ({ email, status, isPrimary }: IEmailField) => {
       )}
       size="lg"
     >
-      {status === 'verified' ? (
+      {status === IEmailStatus.Verified ? (
         <IconCircleDashedCheck className="text-success" />
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
@@ -146,7 +168,8 @@ const EmailOptions = ({
   status,
   isPrimary,
 }: IEmailField & { isPrimary?: boolean }) => {
-  const { recordId, onValueChange, noValidation, onValidationStatusChange } = useEmailFields();
+  const { recordId, onValueChange, noValidation, onValidationStatusChange } =
+    useEmailFields();
   const emails = useAtomValue(emailsFamilyState(recordId));
   const setEditingEmail = useSetAtom(editingEmailFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
@@ -167,9 +190,7 @@ const EmailOptions = ({
   const handleVerificationChange = (value: string) => {
     if (noValidation) return;
     if (value === status) return;
-    onValidationStatusChange?.(
-      value as 'verified' | 'unverified',
-    );
+    onValidationStatusChange?.(value as IEmailStatus);
   };
   const handleDeleteClick = () => {
     onValueChange?.(emails.filter((e) => e.email !== email));
@@ -208,7 +229,10 @@ const EmailOptions = ({
         {isPrimary && !noValidation && (
           <>
             <DropdownMenu.Separator />
-            <DropdownMenu.RadioGroup value={status} onValueChange={handleVerificationChange}>
+            <DropdownMenu.RadioGroup
+              value={status}
+              onValueChange={handleVerificationChange}
+            >
               <DropdownMenu.RadioItem value="verified">
                 <IconCircleDashedCheck className="text-success data-[state=active]:bg-muted " />
                 Verified
@@ -285,9 +309,11 @@ const EmailForm = () => {
   };
   const onEmailAdd = (email: string) => {
     if (emails.length === 0) {
-      onValueChange?.([{ email, status: 'unverified', isPrimary: true }]);
+      onValueChange?.([
+        { email, status: IEmailStatus.Unverified, isPrimary: true },
+      ]);
     } else {
-      onValueChange?.([...emails, { email, status: 'unverified' }]);
+      onValueChange?.([...emails, { email, status: IEmailStatus.Unverified }]);
     }
     form.reset();
   };
@@ -331,7 +357,7 @@ const EmailForm = () => {
           <Button
             variant="secondary"
             className="w-full"
-            type='submit'
+            type="submit"
             onClick={(e) => {
               if (!showEmailInput) {
                 e.preventDefault();

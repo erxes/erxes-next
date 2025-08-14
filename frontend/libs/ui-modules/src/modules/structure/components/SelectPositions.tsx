@@ -12,16 +12,15 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  PopoverScoped,
+  RecordTableInlineCell,
   SelectTree,
   TextOverflowTooltip,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
 import { PositionBadge } from './PositionBadge';
-import { IconBriefcase, IconPlus, IconX } from '@tabler/icons-react';
+import { IconBriefcase, IconPlus } from '@tabler/icons-react';
 import {
   CreatePositionForm,
   SelectPositionCreateContainer,
@@ -248,7 +247,7 @@ export const PositionsList = ({
 };
 
 export const SelectPositionsValue = () => {
-  const { selectedPositions, mode, positionIds } = useSelectPositionsContext();
+  const { mode, positionIds } = useSelectPositionsContext();
 
   if (positionIds && positionIds?.length > 1)
     return (
@@ -297,14 +296,14 @@ export const SelectPositionsInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectPositionsValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectPositionsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectPositionsProvider>
   );
 };
@@ -402,17 +401,17 @@ export const SelectPositionsCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconBriefcase />
             Position
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectPositionsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectPositionsProvider>
   );
 };

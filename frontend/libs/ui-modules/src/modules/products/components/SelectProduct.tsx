@@ -1,15 +1,24 @@
-import { SelectProductContext, useSelectProductContext } from '../contexts/SelectProductContext';
+import {
+  SelectProductContext,
+  useSelectProductContext,
+} from '../contexts/SelectProductContext';
 import { IProduct } from '../types/Product';
 import { useProducts } from '../hooks/useProducts';
 import { useDebounce } from 'use-debounce';
 import React, { useState } from 'react';
-import { cn, Combobox, Command, Filter, Form, Popover, PopoverScoped, useFilterContext, useQueryState } from 'erxes-ui';
-import { ProductsInline } from './ProductsInline';
 import {
-  RecordTablePopover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
+  cn,
+  Combobox,
+  Command,
+  Filter,
+  Form,
+  Popover,
+  PopoverScoped,
+  useFilterContext,
+  useQueryState,
+  RecordTableInlineCell,
 } from 'erxes-ui';
+import { ProductsInline } from './ProductsInline';
 import { IconShoppingCart } from '@tabler/icons-react';
 
 interface SelectProductProviderProps {
@@ -152,14 +161,14 @@ const SelectProductInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectProductValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectProductContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectProductProvider>
   );
 };
@@ -171,39 +180,43 @@ const SelectProductRoot = React.forwardRef<
       placeholder?: string;
       scope?: string;
     }
->(({ onValueChange, className, mode, value, placeholder, scope, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
+>(
+  (
+    { onValueChange, className, mode, value, placeholder, scope, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
 
-  return (
-    <SelectProductProvider
-    mode={mode}
-      value={value}
+    return (
+      <SelectProductProvider
+        mode={mode}
+        value={value}
+        onValueChange={(value) => {
+          if (mode === 'single') {
+            setOpen(false);
+          }
+          onValueChange?.(value);
+        }}
+      >
+        <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+          <Combobox.Trigger
+            className={cn('w-full inline-flex', className)}
+            variant="outline"
+            ref={ref}
+            {...props}
+          >
+            <SelectProductValue />
+          </Combobox.Trigger>
+          <Combobox.Content>
+            <SelectProductContent />
+          </Combobox.Content>
+        </PopoverScoped>
+      </SelectProductProvider>
+    );
+  },
+);
 
-      onValueChange={(value) => {
-        if (mode === 'single') {
-          setOpen(false);
-        }
-        onValueChange?.(value);
-      }}
-    >
-      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-        <Combobox.Trigger
-          className={cn('w-full inline-flex', className)}
-          variant="outline"
-          ref={ref}
-          {...props}
-        >
-          <SelectProductValue />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectProductContent />
-        </Combobox.Content>
-      </PopoverScoped>
-    </SelectProductProvider>
-  );
-})
-
-const SelectProductValue = ({placeholder}: {placeholder?: string}) => {
+const SelectProductValue = ({ placeholder }: { placeholder?: string }) => {
   const { productIds, products, setProducts } = useSelectProductContext();
 
   return (
@@ -215,7 +228,6 @@ const SelectProductValue = ({placeholder}: {placeholder?: string}) => {
     />
   );
 };
-
 
 export const SelectProductFilterItem = () => {
   return (
@@ -280,7 +292,7 @@ export const SelectProductFilterBar = ({
   return (
     <Filter.BarItem>
       <Filter.BarName>
-        <IconShoppingCart/>
+        <IconShoppingCart />
         {!iconOnly && 'Products'}
       </Filter.BarName>
       <SelectProductProvider
@@ -343,7 +355,6 @@ export const SelectProductFormItem = ({
     </SelectProductProvider>
   );
 };
-
 
 export const SelectProduct = Object.assign(SelectProductRoot, {
   Provider: SelectProductProvider,

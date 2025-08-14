@@ -1,7 +1,7 @@
 import { IApp } from '@/settings/apps/types';
 import { ColumnDef } from '@tanstack/table-core';
 import { format } from 'date-fns';
-import { RecordTableCellDisplay } from 'erxes-ui';
+import { RecordTableInlineCell } from 'erxes-ui';
 
 export const appsSettingsColumns: ColumnDef<IApp>[] = [
   {
@@ -9,9 +9,7 @@ export const appsSettingsColumns: ColumnDef<IApp>[] = [
     accessorKey: 'name',
     header: 'App Name',
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -19,9 +17,7 @@ export const appsSettingsColumns: ColumnDef<IApp>[] = [
     accessorKey: 'clientId',
     header: 'Client ID',
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -29,9 +25,7 @@ export const appsSettingsColumns: ColumnDef<IApp>[] = [
     accessorKey: 'clientSecret',
     header: 'Client Secret',
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -39,10 +33,10 @@ export const appsSettingsColumns: ColumnDef<IApp>[] = [
     accessorKey: 'createdAt',
     header: 'Created At',
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
+      <RecordTableInlineCell>
         {format(new Date(cell.getValue() as string), 'yyyy/MM/dd') ||
           'YYYY/MM/DD'}
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   },
 ];

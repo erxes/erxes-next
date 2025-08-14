@@ -76,7 +76,7 @@ export function RecordTableInlineCell({
       }}
     >
       <RecordTableInlineCellContainer {...props}>
-        <RecordTableCellDisplayContainer
+        <RecordTableInlineCellContainer
           className={containerClassName || ''}
           readOnly={!edit}
         >
@@ -85,7 +85,7 @@ export function RecordTableInlineCell({
             setIsInEditMode,
             handleSelect,
           })}
-        </RecordTableCellDisplayContainer>
+        </RecordTableInlineCellContainer>
         <RecordTableInlineCellEditContainer>
           {edit?.({
             isInEditMode,
@@ -121,7 +121,7 @@ export const RecordTableInlineCellContainer = React.forwardRef<
 
 RecordTableInlineCellContainer.displayName = 'RecordTableInlineCellContainer';
 
-export function RecordTableCellDisplayContainer({
+export function RecordTableInlineCellContainer({
   className,
   readOnly,
   ...props

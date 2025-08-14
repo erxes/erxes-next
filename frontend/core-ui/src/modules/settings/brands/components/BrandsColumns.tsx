@@ -4,10 +4,8 @@ import {
   Badge,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   RelativeDateDisplay,
   Textarea,
   TextOverflowTooltip,
@@ -53,7 +51,7 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -62,7 +60,7 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <Badge
               variant="secondary"
               onClick={(e) => {
@@ -73,11 +71,11 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
             >
               {cell.getValue() as string}
             </Badge>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent className="min-w-72">
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content className="min-w-72">
             <Input value={_name} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -111,7 +109,7 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
         setDescription(el.currentTarget.value);
       };
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -120,17 +118,17 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <TextOverflowTooltip value={cell.getValue() as string} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Textarea
               value={_description}
               onChange={onChange}
               disabled={loading}
             />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 350,
@@ -141,9 +139,9 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
     header: () => <RecordTable.InlineHead label="code" icon={IconHash} />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge>{cell.getValue() as string}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -156,9 +154,9 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableCellDisplay>
+          <RecordTableInlineCell>
             <RelativeDateDisplay.Value value={cell.getValue() as string} />
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         </RelativeDateDisplay>
       );
     },

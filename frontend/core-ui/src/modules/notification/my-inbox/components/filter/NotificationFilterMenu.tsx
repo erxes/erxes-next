@@ -1,13 +1,11 @@
 import { Command, Filter, ToggleGroup, useQueryState } from 'erxes-ui';
 import {
   IconCalendar,
-  IconCheck,
   IconEyeCancel,
   IconEyeCheck,
   IconEyeSearch,
   IconEyeUp,
   IconNotification,
-  IconPuzzle,
   IconUserUp,
 } from '@tabler/icons-react';
 

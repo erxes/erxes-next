@@ -13,7 +13,7 @@ import {
   Avatar,
   Badge,
   RecordTable,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   RelativeDateDisplay,
 } from 'erxes-ui';
 import { LogDetailDialog } from './LogDetail';
@@ -45,11 +45,11 @@ export const logColumns: ColumnDef<any>[] = [
     cell: ({ cell }) => {
       const { payload, ...doc } = cell?.row?.original || {};
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <LogDetailDialog
             doc={{ ...doc, payload: JSON.parse(payload || '{}') }}
           />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 20,
@@ -66,12 +66,12 @@ export const logColumns: ColumnDef<any>[] = [
       const { Icon, variant } = statusInfos[status] || {};
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge variant={variant as 'success' | 'destructive'}>
             <Icon className="size-4" />
             {status}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -82,11 +82,11 @@ export const logColumns: ColumnDef<any>[] = [
       <RecordTable.InlineHead icon={IconCalendarTime} label="Created At" />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
+      <RecordTableInlineCell>
         <RelativeDateDisplay.Value
           value={dayjs(cell.getValue() as string).format('YYYY-MM-DD HH:mm:ss')}
         />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   },
   {
@@ -96,9 +96,7 @@ export const logColumns: ColumnDef<any>[] = [
       <RecordTable.InlineHead icon={IconSourceCode} label="Source" />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -106,9 +104,7 @@ export const logColumns: ColumnDef<any>[] = [
     accessorKey: 'action',
     header: () => <RecordTable.InlineHead icon={IconSettings} label="Action" />,
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -119,14 +115,14 @@ export const logColumns: ColumnDef<any>[] = [
       const { user = {}, userId } = cell?.row?.original || {};
       if (!userId) {
         return (
-          <RecordTableCellDisplay className="text-border">
+          <RecordTableInlineCell className="text-border">
             No User
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         );
       }
       const { details } = user as IUser;
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Avatar className="h-6 w-6 rounded-full">
             <Avatar.Image
               src={readImage(details?.avatar)}
@@ -137,7 +133,7 @@ export const logColumns: ColumnDef<any>[] = [
             </Avatar.Fallback>
           </Avatar>
           {generateUserName(user)}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
