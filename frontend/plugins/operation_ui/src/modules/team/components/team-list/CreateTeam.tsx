@@ -16,12 +16,15 @@ import { useTeamForm } from '@/team/hooks/useTeamForm';
 import { useTeamCreate } from '@/team/hooks/useTeamCreate';
 import { TeamHotKeyScope, TTeamForm } from '@/team/types';
 import { CreateTeamForm } from '@/team/components/team-list/CreateTeamForm';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateTeam = () => {
   const form = useTeamForm({});
 
   const { addTeam, loading } = useTeamCreate();
   const { toast } = useToast();
+
+  const navigate = useNavigate();
 
   const [_open, _setOpen] = useState<boolean>(false);
   const setHotkeyScope = useSetHotkeyScope();
@@ -46,6 +49,7 @@ export const CreateTeam = () => {
         variables: data,
         onCompleted: () => {
           toast({ title: 'Success!' });
+          navigate('/operation/teams');
           form.reset();
           _setOpen(false);
         },
@@ -57,7 +61,7 @@ export const CreateTeam = () => {
           }),
       });
     },
-    [addTeam, toast, _setOpen, form],
+    [addTeam, toast, _setOpen, form, navigate],
   );
 
   return (

@@ -119,9 +119,14 @@ export const teamMutations = {
     { _id, role }: { _id: string; memberId: string; role: TeamMemberRoles },
     { models, user }: IContext,
   ) => {
+    const team = await models.Team.getTeam(_id);
+    if (!team) {
+      throw new Error('Team not found');
+    }
+
     await checkUserRole({
       models,
-      teamId: _id,
+      teamId: team._id,
       userId: user._id,
       allowedRoles: [TeamMemberRoles.ADMIN],
     });
