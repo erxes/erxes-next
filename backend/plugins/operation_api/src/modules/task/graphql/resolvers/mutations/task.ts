@@ -14,9 +14,9 @@ export const taskMutations = {
   updateTask: async (
     _parent: undefined,
     params: ITaskUpdate,
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
-    return models.Task.updateTask(params);
+    return models.Task.updateTask({ doc: params, userId: user._id });
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {
