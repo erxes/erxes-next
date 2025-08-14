@@ -27,7 +27,6 @@ export const types = `
 
 const activityFilterParams = `
     contentId: String!
-    module: String!
     ${GQL_CURSOR_PARAM_DEFS}
 `;
 

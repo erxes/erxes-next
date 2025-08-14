@@ -8,8 +8,11 @@ const PROJECT_ACTIVITY_ACTIONS = {
   LEAD_REMOVED: 'LEAD_REMOVED',
   PRIORITY_CHANGED: 'PRIORITY_CHANGED',
   TEAM_CHANGED: 'TEAM_CHANGED',
+  START_DATE_CREATED: 'START_DATE_CREATED',
   START_DATE_CHANGED: 'START_DATE_CHANGED',
   START_DATE_REMOVED: 'START_DATE_REMOVED',
+
+  END_DATE_CREATED: 'END_DATE_CREATED',
   END_DATE_CHANGED: 'END_DATE_CHANGED',
   END_DATE_REMOVED: 'END_DATE_REMOVED',
 } as const;
@@ -117,22 +120,33 @@ export const createProjectActivity = async ({
     {
       field: 'startDate',
       module: PROJECT_ACTIVITY_MODULES.START_DATE,
-      getAction: (newValue, oldValue) =>
-        newValue !== oldValue
+      defaultValue: undefined,
+      getAction: (newValue, oldValue) => {
+        console.log(oldValue, newValue);
+        if (!oldValue && newValue) {
+          return PROJECT_ACTIVITY_ACTIONS.START_DATE_CREATED;
+        }
+        return newValue !== oldValue
           ? newValue
             ? PROJECT_ACTIVITY_ACTIONS.START_DATE_CHANGED
             : PROJECT_ACTIVITY_ACTIONS.START_DATE_REMOVED
-          : null,
+          : null;
+      },
     },
     {
       field: 'targetDate',
       module: PROJECT_ACTIVITY_MODULES.END_DATE,
-      getAction: (newValue, oldValue) =>
-        newValue !== oldValue
+      defaultValue: undefined,
+      getAction: (newValue, oldValue) => {
+        if (!oldValue && newValue) {
+          return PROJECT_ACTIVITY_ACTIONS.END_DATE_CREATED;
+        }
+        return newValue !== oldValue
           ? newValue
             ? PROJECT_ACTIVITY_ACTIONS.END_DATE_CHANGED
             : PROJECT_ACTIVITY_ACTIONS.END_DATE_REMOVED
-          : null,
+          : null;
+      },
     },
   ];
 

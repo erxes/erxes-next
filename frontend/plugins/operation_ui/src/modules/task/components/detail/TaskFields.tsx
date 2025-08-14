@@ -14,6 +14,7 @@ import {
 } from '@/task/components/select';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
+import { ActivityList } from '@/activity/components/ActivityList';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -123,6 +124,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
           className="min-h-full"
         />
       </div>
+      <ActivityList contentId={taskId} />
     </div>
   );
 };
