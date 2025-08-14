@@ -36,14 +36,18 @@ const SelectMemberProvider = ({
   children: React.ReactNode;
   mode?: 'single' | 'multiple';
   value?: string[] | string;
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string[] | string | null) => void;
   members?: IUser[];
 }) => {
   const [_members, setMembers] = useState<IUser[]>(members || []);
   const isSingleMode = mode === 'single';
 
-  const onSelect = (member: IUser) => {
-    if (!member) return;
+  const onSelect = (member: IUser | null) => {
+    if (!member) {
+      setMembers([]);
+      onValueChange?.(mode === 'single' ? null : []);
+      return;
+    }
     if (isSingleMode) {
       setMembers([member]);
       return onValueChange?.(member._id);
@@ -119,6 +123,16 @@ const SelectMemberCommandItem = ({ user }: { user: IUser }) => {
   );
 };
 
+const SelectMemberNoAssigneeItem = () => {
+  const { onSelect, memberIds } = useSelectMemberContext();
+  return (
+    <Command.Item value="no-assignee" onSelect={() => onSelect(null)}>
+      <MembersInline memberIds={[]} placeholder="Unnamed user" />
+      <Combobox.Check checked={!memberIds || memberIds.length === 0} />
+    </Command.Item>
+  );
+};
+
 const SelectMemberContent = () => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
@@ -151,6 +165,7 @@ const SelectMemberContent = () => {
             <Command.Separator className="my-1" />
           </>
         )}
+        {!loading && <SelectMemberNoAssigneeItem />}
 
         {!loading &&
           [currentUser, ...users]
@@ -185,7 +200,7 @@ export const SelectMemberFilterView = ({
   queryKey,
   mode = 'single',
 }: {
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string[] | string | null) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
 }) => {
@@ -218,7 +233,7 @@ export const SelectMemberFilterBar = ({
   mode = 'single',
 }: {
   iconOnly?: boolean;
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string[] | string | null) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
 }) => {
@@ -241,11 +256,7 @@ export const SelectMemberFilterBar = ({
         mode={mode}
         value={assignedTo || (mode === 'single' ? '' : [])}
         onValueChange={(value) => {
-          if (value.length > 0) {
-            setAssignedTo(value as string[] | string);
-          } else {
-            setAssignedTo(null);
-          }
+          setAssignedTo(null);
           setOpen(false);
           onValueChange?.(value);
         }}
@@ -435,6 +446,7 @@ export const SelectMember = Object.assign(SelectMemberRoot, {
   Value: SelectMemberValue,
   Content: SelectMemberContent,
   CommandItem: SelectMemberCommandItem,
+  NoAssigneeItem: SelectMemberNoAssigneeItem,
   FilterItem: SelectMemberFilterItem,
   FilterView: SelectMemberFilterView,
   FilterBar: SelectMemberFilterBar,

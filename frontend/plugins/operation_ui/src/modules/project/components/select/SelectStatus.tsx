@@ -112,13 +112,11 @@ const SelectStatusValue = ({
       {selectedStatuses.map((status) => (
         <div className="flex items-center gap-2" key={status.value}>
           <status.Icon
-            className="w-3 h-3"
+            className="size-4 flex-none"
             color={status.IconColor}
             stroke={2}
           />
-          <p className={cn('font-medium text-base ', className)}>
-            {status.name}
-          </p>
+          <p className={cn('font-medium', className)}>{status.name}</p>
         </div>
       ))}
     </div>

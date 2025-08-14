@@ -111,10 +111,8 @@ const SelectEstimatedPointValue = ({
     <div className="flex gap-1 ">
       {selectedEstimates.map((estimate) => (
         <div className="flex items-center gap-2" key={estimate.value}>
-          <IconHash className="w-3 h-3" stroke={2} />
-          <p className={cn('font-medium text-base ', className)}>
-            {estimate.label}
-          </p>
+          <IconHash className="size-4 text-accent-foreground" />
+          <p className={cn('font-medium', className)}>{estimate.label}</p>
         </div>
       ))}
     </div>

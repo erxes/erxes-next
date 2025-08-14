@@ -23,10 +23,9 @@ export const ProgressByMember = ({ projectId }: { projectId: string }) => {
   return (
     <div className="space-y-1">
       {projectProgressByMember?.map((item) => (
-        <HoverCard openDelay={150} closeDelay={150}>
-          <HoverCard.Trigger>
+        <HoverCard openDelay={150} closeDelay={150} key={item.assigneeId}>
+          <HoverCard.Trigger asChild>
             <Button
-              key={item.assigneeId}
               className="flex justify-start gap-2 items-center text-sm font-normal h-10 py-1"
               asChild
               variant="ghost"
@@ -78,25 +77,25 @@ export const ProgressByMember = ({ projectId }: { projectId: string }) => {
               </div>
             </Button>
           </HoverCard.Trigger>
-          <HoverCard.Content side="left" className="w-48 p-3">
-            <div className="flex flex-col gap-1 text-accent-foreground">
+          <HoverCard.Content side="left" className="w-32 p-3">
+            <div className="flex flex-col gap-1 text-muted-foreground">
               <p className="text-sm flex items-center gap-1">
                 <ProgressDot status="total" />
-                Total Scope:
+                total:
                 <span className="text-foreground ml-auto">
                   {item.totalScope}
                 </span>
               </p>
               <p className="text-sm flex items-center gap-1 ">
                 <ProgressDot status="completed" />
-                Completed Scope:
+                completed:
                 <span className="text-foreground ml-auto">
                   {item.totalCompletedScope}
                 </span>
               </p>
               <p className="text-sm flex items-center gap-1 ">
                 <ProgressDot status="started" />
-                Started Scope:
+                started:
                 <span className="text-foreground ml-auto">
                   {item.totalStartedScope}
                 </span>

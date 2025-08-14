@@ -13,9 +13,9 @@ export const ProgressDot = ({
         <Tooltip.Trigger>
           <IconCircleFilled
             className={cn('size-2', {
-              'text-chart-1': status === 'started',
-              'text-chart-2': status === 'completed',
-              'text-muted-foreground': status === 'total',
+              'text-warning': status === 'started',
+              'text-success': status === 'completed',
+              'text-primary': status === 'total',
             })}
           />
         </Tooltip.Trigger>

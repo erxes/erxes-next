@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import { IUser } from '../types/TeamMembers';
-import { IconUserCircle } from '@tabler/icons-react';
+import { IconUserCancel, IconUserCircle } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules/states';
 import { useAtomValue } from 'jotai';
 import { useMemberInline } from '../hooks';
@@ -158,11 +158,11 @@ export const MembersInlineAvatar = ({
               {...props}
               className={cn(className, 'items-center justify-center')}
             >
-              <IconUserCircle className="text-muted-foreground !size-5 flex-none" />
+              <IconUserCircle className="text-muted-foreground size-4 flex-none" />
             </Avatar>
           </Tooltip.Trigger>
           <Tooltip.Content>
-            <p>You</p>
+            <p>{currentUser.details?.fullName}</p>
           </Tooltip.Content>
         </Tooltip>
       );
@@ -191,7 +191,8 @@ export const MembersInlineAvatar = ({
     );
   };
 
-  if (members.length === 0) return null;
+  if (members.length === 0)
+    return <IconUserCancel className="text-muted-foreground flex-none" />;
 
   if (members.length === 1) return renderAvatar(members[0]);
 
@@ -229,7 +230,7 @@ export const MembersInlineTitle = ({ className }: { className?: string }) => {
   const isCurrentUser = members.some((m) => m._id === currentUser._id);
 
   const getDisplayValue = () => {
-    if (members.length === 0) return undefined;
+    if (!members || members.length === 0) return 'No assignee';
 
     if (members.length === 1) {
       return isCurrentUser ? 'Current User' : members?.[0].details?.fullName;

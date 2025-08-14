@@ -5,9 +5,9 @@ import { format, parseISO, endOfDay, isAfter, subDays } from 'date-fns';
 
 export const ProgressChart = ({ projectId }: { projectId: string }) => {
   const statusColors = {
-    started: '#F59E0B', // in progress
-    completed: '#10B981', // done
-    totalScope: '#6B7280', // backlog буюу жишээ өнгө
+    started: 'hsl(var(--warning))', // in progress
+    completed: 'hsl(var(--success))', // done
+    totalScope: 'hsl(var(--primary))', // backlog буюу жишээ өнгө
   };
 
   const chartConfig = {
@@ -71,7 +71,7 @@ export const ProgressChart = ({ projectId }: { projectId: string }) => {
             dataKey="totalScope"
             type="monotone"
             stroke={statusColors.totalScope}
-            fill={`${statusColors.totalScope}33`} // 20% opacity (16-р системтэй 33 hex)
+            fill={`hsla(var(--primary) / 0.2)`}
             strokeWidth={2}
             connectNulls={true}
             strokeLinecap="round"
@@ -82,7 +82,7 @@ export const ProgressChart = ({ projectId }: { projectId: string }) => {
             dataKey="started"
             type="monotone"
             stroke={statusColors.started}
-            fill={`${statusColors.started}33`}
+            fill={`hsla(var(--warning) / 0.2)`}
             strokeWidth={2}
             dot={false}
             connectNulls={false}
@@ -92,7 +92,7 @@ export const ProgressChart = ({ projectId }: { projectId: string }) => {
             dataKey="completed"
             type="monotone"
             stroke={statusColors.completed}
-            fill={`${statusColors.completed}33`}
+            fill={`hsla(var(--success) / 0.2)`}
             strokeWidth={2}
             dot={false}
             connectNulls={false}

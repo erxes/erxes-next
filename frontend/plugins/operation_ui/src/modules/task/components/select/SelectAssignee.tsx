@@ -86,11 +86,11 @@ export const SelectTeamMemberContent = ({
           </>
         )}
 
+        {!loading && <SelectMember.NoAssigneeItem />}
         {!loading &&
           membersList.map((user: IUser) => (
             <SelectMember.CommandItem key={user._id} user={user} />
           ))}
-
         <Combobox.FetchMore
           fetchMore={handleFetchMore}
           currentLength={users.length}
@@ -210,7 +210,7 @@ export const SelectAssigneeInlineCell = ({
   teamIds?: string[] | string;
   value?: string;
   id?: string;
-  onValueChange?: (value: string | string[]) => void;
+  onValueChange?: (value: string | string[] | null) => void;
   scope?: string;
 } & Omit<
   React.ComponentProps<typeof SelectAssigneeProvider>,
@@ -219,7 +219,7 @@ export const SelectAssigneeInlineCell = ({
   const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
-  const handleValueChange = (value: string | string[]) => {
+  const handleValueChange = (value: string | string[] | null) => {
     if (id) {
       updateTask({
         variables: {
@@ -240,7 +240,7 @@ export const SelectAssigneeInlineCell = ({
       {...props}
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Trigger className="font-medium">
           <SelectAssigneeValue placeholder="Assignee not specified" />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content>
@@ -363,7 +363,7 @@ export const SelectAssigneeDetail = React.forwardRef<
   const [open, setOpen] = useState(false);
   const { updateTask } = useUpdateTask();
 
-  const handleValueChange = (value: string | string[]) => {
+  const handleValueChange = (value: string | string[] | null) => {
     if (id) {
       updateTask({
         variables: {

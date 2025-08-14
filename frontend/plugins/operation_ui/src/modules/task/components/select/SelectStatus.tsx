@@ -102,10 +102,10 @@ const SelectStatusValue = ({
       {(() => {
         const Icon = TeamStatusIcons[selectedStatus.type];
         return (
-          <Icon className="w-4 h-4" color={selectedStatus.color} stroke={2} />
+          <Icon className="size-4 flex-none" color={selectedStatus.color} />
         );
       })()}
-      <p className={cn('font-medium text-base ', className)}>
+      <p className={cn('font-medium text-sm', className)}>
         {selectedStatus.label}
       </p>
     </div>
@@ -318,7 +318,7 @@ export const SelectStatusInlineCell = ({
         scope={scope}
         closeOnEnter
       >
-        <RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Trigger className="text-sm">
           <SelectStatusValue placeholder={''} />
         </RecordTableInlineCell.Trigger>
         <RecordTableInlineCell.Content className="max-w-72">

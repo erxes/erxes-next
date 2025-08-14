@@ -84,10 +84,8 @@ const ProjectsInline: React.FC<ProjectsInlineProps> = ({
     return (
       <>
         <div className={cn('flex items-center gap-2', className)}>
-          <IconClipboard className="h-4 w-4" />
-          <span className="truncate text-base font-medium">
-            {project?.name}
-          </span>
+          <IconClipboard className="size-4 text-accent-foreground" />
+          <span className="truncate font-medium">{project?.name}</span>
         </div>
         <ProjectsInlineEffectComponent
           projectId={projectIds[0]}
@@ -474,7 +472,10 @@ SelectProjectRoot.displayName = 'SelectProjectRoot';
 
 export const SelectProjectDetail = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
-  Omit<React.ComponentProps<typeof SelectProjectProvider>, 'children' | 'onValueChange' > & {
+  Omit<
+    React.ComponentProps<typeof SelectProjectProvider>,
+    'children' | 'onValueChange'
+  > & {
     className?: string;
     placeholder?: string;
     id?: string;
