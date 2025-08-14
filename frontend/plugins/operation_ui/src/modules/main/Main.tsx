@@ -28,6 +28,8 @@ const taskMain = () => {
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="tasks" element={<TasksPage />} />
 
+          <Route path="tasks/:taskId" element={<TaskDetailPage />} />
+
           <Route path="projects/:projectId" element={<ProjectLayout />}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<ProjectDetailPage />} />

@@ -77,7 +77,7 @@ export const tasksColumns = (
                 variant="secondary"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/operation/tasks/${cell.row.original._id}`);
+                  navigate(`${cell.row.original._id}`);
                 }}
               >
                 {name}
