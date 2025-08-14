@@ -1,23 +1,13 @@
-import { IModels } from '~/connectionResolvers';
-import { IProject, IProjectDocument } from '@/project/@types/project';
+import type { IModels } from '~/connectionResolvers';
+import type { IProject, IProjectDocument } from '@/project/@types/project';
 
-const PROJECT_ACTIVITY_ACTIONS = {
-  NAME_CHANGED: 'NAME_CHANGED',
-  STATUS_CHANGED: 'STATUS_CHANGED',
-  LEAD_CHANGED: 'LEAD_CHANGED',
-  LEAD_REMOVED: 'LEAD_REMOVED',
-  PRIORITY_CHANGED: 'PRIORITY_CHANGED',
-  TEAM_CHANGED: 'TEAM_CHANGED',
-  START_DATE_CREATED: 'START_DATE_CREATED',
-  START_DATE_CHANGED: 'START_DATE_CHANGED',
-  START_DATE_REMOVED: 'START_DATE_REMOVED',
-
-  END_DATE_CREATED: 'END_DATE_CREATED',
-  END_DATE_CHANGED: 'END_DATE_CHANGED',
-  END_DATE_REMOVED: 'END_DATE_REMOVED',
+const ACTIONS = {
+  CREATED: 'CREATED',
+  CHANGED: 'CHANGED',
+  REMOVED: 'REMOVED',
 } as const;
 
-const PROJECT_ACTIVITY_MODULES = {
+const MODULES = {
   NAME: 'NAME',
   STATUS: 'STATUS',
   LEAD: 'LEAD',
@@ -27,11 +17,23 @@ const PROJECT_ACTIVITY_MODULES = {
   END_DATE: 'END_DATE',
 } as const;
 
-type ProjectFieldChange = {
-  field: keyof IProject;
-  module: string;
-  defaultValue?: string | number;
-  getAction: (newValue: any, oldValue: any) => string | null;
+const getModule = (field: string) => {
+  const module = MODULES[field.toUpperCase() as keyof typeof MODULES];
+
+  if (module) return module;
+
+  switch (field) {
+    case 'leadId':
+      return MODULES.LEAD;
+    case 'teamIds':
+      return MODULES.TEAM;
+    case 'startDate':
+      return MODULES.START_DATE;
+    case 'targetDate':
+      return MODULES.END_DATE;
+    default:
+      return null;
+  }
 };
 
 export const createProjectActivity = async ({
@@ -42,12 +44,12 @@ export const createProjectActivity = async ({
 }: {
   models: IModels;
   project: IProjectDocument;
-  doc: IProject;
+  doc: Partial<IProject>;
   userId: string;
 }) => {
   const toStr = (val: any) => (val != null ? String(val) : undefined);
 
-  const createActivity = async (
+  const logActivity = async (
     action: string,
     newValue: any,
     previousValue: any,
@@ -65,101 +67,31 @@ export const createProjectActivity = async ({
     });
   };
 
-  const fieldChanges: ProjectFieldChange[] = [
-    {
-      field: 'name',
-      module: PROJECT_ACTIVITY_MODULES.NAME,
-      getAction: (newValue, oldValue) =>
-        newValue !== oldValue ? PROJECT_ACTIVITY_ACTIONS.NAME_CHANGED : null,
-    },
-    {
-      field: 'status',
-      module: PROJECT_ACTIVITY_MODULES.STATUS,
-      getAction: (newValue, oldValue) =>
-        newValue !== oldValue ? PROJECT_ACTIVITY_ACTIONS.STATUS_CHANGED : null,
-    },
-    {
-      field: 'leadId',
-      module: PROJECT_ACTIVITY_MODULES.LEAD,
-      getAction: (newValue, oldValue) =>
-        newValue !== oldValue
+  for (const field in doc) {
+    const newValue = doc[field as keyof IProject];
+    const oldValue = project[field as keyof IProject];
+
+    const module = getModule(field);
+
+    if (!module) continue;
+
+    let action: string | null = null;
+
+    if (field === 'teamIds') {
+      return;
+    } else if (['startDate', 'targetDate'].includes(field)) {
+      action =
+        !oldValue && newValue
+          ? ACTIONS.CREATED
+          : newValue !== oldValue
           ? newValue
-            ? PROJECT_ACTIVITY_ACTIONS.LEAD_CHANGED
-            : PROJECT_ACTIVITY_ACTIONS.LEAD_REMOVED
-          : null,
-    },
-    {
-      field: 'priority',
-      module: PROJECT_ACTIVITY_MODULES.PRIORITY,
-      getAction: (newValue, oldValue) =>
-        newValue !== oldValue
-          ? PROJECT_ACTIVITY_ACTIONS.PRIORITY_CHANGED
-          : null,
-    },
-    {
-      field: 'teamIds',
-      module: PROJECT_ACTIVITY_MODULES.TEAM,
-      getAction: (newValue: string[] = [], oldValue: string[] = []) => {
-        // Массив байгаа эсэхийг шалгах
-        if (!Array.isArray(newValue) || !Array.isArray(oldValue)) return null;
-
-        // Урт нь өөр бол шууд өөрчлөгдсөн гэж үзнэ
-        if (newValue.length !== oldValue.length) {
-          return PROJECT_ACTIVITY_ACTIONS.TEAM_CHANGED;
-        }
-
-        // Агуулга өөр эсэхийг шалгах
-        const changed =
-          newValue.some((id) => !oldValue.includes(id)) ||
-          oldValue.some((id) => !newValue.includes(id));
-
-        return changed ? PROJECT_ACTIVITY_ACTIONS.TEAM_CHANGED : null;
-      },
-    },
-
-    {
-      field: 'startDate',
-      module: PROJECT_ACTIVITY_MODULES.START_DATE,
-      defaultValue: undefined,
-      getAction: (newValue, oldValue) => {
-        console.log(oldValue, newValue);
-        if (!oldValue && newValue) {
-          return PROJECT_ACTIVITY_ACTIONS.START_DATE_CREATED;
-        }
-        return newValue !== oldValue
-          ? newValue
-            ? PROJECT_ACTIVITY_ACTIONS.START_DATE_CHANGED
-            : PROJECT_ACTIVITY_ACTIONS.START_DATE_REMOVED
+            ? ACTIONS.CHANGED
+            : ACTIONS.REMOVED
           : null;
-      },
-    },
-    {
-      field: 'targetDate',
-      module: PROJECT_ACTIVITY_MODULES.END_DATE,
-      defaultValue: undefined,
-      getAction: (newValue, oldValue) => {
-        if (!oldValue && newValue) {
-          return PROJECT_ACTIVITY_ACTIONS.END_DATE_CREATED;
-        }
-        return newValue !== oldValue
-          ? newValue
-            ? PROJECT_ACTIVITY_ACTIONS.END_DATE_CHANGED
-            : PROJECT_ACTIVITY_ACTIONS.END_DATE_REMOVED
-          : null;
-      },
-    },
-  ];
-
-  for (const { field, module, getAction, defaultValue } of fieldChanges) {
-    const newValue = doc[field];
-    const oldValue = project[field];
-
-    if (oldValue !== defaultValue && newValue && newValue !== oldValue) {
-      const action = getAction(newValue, oldValue);
-
-      if (action) {
-        await createActivity(action, newValue, oldValue, module);
-      }
+    } else {
+      action = newValue !== oldValue ? ACTIONS.CHANGED : null;
     }
+
+    if (action) await logActivity(action, newValue, oldValue, module);
   }
 };
