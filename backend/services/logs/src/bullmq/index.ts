@@ -8,6 +8,7 @@ import { AFTER_PROCESS_CONSTANTS, LOG_STATUSES } from '~/constants';
 import { IJobData } from '~/types';
 import { handleAfterProcess } from './afterProcess';
 import { handleMongoChangeEvent } from './mongo';
+import { handleNotifications } from '~/bullmq/notifications';
 
 export const initMQWorkers = async (redis: any) => {
   console.info('Starting worker ...');
@@ -81,6 +82,7 @@ export const initMQWorkers = async (redis: any) => {
                   `Error occured during afterProcess job ${id}: ${err.message}`,
                 );
               });
+              handleNotifications({ subdomain, models, logDoc: result });
             }
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);
