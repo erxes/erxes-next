@@ -241,6 +241,8 @@ export const facebookCreateIntegration = async (
     if (process.env.NODE_ENV !== 'production') {
       domain = `${DOMAIN}/pl:facebook`;
     }
+    console.log(ENDPOINT_URL, 'ENDPOINT_URL');
+    console.log(DOMAIN, 'DOMAIN');
 
     // Register the endpoint if ENDPOINT_URL is defined
     if (ENDPOINT_URL) {

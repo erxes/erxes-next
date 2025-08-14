@@ -370,7 +370,6 @@ export const loadClass = (models: IModels, subdomain: string) => {
       doc: IExternalIntegrationParams,
       userId: string,
     ): Promise<IIntegrationDocument> {
-      console.log(doc, 'doc');
       return models.Integrations.createIntegration(doc, userId);
     }
 
