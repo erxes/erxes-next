@@ -1,6 +1,6 @@
 import { CoreNotificationContent } from '@/notification/my-inbox/components/contents/CoreNotificationContent';
 import { SystemNotificationContents } from '@/notification/my-inbox/components/contents/system/SystemNotificationContents';
-import { UnknowSystemNotificationContent } from '@/notification/my-inbox/components/contents/system/UnknowSystemNotificationContent';
+import { UnknownSystemNotificationContent } from '@/notification/my-inbox/components/contents/system/UnknownSystemNotificationContent';
 import { NoNotificationSelected } from '@/notification/my-inbox/components/NoNotificationSelected';
 import { NotificationContentSkeleton } from '@/notification/my-inbox/components/NotificationContentSkeleton';
 import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
@@ -15,6 +15,7 @@ import {
   IconNotificationOff,
 } from '@tabler/icons-react';
 import { Button, cn, Label, Tooltip } from 'erxes-ui';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PageHeader } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
@@ -95,9 +96,11 @@ const NotificationContentWrapper = ({
         template as keyof typeof SystemNotificationContents
       ];
     return SystemComponent ? (
-      <SystemComponent />
+      <Suspense fallback={<NotificationContentSkeleton />}>
+        <SystemComponent />
+      </Suspense>
     ) : (
-      <UnknowSystemNotificationContent />
+      <UnknownSystemNotificationContent />
     );
   }
 

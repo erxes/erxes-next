@@ -1,8 +1,6 @@
-import { OnBoarding } from '~/pages/onboarding/Onboarding';
+import { IconKeyboard, IconSun } from '@tabler/icons-react';
+import { Button, Card } from 'erxes-ui';
 import { motion } from 'framer-motion';
-import { Button, Card, PageContainer } from 'erxes-ui';
-import { IconSun, IconKeyboard } from '@tabler/icons-react';
-import { PageHeader } from 'ui-modules';
 
 interface FeatureProps {
   icon: React.ReactNode;
