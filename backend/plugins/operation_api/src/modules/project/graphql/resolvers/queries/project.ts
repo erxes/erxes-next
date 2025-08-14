@@ -89,11 +89,10 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
-    const tasks = await models.Task.countDocuments({
-      projectId: _id,
-      status: { $in: completedStatusIds },
-    });
-    console.log(tasks);
+    const canceledStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.CANCELLED] },
+    }).distinct('_id');
 
     const result = await models.Task.aggregate([
       {
@@ -104,6 +103,7 @@ export const projectQueries = {
       {
         $facet: {
           totalScope: [
+            { $match: { status: { $nin: canceledStatusIds } } },
             {
               $group: {
                 _id: null,
@@ -205,6 +205,11 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
+    const canceledStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.CANCELLED] },
+    }).distinct('_id');
+
     return models.Task.aggregate([
       {
         $match: {
@@ -214,6 +219,7 @@ export const projectQueries = {
       {
         $facet: {
           totalScope: [
+            { $match: { status: { $nin: canceledStatusIds } } },
             {
               $group: {
                 _id: '$assigneeId',
@@ -355,6 +361,11 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
+    const canceledStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.CANCELLED] },
+    }).distinct('_id');
+
     return models.Task.aggregate([
       {
         $match: {
@@ -364,6 +375,7 @@ export const projectQueries = {
       {
         $facet: {
           totalScope: [
+            { $match: { status: { $nin: canceledStatusIds } } },
             {
               $group: {
                 _id: '$teamId',
@@ -511,6 +523,11 @@ export const projectQueries = {
       type: { $in: [STATUS_TYPES.COMPLETED] },
     }).distinct('_id');
 
+    const canceledStatusIds = await models.Status.find({
+      teamId: { $in: teamIds },
+      type: { $in: [STATUS_TYPES.CANCELLED] },
+    }).distinct('_id');
+
     const [totalScopeResult] = await models.Task.aggregate([
       {
         $match: { projectId: _id },
@@ -519,6 +536,7 @@ export const projectQueries = {
         $group: {
           _id: null,
           totalScope: {
+            $match: { status: { $nin: canceledStatusIds } },
             $sum: {
               $cond: [
                 {
