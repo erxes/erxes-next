@@ -185,7 +185,7 @@ export const SelectEstimatedPointInlineCell = ({
 
   if (!estimateChoices) {
     return (
-      <div className="text-muted-foreground p-2">Not enabled estimate</div>
+      <div className="text-muted-foreground p-2">Estimate not enabled</div>
     );
   }
 
@@ -392,7 +392,7 @@ export const SelectEstimatedPointDetail = React.forwardRef<
         className="h-7 text-muted-foreground"
         disabled
       >
-        Not enabled estimate
+        Estimate not enabled
       </Button>
     );
   }
