@@ -17,12 +17,9 @@ export const TeamMemberEmailField = ({
 
   const onSave = () => {
     if (_email !== email) {
-      usersEdit(
-        {
-          variables: { _id, email: _email },
-        },
-        ['email'],
-      );
+      usersEdit({
+        variables: { _id, email: _email },
+      });
     }
   };
 

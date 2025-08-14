@@ -17,6 +17,7 @@ export interface ISelectDepartmentsContext {
   newDepartmentName: string;
   setNewDepartmentName: (DepartmentName: string) => void;
   mode: 'single' | 'multiple';
+  departmentIds?: string[];
 }
 
 export type ISelectDepartmentsProviderProps = {
@@ -24,6 +25,7 @@ export type ISelectDepartmentsProviderProps = {
   value?: string[] | string;
   onValueChange?: (Departments?: string[] | string) => void;
   mode?: 'single' | 'multiple';
+  departmentIds?: string[];
   children?: React.ReactNode;
   options?: (newSelectedDepartmentIds: string[]) => MutationHookOptions<
     {

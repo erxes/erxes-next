@@ -9,6 +9,9 @@ export interface IPermission {
   action: string;
   allowed: boolean;
 
+  userId?: string;
+  groupId?: string;
+
   group?: {
     id: string;
     name: string;

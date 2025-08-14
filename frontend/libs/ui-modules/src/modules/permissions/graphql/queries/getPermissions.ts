@@ -29,6 +29,8 @@ export const GET_PERMISSIONS = gql`
         action
         allowed
         module
+        userId
+        groupId
         user {
           _id
           email

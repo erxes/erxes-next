@@ -32,16 +32,10 @@ const PROFILE_ADVANCED_FIELDS = [
     field: { element: 'input', attributes: { type: 'text' } },
   },
   {
-    fieldLabel: 'Position',
-    fieldName: 'position',
-    fieldPath: 'details',
-    field: { element: 'input', attributes: { type: 'text' } },
-  },
-  {
     fieldLabel: 'Phone (Operator)',
     fieldName: 'operatorPhone',
     fieldPath: 'details',
-    field: { element: 'input', attributes: { type: 'text' } },
+    field: { element: 'telephone' },
   },
   {
     fieldLabel: 'Join Date',
