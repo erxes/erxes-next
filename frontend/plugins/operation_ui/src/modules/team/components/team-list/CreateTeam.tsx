@@ -47,9 +47,9 @@ export const CreateTeam = () => {
     async (data) => {
       addTeam({
         variables: data,
-        onCompleted: () => {
+        onCompleted: (data) => {
           toast({ title: 'Success!' });
-          navigate('/operation/teams');
+          navigate(`/operation/team/${data.createTeam._id}`);
           form.reset();
           _setOpen(false);
         },
