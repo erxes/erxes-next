@@ -30,6 +30,22 @@ export const types = `
     pageInfo: PageInfo
     totalCount: Int,
   }
+
+  input TaskUpdate {
+    name: String
+    description: String
+    teamId: String
+    status: String
+    priority: Int
+    labelIds: [String]
+    tagIds: [String]
+    assigneeId: String
+    startDate: Date
+    targetDate: Date
+    cycleId: String
+    projectId: String
+    estimatePoint: Int
+  }
 `;
 
 const taskFilterParams = `
@@ -94,6 +110,6 @@ export const queries = `
 
 export const mutations = `
   createTask(${createTaskParams}): Task
-  updateTask(${updateTaskParams}): Task
+  updateTask(${updateTaskParams} input: TaskUpdate): Task
   removeTask(_id: String!): Task
 `;

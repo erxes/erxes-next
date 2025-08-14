@@ -55,7 +55,25 @@ export const createProjectActivity = async ({
     previousValue: any,
     module: string,
   ) => {
-    await models.Activity.createActivity({
+    const lastActivity = await models.Activity.findOne({
+      contentId: project._id,
+    }).sort({ createdAt: -1 });
+
+    if (lastActivity?.module === module && lastActivity?.action === action) {
+      return models.Activity.updateOne({
+        _id: lastActivity._id,
+        contentId: project._id,
+        action,
+        module,
+        metadata: {
+          newValue: toStr(newValue),
+          previousValue: toStr(previousValue),
+        },
+        createdBy: userId,
+      });
+    }
+
+    return models.Activity.createActivity({
       contentId: project._id,
       action,
       module,

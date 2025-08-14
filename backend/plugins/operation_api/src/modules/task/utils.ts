@@ -58,7 +58,25 @@ export const createTaskActivity = async ({
     previousValue: any,
     module: string,
   ) => {
-    await models.Activity.createActivity({
+    const lastActivity = await models.Activity.findOne({
+      contentId: task._id,
+    }).sort({ createdAt: -1 });
+
+    if (lastActivity?.module === module && lastActivity?.action === action) {
+      return models.Activity.updateOne({
+        _id: lastActivity._id,
+        contentId: task._id,
+        action,
+        module,
+        metadata: {
+          newValue: toStr(newValue),
+          previousValue: toStr(previousValue),
+        },
+        createdBy: userId,
+      });
+    }
+
+    return models.Activity.createActivity({
       contentId: task._id,
       action,
       module,
@@ -90,6 +108,7 @@ export const createTaskActivity = async ({
             : ACTIONS.REMOVED
           : null;
     } else {
+      // Бусад бүх талбарын хувьд
       action = newValue !== oldValue ? ACTIONS.CHANGED : null;
     }
 
