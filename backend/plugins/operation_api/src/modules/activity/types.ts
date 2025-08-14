@@ -1,10 +1,15 @@
 import { Document } from 'mongoose';
 
+interface IActivityMetaData {
+  newValue?: string;
+  previousValue?: string;
+}
+
 export interface IActivity {
   action: string;
   contentId: string;
   module: string;
-  metadata: any;
+  metadata: IActivityMetaData;
   createdBy: string;
 }
 

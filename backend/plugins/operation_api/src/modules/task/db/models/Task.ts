@@ -7,12 +7,19 @@ import {
   ITaskFilter,
   ITaskUpdate,
 } from '@/task/@types/task';
+import { createTaskActivity } from '@/task/utils';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
   getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
   createTask(doc: ITask): Promise<ITaskDocument>;
-  updateTask(doc: ITaskUpdate): Promise<ITaskDocument>;
+  updateTask({
+    doc,
+    userId,
+  }: {
+    doc: ITaskUpdate;
+    userId: string;
+  }): Promise<ITaskDocument>;
   removeTask(TaskId: string): Promise<{ ok: number }>;
 }
 
@@ -94,7 +101,13 @@ export const loadTaskClass = (models: IModels) => {
       });
     }
 
-    public static async updateTask(doc: ITaskUpdate) {
+    public static async updateTask({
+      doc,
+      userId,
+    }: {
+      doc: ITaskUpdate;
+      userId: string;
+    }) {
       const { _id, ...rest } = doc;
 
       const task = await models.Task.findOne({ _id });
@@ -138,6 +151,13 @@ export const loadTaskClass = (models: IModels) => {
 
         rest.number = nextNumber;
       }
+
+      await createTaskActivity({
+        models,
+        task,
+        doc,
+        userId,
+      });
 
       return models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
     }
