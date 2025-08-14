@@ -28,7 +28,6 @@ interface IDetailField {
 interface ILinkField {
   label: string;
   name: string;
-  path: string;
   Icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
 }
 
@@ -141,41 +140,35 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
   },
 ];
 
-export const USER_LINK_FIELDS: ILinkField[] = [
+export const USER_LINK_FIELDS = [
   {
     label: 'Facebook',
     name: 'facebook',
-    path: 'links',
     Icon: IconBrandFacebook,
   },
   {
     label: 'Twitter',
     name: 'twitter',
-    path: 'links',
     Icon: IconBrandX,
   },
   {
     label: 'Website',
     name: 'website',
-    path: 'links',
     Icon: IconWorldWww,
   },
   {
     label: 'Discord',
     name: 'discord',
-    path: 'links',
     Icon: IconBrandDiscord,
   },
   {
     label: 'GitHub',
     name: 'github',
-    path: 'links',
     Icon: IconBrandGithub,
   },
   {
     label: 'Instagram',
     name: 'instagram',
-    path: 'links',
     Icon: IconBrandInstagram,
   },
-];
+] as ILinkField[];
