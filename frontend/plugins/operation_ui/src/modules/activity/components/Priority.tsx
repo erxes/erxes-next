@@ -12,7 +12,7 @@ export const Priority = ({ metadata }: { metadata: IActivity['metadata'] }) => {
 
   return (
     <div>
-      {oldPriority?.name} to {newPriority?.name}
+      Priority {oldPriority?.name} to {newPriority?.name}
     </div>
   );
 };

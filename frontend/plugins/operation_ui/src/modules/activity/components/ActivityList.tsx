@@ -19,6 +19,7 @@ export const ActivityList = ({ contentId }: { contentId: string }) => {
               <MembersInline.Provider
                 memberIds={activity.createdBy ? [activity.createdBy] : []}
               >
+                <div>{activity.createdAt.toLocaleString()}</div>
                 <MembersInline.Avatar size="xl" />
                 <MembersInline.Title />
               </MembersInline.Provider>
