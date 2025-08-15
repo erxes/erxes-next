@@ -60,17 +60,23 @@ export const createProjectActivity = async ({
     }).sort({ createdAt: -1 });
 
     if (lastActivity?.module === module && lastActivity?.action === action) {
-      return models.Activity.updateOne({
-        _id: lastActivity._id,
-        contentId: project._id,
-        action,
-        module,
-        metadata: {
-          newValue: toStr(newValue),
-          previousValue: toStr(previousValue),
+      return models.Activity.updateOne(
+        {
+          _id: lastActivity._id,
         },
-        createdBy: userId,
-      });
+        {
+          $set: {
+            contentId: project._id,
+            action,
+            module,
+            metadata: {
+              newValue: toStr(newValue),
+              previousValue: toStr(previousValue),
+            },
+            createdBy: userId,
+          },
+        },
+      );
     }
 
     return models.Activity.createActivity({

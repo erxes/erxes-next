@@ -82,6 +82,7 @@ export const facebookWebhook = async (req, res, next) => {
     return;
   }
   for (const entry of data.entry) {
+    console.log('entry =', JSON.stringify(entry, null, 2));
     // receive chat
     try {
       if (entry.messaging) {
