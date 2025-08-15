@@ -18,6 +18,8 @@ type Props = {
 
 export const LinkInput = React.forwardRef<HTMLButtonElement, Props>(
   ({ _id, links, linkField, label, InputIcon, ...props }, ref) => {
+    const inputId = React.useId();
+
     const { usersEdit } = useUserEdit();
     const value = links?.[linkField as LinkFieldName] ?? '';
 
@@ -85,6 +87,7 @@ export const LinkInput = React.forwardRef<HTMLButtonElement, Props>(
                 {InputIcon ? <InputIcon size={16} /> : <IconLink size={16} />}
               </Button>
               <Input
+                id={inputId}
                 className={cn(props.className, 'pl-9')}
                 onChange={(e) => setEditingValue(e.target.value)}
                 onKeyDown={handleKeyDown}
