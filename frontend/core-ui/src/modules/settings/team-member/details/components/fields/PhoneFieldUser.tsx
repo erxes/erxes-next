@@ -1,12 +1,6 @@
 import { useUserEdit } from '@/settings/team-member/hooks/useUserEdit';
 import { IDetailsType } from '@/settings/team-member/types';
-import {
-  PhoneInput,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-} from 'erxes-ui';
-import { formatPhoneNumber } from 'erxes-ui/utils/format';
+import { PhoneInput } from 'erxes-ui';
 import { useRef, useState } from 'react';
 
 interface PhoneFieldUserProps {
@@ -23,18 +17,18 @@ export const PhoneFieldUser = ({ _id, details }: PhoneFieldUserProps) => {
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-  const handleSave = (newPhone: string) => {
+  const handleSave = () => {
     if (!isPhoneValid) {
       setErrorMessage('Please enter a valid phone number.');
       return;
     }
-    if (newPhone === operatorPhone) {
+    if (editingValue === operatorPhone) {
       setIsOpen(false);
       return;
     }
 
     usersEdit({
-      variables: { _id, details: { ...rest, operatorPhone: newPhone } },
+      variables: { _id, details: { ...rest, operatorPhone: editingValue } },
     });
     setIsOpen(false);
   };
@@ -48,36 +42,16 @@ export const PhoneFieldUser = ({ _id, details }: PhoneFieldUserProps) => {
 
   return (
     <>
-      <RecordTablePopover
-        scope={`user-${_id}-primaryPhone`}
-        open={isOpen}
-        onOpenChange={(open) => {
-          setIsOpen(open);
-          if (open) {
-            setEditingValue(operatorPhone || '');
-            setTimeout(() => {
-              phoneInputRef.current?.focus();
-            });
-          } else if (!open && editingValue !== operatorPhone) {
-            handleSave(editingValue);
-          }
-        }}
-      >
-        <RecordTableCellTrigger className="shadow-xs rounded-sm text-sm">
-          {formatPhoneNumber({ value: operatorPhone || '' })}
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
-          <PhoneInput
-            value={editingValue}
-            ref={phoneInputRef}
-            className="bg-transparent"
-            onChange={(value) => setEditingValue(value)}
-            onEnter={() => handleSave(editingValue)}
-            onKeyDown={handleKeyDown}
-            onValidationChange={(isValid) => setIsPhoneValid(isValid)}
-          />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+      <PhoneInput
+        value={editingValue}
+        ref={phoneInputRef}
+        className="bg-transparent"
+        onChange={(value) => setEditingValue(value)}
+        onEnter={handleSave}
+        onBlur={handleSave}
+        onKeyDown={handleKeyDown}
+        onValidationChange={(isValid) => setIsPhoneValid(isValid)}
+      />
       {!isPhoneValid && errorMessage ? (
         <span className="text-destructive text-xs">{errorMessage}</span>
       ) : null}

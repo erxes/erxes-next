@@ -34,33 +34,7 @@ import { ApolloError } from '@apollo/client';
 import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
 import clsx from 'clsx';
 
-export const UserMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<IUser, unknown>;
-}) => {
-  const [, setOpen] = useQueryState('user_id');
-  const setRenderingTeamMemberDetail = useSetAtom(
-    renderingTeamMemberDetailAtom,
-  );
-  const { _id } = cell.row.original;
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingTeamMemberDetail(false);
-      }}
-    />
-  );
-};
-
 export const teamMemberColumns: ColumnDef<IUser>[] = [
-  {
-    id: 'more',
-    cell: UserMoreColumnCell,
-    size: 33,
-  },
   {
     id: 'avatar',
     accessorKey: 'avatar',
@@ -120,6 +94,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       return (
         <FullNameField
+          withBadge
           scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Name')}
           firstName={firstName}
           lastName={lastName}
