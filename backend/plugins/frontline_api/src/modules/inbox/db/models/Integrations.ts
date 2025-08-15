@@ -9,7 +9,7 @@ import {
   ILeadData,
   IMessengerData,
   IUiOptions,
-  ITicketData
+  ITicketData,
 } from '@/inbox/@types/integrations';
 import { integrationSchema } from '@/inbox/db/definitions/integrations';
 export interface IMessengerIntegration {
@@ -99,9 +99,9 @@ export interface IIntegrationModel extends Model<IIntegrationDocument> {
     _id: string,
     doc: IIntegration,
   ): Promise<IIntegrationDocument>;
- integrationsSaveMessengerTicketData(
+  integrationsSaveMessengerTicketData(
     _id: string,
-    doc: ITicketData
+    doc: ITicketData,
   ): Promise<IIntegrationDocument>;
   saveMessengerAppearanceData(
     _id: string,
@@ -291,17 +291,17 @@ export const loadClass = (models: IModels, subdomain: string) => {
       return models.Integrations.findOne({ _id });
     }
 
-      public static async integrationsSaveMessengerTicketData(
+    public static async integrationsSaveMessengerTicketData(
       _id: string,
       {
         ticketLabel,
         ticketToggle,
         ticketStageId,
         ticketPipelineId,
-        ticketBoardId
-      }: ITicketData
+        ticketBoardId,
+      }: ITicketData,
     ) {
-        const result = await models.Integrations.updateOne(
+      const result = await models.Integrations.updateOne(
         { _id },
         {
           $set: {
@@ -310,21 +310,19 @@ export const loadClass = (models: IModels, subdomain: string) => {
               ticketToggle,
               ticketStageId,
               ticketPipelineId,
-              ticketBoardId
-            }
-          }
+              ticketBoardId,
+            },
+          },
         },
-        { runValidators: true }
+        { runValidators: true },
       );
-    
-        if (!result.acknowledged) {
+
+      if (!result.acknowledged) {
         throw new Error('Failed to update ticket data');
-        }
+      }
 
       return models.Integrations.findOne({ _id });
-
     }
-
 
     /**
      * Save messenger appearance data

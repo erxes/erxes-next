@@ -1,33 +1,44 @@
-import { Label, Switch, Textarea } from 'erxes-ui';
-import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
+import { Combobox, Label, Switch, Textarea } from 'erxes-ui';
 import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
 import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
-import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/components/CustomerDetailAssignedTo';
-import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
-import { PhoneFieldCustomer } from '@/contacts/customers/customer-edit/components/PhoneFieldCustomer';
+import {
+  CustomerEmails,
+  CustomerOwner,
+  useCustomerEdit,
+  CustomerPhones,
+} from 'ui-modules';
+import { useCustomerDetailWithParams } from '../hooks/useCustomerDetailWithParams';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 export const CustomerGeneral = () => {
-  const { customerDetail } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetailWithParams();
   const { customerEdit } = useCustomerEdit();
   if (!customerDetail) return;
 
   const {
     primaryEmail,
     primaryPhone,
+    emails,
+    emailValidationStatus,
     tagIds,
     ownerId,
     code,
     _id,
-    score,
     isSubscribed,
     description,
+    score,
+    phones,
+    phoneValidationStatus,
   } = customerDetail;
 
   return (
     <>
       <div className="py-8 space-y-6">
         <CustomerDetailSelectTag tagIds={tagIds || []} customerId={_id} />
-        <CustomerDetailAssignedTo ownerId={ownerId} customerId={_id} />
+        <div className="px-8 space-y-2">
+          <Label>Owner</Label>
+          <CustomerOwner _id={_id} ownerId={ownerId} />
+        </div>
         <div className="px-8 font-medium flex gap-5 flex-col">
           <div className="grid grid-cols-2 gap-5 col-span-5">
             <DataListItem label="Code">
@@ -38,16 +49,25 @@ export const CustomerGeneral = () => {
                 _id={_id}
               />
             </DataListItem>
-            <DataListItem label="Primary Email">
-              <TextFieldCustomer
-                value={primaryEmail || ''}
-                placeholder="Add Primary Email"
-                field="primaryEmail"
+            <DataListItem label="Emails">
+              <CustomerEmails
                 _id={_id}
+                primaryEmail={primaryEmail || ''}
+                emails={emails || []}
+                emailValidationStatus={emailValidationStatus || 'valid'}
+                Trigger={(props) => <Combobox.TriggerBase {...props} />}
+                scope={ContactsHotKeyScope.CustomersPage}
               />
             </DataListItem>
-            <DataListItem label="Primary Phone">
-              <PhoneFieldCustomer _id={_id} primaryPhone={primaryPhone || ''} />
+            <DataListItem label="phones">
+              <CustomerPhones
+                _id={_id}
+                primaryPhone={primaryPhone || ''}
+                phones={phones || []}
+                phoneValidationStatus={phoneValidationStatus || 'valid'}
+                scope={ContactsHotKeyScope.CustomersPage}
+                Trigger={Combobox.TriggerBase}
+              />
             </DataListItem>
             <DataListItem label="Score">
               <TextFieldCustomer
@@ -72,7 +92,17 @@ export const CustomerGeneral = () => {
             />
           </DataListItem>
           <DataListItem label="Description">
-            <Textarea value={description || ''} />
+            <Textarea
+              value={description || ''}
+              onChange={(e) => {
+                customerEdit({
+                  variables: {
+                    _id,
+                    description: e.target.value,
+                  },
+                });
+              }}
+            />
           </DataListItem>
         </div>
       </div>

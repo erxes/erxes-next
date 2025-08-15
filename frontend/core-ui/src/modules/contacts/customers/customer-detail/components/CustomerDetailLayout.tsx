@@ -22,9 +22,7 @@ export const CustomerDetailLayout = ({
   otherState?: 'loading' | 'not-found';
 }) => {
   return (
-    <CustomerDetailSheet
-      className={!otherState ? undefined : 'sm:max-w-screen-lg'}
-    >
+    <CustomerDetailSheet className="sm:max-w-screen-lg">
       <Sheet.Content>
         {otherState === 'loading' && (
           <div className="flex items-center justify-center h-full">
@@ -34,12 +32,15 @@ export const CustomerDetailLayout = ({
         {otherState === 'not-found' && (
           <div className="flex items-center justify-center h-full">
             <div className="flex flex-col items-center gap-3">
-              <IconMoodAnnoyed className="w-16 h-16 text-muted-foreground" />
+              <IconMoodAnnoyed
+                className="w-16 h-16 text-muted-foreground"
+                strokeWidth={1.5}
+              />
               <div className="flex flex-col gap-2">
                 <h2 className="text-xl font-semibold w-full text-center">
                   Customer details not found
                 </h2>
-                <p className="text-muted-foreground font-medium text-base w-full text-center">
+                <p className="text-accent-foreground w-full text-center">
                   There seems to be no data on this customer
                 </p>
               </div>
@@ -108,11 +109,6 @@ const CustomerDetailTabs = ({ children }: { children: React.ReactNode }) => {
           <Sidebar.Separator />
           <Sidebar.Group></Sidebar.Group>
         </Sidebar>
-        {/* <Tabs.VerticalTrigger value="overview">Overview</Tabs.VerticalTrigger>
-        <Tabs.VerticalTrigger value="plugins">Plugins</Tabs.VerticalTrigger>
-        <Tabs.VerticalTrigger value="properties">
-          Properties
-        </Tabs.VerticalTrigger> */}
       </Tabs.List>
       {children}
     </Tabs>

@@ -5,7 +5,7 @@ import {
   Command,
   Popover,
   RecordTable,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   TextOverflowTooltip,
   useConfirm,
   useQueryState,
@@ -26,7 +26,6 @@ export const PermissionsColumnsMoreCell = ({
   const confirmOptions = { confirmationValue: 'delete' };
   const { confirm } = useConfirm();
   const { permissionsRemove, loading } = usePermissionsRemove();
-  const [, setOpen] = useQueryState('permission_id');
 
   const { _id } = cell.row.original;
 
@@ -74,9 +73,9 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     accessorKey: 'module',
     header: () => <RecordTable.InlineHead label="Module" />,
     cell: ({ cell }) => (
-      <RecordTableCellDisplay className="capitalize">
+      <RecordTableInlineCell className="capitalize">
         <TextOverflowTooltip value={cell.getValue() as string} />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
     size: 200,
   },
@@ -87,19 +86,19 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     cell: ({ cell }) => {
       const { action } = cell.row.original || {};
       if (!action) {
-        return <RecordTableCellDisplay>N/A</RecordTableCellDisplay>;
+        return <RecordTableInlineCell>N/A</RecordTableInlineCell>;
       }
       if (action.endsWith('All')) {
         return (
-          <RecordTableCellDisplay className="justify-center">
+          <RecordTableInlineCell className="justify-center">
             <Badge>All</Badge>
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         );
       }
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge>{cell.getValue() as string}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 250,
@@ -111,11 +110,11 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     cell: ({ cell }) => {
       const { userId } = cell.row.original || {};
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <SelectMember.Provider value={userId}>
             <SelectMember.Value placeholder="No users selected" />
           </SelectMember.Provider>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 250,
@@ -127,11 +126,11 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     cell: ({ cell }) => {
       const { groupId } = cell.row.original || {};
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <SelectUsersGroup.Provider value={groupId}>
             <SelectUsersGroup.Value placeholder="No groups selected" />
           </SelectUsersGroup.Provider>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 250,
@@ -143,11 +142,11 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     cell: ({ cell }) => {
       const allowed = cell.getValue() as boolean;
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge variant={allowed ? 'success' : 'destructive'}>
             {allowed ? 'Allowed' : 'Denied'}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

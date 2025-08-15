@@ -4,10 +4,8 @@ import {
   Button,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   RecordTableTree,
   Spinner,
   Textarea,
@@ -123,14 +121,14 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
             if (!open) onSave();
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <RecordTableTree.Trigger
               order={cell.row.original.order}
               name={cell.getValue() as string}
@@ -138,11 +136,11 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
             >
               <TextOverflowTooltip value={cell.getValue() as string} />
             </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_code} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
   },
@@ -170,20 +168,20 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
             if (!open) onSave();
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             {cell.getValue() as string}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_title} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -237,7 +235,7 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
         setAddress(value);
       };
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -246,13 +244,13 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <TextOverflowTooltip value={cell.getValue() as string} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Textarea value={_address} onChange={onChange} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -263,9 +261,9 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="text-center flex w-full justify-center">
+        <RecordTableInlineCell className="text-center flex w-full justify-center">
           <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -274,11 +272,11 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="flex justify-center gap-1 [&>button]:px-2">
+        <RecordTableInlineCell className="flex justify-center gap-1 [&>button]:px-2">
           <BranchWorkingHoursColumnCell cell={cell} />
           <BranchEditColumnCell cell={cell} />
           <BranchRemoveCell cell={cell} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

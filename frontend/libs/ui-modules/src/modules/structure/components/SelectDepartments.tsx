@@ -9,10 +9,9 @@ import {
   Command,
   Filter,
   Form,
+  PopoverScoped,
+  RecordTableInlineCell,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
   SelectTree,
   TextOverflowTooltip,
   useFilterContext,
@@ -301,14 +300,14 @@ export const SelectDepartmentsInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectDepartmentsValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectDepartmentsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectDepartmentsProvider>
   );
 };
@@ -411,17 +410,17 @@ export const SelectDepartmentsCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconFolder />
             Department
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectDepartmentsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectDepartmentsProvider>
   );
 };

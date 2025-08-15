@@ -3,10 +3,8 @@ import {
   Badge,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  PopoverScoped,
 } from 'erxes-ui';
 import { IIntegrationDetail } from '../types/Integration';
 import { useIntegrations } from '../hooks/useIntegrations';
@@ -14,9 +12,10 @@ import { useParams } from 'react-router-dom';
 import { BrandsInline } from 'ui-modules';
 import { useIntegrationEditField } from '@/integrations/hooks/useIntegrationEdit';
 import { useState } from 'react';
-import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import { ArchiveIntegration } from '@/integrations/components/ArchiveIntegration';
 import { RemoveIntegration } from '@/integrations/components/RemoveIntegration';
+import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
+import clsx from 'clsx';
 
 export const IntegrationsRecordTable = ({
   Actions,
@@ -76,20 +75,24 @@ const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
   };
 
   return (
-    <RecordTablePopover
+    <PopoverScoped
       onOpenChange={(open) => {
         if (!open) {
           handleSave();
         }
       }}
-      scope={`${InboxHotkeyScope.IntegrationSettingsPage}_${cell.row.original._id}_name`}
+      scope={clsx(
+        InboxHotkeyScope.IntegrationSettingsPage,
+        cell.row.original._id,
+        'name',
+      )}
       closeOnEnter
     >
-      <RecordTableCellTrigger>{name}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+      <RecordTableInlineCell.Trigger>{name}</RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -121,9 +124,9 @@ export const integrationTypeColumns = ({
     header: () => <RecordTable.InlineHead label="Brand" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <BrandsInline brandIds={[cell.getValue() as string]} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 235,
@@ -135,14 +138,14 @@ export const integrationTypeColumns = ({
     cell: ({ cell }) => {
       const status = cell.getValue() as boolean;
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge
             className="text-xs capitalize"
             variant={status ? 'success' : 'destructive'}
           >
             {status ? 'Active' : 'Inactive'}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 100,
@@ -155,14 +158,14 @@ export const integrationTypeColumns = ({
       const { status } = cell.getValue() as IIntegrationDetail['healthStatus'];
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge
             className="text-xs capitalize"
             variant={status === 'healthy' ? 'success' : 'destructive'}
           >
             {status}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 120,

@@ -7,7 +7,7 @@ import {
   CurrencyField,
   TextField,
   useQueryState,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
 } from 'erxes-ui';
 import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { useAccountEdit } from '../hooks/useAccountEdit';
@@ -160,9 +160,9 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     header: () => <RecordTable.InlineHead label="Kind" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {cell.getValue() as string}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -172,9 +172,9 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     header: () => <RecordTable.InlineHead label="Journal" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {JOURNAL_LABELS[cell.getValue() as JournalEnum]}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -185,9 +185,9 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     size: 80,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {cell.getValue() ? 'temp' : '-'}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -198,9 +198,9 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     size: 80,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {cell.getValue() ? 'Out' : '-'}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

@@ -1,6 +1,9 @@
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { IAccount, JournalEnum } from '@/settings/account/types/Account';
-import { INV_INCOME_EXPENSE_TYPES, TR_SIDES } from '@/transactions/types/constants';
+import {
+  INV_INCOME_EXPENSE_TYPES,
+  TR_SIDES,
+} from '@/transactions/types/constants';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { IconTrashX } from '@tabler/icons-react';
 import {
@@ -9,12 +12,12 @@ import {
   Form,
   Input,
   InputNumber,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
+  RecordTableInlineCell,
   RecordTableHotKeyControl,
-  RecordTablePopover,
+  Popover,
   Select,
   Table,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -26,7 +29,7 @@ import { getSingleJournalByAccount, getTempId } from '../../utils';
 export const ExpenseRow = ({
   form,
   journalIndex,
-  expenseIndex
+  expenseIndex,
 }: {
   form: ITransactionGroupForm;
   expenseIndex: number;
@@ -34,7 +37,7 @@ export const ExpenseRow = ({
 }) => {
   const trDoc = useWatch({
     control: form.control,
-    name: `trDocs.${journalIndex}`
+    name: `trDocs.${journalIndex}`,
   });
 
   const expenses = useWatch({
@@ -52,39 +55,62 @@ export const ExpenseRow = ({
 
   useEffect(() => {
     if (!expense.accountId) {
-      setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'invIncomeExpense' && expense._id === ftr.originSubId)));
+      setFollowTrDocs(
+        (followTrDocs || []).filter(
+          (ftr) =>
+            !(
+              ftr.originId === trDoc._id &&
+              ftr.followType === 'invIncomeExpense' &&
+              expense._id === ftr.originSubId
+            ),
+        ),
+      );
       return;
     }
 
     const { sumDt, sumCt } = { sumDt: expense.amount, sumCt: 0 };
 
-    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'invIncomeExpense' && ftr.originSubId === expense._id);
+    const curr = followTrDocs.find(
+      (ftr) =>
+        ftr.originId === trDoc._id &&
+        ftr.followType === 'invIncomeExpense' &&
+        ftr.originSubId === expense._id,
+    );
 
-    const expenseTr = [{
-      ...curr,
-      _id: curr?._id || getTempId(),
-      journal: getSingleJournalByAccount(account?.journal, account?.kind),
-      originId: trDoc._id,
-      ptrId: trDoc.ptrId,
-      parentId: trDoc.parentId,
-      followType: 'invIncomeExpense',
-      originSubId: expense._id,
-      details: [{
-        ...(curr?.details || [{}])[0],
-        account,
-        accountId: expense.accountId,
-        side: TR_SIDES.CREDIT,
-        amount: expense.amount ?? 0
-      }],
+    const expenseTr = [
+      {
+        ...curr,
+        _id: curr?._id || getTempId(),
+        journal: getSingleJournalByAccount(account?.journal, account?.kind),
+        originId: trDoc._id,
+        ptrId: trDoc.ptrId,
+        parentId: trDoc.parentId,
+        followType: 'invIncomeExpense',
+        originSubId: expense._id,
+        details: [
+          {
+            ...(curr?.details || [{}])[0],
+            account,
+            accountId: expense.accountId,
+            side: TR_SIDES.CREDIT,
+            amount: expense.amount ?? 0,
+          },
+        ],
 
-      sumDt,
-      sumCt,
-    }];
+        sumDt,
+        sumCt,
+      },
+    ];
     setFollowTrDocs([
       ...(followTrDocs || []).filter(
-        ftr => !(ftr.originId === trDoc._id && ftr.followType === 'invIncomeExpense' && ftr.originSubId === expense._id)
+        (ftr) =>
+          !(
+            ftr.originId === trDoc._id &&
+            ftr.followType === 'invIncomeExpense' &&
+            ftr.originSubId === expense._id
+          ),
       ),
-      ...expenseTr
+      ...expenseTr,
     ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,11 +135,12 @@ export const ExpenseRow = ({
         <div className="w-9 flex items-center justify-center">
           <Button
             variant="ghost"
-            onClick={() => form.setValue(
-              `trDocs.${journalIndex}.extraData.invIncomeExpenses`,
-              expenses.filter(e => e._id !== _id)
-            )}
-
+            onClick={() =>
+              form.setValue(
+                `trDocs.${journalIndex}.extraData.invIncomeExpenses`,
+                expenses.filter((e) => e._id !== _id),
+              )
+            }
           >
             <IconTrashX />
           </Button>
@@ -125,19 +152,23 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.title`}
             render={({ field }) => (
-              <RecordTablePopover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.title`}
                 closeOnEnter
               >
                 <Form.Control>
-                  <RecordTableCellTrigger>
+                  <RecordTableInlineCell.Trigger>
                     {field.value || ''}
-                  </RecordTableCellTrigger>
+                  </RecordTableInlineCell.Trigger>
                 </Form.Control>
-                <RecordTableCellContent>
-                  <Input {...field} value={field.value ?? ''} onChange={field.onChange} />
-                </RecordTableCellContent>
-              </RecordTablePopover>
+                <RecordTableInlineCell.Content>
+                  <Input
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                  />
+                </RecordTableInlineCell.Content>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -148,7 +179,7 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.rule`}
             render={({ field }) => (
-              <RecordTablePopover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.rule`}
                 closeOnEnter
               >
@@ -167,7 +198,7 @@ export const ExpenseRow = ({
                     ))}
                   </Select.Content>
                 </Select>
-              </RecordTablePopover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -178,22 +209,22 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.amount`}
             render={({ field }) => (
-              <RecordTablePopover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.amount`}
                 closeOnEnter
               >
                 <Form.Control>
-                  <RecordTableCellTrigger>
+                  <RecordTableInlineCell.Trigger>
                     {field.value?.toLocaleString() || 0}
-                  </RecordTableCellTrigger>
+                  </RecordTableInlineCell.Trigger>
                 </Form.Control>
-                <RecordTableCellContent>
+                <RecordTableInlineCell.Content>
                   <InputNumber
                     value={field.value ?? 0}
                     onChange={field.onChange}
                   />
-                </RecordTableCellContent>
-              </RecordTablePopover>
+                </RecordTableInlineCell.Content>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
@@ -204,7 +235,7 @@ export const ExpenseRow = ({
             control={form.control}
             name={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.accountId`}
             render={({ field }) => (
-              <RecordTablePopover
+              <PopoverScoped
                 scope={`trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}.amount`}
                 closeOnEnter
               >
@@ -213,18 +244,25 @@ export const ExpenseRow = ({
                   onValueChange={(accountId) => {
                     field.onChange(accountId);
                   }}
-                  defaultFilter={{ journals: [JournalEnum.MAIN, JournalEnum.BANK, JournalEnum.CASH, JournalEnum.DEBT], currency: 'MNT' }}
+                  defaultFilter={{
+                    journals: [
+                      JournalEnum.MAIN,
+                      JournalEnum.BANK,
+                      JournalEnum.CASH,
+                      JournalEnum.DEBT,
+                    ],
+                    currency: 'MNT',
+                  }}
                   variant="ghost"
                   inForm
                   scope={AccountingHotkeyScope.TransactionFormSubPage}
                   onCallback={(account) => setAccount(account)}
                 />
-              </RecordTablePopover>
+              </PopoverScoped>
             )}
           />
         </Table.Cell>
       </RecordTableHotKeyControl>
-
     </Table.Row>
   );
 };
