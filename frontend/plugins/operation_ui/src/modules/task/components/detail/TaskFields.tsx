@@ -15,6 +15,7 @@ import {
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
+import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -94,7 +95,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
           id={taskId}
           teamId={teamId || undefined}
         />
-        <SelectPriority.Detail value={priority} id={taskId} />
+        <SelectTaskPriority taskId={taskId} value={priority} />
         <SelectAssignee.Detail
           value={assigneeId}
           id={taskId}

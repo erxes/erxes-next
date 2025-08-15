@@ -18,13 +18,13 @@ import { Block } from '@blocknote/core';
 import {
   SelectStatus,
   SelectTeam,
-  SelectPriority,
   SelectLead,
   DateSelect,
 } from '@/project/components/select';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
+import { SelectPriority } from '@/task/components';
 
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();

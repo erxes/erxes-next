@@ -1,5 +1,5 @@
 export * from './SelectAssignee';
-export * from './SelectPriority';
+export * from '../../../priority/components/SelectPriority';
 export * from './SelectStatus';
 export * from './SelectTeam';
 export * from './DateSelect';

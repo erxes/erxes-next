@@ -1,6 +1,6 @@
 import { IActivity } from '@/activity/types';
 import { PROJECT_PRIORITIES_OPTIONS } from '@/project/constants';
-import { PriorityBadge } from '@/task/components/select/PriorityInline';
+import { PriorityBadge } from '@/task/components/PriorityInline';
 
 export const ActivityPriority = ({
   metadata,
