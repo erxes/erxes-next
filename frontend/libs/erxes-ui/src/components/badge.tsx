@@ -16,6 +16,7 @@ export const badgeVariants = cva(
         success: 'bg-success/10 text-success border-success/10',
         warning: 'bg-warning/10 text-warning border-warning/10',
         destructive: 'bg-destructive/10 text-destructive border-destructive/10',
+        info: 'bg-info/10 text-info border-info/10',
       },
     },
     defaultVariants: {

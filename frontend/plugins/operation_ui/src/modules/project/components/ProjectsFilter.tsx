@@ -6,9 +6,9 @@ import { ProjectsTotalCount } from '@/project/components/ProjectsTotalCount';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { SelectLead } from '@/project/components/select/SelectLead';
 import { SelectTeam } from '@/project/components/select/SelectTeam';
-import { SelectPriority } from '@/project/components/select/SelectPriority';
 import { SelectStatus } from '@/project/components/select/SelectStatus';
 import { useParams } from 'react-router-dom';
+import { SelectPriority } from '@/task/components';
 
 const ProjectsFilterPopover = () => {
   const { teamId } = useParams();

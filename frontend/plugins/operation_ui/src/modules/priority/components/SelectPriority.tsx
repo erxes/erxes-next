@@ -9,13 +9,16 @@ import {
   RecordTableInlineCell,
   useFilterContext,
   useQueryState,
-  Badge,
   Button,
   PopoverScoped,
 } from 'erxes-ui';
 import { IconAlertSquareRounded } from '@tabler/icons-react';
 import { PROJECT_PRIORITIES_OPTIONS } from '@/project/constants';
-import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import {
+  PriorityBadge,
+  PriorityIcon,
+  PriorityTitle,
+} from '@/task/components/PriorityInline';
 
 interface SelectPriorityContextType {
   priorities: typeof PROJECT_PRIORITIES_OPTIONS;
@@ -112,23 +115,7 @@ const SelectPriorityBadgeValue = ({
   return (
     <div className="flex gap-1 flex-wrap">
       {selectedPriorities.map((priority) => (
-        <Badge
-          key={priority.value}
-          variant="secondary"
-          className="flex items-center gap-1"
-          style={
-            priority.value !== 0
-              ? { backgroundColor: `${priority.IconColor}25` }
-              : undefined
-          }
-        >
-          <priority.Icon
-            className="w-3 h-3"
-            color={priority.IconColor}
-            stroke={2}
-          />
-          {priority.name}
-        </Badge>
+        <PriorityBadge key={priority.value} priority={priority.value} />
       ))}
     </div>
   );
@@ -152,12 +139,8 @@ const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
     <div className="flex gap-1 flex-wrap">
       {selectedPriorities.map((priority) => (
         <div className="flex items-center gap-2" key={priority.value}>
-          <priority.Icon
-            className="w-3 h-3"
-            color={priority.IconColor}
-            stroke={2}
-          />
-          <p className={cn('font-medium text-base')}>{priority.name}</p>
+          <PriorityIcon priority={priority.value} />
+          <PriorityTitle priority={priority.value} />
         </div>
       ))}
     </div>
@@ -179,12 +162,8 @@ const SelectPriorityCommandItem = ({
       }}
     >
       <div className="flex items-center gap-2 flex-1">
-        <priority.Icon
-          className="w-4 h-4"
-          color={priority.IconColor}
-          stroke={1.8}
-        />
-        <span className="font-medium">{priority.name}</span>
+        <PriorityIcon priority={priority.value} />
+        <PriorityTitle priority={priority.value} />
       </div>
       <Combobox.Check
         checked={priorityIds.includes(priority.value.toString())}
@@ -307,39 +286,26 @@ export const SelectPriorityFilterBar = ({
 
 export const SelectPriorityInlineCell = ({
   value,
-  id,
   onValueChange,
   scope,
   ...props
 }: {
   value?: number | string;
-  id?: string;
   onValueChange?: (value: string | string[]) => void;
   scope?: string;
 } & Omit<
   React.ComponentProps<typeof SelectPriorityProvider>,
   'children' | 'onValueChange' | 'value'
 >) => {
-  const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
   const handleValueChange = (value: string | string[]) => {
-    if (id) {
-      updateTask({
-        variables: {
-          _id: id,
-          priority: Number(value),
-        },
-      });
-    }
     onValueChange?.(value);
     setOpen(false);
   };
 
   const stringValue =
     typeof value === 'number' ? value.toString() : value || '';
-  const finalScope =
-    scope || (id ? `ProjectTableCell.${id}.Priority` : undefined);
 
   return (
     <SelectPriorityProvider
@@ -351,7 +317,7 @@ export const SelectPriorityInlineCell = ({
       <PopoverScoped
         open={open}
         onOpenChange={setOpen}
-        scope={finalScope}
+        scope={scope}
         closeOnEnter
       >
         <RecordTableInlineCell.Trigger>
@@ -460,23 +426,15 @@ export const SelectPriorityDetail = React.forwardRef<
     className?: string;
     placeholder?: string;
     value?: number | string;
-    id?: string;
+    onValueChange?: (value: number) => void;
   }
->(({ className, placeholder, value, id, ...props }, ref) => {
+>(({ className, placeholder, value, onValueChange, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const { updateTask } = useUpdateTask();
   const stringValue =
     typeof value === 'number' ? value.toString() : value || '';
 
   const handleValueChange = (value: number) => {
-    if (id) {
-      updateTask({
-        variables: {
-          _id: id,
-          priority: value,
-        },
-      });
-    }
+    onValueChange?.(value);
     setOpen(false);
   };
 

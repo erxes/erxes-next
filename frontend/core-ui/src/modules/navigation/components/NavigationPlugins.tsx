@@ -42,12 +42,12 @@ export const NavigationPlugins = () => {
           }
           separate
         >
-          {navigationGroups[activePlugin].contents.map((Content) => (
-            <Content key={Content.name} />
+          {navigationGroups[activePlugin].contents.map((Content, index) => (
+            <Content key={index} />
           ))}
         </NavigationMenuGroup>
-        {navigationGroups[activePlugin].subGroups.map((SubGroup) => (
-          <SubGroup key={SubGroup.name} />
+        {navigationGroups[activePlugin].subGroups.map((SubGroup, index) => (
+          <SubGroup key={index} />
         ))}
         <NavigationPluginActions />
       </>

@@ -16,7 +16,7 @@ const RelativeDateDisplayTooltip = React.forwardRef<
   }
 
   return (
-    <Tooltip.Provider>
+    <Tooltip.Provider delayDuration={100}>
       <Tooltip>
         <Tooltip.Trigger className="truncate" {...props} ref={ref} />
         <Tooltip.Content>{format(value, 'MMM dd, yyyy HH:mm')}</Tooltip.Content>

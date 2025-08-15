@@ -44,6 +44,7 @@ import {
 import { TeamStatusIcons } from '@/team/constants';
 import { useParams } from 'react-router';
 import { useDeleteStatus } from '@/team/hooks/useDeleteStatus';
+import { StatusInlineIcon } from '@/task/components/StatusInline';
 
 const StatusSkeleton = () => {
   return (
@@ -100,7 +101,7 @@ export const Status = ({
       )}
     >
       <div className="absolute inset-0 rounded" {...dragProps} />
-      <span className="flex items-center gap-1">
+      <span className="flex items-center gap-2">
         <IconGripVertical
           className={cn(
             'w-4 h-4 transition-all',
@@ -119,15 +120,10 @@ export const Status = ({
             color: status.color || '#000000',
           }}
         >
-          {(() => {
-            const StatusIcon = TeamStatusIcons[status.type];
-            return StatusIcon ? (
-              <StatusIcon className="w-4 h-4" stroke={1.5} />
-            ) : null;
-          })()}
+          <StatusInlineIcon type={status.type} color={status.color} />
         </Button>
         <div className="flex flex-col">
-          <span>{status.name}</span>
+          <span className="capitalize">{status.name}</span>
           <span className="text-xs text-muted-foreground">
             {status.description}
           </span>
@@ -296,15 +292,12 @@ export const StatusForm = ({
                             backgroundColor: field.value
                               ? `${field.value}25`
                               : undefined,
-                            color: field.value,
                           }}
                         >
-                          {(() => {
-                            const StatusIcon = TeamStatusIcons[statusType];
-                            return StatusIcon ? (
-                              <StatusIcon className="w-4 h-4" stroke={1.5} />
-                            ) : null;
-                          })()}
+                          <StatusInlineIcon
+                            type={statusType}
+                            color={field.value}
+                          />
                         </Button>
                       </ColorPicker.Trigger>
                       <ColorPicker.Content />

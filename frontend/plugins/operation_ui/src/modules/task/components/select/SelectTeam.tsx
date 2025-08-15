@@ -370,7 +370,7 @@ const SelectTeamValue = () => {
     <div className="flex items-center gap-2 max-w-[200px]">
       <IconComponent
         name={selectedTeams[0].icon}
-        className="size-3 flex-shrink-0"
+        className="size-4 flex-shrink-0"
       />
       <TextOverflowTooltip
         className="text-base font-medium"

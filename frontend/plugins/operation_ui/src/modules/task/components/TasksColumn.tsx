@@ -33,6 +33,7 @@ import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPoint';
 import clsx from 'clsx';
+import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
@@ -112,9 +113,10 @@ export const tasksColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectPriority.InlineCell
-            value={cell.row.original.priority || 0}
-            id={cell.row.original._id}
+          <SelectTaskPriority
+            taskId={cell.row.original._id}
+            value={cell.row.original.priority}
+            inInlineCell
           />
         );
       },
