@@ -40,11 +40,15 @@ export const MemberDetailGeneral = () => {
             }
             onSave={(_firstName, _lastName) => {
               if (_firstName !== firstName || _lastName !== lastName) {
+                const { __typename, ...rest } = details || {};
                 usersEdit({
                   variables: {
                     _id,
-                    firstName: _firstName,
-                    lastName: _lastName,
+                    details: {
+                      ...rest,
+                      firstName: _firstName,
+                      lastName: _lastName,
+                    },
                   },
                 });
               }

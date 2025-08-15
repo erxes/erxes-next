@@ -67,7 +67,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         renderingTeamMemberDetailAtom,
       );
       const { details, _id } = cell.row.original;
-      const { firstName, lastName } = details || {};
+      const { firstName, lastName, ...rest } = details || {};
 
       const { usersEdit } = useUserEdit();
 
@@ -77,6 +77,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             variables: {
               _id,
               details: {
+                ...rest,
                 firstName: first,
                 lastName: last,
               },
