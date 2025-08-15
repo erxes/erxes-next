@@ -35,8 +35,8 @@ const ADD_DEPARTMENT = gql`
 `;
 
 const EDIT_DEPARTMENT = gql`
-  mutation DepartmentsEdit($id: String! ${commonDefs}) {
-    departmentsEdit(_id: $id, ${commonVars}) {
+  mutation DepartmentsEdit($id: String! $workhours: JSON ${commonDefs}) {
+    departmentsEdit(_id: $id, workhours: $workhours, ${commonVars}) {
       ${returnFields}
     }
   }

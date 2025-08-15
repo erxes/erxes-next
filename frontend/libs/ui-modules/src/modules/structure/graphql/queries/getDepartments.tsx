@@ -48,6 +48,7 @@ export const GET_DEPARTMENT_BY_ID = gql`
       title
       parentId
       order
+      workhours
     }
   }
 `;
