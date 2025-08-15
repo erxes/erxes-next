@@ -85,10 +85,10 @@ export const removeIntegration = async (
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-  let domain = `${DOMAIN}/gateway/pl:facebook`;
+  let domain = `${DOMAIN}/gateway/pl:frontline`;
 
   if (process.env.NODE_ENV !== 'production') {
-    domain = `${DOMAIN}/pl:facebook`;
+    domain = `${DOMAIN}/pl:frontline`;
   }
 
   if (ENDPOINT_URL) {
@@ -185,10 +185,10 @@ export const repairIntegrations = async (
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-  let domain = `${DOMAIN}/gateway/pl:facebook`;
+  let domain = `${DOMAIN}/gateway/pl:frontline`;
 
   if (process.env.NODE_ENV !== 'production') {
-    domain = `${DOMAIN}/pl:facebook`;
+    domain = `${DOMAIN}/pl:frontline`;
   }
 
   if (ENDPOINT_URL) {
@@ -237,9 +237,9 @@ export const facebookCreateIntegration = async (
     const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
     // Set domain based on environment (production vs non-production)
-    let domain = `${DOMAIN}/gateway/pl:facebook`;
+    let domain = `${DOMAIN}/gateway/pl:frontline`;
     if (process.env.NODE_ENV !== 'production') {
-      domain = `${DOMAIN}/pl:facebook`;
+      domain = `${DOMAIN}/pl:frontline`;
     }
     console.log(ENDPOINT_URL, 'ENDPOINT_URL');
     console.log(DOMAIN, 'DOMAIN');
