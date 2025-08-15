@@ -20,7 +20,7 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { PositionBadge } from './PositionBadge';
-import { IconBriefcase, IconPlus, IconX } from '@tabler/icons-react';
+import { IconBriefcase, IconPlus } from '@tabler/icons-react';
 import {
   CreatePositionForm,
   SelectPositionCreateContainer,
