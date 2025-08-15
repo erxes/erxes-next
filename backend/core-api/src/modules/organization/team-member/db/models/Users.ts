@@ -35,7 +35,7 @@ interface IEditProfile {
   details?: IDetail;
   links?: ILink;
   employeeId?: string;
-  positionIds?: string[]
+  positionIds?: string[];
 }
 
 interface IUpdateUser extends IEditProfile {
@@ -433,7 +433,14 @@ export const loadUserClass = (models: IModels) => {
      */
     public static async editProfile(
       _id: string,
-      { username, email, details, links, employeeId, positionIds }: IEditProfile,
+      {
+        username,
+        email,
+        details,
+        links,
+        employeeId,
+        positionIds,
+      }: IEditProfile,
     ) {
       // Checking duplicated email
       await this.checkDuplication({ email, idsToExclude: _id });
@@ -1147,13 +1154,14 @@ export const loadUserMovemmentClass = (models: IModels, subdomain: string) => {
           );
 
           if (contentType && contentTypeId && createdBy) {
+            const notificationType =
+              contentType === 'department'
+                ? 'departmentAssigneeChanged'
+                : 'branchAssigneeChanged';
             console.log({
               fromUserId: createdBy,
               userIds: targetUserIds,
-              notificationType:
-                contentType === 'department'
-                  ? 'departmentAssigneeChanged'
-                  : 'branchAssigneeChanged',
+              notificationType,
               message,
             });
             sendNotification(subdomain, {
@@ -1166,10 +1174,7 @@ export const loadUserMovemmentClass = (models: IModels, subdomain: string) => {
               contentTypeId,
               action,
               priority: 'medium',
-              notificationType:
-                contentType === 'department'
-                  ? 'departmentAssigneeChanged'
-                  : 'branchAssigneeChanged',
+              notificationType,
             });
           }
         }

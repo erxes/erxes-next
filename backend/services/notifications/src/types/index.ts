@@ -1,29 +1,4 @@
-// Core notification configuration for creating notifications
-// export interface INotificationData {
-//   // Core notification data
-//   title: string;
-//   message: string;
-//   type: 'info' | 'success' | 'warning' | 'error';
-
 import { INotificationData } from 'erxes-api-shared/core-modules';
-
-//   // Recipients
-//   userIds: string[];
-//   fromUserId?: string; // null for system notifications
-
-//   // Source information
-//   contentType: string; // 'frontline:conversation', 'sales:deal', etc.
-//   contentTypeId?: string; // ID of the source object
-//   action?: string; // 'assigned', 'resolved', etc.
-
-//   // Email configuration (if user wants email notifications)
-//   emailSubject?: string;
-//   emailTemplate?: string;
-
-//   // Additional options
-//   priority?: 'low' | 'medium' | 'high' | 'urgent';
-//   metadata?: Record<string, any>; // Additional data
-// }
 
 // Email transport configuration
 export interface IEmailTransportConfig {
@@ -48,5 +23,5 @@ export interface IEmailTransportConfig {
 // BullMQ job data structure
 export interface INotificationJobData {
   subdomain: string;
-  data: INotificationData;
+  data: { userIds: string[] } & INotificationData;
 }
