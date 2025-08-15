@@ -148,6 +148,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const [open, setOpen] = useState<boolean>(false);
       const [_employeeId, setEmployeeId] = useState<string>(employeeId);
       const onSave = () => {
+        if (_employeeId === employeeId) return;
         usersEdit({
           variables: {
             _id,
@@ -158,7 +159,6 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.currentTarget || {};
-        if (value === employeeId) return;
         setEmployeeId(value);
       };
       return (
@@ -227,6 +227,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       );
       const { usersEdit } = useUserEdit();
       const onSave = () => {
+        if (_workStartedDate === workStartedDate) return;
         usersEdit({
           variables: {
             _id,
@@ -239,7 +240,6 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       };
 
       const onChange = (date: Date) => {
-        if (date === workStartedDate) return;
         setWorkStartedDate(date);
       };
 
