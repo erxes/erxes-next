@@ -12,7 +12,6 @@ export const PhoneFieldUser = ({ _id, details }: PhoneFieldUserProps) => {
   const { __typename, operatorPhone, ...rest } = details || {};
   const { usersEdit } = useUserEdit();
   const phoneInputRef = useRef<HTMLInputElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [editingValue, setEditingValue] = useState(operatorPhone || '');
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -23,20 +22,17 @@ export const PhoneFieldUser = ({ _id, details }: PhoneFieldUserProps) => {
       return;
     }
     if (editingValue === operatorPhone) {
-      setIsOpen(false);
       return;
     }
 
     usersEdit({
       variables: { _id, details: { ...rest, operatorPhone: editingValue } },
     });
-    setIsOpen(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setEditingValue(operatorPhone || '');
-      setIsOpen(false);
     }
   };
 

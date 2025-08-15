@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { IMask, IMaskInput } from 'react-imask';
 import { parse, isValid, format } from 'date-fns';
-import { cn, Form } from 'erxes-ui';
+import { cn } from 'erxes-ui';
 
 interface TimeInputProps {
   value: Date;

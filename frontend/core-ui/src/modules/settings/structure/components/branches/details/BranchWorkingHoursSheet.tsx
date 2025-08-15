@@ -14,7 +14,7 @@ import { IWorkhoursForm } from '@/settings/structure/types/workhours';
 import { useWorkhoursForm } from '@/settings/structure/hooks/useWorkhoursForm';
 import { useFormContext } from 'react-hook-form';
 import { useBranchById } from 'ui-modules/modules/structure/hooks/useBranchById';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useBranchInlineEdit } from '@/settings/structure/hooks/useBranchActions';
 
 export const BranchWorkingHoursSheet = () => {
@@ -73,8 +73,15 @@ export const BranchWorkingHoursSheet = () => {
     if (branchDetail) {
       const initialValues = branchDetail.workhours ?? {};
 
-      const mergedValues = { ...workingHours, ...initialValues };
-
+      const mergedValues = Object.fromEntries(
+        Object.entries(workingHours).map(([day, defaults]) => [
+          day,
+          {
+            ...(defaults || {}),
+            ...((initialValues as Record<string, any>)[day] || {}),
+          },
+        ]),
+      ) as IWorkhoursForm;
       form.reset(mergedValues);
     }
   }, [branchDetail, form]);
@@ -98,15 +105,17 @@ export const BranchWorkingHoursSheet = () => {
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5">
               {Object.entries(workingHours).map(([day, data], index) => {
                 return (
-                  <>
+                  <Fragment key={day}>
                     {index !== 0 && <Separator />}
-                    <WeekDay weekDay={day} key={day} />
-                  </>
+                    <WeekDay weekDay={day} />
+                  </Fragment>
                 );
               })}
             </Sheet.Content>
             <Sheet.Footer className="flex justify-end items-center gap-3">
-              <Button variant={'secondary'}>Cancel</Button>
+              <Button variant={'secondary'} onClick={() => setOpen(null)}>
+                Cancel
+              </Button>
               <Button
                 disabled={loading}
                 type="button"
@@ -124,7 +133,7 @@ export const BranchWorkingHoursSheet = () => {
 
 const WeekDay = ({ weekDay }: { weekDay: string }) => {
   const form = useFormContext<IWorkhoursForm>();
-  const active = form.watch(`${weekDay}.inactive`) as boolean;
+  const isInactive = form.watch(`${weekDay}.inactive`) as boolean;
 
   function parseTime(time: string | undefined) {
     if (!time) return new Date();
@@ -152,7 +161,7 @@ const WeekDay = ({ weekDay }: { weekDay: string }) => {
         )}
       />
       <span className="font-semibold">{weekDay}</span>
-      {(active && (
+      {(isInactive && (
         <span className="font-normal text-sm h-8 text-accent-foreground flex items-center">
           Not working on this day
         </span>
