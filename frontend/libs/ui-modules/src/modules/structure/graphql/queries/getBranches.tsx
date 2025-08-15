@@ -40,6 +40,7 @@ export const GET_BRANCH_BY_ID = gql`
       title
       code
       order
+      workhours
     }
   }
 `;
