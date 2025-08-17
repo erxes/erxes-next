@@ -112,15 +112,15 @@ export const logColumns: ColumnDef<any>[] = [
     accessorKey: 'userId',
     header: () => <RecordTable.InlineHead icon={IconUser} label="User" />,
     cell: ({ cell }) => {
-      const { user = {}, userId } = cell?.row?.original || {};
-      if (!userId) {
+      const { user = {} } = cell?.row?.original || {};
+      if (!user) {
         return (
           <RecordTableInlineCell className="text-border">
             No User
           </RecordTableInlineCell>
         );
       }
-      const { details } = user as IUser;
+      const { details } = (user || {}) as IUser;
       return (
         <RecordTableInlineCell>
           <Avatar className="h-6 w-6 rounded-full">

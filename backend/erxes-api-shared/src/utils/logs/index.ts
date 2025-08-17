@@ -1,7 +1,8 @@
+import { checkServiceRunning } from '../utils';
 import { ILogDoc } from '../../core-types';
 import { createMQWorkerWithListeners, sendWorkerQueue } from '../mq-worker';
 import { redis } from '../redis';
-import { initializePluginConfig, isEnabled } from '../service-discovery';
+import { initializePluginConfig } from '../service-discovery';
 
 export const logHandler = async (
   resolver: () => Promise<any> | any,
@@ -10,7 +11,7 @@ export const logHandler = async (
   onError?: any,
   skipSaveResult?: boolean,
 ) => {
-  if (!(await isEnabled('logs'))) {
+  if (!(await checkServiceRunning('logs'))) {
     return await resolver();
   }
 

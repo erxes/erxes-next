@@ -1,5 +1,6 @@
 import { ILogDocument } from 'erxes-api-shared/core-types';
 import {
+  checkServiceRunning,
   createMQWorkerWithListeners,
   sendWorkerQueue,
 } from 'erxes-api-shared/utils';
@@ -43,7 +44,7 @@ export const initMQWorkers = async (redis: any) => {
                 contentType,
               );
 
-              if (contentType) {
+              if (contentType && (await checkServiceRunning('automations'))) {
                 sendWorkerQueue('automations', 'trigger').add('trigger', {
                   subdomain,
                   data: { type: contentType, targets: [payload?.fullDocument] },
