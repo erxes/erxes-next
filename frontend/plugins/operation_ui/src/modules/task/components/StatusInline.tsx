@@ -1,5 +1,5 @@
 import {
-  Icon,
+  type Icon,
   IconCircle,
   IconCircleCheck,
   IconCircleDashed,
@@ -24,8 +24,6 @@ export const StatusInlineIcon = React.forwardRef<
   if (!TeamStatusIcon) {
     return null;
   }
-
-  console.log(color);
 
   return (
     <TeamStatusIcon

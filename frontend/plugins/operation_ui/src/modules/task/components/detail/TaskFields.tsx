@@ -127,7 +127,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
           className="min-h-full"
         />
       </div>
-      <ActivityList contentId={taskId} />
+      <ActivityList contentId={taskId} contentDetail={task} />
     </div>
   );
 };

@@ -16,7 +16,7 @@ import { IconProgressCheck } from '@tabler/icons-react';
 import { IStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { DEFAULT_TEAM_STATUSES, TeamStatusIcons } from '@/team/constants';
+import { DEFAULT_TEAM_STATUSES } from '@/team/constants';
 import { useParams } from 'react-router-dom';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
 

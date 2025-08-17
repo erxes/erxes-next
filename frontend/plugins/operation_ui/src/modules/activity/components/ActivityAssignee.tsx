@@ -1,30 +1,28 @@
 import { IActivity } from '@/activity/types';
-import { format } from 'date-fns';
 import { Badge } from 'erxes-ui';
+import { MembersInline } from 'ui-modules';
 
-export const ActivityDate = ({
+export const ActivityAssignee = ({
   metadata,
-  type,
 }: {
   metadata: IActivity['metadata'];
-  type: 'start' | 'end';
 }) => {
   const { previousValue, newValue } = metadata;
 
   return (
-    <div className="inline-flex items-center gap-1 whitespace-nowrap">
-      changed {type === 'start' ? 'start' : 'end'} date
-      {previousValue && (
+    <div className="inline-flex items-center gap-1">
+      changed assignee{' '}
+      {!!previousValue && (
         <>
-          {' '}
+          from
           <Badge variant="secondary" className="flex-none">
-            {format(new Date(previousValue), 'MMM d, yyyy')}
+            <MembersInline memberIds={previousValue ? [previousValue] : []} />
           </Badge>
         </>
-      )}{' '}
+      )}
       to
       <Badge variant="secondary" className="flex-none">
-        {format(new Date(newValue), 'MMM d, yyyy')}
+        <MembersInline memberIds={newValue ? [newValue] : []} />
       </Badge>
     </div>
   );
