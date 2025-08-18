@@ -5,7 +5,7 @@ import {
   Command,
   Popover,
   RecordTable,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   TextOverflowTooltip,
   useConfirm,
   useQueryState,
@@ -13,6 +13,10 @@ import {
 import { IPermission } from 'ui-modules/modules/permissions/types/permission';
 import { usePermissionsRemove } from 'ui-modules/modules/permissions/hooks/usePermissionsMutations';
 import { IconTrash } from '@tabler/icons-react';
+import {
+  SelectMember,
+  SelectUsersGroup,
+} from 'ui-modules/modules/team-members';
 
 export const PermissionsColumnsMoreCell = ({
   cell,
@@ -22,7 +26,6 @@ export const PermissionsColumnsMoreCell = ({
   const confirmOptions = { confirmationValue: 'delete' };
   const { confirm } = useConfirm();
   const { permissionsRemove, loading } = usePermissionsRemove();
-  const [, setOpen] = useQueryState('permission_id');
 
   const { _id } = cell.row.original;
 
@@ -70,11 +73,11 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     accessorKey: 'module',
     header: () => <RecordTable.InlineHead label="Module" />,
     cell: ({ cell }) => (
-      <RecordTableCellDisplay className="capitalize">
+      <RecordTableInlineCell className="capitalize">
         <TextOverflowTooltip value={cell.getValue() as string} />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
-    size: 250,
+    size: 200,
   },
   {
     id: 'action',
@@ -83,46 +86,51 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     cell: ({ cell }) => {
       const { action } = cell.row.original || {};
       if (!action) {
-        return <RecordTableCellDisplay>N/A</RecordTableCellDisplay>;
+        return <RecordTableInlineCell>N/A</RecordTableInlineCell>;
       }
       if (action.endsWith('All')) {
         return (
-          <RecordTableCellDisplay className="justify-center">
+          <RecordTableInlineCell className="justify-center">
             <Badge>All</Badge>
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         );
       }
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge>{cell.getValue() as string}</Badge>
-        </RecordTableCellDisplay>
-      );
-    },
-  },
-  {
-    id: 'user',
-    accessorKey: 'user',
-    header: () => <RecordTable.InlineHead label="Email" />,
-    cell: ({ cell }) => {
-      const { user } = cell.row.original || {};
-      return (
-        <RecordTableCellDisplay>
-          {user ? <Badge>{user.email}</Badge> : '-'}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 250,
   },
   {
-    id: 'group',
-    accessorKey: 'group',
+    id: 'userId',
+    accessorKey: 'userId',
+    header: () => <RecordTable.InlineHead label="User" />,
+    cell: ({ cell }) => {
+      const { userId } = cell.row.original || {};
+      return (
+        <RecordTableInlineCell>
+          <SelectMember.Provider value={userId}>
+            <SelectMember.Value placeholder="No users selected" />
+          </SelectMember.Provider>
+        </RecordTableInlineCell>
+      );
+    },
+    size: 250,
+  },
+  {
+    id: 'groupId',
+    accessorKey: 'groupId',
     header: () => <RecordTable.InlineHead label="Group" />,
     cell: ({ cell }) => {
-      const { group } = cell.row.original || {};
+      const { groupId } = cell.row.original || {};
       return (
-        <RecordTableCellDisplay>
-          {group ? <Badge>{group.name}</Badge> : '-'}
-        </RecordTableCellDisplay>
+        <RecordTableInlineCell>
+          <SelectUsersGroup.Provider value={groupId}>
+            <SelectUsersGroup.Value placeholder="No groups selected" />
+          </SelectUsersGroup.Provider>
+        </RecordTableInlineCell>
       );
     },
     size: 250,
@@ -134,11 +142,11 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     cell: ({ cell }) => {
       const allowed = cell.getValue() as boolean;
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge variant={allowed ? 'success' : 'destructive'}>
             {allowed ? 'Allowed' : 'Denied'}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

@@ -23,7 +23,7 @@ export const CustomerAddSheet = () => {
   };
 
   const onClose = () => {
-    setHotkeyScope(ContactsHotKeyScope.CustomerAddSheet);
+    setHotkeyScope(ContactsHotKeyScope.CustomersPage);
     setOpen(false);
   };
 

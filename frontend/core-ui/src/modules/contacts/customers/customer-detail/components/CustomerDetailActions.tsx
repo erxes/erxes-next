@@ -15,10 +15,10 @@ import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDet
 import { useAtom, useSetAtom } from 'jotai';
 import { useRelationWidget } from 'ui-modules';
 import { useRelationWidgetsModules } from '@/widgets/hooks/useRelationWidgetsModules';
-import { useCustomerDetail } from '../hooks/useCustomerDetail';
+import { useCustomerDetailWithParams } from '../hooks/useCustomerDetailWithParams';
 
 export const CustomerDetailActions = () => {
-  const { customerDetail } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetailWithParams();
   const contactId = customerDetail?._id;
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
   const widgetsModules = useRelationWidgetsModules();
@@ -70,7 +70,8 @@ export const CustomerDetailActions = () => {
               title={item.name}
             >
               <RelationWidget
-                module={item}
+                module={item.name}
+                pluginName={item.pluginName}
                 contentId={contactId || ''}
                 contentType="core:customer"
               />

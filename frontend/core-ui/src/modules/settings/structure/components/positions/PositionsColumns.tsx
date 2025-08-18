@@ -5,10 +5,8 @@ import {
   Button,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   RecordTableTree,
   Spinner,
   TextOverflowTooltip,
@@ -25,6 +23,7 @@ import {
   useRemovePosition,
 } from '../../hooks/usePositionActions';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -110,7 +109,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -119,7 +118,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <RecordTableTree.Trigger
               order={cell.row.original.order}
               name={cell.getValue() as string}
@@ -127,11 +126,11 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
             >
               {cell.getValue() as string}
             </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_code} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
   },
@@ -164,7 +163,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -173,13 +172,13 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <TextOverflowTooltip value={cell.getValue() as string} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_title} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -193,12 +192,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
       const { positionsEdit } = usePositionInlineEdit();
       return (
         <SelectPositions.InlineCell
-          scope={
-            SettingsHotKeyScope.PositionsPage +
-            '.' +
-            cell.row.original._id +
-            '.parentId'
-          }
+          scope={clsx(SettingsHotKeyScope.PositionsPage, _id, 'parentId')}
           mode="single"
           value={cell.getValue() as string[]}
           onValueChange={(value) =>
@@ -224,9 +218,9 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -235,10 +229,10 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="justify-center gap-1 [&>button]:px-2">
+        <RecordTableInlineCell className="justify-center gap-1 [&>button]:px-2">
           <UnitEditColumnCell cell={cell} />
           <UnitRemoveCell cell={cell} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

@@ -4,10 +4,8 @@ import {
   Command,
   Filter,
   Form,
+  RecordTableInlineCell,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -265,14 +263,14 @@ export const SelectBrandInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={setOpen}>
+        <RecordTableInlineCell.Trigger>
           <SelectBrandValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectBrandContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectBrandProvider>
   );
 };

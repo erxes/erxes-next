@@ -29,6 +29,7 @@ export interface INotificationDocument extends Document {
   createdAt: Date;
   expiresAt?: Date; // Auto-cleanup old notifications
   isArchived: Boolean;
+  kind: 'system' | 'user';
 }
 
 export const notificationSchema = new Schema({
@@ -61,7 +62,6 @@ export const notificationSchema = new Schema({
 
   contentType: {
     type: String,
-    required: true,
   },
 
   contentTypeId: {
@@ -111,6 +111,12 @@ export const notificationSchema = new Schema({
     type: String,
     index: true,
     optional: true,
+  },
+  kind: {
+    type: String,
+    enum: ['system', 'user'],
+    default: 'user',
+    index: true,
   },
 });
 

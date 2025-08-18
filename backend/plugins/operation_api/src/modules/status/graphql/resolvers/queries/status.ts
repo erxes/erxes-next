@@ -1,24 +1,38 @@
 import { IContext } from '~/connectionResolvers';
-import { IStatusFilter } from '~/modules/status/@types/status';
+import { IStatusFilter } from '@/status/@types/status';
+import { STATUS_TYPES } from '@/status/constants';
 
 export const statusQueries = {
   getStatus: async (_parent: undefined, { _id }, { models }: IContext) => {
     return models.Status.getStatus(_id);
   },
 
-  getStatusesByTeam: async (
+  getStatusesChoicesByTeam: async (
     _parent: undefined,
-    params: IStatusFilter,
+    { teamId }: IStatusFilter,
     { models }: IContext,
   ) => {
-    return models.Status.getStatuses(params);
+    const statuses = await Promise.all(
+      Object.values(STATUS_TYPES).map((type) =>
+        models.Status.getStatuses(teamId, type),
+      ),
+    );
+
+    return statuses
+      .flat() // flatten nested arrays into one array
+      .map(({ name, _id, color, type }) => ({
+        label: name,
+        value: _id,
+        color,
+        type,
+      }));
   },
 
   getStatusesByType: async (
     _parent: undefined,
-    params: IStatusFilter,
+    { teamId, type }: IStatusFilter,
     { models }: IContext,
   ) => {
-    return models.Status.getStatuses(params);
+    return models.Status.getStatuses(teamId, type);
   },
 };

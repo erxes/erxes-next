@@ -114,7 +114,7 @@ const FilterPopover = ({
     goBackToPreviousHotkeyScope,
   } = usePreviousHotkeyScope();
 
-  useScopedHotkeys(`f`, () => setOpen(true), scope);
+  useScopedHotkeys('f', () => setOpen(true), scope);
 
   useEffect(() => {
     if (open) {

@@ -1,16 +1,27 @@
 import gql from 'graphql-tag';
 
 export const GET_TEAMS = gql`
-  query getTeams($name: String) {
-    getTeams(name: $name) {
+  query getTeams(
+    $name: String
+    $userId: String
+    $teamIds: [String]
+    $projectId: String
+  ) {
+    getTeams(
+      name: $name
+      userId: $userId
+      teamIds: $teamIds
+      projectId: $projectId
+    ) {
       _id
-      name
       icon
+      name
       description
-      memberIds
-
-      taskCount
+      estimateType
       createdAt
+      updatedAt
+      taskCount
+      memberCount
     }
   }
 `;

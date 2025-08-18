@@ -29,6 +29,7 @@ interface NavigationGroupResult {
   icon?: React.ElementType;
   contents: any[];
   actions: any[];
+  subGroups: any[];
   name: string;
 }
 
@@ -62,11 +63,17 @@ export const usePluginsNavigationGroups = (): NavigationGroups => {
           ? [...existingGroup.actions, newAction]
           : existingGroup.actions;
 
+        const newSubGroup = plugin.navigationGroup?.subGroups;
+        const updatedSubGroups = newSubGroup
+          ? [...existingGroup.subGroups, newSubGroup]
+          : existingGroup.subGroups;
+
         acc[groupName] = {
           name: groupName,
           icon: plugin.navigationGroup?.icon || existingGroup.icon,
           contents: updatedContents,
           actions: updatedActions,
+          subGroups: updatedSubGroups,
         };
 
         return acc;

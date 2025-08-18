@@ -68,18 +68,3 @@ router.post('/receive', async (req, res, next) => {
     });
   }
 });
-
-router.get('/test', async (req, res, next) => {
-  try {
-    res.status(200).json({
-      success: true,
-      message: 'success',
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'Webhook handling failed',
-      error: err.message || err.toString(),
-    });
-  }
-});

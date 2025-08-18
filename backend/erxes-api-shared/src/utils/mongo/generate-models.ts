@@ -4,7 +4,7 @@ import {
   getSaasCoreConnection,
 } from '../saas/saas-mongo-connection';
 import { isEnabled } from '../service-discovery';
-import { getEnv, getSubdomain } from '../utils';
+import { checkServiceRunning, getEnv, getSubdomain } from '../utils';
 import { startChangeStreams } from './change-stream';
 import { connect } from './mongo-connection';
 
@@ -21,7 +21,10 @@ const initializeModels = async <IModels>(
   },
 ) => {
   const models = await loadClasses(connection, subdomain);
-  if (!logIgnoreOptions?.ignoreChangeStream && (await isEnabled('logs'))) {
+  if (
+    !logIgnoreOptions?.ignoreChangeStream &&
+    (await checkServiceRunning('logs'))
+  ) {
     startChangeStreams(models as any, subdomain, logIgnoreOptions);
   }
 

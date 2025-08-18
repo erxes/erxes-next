@@ -1,5 +1,11 @@
 import * as _ from 'underscore';
-import { redis, isEnabled } from 'erxes-api-shared/utils';
+import {
+  redis,
+  isEnabled,
+  checkServiceRunning,
+  sendWorkerMessage,
+  sendWorkerQueue,
+} from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels, generateModels } from '~/connectionResolvers';
 import { sendCoreMessage } from '~/init-trpc';
@@ -15,7 +21,7 @@ export const getConfig = async (code: string, defaultValue?: any) => {
     action: 'getConfig',
     input: { code, defaultValue },
   });
-}
+};
 
 export const getChildCategories = async (subdomain: string, categoryIds) => {
   const childs = await sendTRPCMessage({
@@ -23,7 +29,7 @@ export const getChildCategories = async (subdomain: string, categoryIds) => {
     module: 'productCategories',
     action: 'withChilds',
     input: { ids: categoryIds },
-    defaultValue: []
+    defaultValue: [],
   });
 
   const catIds: string[] = (childs || []).map((ch) => ch._id) || [];
@@ -36,7 +42,7 @@ const getChildTags = async (subdomain: string, tagIds) => {
     module: 'tag',
     action: 'findWithChild',
     input: { query: { _id: { $in: tagIds } }, fields: { _id: 1 } },
-    defaultValue: []
+    defaultValue: [],
   });
 
   const foundTagIds: string[] = (childs || []).map((ch) => ch._id) || [];
@@ -46,7 +52,7 @@ const getChildTags = async (subdomain: string, tagIds) => {
 export const getBranchesUtil = async (
   subdomain: string,
   models: IModels,
-  posToken: string
+  posToken: string,
 ) => {
   const pos = await models.Pos.findOne({ token: posToken }).lean();
 
@@ -56,7 +62,7 @@ export const getBranchesUtil = async (
 
   const allowsPos = await models.Pos.find({
     isOnline: { $ne: true },
-    branchId: { $in: pos.allowBranchIds }
+    branchId: { $in: pos.allowBranchIds },
   })
     .sort({ onServer: -1, name: 1 })
     .lean();
@@ -75,7 +81,7 @@ export const getBranchesUtil = async (
 
       const response = await sendPosclientHealthCheck({
         subdomain,
-        pos: allowPos
+        pos: allowPos,
       });
 
       if (response && response.healthy === 'ok') {
@@ -103,10 +109,10 @@ export const getBranchesUtil = async (
         code: 1,
         order: 1,
         status: 1,
-        links: 1
-      }
+        links: 1,
+      },
     },
-    defaultValue: []
+    defaultValue: [],
   });
 };
 
@@ -118,9 +124,9 @@ export const confirmLoyalties = async (subdomain: string, order: IPosOrder) => {
     paymentTypes: {
       $elemMatch: {
         type: { $in: (order?.paidAmounts || []).map(({ type }) => type) },
-        scoreCampaignId: { $exists: true }
-      }
-    }
+        scoreCampaignId: { $exists: true },
+      },
+    },
   });
 
   if (pos) {
@@ -142,8 +148,8 @@ export const confirmLoyalties = async (subdomain: string, order: IPosOrder) => {
               target: order,
               actionMethod: 'subtract',
               serviceName: 'pos',
-              targetId: (order as any)?._id
-            }
+              targetId: (order as any)?._id,
+            },
           });
         } catch (error) {
           console.log(error);
@@ -163,7 +169,7 @@ export const confirmLoyalties = async (subdomain: string, order: IPosOrder) => {
   for (const item of confirmItems) {
     checkInfo[item.productId] = {
       voucherId: item.bonusVoucherId,
-      count: item.bonusCount
+      count: item.bonusCount,
     };
   }
 
@@ -179,10 +185,10 @@ export const confirmLoyalties = async (subdomain: string, order: IPosOrder) => {
           ownerType: order.customerType?.trim() || 'customer',
           ownerId: order.customerId || null,
           targetType: 'pos',
-          targetId: (order as any)?._id
-        }
+          targetId: (order as any)?._id,
+        },
       },
-    })
+    });
   } catch (e) {
     throw new Error(e.message);
   }
@@ -202,7 +208,7 @@ const otherPlugins = async (subdomain, newOrder, oldOrder?, userId?) => {
       module: 'users',
       action: 'users.findOne',
       input: { _id: userId },
-      defaultValue: {}
+      defaultValue: {},
     });
 
     for (const service of afterMutations['pos:order']['synced']) {
@@ -230,7 +236,7 @@ const updateCustomer = async ({ subdomain, doneOrder }) => {
     description,
     phone,
     email,
-    saveInfo
+    saveInfo,
   } = deliveryInfo;
 
   const customerType = doneOrder.customerType || 'customer';
@@ -249,16 +255,18 @@ const updateCustomer = async ({ subdomain, doneOrder }) => {
       (marker.latitude || marker.lat)
     ) {
       pushInfo.addresses = {
-        id: `${marker.longitude || marker.lng}_${marker.latitude || marker.lat}`,
+        id: `${marker.longitude || marker.lng}_${
+          marker.latitude || marker.lat
+        }`,
         location: {
           type: 'Point',
           coordinates: [
             marker.longitude || marker.lng,
-            marker.latitude || marker.lat
-          ]
+            marker.latitude || marker.lat,
+          ],
         },
         address,
-        short: description
+        short: description,
       };
     }
 
@@ -279,10 +287,10 @@ const updateCustomer = async ({ subdomain, doneOrder }) => {
         input: {
           selector: { _id: doneOrder.customerId },
           modifier: {
-            $addToSet: pushInfo
-          }
-        }
-      })
+            $addToSet: pushInfo,
+          },
+        },
+      });
     }
   }
 };
@@ -296,7 +304,9 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
     name: `Delivery: ${doneOrder.number}`,
     startDate: doneOrder.createdAt,
     closeDate: doneOrder.dueDate,
-    description: `<p>${doneOrder.description || ''}</p> <p>${description || ''}</p>`,
+    description: `<p>${doneOrder.description || ''}</p> <p>${
+      description || ''
+    }</p>`,
     stageId: deliveryConfig.stageId,
     assignedUserIds: deliveryConfig.assignedUserIds,
     watchedUserIds: deliveryConfig.watchedUserIds,
@@ -307,8 +317,8 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
       quantity: i.count,
       unitPrice: i.unitPrice,
       amount: i.count * i.unitPrice,
-      tickUsed: true
-    }))
+      tickUsed: true,
+    })),
   };
 
   if (deliveryConfig.mapCustomField) {
@@ -334,16 +344,18 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
           type: 'Point',
           coordinates: [
             marker.longitude || marker.lng,
-            marker.latitude || marker.lat
-          ]
+            marker.latitude || marker.lat,
+          ],
         },
         value: {
           lat: marker.latitude || marker.lat,
           lng: marker.longitude || marker.lng,
-          description: 'location'
+          description: 'location',
         },
-        stringValue: `${marker.longitude || marker.lng},${marker.latitude || marker.lat}`
-      }
+        stringValue: `${marker.longitude || marker.lng},${
+          marker.latitude || marker.lat
+        }`,
+      },
     ];
   }
 
@@ -355,9 +367,9 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
       action: 'updateOne',
       input: {
         selector: { _id: doneOrder.deliveryInfo.dealId },
-        modifier: dealsData
+        modifier: dealsData,
       },
-    })
+    });
 
     await sendTRPCMessage({
       method: 'mutation',
@@ -369,9 +381,9 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
         action: 'itemUpdate',
         data: {
           item: deal,
-          destinationStageId: deliveryConfig.stageId
-        }
-      }
+          destinationStageId: deliveryConfig.stageId,
+        },
+      },
     });
   } else {
     const deal = await sendTRPCMessage({
@@ -380,9 +392,9 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
       module: 'deals',
       action: 'create',
       input: {
-        ...dealsData
+        ...dealsData,
       },
-    })
+    });
 
     if (
       doneOrder.customerId &&
@@ -398,9 +410,9 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
           mainType: 'deal',
           mainTypeId: deal._id,
           relType: doneOrder.customerType || 'customer',
-          relTypeId: doneOrder.customerId
+          relTypeId: doneOrder.customerId,
         },
-      })
+      });
     }
 
     await sendTRPCMessage({
@@ -413,9 +425,9 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
         action: 'itemAdd',
         data: {
           item: deal,
-          destinationStageId: deliveryConfig.stageId
-        }
-      }
+          destinationStageId: deliveryConfig.stageId,
+        },
+      },
     });
 
     await models.PosOrders.updateOne(
@@ -424,10 +436,10 @@ const createDeliveryDeal = async ({ subdomain, models, doneOrder, pos }) => {
         $set: {
           deliveryInfo: {
             ...deliveryInfo,
-            dealId: deal._id
-          }
-        }
-      }
+            dealId: deal._id,
+          },
+        },
+      },
     );
   }
 };
@@ -436,7 +448,7 @@ export const statusToDone = async ({
   subdomain,
   models,
   order,
-  pos
+  pos,
 }: {
   subdomain;
   models;
@@ -445,7 +457,7 @@ export const statusToDone = async ({
 }) => {
   // must have
   const doneOrder = await models.PosOrders.findOne({
-    _id: order._id
+    _id: order._id,
   }).lean();
 
   if (!doneOrder) {
@@ -459,7 +471,7 @@ export const statusToDone = async ({
   if (pos.isOnline && doneOrder.subBranchId) {
     const toPos = await models.Pos.findOne({
       branchId: doneOrder.subBranchId,
-      _id: { $ne: pos._id }
+      _id: { $ne: pos._id },
     })
       .sort({ onServer: -1, name: 1 })
       .lean();
@@ -474,16 +486,16 @@ export const statusToDone = async ({
             ...doneOrder,
             posToken: doneOrder.posToken,
             subToken: toPos.token,
-            status: 'reDoing'
-          }
+            status: 'reDoing',
+          },
         },
-        pos: toPos
+        pos: toPos,
       });
     }
   }
 
   return {
-    status: 'success'
+    status: 'success',
   };
 };
 
@@ -491,7 +503,7 @@ const createDealPerOrder = async ({
   subdomain,
   models,
   pos,
-  newOrder
+  newOrder,
 }: {
   subdomain: string;
   models: IModels;
@@ -503,7 +515,7 @@ const createDealPerOrder = async ({
 
   const currentCardsConfig: any = (Object.values(cardsConfig || {}) || []).find(
     (c) =>
-      (c || ({} as any)).branchId && (c as any).branchId === newOrder.branchId
+      (c || ({} as any)).branchId && (c as any).branchId === newOrder.branchId,
   );
 
   if (currentCardsConfig && currentCardsConfig.stageId) {
@@ -511,13 +523,13 @@ const createDealPerOrder = async ({
     if (newOrder.cashAmount) {
       paymentsData.cash = {
         amount: newOrder.cashAmount,
-        currency: 'MNT'
+        currency: 'MNT',
       };
     }
     if (newOrder.mobileAmount) {
       paymentsData.bank = {
         amount: newOrder.cashAmount,
-        currency: 'MNT'
+        currency: 'MNT',
       };
     }
     if (newOrder.paidAmounts?.length) {
@@ -528,9 +540,9 @@ const createDealPerOrder = async ({
       paymentsData.other = {
         amount: newOrder.paidAmounts.reduce(
           (sum, curr) => curr.amount + sum,
-          0
+          0,
         ),
-        currency: 'MNT'
+        currency: 'MNT',
       };
     }
 
@@ -552,11 +564,11 @@ const createDealPerOrder = async ({
           quantity: i.count,
           unitPrice: i.unitPrice,
           amount: i.count * (i.unitPrice || 0),
-          tickUsed: true
+          tickUsed: true,
         })),
-        paymentsData
-      }
-    })
+        paymentsData,
+      },
+    });
 
     if (newOrder.customerId && cardDeal._id) {
       await sendTRPCMessage({
@@ -568,9 +580,9 @@ const createDealPerOrder = async ({
           mainType: 'deal',
           mainTypeId: cardDeal._id,
           relType: newOrder.customerType || 'customer',
-          relTypeId: newOrder.customerId
+          relTypeId: newOrder.customerId,
         },
-      })
+      });
     }
     await sendTRPCMessage({
       method: 'mutation',
@@ -582,14 +594,14 @@ const createDealPerOrder = async ({
         action: 'itemAdd',
         data: {
           item: cardDeal,
-          destinationStageId: currentCardsConfig.stageId
-        }
-      }
+          destinationStageId: currentCardsConfig.stageId,
+        },
+      },
     });
 
     await models.PosOrders.updateOne(
       { _id: newOrder._id },
-      { $set: { convertDealId: cardDeal._id } }
+      { $set: { convertDealId: cardDeal._id } },
     );
     return cardDeal._id;
   }
@@ -616,10 +628,10 @@ const syncErkhetRemainder = async ({ subdomain, models, pos, newOrder }) => {
       action: 'returnOrder',
       input: {
         pos,
-        order: newOrder
+        order: newOrder,
       },
       // timeout: 50000
-    })
+    });
   } else {
     resp = await sendTRPCMessage({
       method: 'mutation',
@@ -628,21 +640,21 @@ const syncErkhetRemainder = async ({ subdomain, models, pos, newOrder }) => {
       action: 'toOrder',
       input: {
         pos,
-        order: newOrder
+        order: newOrder,
       },
       // timeout: 50000
-    })
+    });
   }
 
   if (resp && (resp.message || resp.error)) {
     const txt = JSON.stringify({
       message: resp.message,
-      error: resp.error
+      error: resp.error,
     });
 
     await models.PosOrders.updateOne(
       { _id: newOrder._id },
-      { $set: { syncErkhetInfo: txt } }
+      { $set: { syncErkhetInfo: txt } },
     );
   }
 };
@@ -651,7 +663,7 @@ const syncInventoriesRem = async ({
   subdomain,
   newOrder,
   oldBranchId,
-  pos
+  pos,
 }) => {
   if (!(pos.checkRemainder && newOrder.departmentId)) {
     return;
@@ -679,10 +691,10 @@ const syncInventoriesRem = async ({
             productsData: (newOrder.items || []).map((item) => ({
               productId: item.productId,
               uom: item.uom,
-              diffSoonOut: item.count * multiplier
-            }))
-          }
-        })
+              diffSoonOut: item.count * multiplier,
+            })),
+          },
+        });
       }
 
       if (oldBranchId && oldBranchId !== newOrder.branchId) {
@@ -697,10 +709,10 @@ const syncInventoriesRem = async ({
             productsData: (newOrder.items || []).map((item) => ({
               productId: item.productId,
               uom: item.uom,
-              diffSoonOut: -1 * item.count * multiplier
-            }))
-          }
-        })
+              diffSoonOut: -1 * item.count * multiplier,
+            })),
+          },
+        });
       }
 
       return;
@@ -726,9 +738,9 @@ const syncInventoriesRem = async ({
           productId: item.productId,
           uom: item.uom,
           diffCount: -1 * item.count * multiplier,
-          diffSoonOut: newOrder.isPre ? -1 * item.count * multiplier : 0
-        }))
-      }
+          diffSoonOut: newOrder.isPre ? -1 * item.count * multiplier : 0,
+        })),
+      },
     });
   }
 
@@ -745,9 +757,9 @@ const syncInventoriesRem = async ({
           productId: item.productId,
           uom: item.uom,
           diffCount: item.count * multiplier,
-          diffSoonOut: newOrder.isPre ? item.count * multiplier : 0
-        }))
-      }
+          diffSoonOut: newOrder.isPre ? item.count * multiplier : 0,
+        })),
+      },
     });
   }
 };
@@ -759,7 +771,7 @@ export const syncOrderFromClient = async ({
   items,
   pos,
   posToken,
-  responses
+  responses,
 }: {
   subdomain: string;
   models: IModels;
@@ -781,8 +793,8 @@ export const syncOrderFromClient = async ({
           module: 'putresponses',
           action: 'createOrUpdate',
           input: { _id: response._id, doc: { ...response, posToken } },
-          defaultValue: []
-        })
+          defaultValue: [],
+        });
       }
     }
   }
@@ -796,10 +808,10 @@ export const syncOrderFromClient = async ({
         items,
         scopeBrandIds: pos.scopeBrandIds,
         branchId: order.branchId || pos.branchId,
-        departmentId: order.departmentId || pos.departmentId
-      }
+        departmentId: order.departmentId || pos.departmentId,
+      },
     },
-    { upsert: true }
+    { upsert: true },
   );
 
   const newOrder = await models.PosOrders.findOne({ _id: order._id }).lean();
@@ -810,19 +822,12 @@ export const syncOrderFromClient = async ({
 
   let convertDealId;
   if (newOrder.paidDate) {
-    if (newOrder.customerId && (await isEnabled('automations'))) {
+    if (newOrder.customerId && (await checkServiceRunning('automations'))) {
       try {
-        // TODO: check
-        sendTRPCMessage({
-          method: 'mutation',
-          pluginName: 'automations',
-          module: 'trigger',
-          action: 'trigger',
-          input: {
-            type: 'pos:posOrder',
-            targets: [newOrder]
-          }
-        })
+        sendWorkerQueue('automations', 'trigger').add('trigger', {
+          subdomain,
+          data: { type: 'pos:posOrder', targets: [newOrder] },
+        });
       } catch (e) {
         console.log(subdomain, e.message);
       }
@@ -845,7 +850,7 @@ export const syncOrderFromClient = async ({
         subdomain,
         models,
         pos,
-        newOrder
+        newOrder,
       });
     } catch (e) {
       console.log(subdomain, e.message);
@@ -855,7 +860,7 @@ export const syncOrderFromClient = async ({
   if (pos.isOnline && newOrder.subBranchId) {
     const toPos = await models.Pos.findOne({
       branchId: newOrder.subBranchId,
-      _id: { $ne: pos._id }
+      _id: { $ne: pos._id },
     })
       .sort({ onServer: -1, name: 1 })
       .lean();
@@ -870,10 +875,10 @@ export const syncOrderFromClient = async ({
             ...newOrder,
             convertDealId,
             posToken,
-            subToken: toPos.token
-          }
+            subToken: toPos.token,
+          },
         },
-        pos: toPos
+        pos: toPos,
       });
     }
 
@@ -885,7 +890,7 @@ export const syncOrderFromClient = async ({
     ) {
       const toCancelPos = await models.Pos.findOne({
         branchId: oldOrder.subBranchId,
-        _id: { $ne: pos._id }
+        _id: { $ne: pos._id },
       }).lean();
 
       if (toCancelPos) {
@@ -893,9 +898,9 @@ export const syncOrderFromClient = async ({
           subdomain,
           action: 'erxes-posclient-to-pos-api-remove',
           data: {
-            order: { ...newOrder, posToken, subToken: toCancelPos.token }
+            order: { ...newOrder, posToken, subToken: toCancelPos.token },
           },
-          pos: toCancelPos
+          pos: toCancelPos,
         });
       }
     }
@@ -920,8 +925,10 @@ export const syncOrderFromClient = async ({
       pluginName: 'coreintegration',
       module: 'putresponses',
       action: 'find',
-      input: { query: { _id: { $in: (responses || []).map((resp) => resp._id) } } },
-      defaultValue: []
+      input: {
+        query: { _id: { $in: (responses || []).map((resp) => resp._id) } },
+      },
+      defaultValue: [],
     })) || []
   ).map((r) => r._id);
 
@@ -934,9 +941,9 @@ export const syncOrderFromClient = async ({
       posToken,
       responseIds: syncedResponseIds,
       orderId: newOrder._id,
-      convertDealId
+      convertDealId,
     },
-    pos
+    pos,
   });
 };
 
@@ -947,14 +954,14 @@ const checkProductsByRule = async (subdomain, products, rule) => {
   if (rule.productCategoryIds?.length) {
     const includeCatIds = await getChildCategories(
       subdomain,
-      rule.productCategoryIds
+      rule.productCategoryIds,
     );
 
     const includeProductIdsCat = products
       .filter((p) => includeCatIds.includes(p.categoryId))
       .map((p) => p._id);
     filterIds = filterIds.concat(
-      _.intersection(includeProductIdsCat, productIds)
+      _.intersection(includeProductIdsCat, productIds),
     );
   }
 
@@ -965,14 +972,12 @@ const checkProductsByRule = async (subdomain, products, rule) => {
       .filter((p) => _.intersection(includeTagIds, p.tagIds || []).length)
       .map((p) => p._id);
     filterIds = filterIds.concat(
-      _.intersection(includeProductIdsTag, productIds)
+      _.intersection(includeProductIdsTag, productIds),
     );
   }
 
   if (rule.productIds?.length) {
-    filterIds = filterIds.concat(
-      _.intersection(rule.productIds, productIds)
-    );
+    filterIds = filterIds.concat(_.intersection(rule.productIds, productIds));
   }
 
   if (!filterIds.length) {
@@ -984,7 +989,7 @@ const checkProductsByRule = async (subdomain, products, rule) => {
   if (rule.excludeCatIds?.length) {
     const excludeCatIds = await getChildCategories(
       subdomain,
-      rule.excludeCatIds
+      rule.excludeCatIds,
     );
 
     const excProductIdsCat = filterProducts
@@ -1012,7 +1017,7 @@ const checkProductsByRule = async (subdomain, products, rule) => {
 export const calcProductsTaxRule = async (
   subdomain: string,
   config,
-  products
+  products,
 ) => {
   const vatRules =
     (config?.reverseVatRules?.length &&
@@ -1021,7 +1026,7 @@ export const calcProductsTaxRule = async (
         module: 'productRules',
         action: 'find',
         input: { _id: { $in: config.reverseVatRules } },
-        defaultValue: []
+        defaultValue: [],
       }))) ||
     [];
 
@@ -1032,7 +1037,7 @@ export const calcProductsTaxRule = async (
         module: 'productRules',
         action: 'find',
         input: { _id: { $in: config.reverseCtaxRules } },
-        defaultValue: []
+        defaultValue: [],
       }))) ||
     [];
 
@@ -1046,7 +1051,7 @@ export const calcProductsTaxRule = async (
       const productIdsByRule = await checkProductsByRule(
         subdomain,
         products,
-        rule
+        rule,
       );
 
       for (const pId of productIdsByRule) {
@@ -1065,7 +1070,7 @@ export const calcProductsTaxRule = async (
       const productIdsByRule = await checkProductsByRule(
         subdomain,
         products,
-        rule
+        rule,
       );
 
       for (const pId of productIdsByRule) {

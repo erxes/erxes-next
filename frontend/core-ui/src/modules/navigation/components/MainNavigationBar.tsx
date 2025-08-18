@@ -1,14 +1,20 @@
-import { NavigationMenuGroup, NavigationMenuLinkItem, Sidebar } from 'erxes-ui';
+import { Sidebar } from 'erxes-ui';
 import { Organization } from './Organization';
 import { SidebarNavigationFavorites } from './SidebarNavigationFavorites';
-import { MyInboxMainNavigationBarItem } from '@/notification/my-inbox/components/MyInboxMainNavigationBarItem';
 import { NavigationCoreModules } from '@/navigation/components/NavigationCoreModules';
 import {
-  NavigationPluginActions,
   NavigationPluginExitButton,
   NavigationPlugins,
 } from '@/navigation/components/NavigationPlugins';
-import { IconCode } from '@tabler/icons-react';
+import { lazy } from 'react';
+
+const SHOW_COMPONENTS = false;
+
+export const DevelopmentNavigation = lazy(() =>
+  import('./DevelopmentMenus').then((m) => ({
+    default: m.DevelopmentNavigation,
+  })),
+);
 
 export const MainNavigationBar = () => {
   return (
@@ -21,29 +27,16 @@ export const MainNavigationBar = () => {
         </Sidebar.Menu>
       </Sidebar.Header>
       <Sidebar.Separator className="mx-0" />
-
       <Sidebar.Content className="gap-0">
         <NavigationPluginExitButton />
-        <MyInboxMainNavigationBarItem />
-        {process.env.NODE_ENV === 'development' && <DevelopmentNavigation />}
+        {process.env.NODE_ENV === 'development' && SHOW_COMPONENTS && (
+          <DevelopmentNavigation />
+        )}
         <SidebarNavigationFavorites />
         <NavigationPlugins />
         <NavigationCoreModules />
-        <NavigationPluginActions />
       </Sidebar.Content>
     </>
-  );
-};
-
-export const DevelopmentNavigation = () => {
-  return (
-    <NavigationMenuGroup name="Development">
-      <NavigationMenuLinkItem
-        name="components"
-        icon={IconCode}
-        path="components"
-      />
-    </NavigationMenuGroup>
   );
 };
 

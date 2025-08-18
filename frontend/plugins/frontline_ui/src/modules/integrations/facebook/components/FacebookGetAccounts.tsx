@@ -61,7 +61,7 @@ export const FacebookGetAccounts = () => {
             </div>
             <Button variant="ghost" className="text-primary" asChild>
               <a
-                href={`${REACT_APP_API_URL}/pl:frontline/facebook/fblogin?kind=${IntegrationType.FACEBOOK_MESSENGER}`}
+                href={`${REACT_APP_API_URL}/pl:frontline/facebook/fblogin?kind=facebook`}
                 target="_blank"
                 rel="noreferrer"
               >

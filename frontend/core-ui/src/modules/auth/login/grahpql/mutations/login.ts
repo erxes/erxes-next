@@ -5,3 +5,15 @@ export const Login = gql`
     login(email: $email, password: $password)
   }
 `;
+
+export const LOGIN_WITH_GOOGLE = gql`
+  mutation LoginWithGoogle {
+    loginWithGoogle
+  }
+`;
+
+export const LOGIN_WITH_MAGIC_LINK = gql`
+  mutation LoginWithMagicLink($email: String!) {
+    loginWithMagicLink(email: $email)
+  }
+`;

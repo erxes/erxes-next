@@ -15,7 +15,7 @@ import {
   SipProviderProps,
   SipContextValue,
 } from '../types/sipTypes';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import {
   callConfigAtom,
   callInfoAtom,
@@ -29,6 +29,7 @@ import {
   logger,
   parseCallDirection,
 } from '@/integrations/call/utils/callUtils';
+import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 
 // Context for SIP functionality
 const SipContext = createContext<SipContextValue | null>(null);
@@ -51,6 +52,7 @@ const SipProvider = ({
 }: SipProviderProps & { children: React.ReactNode }) => {
   const [callConfig, setCallConfig] = useAtom(callConfigAtom);
   const [callInfo, setCallInfo] = useAtom(callInfoAtom);
+  const setCallNumber = useSetAtom(callNumberState);
   // State
   const [sipState, setSipState] = useAtom(sipStateAtom);
   const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
@@ -86,23 +88,6 @@ const SipProvider = ({
         .then(() => {
           ringbackToneRef.current = null;
         });
-    }
-  }, []);
-
-  const playRingbackTone = useCallback(() => {
-    if (!ringbackToneRef.current) {
-      ringbackToneRef.current = new Audio(
-        getPluginAssetsUrl('frontline', '/sound/outgoingRingtone.mp3'),
-      );
-      ringbackToneRef.current.loop = true;
-
-      setTimeout(() => {
-        ringbackToneRef.current?.play().catch(() => {
-          stopRingbackTone();
-        });
-      }, 4000);
-    } else {
-      stopRingbackTone();
     }
   }, []);
 
@@ -508,6 +493,7 @@ const SipProvider = ({
           }
           if (data.cause === 'Terminated') {
             playHangupTone();
+            setCallNumber('');
           }
 
           if (sipState.callDirection) {
@@ -654,6 +640,7 @@ const SipProvider = ({
     password,
     pathname,
     playHangupTone,
+    setCallNumber,
     port,
     setPersistentStates,
     setSipState,
@@ -663,24 +650,18 @@ const SipProvider = ({
     rtcSessionState,
     setRtcSessionState,
     stopRingbackTone,
-    playRingbackTone,
     user,
   ]);
 
   // Initialize audio element and JsSIP on mount
   useEffect(() => {
-    console.log('sipState', sipState);
-    console.log('callInfo', callInfo);
-    console.log('callConfig', callConfig);
     if (
       sipState.sipStatus === SipStatusEnum.REGISTERED &&
       callInfo?.isUnregistered
     ) {
-      console.log('unregisterSip');
       unregisterSip();
     }
     if (callConfig && !callConfig.isAvailable) {
-      console.log('return');
       return;
     }
 
@@ -768,6 +749,23 @@ export const useSip = () => {
 };
 
 export default SipProvider;
+
+// const playRingbackTone = useCallback(() => {
+//   if (!ringbackToneRef.current) {
+//     ringbackToneRef.current = new Audio(
+//       getPluginAssetsUrl('frontline', '/sound/outgoingRingtone.mp3'),
+//     );
+//     ringbackToneRef.current.loop = true;
+
+//     setTimeout(() => {
+//       ringbackToneRef.current?.play().catch(() => {
+//         stopRingbackTone();
+//       });
+//     }, 4000);
+//   } else {
+//     stopRingbackTone();
+//   }
+// }, []);
 
 // Audio playback functions
 // const playUnavailableAudio = useCallback(() => {

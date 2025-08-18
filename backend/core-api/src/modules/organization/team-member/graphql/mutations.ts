@@ -138,12 +138,14 @@ export const userMutations = {
       details,
       links,
       employeeId,
+      positionIds
     }: {
       username: string;
       email: string;
       details: IDetail;
       links: ILink;
       employeeId: string;
+      positionIds: string[]
     },
     { user, models }: IContext,
   ) {
@@ -156,6 +158,7 @@ export const userMutations = {
       },
       links,
       employeeId,
+      positionIds
     };
 
     const updatedUser = await models.Users.editProfile(user._id, doc);

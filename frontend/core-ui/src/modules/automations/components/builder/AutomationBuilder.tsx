@@ -47,7 +47,7 @@ export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
 
   useEffect(() => {
     if (activeTab !== queryParams.activeTab) {
-      setActiveTab(queryParams.activeTab || 'builder');
+      setActiveTab(queryParams.activeTab || AutomationBuilderTabsType.Builder);
     }
 
     if (queryParams.activeNodeId && !isOpenSideBar) {

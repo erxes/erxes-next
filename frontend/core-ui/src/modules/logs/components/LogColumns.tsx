@@ -13,12 +13,10 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import dayjs from 'dayjs';
 import {
-  Avatar,
   Badge,
   Button,
-  readImage,
   RecordTable,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   RelativeDateDisplay,
   useQueryState,
 } from 'erxes-ui';
@@ -51,7 +49,7 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
     cell: ({ cell }) => {
       const [, setLogId] = useQueryState<string>('logId');
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Button
             className="w-full"
             variant="ghost"
@@ -60,7 +58,7 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
           >
             <IconEye />
           </Button>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 33,
@@ -77,12 +75,12 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
       const { Icon, variant } = statusInfos[status] || {};
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge variant={variant as 'success' | 'destructive'}>
             <Icon className="size-4" />
             {status}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -93,11 +91,11 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
       <RecordTable.InlineHead icon={IconCalendarTime} label="Created At" />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
+      <RecordTableInlineCell>
         <RelativeDateDisplay.Value
           value={dayjs(cell.getValue() as string).format('YYYY-MM-DD HH:mm:ss')}
         />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   },
   {
@@ -107,9 +105,7 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
       <RecordTable.InlineHead icon={IconSourceCode} label="Source" />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -117,9 +113,7 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
     accessorKey: 'action',
     header: () => <RecordTable.InlineHead icon={IconSettings} label="Action" />,
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -128,11 +122,11 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
     header: () => <RecordTable.InlineHead icon={IconUser} label="User" />,
     cell: ({ cell }) => {
       const { user, userId } = cell?.row?.original || {};
-      if (!userId) {
+      if (!user) {
         return (
-          <RecordTableCellDisplay className="text-border">
+          <RecordTableInlineCell className="text-border">
             No User
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         );
       }
       const { details } = user || {};
@@ -140,9 +134,9 @@ export const logColumns: ColumnDef<ILogDoc>[] = [
       const initials = fullName ? fullName.charAt(0).toUpperCase() : '';
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {user && <LogUserInfo user={user} />}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

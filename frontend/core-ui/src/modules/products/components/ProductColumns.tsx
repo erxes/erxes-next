@@ -9,7 +9,7 @@ import { ColumnDef } from '@tanstack/table-core';
 import {
   RecordTable,
   TextOverflowTooltip,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   CurrencyFormatedDisplay,
   CurrencyCode,
 } from 'erxes-ui';
@@ -24,9 +24,9 @@ export const productColumns: ColumnDef<IProduct>[] = [
     header: () => <RecordTable.InlineHead icon={IconLabel} label="Name" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -36,9 +36,9 @@ export const productColumns: ColumnDef<IProduct>[] = [
     header: () => <RecordTable.InlineHead icon={IconHash} label="Code" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -50,14 +50,14 @@ export const productColumns: ColumnDef<IProduct>[] = [
     ),
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <CurrencyFormatedDisplay
             currencyValue={{
-              amountMicros: (cell.getValue() as number),
+              amountMicros: cell.getValue() as number,
               currencyCode: CurrencyCode.MNT,
             }}
           />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -67,9 +67,9 @@ export const productColumns: ColumnDef<IProduct>[] = [
     header: () => <RecordTable.InlineHead icon={IconUser} label="Vendor" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -81,11 +81,11 @@ export const productColumns: ColumnDef<IProduct>[] = [
     ),
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <TextOverflowTooltip
             value={cell.row.original?.category?.name || ''}
           />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

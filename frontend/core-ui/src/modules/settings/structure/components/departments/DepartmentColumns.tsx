@@ -5,10 +5,8 @@ import {
   Button,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   RecordTableTree,
   Spinner,
   TextOverflowTooltip,
@@ -126,14 +124,14 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
             if (!open) onSave();
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <RecordTableTree.Trigger
               order={(cell.row.original?.order as string) || ''}
               name={cell.getValue() as string}
@@ -141,11 +139,11 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
             >
               <TextOverflowTooltip value={cell.getValue() as string} />
             </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_code} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
   },
@@ -173,20 +171,20 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
             if (!open) onSave();
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             {cell.getValue() as string}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_title} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 350,
@@ -199,7 +197,7 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
       const { _id, code } = cell.row.original;
       const { departmentsEdit } = useDepartmentInlineEdit();
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <SelectMember.InlineCell
             scope={`DepartmentsPage.${_id}`}
             value={cell.getValue() as string}
@@ -213,7 +211,7 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
               );
             }}
           />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -223,9 +221,9 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -234,11 +232,11 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="gap-1 [&>button]:px-2 justify-center">
+        <RecordTableInlineCell className="gap-1 [&>button]:px-2 justify-center">
           <DepartmentWorkingHoursColumnCell cell={cell} />
           <DepartmentMoreColumnCell cell={cell} />
           <DepartmentRemoveCell cell={cell} />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

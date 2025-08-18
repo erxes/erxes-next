@@ -9,11 +9,9 @@ import {
   Command,
   Filter,
   Form,
-  Popover,
   PopoverScoped,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   SelectTree,
   TextOverflowTooltip,
   useFilterContext,
@@ -41,6 +39,7 @@ export const SelectDepartmentsProvider = ({
   const [selectedDepartments, setSelectedDepartments] = useState<IDepartment[]>(
     [],
   );
+  const departmentIds = !value ? [] : Array.isArray(value) ? value : [value];
 
   const handleSelectCallback = (department: IDepartment) => {
     if (!department) return;
@@ -75,6 +74,7 @@ export const SelectDepartmentsProvider = ({
         newDepartmentName,
         setNewDepartmentName,
         mode,
+        departmentIds,
       }}
     >
       {children}
@@ -89,7 +89,7 @@ export const SelectDepartmentsCommand = ({
 }) => {
   const [search, setSearch] = useState<string>('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { selectedDepartments } = useSelectDepartmentsContext();
+  const { selectedDepartments, departmentIds } = useSelectDepartmentsContext();
   const [noDepartmentsSearchValue, setNoDepartmentsSearchValue] =
     useState<string>('');
 
@@ -119,33 +119,35 @@ export const SelectDepartmentsCommand = ({
         placeholder="Search departments"
         focusOnMount
       />
-      {selectedDepartments?.length > 0 && (
-        <>
-          <div className="flex flex-wrap justify-start p-2 gap-2">
-            <DepartmentsList />
-          </div>
-          <Command.Separator />
-        </>
-      )}
 
       <Command.List>
+        {selectedDepartments?.length > 0 && (
+          <>
+            <div className="flex flex-wrap justify-start p-2 gap-2">
+              <DepartmentsList />
+            </div>
+            <Command.Separator />
+          </>
+        )}
         <SelectTree.Provider id={'select-departments'} ordered={!search}>
           <SelectDepartmentsCreate
             search={search}
             show={!disableCreateOption && !loading && !departments?.length}
           />
           <Combobox.Empty loading={loading} error={error} />
-          {departments?.map((department) => (
-            <SelectDepartmentsItem
-              key={department._id}
-              department={{
-                ...department,
-                hasChildren: departments.some(
-                  (b) => b.parentId === department._id,
-                ),
-              }}
-            />
-          ))}
+          {departments
+            ?.filter((d) => !departmentIds?.find((id) => id === d._id))
+            .map((department) => (
+              <SelectDepartmentsItem
+                key={department._id}
+                department={{
+                  ...department,
+                  hasChildren: departments.some(
+                    (b) => b.parentId === department._id,
+                  ),
+                }}
+              />
+            ))}
           <Combobox.FetchMore
             fetchMore={handleFetchMore}
             currentLength={departments?.length || 0}
@@ -184,8 +186,8 @@ export const SelectDepartmentsItem = ({
 }: {
   department: IDepartment & { hasChildren: boolean };
 }) => {
-  const { onSelect, selectedDepartments } = useSelectDepartmentsContext();
-  const isSelected = selectedDepartments.some((d) => d._id === department._id);
+  const { onSelect, departmentIds } = useSelectDepartmentsContext();
+  const isSelected = departmentIds?.some((d) => d === department._id);
   return (
     <SelectTree.Item
       key={department._id}
@@ -298,15 +300,48 @@ export const SelectDepartmentsInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectDepartmentsValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectDepartmentsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectDepartmentsProvider>
+  );
+};
+
+const SelectDepartmentsBadgesView = () => {
+  const {
+    departmentIds,
+    setSelectedDepartments,
+    selectedDepartments,
+    onSelect,
+  } = useSelectDepartmentsContext();
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {departmentIds?.map((departmentId) => (
+        <DepartmentBadge
+          key={departmentId}
+          departmentId={departmentId}
+          onCompleted={(position) => {
+            if (!position) return;
+            if (departmentIds.includes(position._id)) {
+              setSelectedDepartments([...selectedDepartments, position]);
+            }
+          }}
+          onClose={() =>
+            onSelect?.(
+              selectedDepartments.find(
+                (p) => p._id === departmentId,
+              ) as IDepartment,
+            )
+          }
+        />
+      ))}
+    </div>
   );
 };
 
@@ -319,27 +354,42 @@ export const SelectDepartmentsDetail = React.forwardRef<
     > & {
       scope?: string;
     }
->(({ onValueChange, scope, value, mode, options, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectDepartmentsProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...{ value, mode, options }}
-    >
-      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-        <Combobox.Trigger ref={ref} {...props}>
-          <SelectDepartmentsValue />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectDepartmentsContent />
-        </Combobox.Content>
-      </PopoverScoped>
-    </SelectDepartmentsProvider>
-  );
-});
+>(
+  (
+    { onValueChange, scope, value, mode, options, className, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <SelectDepartmentsProvider
+        onValueChange={(value) => {
+          onValueChange?.(value);
+          setOpen(false);
+        }}
+        {...{ value, mode, options }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Button
+              className={cn(
+                'w-min inline-flex text-sm font-medium shadow-xs',
+                className,
+              )}
+              variant="outline"
+            >
+              Add Departments
+              <IconPlus className="text-lg" />
+            </Button>
+          </Popover.Trigger>
+          <Combobox.Content className="mt-2">
+            <SelectDepartmentsContent />
+          </Combobox.Content>
+        </Popover>
+        <SelectDepartmentsBadgesView />
+      </SelectDepartmentsProvider>
+    );
+  },
+);
 
 SelectDepartmentsDetail.displayName = 'SelectDepartmentsDetail';
 
@@ -360,17 +410,17 @@ export const SelectDepartmentsCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconFolder />
             Department
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectDepartmentsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectDepartmentsProvider>
   );
 };

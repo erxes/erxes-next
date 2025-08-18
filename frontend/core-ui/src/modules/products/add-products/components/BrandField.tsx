@@ -6,9 +6,5 @@ interface BrandFieldProps {
 }
 
 export const BrandField = ({ value, onChange }: BrandFieldProps) => {
-  return (
-    <div>
-      <SelectBrand value={value} onValueChange={onChange}></SelectBrand>
-    </div>
-  );
+  return <div></div>;
 };
