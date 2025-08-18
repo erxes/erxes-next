@@ -8,7 +8,7 @@ import { AutomationBuilderTabsType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
 import { useReactFlow } from '@xyflow/react';
-import { useIsMobile, useToast } from 'erxes-ui';
+import { useIsMobile, toast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useParams } from 'react-router';
 
@@ -21,7 +21,6 @@ export const useAutomationHeader = () => {
   const isMobile = useIsMobile();
 
   const { getNodes, setNodes } = useReactFlow();
-  const { toast } = useToast();
   const { id } = useParams();
 
   const [save, { loading }] = useMutation(

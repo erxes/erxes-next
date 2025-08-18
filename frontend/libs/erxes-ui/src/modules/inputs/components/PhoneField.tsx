@@ -28,16 +28,12 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { usePhoneFields } from '../hooks/usePhoneFields';
 import { PhoneFieldsContext } from '../contexts/PhoneFieldsContext';
-import { PopoverScoped, RecordTableInlineCell } from 'erxes-ui/modules';
-
-export enum IPhoneStatus {
-  Verified = 'verified',
-  Unverified = 'unverified',
-}
+import { ValidationStatus } from 'erxes-ui/types';
+import { formatPhones } from 'erxes-ui/modules/display/utils/formatPhones';
 
 export interface IPhoneField {
   phone?: string;
-  status?: IPhoneStatus;
+  status?: ValidationStatus;
   isPrimary?: boolean;
 }
 
@@ -57,7 +53,7 @@ const PhoneFieldsProvider = forwardRef<
     children: React.ReactNode;
     recordId: string;
     onValueChange: (phones: TPhones) => void;
-    onValidationStatusChange?: (status: IPhoneStatus) => void;
+    onValidationStatusChange?: (status: ValidationStatus) => void;
   } & React.HTMLAttributes<HTMLDivElement>
 >(
   (
@@ -123,7 +119,7 @@ const PhoneItem = forwardRef<
       size="lg"
       {...props}
     >
-      {status === 'verified' ? (
+      {status === ValidationStatus.Valid ? (
         <IconCircleDashedCheck className="text-success" />
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
@@ -161,7 +157,7 @@ const PhoneOptions = forwardRef<
   };
 
   const handleVerificationChange = (value: string) => {
-    onValidationStatusChange?.(value as IPhoneStatus);
+    onValidationStatusChange?.(value);
   };
 
   const handleDeleteClick = () => {
@@ -284,10 +280,10 @@ const PhoneForm = forwardRef<
   const onPhoneAdd = (phone: string) => {
     if (phones.length === 0) {
       onValueChange?.([
-        { phone, status: IPhoneStatus.Unverified, isPrimary: true },
+        { phone, status: ValidationStatus.Invalid, isPrimary: true },
       ]);
     } else {
-      onValueChange?.([...phones, { phone, status: IPhoneStatus.Unverified }]);
+      onValueChange?.([...phones, { phone, status: ValidationStatus.Invalid }]);
     }
     setNewPhone('');
   };
@@ -345,11 +341,10 @@ const PhoneForm = forwardRef<
 });
 PhoneForm.displayName = 'PhoneForm';
 
-interface PhoneListFieldProps {
+interface PhoneListFieldProps extends IPhoneFieldProps {
   recordId: string;
-  phones: TPhones;
-  onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: IPhoneStatus) => void;
+  onValueChange: (values: IPhoneFieldProps) => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
 }
 
 const PhoneListFieldRoot = forwardRef<
@@ -359,30 +354,62 @@ const PhoneListFieldRoot = forwardRef<
   (
     {
       recordId,
-      phones,
       onValueChange,
       onValidationStatusChange,
       className,
+      primaryPhone,
+      phones,
+      phoneValidationStatus,
       ...props
     },
     ref,
   ) => {
     const setPhones = useSetAtom(phonesFamilyState(recordId));
     const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+    const formattedPhones = formatPhones(
+      primaryPhone,
+      phones,
+      phoneValidationStatus,
+    );
 
     useEffect(() => {
-      setPhones(phones);
+      setPhones(formattedPhones);
       return () => {
         setShowPhoneInput(false);
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [phones, setPhones]);
 
+    const handleValueChange = (values: TPhones) => {
+      if (onValueChange) {
+        const { primaryPhone, phones, phoneValidationStatus } = values.reduce(
+          (acc, phone) => {
+            if (phone.isPrimary) {
+              acc.primaryPhone = phone.phone || '';
+              acc.phoneValidationStatus =
+                phone.status || ValidationStatus.Invalid;
+            } else if (phone.phone) {
+              acc.phones.push(phone.phone);
+            }
+
+            return acc;
+          },
+          {} as IPhoneFieldProps,
+        );
+
+        onValueChange({
+          primaryPhone,
+          phones,
+          phoneValidationStatus,
+        });
+      }
+    };
+
     return (
       <PhoneField.Provider
         ref={ref}
         recordId={recordId}
-        onValueChange={onValueChange}
+        onValueChange={handleValueChange}
         onValidationStatusChange={onValidationStatusChange}
         className={className}
         {...props}
@@ -413,7 +440,7 @@ export const PhonesBadgeDisplay = ({
         phone.phone ? (
           <Badge key={phone.phone} variant="secondary">
             {phone.isPrimary &&
-              (phone.status === 'verified' ? (
+              (phone.status === ValidationStatus.Valid ? (
                 <IconCircleDashedCheck className="text-success size-4" />
               ) : (
                 <IconCircleDashed className="text-muted-foreground size-4" />
@@ -430,7 +457,7 @@ export interface PhoneListFieldInlineCellProps {
   recordId: string;
   phones: TPhones;
   onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: IPhoneStatus) => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
   scope?: string;
 }
 
@@ -438,11 +465,17 @@ export interface PhoneFieldDetailProps {
   recordId: string;
   phones: TPhones;
   onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: IPhoneStatus) => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
   scope?: string;
 }
 
-const PhoneField = Object.assign(PhoneListFieldRoot, {
+export interface IPhoneFieldProps {
+  primaryPhone: string;
+  phones: string[];
+  phoneValidationStatus: ValidationStatus;
+}
+
+export const PhoneField = Object.assign(PhoneListFieldRoot, {
   Provider: PhoneFieldsProvider,
   Container: PhoneListContainer,
   List: PhoneList,
@@ -451,5 +484,3 @@ const PhoneField = Object.assign(PhoneListFieldRoot, {
   Form: PhoneForm,
   BadgeDisplay: PhonesBadgeDisplay,
 });
-
-export { PhoneField };

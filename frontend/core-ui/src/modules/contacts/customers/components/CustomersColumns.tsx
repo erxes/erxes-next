@@ -107,7 +107,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         <CustomerEmails
           primaryEmail={primaryEmail || ''}
           _id={_id}
-          emailValidationStatus={emailValidationStatus || 'valid'}
+          emailValidationStatus={emailValidationStatus}
           emails={emails || []}
           Trigger={RecordTableInlineCell.Trigger}
         />
@@ -128,7 +128,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           _id={_id}
           primaryPhone={primaryPhone || ''}
           phones={phones || []}
-          phoneValidationStatus={phoneValidationStatus || 'valid'}
+          phoneValidationStatus={phoneValidationStatus}
           scope={clsx(ContactsHotKeyScope.CustomersPage, _id, 'Phones')}
           Trigger={RecordTableInlineCell.Trigger}
         />

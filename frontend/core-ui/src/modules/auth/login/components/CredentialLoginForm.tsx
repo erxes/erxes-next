@@ -4,10 +4,8 @@ import { Button, Form, Input } from 'erxes-ui';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 import { FormType, useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
 import { Link } from 'react-router-dom';
-import { useQueryState } from 'erxes-ui';
 
 export const CredentialLoginForm = () => {
-  const [, setEmail] = useQueryState('email');
   const { form } = useSignInUpForm();
   const { handleCrendentialsLogin } = useLogin();
 

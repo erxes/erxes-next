@@ -33,6 +33,7 @@
     "@escape.tech/graphql-armor-character-limit": "^2.3.0",
     "@escape.tech/graphql-armor-max-aliases": "^2.6.0",
     "@escape.tech/graphql-armor-max-depth": "^2.4.0",
+    "@faker-js/faker": "^9.9.0",
     "@formkit/auto-animate": "^0.8.2",
     "@graphql-tools/schema": "^10.0.23",
     "@hookform/resolvers": "^3.9.1",

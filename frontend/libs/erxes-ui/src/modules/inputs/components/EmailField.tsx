@@ -15,7 +15,6 @@ import {
   Separator,
   TextOverflowTooltip,
   Form,
-  Popover,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
@@ -33,21 +32,32 @@ import { emailSchema } from '../validations/emailValidation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
-import { EmailDisplay } from 'erxes-ui/modules/display';
+import { formatEmails } from 'erxes-ui/modules/display/utils/formatEmails';
+import { ValidationStatus } from 'erxes-ui/types';
 
-export enum IEmailStatus {
-  Verified = 'verified',
-  Unverified = 'unverified',
-}
+export type TEmailsOnValueChange = ({
+  primaryEmail,
+  emails,
+  emailValidationStatus,
+}: {
+  primaryEmail: string;
+  emails: string[];
+  emailValidationStatus: ValidationStatus;
+}) => void;
 
 export interface IEmailField {
   email?: string;
-  status?: IEmailStatus.Verified | IEmailStatus.Unverified;
+  status?: ValidationStatus;
   isPrimary?: boolean;
 }
 
 export type TEmails = IEmailField[];
+
+export interface IEmailFieldProps {
+  primaryEmail: string;
+  emails: string[];
+  emailValidationStatus: ValidationStatus;
+}
 
 export const EmailFieldsProvider = ({
   children,
@@ -58,17 +68,43 @@ export const EmailFieldsProvider = ({
 }: {
   children: React.ReactNode;
   recordId: string;
-  onValueChange: (emails: TEmails) => void;
+  onValueChange: TEmailsOnValueChange;
   noValidation?: boolean;
-  onValidationStatusChange?: (
-    status: IEmailStatus.Verified | IEmailStatus.Unverified,
-  ) => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
 }) => {
+  const handleValueChange = (emails: TEmails) => {
+    const {
+      primaryEmail,
+      emails: newEmails,
+      emailValidationStatus,
+    } = emails.reduce(
+      (acc, email) => {
+        if (email.isPrimary) {
+          acc.primaryEmail = email.email || '';
+          acc.emailValidationStatus = email.status || ValidationStatus.Invalid;
+        } else if (email.email) {
+          acc.emails.push(email.email);
+        }
+        return acc;
+      },
+      {
+        primaryEmail: '',
+        emails: [] as string[],
+        emailValidationStatus: ValidationStatus.Invalid,
+      },
+    );
+    onValueChange?.({
+      primaryEmail,
+      emails: newEmails,
+      emailValidationStatus,
+    });
+  };
+
   return (
     <EmailFieldsContext.Provider
       value={{
         recordId,
-        onValueChange,
+        onValueChange: handleValueChange,
         noValidation,
         onValidationStatusChange,
       }}
@@ -80,26 +116,34 @@ export const EmailFieldsProvider = ({
 
 export const EmailListField = ({
   recordId,
-  emails,
   onValueChange,
   onValidationStatusChange,
   noValidation,
-}: {
+  primaryEmail,
+  emails,
+  emailValidationStatus,
+}: IEmailFieldProps & {
   recordId: string;
-  emails: TEmails;
-  onValueChange: (emails: TEmails) => void;
-  onValidationStatusChange?: (status: IEmailStatus) => void;
+  onValueChange: TEmailsOnValueChange;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
   noValidation?: boolean;
 }) => {
+  const formattedEmails = formatEmails(
+    primaryEmail,
+    emails,
+    emailValidationStatus,
+  );
   const setEmails = useSetAtom(emailsFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
+
   useEffect(() => {
-    setEmails(emails);
+    setEmails(formattedEmails);
     return () => {
       setShowEmailInput(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emails, setEmails]);
+  }, [formattedEmails, setEmails]);
+
   return (
     <EmailFieldsProvider
       recordId={recordId}
@@ -152,7 +196,7 @@ const EmailField = ({ email, status, isPrimary }: IEmailField) => {
       )}
       size="lg"
     >
-      {status === IEmailStatus.Verified ? (
+      {status === ValidationStatus.Valid ? (
         <IconCircleDashedCheck className="text-success" />
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
@@ -190,7 +234,7 @@ const EmailOptions = ({
   const handleVerificationChange = (value: string) => {
     if (noValidation) return;
     if (value === status) return;
-    onValidationStatusChange?.(value as IEmailStatus);
+    onValidationStatusChange?.(value as ValidationStatus);
   };
   const handleDeleteClick = () => {
     onValueChange?.(emails.filter((e) => e.email !== email));
@@ -233,11 +277,11 @@ const EmailOptions = ({
               value={status}
               onValueChange={handleVerificationChange}
             >
-              <DropdownMenu.RadioItem value="verified">
+              <DropdownMenu.RadioItem value={ValidationStatus.Valid}>
                 <IconCircleDashedCheck className="text-success data-[state=active]:bg-muted " />
                 Verified
               </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="unverified">
+              <DropdownMenu.RadioItem value={ValidationStatus.Invalid}>
                 <IconCircleDashed className="text-muted-foreground" />
                 Unverified
               </DropdownMenu.RadioItem>
@@ -310,10 +354,10 @@ const EmailForm = () => {
   const onEmailAdd = (email: string) => {
     if (emails.length === 0) {
       onValueChange?.([
-        { email, status: IEmailStatus.Unverified, isPrimary: true },
+        { email, status: ValidationStatus.Invalid, isPrimary: true },
       ]);
     } else {
-      onValueChange?.([...emails, { email, status: IEmailStatus.Unverified }]);
+      onValueChange?.([...emails, { email, status: ValidationStatus.Invalid }]);
     }
     form.reset();
   };

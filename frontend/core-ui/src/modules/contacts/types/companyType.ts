@@ -1,3 +1,4 @@
+import { ValidationStatus } from 'erxes-ui';
 import { CountryCode } from 'libphonenumber-js';
 
 export interface TCompany {
@@ -13,6 +14,6 @@ export interface TCompany {
   location?: {
     countryCode?: CountryCode | undefined;
   };
-  emailValidationStatus?: 'valid' | 'invalid';
-  phoneValidationStatus?: 'valid' | 'invalid';
+  emailValidationStatus?: ValidationStatus;
+  phoneValidationStatus?: ValidationStatus;
 }

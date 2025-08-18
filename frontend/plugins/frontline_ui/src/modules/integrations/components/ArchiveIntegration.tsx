@@ -6,9 +6,11 @@ import { ARCHIVE_INTEGRATION } from '@/integrations/graphql/mutations/ArchiveInt
 export const ArchiveIntegration = ({
   _id,
   name,
+  isActive,
 }: {
   _id: string;
   name: string;
+  isActive: boolean;
 }) => {
   const { confirm } = useConfirm();
   const [archiveIntegration, { loading }] = useMutation(ARCHIVE_INTEGRATION, {
@@ -34,9 +36,13 @@ export const ArchiveIntegration = ({
       size="icon"
       onClick={() =>
         confirm({
-          message: `Are you sure you want to archive "${name}" integration?`,
+          message: `Are you sure you want to ${
+            isActive ? 'archive' : 'unarchive'
+          } "${name}" integration?`,
         }).then(() => {
-          archiveIntegration({ variables: { id: _id, status: true } });
+          archiveIntegration({
+            variables: { id: _id, status: isActive },
+          });
         })
       }
       disabled={loading}
