@@ -35,6 +35,7 @@ export const useCompaniesEdit = () => {
         toast({
           title: 'Error',
           description: error.message,
+          variant: 'destructive',
         });
       },
     });

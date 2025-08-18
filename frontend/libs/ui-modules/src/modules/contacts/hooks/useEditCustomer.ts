@@ -35,6 +35,7 @@ export const useCustomerEdit = () => {
         toast({
           title: 'Error',
           description: error.message,
+          variant: 'destructive',
         });
       },
     });
