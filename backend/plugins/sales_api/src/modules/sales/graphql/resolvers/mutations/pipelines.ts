@@ -152,7 +152,6 @@ export const pipelineMutations = {
       await models.Stages.createStage({
         ...rest,
         probability: stage.probability || '10%',
-        type: copied.type,
         pipelineId: copied._id,
       });
     }

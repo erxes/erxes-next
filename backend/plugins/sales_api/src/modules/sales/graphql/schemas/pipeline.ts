@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
 
   type SalesPipeline @key(fields: "_id") {
@@ -39,6 +41,14 @@ export const types = `
     order: Int
     createdAt: Date
     type: String
+
+    cursor: String
+  }
+
+  type SalesPipelinesListResponse {
+    list: [SalesPipeline],
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 
   input SalesOrderItem {
@@ -47,17 +57,23 @@ export const types = `
   }
 `;
 
+const queryParams = `
+  boardId: String,
+  isAll: Boolean
+
+  ${GQL_CURSOR_PARAM_DEFS}
+`;
+
 export const queries = `
-  salesPipelines(boardId: String, type: String, isAll: Boolean, page: Int, perPage: Int): [SalesPipeline]
+  salesPipelines(${queryParams}): SalesPipelinesListResponse
   salesPipelineDetail(_id: String!): SalesPipeline
   salesPipelineAssignedUsers(_id: String!): [User]
-  salesPipelineStateCount(boardId: String, type: String): JSON
+  salesPipelineStateCount(boardId: String): JSON
 `;
 
 const mutationParams = `
   name: String!,
   boardId: String!,
-  type: String!,
   stages: JSON,
   visibility: String!,
   memberIds: [String],
@@ -89,7 +105,7 @@ export const mutations = `
   salesPipelinesAdd(${mutationParams}): SalesPipeline
   salesPipelinesEdit(_id: String!, ${mutationParams}): SalesPipeline
   salesPipelinesUpdateOrder(orders: [SalesOrderItem]): [SalesPipeline]
-  salesPipelinesWatch(_id: String!, isAdd: Boolean, type: String!): SalesPipeline
+  salesPipelinesWatch(_id: String!, isAdd: Boolean): SalesPipeline
   salesPipelinesRemove(_id: String!): JSON
   salesPipelinesArchive(_id: String!): JSON
   salesPipelinesCopied(_id: String!): JSON

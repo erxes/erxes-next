@@ -19,7 +19,7 @@ export interface IPipelineLabelModel extends Model<IPipelineLabelDocument> {
     doc: IPipelineLabel,
   ): Promise<IPipelineLabelDocument>;
   removePipelineLabel(_id: string): void;
-  labelsLabel(pipelineId: string, targetId: string, labelIds: string[]): void;
+  labelsLabel(targetId: string, labelIds: string[]): void;
   validateUniqueness(filter: IFilter, _id?: string): Promise<boolean>;
   labelObject(params: ILabelObjectParams): void;
 }

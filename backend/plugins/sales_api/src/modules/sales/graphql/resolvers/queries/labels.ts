@@ -1,5 +1,5 @@
-import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 
 export const pipelineLabelQueries = {
   /**
@@ -33,4 +33,4 @@ export const pipelineLabelQueries = {
   },
 };
 
-moduleRequireLogin(pipelineLabelQueries);
+// moduleRequireLogin(pipelineLabelQueries);

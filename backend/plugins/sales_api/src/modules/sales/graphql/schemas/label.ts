@@ -24,5 +24,5 @@ export const mutations = `
   salesPipelineLabelsAdd(${mutationParams}): SalesPipelineLabel
   salesPipelineLabelsEdit(_id: String!, ${mutationParams}): SalesPipelineLabel
   salesPipelineLabelsRemove(_id: String!): JSON
-  salesPipelineLabelsLabel(pipelineId: String!, targetId: String!, labelIds: [String!]!): String
+  salesPipelineLabelsLabel(targetId: String!, labelIds: [String!]!): String
 `;
