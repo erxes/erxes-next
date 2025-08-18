@@ -89,7 +89,11 @@ const ColorPickerTrigger = React.forwardRef<
 
 ColorPickerTrigger.displayName = 'ColorPickerTrigger';
 
-const ColorPickerContent = () => {
+const ColorPickerContent = ({
+  setOpen,
+}: {
+  setOpen: (open: boolean) => void;
+}) => {
   const { value, onValueChange, colors } = useColorPickerContext();
 
   return (
@@ -100,7 +104,10 @@ const ColorPickerContent = () => {
             key={key}
             className="aspect-[3/2] rounded flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
             style={{ backgroundColor: color }}
-            onClick={() => onValueChange?.(color)}
+            onClick={() => {
+              onValueChange?.(color);
+              setOpen(false);
+            }}
           >
             {value === color && (
               <IconCheck className="h-4 w-4 text-primary-foreground" />
@@ -147,11 +154,12 @@ const ColorPickerRoot = React.forwardRef<
       value={value}
       onValueChange={(newValue) => {
         onValueChange?.(newValue);
-        setOpen(false);
       }}
       colors={colors}
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(open) => {
+        setOpen(open);
+      }}
     >
       <ColorPickerTrigger ref={ref} className={className} {...props}>
         <div
@@ -163,7 +171,7 @@ const ColorPickerRoot = React.forwardRef<
         />
         <IconChevronDown />
       </ColorPickerTrigger>
-      <ColorPickerContent />
+      <ColorPickerContent setOpen={setOpen} />
     </ColorPickerProvider>
   );
 });

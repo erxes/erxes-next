@@ -34,7 +34,6 @@ export const GET_PROJECTS = gql`
         _id
         name
         icon
-        description
         status
         priority
         teamIds
@@ -45,7 +44,6 @@ export const GET_PROJECTS = gql`
         updatedAt
       } 
       ${GQL_PAGE_INFO}
-      totalCount
     }
   }
 `;

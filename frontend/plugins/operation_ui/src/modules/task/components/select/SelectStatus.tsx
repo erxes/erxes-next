@@ -16,8 +16,9 @@ import { IconProgressCheck } from '@tabler/icons-react';
 import { IStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { DEFAULT_TEAM_STATUSES, TeamStatusIcons } from '@/team/constants';
+import { DEFAULT_TEAM_STATUSES } from '@/team/constants';
 import { useParams } from 'react-router-dom';
+import { StatusInlineIcon } from '@/task/components/StatusInline';
 
 interface SelectStatusContextType {
   statuses: IStatus[];
@@ -99,12 +100,10 @@ const SelectStatusValue = ({
 
   return (
     <div className="flex items-center gap-2">
-      {(() => {
-        const Icon = TeamStatusIcons[selectedStatus.type];
-        return (
-          <Icon className="size-4 flex-none" color={selectedStatus.color} />
-        );
-      })()}
+      <StatusInlineIcon
+        type={selectedStatus.type}
+        color={selectedStatus.color}
+      />
       <p className={cn('font-medium text-sm', className)}>
         {selectedStatus.label}
       </p>
@@ -123,10 +122,7 @@ const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
       }}
     >
       <div className="flex items-center gap-2 flex-1">
-        {(() => {
-          const Icon = TeamStatusIcons[status.type];
-          return <Icon className="w-3 h-3" color={status.color} stroke={2} />;
-        })()}
+        <StatusInlineIcon type={status.type} color={status.color} />
         <span className="font-medium">{status.label}</span>
       </div>
       <Combobox.Check checked={statusId === status.value.toString()} />

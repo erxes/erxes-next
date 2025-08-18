@@ -158,7 +158,7 @@ export const MembersInlineAvatar = ({
               {...props}
               className={cn(className, 'items-center justify-center')}
             >
-              <IconUserCircle className="text-muted-foreground size-4 flex-none" />
+              <IconUserCircle className="text-accent-foreground size-4 flex-none" />
             </Avatar>
           </Tooltip.Trigger>
           <Tooltip.Content>
@@ -192,7 +192,9 @@ export const MembersInlineAvatar = ({
   };
 
   if (members.length === 0)
-    return <IconUserCancel className="text-muted-foreground flex-none" />;
+    return (
+      <IconUserCancel className="text-muted-foreground flex-none size-4" />
+    );
 
   if (members.length === 1) return renderAvatar(members[0]);
 
