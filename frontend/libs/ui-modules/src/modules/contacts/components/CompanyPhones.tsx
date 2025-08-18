@@ -1,14 +1,14 @@
 import {
-  type IPhoneFieldProps,
   PhoneDisplay,
   PhoneField,
   PopoverScoped,
   RecordTableInlineCell,
+  type IPhoneFieldProps,
   type ValidationStatus,
 } from 'erxes-ui';
-import { useCustomerEdit } from 'ui-modules/modules/contacts/hooks';
+import { useCompaniesEdit } from 'ui-modules/modules/contacts/hooks';
 
-interface CustomerPhonesProps {
+interface CompanyPhonesProps {
   _id: string;
   primaryPhone: string;
   phones: string[];
@@ -17,15 +17,15 @@ interface CustomerPhonesProps {
   Trigger: React.ComponentType<{ children: React.ReactNode }>;
 }
 
-export function CustomerPhones({
+export function CompanyPhones({
   _id,
   primaryPhone,
   phones: _phones,
   phoneValidationStatus,
   scope,
   Trigger,
-}: CustomerPhonesProps) {
-  const { customerEdit } = useCustomerEdit();
+}: CompanyPhonesProps) {
+  const { companiesEdit } = useCompaniesEdit();
 
   const phoneProps = {
     primaryPhone,
@@ -34,7 +34,7 @@ export function CustomerPhones({
   };
 
   const handleValueChange = (values: IPhoneFieldProps) => {
-    customerEdit({
+    companiesEdit({
       variables: {
         _id,
         ...values,
@@ -43,7 +43,7 @@ export function CustomerPhones({
   };
 
   const handleValidationStatusChange = (status: ValidationStatus) => {
-    customerEdit({
+    companiesEdit({
       variables: {
         _id,
         phoneValidationStatus: status,

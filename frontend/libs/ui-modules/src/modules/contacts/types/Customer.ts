@@ -1,4 +1,4 @@
-import { SexCode } from 'erxes-ui';
+import { SexCode, ValidationStatus } from 'erxes-ui';
 import { CountryCode } from 'libphonenumber-js';
 import { ICompany } from './Company';
 import { IUser } from 'ui-modules/modules/team-members';
@@ -16,8 +16,8 @@ export interface ICustomer extends ICustomerInline {
   type?: CustomerType;
   links?: object;
   code?: string;
-  emailValidationStatus?: 'valid' | 'invalid';
-  phoneValidationStatus?: 'valid' | 'invalid';
+  emailValidationStatus?: ValidationStatus;
+  phoneValidationStatus?: ValidationStatus;
   emails?: string[];
   phones?: string[];
   tagIds?: string[];
