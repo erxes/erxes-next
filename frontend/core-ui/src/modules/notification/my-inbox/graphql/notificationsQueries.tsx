@@ -27,6 +27,7 @@ const NOTIFICATION_FIELDS = `
       contentType
       contentTypeId
       action
+      kind
 `;
 
 const NOTIFICATIONS_LIST_PARAMS = `
