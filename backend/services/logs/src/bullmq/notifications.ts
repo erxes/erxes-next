@@ -33,8 +33,6 @@ const sendWelcomeNotification = async ({
       userId,
     })) === 1;
 
-  console.log({ userId, action, source, isFirstLogin });
-
   if (isFirstLogin && source === 'auth' && action === 'login' && userId) {
     sendNotification(subdomain, {
       title: 'Welcome to erxes 🎉',
