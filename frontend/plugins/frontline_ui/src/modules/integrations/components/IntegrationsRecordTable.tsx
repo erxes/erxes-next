@@ -63,7 +63,6 @@ export const IntegrationsRecordTable = ({
 const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
   const [name, setName] = useState(cell.row.original.name);
   const { editIntegrationField } = useIntegrationEditField(cell.row.original);
-  console.log(cell.row.original, 'cell.row.original');
   const handleSave = () => {
     editIntegrationField(
       {
