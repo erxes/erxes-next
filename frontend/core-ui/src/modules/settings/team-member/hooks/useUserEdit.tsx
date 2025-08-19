@@ -105,7 +105,7 @@ export const useUsersStatusEdit = () => {
           variant: 'destructive',
         });
       },
-      refetchQueries: ['users'],
+      refetchQueries: ['Users'],
     });
   };
   return { editStatus: mutate, loading };

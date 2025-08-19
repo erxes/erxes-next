@@ -1,12 +1,12 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { useQueryState } from 'erxes-ui';
 import { queries } from '@/settings/team-member/graphql';
-import { IUserDetail } from '@/settings/team-member/types';
+import { IDetailsType, IUserDetail } from '@/settings/team-member/types';
 import { useSetAtom } from 'jotai';
 import { renderingTeamMemberDetailAtom } from '@/settings/team-member/states/teamMemberDetailStates';
 
 interface IUseUserDetailResponseData {
-  userDetail: IUserDetail;
+  userDetail: IUserDetail & { details: IDetailsType & { __typename?: string } };
 }
 
 export const useUserDetail = (options?: OperationVariables) => {

@@ -151,7 +151,7 @@ export const UsersGroupSidebarItem = ({
           )}
         >
           <IconUserFilled size={16} />
-          {group.members?.length || 0} members
+          {group?.memberIds?.length || 0} members
         </span>
         <motion.div
           initial={{ x: 5, opacity: 0 }}

@@ -1,20 +1,6 @@
-import {
-  Button,
-  cn,
-  Input,
-  Label,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-  TextOverflowTooltip,
-} from 'erxes-ui';
+import { Button, cn, Input, Label, Tooltip } from 'erxes-ui';
 import React, { useState } from 'react';
-import {
-  Icon,
-  IconExternalLink,
-  IconLink,
-  IconProps,
-} from '@tabler/icons-react';
+import { Icon, IconLink, IconProps } from '@tabler/icons-react';
 import { useUserEdit } from '@/settings/team-member/hooks/useUserEdit';
 import { UserLinks } from '@/settings/team-member/types';
 
@@ -32,46 +18,40 @@ type Props = {
 
 export const LinkInput = React.forwardRef<HTMLButtonElement, Props>(
   ({ _id, links, linkField, label, InputIcon, ...props }, ref) => {
+    const inputId = React.useId();
+
     const { usersEdit } = useUserEdit();
     const value = links?.[linkField as LinkFieldName] ?? '';
-    const [isOpen, setIsOpen] = useState(false);
+
     const [editingValue, setEditingValue] = useState(value);
 
-    const handleSave = (newValue: string) => {
+    React.useEffect(() => {
+      setEditingValue(value);
+    }, [value]);
+
+    const handleSave = () => {
+      if (editingValue === value) {
+        return;
+      }
       usersEdit({
         variables: {
           _id,
           links: {
             ...links,
-            [linkField]: newValue,
+            [linkField]: editingValue,
           },
         },
       });
     };
 
-    const handleAction = (e?: React.FormEvent) => {
-      e?.preventDefault();
-      if (editingValue === value) {
-        setIsOpen(false);
-        return;
-      }
-      handleSave(editingValue);
-      setIsOpen(false);
-    };
-
     const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleAction();
-      }
       if (e.key === 'Escape') {
-        setEditingValue(value);
-        setIsOpen(false);
+        setEditingValue(value || '');
       }
     };
 
     function handleNavigate(
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      event: React.MouseEvent<HTMLFieldSetElement, MouseEvent>,
     ): void {
       event.stopPropagation();
 
@@ -93,78 +73,38 @@ export const LinkInput = React.forwardRef<HTMLButtonElement, Props>(
     }
 
     return (
-      <fieldset className="space-y-2">
-        <Label asChild>
-          <legend>{label}</legend>
-        </Label>
-        <RecordTablePopover
-          scope={`user-${_id}-${linkField}`}
-          open={isOpen}
-          onOpenChange={(open: boolean) => {
-            setIsOpen(open);
-            if (open) {
-              setEditingValue(value);
-            } else if (!open && editingValue !== value) {
-              handleAction();
-            }
-          }}
-        >
-          <RecordTableCellTrigger
-            {...props}
-            ref={ref}
-            className="relative md:border border-accent rounded-sm p-0 group"
-          >
-            <span className="absolute inset-0 w-8 flex items-center justify-center text-muted-foreground bg-muted rounded-l-sm">
-              {InputIcon ? <InputIcon size={16} /> : <IconLink size={16} />}
-            </span>
-            <Input
-              readOnly
-              className={cn(props.className, 'pl-9 w-full')}
-              value={value}
-              placeholder={`https://www.${label.toLowerCase()}.com/username`}
-            />
-            <span
-              className={cn(
-                'absolute inset-y-0 right-0 w-8 flex overflow-hidden items-center justify-center text-muted-foreground bg-muted rounded-r-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-200 ease-linear',
-                !value && 'hidden',
-              )}
-            >
+      <Tooltip delayDuration={3000}>
+        <Tooltip.Trigger asChild>
+          <fieldset className="space-y-2" onDoubleClick={handleNavigate}>
+            <Label asChild>
+              <legend>{label}</legend>
+            </Label>
+            <div className="relative">
               <Button
-                type="button"
                 variant={'ghost'}
-                onClick={handleNavigate}
-                className={cn(
-                  'md:bg-none border-0',
-                  !value && 'pointer-events-none',
-                )}
-                disabled={!value}
-                aria-label="Open link"
+                className="absolute inset-0 size-8 flex items-center justify-center text-muted-foreground bg-muted rounded-l-sm rounded-r-none"
               >
-                <IconExternalLink size={16} />
+                {InputIcon ? <InputIcon size={16} /> : <IconLink size={16} />}
               </Button>
-            </span>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent asChild>
-            <form onSubmit={handleAction}>
-              <div className="relative">
-                <span className="absolute inset-0 w-8 flex items-center justify-center text-muted-foreground bg-muted rounded-l-sm">
-                  {InputIcon ? <InputIcon size={16} /> : <IconLink size={16} />}
-                </span>
-                <Input
-                  className={cn(props.className, 'pl-9')}
-                  onChange={(e) => setEditingValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  autoFocus
-                  value={editingValue}
-                />
-              </div>
-              <button type="submit" className="sr-only">
-                Save
-              </button>
-            </form>
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      </fieldset>
+              <Input
+                id={inputId}
+                className={cn(props.className, 'pl-9')}
+                onChange={(e) => setEditingValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={handleSave}
+                value={editingValue}
+              />
+            </div>
+          </fieldset>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          alignOffset={1}
+          className="flex flex-row gap-2 items-center"
+        >
+          <IconLink size={12} />
+          Double click to visit
+        </Tooltip.Content>
+      </Tooltip>
     );
   },
 );
