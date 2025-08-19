@@ -7,4 +7,4 @@ export const parseInternalNote = (content: string) => {
   } catch (error) {
     return false;
   }
-};
+}
