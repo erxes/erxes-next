@@ -14,7 +14,6 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import {
   SelectStatus,
-  SelectPriority,
   SelectAssignee,
   SelectTeam,
   DateSelect,
@@ -38,7 +37,9 @@ import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority'
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
 ): ColumnDef<ITask>[] => {
+  const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ITask>;
   return [
+    checkBoxColumn,
     {
       id: 'name',
       accessorKey: 'name',

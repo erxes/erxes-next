@@ -38,7 +38,6 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     description,
   } = project || {};
 
-  console.log(project);
   const [descriptionContent, setDescriptionContent] = useState<
     Block[] | undefined
   >(description ? JSON.parse(description) : undefined);
@@ -111,7 +110,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
       <div className="gap-2 flex flex-wrap w-full">
         <SelectStatus.Detail value={status} id={projectId} />
         <SelectProjectPriority projectId={projectId} value={priority} />
-        <SelectLead.Detail value={leadId} id={projectId} />
+        <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds}/>
         <DateSelect.Detail value={startDate} id={projectId} type="start" />
         <DateSelect.Detail value={targetDate} id={projectId} type="target" />
         <SelectTeam.Detail

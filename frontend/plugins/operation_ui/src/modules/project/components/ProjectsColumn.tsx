@@ -33,7 +33,9 @@ import { SelectProjectPriority } from '@/project/components/select/SelectProject
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
 ): ColumnDef<IProject>[] => {
+  const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<IProject>;
   return [
+    checkBoxColumn,
     {
       id: 'name',
       accessorKey: 'name',
