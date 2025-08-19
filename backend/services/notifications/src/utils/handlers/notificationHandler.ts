@@ -47,7 +47,6 @@ export const handleCreateNotification = async (
         debugInfo(`In-app notification created for user ${userId}`);
         continue;
       }
-      console.log({ results });
 
       const userSettings = await models.UserNotificationSettings.findOne({
         userId,

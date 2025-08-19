@@ -2,12 +2,10 @@ export default {
   name: 'operation',
   typeDefs: `
 			operationTaskChanged(_id: String!): Task
+      operationActivityChanged(contentId: String!): OperationActivity
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
-      /*
-       * Listen for new message insertion
-       */
       operationTaskChanged: {
         resolve(payload, _args, { dataSources: { gatewayDataSource } }, info) {
           if (!payload) {
@@ -28,7 +26,7 @@ export default {
             );
             return;
           }
-          console.log(payload);
+
           return gatewayDataSource.queryAndMergeMissingData({
             payload,
             info,
@@ -44,6 +42,45 @@ export default {
         },
         subscribe: (_, { _id }) =>
           graphqlPubsub.asyncIterator(`operationTaskChanged:${_id}`),
+      },
+      operationActivityChanged: {
+        resolve(payload, _args, { dataSources: { gatewayDataSource } }, info) {
+          if (!payload) {
+            console.error(
+              `Subscription resolver error: operationActivityChanged: payload is ${payload}`,
+            );
+            return;
+          }
+          if (!payload.operationActivityChanged) {
+            console.error(
+              `Subscription resolver error: operationActivityChanged: payload.operationActivityChanged is ${payload.operationActivityChanged}`,
+            );
+            return;
+          }
+          if (!payload.operationActivityChanged.contentId) {
+            console.error(
+              `Subscription resolver error: operationTaskChanged: payload.operationTaskChanged._id is ${payload.operationTaskChanged._id}`,
+            );
+            return;
+          }
+
+          return gatewayDataSource.queryAndMergeMissingData({
+            payload,
+            info,
+            queryVariables: {
+              contentId: payload.operationActivityChanged.contentId,
+            },
+            buildQueryUsingSelections: (selections) => `
+                  query Subscription_GetOperationActivity($contentId: String!) {
+                    getOperationActivities(contentId: $contentId) {
+                      ${selections}
+                    }
+                  }
+              `,
+          });
+        },
+        subscribe: (_, { contentId }) =>
+          graphqlPubsub.asyncIterator(`operationActivityChanged:${contentId}`),
       },
     };
   },

@@ -317,6 +317,9 @@ importers:
       moment-timezone:
         specifier: ^0.5.48
         version: 0.5.48
+      mongodb:
+        specifier: ^6.18.0
+        version: 6.18.0
       mongoose:
         specifier: ^8.9.6
         version: 8.13.2
@@ -765,6 +768,9 @@ importers:
       nanoid:
         specifier: ^3.3.6
         version: 3.3.11
+      node-fetch:
+        specifier: ^2.6.7
+        version: 2.7.0(encoding@0.1.13)
       strip-ansi:
         specifier: ^6.0.1
         version: 6.0.1
@@ -814,6 +820,156 @@ importers:
       erxes-api-shared:
         specifier: workspace:^
         version: link:../erxes-api-shared
+
+  backend/gateway/dist:
+    dependencies:
+      '@apollo/client':
+        specifier: 3.13.6
+        version: 3.13.6(@types/react@18.3.1)(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@apollo/server':
+        specifier: 4.11.3
+        version: 4.11.3(encoding@0.1.13)(graphql@16.10.0)
+      '@apollo/subgraph':
+        specifier: 2.10.0
+        version: 2.10.0(graphql@16.10.0)
+      '@babel/preset-env':
+        specifier: 7.26.9
+        version: 7.26.9(@babel/core@7.26.10)
+      '@bull-board/api':
+        specifier: 6.9.0
+        version: 6.9.0(@bull-board/ui@6.9.0)
+      '@bull-board/express':
+        specifier: 6.9.0
+        version: 6.9.0
+      '@elastic/elasticsearch':
+        specifier: 7.17.14
+        version: 7.17.14
+      '@envelop/core':
+        specifier: 5.2.3
+        version: 5.2.3
+      '@escape.tech/graphql-armor-character-limit':
+        specifier: 2.3.0
+        version: 2.3.0
+      '@escape.tech/graphql-armor-max-aliases':
+        specifier: 2.6.0
+        version: 2.6.0
+      '@escape.tech/graphql-armor-max-depth':
+        specifier: 2.4.0
+        version: 2.4.0
+      '@graphql-tools/schema':
+        specifier: 10.0.23
+        version: 10.0.23(graphql@16.10.0)
+      '@preconstruct/cli':
+        specifier: 2.8.12
+        version: 2.8.12
+      '@prettier/sync':
+        specifier: 0.5.5
+        version: 0.5.5(prettier@2.8.8)
+      '@sniptt/guards':
+        specifier: 0.2.0
+        version: 0.2.0
+      '@trpc/client':
+        specifier: 11.0.4
+        version: 11.0.4(@trpc/server@11.0.4(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server':
+        specifier: 11.0.4
+        version: 11.0.4(typescript@5.7.3)
+      '@types/babel__preset-env':
+        specifier: 7.10.0
+        version: 7.10.0
+      '@types/graphql':
+        specifier: 14.5.0
+        version: 14.5.0
+      '@types/ioredis':
+        specifier: 5.0.0
+        version: 5.0.0
+      babel-plugin-module-resolver:
+        specifier: 5.0.2
+        version: 5.0.2
+      bullmq:
+        specifier: 5.40.4
+        version: 5.40.4
+      cookie-parser:
+        specifier: 1.4.7
+        version: 1.4.7
+      cors:
+        specifier: 2.8.5
+        version: 2.8.5
+      dayjs:
+        specifier: 1.11.13
+        version: 1.11.13
+      dotenv:
+        specifier: 16.4.7
+        version: 16.4.7
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+      express:
+        specifier: 4.21.2
+        version: 4.21.2
+      express-rate-limit:
+        specifier: 6.11.2
+        version: 6.11.2(express@4.21.2)
+      glob:
+        specifier: 11.0.1
+        version: 11.0.1
+      graphql:
+        specifier: 16.10.0
+        version: 16.10.0
+      graphql-parse-resolve-info:
+        specifier: 4.14.1
+        version: 4.14.1(graphql@16.10.0)
+      graphql-redis-subscriptions:
+        specifier: 2.7.0
+        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
+      graphql-subscriptions:
+        specifier: 3.0.0
+        version: 3.0.0(graphql@16.10.0)
+      graphql-ws:
+        specifier: 5.16.2
+        version: 5.16.2(graphql@16.10.0)
+      http-proxy-middleware:
+        specifier: 3.0.5
+        version: 3.0.5
+      ioredis:
+        specifier: 5.6.1
+        version: 5.6.1
+      jsonwebtoken:
+        specifier: 9.0.2
+        version: 9.0.2
+      lodash:
+        specifier: 4.17.21
+        version: 4.17.21
+      moment:
+        specifier: 2.30.1
+        version: 2.30.1
+      mongoose:
+        specifier: 8.13.2
+        version: 8.13.2
+      nanoid:
+        specifier: 3.3.11
+        version: 3.3.11
+      node-fetch:
+        specifier: 2.7.0
+        version: 2.7.0(encoding@0.1.13)
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: 18.3.1
+        version: 18.3.1(react@18.3.1)
+      strip-ansi:
+        specifier: 6.0.1
+        version: 6.0.1
+      ws:
+        specifier: 8.18.2
+        version: 8.18.2
+      yaml:
+        specifier: 2.7.1
+        version: 2.7.1
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
 
   backend/plugins/accounting_api:
     dependencies:
@@ -880,6 +1036,108 @@ importers:
       erxes-api-shared:
         specifier: workspace:^
         version: link:../../erxes-api-shared
+
+  backend/plugins/operation_api/dist:
+    dependencies:
+      '@apollo/server':
+        specifier: 4.11.3
+        version: 4.11.3(encoding@0.1.13)(graphql@16.10.0)
+      '@apollo/subgraph':
+        specifier: 2.10.0
+        version: 2.10.0(graphql@16.10.0)
+      '@babel/preset-env':
+        specifier: 7.26.9
+        version: 7.26.9(@babel/core@7.26.10)
+      '@elastic/elasticsearch':
+        specifier: 7.17.14
+        version: 7.17.14
+      '@preconstruct/cli':
+        specifier: 2.8.12
+        version: 2.8.12
+      '@prettier/sync':
+        specifier: 0.5.5
+        version: 0.5.5(prettier@2.8.8)
+      '@sniptt/guards':
+        specifier: 0.2.0
+        version: 0.2.0
+      '@trpc/client':
+        specifier: 11.0.4
+        version: 11.0.4(@trpc/server@11.0.4(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server':
+        specifier: 11.0.4
+        version: 11.0.4(typescript@5.7.3)
+      '@types/babel__preset-env':
+        specifier: 7.10.0
+        version: 7.10.0
+      '@types/graphql':
+        specifier: 14.5.0
+        version: 14.5.0
+      '@types/ioredis':
+        specifier: 5.0.0
+        version: 5.0.0
+      babel-plugin-module-resolver:
+        specifier: 5.0.2
+        version: 5.0.2
+      bullmq:
+        specifier: 5.40.4
+        version: 5.40.4
+      cookie-parser:
+        specifier: 1.4.7
+        version: 1.4.7
+      cors:
+        specifier: 2.8.5
+        version: 2.8.5
+      date-fns:
+        specifier: 4.1.0
+        version: 4.1.0
+      dayjs:
+        specifier: 1.11.13
+        version: 1.11.13
+      dotenv:
+        specifier: 16.4.7
+        version: 16.4.7
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../../erxes-api-shared
+      express:
+        specifier: 4.21.2
+        version: 4.21.2
+      express-rate-limit:
+        specifier: 6.11.2
+        version: 6.11.2(express@4.21.2)
+      glob:
+        specifier: 11.0.1
+        version: 11.0.1
+      graphql:
+        specifier: 16.10.0
+        version: 16.10.0
+      graphql-redis-subscriptions:
+        specifier: 2.7.0
+        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
+      graphql-subscriptions:
+        specifier: 3.0.0
+        version: 3.0.0(graphql@16.10.0)
+      graphql-tag:
+        specifier: 2.12.6
+        version: 2.12.6(graphql@16.10.0)
+      ioredis:
+        specifier: 5.6.1
+        version: 5.6.1
+      moment:
+        specifier: 2.30.1
+        version: 2.30.1
+      mongoose:
+        specifier: 8.13.2
+        version: 8.13.2
+      nanoid:
+        specifier: 3.3.11
+        version: 3.3.11
+      strip-ansi:
+        specifier: 6.0.1
+        version: 6.0.1
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
 
   backend/plugins/pos_api:
     dependencies:
@@ -6793,6 +7051,10 @@ packages:
     resolution: {integrity: sha512-MTxGsqgYTwfshYWTRdmZRC+M7FnG1b4y7RO7p2k3X24Wq0yv1m77Wsj0BzlPzd/IowgESfsruQCUToa7vbOpPQ==}
     engines: {node: '>=16.20.1'}
 
+  bson@6.10.4:
+    resolution: {integrity: sha512-WIsKqkSC0ABoBJuT1LEX+2HEvNmNKKgnTAyd0fL8qzK4SH2i9NXg+t08YtdZp/V9IZ33cxe3iV4yM0qg8lMQng==}
+    engines: {node: '>=16.20.1'}
+
   btoa@1.2.1:
     resolution: {integrity: sha512-SB4/MIGlsiVkMcHmT+pSmIPoNDoHg+7cMzmt3Uxt628MTz2487DKSqK/fuhFBrkuqrYv5UCEnACpF4dTFNKc/g==}
     engines: {node: '>= 0.4.0'}
@@ -7845,10 +8107,6 @@ packages:
 
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
-    engines: {node: '>=12'}
-
-  dotenv@16.5.0:
-    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
   dset@3.1.4:
@@ -10681,6 +10939,33 @@ packages:
 
   mongodb@6.15.0:
     resolution: {integrity: sha512-ifBhQ0rRzHDzqp9jAQP6OwHSH7dbYIQjD3SbJs9YYk9AikKEettW/9s/tbSFDTpXcRbF+u1aLrhHxDFaYtZpFQ==}
+    engines: {node: '>=16.20.1'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.188.0
+      '@mongodb-js/zstd': ^1.1.0 || ^2.0.0
+      gcp-metadata: ^5.2.0
+      kerberos: ^2.0.1
+      mongodb-client-encryption: '>=6.0.0 <7'
+      snappy: ^7.2.2
+      socks: ^2.7.1
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
+
+  mongodb@6.18.0:
+    resolution: {integrity: sha512-fO5ttN9VC8P0F5fqtQmclAkgXZxbIkYRTUi1j8JO6IYwvamkhtYDilJr35jOPELR49zqCJgXZWwCtW7B+TM8vQ==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -16333,7 +16618,7 @@ snapshots:
     dependencies:
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-blur@1.6.0':
     dependencies:
@@ -16343,7 +16628,7 @@ snapshots:
   '@jimp/plugin-circle@1.6.0':
     dependencies:
       '@jimp/types': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-color@1.6.0':
     dependencies:
@@ -16351,7 +16636,7 @@ snapshots:
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
       tinycolor2: 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-contain@1.6.0':
     dependencies:
@@ -16360,7 +16645,7 @@ snapshots:
       '@jimp/plugin-resize': 1.6.0
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-cover@1.6.0':
     dependencies:
@@ -16368,20 +16653,20 @@ snapshots:
       '@jimp/plugin-crop': 1.6.0
       '@jimp/plugin-resize': 1.6.0
       '@jimp/types': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-crop@1.6.0':
     dependencies:
       '@jimp/core': 1.6.0
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-displace@1.6.0':
     dependencies:
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-dither@1.6.0':
     dependencies:
@@ -16391,12 +16676,12 @@ snapshots:
     dependencies:
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-flip@1.6.0':
     dependencies:
       '@jimp/types': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-hash@1.6.0':
     dependencies:
@@ -16414,7 +16699,7 @@ snapshots:
   '@jimp/plugin-mask@1.6.0':
     dependencies:
       '@jimp/types': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-print@1.6.0':
     dependencies:
@@ -16427,18 +16712,18 @@ snapshots:
       parse-bmfont-binary: 1.0.6
       parse-bmfont-xml: 1.1.6
       simple-xml-to-json: 1.2.3
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-quantize@1.6.0':
     dependencies:
       image-q: 4.0.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-resize@1.6.0':
     dependencies:
       '@jimp/core': 1.6.0
       '@jimp/types': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-rotate@1.6.0':
     dependencies:
@@ -16447,7 +16732,7 @@ snapshots:
       '@jimp/plugin-resize': 1.6.0
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/plugin-threshold@1.6.0':
     dependencies:
@@ -16456,11 +16741,11 @@ snapshots:
       '@jimp/plugin-hash': 1.6.0
       '@jimp/types': 1.6.0
       '@jimp/utils': 1.6.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/types@1.6.0':
     dependencies:
-      zod: 3.24.2
+      zod: 3.23.8
 
   '@jimp/utils@1.6.0':
     dependencies:
@@ -17783,7 +18068,7 @@ snapshots:
       semver: 7.7.1
       terser: 5.39.0
       v8-compile-cache: 2.4.0
-      zod: 3.24.2
+      zod: 3.23.8
     transitivePeerDependencies:
       - supports-color
 
@@ -21941,6 +22226,8 @@ snapshots:
 
   bson@6.10.3: {}
 
+  bson@6.10.4: {}
+
   btoa@1.2.1: {}
 
   buffer-crc32@0.2.13: {}
@@ -23049,11 +23336,9 @@ snapshots:
 
   dotenv-expand@11.0.7:
     dependencies:
-      dotenv: 16.5.0
+      dotenv: 16.4.7
 
   dotenv@16.4.7: {}
-
-  dotenv@16.5.0: {}
 
   dset@3.1.4: {}
 
@@ -26300,7 +26585,7 @@ snapshots:
   lazy-universal-dotenv@4.0.0:
     dependencies:
       app-root-dir: 1.0.2
-      dotenv: 16.5.0
+      dotenv: 16.4.7
       dotenv-expand: 10.0.0
 
   leb@1.0.0: {}
@@ -26984,6 +27269,12 @@ snapshots:
     dependencies:
       '@mongodb-js/saslprep': 1.2.2
       bson: 6.10.3
+      mongodb-connection-string-url: 3.0.2
+
+  mongodb@6.18.0:
+    dependencies:
+      '@mongodb-js/saslprep': 1.2.2
+      bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
 
   mongoose@8.13.2:

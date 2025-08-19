@@ -28,8 +28,6 @@ export const useGetTask = (options: QueryHookOptions) => {
 
         const newData = subscriptionData.data.operationTaskChanged;
 
-        console.log(newData.status, prev.getTask.status);
-
         return { getTask: newData };
       },
     });
