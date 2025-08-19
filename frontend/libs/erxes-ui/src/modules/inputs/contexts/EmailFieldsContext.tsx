@@ -1,11 +1,12 @@
 import { createContext } from 'react';
-import { IEmailStatus, TEmails } from '../components/EmailField';
+import { TEmails } from '../components/EmailField';
+import { ValidationStatus } from 'erxes-ui/types';
 
 export const EmailFieldsContext = createContext<{
   recordId: string;
   onValueChange?: (emails: TEmails) => void;
   noValidation?: boolean;
-  onValidationStatusChange?: (status: IEmailStatus) => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
 }>({
   recordId: '',
   onValueChange: undefined,

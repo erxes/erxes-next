@@ -16,6 +16,7 @@ import { ArchiveIntegration } from '@/integrations/components/ArchiveIntegration
 import { RemoveIntegration } from '@/integrations/components/RemoveIntegration';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import clsx from 'clsx';
+import { IntegrationType } from '@/types/Integration';
 
 export const IntegrationsRecordTable = ({
   Actions,
@@ -62,7 +63,6 @@ export const IntegrationsRecordTable = ({
 const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
   const [name, setName] = useState(cell.row.original.name);
   const { editIntegrationField } = useIntegrationEditField(cell.row.original);
-
   const handleSave = () => {
     editIntegrationField(
       {
@@ -73,6 +73,9 @@ const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
       cell.row.original.name === name,
     );
   };
+  if (cell.row.original.kind === IntegrationType.CALL) {
+    return <RecordTableInlineCell>{name}</RecordTableInlineCell>;
+  }
 
   return (
     <PopoverScoped
@@ -174,17 +177,12 @@ export const integrationTypeColumns = ({
     id: 'action-group',
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
+      const { isActive, _id, name } = cell.row.original;
       return (
         <div className="flex items-center justify-center gap-1.5">
           <Actions cell={cell} />
-          <ArchiveIntegration
-            _id={cell.row.original._id}
-            name={cell.row.original.name}
-          />
-          <RemoveIntegration
-            _id={cell.row.original._id}
-            name={cell.row.original.name}
-          />
+          <ArchiveIntegration _id={_id} name={name} isActive={isActive} />
+          <RemoveIntegration _id={_id} name={name} />
         </div>
       );
     },

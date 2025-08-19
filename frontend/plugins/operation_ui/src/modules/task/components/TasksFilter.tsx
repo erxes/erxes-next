@@ -5,7 +5,7 @@ import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { TasksTotalCount } from '@/task/components/TasksTotalCount';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
 import { SelectTeam } from '@/task/components/select/SelectTeam';
-import { SelectPriority } from '@/task/components/select/SelectPriority';
+import { SelectPriority } from '@/priority/components/SelectPriority';
 import { SelectStatus } from '@/task/components/select/SelectStatus';
 import { SelectAssignee } from '@/task/components/select/SelectAssignee';
 import { useParams } from 'react-router-dom';
@@ -53,7 +53,11 @@ const TasksFilterPopover = () => {
           <SelectAssignee.FilterView />
           <SelectTeam.FilterView />
           <SelectPriority.FilterView />
-          {teamId ? <SelectStatus.FilterView teamId={teamId} /> : <SelectStatus.TypeFilterView />}
+          {teamId ? (
+            <SelectStatus.FilterView teamId={teamId} />
+          ) : (
+            <SelectStatus.TypeFilterView />
+          )}
         </Combobox.Content>
       </Filter.Popover>
       <Filter.Dialog>

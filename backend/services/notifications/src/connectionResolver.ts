@@ -12,22 +12,6 @@ import {
   notificationSchema,
   userNotificationSettingsSchema,
 } from 'erxes-api-shared/core-modules';
-// import {
-//   INotificationDocument,
-//   notificationSchema,
-// } from './db/definitions/notifications';
-// import {
-//   INotificationConfigDocument,
-//   notificationConfigSchema,
-// } from './db/definitions/notificationConfigs';
-// import {
-//   IUserNotificationSettingsDocument,
-//   userNotificationSettingsSchema,
-// } from './db/definitions/userNotificationSettings';
-// import {
-//   IEmailDeliveryDocument,
-//   emailDeliverySchema,
-// } from './db/definitions/emailDeliveries';
 
 export interface IModels {
   Notifications: Model<INotificationDocument>;

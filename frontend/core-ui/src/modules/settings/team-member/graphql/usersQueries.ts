@@ -74,10 +74,15 @@ const GET_USERS_QUERY = gql`
         positionIds
         details {
           avatar
-          fullName
+          shortName
+          birthDate
           workStartedDate
+          location
+          description
           firstName
+          middleName
           lastName
+          operatorPhone
         }
         links
         employeeId

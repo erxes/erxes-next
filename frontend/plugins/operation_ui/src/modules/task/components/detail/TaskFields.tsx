@@ -15,6 +15,7 @@ import {
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
+import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -53,6 +54,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
 
   const [debouncedDescriptionContent] = useDebounce(descriptionContent, 1000);
   const [debouncedName] = useDebounce(name, 1000);
+
   useEffect(() => {
     if (!debouncedName || debouncedName === _name) return;
     updateTask({
@@ -63,6 +65,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
+
   useEffect(() => {
     if (
       !debouncedDescriptionContent ||
@@ -92,7 +95,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
           id={taskId}
           teamId={teamId || undefined}
         />
-        <SelectPriority.Detail value={priority} id={taskId} />
+        <SelectTaskPriority taskId={taskId} value={priority} />
         <SelectAssignee.Detail
           value={assigneeId}
           id={taskId}
@@ -117,14 +120,14 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         />
       </div>
       <Separator className="my-4" />
-      <div className="h-[60vh] overflow-y-auto">
+      <div className="min-h-56 overflow-y-auto">
         <BlockEditor
-          editor={editor}
+          editor={editor} 
           onChange={handleDescriptionChange}
           className="min-h-full"
         />
       </div>
-      <ActivityList contentId={taskId} />
+      <ActivityList contentId={taskId} contentDetail={task} />
     </div>
   );
 };

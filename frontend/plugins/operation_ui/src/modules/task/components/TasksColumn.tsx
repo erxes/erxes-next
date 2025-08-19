@@ -14,7 +14,6 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import {
   SelectStatus,
-  SelectPriority,
   SelectAssignee,
   SelectTeam,
   DateSelect,
@@ -33,11 +32,14 @@ import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPoint';
 import clsx from 'clsx';
+import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
 ): ColumnDef<ITask>[] => {
+  const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ITask>;
   return [
+    checkBoxColumn,
     {
       id: 'name',
       accessorKey: 'name',
@@ -112,9 +114,10 @@ export const tasksColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectPriority.InlineCell
-            value={cell.row.original.priority || 0}
-            id={cell.row.original._id}
+          <SelectTaskPriority
+            taskId={cell.row.original._id}
+            value={cell.row.original.priority}
+            inInlineCell
           />
         );
       },

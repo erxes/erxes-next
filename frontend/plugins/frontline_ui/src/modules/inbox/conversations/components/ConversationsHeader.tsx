@@ -8,7 +8,7 @@ export const ConversationsHeader = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="pl-6 pr-4 py-2.5 space-y-1">
+    <div className="pl-6 pr-4 py-2 space-y-1 bg-sidebar">
       <div className="flex items-center justify-between">
         {children}
         <ConversationCount />

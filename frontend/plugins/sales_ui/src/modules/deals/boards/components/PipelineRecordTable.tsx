@@ -6,8 +6,6 @@ import {
   Popover,
   RecordTable,
   RecordTableInlineCell,
-  RecordTableInlineCell,
-  Popover,
   RecordTableTree,
   RelativeDateDisplay,
   useConfirm,

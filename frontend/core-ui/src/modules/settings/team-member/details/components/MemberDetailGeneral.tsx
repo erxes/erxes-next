@@ -32,20 +32,23 @@ export const MemberDetailGeneral = () => {
         <div className="flex flex-col items-start">
           <FullNameField
             scope={UsersHotKeyScope.UserDetailPage + '.' + _id + '.Name'}
-            closeOnEnter
             firstName={firstName || ''}
             lastName={
               middleName
                 ? `${middleName || ''} ${lastName || ''}`
                 : lastName || ''
             }
-            onClose={(_firstName, _lastName) => {
+            onSave={(_firstName, _lastName) => {
               if (_firstName !== firstName || _lastName !== lastName) {
+                const { __typename, ...rest } = details || {};
                 usersEdit({
                   variables: {
                     _id,
-                    firstName: _firstName,
-                    lastName: _lastName,
+                    details: {
+                      ...rest,
+                      firstName: _firstName,
+                      lastName: _lastName,
+                    },
                   },
                 });
               }

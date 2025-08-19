@@ -65,7 +65,7 @@ export const useProjects = (
     {
       ...options,
       variables,
-      skip: options?.skip || variables.cursor === undefined,
+      skip: options?.skip || isUndefinedOrNull(variables.cursor),
       onError: (e) => {
         toast({
           title: 'Error',

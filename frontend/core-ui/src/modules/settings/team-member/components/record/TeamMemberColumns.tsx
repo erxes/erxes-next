@@ -34,33 +34,7 @@ import { ApolloError } from '@apollo/client';
 import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
 import clsx from 'clsx';
 
-export const UserMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<IUser, unknown>;
-}) => {
-  const [, setOpen] = useQueryState('user_id');
-  const setRenderingTeamMemberDetail = useSetAtom(
-    renderingTeamMemberDetailAtom,
-  );
-  const { _id } = cell.row.original;
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingTeamMemberDetail(false);
-      }}
-    />
-  );
-};
-
 export const teamMemberColumns: ColumnDef<IUser>[] = [
-  {
-    id: 'more',
-    cell: UserMoreColumnCell,
-    size: 33,
-  },
   {
     id: 'avatar',
     accessorKey: 'avatar',
@@ -93,7 +67,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         renderingTeamMemberDetailAtom,
       );
       const { details, _id } = cell.row.original;
-      const { firstName, lastName } = details || {};
+      const { firstName, lastName, ...rest } = details || {};
 
       const { usersEdit } = useUserEdit();
 
@@ -103,6 +77,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             variables: {
               _id,
               details: {
+                ...rest,
                 firstName: first,
                 lastName: last,
               },
@@ -120,6 +95,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       return (
         <FullNameField
+          withBadge
           scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Name')}
           firstName={firstName}
           lastName={lastName}
@@ -172,6 +148,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const [open, setOpen] = useState<boolean>(false);
       const [_employeeId, setEmployeeId] = useState<string>(employeeId);
       const onSave = () => {
+        if (_employeeId === employeeId) return;
         usersEdit({
           variables: {
             _id,
@@ -182,7 +159,6 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.currentTarget || {};
-        if (value === employeeId) return;
         setEmployeeId(value);
       };
       return (
@@ -251,6 +227,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       );
       const { usersEdit } = useUserEdit();
       const onSave = () => {
+        if (_workStartedDate === workStartedDate) return;
         usersEdit({
           variables: {
             _id,
@@ -263,7 +240,6 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       };
 
       const onChange = (date: Date) => {
-        if (date === workStartedDate) return;
         setWorkStartedDate(date);
       };
 

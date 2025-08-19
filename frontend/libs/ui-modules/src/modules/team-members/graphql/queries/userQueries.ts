@@ -37,6 +37,7 @@ export const GET_USERS_GROUP = gql`
         _id
         name
         description
+        memberIds
         members {
           _id
           details {
