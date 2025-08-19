@@ -172,7 +172,11 @@ export const loadTaskClass = (models: IModels) => {
         userId,
       });
 
-      return models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
+      return models.Task.findOneAndUpdate(
+        { _id },
+        { $set: { ...rest } },
+        { new: true },
+      );
     }
 
     public static async removeTask(TaskId: string[]) {

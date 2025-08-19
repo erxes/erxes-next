@@ -14,19 +14,6 @@ export const useUpdateTask = () => {
           variant: 'destructive',
         });
       },
-      update: (cache, { data }) => {
-        cache.modify({
-          id: cache.identify(data?.updateTask),
-          fields: Object.keys(options?.variables || {}).reduce(
-            (fields: Record<string, () => any>, field) => {
-              fields[field] = () => (options?.variables || {})[field];
-              return fields;
-            },
-            {},
-          ),
-          optimistic: true,
-        });
-      },
     });
   };
 
