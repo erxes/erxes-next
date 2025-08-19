@@ -21,7 +21,7 @@ const {
   MONGO_URL,
 } = process.env;
 
-const port = PORT ? Number(PORT) : 3303;
+const port = PORT ? Number(PORT) : 3308;
 
 const serviceName = 'notifications-service';
 

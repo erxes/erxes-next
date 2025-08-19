@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 
 export type IActionProps = {
   currentActionIndex: number;
@@ -92,7 +92,7 @@ export type BaseAutomationRemoteProps = {
 
 export type AutomationTriggerFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
-    formRef: RefObject<{
+    formRef: React.RefObject<{
       submit: () => void;
     }>;
     componentType: 'triggerForm';
@@ -102,7 +102,7 @@ export type AutomationTriggerFormProps<TConfig = any> =
 
 export type AutomationActionFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
-    formRef: RefObject<{
+    formRef: React.RefObject<{
       submit: () => void;
     }>;
     componentType: 'actionForm';
