@@ -1,6 +1,6 @@
 import { SelectSeparator } from '@radix-ui/react-select';
 import dayjs from 'dayjs';
-import { Dialog } from 'erxes-ui';
+import { Card, Label, Sheet } from 'erxes-ui';
 import { UAParser } from 'ua-parser-js';
 import { ILogDoc } from '../types';
 import {
@@ -8,6 +8,8 @@ import {
   IconClockHour1,
   IconDeviceDesktopCode,
   IconDeviceImac,
+  IconMail,
+  IconMapPin,
   IconShield,
   IconUser,
 } from '@tabler/icons-react';
@@ -58,52 +60,76 @@ export const AuthLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
     browser = '',
   } = getClientInfo(headers) || {};
   return (
-    <>
-      <Dialog.Title className="flex flex-row gap-2">
-        <IconShield className="pr-2" />
-        Authentication Details
-      </Dialog.Title>
-      <Dialog.Description>User Information </Dialog.Description>
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-row gap-2">
-          <IconUser />
-          <p className="font-bold">Email:</p>
-          <span>{payload.email}</span>
-        </div>
-        <div className="flex flex-row gap-2">
-          <IconClockHour1 />
-          <p className="font-bold">Time:</p>
-          <span>{dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
-        </div>
-        <div className="flex flex-row gap-2">
-          <IconShield />
-          <p className="font-bold">Method:</p>
-          <span>{payload.method}</span>
-        </div>
+    <div className="flex flex-col gap-4 p-6">
+      <div className="border-b pb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Authentication Details
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          User session and device information
+        </p>
+      </div>
+      <Sheet.Description>User Information </Sheet.Description>
+      <div className="flex flex-row justify-between">
+        <Card className="flex flex-row items-center gap-4 py-2 px-4">
+          <div className="bg-foreground/20 p-2 rounded-xl text-foreground/80">
+            <IconMail />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Email</Label>
+            <span>{payload.email}</span>
+          </div>
+        </Card>
+        <Card className="flex flex-row items-center gap-4 py-2 px-4">
+          <div className="bg-success/20 p-2 rounded-xl text-success/80">
+            <IconClockHour1 />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Time</Label>
+            <span>{dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
+          </div>
+        </Card>
+        <Card className="flex flex-row items-center gap-4 py-2 px-4">
+          <div className="bg-primary/20 p-2 rounded-xl text-primary/80">
+            <IconShield />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Method</Label>
+            <span>{payload.method}</span>
+          </div>
+        </Card>
       </div>
       <SelectSeparator />
       <div className="w-full flex flex-row justify-between">
-        <div className="flex flex-col gap-2 items-center">
-          <IconUser />
+        <Card className="flex flex-col gap-2 items-center size-36 justify-center">
+          <div className="bg-warning/20 p-2 rounded-xl text-warning/80">
+            <IconMapPin />
+          </div>
           <p>IP Address</p>
           <span>{ip}</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <IconDeviceImac />
+        </Card>
+        <Card className="flex flex-col gap-2 items-center size-36 justify-center">
+          <div className="bg-foreground/20 p-2 rounded-xl text-foreground/80">
+            <IconDeviceImac />
+          </div>
           <p>Device</p>
           <span>{device}</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <IconDeviceDesktopCode />
+        </Card>
+        <Card className="flex flex-col gap-2 items-center size-36 justify-center">
+          <div className="bg-primary/20 p-2 rounded-xl text-primary/80">
+            <IconDeviceDesktopCode />
+          </div>
           <p>Os</p>
           <span>{os}</span>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <IconBrowser />
+        </Card>
+        <Card className="flex flex-col gap-2 items-center size-36 justify-center">
+          <div className="bg-success/20 p-2 rounded-xl text-success/80">
+            <IconBrowser />
+          </div>
           <p>Browser</p>
           <span>{browser}</span>
-        </div>
+        </Card>
       </div>
-    </>
+    </div>
   );
 };

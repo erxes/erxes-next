@@ -89,7 +89,7 @@ export const useLogs = () => {
   });
 
   const { data, loading, error, fetchMore } =
-    useQuery<LogsMainListQueryResponse>(gql(LOGS_MAIN_LIST), {
+    useQuery<LogsMainListQueryResponse>(LOGS_MAIN_LIST, {
       variables: {
         filters: generateFilters(searchParams),
         cursor: cursor ?? undefined,

@@ -1,11 +1,32 @@
-import { Dialog } from 'erxes-ui';
+import { Card, Resizable, Sheet } from 'erxes-ui';
 import ReactJson from 'react-json-view';
 import { ILogDoc } from '../types';
 import { maskFields } from '../utils/logFormUtils';
 
+export const MongoLogDetailContent = ({ payload, action }: ILogDoc) => {
+  const { collectionName, fullDocument } = payload || {};
+
+  const ContentComponent =
+    action === 'update' ? (
+      <MongoUpdateLogDetailContent payload={payload} action={action} />
+    ) : (
+      <ReactJson
+        src={maskFields(fullDocument, ['password'])}
+        collapsed={1}
+        name={false}
+      />
+    );
+
+  return (
+    <div className="flex-1 flex flex-col gap-2 p-4 overflow-auto">
+      <Card.Title>{(collectionName || '').toUpperCase()}</Card.Title>
+      {ContentComponent}
+    </div>
+  );
+};
+
 const MongoUpdateLogDetailContent = ({
   payload,
-  action,
 }: {
   action: string;
   payload: any;
@@ -14,56 +35,47 @@ const MongoUpdateLogDetailContent = ({
     payload;
 
   return (
-    <>
-      <Dialog.Title>{(collectionName || '').toUpperCase()}</Dialog.Title>
-      <Dialog.Description>{action.toUpperCase()}</Dialog.Description>
+    <div className="flex-1 flex flex-col gap-2 p-4 overflow-auto">
+      <Card.Title>{(collectionName || '').toUpperCase()}</Card.Title>
+      <Resizable.PanelGroup direction="vertical">
+        <Resizable.Panel maxSize={35} defaultSize={15}>
+          <div className="h-full overflow-auto p-4">
+            <Card.Description className="mb-2">Diff</Card.Description>
+            <ReactJson src={updateDescription} collapsed={1} name={false} />
+          </div>
+        </Resizable.Panel>
+        <Resizable.Handle />
+        <Resizable.Panel>
+          <Resizable.PanelGroup
+            direction="horizontal"
+            className="flex-1 min-h-0"
+          >
+            <Resizable.Panel defaultSize={50} className="min-h-0 ">
+              <div className="h-full overflow-auto p-4">
+                <Card.Description className="mb-2">Before</Card.Description>
+                <ReactJson
+                  src={maskFields(prevDocument, ['password'])}
+                  collapsed={1}
+                  name={false}
+                />
+              </div>
+            </Resizable.Panel>
 
-      <div>
-        <Dialog.Description>{'Diff'}</Dialog.Description>
+            <Resizable.Handle />
 
-        <ReactJson src={updateDescription} collapsed={1} name={false} />
-      </div>
-      <div className="flex flex-row mb-4 justify-between">
-        <div className="flex-1">
-          <Dialog.Description>{'Before'}</Dialog.Description>
-          <ReactJson
-            src={maskFields(prevDocument, ['password'])}
-            collapsed={1}
-            name={false}
-          />
-        </div>
-        <div className="flex-1">
-          <Dialog.Description>{'After'}</Dialog.Description>
-
-          <ReactJson
-            src={maskFields(fullDocument, ['password'])}
-            collapsed={1}
-            name={false}
-          />
-        </div>
-      </div>
-    </>
-  );
-};
-
-export const MongoLogDetailContent = ({ payload, action }: ILogDoc) => {
-  const { collectionName, fullDocument } = payload || {};
-
-  if (action === 'update') {
-    return <MongoUpdateLogDetailContent payload={payload} action={action} />;
-  }
-
-  return (
-    <div>
-      <Dialog.Title>{(collectionName || '').toUpperCase()}</Dialog.Title>
-
-      <Dialog.Description>{action.toUpperCase()}</Dialog.Description>
-
-      <ReactJson
-        src={maskFields(fullDocument, ['password'])}
-        collapsed={1}
-        name={false}
-      />
+            <Resizable.Panel defaultSize={50} className="min-h-0">
+              <div className="h-full overflow-auto p-4">
+                <Card.Description className="mb-2">After</Card.Description>
+                <ReactJson
+                  src={maskFields(fullDocument, ['password'])}
+                  collapsed={1}
+                  name={false}
+                />
+              </div>
+            </Resizable.Panel>
+          </Resizable.PanelGroup>
+        </Resizable.Panel>
+      </Resizable.PanelGroup>
     </div>
   );
 };

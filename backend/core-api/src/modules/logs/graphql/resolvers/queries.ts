@@ -250,12 +250,13 @@ export const logQueries = {
     });
 
     return {
-      list: list.map((log: ILogDocument) => ({
-        ...log,
-        payload: JSON.stringify(log?.payload || {}),
-      })),
+      list,
       totalCount,
       pageInfo,
     };
+  },
+
+  async logDetail(_root, { _id }, { models }: IContext) {
+    return await models.Logs.findOne({ _id });
   },
 };
