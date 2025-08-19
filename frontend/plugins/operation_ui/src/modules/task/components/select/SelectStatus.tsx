@@ -336,51 +336,51 @@ export const SelectStatusFormItem = React.forwardRef<
     value?: string;
     onChange?: (value: string) => void;
     teamId?: string;
+    scope?: string;
   }
->(({ onChange, className, placeholder, value, teamId, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  const { statuses } = useGetStatusByTeam({
-    variables: { teamId },
-  });
+>(
+  (
+    { onChange, className, placeholder, value, teamId, scope, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    const { statuses } = useGetStatusByTeam({
+      variables: { teamId },
+    });
 
-  useEffect(() => {
-    if (teamId && statuses?.length) {
-      onChange?.(statuses?.[0]?.value);
-    }
-  }, [teamId, onChange, statuses]);
+    useEffect(() => {
+      if (teamId && statuses?.length && !value) {
+        onChange?.(statuses?.[0]?.value);
+      }
+    }, [onChange, statuses, teamId, value]);
 
-  return (
-    <SelectStatusProvider
-      value={value || ''}
-      onValueChange={(value) => {
-        onChange?.(value);
-        setOpen(false);
-      }}
-      statuses={statuses}
-      {...props}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <Form.Control>
-          <Combobox.TriggerBase
-            ref={ref}
-            className={cn('w-full shadow-xs', className)}
-            asChild
-          >
-            <Button variant="secondary" className="h-7">
+    return (
+      <SelectStatusProvider
+        value={value || ''}
+        onValueChange={(value) => {
+          onChange?.(value);
+          setOpen(false);
+        }}
+        statuses={statuses}
+        {...props}
+      >
+        <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
+          <Form.Control>
+            <Combobox.TriggerBase ref={ref} className={cn('h-7', className)}>
               <SelectStatusValue
                 placeholder={placeholder}
                 className={!value ? 'text-muted-foreground' : undefined}
               />
-            </Button>
-          </Combobox.TriggerBase>
-        </Form.Control>
-        <Combobox.Content>
-          <SelectStatusContent />
-        </Combobox.Content>
-      </Popover>
-    </SelectStatusProvider>
-  );
-});
+            </Combobox.TriggerBase>
+          </Form.Control>
+          <Combobox.Content>
+            <SelectStatusContent />
+          </Combobox.Content>
+        </PopoverScoped>
+      </SelectStatusProvider>
+    );
+  },
+);
 
 SelectStatusFormItem.displayName = 'SelectStatusFormItem';
 
