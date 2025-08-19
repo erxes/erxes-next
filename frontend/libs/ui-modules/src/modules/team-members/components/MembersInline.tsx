@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import { IUser } from '../types/TeamMembers';
-import { IconUserCancel, IconUserCircle } from '@tabler/icons-react';
+import { IconUserCancel } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules/states';
 import { useAtomValue } from 'jotai';
 import { useMemberInline } from '../hooks';
@@ -149,27 +149,8 @@ export const MembersInlineAvatar = ({
     const { details } = member;
     const { avatar, fullName } = details || {};
 
-    if (member._id === currentUser._id) {
-      return (
-        <Tooltip delayDuration={100} key={member._id}>
-          <Tooltip.Trigger asChild>
-            <Avatar
-              size={size || 'lg'}
-              {...props}
-              className={cn(className, 'items-center justify-center')}
-            >
-              <IconUserCircle className="text-accent-foreground size-4 flex-none" />
-            </Avatar>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>{currentUser.details?.fullName}</p>
-          </Tooltip.Content>
-        </Tooltip>
-      );
-    }
-
     return (
-      <Tooltip key={member._id}>
+      <Tooltip delayDuration={100} key={member._id}>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(
@@ -235,7 +216,7 @@ export const MembersInlineTitle = ({ className }: { className?: string }) => {
     if (!members || members.length === 0) return 'No assignee';
 
     if (members.length === 1) {
-      return isCurrentUser ? 'Current User' : members?.[0].details?.fullName;
+      return members?.[0].details?.fullName;
     }
 
     if (isCurrentUser) {

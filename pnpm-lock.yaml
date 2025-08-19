@@ -62,6 +62,9 @@ importers:
       '@escape.tech/graphql-armor-max-depth':
         specifier: ^2.4.0
         version: 2.4.0
+      '@faker-js/faker':
+        specifier: ^9.9.0
+        version: 9.9.0
       '@formkit/auto-animate':
         specifier: ^0.8.2
         version: 0.8.2
@@ -765,6 +768,9 @@ importers:
       nanoid:
         specifier: ^3.3.6
         version: 3.3.11
+      node-fetch:
+        specifier: ^2.6.7
+        version: 2.7.0(encoding@0.1.13)
       strip-ansi:
         specifier: ^6.0.1
         version: 6.0.1
@@ -2481,6 +2487,10 @@ packages:
   '@eslint/plugin-kit@0.2.8':
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@faker-js/faker@9.9.0':
+    resolution: {integrity: sha512-OEl393iCOoo/z8bMezRlJu+GlRGlsKbUAN7jKB6LhnKoqKve5DXRpalbItIIcwnCjs1k/FOPjFzcA6Qn+H+YbA==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
@@ -15773,6 +15783,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.13.0
       levn: 0.4.1
+
+  '@faker-js/faker@9.9.0': {}
 
   '@floating-ui/core@1.6.9':
     dependencies:

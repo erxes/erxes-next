@@ -6,35 +6,32 @@ import {
   TEmailsOnValueChange,
   ValidationStatus,
 } from 'erxes-ui';
-import { useCustomerEdit } from 'ui-modules/modules/contacts/hooks';
+import { useCompaniesEdit } from '../hooks/useEditCompany';
 
-interface CustomerEmailsProps {
-  primaryEmail: string;
-  _id: string;
-  emailValidationStatus?: ValidationStatus;
-  emails: string[];
-  scope?: string;
-  Trigger: React.ComponentType<{ children: React.ReactNode }>;
-}
-
-export function CustomerEmails({
+export const CompanyEmails = ({
   primaryEmail,
   _id,
-  emailValidationStatus,
   emails,
+  emailValidationStatus,
   scope,
   Trigger,
-}: CustomerEmailsProps) {
-  const { customerEdit } = useCustomerEdit();
-
+}: {
+  primaryEmail: string;
+  _id: string;
+  emails: string[];
+  emailValidationStatus?: ValidationStatus;
+  scope: string;
+  Trigger: React.ComponentType<{ children: React.ReactNode }>;
+}) => {
+  const { companiesEdit } = useCompaniesEdit();
   const emailProps = {
     primaryEmail,
     emails,
-    emailValidationStatus,
+    emailValidationStatus: emailValidationStatus || ValidationStatus.Invalid,
   };
 
   const handleValidationStatusChange = (status: ValidationStatus) => {
-    customerEdit({
+    companiesEdit({
       variables: {
         _id,
         emailValidationStatus: status,
@@ -43,7 +40,7 @@ export function CustomerEmails({
   };
 
   const handleValueChange: TEmailsOnValueChange = (values) => {
-    customerEdit({
+    companiesEdit({
       variables: {
         _id,
         ...values,
@@ -66,4 +63,4 @@ export function CustomerEmails({
       </RecordTableInlineCell.Content>
     </PopoverScoped>
   );
-}
+};

@@ -1,13 +1,17 @@
 import { MutationHookOptions, useMutation } from '@apollo/client';
 import { EDIT_CUSTOMERS } from '../graphql/mutations/editCustomers';
-import { useToast } from 'erxes-ui';
+import { toast } from 'erxes-ui';
+import { ICustomer } from '../types';
 
 export const useCustomerEdit = () => {
-  const [customerEdit, { loading }] = useMutation(EDIT_CUSTOMERS);
-  const { toast } = useToast();
+  const [mutate, { loading }] = useMutation(EDIT_CUSTOMERS);
 
-  const mutate = ({ variables, ...options }: MutationHookOptions) => {
-    customerEdit({
+  const customerEdit = ({
+    variables,
+    onError,
+    ...options
+  }: MutationHookOptions<{ customersEdit: { _id: string } }, ICustomer>) => {
+    mutate({
       ...options,
       variables,
       update: (cache, { data: { customersEdit } }) => {
@@ -15,7 +19,7 @@ export const useCustomerEdit = () => {
           id: cache.identify(customersEdit),
           fields: Object.keys(variables || {}).reduce(
             (fields: Record<string, () => any>, field) => {
-              fields[field] = () => (variables || {})[field];
+              fields[field] = () => (variables || {})[field as keyof ICustomer];
               return fields;
             },
             {},
@@ -24,13 +28,18 @@ export const useCustomerEdit = () => {
         });
       },
       onError: (error) => {
+        if (onError) {
+          onError(error);
+          return;
+        }
         toast({
           title: 'Error',
           description: error.message,
+          variant: 'destructive',
         });
       },
     });
   };
 
-  return { customerEdit: mutate, loading };
+  return { customerEdit, loading };
 };
