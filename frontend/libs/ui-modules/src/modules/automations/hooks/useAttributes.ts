@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import {
   FIELDS_COMBINED_BY_CONTENT_TYPE,
   groupFieldsByType,
-} from '../../segments';
+} from 'ui-modules/modules/segments';
 
 type QueryResponse = {
   fieldsCombinedByContentType: any[];
