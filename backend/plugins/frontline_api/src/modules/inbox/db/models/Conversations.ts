@@ -1,15 +1,15 @@
 import { Model } from 'mongoose';
 
-import { cleanHtml } from 'erxes-api-shared/utils';
+import { cleanHtml, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { conversationSchema } from '@/inbox/db/definitions/conversations';
 import { IModels } from '~/connectionResolvers';
-import { graphqlPubsub } from 'erxes-api-shared/utils';
+import { graphqlPubsub, stream } from 'erxes-api-shared/utils';
 import {
   IConversationDocument,
   IConversation,
 } from '@/inbox/@types/conversations';
-
+import { IMessageDocument } from '@/inbox/@types/conversationMessages';
 export interface IConversationModel extends Model<IConversationDocument> {
   getConversation(_id: string): IConversationDocument;
   createConversation(doc: IConversation): Promise<IConversationDocument>;
@@ -108,9 +108,6 @@ export const loadClass = (models: IModels) => {
      */
     public static async createConversation(doc: IConversation) {
       const now = new Date();
-      const userRelevance = await this.getUserRelevance({
-        skillId: doc.skillId,
-      });
 
       const result = await models.Conversations.create({
         status: CONVERSATION_STATUSES.NEW,
@@ -120,7 +117,6 @@ export const loadClass = (models: IModels) => {
         updatedAt: doc.createdAt || now,
         number: (await models.Conversations.countDocuments()) + 1,
         messageCount: 0,
-        ...(userRelevance ? { userRelevance } : {}),
       });
 
       return result;
@@ -200,7 +196,25 @@ export const loadClass = (models: IModels) => {
       customerId: string,
       integrationId: string,
     ) {
-      //incomplete use coversation message model
+      const customerConversations = await models.Conversations.find({
+        customerId,
+        integrationId,
+        status: 'open',
+      });
+
+      const promises: Array<Promise<IMessageDocument>> = [];
+
+      for (const conversationObj of customerConversations) {
+        promises.push(
+          models.ConversationMessages.addMessage({
+            conversationId: conversationObj._id,
+            content: `Customer has ${status}`,
+            fromBot: true,
+          }),
+        );
+      }
+
+      return Promise.all(promises);
     }
 
     /**
@@ -338,8 +352,31 @@ export const loadClass = (models: IModels) => {
      * Remove engage conversations
      */
     public static async removeEngageConversations(engageMessageId: string) {
-      //incomplete
-      return 'success';
+      await stream(
+        async (chunk) => {
+          await models.ConversationMessages.deleteMany({
+            conversationId: { $in: chunk },
+          });
+          await models.Conversations.deleteMany({ _id: { $in: chunk } });
+        },
+        (variables, root: any) => {
+          const parentIds = variables.parentIds || [];
+
+          parentIds.push(root.conversationId);
+
+          variables.parentIds = parentIds;
+        },
+        () => {
+          return models.ConversationMessages.find(
+            {
+              engageData: { $exists: true, $ne: null },
+              'engageData.messageId': engageMessageId,
+            },
+            { conversationId: 1, _id: 0 },
+          ) as any;
+        },
+        1000,
+      );
     }
 
     public static widgetsUnreadMessagesQuery(
@@ -364,11 +401,6 @@ export const loadClass = (models: IModels) => {
      */
     public static resolveAllConversation(query: any, param: any) {
       return models.Conversations.updateMany(query, { $set: param });
-    }
-
-    public static async getUserRelevance(args: { skillId?: string }) {
-      //incomplete skill model
-      return 'success';
     }
   }
 

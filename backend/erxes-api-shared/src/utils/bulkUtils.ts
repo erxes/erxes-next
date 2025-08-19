@@ -1,29 +1,34 @@
-import { chunkArray } from '@/utils/utils';
+import { chunkArray } from './utils';
 import { Readable, Transform } from 'stream';
 
 export const stream = async <T>(
   executeChunk: (chunk: T[]) => Promise<void>,
-  transformCallback: (variables: any, root: T) => void,
+  transformCallback: (variables: { parentIds?: T[] }, root: T) => void,
   generateChildStream: () => { cursor: () => Readable },
   chunkSize: number,
 ): Promise<'done'> => {
   const variables: { parentIds?: T[] } = {};
 
+  // Function to handle remaining items after streaming
   const onFinishPiping = async () => {
-    if (variables.parentIds) {
+    if (variables.parentIds && variables.parentIds.length > 0) {
       const chunks = chunkArray(variables.parentIds, chunkSize);
-
       for (const chunk of chunks) {
         await executeChunk(chunk);
       }
     }
   };
 
+  // Transformer stream to process each item
   const parentTransformerStream = new Transform({
     objectMode: true,
-    transform(root: T, _encoding, callback) {
-      transformCallback(variables, root);
-      callback();
+    transform(root: unknown, _encoding, callback) {
+      try {
+        transformCallback(variables, root as T);
+        callback();
+      } catch (err) {
+        callback(err as Error);
+      }
     },
   });
 
@@ -34,8 +39,12 @@ export const stream = async <T>(
       childCursor.pipe(parentTransformerStream);
 
       parentTransformerStream.on('finish', async () => {
-        await onFinishPiping();
-        resolve();
+        try {
+          await onFinishPiping();
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
       });
 
       parentTransformerStream.on('error', reject);

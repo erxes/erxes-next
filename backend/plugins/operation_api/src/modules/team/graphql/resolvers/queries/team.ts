@@ -1,9 +1,23 @@
 import { IContext } from '~/connectionResolvers';
-import { ITeamFilter } from '~/modules/team/@types/team';
+import { ITeamFilter } from '@/team/@types/team';
+import { getTeamEstimateChoises } from '~/modules/team/utils';
 
 export const teamQueries = {
   getTeam: async (_parent: undefined, { _id }, { models }: IContext) => {
     return models.Team.getTeam(_id);
+  },
+
+  getMyTeams: async (
+    _parent: undefined,
+    _params: undefined,
+    { models, user }: IContext,
+  ) => {
+    const userId = user._id;
+    const teamIds = await models.TeamMember.find({ memberId: userId }).distinct(
+      'teamId',
+    );
+
+    return models.Team.find({ _id: { $in: teamIds } });
   },
 
   getTeams: async (
@@ -11,6 +25,64 @@ export const teamQueries = {
     params: ITeamFilter,
     { models }: IContext,
   ) => {
+    if (params.teamIds && params.teamIds.length > 0) {
+      return models.Team.find({ _id: { $in: params.teamIds } });
+    }
+
+    if (params.projectId) {
+      const teamIds = await models.Project.findOne({
+        _id: params.projectId,
+      }).distinct('teamIds');
+      return models.Team.find({ _id: { $in: teamIds } });
+    }
+
+    if (params.userId) {
+      const teamIds = await models.TeamMember.find({
+        memberId: params.userId,
+      }).distinct('teamId');
+      return models.Team.find({ _id: { $in: teamIds } });
+    }
+
     return models.Team.getTeams(params);
+  },
+
+  getTeamMembers: async (
+    _parent: undefined,
+    { teamId, teamIds }: { teamId: string; teamIds: string[] },
+    { models }: IContext,
+  ) => {
+    if (teamIds && teamIds.length > 0) {
+      return models.TeamMember.aggregate([
+        {
+          $match: {
+            teamId: { $in: teamIds },
+          },
+        },
+        {
+          $sort: { _id: -1 },
+        },
+        {
+          $group: {
+            _id: '$memberId',
+            doc: { $first: '$$ROOT' },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: '$doc' },
+        },
+      ]);
+    }
+
+    return models.TeamMember.find({ teamId });
+  },
+
+  getTeamEstimateChoises: async (
+    _parent: undefined,
+    { teamId }: { teamId: string },
+    { models }: IContext,
+  ) => {
+    const team = await models.Team.getTeam(teamId);
+
+    return getTeamEstimateChoises(team.estimateType);
   },
 };

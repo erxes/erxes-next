@@ -1,22 +1,36 @@
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import { IMainContext } from 'erxes-api-shared/core-types';
 import { ITaskDocument } from '@/task/@types/task';
-import { ITeamDocument } from '@/team/@types/team';
+import { ITeamDocument, ITeamMemberDocument } from '@/team/@types/team';
 
 import mongoose from 'mongoose';
 
 import { loadTaskClass, ITaskModel } from '@/task/db/models/Task';
 import { loadTeamClass, ITeamModel } from '@/team/db/models/Team';
+import {
+  loadTeamMemberClass,
+  ITeamMemberModel,
+} from '@/team/db/models/TeamMembers';
 import { loadStatusClass, IStatusModel } from '@/status/db/models/Status';
 import { IStatusDocument } from '@/status/@types/status';
 import { loadProjectClass, IProjectModel } from '@/project/db/models/Project';
 import { IProjectDocument } from '@/project/@types/project';
+import { loadNoteClass, INoteModel } from '@/note/db/models/Note';
+import { INoteDocument } from '@/note/types';
+import {
+  loadActivityClass,
+  IActivityModel,
+} from '@/activity/db/models/Activity';
+import { IActivityDocument } from '@/activity/types';
 
 export interface IModels {
   Task: ITaskModel;
   Team: ITeamModel;
+  TeamMember: ITeamMemberModel;
   Status: IStatusModel;
   Project: IProjectModel;
+  Note: INoteModel;
+  Activity: IActivityModel;
 }
 
 export interface IContext extends IMainContext {
@@ -36,6 +50,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     loadTeamClass(models),
   );
 
+  models.TeamMember = db.model<ITeamMemberDocument, ITeamMemberModel>(
+    'operation_team_members',
+    loadTeamMemberClass(models),
+  );
+
   models.Status = db.model<IStatusDocument, IStatusModel>(
     'operation_statuses',
     loadStatusClass(models),
@@ -44,6 +63,16 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Project = db.model<IProjectDocument, IProjectModel>(
     'operation_projects',
     loadProjectClass(models),
+  );
+
+  models.Note = db.model<INoteDocument, INoteModel>(
+    'operation_notes',
+    loadNoteClass(models),
+  );
+
+  models.Activity = db.model<IActivityDocument, IActivityModel>(
+    'operation_activities',
+    loadActivityClass(models),
   );
 
   return models;

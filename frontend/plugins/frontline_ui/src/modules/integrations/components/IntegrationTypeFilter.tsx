@@ -12,7 +12,6 @@ import {
   useFilterContext,
   Popover,
 } from 'erxes-ui';
-import { useState } from 'react';
 
 const SelectIntegrationTypeProvider = ({
   children,
@@ -20,26 +19,17 @@ const SelectIntegrationTypeProvider = ({
   onValueChange,
 }: {
   children: React.ReactNode;
-  value?: string | null;
+  value: string | null;
   onValueChange?: (value: string | null) => void;
 }) => {
-  const [selectedIntegrationTypeId, setSelectedIntegrationTypeId] = useState<
-    string | null
-  >(value || null);
-
   const onSelect = (integrationType: string) => {
-    setSelectedIntegrationTypeId(
-      integrationType === selectedIntegrationTypeId ? null : integrationType,
-    );
-    onValueChange?.(
-      integrationType === selectedIntegrationTypeId ? null : integrationType,
-    );
+    onValueChange?.(integrationType === value ? null : integrationType);
   };
 
   return (
     <SelectIntegrationTypeContext.Provider
       value={{
-        selectedIntegrationTypeId,
+        value,
         onSelect,
       }}
     >
@@ -50,8 +40,7 @@ const SelectIntegrationTypeProvider = ({
 
 export const ChooseIntegrationTypeContent = () => {
   const { integrationTypes } = useUsedIntegrationTypes();
-  const { selectedIntegrationTypeId, onSelect } =
-    useSelectIntegrationTypeContext();
+  const { value, onSelect } = useSelectIntegrationTypeContext();
 
   return (
     <Command>
@@ -65,9 +54,7 @@ export const ChooseIntegrationTypeContent = () => {
             onSelect={() => onSelect(integrationType._id)}
           >
             {integrationType.name}
-            <Combobox.Check
-              checked={integrationType._id === selectedIntegrationTypeId}
-            />
+            <Combobox.Check checked={integrationType._id === value} />
           </Command.Item>
         ))}
       </Command.List>
@@ -106,14 +93,13 @@ export const IntegrationTypeFilterView = () => {
 
 export const IntegrationTypeValue = () => {
   const { integrationTypes, loading } = useUsedIntegrationTypes();
-  const { selectedIntegrationTypeId } = useSelectIntegrationTypeContext();
+  const { value } = useSelectIntegrationTypeContext();
 
   return (
     <Combobox.Value
       value={
         integrationTypes?.find(
-          (integrationType) =>
-            integrationType._id === selectedIntegrationTypeId,
+          (integrationType) => integrationType._id === value,
         )?.name
       }
       loading={loading}
@@ -134,6 +120,8 @@ export const IntegrationTypeFilterBar = ({
   if (!integrationTypeId) {
     return null;
   }
+
+  console.log(integrationTypeId);
 
   return (
     <Filter.BarItem>

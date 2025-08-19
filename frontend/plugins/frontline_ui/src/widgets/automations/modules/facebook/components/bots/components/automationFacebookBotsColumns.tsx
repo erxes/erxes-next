@@ -6,7 +6,7 @@ import {
   Avatar,
   Button,
   RecordTable,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   Spinner,
   toast,
   useQueryState,
@@ -23,9 +23,9 @@ export const automationFacebookBotsColumns: ColumnDef<IFacebookBot>[] = [
     header: () => <RecordTable.InlineHead label="Name" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {cell.getValue() as string}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 250,
@@ -36,7 +36,7 @@ export const automationFacebookBotsColumns: ColumnDef<IFacebookBot>[] = [
     header: () => <RecordTable.InlineHead label="Account" />,
     cell: ({ cell }) => {
       const { name = '-' } = cell.getValue() || ({} as any);
-      return <RecordTableCellDisplay>{name}</RecordTableCellDisplay>;
+      return <RecordTableInlineCell>{name}</RecordTableInlineCell>;
     },
     size: 235,
   },
@@ -48,13 +48,13 @@ export const automationFacebookBotsColumns: ColumnDef<IFacebookBot>[] = [
       const { profileUrl = '' } = cell.row.original || {};
       const { name = '-' } = cell.getValue() || ({} as any);
       return (
-        <RecordTableCellDisplay className="w-full flex items-center justify-center">
+        <RecordTableInlineCell className="w-full flex items-center justify-center">
           <Avatar>
             <Avatar.Image src={profileUrl} />
             <Avatar.Fallback>{name}</Avatar.Fallback>
           </Avatar>
           {name}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

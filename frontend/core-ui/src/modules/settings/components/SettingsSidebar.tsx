@@ -1,13 +1,8 @@
 import { useNavigate } from 'react-router';
 
-import { Icon, IconChevronLeft } from '@tabler/icons-react';
+import { IconChevronLeft } from '@tabler/icons-react';
 
-import {
-  Sidebar,
-  IUIConfig,
-  NavigationMenuLinkItem,
-  NavigationMenuGroup,
-} from 'erxes-ui';
+import { Sidebar, IUIConfig, NavigationMenuLinkItem } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
@@ -28,7 +23,7 @@ export function SettingsSidebar() {
 
         Object.values(pluginsMetaData).forEach((plugin) => {
           const settingsModules = plugin.modules
-            .filter((module) => module.hasSettings)
+            .filter((module) => module.hasSettings || module.settingsOnly)
             .map((module) => ({
               ...module,
               pluginName: plugin.name,

@@ -52,8 +52,10 @@ export const AccountCategoriesTable = () => {
                 Row={(props) => (
                   <RecordTableTree.Row
                     {...props}
-                    order={categoryObject[props.id as string]?.order || ''}
-                    name={categoryObject[props.id as string]?.name}
+                    original={{
+                      ...props.original,
+                      ...categoryObject[props.id as string],
+                    }}
                   />
                 )}
               />

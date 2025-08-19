@@ -1,7 +1,7 @@
 import { Button, Popover, ScrollArea, Skeleton } from 'erxes-ui';
 import { useFacebookPost } from '../hooks/useFacebookPost';
 import DOMPurify from 'dompurify';
-import { IconExternalLink } from '@tabler/icons-react';
+import { IconBrowserShare, IconExternalLink } from '@tabler/icons-react';
 import { useMemo } from 'react';
 
 export const FacebookPostTrigger = ({ erxesApiId }: { erxesApiId: string }) => {
@@ -21,6 +21,7 @@ export const FacebookPostTrigger = ({ erxesApiId }: { erxesApiId: string }) => {
           variant="ghost"
           className="font-normal text-muted-foreground"
         >
+          <IconBrowserShare />
           {loading ? (
             <Skeleton className="h-4 w-16" />
           ) : (

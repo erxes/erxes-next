@@ -3,13 +3,9 @@ import {
   IconEye,
   IconTournament,
 } from '@tabler/icons-react';
-import { RecordTable, RecordTableCellDisplay, Sheet, Tabs } from 'erxes-ui';
+import { RecordTable, RecordTableInlineCell, Sheet, Tabs } from 'erxes-ui';
 import { useState } from 'react';
-import {
-  IAutomationHistory,
-  IAutomationsActionConfigConstants,
-  IAutomationsTriggerConfigConstants,
-} from 'ui-modules';
+import { IAutomationHistory } from 'ui-modules';
 import { AutomationHistoryByFlow } from './AutomationHistoryByFlow';
 import { AutomationHistoryByTable } from './AutomationHistoryByTable';
 
@@ -21,7 +17,7 @@ export const AutomationHistoryDetail = ({
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       <Sheet open={isOpen} onOpenChange={setOpen}>
         <Sheet.Trigger asChild>
           <RecordTable.MoreButton className="w-full h-full">
@@ -32,7 +28,7 @@ export const AutomationHistoryDetail = ({
           <AutomationHistorySheetContent isOpen={isOpen} history={history} />
         </Sheet.View>
       </Sheet>
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 

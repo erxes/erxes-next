@@ -58,7 +58,7 @@ const BrandsInlineEffectComponent = ({ brandId }: { brandId: string }) => {
     variables: {
       _id: brandId,
     },
-    skip: !brandId || brands.some((b) => b._id === brandId),
+  
   });
 
   useEffect(() => {

@@ -17,6 +17,7 @@ export interface ISelectBranchesContext {
   newBranchName: string;
   setNewBranchName: (BranchName: string) => void;
   mode: 'single' | 'multiple';
+  branchIds?: string[];
 }
 
 export type ISelectBranchesProviderProps = {
@@ -24,6 +25,7 @@ export type ISelectBranchesProviderProps = {
   value?: string[] | string;
   onValueChange?: (Branches?: string[] | string) => void;
   mode?: 'single' | 'multiple';
+  branchIds?: string[];
   children?: React.ReactNode;
   options?: (newSelectedBranchIds: string[]) => MutationHookOptions<
     {

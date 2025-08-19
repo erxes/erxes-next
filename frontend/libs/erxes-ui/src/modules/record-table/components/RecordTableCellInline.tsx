@@ -2,63 +2,16 @@ import { Button, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
-import { Key } from 'erxes-ui/types';
-import { UseHotkeysOptionsWithoutBuggyOptions, useScopedHotkeys } from 'erxes-ui/modules/hotkey';
+import { UseHotkeysOptionsWithoutBuggyOptions } from 'erxes-ui/modules/hotkey';
 
-type NewType = {
+export interface ReactTablePopoverProps
+  extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> {
   scope?: string;
   closeOnEnter?: boolean;
   scopeOptions?: UseHotkeysOptionsWithoutBuggyOptions;
-};
+}
 
-export const RecordTablePopover = ({
-  scope,
-  onOpenChange,
-  open,
-  closeOnEnter,
-  scopeOptions,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> & NewType) => {
-  const [_open, _setOpen] = React.useState(false);
-  const {
-    setHotkeyScopeAndMemorizePreviousScope,
-    goBackToPreviousHotkeyScope,
-  } = usePreviousHotkeyScope();
-
-  useScopedHotkeys(
-    Key.Enter,
-    () => {
-      if (!scope || !closeOnEnter) {
-        return;
-      }
-      onOpenChange?.(false);
-      _setOpen(false);
-      goBackToPreviousHotkeyScope();
-    },
-    scope + '.Popover',
-    [],
-    scopeOptions,
-  );
-
-  return (
-    <PopoverPrimitive.Root
-      modal
-      {...props}
-      open={open ?? _open}
-      onOpenChange={(open) => {
-        onOpenChange?.(open);
-        _setOpen(open);
-        open
-          ? setHotkeyScopeAndMemorizePreviousScope(scope + '.Popover')
-          : goBackToPreviousHotkeyScope();
-      }}
-    />
-  );
-};
-RecordTablePopover.displayName = 'RecordTablePopover';
-
-export const RecordTableCellTrigger = React.forwardRef<
+const RecordTableCellTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button>
 >(({ children, className, ...props }, ref) => {
@@ -67,7 +20,7 @@ export const RecordTableCellTrigger = React.forwardRef<
       <Button
         variant="ghost"
         className={cn(
-          'h-8 px-2 w-full justify-start text-left font-normal rounded-none focus-visible:relative focus-visible:z-10 focus-visible:outline-transparent focus-visible:shadow-subtle overflow-hidden',
+          'h-8 px-2 w-full justify-start text-left rounded-none focus-visible:relative focus-visible:z-10 focus-visible:outline-transparent focus-visible:shadow-subtle overflow-hidden',
           className,
         )}
         ref={ref}
@@ -79,7 +32,7 @@ export const RecordTableCellTrigger = React.forwardRef<
   );
 });
 
-export const RecordTableCellContent = React.forwardRef<
+const RecordTableCellContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, ...props }, ref) => {
@@ -100,7 +53,7 @@ export const RecordTableCellContent = React.forwardRef<
 
 RecordTableCellTrigger.displayName = 'RecordTableCellTrigger';
 
-export const RecordTableCellDisplay = React.forwardRef<
+const RecordTableCellDisplay = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button>
 >(({ className, children, ...props }, ref) => {
@@ -122,3 +75,8 @@ export const RecordTableCellDisplay = React.forwardRef<
 });
 
 RecordTableCellDisplay.displayName = 'RecordTableCellDisplay';
+
+export const RecordTableInlineCell = Object.assign(RecordTableCellDisplay, {
+  Trigger: RecordTableCellTrigger,
+  Content: RecordTableCellContent,
+});

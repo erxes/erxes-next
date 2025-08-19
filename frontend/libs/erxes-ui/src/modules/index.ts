@@ -5,6 +5,7 @@ export * from './record-table';
 export * from './record-field';
 export * from './filter';
 export * from './side-menu/components/SideMenu';
+export * from './side-menu/context/SideMenuContext';
 export * from './inputs';
 export * from './display';
 export * from './layout';

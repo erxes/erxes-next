@@ -1,6 +1,7 @@
 import { ControllerRenderProps, Path, useFormContext } from 'react-hook-form';
 import { FormType } from '@/settings/profile/hooks/useProfileForm';
-import { DatePicker, Form, Input } from 'erxes-ui';
+import { DatePicker, Form, Input, PhoneInput } from 'erxes-ui';
+import { SelectPositions } from 'ui-modules';
 
 type RenderProps = {
   field: ControllerRenderProps;
@@ -28,7 +29,11 @@ const RenderFormField = ({ field, element, attributes }: RenderProps) => {
         />
       );
     case 'date':
-      return <DatePicker {...field} {...attributes} />;
+      return (
+        <DatePicker {...field} {...attributes} defaultMonth={field.value} />
+      );
+    case 'telephone':
+      return <PhoneInput value={field.value} onChange={field.onChange} />;
     default:
       return <></>;
   }
@@ -36,6 +41,7 @@ const RenderFormField = ({ field, element, attributes }: RenderProps) => {
 
 const FormField = ({ name, element, attributes }: Props) => {
   const form = useFormContext<FormType>();
+
   return (
     <Form.Field
       key={name}

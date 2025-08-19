@@ -77,6 +77,7 @@ type Notification {
     isRead: Boolean
     action:String
     emailDelivery:EmailDelivery
+    kind:String
 }
 
 type NotificationsList {

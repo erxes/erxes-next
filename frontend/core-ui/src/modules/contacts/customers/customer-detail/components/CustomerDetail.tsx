@@ -7,13 +7,13 @@ import {
 import { CustomerDetailGeneral } from './CustomerDetailGeneral';
 import { CustomerGeneral } from './CustomerGeneral';
 import { CustomerProperties } from './CustomerProperties';
-import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
+import { useCustomerDetailWithParams } from '@/contacts/customers/customer-detail/hooks/useCustomerDetailWithParams';
 
 export const CustomerDetail = () => {
   const { toast } = useToast();
-  const { error } = useCustomerDetail({
+  const { error } = useCustomerDetailWithParams({
     onError: (e: ApolloError) => {
       if (!e.message.includes('not found')) {
         toast({
@@ -24,6 +24,7 @@ export const CustomerDetail = () => {
       }
     },
   });
+
   return (
     <CustomerDetailLayout
       actions={<CustomerDetailActions />}

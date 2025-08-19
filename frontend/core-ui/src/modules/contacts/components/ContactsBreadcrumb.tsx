@@ -1,14 +1,22 @@
-import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import {
+  Breadcrumb,
+  Button,
+  recordTableCursorAtomFamily,
+  Separator,
+  ToggleGroup,
+} from 'erxes-ui';
 
 import { ContactsPath } from '@/types/paths/ContactsPath';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { IconBookmarksFilled } from '@tabler/icons-react';
+import { useIsCustomerLeadSessionKey } from '@/contacts/customers/hooks/useCustomerLeadSessionKey';
+import { useSetAtom } from 'jotai';
 
-export const ContactsBreadcrumb = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const ContactsBreadcrumb = () => {
+  const { pathname } = useLocation();
+  const { sessionKey } = useIsCustomerLeadSessionKey();
+  const setCursor = useSetAtom(recordTableCursorAtomFamily(sessionKey));
+
   return (
     <>
       <Breadcrumb>
@@ -22,7 +30,36 @@ export const ContactsBreadcrumb = ({
             </Button>
           </Breadcrumb.Item>
           <Breadcrumb.Separator />
-          {children}
+          <ToggleGroup type="single" value={pathname}>
+            <ToggleGroup.Item
+              value="/contacts/customers"
+              asChild
+              onClick={() => setCursor('')}
+            >
+              <Link to="/contacts/customers">Customers</Link>
+            </ToggleGroup.Item>
+            <ToggleGroup.Item
+              value="/contacts/companies"
+              asChild
+              onClick={() => setCursor('')}
+            >
+              <Link to="/contacts/companies">Companies</Link>
+            </ToggleGroup.Item>
+            <ToggleGroup.Item
+              value="/contacts/leads"
+              asChild
+              onClick={() => setCursor('')}
+            >
+              <Link to="/contacts/leads">Leads</Link>
+            </ToggleGroup.Item>
+            <ToggleGroup.Item
+              value="/contacts/clients"
+              asChild
+              onClick={() => setCursor('')}
+            >
+              <Link to="/contacts/clients">Clients</Link>
+            </ToggleGroup.Item>
+          </ToggleGroup>
         </Breadcrumb.List>
       </Breadcrumb>
       <Separator.Inline />

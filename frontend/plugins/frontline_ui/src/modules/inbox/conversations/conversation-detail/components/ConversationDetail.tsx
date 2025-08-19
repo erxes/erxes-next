@@ -20,6 +20,7 @@ import { IIntegration } from '@/integrations/types/Integration';
 import { MessageInputIntegrationWrapper } from '@/integrations/components/MessageInputIntegrationWrapper';
 import { messageExtraInfoState } from '../states/messageExtraInfoState';
 import { useEffect } from 'react';
+import { ConversationSideWidget } from '@/inbox/conversations/conversation-detail/components/ConversationSideWidget';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -74,21 +75,21 @@ export const ConversationDetail = () => {
   }
 
   return (
-    <div className="flex h-full overflow-hidden">
-      <div className="flex flex-col h-full overflow-hidden flex-auto">
-        <ConversationContext.Provider
-          value={
-            {
-              ...currentConversation,
-              ...conversationDetail,
-              integration,
-              loading,
-            } as IConversation & {
-              integration?: IIntegration;
-              loading?: boolean;
-            }
-          }
-        >
+    <ConversationContext.Provider
+      value={
+        {
+          ...currentConversation,
+          ...conversationDetail,
+          integration,
+          loading,
+        } as IConversation & {
+          integration?: IIntegration;
+          loading?: boolean;
+        }
+      }
+    >
+      <div className="flex h-full overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden flex-auto">
           <ConversationHeader />
           <Separator />
           <ConversationDetailLayout
@@ -105,8 +106,9 @@ export const ConversationDetail = () => {
             <ConversationIntegrationDetail />
           </ConversationDetailLayout>
           <ConversationMarkAsReadEffect />
-        </ConversationContext.Provider>
+        </div>
+        <ConversationSideWidget />
       </div>
-    </div>
+    </ConversationContext.Provider>
   );
 };

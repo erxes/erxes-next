@@ -7,17 +7,17 @@ import { IReplyParams } from '@/integrations/facebook/@types/utils';
 import { sendReply } from '@/integrations/facebook/utils';
 import { sendNotifications } from '@/inbox/graphql/resolvers/mutations/conversations';
 export const facebookMutations = {
-  async facebookUpdateConfigs(_root, { configsMap }, { models }: IContext) {
-    await updateConfigs(models, configsMap);
+  async facebookUpdateConfigs(_root, { configsMap }, { subdomain }: IContext) {
+    await updateConfigs(subdomain, configsMap);
 
     return { status: 'ok' };
   },
   async facebookRepair(
     _root,
     { _id }: { _id: string },
-    { subdomain, models }: IContext,
+    { subdomain }: IContext,
   ) {
-    await repairIntegrations(subdomain, models, _id);
+    await repairIntegrations(subdomain, _id);
 
     return 'success';
   },

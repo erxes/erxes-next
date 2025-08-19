@@ -8,10 +8,8 @@ import {
   CurrencyCode,
   CurrencyField,
   CurrencyFormatedDisplay,
-  RecordTablePopover,
-  RecordTableCellTrigger,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
+  PopoverScoped,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingTransactionDetailState } from '../states/renderingTransactionDetailStates';
@@ -24,16 +22,18 @@ const NumberCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-number`}>
-      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+    <PopoverScoped scope={`transaction-${_id}-number`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as string}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input
           value={number}
           onChange={(e) => setNumber(e.target.value)}
           className="w-full"
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -42,15 +42,17 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-description`}>
-      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+    <PopoverScoped scope={`transaction-${_id}-description`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as string}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -59,8 +61,8 @@ const SumDebitCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-sumDt`}>
-      <RecordTableCellTrigger>
+    <PopoverScoped scope={`transaction-${_id}-sumDt`}>
+      <RecordTableInlineCell.Trigger>
         {
           <CurrencyFormatedDisplay
             currencyValue={{
@@ -69,14 +71,14 @@ const SumDebitCell = ({ getValue, row }: any) => {
             }}
           />
         }
-      </RecordTableCellTrigger>
-      <RecordTableCellContent>
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <CurrencyField.ValueInput
           value={sumDt}
           onChange={(value) => setSumDt(value)}
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -85,8 +87,8 @@ const SumCreditCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-sumCt`}>
-      <RecordTableCellTrigger>
+    <PopoverScoped scope={`transaction-${_id}-sumCt`}>
+      <RecordTableInlineCell.Trigger>
         {
           <CurrencyFormatedDisplay
             currencyValue={{
@@ -95,14 +97,14 @@ const SumCreditCell = ({ getValue, row }: any) => {
             }}
           />
         }
-      </RecordTableCellTrigger>
-      <RecordTableCellContent>
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <CurrencyField.ValueInput
           value={sumCt}
           onChange={(value) => setSumCt(value)}
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -111,20 +113,22 @@ const BranchCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`transaction-${_id}-branchId`}>
-      <RecordTableCellTrigger>{getValue() as any}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+    <PopoverScoped scope={`transaction-${_id}-branchId`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as any}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input value={branch} onChange={(e) => setBranch(e.target.value)} />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
 const DateCell = ({ getValue }: any) => {
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {dayjs(new Date(getValue())).format('YYYY-MM-DD')}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -132,9 +136,9 @@ const AccountCell = ({ row }: any) => {
   const { details } = row.original;
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {`${details?.account?.code} - ${details?.account?.name}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
