@@ -1,6 +1,6 @@
 import { IconChalkboard } from '@tabler/icons-react';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
-import { Avatar, Button, readFile, Skeleton, Spinner } from 'erxes-ui';
+import { Avatar, Button, readImage, Skeleton, Spinner } from 'erxes-ui';
 import { Link } from 'react-router';
 import { useChannel } from '~/widgets/notifications/my-inbox/hooks/useChannel';
 
@@ -51,7 +51,7 @@ export const NotificationChannelContent = ({
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm text-foreground">
           <Avatar className="size-6">
             <Avatar.Image
-              src={readFile(fromUser?.details?.avatar || '')}
+              src={readImage(fromUser?.details?.avatar || '')}
               alt={fromUser?.details?.fullName || ''}
             />
             <Avatar.Fallback className="rounded-lg">

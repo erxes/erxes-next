@@ -9,22 +9,23 @@ export const createTransporter = async (config: IEmailTransportConfig) => {
   if (config.sendgrid) {
     const { apiKey } = config.sendgrid || {};
 
-    return sendgridMail.setApiKey(apiKey);
+    sendgridMail.setApiKey(apiKey);
+    return sendgridMail;
   }
 
-  if (config.ses) {
-    const { accessKeyId, secretAccessKey, region } = config.ses;
+  // if (config.ses) {
+  //   const { accessKeyId, secretAccessKey, region } = config.ses;
 
-    AWS.config.update({
-      region,
-      accessKeyId,
-      secretAccessKey,
-    });
+  //   AWS.config.update({
+  //     region,
+  //     accessKeyId,
+  //     secretAccessKey,
+  //   });
 
-    return nodemailer.createTransport({
-      SES: new AWS.SES({ apiVersion: '2010-12-01' }),
-    });
-  }
+  //   return nodemailer.createTransport({
+  //     SES: new AWS.SES({ apiVersion: '2010-12-01' }),
+  //   });
+  // }
 
   return nodemailer.createTransport({
     service: config.service,

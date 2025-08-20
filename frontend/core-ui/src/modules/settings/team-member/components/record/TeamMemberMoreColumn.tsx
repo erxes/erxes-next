@@ -2,7 +2,7 @@ import { Cell } from '@tanstack/react-table';
 import { useSetAtom } from 'jotai';
 import { RecordTable, useQueryState } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
-import { renderingTeamMemberDetailAtom } from '@/settings/team-member/states/renderingTeamMemberDetail';
+import { renderingTeamMemberDetailAtom } from '@/settings/team-member/states/teamMemberDetailStates';
 
 export const TeamMemberMoreColumnCell = ({
   cell,

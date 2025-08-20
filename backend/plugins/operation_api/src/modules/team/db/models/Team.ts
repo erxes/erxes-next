@@ -1,16 +1,32 @@
 import { Model } from 'mongoose';
-import { ITeam, ITeamDocument } from '@/team/@types/team';
+import {
+  ITeam,
+  ITeamDocument,
+  ITeamMember,
+  TeamEstimateTypes,
+  TeamMemberRoles,
+} from '@/team/@types/team';
 import { ITeamFilter } from '@/team/@types/team';
 import { teamSchema } from '@/team/db/definitions/team';
 import { IModels } from '~/connectionResolvers';
+import { FilterQuery } from 'mongoose';
 
 export interface ITeamModel extends Model<ITeamDocument> {
   getTeam(_id: string): Promise<ITeamDocument>;
   getTeams(params: ITeamFilter): Promise<ITeamDocument[]>;
   getTeamsByMember(memberId: string): Promise<ITeamDocument[]>;
-  createTeam(doc: ITeam): Promise<ITeamDocument>;
+  createTeam({
+    teamDoc,
+    memberIds,
+    adminId,
+  }: {
+    teamDoc: ITeam;
+    memberIds: string[];
+    adminId: string;
+  }): Promise<ITeamDocument>;
+  addMembers(_id: string, memberIds: string[]): Promise<ITeamDocument>;
   updateTeam(_id: string, doc: ITeam): Promise<ITeamDocument>;
-  removeTeam(teamId: string[]): Promise<{ ok: number }>;
+  removeTeam(teamId: string): Promise<{ ok: number }>;
 }
 
 export const loadTeamClass = (models: IModels) => {
@@ -34,7 +50,7 @@ export const loadTeamClass = (models: IModels) => {
     public static async getTeams(
       params: ITeamFilter,
     ): Promise<ITeamDocument[]> {
-      const query = {} as any;
+      const query: FilterQuery<ITeamDocument> = {};
 
       if (params.name) {
         query.name = params.name;
@@ -48,15 +64,40 @@ export const loadTeamClass = (models: IModels) => {
         query.icon = params.icon;
       }
 
-      if (params.memberIds) {
-        query.memberIds = params.memberIds;
+      if (params.userId) {
+        const teamIds = await models.TeamMember.find({
+          memberId: params.userId,
+        }).distinct('teamId');
+
+        query._id = { $in: teamIds };
       }
 
       return models.Team.find(query).lean();
     }
 
-    public static async createTeam(doc: ITeam): Promise<ITeamDocument> {
-      const team = await models.Team.insertOne(doc);
+    public static async createTeam({
+      teamDoc,
+      memberIds,
+      adminId,
+    }: {
+      teamDoc: ITeam;
+      memberIds: string[];
+      adminId: string;
+    }): Promise<ITeamDocument> {
+      const roles: ITeamMember[] = [];
+
+      const team = await models.Team.insertOne(teamDoc);
+
+      roles.push(
+        { memberId: adminId, teamId: team._id, role: TeamMemberRoles.ADMIN },
+        ...memberIds.map((memberId) => ({
+          memberId,
+          teamId: team._id,
+          role: TeamMemberRoles.MEMBER,
+        })),
+      );
+
+      await models.TeamMember.createTeamMembers(roles);
 
       await models.Status.createDefaultStatuses(team._id);
 
@@ -64,11 +105,31 @@ export const loadTeamClass = (models: IModels) => {
     }
 
     public static async updateTeam(_id: string, doc: ITeam) {
+      const team = await models.Team.findOne({ _id });
+
+      if (!team) {
+        throw new Error('Team not found');
+      }
+
+      if (doc.estimateType !== team.estimateType) {
+        switch (doc.estimateType) {
+          case TeamEstimateTypes.NOT_IN_USE:
+            await models.Task.updateMany(
+              { teamId: _id },
+              { $set: { estimatePoint: null } },
+            );
+            break;
+
+          default:
+            break;
+        }
+      }
+
       return await models.Team.findOneAndUpdate({ _id }, { $set: { ...doc } });
     }
 
-    public static async removeTeam(teamId: string[]) {
-      return models.Team.deleteOne({ _id: { $in: teamId } });
+    public static async removeTeam(teamId: string) {
+      return models.Team.deleteOne({ _id: teamId });
     }
   }
 

@@ -5,9 +5,8 @@ import {
   Filter,
   Form,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  PopoverScoped,
+  RecordTableInlineCell,
   cn,
   useFilterContext,
   useQueryState,
@@ -37,14 +36,18 @@ const SelectMemberProvider = ({
   children: React.ReactNode;
   mode?: 'single' | 'multiple';
   value?: string[] | string;
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string[] | string | null) => void;
   members?: IUser[];
 }) => {
   const [_members, setMembers] = useState<IUser[]>(members || []);
   const isSingleMode = mode === 'single';
 
-  const onSelect = (member: IUser) => {
-    if (!member) return;
+  const onSelect = (member: IUser | null) => {
+    if (!member) {
+      setMembers([]);
+      onValueChange?.(mode === 'single' ? null : []);
+      return;
+    }
     if (isSingleMode) {
       setMembers([member]);
       return onValueChange?.(member._id);
@@ -120,6 +123,16 @@ const SelectMemberCommandItem = ({ user }: { user: IUser }) => {
   );
 };
 
+const SelectMemberNoAssigneeItem = () => {
+  const { onSelect, memberIds } = useSelectMemberContext();
+  return (
+    <Command.Item value="no-assignee" onSelect={() => onSelect(null)}>
+      <MembersInline memberIds={[]} placeholder="Unnamed user" />
+      <Combobox.Check checked={!memberIds || memberIds.length === 0} />
+    </Command.Item>
+  );
+};
+
 const SelectMemberContent = () => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
@@ -152,6 +165,7 @@ const SelectMemberContent = () => {
             <Command.Separator className="my-1" />
           </>
         )}
+        {!loading && <SelectMemberNoAssigneeItem />}
 
         {!loading &&
           [currentUser, ...users]
@@ -186,7 +200,7 @@ export const SelectMemberFilterView = ({
   queryKey,
   mode = 'single',
 }: {
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string[] | string | null) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
 }) => {
@@ -219,7 +233,7 @@ export const SelectMemberFilterBar = ({
   mode = 'single',
 }: {
   iconOnly?: boolean;
-  onValueChange?: (value: string[] | string) => void;
+  onValueChange?: (value: string[] | string | null) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
 }) => {
@@ -242,11 +256,7 @@ export const SelectMemberFilterBar = ({
         mode={mode}
         value={assignedTo || (mode === 'single' ? '' : [])}
         onValueChange={(value) => {
-          if (value.length > 0) {
-            setAssignedTo(value as string[] | string);
-          } else {
-            setAssignedTo(null);
-          }
+          setAssignedTo(null);
           setOpen(false);
           onValueChange?.(value);
         }}
@@ -267,32 +277,48 @@ export const SelectMemberFilterBar = ({
   );
 };
 
-export const SelectMemberInlineCell = ({
-  onValueChange,
-  scope,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
-  scope?: string;
-}) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectMemberProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-      }}
-      {...props}
-    >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
-          <SelectMemberValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
-          <SelectMemberContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
-    </SelectMemberProvider>
-  );
-};
+export const SelectMemberInlineCell = React.forwardRef<
+  React.ComponentRef<typeof RecordTableInlineCell.Trigger>,
+  Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> &
+    React.ComponentProps<typeof RecordTableInlineCell.Trigger> & {
+      scope?: string;
+      placeholder?: string;
+    }
+>(
+  (
+    {
+      mode,
+      value,
+      onValueChange,
+      members,
+      size = 'lg',
+      scope,
+      placeholder,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <SelectMemberProvider
+        mode={mode}
+        value={value}
+        onValueChange={onValueChange}
+        members={members}
+      >
+        <PopoverScoped scope={scope}>
+          <RecordTableInlineCell.Trigger ref={ref} {...props}>
+            <SelectMemberValue placeholder={placeholder} size={size} />
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
+            <SelectMemberContent />
+          </RecordTableInlineCell.Content>
+        </PopoverScoped>
+      </SelectMemberProvider>
+    );
+  },
+);
+
+SelectMemberInlineCell.displayName = 'SelectMemberInlineCell';
 
 export const SelectMemberFormItem = ({
   onValueChange,
@@ -353,7 +379,7 @@ export const SelectMemberDetail = ({
       {...props}
     >
       <Popover open={open} onOpenChange={setOpen}>
-        <Popover.Trigger>
+        <Popover.Trigger asChild>
           {!value ? (
             <Button
               className={cn(
@@ -383,11 +409,13 @@ export const SelectMemberRoot = ({
   className,
   size,
   placeholder,
+  scope,
   ...props
 }: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
   className?: string;
   size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
   placeholder?: string;
+  scope?: string;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -398,7 +426,7 @@ export const SelectMemberRoot = ({
       }}
       {...props}
     >
-      <Popover open={open} onOpenChange={setOpen}>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <Combobox.Trigger
           className={cn('w-full inline-flex', className)}
           variant="outline"
@@ -408,7 +436,7 @@ export const SelectMemberRoot = ({
         <Combobox.Content>
           <SelectMemberContent />
         </Combobox.Content>
-      </Popover>
+      </PopoverScoped>
     </SelectMemberProvider>
   );
 };
@@ -417,6 +445,8 @@ export const SelectMember = Object.assign(SelectMemberRoot, {
   Provider: SelectMemberProvider,
   Value: SelectMemberValue,
   Content: SelectMemberContent,
+  CommandItem: SelectMemberCommandItem,
+  NoAssigneeItem: SelectMemberNoAssigneeItem,
   FilterItem: SelectMemberFilterItem,
   FilterView: SelectMemberFilterView,
   FilterBar: SelectMemberFilterBar,

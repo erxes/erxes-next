@@ -1,22 +1,79 @@
-import { TeamLine } from '@/team/components/team-list/TeamLine';
+import { Skeleton, Table } from 'erxes-ui';
+import { IconComponent } from 'erxes-ui';
 import { useGetTeams } from '@/team/hooks/useGetTeams';
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+export function Teams() {
+  const { teams, loading } = useGetTeams();
+  const navigate = useNavigate();
 
-export const Teams = () => {
-  const { teams } = useGetTeams();
-
+  const onClick = (teamId: string) => {
+    navigate(`/settings/operation/team/details/${teamId}`);
+  };
   return (
-    <div className="w-full">
-      <div className="bg-container px-6 py-1.5 text-sm flex items-center text-muted-foreground border-b sticky top-0 z-10">
-        <div className="w-[40%] sm:w-[50%] xl:w-[50%]">Title</div>
-        <div className="w-[20%] sm:w-[20%] xl:w-[20%] pl-2.5">Members</div>
-        <div className="w-[20%] sm:w-[15%] xl:w-[15%] pl-2.5">Tasks</div>
-        <div className="w-[20%] sm:w-[15%] xl:w-[15%] pl-2.5">Created At</div>
-      </div>
-      <div className="w-full">
-        {teams?.map((team: any) => (
-          <TeamLine key={team._id} team={team} />
-        ))}
+    <div className="overflow-auto h-full px-8">
+      <div className="bg-sidebar border border-sidebar pl-1 border-t-4 border-l-4 pb-2 pr-2 rounded-lg">
+        <Table>
+          <Table.Header>
+            <Table.Row className="rounded-t-md">
+              <Table.Head className="w-auto rounded-tl-md pl-2">Title</Table.Head>
+              <Table.Head className="w-20">Members</Table.Head>
+              <Table.Head className="w-20">Tasks</Table.Head>
+              <Table.Head className="w-32">Created At</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body className="">
+            {loading
+              ? Array.from({ length: 3 }).map((_, index) => (
+                  <TableRowSkeleton key={index} />
+                ))
+              : teams?.map((team) => (
+                  <Table.Row
+                    key={team._id}
+                    onClick={() => onClick(team._id)}
+                    className="hover:cursor-pointer shadow-xs "
+                  >
+                    <Table.Cell className="font-medium border-none pl-2 w-auto ">
+                      <span className="w-full flex gap-2 text-base font-medium">
+                        <span className="[1lh] flex items-center">
+                          <IconComponent name={team.icon} className="size-4" />
+                        </span>
+                        {team.name}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell className="border-none px-2 w-20">
+                      {team.memberCount}
+                    </Table.Cell>
+                    <Table.Cell className="border-none px-2 w-20">
+                      {team.taskCount}
+                    </Table.Cell>
+                    <Table.Cell className="border-none px-2 w-32 text-muted-foreground">
+                      {format(team.createdAt, 'MMM d, yyyy')}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+          </Table.Body>
+        </Table>
       </div>
     </div>
+  );
+}
+
+const TableRowSkeleton = () => {
+  return (
+    <Table.Row className="shadow-xs">
+      <Table.Cell className="w-auto pl-8 border-none">
+        <Skeleton className="h-4 w-10" />
+      </Table.Cell>
+      <Table.Cell className="w-20 border-none">
+        <Skeleton className="h-4 w-5" />
+      </Table.Cell>
+      <Table.Cell className="w-20 border-none">
+        <Skeleton className="h-4 w-5" />
+      </Table.Cell>
+      <Table.Cell className="w-32 pr-8 border-none">
+        <Skeleton className="h-4 w-16" />
+      </Table.Cell>
+    </Table.Row>
   );
 };

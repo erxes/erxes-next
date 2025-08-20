@@ -2,13 +2,13 @@ import { RelationWidgetProps } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const WidgetsComponent = (props: RelationWidgetProps) => {
-  const { module } = props;
+  const { module, pluginName } = props;
 
   return (
     <RenderPluginsComponent
-      pluginName={`${module.pluginName}_ui`}
+      pluginName={`${pluginName}_ui`}
       remoteModuleName="relationWidget"
-      moduleName={module.name}
+      moduleName={module}
       props={props}
     />
   );

@@ -184,6 +184,7 @@ export const mutations = `
     details: UserDetails,
     links: JSON
     employeeId: String
+    positionIds: [String]
   ): User
   usersEdit(_id: String!, ${commonParams}): User
   usersChangePassword(currentPassword: String!, newPassword: String!): User

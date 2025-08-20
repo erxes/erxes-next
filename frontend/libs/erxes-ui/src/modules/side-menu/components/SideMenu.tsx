@@ -1,24 +1,30 @@
 import { Icon } from '@tabler/icons-react';
-import { Sidebar } from 'erxes-ui/components';
-import { Tabs } from 'erxes-ui/components/tabs';
-import { Tooltip } from 'erxes-ui/components/tooltip';
+import { Separator, Tabs, Tooltip } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
+import {
+  SideMenuContext,
+  useSideMenuContext,
+} from '../context/SideMenuContext';
 
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 
 export const SideMenuRoot = forwardRef<
   React.ElementRef<typeof Tabs>,
   React.ComponentProps<typeof Tabs>
->(({ className, ...props }, ref) => {
+>(({ className, defaultValue, ...props }, ref) => {
+  const [activeTab, setActiveTab] = useState<string | undefined>(defaultValue);
   return (
-    <Tabs
-      ref={ref}
-      className={cn('flex', className)}
-      orientation="horizontal"
-      {...props}
-    >
-      {props.children}
-    </Tabs>
+    <SideMenuContext.Provider value={{ activeTab, setActiveTab }}>
+      <Tabs
+        ref={ref}
+        className={cn('flex', className)}
+        orientation="horizontal"
+        value={activeTab || undefined}
+        {...props}
+      >
+        {props.children}
+      </Tabs>
+    </SideMenuContext.Provider>
   );
 });
 SideMenuRoot.displayName = 'SideMenuRoot';
@@ -27,11 +33,16 @@ export const SideMenuContent = forwardRef<
   React.ElementRef<typeof Tabs.Content>,
   React.ComponentProps<typeof Tabs.Content>
 >(({ className, children, ...props }, ref) => {
+  const { activeTab } = useSideMenuContext();
+  if (!activeTab) {
+    return null;
+  }
+
   return (
     <Tabs.Content
       ref={ref}
       className={cn(
-        'data-[state=active]:border-l data-[state=active]:min-w-80 w-full transition-all',
+        'data-[state=active]:border-l data-[state=active]:w-80 w-full transition-all',
         className,
       )}
       {...props}
@@ -50,17 +61,23 @@ export const SideMenuContentHeader = forwardRef<
   }
 >(({ className, Icon, label, children, ...props }, ref) => {
   return (
-    <div
-      ref={ref}
-      className={cn('h-12 px-5 flex items-center gap-2', className)}
-      {...props}
-    >
-      {!!Icon && (
-        <Icon className="size-4 flex-none text-primary" strokeWidth={3} />
-      )}
-      <div className="mr-auto font-medium    text-primary">{label}</div>
-      {children}
-    </div>
+    <>
+      <div
+        ref={ref}
+        className={cn(
+          'h-11 px-5 flex items-center gap-2 bg-sidebar',
+          className,
+        )}
+        {...props}
+      >
+        {!!Icon && (
+          <Icon className="size-4 flex-none text-primary" strokeWidth={3} />
+        )}
+        <div className="mr-auto font-medium text-primary">{label}</div>
+        {children}
+      </div>
+      <Separator />
+    </>
   );
 });
 SideMenuContentHeader.displayName = 'SideMenuContentHeader';
@@ -90,8 +107,8 @@ export const SideMenuTrigger = forwardRef<
     label?: string;
     Icon?: Icon;
   }
->(({ className, Icon, label, onClick, ...props }, ref) => {
-  const { setOpen } = Sidebar.useSidebar();
+>(({ className, Icon, label, ...props }, ref) => {
+  const { activeTab, setActiveTab } = useSideMenuContext();
   return (
     <Tooltip>
       <Tabs.Trigger
@@ -101,8 +118,8 @@ export const SideMenuTrigger = forwardRef<
           className,
         )}
         onClick={(e) => {
-          setOpen(false);
-          onClick?.(e);
+          e.preventDefault();
+          setActiveTab(activeTab === props.value ? undefined : props.value);
         }}
         {...props}
         asChild

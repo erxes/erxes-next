@@ -8,6 +8,7 @@ import { generateModels } from './connectionResolvers';
 import { initializeCallQueueMonitoring } from '~/modules/integrations/call/worker/callDashboard';
 import automations from './meta/automations';
 import initCallApp from '~/modules/integrations/call/initApp';
+import initCallApp from '~/modules/integrations/imap/configs';
 
 startPlugin({
   name: 'frontline',

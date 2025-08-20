@@ -63,33 +63,31 @@ export const useUserEdit = () => {
     },
   });
 
-  const usersEdit = (
-    operationVariables: OperationVariables,
-    fields: string[],
-  ) => {
-    const { variables } = operationVariables || {};
-
-    const fieldsToUpdate: Record<string, () => any> = {};
-    fields.forEach((field) => {
-      fieldsToUpdate[field] = () => variables[field];
-    });
-    return _usersEdit({
-      ...operationVariables,
-      update: (cache, { data }) => {
-        if (!data?.usersEdit) return;
-        const { usersEdit } = data;
+  const usersEdit = ({ variables, ...options }: MutationHookOptions) => {
+    _usersEdit({
+      ...options,
+      variables,
+      update: (cache, { data: { usersEdit } }) => {
         cache.modify({
           id: cache.identify(usersEdit),
-          fields: fieldsToUpdate,
+          fields: Object.keys(variables || {}).reduce(
+            (fields: Record<string, () => any>, field) => {
+              fields[field] = () => (variables || {})[field];
+              return fields;
+            },
+            {},
+          ),
+          optimistic: true,
         });
       },
+      refetchQueries: ['Users', 'UserDetail'],
     });
   };
 
   return { usersEdit, loading };
 };
 
-export const  useUsersStatusEdit = () => {
+export const useUsersStatusEdit = () => {
   const { toast } = useToast();
   const [editStatus, { loading }] = useMutation(
     mutations.USERS_SET_ACTIVE_STATUS,
@@ -107,7 +105,7 @@ export const  useUsersStatusEdit = () => {
           variant: 'destructive',
         });
       },
-      refetchQueries: ['users'],
+      refetchQueries: ['Users'],
     });
   };
   return { editStatus: mutate, loading };

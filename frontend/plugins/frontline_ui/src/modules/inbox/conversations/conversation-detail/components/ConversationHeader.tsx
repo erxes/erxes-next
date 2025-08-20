@@ -17,7 +17,7 @@ export const ConversationHeader = () => {
   return (
     <div className="flex gap-6 items-center h-12 flex-none pr-6">
       <ScrollArea className="flex-auto">
-        <div className="h-12 flex items-center px-5 text-xs font-medium text-muted-foreground flex-none gap-3 whitespace-nowrap">
+        <div className="h-12 flex items-center px-5 text-xs font-medium text-accent-foreground flex-none gap-3 whitespace-nowrap">
           {view === 'list' && (
             <Button
               variant="secondary"
@@ -33,6 +33,7 @@ export const ConversationHeader = () => {
               customers={customer ? [customer] : []}
               customerIds={customerId ? [customerId] : []}
               className="text-sm text-foreground flex-none"
+              placeholder="anonymous customer"
             />
           ) : (
             <Skeleton className="w-32 h-4 ml-2" />
@@ -71,12 +72,12 @@ const AssignConversation = () => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      Assigned to:
+    <div className="flex">
       <SelectMember
         value={assignedUserId}
         onValueChange={handleAssignConversations}
-        className="text-foreground"
+        className="text-foreground shadow-none px-2"
+        size="lg"
       />
     </div>
   );

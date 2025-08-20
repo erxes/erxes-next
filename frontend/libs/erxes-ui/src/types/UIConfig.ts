@@ -17,4 +17,9 @@ export type IUIConfig = {
     hasFloatingWidget?: boolean;
     settingsOnly?: boolean;
   }[];
+
+  relationWidgets?: {
+    name: string;
+    icon?: React.ElementType;
+  }[];
 };

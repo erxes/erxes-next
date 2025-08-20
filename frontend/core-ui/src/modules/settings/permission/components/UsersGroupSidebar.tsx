@@ -3,7 +3,7 @@ import {
   IconCopy,
   IconEdit,
   IconPlus,
-  IconTrashFilled,
+  IconTrash,
   IconUserFilled,
 } from '@tabler/icons-react';
 import {
@@ -151,7 +151,7 @@ export const UsersGroupSidebarItem = ({
           )}
         >
           <IconUserFilled size={16} />
-          {group.members?.length || 0} members
+          {group?.memberIds?.length || 0} members
         </span>
         <motion.div
           initial={{ x: 5, opacity: 0 }}
@@ -163,9 +163,9 @@ export const UsersGroupSidebarItem = ({
           <CopyButton group={group} />
           <UsersGroupModal.Edit groupId={group._id}>
             <Button
-              variant={'secondary'}
+              variant={'outline'}
               onClick={(e) => e.stopPropagation()}
-              className="bg-background h-7 w-7 flex items-center justify-center border border-accent-foreground"
+              className="size-7 flex items-center justify-center"
             >
               <IconEdit />
             </Button>
@@ -183,7 +183,7 @@ const RemoveButton = ({ group }: { group: IUserGroup }) => {
   return (
     <Button
       disabled={loading}
-      variant={'secondary'}
+      variant={'outline'}
       onClick={(e) => {
         e.stopPropagation();
         confirm({
@@ -191,9 +191,9 @@ const RemoveButton = ({ group }: { group: IUserGroup }) => {
           options: { confirmationValue: 'delete' },
         }).then(() => removeUsersGroup(group._id));
       }}
-      className="bg-background h-7 w-7 flex items-center justify-center border border-accent-foreground"
+      className="size-7 flex items-center justify-center"
     >
-      {loading ? <Spinner size={'small'} /> : <IconTrashFilled />}
+      {loading ? <Spinner size={'small'} /> : <IconTrash />}
     </Button>
   );
 };
@@ -204,12 +204,12 @@ const CopyButton = ({ group }: { group: IUserGroup }) => {
   return (
     <Button
       disabled={loading}
-      variant={'secondary'}
+      variant={'outline'}
       onClick={(e) => {
         e.stopPropagation();
         usersGroupsCopy(group._id);
       }}
-      className="bg-background h-7 w-7 flex items-center justify-center border border-accent-foreground"
+      className="size-7 flex items-center justify-center"
     >
       {loading ? <Spinner size={'small'} /> : <IconCopy />}
     </Button>

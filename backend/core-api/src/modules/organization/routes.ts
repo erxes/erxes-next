@@ -2,6 +2,16 @@ import { Router, Request, Response } from 'express';
 import { getEnv, getSubdomain } from 'erxes-api-shared/utils';
 import { generateModels } from '~/connectionResolvers';
 import { getSaasOrganizationDetail } from 'erxes-api-shared/utils';
+import { magiclinkCallback, ssocallback } from '~/utils/saas';
+import rateLimit from 'express-rate-limit';
+
+// Rate limiter for /ml-callback route: max 100 requests per 15 minutes per IP
+const callbackLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 const router: Router = Router();
 
@@ -55,5 +65,8 @@ router.get('/get-frontend-plugins', async (_req: Request, res: Response) => {
 
   return res.json(remotes);
 });
+
+router.get('/sso-callback', callbackLimiter, ssocallback);
+router.get('/ml-callback', callbackLimiter, magiclinkCallback);
 
 export { router };

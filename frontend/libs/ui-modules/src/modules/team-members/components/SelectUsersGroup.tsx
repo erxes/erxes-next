@@ -73,7 +73,7 @@ const SelectUsersGroupProvider = ({
   );
 };
 
-const SelectUsersGroupValue = ({ value }: { value?: string }) => {
+const SelectUsersGroupValue = ({ placeholder }: { placeholder?: string }) => {
   const { usersGroups, groupsIds, setUsersGroups } =
     useSelectUsersGroupContext();
 
@@ -82,6 +82,7 @@ const SelectUsersGroupValue = ({ value }: { value?: string }) => {
       groups={usersGroups}
       groupsIds={groupsIds}
       updateGroups={setUsersGroups}
+      placeholder={placeholder}
     />
   );
 };

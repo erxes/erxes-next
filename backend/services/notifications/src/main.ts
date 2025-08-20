@@ -1,20 +1,29 @@
+import { debugError, debugInfo } from '@/utils/debugger';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import {
   closeMongooose,
+  createHealthRoute,
   isDev,
-  joinErxesGateway,
-  leaveErxesGateway,
+  keyForConfig,
   redis,
 } from 'erxes-api-shared/utils';
 import express from 'express';
 import * as http from 'http';
 import { initMQWorkers } from './bullmq';
-import { debugError, debugInfo } from '@/utils/debugger';
 
-const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
+const {
+  DOMAIN,
+  CLIENT_PORTAL_DOMAINS,
+  ALLOWED_DOMAINS,
+  PORT,
+  LOAD_BALANCER_ADDRESS,
+  MONGO_URL,
+} = process.env;
 
-const port = PORT ? Number(PORT) : 3303;
+const port = PORT ? Number(PORT) : 3308;
+
+const serviceName = 'notifications-service';
 
 const app = express();
 
@@ -39,25 +48,32 @@ const corsOptions = {
     ...(process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean),
   ],
 };
-
+// cors
 app.use(cors(corsOptions));
 
 // Health check endpoint
-app.get('/health', async (_req, res) => {
-  res.end('notification service ok');
-});
+app.get('/health', createHealthRoute(serviceName));
 
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {
   debugInfo(`Notification service listening on port ${port}`);
 
-  await joinErxesGateway({
-    name: 'notifications',
-    port,
-    hasSubscriptions: false,
-    meta: {},
-  });
+  await redis.set(
+    keyForConfig(serviceName),
+
+    JSON.stringify({
+      dbConnectionString: MONGO_URL,
+    }),
+  );
+
+  const address =
+    LOAD_BALANCER_ADDRESS ||
+    `http://${isDev ? 'localhost' : serviceName}:${port}`;
+
+  await redis.set(`service-logs`, address);
+
+  console.log(`service-logs joined with ${address}`);
 
   await initMQWorkers(redis);
   debugInfo('Notification service started successfully');
@@ -67,7 +83,7 @@ process.stdin.resume();
 
 async function leaveServiceDiscovery() {
   try {
-    await leaveErxesGateway('notifications', port);
+    console.log(`$service-logs left ${port}`);
     debugInfo('Left from service discovery');
   } catch (e) {
     debugError(e);

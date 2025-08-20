@@ -1,24 +1,55 @@
 import { IContext } from '~/connectionResolvers';
-import { IStatus, IStatusEditInput } from '~/modules/status/@types/status';
+import { IStatus, IStatusEditInput } from '@/status/@types/status';
+import { checkUserRole } from '@/utils';
+import { TeamMemberRoles } from '@/team/@types/team';
 
 export const statusMutations = {
-  createStatus: async (
+  addStatus: async (
     _parent: undefined,
     params: IStatus,
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
-    return models.Status.createStatus(params);
+    await checkUserRole({
+      models,
+      teamId: params.teamId,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
+
+    return models.Status.addStatus(params);
   },
 
   updateStatus: async (
     _parent: undefined,
     { _id, ...params }: IStatusEditInput,
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
+    const status = await models.Status.getStatus(_id);
+
+    await checkUserRole({
+      models,
+      teamId: status.teamId,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
+
     return models.Status.updateStatus(_id, params);
   },
 
-  removeStatus: async (_parent: undefined, { _id }, { models }: IContext) => {
+  deleteStatus: async (
+    _parent: undefined,
+    { _id }: { _id: string },
+    { models, user }: IContext,
+  ) => {
+    const status = await models.Status.getStatus(_id);
+
+    await checkUserRole({
+      models,
+      teamId: status.teamId,
+      userId: user._id,
+      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
+    });
+
     return models.Status.removeStatus(_id);
   },
 };

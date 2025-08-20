@@ -1,5 +1,10 @@
 import { IUser } from 'ui-modules';
 
+export enum INotificationKind {
+  SYSTEM = 'system',
+  USER = 'user',
+}
+
 export type INotification = {
   _id: string;
   title: string;
@@ -7,9 +12,9 @@ export type INotification = {
   type: 'info' | 'success' | 'warning' | 'error';
 
   fromUserId?: string;
-  fromUser: IUser;
+  fromUser?: IUser;
 
-  contentType: string; // 'frontline:conversation', 'sales:deal', etc.
+  contentType?: string; // 'frontline:conversation', 'sales:deal', etc.
   contentTypeId?: string; // target object ID
 
   // Status
@@ -24,6 +29,7 @@ export type INotification = {
   // Timestamps
   createdAt: string;
   expiresAt?: string; // Auto-cleanup old notifications
+  kind: INotificationKind;
   emailDelivery?: {
     _id: string;
     status: string;

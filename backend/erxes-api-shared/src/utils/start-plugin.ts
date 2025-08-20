@@ -112,7 +112,7 @@ export async function startPlugin(
   });
 
   if (configs.expressRouter) {
-    app.use(`/pl:${configs.name}`, configs.expressRouter);
+    app.use(configs.expressRouter);
   }
 
 

@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import {
   Badge,
   RecordTable,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
   RelativeDateDisplay,
 } from 'erxes-ui';
 import {
@@ -72,9 +72,7 @@ export const automationHistoriesColumns = (constants: {
     accessorKey: 'description',
     header: () => <RecordTable.InlineHead label="Description" />,
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
-        {cell.getValue() as string}
-      </RecordTableCellDisplay>
+      <RecordTableInlineCell>{cell.getValue() as string}</RecordTableInlineCell>
     ),
   },
   {
@@ -89,9 +87,9 @@ export const automationHistoriesColumns = (constants: {
       )?.label;
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {triggerLabel || triggerType || 'Empty'}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -106,9 +104,9 @@ export const automationHistoriesColumns = (constants: {
       const variant: StatusBadgeValue = STATUSES_BADGE_VARIABLES[status];
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge variant={variant}>{status}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -119,11 +117,11 @@ export const automationHistoriesColumns = (constants: {
       <RecordTable.InlineHead icon={IconCalendarTime} label="Created At" />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay>
+      <RecordTableInlineCell>
         <RelativeDateDisplay.Value
           value={dayjs(cell.getValue() as string).format('YYYY-MM-DD HH:mm:ss')}
         />
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   },
 ];

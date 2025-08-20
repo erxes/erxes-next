@@ -3,7 +3,7 @@ import {
   IconEye,
   IconTournament,
 } from '@tabler/icons-react';
-import { RecordTable, RecordTableCellDisplay, Sheet, Tabs } from 'erxes-ui';
+import { RecordTable, RecordTableInlineCell, Sheet, Tabs } from 'erxes-ui';
 import {
   IAutomationHistory,
   IAutomationsActionConfigConstants,
@@ -26,7 +26,7 @@ export const AutomationHistoryDetail = ({
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       <Sheet open={isOpen} onOpenChange={setOpen}>
         <Sheet.Trigger asChild>
           <RecordTable.MoreButton className="w-full h-full">
@@ -77,6 +77,6 @@ export const AutomationHistoryDetail = ({
           )}
         </Sheet.View>
       </Sheet>
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };

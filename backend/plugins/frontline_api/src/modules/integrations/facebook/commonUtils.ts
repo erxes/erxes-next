@@ -26,25 +26,21 @@ export const generateAttachmentUrl = (subdomain: string, urlOrName: string) => {
 };
 
 export const getConfigs = async (models: IModels) => {
-  const configsCache = await redis.get(CACHE_NAME);
-
-  if (configsCache && configsCache !== '{}') {
-    return JSON.parse(configsCache);
-  }
-
-  const configsMap = {};
+  const configsMap: Record<string, string> = {};
   const configs = await models.FacebookConfigs.find({});
 
   for (const config of configs) {
     configsMap[config.code] = config.value;
   }
 
-  await redis.set(CACHE_NAME, JSON.stringify(configsMap));
-
   return configsMap;
 };
 
-export const getConfig = async (models: IModels, code, defaultValue?) => {
+export const getConfig = async (
+  models: IModels,
+  code: string,
+  defaultValue?: string,
+) => {
   const VERSION = getEnv({ name: 'VERSION' });
 
   if (VERSION && VERSION === 'saas') {
@@ -65,7 +61,6 @@ export const getConfig = async (models: IModels, code, defaultValue?) => {
 
   return configs[code];
 };
-
 export const resetConfigsCache = async () => {
   await redis.set(CACHE_NAME, '');
 };

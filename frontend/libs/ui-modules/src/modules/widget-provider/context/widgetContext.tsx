@@ -1,25 +1,19 @@
-import { IUIConfig } from 'erxes-ui';
 import { createContext, useContext } from 'react';
 
 export type RelationWidgetProps = {
-  module: IUIConfig['modules'][number] & {
-    pluginName: string;
-  };
+  module: string;
+  pluginName: string;
   contentId: string;
   contentType: string;
 };
 
 export const RelationWidgetContext = createContext<{
   RelationWidget: (props: RelationWidgetProps) => JSX.Element | null;
-  relationWidgetsModules: (IUIConfig['modules'][number] & {
-    pluginName: string;
-  })[];
+  relationWidgetsModules: { name: string; pluginName: string }[];
 }>(
   {} as {
     RelationWidget: (props: any) => JSX.Element | null;
-    relationWidgetsModules: (IUIConfig['modules'][number] & {
-      pluginName: string;
-    })[];
+    relationWidgetsModules: { name: string; pluginName: string }[];
   },
 );
 
@@ -30,9 +24,7 @@ export const RelationWidgetProvider = ({
 }: {
   children: React.ReactNode;
   RelationWidget: (props: RelationWidgetProps) => JSX.Element | null;
-  relationWidgetsModules: (IUIConfig['modules'][number] & {
-    pluginName: string;
-  })[];
+  relationWidgetsModules: { name: string; pluginName: string }[];
 }) => {
   return (
     <RelationWidgetContext.Provider
