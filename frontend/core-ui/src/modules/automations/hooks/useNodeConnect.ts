@@ -1,5 +1,5 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
-import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { NodeData } from '@/automations/types';
 import {
   checkIsValidConnect,
@@ -12,7 +12,7 @@ import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export const useNodeConnect = () => {
-  const { triggers, actions } = useTriggersActions();
+  const { triggers, actions } = useAutomationNodes();
   const { setValue } = useFormContext<TAutomationBuilderForm>();
   const { getNodes, getEdges, getNode, setEdges } =
     useReactFlow<Node<NodeData>>();

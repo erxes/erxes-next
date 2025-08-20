@@ -1,15 +1,22 @@
+import { TDroppedNode } from '@/automations/components/builder/sidebar/states/automationNodeLibrary';
 import { ICustomer } from '@/contacts/types/customerType';
 import { IUser } from '@/settings/team-member/types';
 import { useQuery } from '@apollo/client';
 import { Edge, Node } from '@xyflow/react';
-import { generateAutomationElementId, IAction, ITrigger } from 'ui-modules';
+import {
+  generateAutomationElementId,
+  IAction,
+  ITrigger,
+  IWorkflowNode,
+} from 'ui-modules';
 import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
 import {
   AutomationDropHandlerParams,
+  AutomationNodesType,
   AutomationNodeType,
   NodeData,
-  TDraggingNode,
 } from '../types';
+import { TAutomationNodeState } from '@/automations/utils/AutomationFormDefinitions';
 
 /**
  * Calculates the position of a node in the React Flow canvas.
@@ -29,8 +36,8 @@ import {
  */
 
 export const generateNodePosition = (
-  nodes: IAction[] & ITrigger[],
-  node: IAction & ITrigger,
+  nodes: IAction[] & ITrigger[] & IWorkflowNode[],
+  node: TAutomationNodeState,
   generatedNodes: Node<NodeData>[],
 ) => {
   if (node.position) {
@@ -49,7 +56,8 @@ export const generateNodePosition = (
     return node.position;
   }
 
-  const targetField = node.type === 'trigger' ? 'actionId' : 'nextActionId';
+  const targetField =
+    node.nodeType === AutomationNodeType.Trigger ? 'actionId' : 'nextActionId';
 
   const prevNode = nodes.find((n: any) => n[targetField] === node.id);
 
@@ -62,6 +70,55 @@ export const generateNodePosition = (
   return {
     x: position?.x + 500,
     y: position?.y,
+  };
+};
+
+const generateNodeData = (
+  node: TAutomationNodeState,
+  nodeType:
+    | AutomationNodeType.Action
+    | AutomationNodeType.Trigger
+    | AutomationNodeType.Workflow,
+  props: any,
+) => {
+  if (nodeType === AutomationNodeType.Workflow) {
+    console.log({ node });
+    return {
+      label: node.name,
+      description: node.description,
+      config: node.config,
+      nodeType: AutomationNodeType.Workflow,
+      automationId: node.automationId,
+    };
+  }
+
+  if (node.nodeType === AutomationNodeType.Action) {
+    const { id, label, description, icon, config, isCustom, nextActionId } =
+      node;
+    return {
+      label,
+      description,
+      icon,
+      nodeType: AutomationNodeType.Action,
+      type: node.type,
+      config,
+      isCustom,
+      nextActionId,
+      ...props,
+    };
+  }
+
+  const { id, label, description, icon, config, isCustom, actionId } = node;
+  return {
+    label,
+    description,
+    icon,
+    nodeType: AutomationNodeType.Action,
+    type: node.type,
+    config,
+    isCustom,
+    actionId,
+    ...props,
   };
 };
 
@@ -80,40 +137,15 @@ export const generateNodePosition = (
  */
 
 export const generateNode = (
-  node: IAction & ITrigger,
+  node: TAutomationNodeState,
   nodeType: string,
-  nodes: IAction[] & ITrigger[],
+  nodes: IAction[] & ITrigger[] & IWorkflowNode[],
   props: any,
   generatedNodes: Node<NodeData>[],
-  parentId?: string,
 ) => {
-  const {
-    isAvailableOptionalConnect,
-    id,
-    label,
-    description,
-    icon,
-    config,
-    isCustom,
-    nextActionId,
-    actionId,
-  } = node;
-
   const doc: any = {
-    id,
-    data: {
-      label,
-      description,
-      icon,
-      nodeType,
-      type: node.type,
-      isAvailableOptionalConnect,
-      config,
-      isCustom,
-      nextActionId,
-      actionId,
-      ...props,
-    },
+    id: node.id,
+    data: generateNodeData(node, props),
     position: generateNodePosition(nodes, node, generatedNodes),
     isConnectable: true,
     type: nodeType,
@@ -121,15 +153,6 @@ export const generateNode = (
       zIndex: -1,
     },
   };
-
-  if (parentId) {
-    doc.parentId = parentId;
-    doc.extent = 'parent';
-    doc.expandParent = true;
-    doc.draggable = false;
-    doc.selectable = false;
-    doc.connectable = false;
-  }
 
   return doc;
 };
@@ -153,6 +176,7 @@ export const generateNode = (
 export const generateNodes = (
   triggers: ITrigger[],
   actions: IAction[],
+  workflows: IWorkflowNode[],
   props: any = {},
 ) => {
   if (triggers.length === 0 && actions.length === 0) {
@@ -169,19 +193,33 @@ export const generateNodes = (
   const generatedNodes: Node<NodeData>[] = [];
 
   for (const { type, nodes = [] } of [
-    { type: 'trigger', nodes: triggers },
-    { type: 'action', nodes: actions },
+    { type: AutomationNodeType.Trigger, nodes: triggers },
+    { type: AutomationNodeType.Action, nodes: actions },
+    { type: AutomationNodeType.Workflow, nodes: workflows },
   ]) {
     nodes.forEach((node, index) => {
-      generatedNodes.push({
-        ...generateNode(
-          { ...node, config: node.config ?? {} },
-          type,
-          nodes.map((n) => ({ ...n, config: n.config ?? {} })),
-          { ...props, nodeIndex: index },
-          generatedNodes,
-        ),
-      });
+      const nodeData = { ...node, config: node.config ?? {} } as Extract<
+        TAutomationNodeState,
+        { nodeType: typeof type }
+      >;
+
+      const nodesData = nodes.map(
+        (n) =>
+          ({ ...n, config: n.config ?? {} } as Extract<
+            TAutomationNodeState,
+            { nodeTyp: typeof type }
+          >),
+      );
+
+      const generatedNode = generateNode(
+        nodeData,
+        type,
+        nodesData,
+        { ...props, nodeIndex: index },
+        generatedNodes,
+      );
+
+      generatedNodes.push(generatedNode);
     });
   }
 
@@ -448,29 +486,27 @@ export const generateSendEmailRecipientMails = ({
 export const automationDropHandler = ({
   triggers,
   actions,
+  workflows,
   event,
   reactFlowInstance,
-}: AutomationDropHandlerParams) => {
+}: AutomationDropHandlerParams): {
+  [AutomationNodesType.Actions]: IAction[];
+  [AutomationNodesType.Triggers]: ITrigger[];
+  [AutomationNodesType.Workflows]?: IWorkflowNode[];
+} => {
   event.preventDefault();
 
-  const draggingNode = event.dataTransfer.getData(
-    'application/reactflow/draggingNode',
-  );
+  const draggingNode = JSON.parse(
+    event.dataTransfer.getData('application/reactflow/draggingNode') || '{}',
+  ) as TDroppedNode;
 
-  const {
-    nodeType,
-    type,
-    label,
-    description,
-    icon,
-    isCustom,
-    awaitingToConnectNodeId,
-  } = JSON.parse(draggingNode || '{}') as TDraggingNode;
+  const { type, awaitingToConnectNodeId } = draggingNode;
 
-  if (!nodeType) {
+  if (!type) {
     return {
       actions,
       triggers,
+      workflows,
     };
   }
 
@@ -480,10 +516,86 @@ export const automationDropHandler = ({
   });
 
   const id = generateAutomationElementId(
-    [...triggers, ...actions].map((a) => a.id),
+    [...triggers, ...actions, ...(workflows || [])].map((a) => a.id),
   );
 
-  if (awaitingToConnectNodeId) {
+  handleConnectionAwaitingNode({
+    triggers,
+    actions,
+    workflows,
+    awaitingToConnectNodeId,
+    type,
+    id,
+  });
+
+  if (type === AutomationNodeType.Trigger) {
+    const { icon, label, description, isCustom } = draggingNode;
+    triggers = [
+      ...triggers,
+      {
+        id,
+        type,
+        config: {},
+        icon,
+        label,
+        description,
+        isCustom,
+        position,
+      },
+    ];
+  }
+  if (type === AutomationNodeType.Workflow) {
+    const { name, description, automationId } = draggingNode;
+
+    workflows = [
+      ...(workflows || []),
+      {
+        id,
+        name: name,
+        description,
+        position,
+        config: {},
+        automationId: automationId,
+      },
+    ];
+  }
+  if (type === AutomationNodeType.Action) {
+    const { icon, label, isCustom, description } = draggingNode;
+    actions = [
+      ...actions,
+      {
+        id,
+        type,
+        config: {},
+        icon,
+        label,
+        description,
+        isCustom,
+        position,
+      },
+    ];
+  }
+  return { triggers, actions, workflows };
+};
+
+const handleConnectionAwaitingNode = ({
+  triggers,
+  actions,
+  id,
+  awaitingToConnectNodeId,
+  type,
+}: {
+  id: string;
+  awaitingToConnectNodeId?: string;
+  triggers: ITrigger[];
+  type:
+    | AutomationNodeType.Action
+    | AutomationNodeType.Trigger
+    | AutomationNodeType.Workflow;
+  actions: IAction[];
+  workflows?: IWorkflowNode[];
+}) => {
+  if (awaitingToConnectNodeId && type !== AutomationNodeType.Workflow) {
     const [awaitingNodeType, nodeId, connectionFieldName] =
       awaitingToConnectNodeId.split('__') as [
         AutomationNodeType,
@@ -491,10 +603,13 @@ export const automationDropHandler = ({
         string | undefined,
       ];
 
-    const isValidNodeType = ['trigger', 'action'].includes(awaitingNodeType);
+    const isValidNodeType = [
+      AutomationNodeType.Trigger,
+      AutomationNodeType.Action,
+    ].includes(awaitingNodeType);
 
     if (isValidNodeType && nodeId) {
-      if (awaitingNodeType === 'trigger') {
+      if (awaitingNodeType === AutomationNodeType.Trigger) {
         triggers = triggers.map((trigger) =>
           trigger.id === nodeId
             ? generateAwaitingNodeConnection(
@@ -519,41 +634,6 @@ export const automationDropHandler = ({
       }
     }
   }
-
-  if (nodeType === 'trigger') {
-    triggers = [
-      ...triggers,
-      {
-        id,
-        type,
-        config: {},
-        icon,
-        label,
-        description,
-        isCustom,
-        position,
-      },
-    ];
-  } else {
-    actions = [
-      ...actions,
-      {
-        id,
-        type,
-        config: {},
-        icon,
-        label,
-        description,
-        isCustom,
-        position,
-      },
-    ];
-  }
-
-  return {
-    actions,
-    triggers,
-  };
 };
 
 /**

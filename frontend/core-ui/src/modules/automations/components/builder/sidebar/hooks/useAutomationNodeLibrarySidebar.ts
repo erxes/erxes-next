@@ -3,16 +3,23 @@ import {
   isCoreAutomationActionType,
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { useAutomation } from '@/automations/context/AutomationProvider';
-import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { AutomationNodeType } from '@/automations/types';
+import { TDraggingNode, TDroppedNode } from '../states/automationNodeLibrary';
 import React, { useMemo } from 'react';
+import {
+  IAutomationNodeConfigConstants,
+  IAutomationsActionConfigConstants,
+  IAutomationsTriggerConfigConstants,
+} from 'ui-modules';
+import { TAutomationNodeState } from '@/automations/utils/AutomationFormDefinitions';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =
     useAutomation();
   const { activeNodeTab } = queryParams || {};
 
-  const { triggers, actions, getList } = useTriggersActions();
+  const { triggers, actions, getList } = useAutomationNodes();
 
   const { triggersConst, actionsConst, loading, error, refetch } =
     useAutomation();
@@ -21,23 +28,27 @@ export const useAutomationNodeLibrarySidebar = () => {
     if (!awaitingToConnectNodeId) return actionsConst;
 
     const [nodeType, nodeId] = awaitingToConnectNodeId.split('__') as [
-      AutomationNodeType,
+      AutomationNodeType.Trigger | AutomationNodeType.Action,
       string,
     ];
 
     const nodeList = getList(nodeType);
-    const nodeTypeValue = nodeList.find(
+    const { type: nodeTypeValue } = nodeList.find(
       (node: any) => node.id === nodeId,
-    )?.type;
+    ) as Extract<TAutomationNodeState, { type: typeof nodeType }>;
 
-    const constantsMap = {
-      trigger: triggersConst,
-      action: actionsConst,
+    const constantsMap: {
+      [AutomationNodeType.Trigger]: IAutomationsTriggerConfigConstants[];
+      [AutomationNodeType.Action]: IAutomationsActionConfigConstants[];
+    } = {
+      [AutomationNodeType.Trigger]: triggersConst,
+      [AutomationNodeType.Action]: actionsConst,
     };
 
     const connectableActionTypes =
-      constantsMap[nodeType]?.find((c) => c.type === nodeTypeValue)
-        ?.connectableActionTypes ?? [];
+      constantsMap[nodeType].find(
+        ({ type }: IAutomationNodeConfigConstants) => type === nodeTypeValue,
+      )?.connectableActionTypes ?? [];
 
     if (!connectableActionTypes?.length) {
       return actionsConst;
@@ -55,17 +66,26 @@ export const useAutomationNodeLibrarySidebar = () => {
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: AutomationNodeType,
-    { type, label, description, icon, isCustom }: any,
+    draggingNode: TDraggingNode,
   ) => {
-    const data = {
-      nodeType,
-      type,
-      label,
-      description,
-      icon,
-      isCustom,
-      awaitingToConnectNodeId,
-    };
+    const data: TDroppedNode =
+      draggingNode.type === AutomationNodeType.Workflow
+        ? {
+            nodeType,
+            automationId: draggingNode.automationId,
+            name: draggingNode.name,
+            type: draggingNode.type,
+            description: draggingNode.description,
+          }
+        : {
+            nodeType,
+            type: draggingNode.type,
+            label: draggingNode.label,
+            description: draggingNode.description,
+            icon: draggingNode.icon,
+            isCustom: draggingNode.isCustom,
+            awaitingToConnectNodeId,
+          };
 
     event.dataTransfer.setData(
       'application/reactflow/draggingNode',

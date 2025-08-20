@@ -1,14 +1,25 @@
+import { LoadingSkeleton } from '@/automations/components/builder/sidebar/components/SidebarNodeLibrarySkeleton';
+import { TDraggingNode } from '@/automations/components/builder/sidebar/states/automationNodeLibrary';
+import { useAutomationsRecordTable } from '@/automations/hooks/useAutomationsRecordTable';
+import { AutomationNodeType } from '@/automations/types';
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { Card, cn, Command, IconComponent, Skeleton, Tabs } from 'erxes-ui';
+import { IconArrowsSplit2 } from '@tabler/icons-react';
+import {
+  Card,
+  cn,
+  Command,
+  IconComponent,
+  RelativeDateDisplay,
+  Tabs,
+} from 'erxes-ui';
 import React from 'react';
+import { useParams } from 'react-router';
 import {
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
 import { useAutomationNodeLibrarySidebar } from '../hooks/useAutomationNodeLibrarySidebar';
-import { LoadingSkeleton } from '@/automations/components/builder/sidebar/components/SidebarNodeLibrarySkeleton';
-import { AutomationNodeType } from '@/automations/types';
 
 export const AutomationNodeLibrarySidebar = () => {
   const {
@@ -45,11 +56,14 @@ export const AutomationNodeLibrarySidebar = () => {
         className="flex-1 flex flex-col overflow-auto"
       >
         <Tabs.List className="w-full border-b">
-          <Tabs.Trigger value="trigger" className="w-1/2">
+          <Tabs.Trigger value="trigger" className="w-1/3">
             Triggers
           </Tabs.Trigger>
-          <Tabs.Trigger value="action" className="w-1/2">
+          <Tabs.Trigger value="action" className="w-1/3">
             Actions
+          </Tabs.Trigger>
+          <Tabs.Trigger value="automation" className="w-1/3">
+            Automations
           </Tabs.Trigger>
         </Tabs.List>
 
@@ -74,6 +88,11 @@ export const AutomationNodeLibrarySidebar = () => {
             </Command.Group>
           </Tabs.Content>
         ))}
+        <Tabs.Content className="space-y-2 " value="automation">
+          <Command.Group heading="Automation">
+            <AutomationsNodeLibrary {...commonTabContentProps} />
+          </Command.Group>
+        </Tabs.Content>
       </Tabs>
     </Command>
   );
@@ -183,4 +202,53 @@ const NodeLibraryRow = ({
       </Card>
     </Command.Item>
   );
+};
+
+const AutomationsNodeLibrary = ({
+  onDragStart,
+}: {
+  onDragStart: (
+    event: React.DragEvent<HTMLDivElement>,
+    nodeType: AutomationNodeType,
+    draggingNode: Extract<TDraggingNode, { type: AutomationNodeType.Workflow }>,
+  ) => void;
+}) => {
+  const { id } = useParams();
+
+  const { list } = useAutomationsRecordTable();
+
+  return list.map(({ _id, name = '', createdAt = '' }) => (
+    <Command.Item value={name} asChild>
+      <Card
+        className="hover:shadow-md transition-shadow cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px] hover:border-warning"
+        draggable
+        onDragStart={(event) =>
+          onDragStart(event, AutomationNodeType.Workflow, {
+            type: AutomationNodeType.Workflow,
+            automationId: _id,
+            name,
+            description: 'Hello World',
+          })
+        }
+      >
+        <Card.Content className="p-3">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-lg bg-warning/10 text-warning border-warning">
+              <IconArrowsSplit2 />
+            </div>
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center gap-4">
+                <h3 className="font-semibold text-foreground text-sm">
+                  {name}
+                </h3>
+              </div>
+              <p className="text-accent-foreground leading-relaxed text-xs">
+                <RelativeDateDisplay.Value value={createdAt} />
+              </p>
+            </div>
+          </div>
+        </Card.Content>
+      </Card>
+    </Command.Item>
+  ));
 };

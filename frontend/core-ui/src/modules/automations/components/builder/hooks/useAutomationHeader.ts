@@ -3,7 +3,7 @@ import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
-import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { AutomationBuilderTabsType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
@@ -17,7 +17,7 @@ export const useAutomationHeader = () => {
     useFormContext<TAutomationBuilderForm>();
 
   const { setQueryParams, reactFlowInstance } = useAutomation();
-  const { actions, triggers } = useTriggersActions();
+  const { actions, triggers } = useAutomationNodes();
   const isMobile = useIsMobile();
 
   const { getNodes, setNodes } = useReactFlow();

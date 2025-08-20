@@ -1,4 +1,4 @@
-import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import {
   generateEdges,
   generateNodes,
@@ -7,10 +7,10 @@ import { useReactFlow } from '@xyflow/react';
 
 export const useResetNodes = () => {
   const { getNodes, setNodes, setEdges } = useReactFlow();
-  const { triggers, actions } = useTriggersActions();
+  const { triggers, actions, workflows } = useAutomationNodes();
 
   const resetNodes = () => {
-    const updatedNodes = generateNodes(triggers, actions);
+    const updatedNodes = generateNodes(triggers, actions, workflows);
 
     const mergedArray = updatedNodes.map((node1) => {
       let node2 = getNodes().find((o) => o.id === node1.id);

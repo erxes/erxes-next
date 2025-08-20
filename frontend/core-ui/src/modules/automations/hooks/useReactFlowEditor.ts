@@ -1,7 +1,7 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useNodeConnect } from '@/automations/hooks/useNodeConnect';
 import { useNodeEvents } from '@/automations/hooks/useNodeEvents';
-import { useTriggersActions } from '@/automations/hooks/useTriggersActions';
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { Node, useEdgesState, useNodesState } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -15,6 +15,7 @@ import {
   generateEdges,
   generateNodes,
 } from '../utils/automationBuilderUtils';
+import isEqual from 'lodash/isEqual';
 
 export const useReactFlowEditor = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -27,10 +28,10 @@ export const useReactFlowEditor = () => {
     setReactFlowInstance,
   } = useAutomation();
   const { setValue } = useFormContext<TAutomationBuilderForm>();
-  const { triggers, actions } = useTriggersActions();
+  const { triggers, actions, workflows } = useAutomationNodes();
 
   const [nodes, _setNodes, onNodesChange] = useNodesState<Node<NodeData>>(
-    generateNodes(triggers, actions),
+    generateNodes(triggers, actions, workflows),
   );
   const [edges, _setEdges, onEdgesChange] = useEdgesState<any>(
     generateEdges(triggers, actions),
@@ -45,16 +46,27 @@ export const useReactFlowEditor = () => {
   }, []);
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    const { actions: newActions, triggers: newTriggers } =
-      automationDropHandler({
-        triggers,
-        actions,
-        event,
-        reactFlowInstance,
-      }) || {};
-
-    setValue('actions', newActions);
-    setValue('triggers', newTriggers);
+    const {
+      actions: newActions,
+      triggers: newTriggers,
+      workflows: newWorkflows,
+    } = automationDropHandler({
+      triggers,
+      actions,
+      workflows,
+      event,
+      reactFlowInstance,
+    }) || {};
+    if (!isEqual(newTriggers, triggers)) {
+      setValue('triggers', newTriggers);
+    }
+    if (!isEqual(newActions, actions)) {
+      setValue('actions', newActions);
+    }
+    if (!isEqual(newWorkflows, workflows)) {
+      console.log({ newWorkflows });
+      setValue('workflows', newWorkflows);
+    }
 
     if (awaitingToConnectNodeId) {
       setAwaitingToConnectNodeId('');

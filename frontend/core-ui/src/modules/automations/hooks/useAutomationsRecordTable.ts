@@ -1,11 +1,11 @@
 import { AUTOMATIONS_MAIN_LIST } from '@/automations/graphql/automationQueries';
-import { IAutomationDoc } from '@/automations/types';
+import { IAutomation } from '@/automations/types';
 import { useQuery } from '@apollo/client';
 import { IPageInfo } from 'ui-modules';
 
 type QueryResponse = {
   automationsMain: {
-    list: IAutomationDoc[];
+    list: IAutomation[];
     totalCount: number;
     pageInfo: IPageInfo;
   };

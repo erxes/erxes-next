@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 import AWS from 'aws-sdk';
 import { IEmailTransportConfig } from '@/types';
 import sendgridMail from '@sendgrid/mail';

@@ -6,10 +6,12 @@ import ConnectionLine from './edges/connectionLine';
 import PrimaryEdge from './edges/PrimaryEdge';
 import ActionNode from './nodes/ActionNode';
 import TriggerNode from './nodes/TriggerNode';
+import WorkflowNode from '@/automations/components/builder/nodes/WorkflowNode';
 
 const nodeTypes = {
   trigger: TriggerNode,
   action: ActionNode,
+  workflow: WorkflowNode,
   scratch: PlaceHolderNode,
 };
 const edgeTypes = {

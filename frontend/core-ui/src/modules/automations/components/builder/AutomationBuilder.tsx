@@ -67,7 +67,6 @@ export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
                   value="builder"
                   className="flex-1 h-full relative"
                 >
-                  {/* <AutomationBuilderCanvas /> */}
                   <InspectorPanel />
                   <AutomationBuilderSidebar />
                 </Tabs.Content>

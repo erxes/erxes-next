@@ -2,6 +2,7 @@ import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
 import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
 import {
   IAction,
+  IWorkflowNode,
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
   ITrigger,
@@ -45,8 +46,8 @@ export interface IAutomationDoc {
   status: string;
   triggers: ITrigger[];
   actions: IAction[];
-  updatedAt?: Date;
-  createdAt?: Date;
+  updatedAt?: string;
+  createdAt?: string;
   updatedBy?: string;
   createdBy?: string;
   updatedUser?: any;
@@ -68,12 +69,11 @@ export interface IAutomation extends IAutomationDoc {
 }
 
 export type AutomationDropHandlerParams = {
-  /** The drag event triggered when an item is dropped onto the drop target. */
   event: React.DragEvent<HTMLDivElement>;
-  /** Instance of React Flow to interact with the flow canvas and nodes. */
   reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>> | null;
   triggers: ITrigger[];
   actions: IAction[];
+  workflows?: IWorkflowNode[];
 };
 
 export type TDraggingNode = {
@@ -103,11 +103,13 @@ export enum AutomationsPath {
 export enum AutomationNodeType {
   Trigger = 'trigger',
   Action = 'action',
+  Workflow = 'workflow',
 }
 
 export enum AutomationNodesType {
   Triggers = 'triggers',
   Actions = 'actions',
+  Workflows = 'workflows',
 }
 
 export enum AutomationBuilderTabsType {

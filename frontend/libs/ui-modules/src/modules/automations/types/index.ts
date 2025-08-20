@@ -58,6 +58,15 @@ export type ITrigger<TConfig = any> = {
   count?: number;
 };
 
+export type IWorkflowNode = {
+  id: string;
+  name: string;
+  description: string;
+  config: any;
+  automationId: string;
+  position?: any;
+};
+
 export interface IAutomationHistoryAction {
   createdAt: Date;
   actionId: string;
@@ -183,3 +192,7 @@ export type IAutomationsActionConfigConstants = {
   emailRecipientsConst?: any;
   connectableActionTypes?: string[];
 };
+
+export type IAutomationNodeConfigConstants =
+  | IAutomationsTriggerConfigConstants
+  | IAutomationsActionConfigConstants;

@@ -1,5 +1,5 @@
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
-import { NodeData } from '@/automations/types';
+import { AutomationNodeType, NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Node, NodeProps } from '@xyflow/react';
 import { cn, IconComponent } from 'erxes-ui';
@@ -57,7 +57,8 @@ const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
       >
         <div className="p-3 flex items-center justify-between border-b border-slate-200 gap-8">
           <div className="flex items-center gap-2 text-primary">
-            {beforeTitleContent && beforeTitleContent(id, 'trigger')}
+            {beforeTitleContent &&
+              beforeTitleContent(id, AutomationNodeType.Trigger)}
             <div
               className={`size-6 rounded-full flex items-center justify-center`}
             >
@@ -81,7 +82,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
         </div>
 
         <NodeOutputHandler
-          nodeType="trigger"
+          nodeType={AutomationNodeType.Trigger}
           handlerId={id}
           className="!bg-primary"
           addButtonClassName="hover:border-primary hover:text-primary "
