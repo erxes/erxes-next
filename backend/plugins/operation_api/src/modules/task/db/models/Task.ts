@@ -147,9 +147,22 @@ export const loadTaskClass = (models: IModels) => {
           { $group: { _id: null, maxNumber: { $max: '$number' } } },
         ]);
 
+        const status = await models.Status.getStatus(task.status || '');
+
+        const newStatus = await models.Status.findOne({
+          teamId: doc.teamId,
+          type: status.type,
+        });
+
+        await models.Activity.deleteMany({
+          contentId: task._id,
+          module: 'STATUS',
+        });
+
         const nextNumber = (result?.maxNumber || 0) + 1;
 
         rest.number = nextNumber;
+        rest.status = newStatus?._id;
       }
 
       await createTaskActivity({
@@ -159,7 +172,11 @@ export const loadTaskClass = (models: IModels) => {
         userId,
       });
 
-      return models.Task.findOneAndUpdate({ _id }, { $set: { ...rest } });
+      return models.Task.findOneAndUpdate(
+        { _id },
+        { $set: { ...rest } },
+        { new: true },
+      );
     }
 
     public static async removeTask(TaskId: string[]) {

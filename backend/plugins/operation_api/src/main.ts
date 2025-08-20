@@ -11,6 +11,14 @@ startPlugin({
     typeDefs: await typeDefs(),
     resolvers,
   }),
+  hasSubscriptions: true,
+  subscriptionPluginPath: require('path').resolve(
+    __dirname,
+    'apollo',
+    process.env.NODE_ENV === 'production'
+      ? 'subscription.js'
+      : 'subscription.ts',
+  ),
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);
 
