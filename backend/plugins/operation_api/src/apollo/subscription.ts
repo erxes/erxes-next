@@ -59,7 +59,7 @@ export default {
           }
           if (!payload.operationActivityChanged.contentId) {
             console.error(
-              `Subscription resolver error: operationTaskChanged: payload.operationTaskChanged._id is ${payload.operationTaskChanged._id}`,
+              `Subscription resolver error: operationActivityChanged: payload.operationActivityChanged.contentId is ${payload.operationActivityChanged.contentId}`,
             );
             return;
           }
