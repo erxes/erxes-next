@@ -22,18 +22,20 @@ import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ITeam } from '@/team/types';
 import {
-  SelectPriority,
   SelectStatus,
   SelectTeam,
   SelectLead,
   DateSelect,
 } from '@/project/components/select';
 import clsx from 'clsx';
+import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
 ): ColumnDef<IProject>[] => {
+  const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<IProject>;
   return [
+    checkBoxColumn,
     {
       id: 'name',
       accessorKey: 'name',
@@ -108,9 +110,10 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectPriority.InlineCell
-            value={cell.row.original.priority || 0}
-            id={cell.row.original._id}
+          <SelectProjectPriority
+            projectId={cell.row.original._id}
+            value={cell.row.original.priority}
+            inInlineCell
           />
         );
       },

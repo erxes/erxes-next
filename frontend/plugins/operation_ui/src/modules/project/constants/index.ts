@@ -1,9 +1,4 @@
 import {
-  IconAntennaBars1,
-  IconAntennaBars2,
-  IconAntennaBars3,
-  IconAntennaBars4,
-  IconAntennaBars5,
   IconCircleDashed,
   IconCircle,
   IconCircleDot,
@@ -16,13 +11,11 @@ export const PROJECT_PRIORITIES_OPTIONS = [
   {
     value: 0,
     name: 'No Priority',
-    Icon: IconAntennaBars1,
-    IconColor: '#000000',
   },
-  { value: 1, name: 'Minor', Icon: IconAntennaBars2, IconColor: '#10B981' },
-  { value: 2, name: 'Medium', Icon: IconAntennaBars3, IconColor: '#3B82F6' },
-  { value: 3, name: 'High', Icon: IconAntennaBars4, IconColor: '#F59E0B' },
-  { value: 4, name: 'Critical', Icon: IconAntennaBars5, IconColor: '#EF4444' },
+  { value: 1, name: 'Minor' },
+  { value: 2, name: 'Medium' },
+  { value: 3, name: 'High' },
+  { value: 4, name: 'Critical' },
 ];
 
 export const PROJECT_STATUS_OPTIONS = [
@@ -57,9 +50,5 @@ export const PROJECT_STATUS_OPTIONS = [
     IconColor: '#EF4444',
   },
 ];
-
-
-
-
 
 export * from './ProjectHotKeyScope';

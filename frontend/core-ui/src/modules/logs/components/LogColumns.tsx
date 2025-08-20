@@ -1,5 +1,8 @@
+import { LogUserInfo } from '@/logs/components/LogUser';
+import { ILogDoc } from '@/logs/types';
 import {
   IconCalendarTime,
+  IconEye,
   IconInfoCircle,
   IconProgressCheck,
   IconProgressX,
@@ -10,15 +13,14 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import dayjs from 'dayjs';
 import {
-  Avatar,
   Badge,
+  Button,
   RecordTable,
   RecordTableInlineCell,
   RelativeDateDisplay,
+  useQueryState,
 } from 'erxes-ui';
-import { LogDetailDialog } from './LogDetail';
-import { readImage } from 'erxes-ui';
-import { IUser } from '@/settings/team-member/types';
+import { IUser } from 'ui-modules';
 
 const statusInfos = {
   success: {
@@ -31,28 +33,35 @@ const statusInfos = {
   },
 };
 
-const generateUserName = (user: IUser) => {
-  if (user?.details?.firstName || user?.details?.lastName) {
-    return `${user.details?.firstName || ''} ${user.details?.lastName || ''}`;
+const generateUserName = (user: IUser | undefined) => {
+  if (!user) return '';
+
+  if (user?.details?.fullName) {
+    return user.details.fullName;
   }
 
-  return user.email;
+  return user.email || '';
 };
 
-export const logColumns: ColumnDef<any>[] = [
+export const logColumns: ColumnDef<ILogDoc>[] = [
   {
     id: 'detail',
     cell: ({ cell }) => {
-      const { payload, ...doc } = cell?.row?.original || {};
+      const [, setLogId] = useQueryState<string>('logId');
       return (
         <RecordTableInlineCell>
-          <LogDetailDialog
-            doc={{ ...doc, payload: JSON.parse(payload || '{}') }}
-          />
+          <Button
+            className="w-full"
+            variant="ghost"
+            size="icon"
+            onClick={() => setLogId(cell.row.original._id)}
+          >
+            <IconEye />
+          </Button>
         </RecordTableInlineCell>
       );
     },
-    size: 20,
+    size: 33,
   },
   {
     id: 'status',
@@ -112,27 +121,21 @@ export const logColumns: ColumnDef<any>[] = [
     accessorKey: 'userId',
     header: () => <RecordTable.InlineHead icon={IconUser} label="User" />,
     cell: ({ cell }) => {
-      const { user = {}, userId } = cell?.row?.original || {};
-      if (!userId) {
+      const { user, userId } = cell?.row?.original || {};
+      if (!user) {
         return (
           <RecordTableInlineCell className="text-border">
             No User
           </RecordTableInlineCell>
         );
       }
-      const { details } = user as IUser;
+      const { details } = user || {};
+      const fullName = details?.fullName || '';
+      const initials = fullName ? fullName.charAt(0).toUpperCase() : '';
+
       return (
         <RecordTableInlineCell>
-          <Avatar className="h-6 w-6 rounded-full">
-            <Avatar.Image
-              src={readImage(details?.avatar)}
-              alt={details?.fullName || ''}
-            />
-            <Avatar.Fallback className="rounded-lg text-black">
-              {(details?.fullName || '').split('')[0]}
-            </Avatar.Fallback>
-          </Avatar>
-          {generateUserName(user)}
+          {user && <LogUserInfo user={user} />}
         </RecordTableInlineCell>
       );
     },

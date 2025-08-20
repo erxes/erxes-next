@@ -73,22 +73,20 @@ export const SelectTeamMemberContent = ({
         wrapperClassName="flex-auto"
         focusOnMount
       />
+
       <Command.List className="max-h-[300px] overflow-y-auto">
         <Combobox.Empty loading={loading} error={error} />
-        {members.length > 0 && (
-          <>
-            {members.map((member) => (
-              <SelectMember.CommandItem key={member._id} user={member} />
-            ))}
+        {members.map((member) => (
+          <SelectMember.CommandItem key={member._id} user={member} />
+        ))}
+        {members.length > 0 &&
+          members.some((member) => !memberIds?.includes(member._id)) && (
             <Command.Separator className="my-1" />
-          </>
-        )}
-
+          )}
         {!loading &&
           membersList.map((user) => (
             <SelectMember.CommandItem key={user._id} user={user} />
           ))}
-
         <Combobox.FetchMore
           fetchMore={handleFetchMore}
           currentLength={users.length}
@@ -213,7 +211,7 @@ export const SelectLeadInlineCell = ({
   const { updateProject } = useUpdateProject();
   const [open, setOpen] = useState(false);
 
-  const handleValueChange = (value: string | string[]) => {
+  const handleValueChange = (value: string | string[] | null) => {
     if (id) {
       updateProject({
         variables: {
@@ -222,7 +220,7 @@ export const SelectLeadInlineCell = ({
         },
       });
     }
-    onValueChange?.(value);
+    value && onValueChange?.(value);
     setOpen(false);
   };
 
@@ -247,14 +245,6 @@ export const SelectLeadInlineCell = ({
 
 const SelectLeadFormValue = () => {
   const { members, memberIds, setMembers } = useSelectMemberContext();
-  if (members.length === 0)
-    return (
-      <span className="flex items-center gap-2">
-        <IconUser className="size-4" />
-        <p className="text-muted-foreground font-medium text-base">Lead</p>
-      </span>
-    );
-
   return (
     <MembersInline
       memberIds={memberIds}
@@ -355,8 +345,7 @@ export const SelectLeadDetail = React.forwardRef<
 >(({ onValueChange, className, teamIds, id, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const { updateProject } = useUpdateProject();
-
-  const handleValueChange = (value: string | string[]) => {
+  const handleValueChange = (value: string | string[] | null) => {
     if (id) {
       updateProject({
         variables: {
@@ -365,10 +354,9 @@ export const SelectLeadDetail = React.forwardRef<
         },
       });
     }
-    onValueChange?.(value);
+    value && onValueChange?.(value);
     setOpen(false);
   };
-
   return (
     <SelectLeadProvider onValueChange={handleValueChange} {...props}>
       <Popover open={open} onOpenChange={setOpen}>

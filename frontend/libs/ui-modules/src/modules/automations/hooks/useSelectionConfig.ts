@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 import { useQuerySelectInputList } from 'ui-modules/modules/segments';
 
 export const useSelectionConfig = (selectionConfig: {

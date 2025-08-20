@@ -12,7 +12,6 @@ import { Block } from '@blocknote/core';
 import {
   SelectStatus,
   SelectTeam,
-  SelectPriority,
   SelectLead,
   DateSelect,
 } from '@/project/components/select';
@@ -20,6 +19,7 @@ import { useGetProject } from '@/project/hooks/useGetProject';
 import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
+import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
 
 export const ProjectFields = ({ projectId }: { projectId: string }) => {
   const { project } = useGetProject({
@@ -38,7 +38,6 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     description,
   } = project || {};
 
-  console.log(project);
   const [descriptionContent, setDescriptionContent] = useState<
     Block[] | undefined
   >(description ? JSON.parse(description) : undefined);
@@ -96,7 +95,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
         size="icon"
         className="w-min p-2"
         value={icon}
-        onValueChange={(_icon) => {
+        onValueChange={(_icon: string) => {
           if (_icon !== icon) {
             updateProject({ variables: { _id: projectId, icon: _icon } });
           }
@@ -110,8 +109,8 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
       />
       <div className="gap-2 flex flex-wrap w-full">
         <SelectStatus.Detail value={status} id={projectId} />
-        <SelectPriority.Detail value={priority} id={projectId} />
-        <SelectLead.Detail value={leadId} id={projectId} />
+        <SelectProjectPriority projectId={projectId} value={priority} />
+        <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds}/>
         <DateSelect.Detail value={startDate} id={projectId} type="start" />
         <DateSelect.Detail value={targetDate} id={projectId} type="target" />
         <SelectTeam.Detail

@@ -3,14 +3,11 @@ require('dotenv').config();
 
 const { ENABLED_PLUGINS } = process.env;
 const { execSync } = require('child_process');
-const SERVICES = ['automations', 'logs', 'notifications'];
 
 let devRemotesArg = '';
 if (ENABLED_PLUGINS) {
   try {
-    const remotes = ENABLED_PLUGINS.split(',')
-      .filter((plugin) => !SERVICES.includes(plugin))
-      .map((plugin) => `${plugin}_ui`);
+    const remotes = ENABLED_PLUGINS.split(',').map((plugin) => `${plugin}_ui`);
 
     devRemotesArg = `--devRemotes="${remotes}"`;
   } catch (error) {

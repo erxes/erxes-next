@@ -4,7 +4,7 @@ import {
   IconClipboard,
 } from '@tabler/icons-react';
 
-import { IUIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 
 const MainNavigation = lazy(() =>
@@ -21,6 +21,7 @@ const TeamsNavigation = lazy(() =>
 
 export const CONFIG: IUIConfig = {
   name: 'operation',
+  icon: IconListCheck,
   navigationGroup: {
     name: 'operation',
     icon: IconListCheck,

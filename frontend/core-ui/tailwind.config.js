@@ -52,6 +52,7 @@ module.exports = {
         },
         success: 'hsl(var(--success))',
         warning: 'hsl(var(--warning))',
+        info: 'hsl(var(--info))',
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
