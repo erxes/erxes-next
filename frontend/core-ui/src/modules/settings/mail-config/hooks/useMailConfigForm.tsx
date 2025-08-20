@@ -41,10 +41,12 @@ const useMailConfigForm = () => {
   });
 
   const submitHandler: SubmitHandler<TProps> = useCallback(async (data) => {
-    const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
-      acc[config.code] = data[config.code] ?? config.value;
-      return acc;
-    }, {} as Record<string, any>);
+    const updatedConfigs: Record<string, any> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      updatedConfigs[key] = value;
+    });
+
     updateConfig(updatedConfigs);
   }, []);
 
