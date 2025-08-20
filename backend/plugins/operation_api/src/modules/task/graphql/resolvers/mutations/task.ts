@@ -1,5 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { ITaskUpdate } from '@/task/@types/task';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const taskMutations = {
   createTask: async (
@@ -16,7 +17,16 @@ export const taskMutations = {
     params: ITaskUpdate,
     { models, user }: IContext,
   ) => {
-    return models.Task.updateTask({ doc: params, userId: user._id });
+    const updateTasked = await models.Task.updateTask({
+      doc: params,
+      userId: user._id,
+    });
+
+    await graphqlPubsub.publish(`operationTaskChanged:${updateTasked._id}`, {
+      operationTaskChanged: updateTasked,
+    });
+
+    return updateTasked;
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {

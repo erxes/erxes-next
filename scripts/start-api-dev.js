@@ -28,6 +28,7 @@ if (ENABLED_PLUGINS) {
   }
 }
 
+
 const totalProjectsCount = pluginsCount + DEFAULT_SERVICES.length;
 const totalProjects = `${plugins} ${services}`;
 

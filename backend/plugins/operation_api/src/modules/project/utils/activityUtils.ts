@@ -1,5 +1,6 @@
 import type { IModels } from '~/connectionResolvers';
 import type { IProject, IProjectDocument } from '@/project/@types/project';
+import { subMinutes, isAfter } from 'date-fns';
 
 const ACTIONS = {
   CREATED: 'CREATED',
@@ -60,10 +61,21 @@ export const createProjectActivity = async ({
     }).sort({ createdAt: -1 });
 
     if (lastActivity?.module === module && lastActivity?.action === action) {
+      // 30 минутын өмнө
+      const thirtyMinutesAgo = subMinutes(new Date(), 30);
+
+      // lastActivity.createdAt нь 30 минутаас залуу эсэх
+      const isBefore30Min = isAfter(
+        new Date(lastActivity.createdAt),
+        thirtyMinutesAgo,
+      );
+
+      if (isBefore30Min && newValue === lastActivity.metadata.previousValue) {
+        return models.Activity.deleteOne({ _id: lastActivity._id });
+      }
+
       return models.Activity.updateOne(
-        {
-          _id: lastActivity._id,
-        },
+        { _id: lastActivity._id },
         {
           $set: {
             contentId: project._id,
@@ -71,7 +83,7 @@ export const createProjectActivity = async ({
             module,
             metadata: {
               newValue: toStr(newValue),
-              previousValue: toStr(previousValue),
+              previousValue: toStr(lastActivity.metadata.previousValue),
             },
             createdBy: userId,
           },
