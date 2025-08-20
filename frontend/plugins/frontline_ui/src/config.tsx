@@ -2,6 +2,7 @@ import { IconMail, IconStackFront, IconTicket } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 
+
 const FrontlineNavigation = lazy(() =>
   import('./modules/FrontlineNavigation').then((module) => ({
     default: module.FrontlineNavigation,

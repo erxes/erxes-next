@@ -15,7 +15,7 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'payment_ui',
   exposes: {
-    './config': './src/config.ts',
+    './config': './src/config.tsx',
     './payment': './src/modules/payment/Main.tsx',
     './paymentSettings': './src/modules/payment/Settings.tsx',
     './widgets': './src/widgets/Widgets.tsx',
