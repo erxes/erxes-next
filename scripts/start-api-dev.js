@@ -5,11 +5,11 @@ const { ENABLED_PLUGINS } = process.env;
 const { execSync } = require('child_process');
 
 // preapare services
-const DEFAULT_SERVICES = ['automations', 'logs', 'notifications'];
+// const DEFAULT_SERVICES = ['automations', 'logs', 'notifications'];
 
-const services = DEFAULT_SERVICES.map((service) => `${service}-service`).join(
-  ' ',
-);
+// const services = DEFAULT_SERVICES.map((service) => `${service}-service`).join(
+//   ' ',
+// );
 
 // preapare plugins
 let plugins = '';
@@ -29,8 +29,8 @@ if (ENABLED_PLUGINS) {
 }
 
 
-const totalProjectsCount = pluginsCount + DEFAULT_SERVICES.length;
-const totalProjects = `${plugins} ${services}`;
+const totalProjectsCount = pluginsCount;
+const totalProjects = `${plugins}`;
 
 const command = `npx nx run-many -t serve -p core-api ${totalProjects} gateway --verbose --parallel=${totalProjectsCount}`;
 console.log(`Running: ${command}`);
