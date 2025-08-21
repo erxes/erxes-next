@@ -30,7 +30,6 @@ export const loginMiddleware = async (req, res) => {
     'FACEBOOK_LOGIN_REDIRECT_URL',
     `${API_DOMAIN}/pl:frontline/facebook/fblogin`,
   );
-  console.log(API_DOMAIN, 'API_DOMAIN');
   const conf = {
     client_id: FACEBOOK_APP_ID,
     client_secret: FACEBOOK_APP_SECRET,
@@ -38,7 +37,6 @@ export const loginMiddleware = async (req, res) => {
     redirect_uri: FACEBOOK_LOGIN_REDIRECT_URL,
   };
 
-  console.log(conf, 'conf');
   debugRequest(debugFacebook, req);
 
   // we don't have a code yet
@@ -113,9 +111,8 @@ export const loginMiddleware = async (req, res) => {
     const reactAppUrl = !DOMAIN.includes('zrok')
       ? DOMAIN
       : 'http://localhost:3001';
-    const url = `${reactAppUrl}/settings/fb-authorization?fbAuthorized=true`;
+    const url = `${reactAppUrl}/settings/inbox/integrations/facebook-messenger?fbAuthorized=true`;
 
-    console.log(reactAppUrl, 'reactAppUrl');
     debugResponse(debugFacebook, req, url);
 
     return res.redirect(url);

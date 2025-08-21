@@ -49,12 +49,12 @@ const CompanyInlineProvider = ({
 }) => {
   const { companyDetail, loading } = useCompanyInline({
     variables: {
-      _id: companyId,
+      _id: companyId || '',
     },
     skip: !companyId,
   });
 
-  const companyData = companyDetail || company || {};
+  const companyData = companyDetail || company || ({} as ICompany);
 
   return (
     <CompanyInlineContext.Provider

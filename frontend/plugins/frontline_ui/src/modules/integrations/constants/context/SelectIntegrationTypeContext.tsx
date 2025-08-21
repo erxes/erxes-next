@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
 export interface ISelectIntegrationTypeContext {
-  selectedIntegrationTypeId: string | null;
+  value: string | null;
   onSelect: (integrationTypeId: string) => void;
 }
 

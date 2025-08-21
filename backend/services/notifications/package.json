@@ -4,7 +4,7 @@
   "description": "Notification service for handling email notifications and automation",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
+    "dev": "nodemon src/main.ts",
     "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "start": "node -r tsconfig-paths/register dist/src/main.js",
     "test": "NOTIFICATION_DEBUG=true tsx src/test.ts"
@@ -21,7 +21,8 @@
     "erxes-api-shared": "workspace:^",
     "nodemailer": "^6.9.8",
     "bullmq": "^5.0.0",
-    "aws-sdk": "^2.1498.0"
+    "aws-sdk": "^2.1498.0",
+    "tslib": "^2.6.3"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.14"

@@ -15,7 +15,7 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'content_ui',
   exposes: {
-    './config': './src/config.ts',
+    './config': './src/config.tsx',
     './knowledgebase': './src/modules/knowledgebase/Main.tsx',
     // './contentFirstSettings': './src/modules/knowledgebase/Settings.tsx',
   },

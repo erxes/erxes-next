@@ -1,1 +1,1 @@
-export * from './components/NotificationAssigneeContent';
+export * from './components';

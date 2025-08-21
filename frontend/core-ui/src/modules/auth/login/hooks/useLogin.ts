@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
-import { useToast } from 'erxes-ui';
+import { toast } from 'erxes-ui';
 
 import { Logout } from '@/auth/graphql/mutations/logout';
 import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
@@ -20,7 +20,6 @@ export const useLogin = () => {
   const [resetPassword] = useMutation(ResetPassword);
   const setCurrentUser = useSetAtom(currentUserState);
   const setIsCurrentUserLoaded = useSetAtom(isCurrentUserLoadedState);
-  const { toast } = useToast();
 
   const navigate = useNavigate();
 
@@ -40,7 +39,7 @@ export const useLogin = () => {
           });
         });
     },
-    [login, navigate, setIsCurrentUserLoaded, toast],
+    [login, navigate, setIsCurrentUserLoaded],
   );
 
   const handleLogout = useCallback(async () => {

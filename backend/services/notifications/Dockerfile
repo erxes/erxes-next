@@ -1,66 +1,53 @@
 # Base image for common dependencies
-FROM node:22-alpine AS builder
+FROM --platform=linux/amd64 node:22-alpine AS build
 
 # Set working directory
 WORKDIR /app
 
-# 1. First copy only dependency-related files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY tsconfig.base.json nx.json ./
-COPY ./backend/erxes-api-shared/package.json ./backend/erxes-api-shared/
-COPY ./backend/services/notifications/package.json ./backend/services/notifications/
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
+
+COPY ./backend/services/notifications/package.json /app/backend/services/notifications/
+COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
 # Install pnpm and dependencies
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+RUN npm install -g pnpm
+RUN pnpm install
 
-# 2. Build stage for shared library
-FROM builder AS shared-builder
-COPY ./backend/erxes-api-shared ./backend/erxes-api-shared
-WORKDIR /app/backend/erxes-api-shared
-RUN npx nx build
+# Build the test project
+FROM --platform=linux/amd64 build AS notifications-service-build
 
-# 3. Build stage for notifications
-FROM builder AS notifications-builder
+# Copy source code
+COPY ./backend/services/notifications /app/backend/services/notifications
+COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
-# Copy built shared library
-COPY --from=shared-builder /app/backend/erxes-api-shared /app/backend/erxes-api-shared
-
-# Copy notifications source code (excluding dist folder if it exists)
-COPY ./backend/services/notifications ./backend/services/notifications
-
-# Create proper module symlinks
-RUN ln -s /app/backend/erxes-api-shared /app/node_modules/erxes-api-shared
-
+# Build following exact sequence
 WORKDIR /app/backend/services/notifications
 
-# Environment settings
 ENV NX_DAEMON=false
-ENV NX_CLOUD_DISTRIBUTED_EXECUTION=false
-ENV NODE_PATH=/app/node_modules
+RUN npx nx build:packageJson notifications-service
+RUN npx nx build notifications-service
 
-# Clear caches and build
-RUN rm -rf node_modules/.cache/nx && \
-    npx nx reset && \
-    npx nx build:packageJson notifications-service --verbose && \
-    npx nx build notifications-service --verbose
-
-# 4. Final production image
-FROM node:22-alpine
+# Final stage: Run the application
+FROM --platform=linux/amd64 node:22-alpine as notifications-service
 
 WORKDIR /app
 
-# Copy built artifacts
-COPY --from=notifications-builder --chown=1000:1000 /app/backend/services/notifications/dist ./dist
-COPY --from=shared-builder --chown=1000:1000 /app/backend/erxes-api-shared/dist ./node_modules/erxes-api-shared
+# Copy built applications from previous stages
+COPY --chown=1000 --from=notifications-service-build /app /app
+
+# Install pnpm for production
+RUN npm install -g pnpm
 
 # Install production dependencies
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && \
-    pnpm install --prod && \
-    rm -rf /tmp/* /var/tmp/*
+WORKDIR /app/backend/services/notifications/dist
+RUN pnpm install
 
-# Environment variables
+# Set environment variables
 ENV NODE_ENV=production
+
+# Use non root user
 USER 1000
 
-CMD ["node", "dist/src/main.js"]
+# Start the application
+CMD ["node", "src/main.js"]
+

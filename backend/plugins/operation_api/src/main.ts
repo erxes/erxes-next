@@ -11,6 +11,14 @@ startPlugin({
     typeDefs: await typeDefs(),
     resolvers,
   }),
+  hasSubscriptions: true,
+  subscriptionPluginPath: require('path').resolve(
+    __dirname,
+    'apollo',
+    process.env.NODE_ENV === 'production'
+      ? 'subscription.js'
+      : 'subscription.ts',
+  ),
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);
 
@@ -27,5 +35,15 @@ startPlugin({
 
       return context;
     },
+  },
+  meta: {
+    notificationModules: [
+      {
+        name: 'tasks',
+        description: 'Tasks',
+        icon: 'IconChecklist',
+        types: [{ name: 'taskAssignee', text: 'Task assignee' }],
+      },
+    ],
   },
 });

@@ -28,24 +28,6 @@ export const CONFIG: IUIConfig = {
       path: 'accounting',
       hasSettings: true,
       hasRelationWidget: false,
-      submenus: [
-        {
-          name: 'main',
-          path: 'accounting/main',
-        },
-        {
-          name: 'records',
-          path: 'accounting/records',
-        },
-        {
-          name: 'adjustment',
-          path: 'accounting/adjustment',
-        },
-        {
-          name: 'odds',
-          path: 'accounting/odd-transactions',
-        },
-      ],
     },
   ],
 };

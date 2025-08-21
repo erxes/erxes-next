@@ -6,13 +6,14 @@ import {
 } from 'erxes-ui';
 
 const GET_USER = gql`
-  query userDetail($_id: String) {
+  query UserDetail($_id: String) {
     userDetail(_id: $_id) {
       _id
       username
       email
       positionIds
       details {
+        avatar
         shortName
         birthDate
         workStartedDate
@@ -21,17 +22,19 @@ const GET_USER = gql`
         firstName
         middleName
         lastName
+        operatorPhone
       }
       links
       employeeId
       branchIds
       departmentIds
+      isSubscribed
     }
   }
 `;
 
 const GET_USERS_QUERY = gql`
-  query users(
+  query Users(
     ${GQL_CURSOR_PARAM_DEFS}
     $status: String
     $excludeIds: Boolean
@@ -71,16 +74,15 @@ const GET_USERS_QUERY = gql`
         positionIds
         details {
           avatar
-          fullName
           shortName
           birthDate
           workStartedDate
           location
           description
-          operatorPhone
           firstName
           middleName
           lastName
+          operatorPhone
         }
         links
         employeeId

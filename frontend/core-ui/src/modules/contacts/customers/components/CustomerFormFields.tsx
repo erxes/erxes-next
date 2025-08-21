@@ -189,19 +189,16 @@ export const IsSubscribedField = ({
       name="isSubscribed"
       control={control}
       render={({ field }) => (
-        <Form.Item className="flex flex-col">
-          <Form.Label>SUBSCRIBED</Form.Label>
+        <Form.Item className="flex items-center space-x-2 space-y-0 mt-4">
           <Form.Control>
-            <div className="p-2">
-              <Switch
-                className="scale-150 w-7"
-                checked={field.value === 'Yes'}
-                onCheckedChange={(checked) =>
-                  field.onChange(checked ? 'Yes' : 'No')
-                }
-              />
-            </div>
+            <Switch
+              checked={field.value === 'Yes'}
+              onCheckedChange={(checked) =>
+                field.onChange(checked ? 'Yes' : 'No')
+              }
+            />
           </Form.Control>
+          <Form.Label variant="peer">Subscribed</Form.Label>
           <Form.Message className="text-destructive" />
         </Form.Item>
       )}

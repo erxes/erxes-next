@@ -19,7 +19,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import strip from 'strip-ansi';
-import { currentUserState, IPageInfo, IUser } from 'ui-modules';
+import { currentUserState, IUser } from 'ui-modules';
 type NotificationInsertedData = {
   notificationInserted: INotification;
 };

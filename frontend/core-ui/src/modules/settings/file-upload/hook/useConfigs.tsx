@@ -30,11 +30,7 @@ const useConfig = () => {
           description: 'configs updated successfully',
         });
       },
-      refetchQueries: [
-        {
-          query: fileSettingsQueries.GET_CONFIGS,
-        },
-      ],
+      refetchQueries: ['Configs'],
       awaitRefetchQueries: true,
     },
   );

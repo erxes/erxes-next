@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import { IUser } from '../types/TeamMembers';
-import { IconUserCircle } from '@tabler/icons-react';
+import { IconUserCancel } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules/states';
 import { useAtomValue } from 'jotai';
 import { useMemberInline } from '../hooks';
@@ -24,12 +24,14 @@ export const MembersInlineRoot = ({
   memberIds,
   placeholder,
   updateMembers,
+  className,
   size,
 }: {
   members?: IUser[];
   memberIds?: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
+  className?: string;
   size?: AvatarProps['size'];
 }) => {
   return (
@@ -41,7 +43,7 @@ export const MembersInlineRoot = ({
       size={size}
     >
       <MembersInlineAvatar size={size} />
-      <MembersInlineTitle />
+      <MembersInlineTitle className={className} />
     </MembersInlineProvider>
   );
 };
@@ -147,27 +149,8 @@ export const MembersInlineAvatar = ({
     const { details } = member;
     const { avatar, fullName } = details || {};
 
-    if (member._id === currentUser._id) {
-      return (
-        <Tooltip delayDuration={100} key={member._id}>
-          <Tooltip.Trigger asChild>
-            <Avatar
-              size={size || 'lg'}
-              {...props}
-              className={cn(className, 'items-center justify-center')}
-            >
-              <IconUserCircle className="text-muted-foreground !size-5 flex-none" />
-            </Avatar>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>You</p>
-          </Tooltip.Content>
-        </Tooltip>
-      );
-    }
-
     return (
-      <Tooltip key={member._id}>
+      <Tooltip delayDuration={100} key={member._id}>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(
@@ -189,7 +172,10 @@ export const MembersInlineAvatar = ({
     );
   };
 
-  if (members.length === 0) return null;
+  if (members.length === 0)
+    return (
+      <IconUserCancel className="text-muted-foreground flex-none size-4" />
+    );
 
   if (members.length === 1) return renderAvatar(members[0]);
 
@@ -221,16 +207,16 @@ export const MembersInlineAvatar = ({
   );
 };
 
-export const MembersInlineTitle = () => {
+export const MembersInlineTitle = ({ className }: { className?: string }) => {
   const { members, loading, placeholder } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
   const isCurrentUser = members.some((m) => m._id === currentUser._id);
 
   const getDisplayValue = () => {
-    if (members.length === 0) return undefined;
+    if (!members || members.length === 0) return 'No assignee';
 
     if (members.length === 1) {
-      return isCurrentUser ? 'Current User' : members?.[0].details?.fullName;
+      return members?.[0].details?.fullName;
     }
 
     if (isCurrentUser) {
@@ -251,6 +237,7 @@ export const MembersInlineTitle = () => {
       value={getDisplayValue()}
       loading={loading}
       placeholder={placeholder}
+      className={className}
     />
   );
 };

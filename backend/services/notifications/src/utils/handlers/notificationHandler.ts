@@ -5,6 +5,7 @@ import { debugError, debugInfo } from '@/utils/debugger';
 import { EmailService } from '@/utils/email/emailService';
 import { getUserById } from '@/utils/email/emailUtils';
 import { Job } from 'bullmq';
+
 import {
   INotificationConfigDocument,
   INotificationData,
@@ -25,8 +26,29 @@ export const handleCreateNotification = async (
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
 
-  for (const userId of ['OQgac3z4G3I2LW9QPpAtL']) {
+  for (const userId of data?.userIds || []) {
     try {
+      let notification: INotificationDocument | undefined;
+
+      if (data.kind === 'system') {
+        notification = await createInAppNotification(
+          subdomain,
+          models,
+          {
+            kind: 'system',
+            title: data.title,
+            message: data.message,
+            type: data.type,
+            priority: data.priority,
+            metadata: data.metadata,
+          },
+          userId,
+        );
+        results.push({ userId, inApp: true, notificationId: notification._id });
+        debugInfo(`In-app notification created for user ${userId}`);
+        continue;
+      }
+
       const userSettings = await models.UserNotificationSettings.findOne({
         userId,
       }).lean();
@@ -44,8 +66,6 @@ export const handleCreateNotification = async (
           data,
         ),
       };
-
-      let notification: INotificationDocument | undefined;
 
       // In-app notification
       if (notificationSettings.inApp) {
@@ -114,31 +134,13 @@ export const handleCreateNotification = async (
 async function createInAppNotification(
   subdomain: string,
   models: IModels,
-  {
-    title,
-    message,
-    type,
-    fromUserId,
-    contentType,
-    contentTypeId,
-    priority,
-    metadata,
-    notificationType,
-  }: INotificationData,
+  data: INotificationData,
   userId: string,
 ) {
   const notification = await models.Notifications.create({
-    title,
-    message,
-    type,
+    ...data,
     userId,
-    fromUserId,
-    contentType,
-    contentTypeId,
-    priority: priority || 'medium',
-    metadata,
-    notificationType,
-    priorityLevel: PRIORITY_ORDER[priority || 'medium'],
+    priorityLevel: PRIORITY_ORDER[data?.priority || 'medium'],
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
@@ -153,7 +155,7 @@ function shouldSendNotification(
   type: 'email' | 'inApp',
   defaultConfig: any,
   userSettings: IUserNotificationSettingsDocument | null,
-  data: INotificationData,
+  data: Extract<INotificationData, { kind: 'user' }>,
 ): boolean {
   let shouldSend = true;
 
@@ -171,7 +173,7 @@ function shouldSendNotification(
 function checkUserNotificationSettings(
   type: 'email' | 'inApp',
   userSettings: IUserNotificationSettingsDocument | null,
-  data: INotificationData,
+  data: Extract<INotificationData, { kind: 'user' }>,
 ) {
   if (!userSettings) return true;
 
@@ -179,19 +181,19 @@ function checkUserNotificationSettings(
   if (type === 'email' && userSettings.emailNotificationsDisabled) return false;
   if (type === 'inApp' && userSettings.inAppNotificationsDisabled) return false;
 
-  const [pluginName] = data.contentType.split(':');
+  const [pluginName] = (data?.contentType || '').split(':');
   const pluginSettings = (userSettings.plugins || {})[pluginName];
 
   // Plugin-level setting
-  if (type === 'email' && pluginSettings?.emailDisabled) return false;
-  if (type === 'inApp' && pluginSettings?.inAppDisabled) return false;
+  if (type === 'email' && !pluginSettings?.emailDisabled) return false;
+  if (type === 'inApp' && !pluginSettings?.inAppDisabled) return false;
 
   // Type-level setting
   const typeKey = data.notificationType || '';
   const typeSetting = (pluginSettings?.types || {})[typeKey];
 
-  if (type === 'email' && typeSetting?.emailDisabled) return false;
-  if (type === 'inApp' && typeSetting?.inAppDisabled) return false;
+  if (type === 'email' && !typeSetting?.emailDisabled) return false;
+  if (type === 'inApp' && !typeSetting?.inAppDisabled) return false;
 
   return true;
 }
@@ -199,7 +201,7 @@ function checkUserNotificationSettings(
 function checkOrgNotificationConfig(
   type: 'email' | 'inApp',
   defaultConfig: INotificationConfigDocument | null,
-  data: INotificationData,
+  data: Extract<INotificationData, { kind: 'user' }>,
 ) {
   if (!defaultConfig) return true;
 
@@ -209,7 +211,7 @@ function checkOrgNotificationConfig(
   if (type === 'inApp' && defaultConfig.inAppNotificationsDisabled)
     return false;
 
-  const [pluginName] = data.contentType.split(':');
+  const [pluginName] = (data?.contentType || '').split(':');
   const pluginSettings = (defaultConfig.plugins || {})[pluginName];
 
   // Plugin-level setting

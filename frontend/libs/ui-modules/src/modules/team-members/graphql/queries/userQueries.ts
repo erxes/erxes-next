@@ -37,6 +37,7 @@ export const GET_USERS_GROUP = gql`
         _id
         name
         description
+        memberIds
         members {
           _id
           details {
@@ -75,6 +76,7 @@ export const GET_USER_INLINE_DETAIL = gql`
 export const GET_ASSIGNED_MEMBER = gql`
   query AssignedMember($_id: String) {
     userDetail(_id: $_id) {
+      _id
       details {
         avatar
         fullName

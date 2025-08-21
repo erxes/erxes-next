@@ -11,10 +11,8 @@ import {
   CurrencyFormatedDisplay,
   Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  PopoverScoped,
 } from 'erxes-ui';
 
 // Create named components for cell renderers to fix React Hook usage
@@ -23,16 +21,18 @@ const NumberCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`tbalance-${_id}-number`}>
-      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
-      <RecordTableCellContent>
+    <PopoverScoped scope={`tbalance-${_id}-number`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as string}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content>
         <Input
           value={number}
           onChange={(e) => setNumber(e.target.value)}
           className="w-full"
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -41,16 +41,18 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <RecordTablePopover scope={`tbalance-${_id}-description`}>
-      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
-      <RecordTableCellContent className="w-80">
+    <PopoverScoped scope={`tbalance-${_id}-description`}>
+      <RecordTableInlineCell.Trigger>
+        {getValue() as string}
+      </RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Content className="w-80">
         <Input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="w-full"
         />
-      </RecordTableCellContent>
-    </RecordTablePopover>
+      </RecordTableInlineCell.Content>
+    </PopoverScoped>
   );
 };
 
@@ -59,14 +61,14 @@ const DebitCell = ({ getValue, row }: any) => {
   const { amount, side } = detail;
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       <CurrencyFormatedDisplay
         currencyValue={{
           currencyCode: CurrencyCode.MNT,
           amountMicros: side === TR_SIDES.DEBIT ? amount : 0,
         }}
       />
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -75,14 +77,14 @@ const CreditCell = ({ getValue, row }: any) => {
   const { amount, side } = detail;
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       <CurrencyFormatedDisplay
         currencyValue={{
           currencyCode: CurrencyCode.MNT,
           amountMicros: side === TR_SIDES.CREDIT ? amount : 0,
         }}
       />
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -90,9 +92,9 @@ const BranchCell = ({ row }: any) => {
   const { branch } = row.original;
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {`${branch?.code ? `${branch.code} - ` : ''}${branch?.title ?? ''}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -100,17 +102,19 @@ const DepartmentCell = ({ row }: any) => {
   const { department } = row.original;
 
   return (
-    <RecordTableCellDisplay>
-      {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''}`}
-    </RecordTableCellDisplay>
+    <RecordTableInlineCell>
+      {`${department?.code ? `${department.code} - ` : ''}${
+        department?.title ?? ''
+      }`}
+    </RecordTableInlineCell>
   );
 };
 
 const DateCell = ({ getValue }: any) => {
   return (
-    <RecordTableCellDisplay>
-      {dayjs(new Date(getValue())).format("YYYY-MM-DD")}
-    </RecordTableCellDisplay>
+    <RecordTableInlineCell>
+      {dayjs(new Date(getValue())).format('YYYY-MM-DD')}
+    </RecordTableInlineCell>
   );
 };
 
@@ -118,10 +122,10 @@ const AccountCell = ({ row }: any) => {
   const { details } = row.original;
 
   return (
-    <RecordTableCellDisplay>
+    <RecordTableInlineCell>
       {details.length &&
         `${details[0].account?.code} - ${details[0].account?.name}`}
-    </RecordTableCellDisplay>
+    </RecordTableInlineCell>
   );
 };
 
@@ -137,7 +141,7 @@ const TransactionMoreColumnCell = ({
     <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
-        setActiveJournal(journalIndex)
+        setActiveJournal(journalIndex);
       }}
     />
   );
@@ -184,17 +188,13 @@ export const tbalanceColumns: ColumnDef<ITBalanceTransaction>[] = [
   },
   {
     id: 'debit',
-    header: () => (
-      <RecordTable.InlineHead icon={IconMoneybag} label="Debit" />
-    ),
+    header: () => <RecordTable.InlineHead icon={IconMoneybag} label="Debit" />,
     accessorKey: 'debit',
     cell: ({ getValue, row }) => <DebitCell getValue={getValue} row={row} />,
   },
   {
     id: 'credit',
-    header: () => (
-      <RecordTable.InlineHead icon={IconMoneybag} label="Credit" />
-    ),
+    header: () => <RecordTable.InlineHead icon={IconMoneybag} label="Credit" />,
     accessorKey: 'credit',
     cell: ({ getValue, row }) => <CreditCell getValue={getValue} row={row} />,
   },
@@ -208,6 +208,8 @@ export const tbalanceColumns: ColumnDef<ITBalanceTransaction>[] = [
     id: 'department',
     header: () => <RecordTable.InlineHead icon={IconFile} label="Department" />,
     accessorKey: 'department',
-    cell: ({ getValue, row }) => <DepartmentCell getValue={getValue} row={row} />,
+    cell: ({ getValue, row }) => (
+      <DepartmentCell getValue={getValue} row={row} />
+    ),
   },
 ];

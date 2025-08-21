@@ -13,9 +13,7 @@ import {
   Form,
   Popover,
   PopoverScoped,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   SelectTree,
   TextOverflowTooltip,
   useFilterContext,
@@ -37,6 +35,7 @@ export const SelectBranchesProvider = ({
 }: ISelectBranchesProviderProps) => {
   const [newBranchName, setNewBranchName] = useState<string>('');
   const [selectedBranches, setSelectedBranches] = useState<IBranch[]>([]);
+  const branchIds = !value ? [] : Array.isArray(value) ? value : [value];
 
   const handleSelectCallback = (branch: IBranch) => {
     if (!branch) return;
@@ -71,6 +70,7 @@ export const SelectBranchesProvider = ({
         newBranchName,
         setNewBranchName,
         mode,
+        branchIds,
       }}
     >
       {children}
@@ -85,7 +85,7 @@ export const SelectBranchesCommand = ({
 }) => {
   const [search, setSearch] = useState<string>('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { selectedBranches } = useSelectBranchesContext();
+  const { selectedBranches, branchIds } = useSelectBranchesContext();
   const [noBranchesSearchValue, setNoBranchesSearchValue] =
     useState<string>('');
 
@@ -115,31 +115,32 @@ export const SelectBranchesCommand = ({
         placeholder="Search branches"
         focusOnMount
       />
-      {selectedBranches?.length > 0 && (
-        <>
-          <div className="flex flex-wrap justify-start p-2 gap-2">
-            <BranchesList />
-          </div>
-          <Command.Separator />
-        </>
-      )}
-
       <Command.List>
+        {selectedBranches?.length > 0 && (
+          <>
+            <div className="flex flex-wrap justify-start p-2 gap-2">
+              <BranchesList />
+            </div>
+            <Command.Separator />
+          </>
+        )}
         <SelectTree.Provider id={'select-branches'} ordered={!search}>
           <SelectBranchesCreate
             search={search}
             show={!disableCreateOption && !loading && !branches?.length}
           />
           <Combobox.Empty loading={loading} error={error} />
-          {branches?.map((branch) => (
-            <SelectBranchesItem
-              key={branch._id}
-              branch={{
-                ...branch,
-                hasChildren: branches.some((b) => b.parentId === branch._id),
-              }}
-            />
-          ))}
+          {branches
+            ?.filter((b) => !branchIds?.find((bId) => bId === b._id))
+            .map((branch) => (
+              <SelectBranchesItem
+                key={branch._id}
+                branch={{
+                  ...branch,
+                  hasChildren: branches.some((b) => b.parentId === branch._id),
+                }}
+              />
+            ))}
           <Combobox.FetchMore
             fetchMore={handleFetchMore}
             currentLength={branches?.length || 0}
@@ -178,8 +179,8 @@ export const SelectBranchesItem = ({
 }: {
   branch: IBranch & { hasChildren: boolean };
 }) => {
-  const { onSelect, selectedBranches } = useSelectBranchesContext();
-  const isSelected = selectedBranches.some((b) => b._id === branch._id);
+  const { onSelect, branchIds } = useSelectBranchesContext();
+  const isSelected = branchIds?.some((b) => b === branch._id);
   return (
     <SelectTree.Item
       key={branch._id}
@@ -290,15 +291,40 @@ export const SelectBranchesInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectBranchesValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectBranchesContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectBranchesProvider>
+  );
+};
+
+const SelectBranchesBadgesView = () => {
+  const { branchIds, selectedBranches, setSelectedBranches, onSelect } =
+    useSelectBranchesContext();
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {branchIds?.map((bId) => (
+        <BranchBadge
+          key={bId}
+          branchId={bId}
+          onCompleted={(branch) => {
+            if (!branch) return;
+            if (branchIds.includes(branch._id)) {
+              setSelectedBranches([...selectedBranches, branch]);
+            }
+          }}
+          onClose={() =>
+            onSelect?.(selectedBranches.find((p) => p._id === bId) as IBranch)
+          }
+        />
+      ))}
+    </div>
   );
 };
 
@@ -311,27 +337,46 @@ export const SelectBranchesDetail = React.forwardRef<
     > & {
       scope?: string;
     }
->(({ onValueChange, scope, value, mode, options, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectBranchesProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...{ value, mode, options }}
-    >
-      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-        <Combobox.Trigger ref={ref} {...props}>
-          <SelectBranchesValue />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectBranchesContent />
-        </Combobox.Content>
-      </PopoverScoped>
-    </SelectBranchesProvider>
-  );
-});
+>(
+  (
+    { onValueChange, scope, value, mode, options, className, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <SelectBranchesProvider
+        onValueChange={(value) => {
+          if (mode === 'single') {
+            setOpen(false);
+          }
+          onValueChange?.(value);
+        }}
+        value={value}
+        {...props}
+        mode={mode}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Button
+              className={cn(
+                'w-min inline-flex text-sm font-medium shadow-xs',
+                className,
+              )}
+              variant="outline"
+            >
+              Add Branches
+              <IconPlus className="text-lg" />
+            </Button>
+          </Popover.Trigger>
+          <Combobox.Content className="mt-2">
+            <SelectBranchesContent />
+          </Combobox.Content>
+        </Popover>
+        <SelectBranchesBadgesView />
+      </SelectBranchesProvider>
+    );
+  },
+);
 
 SelectBranchesDetail.displayName = 'SelectBranchesDetail';
 
@@ -349,17 +394,17 @@ export const SelectBranchesCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconGitBranch />
             Branch
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectBranchesContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectBranchesProvider>
   );
 };

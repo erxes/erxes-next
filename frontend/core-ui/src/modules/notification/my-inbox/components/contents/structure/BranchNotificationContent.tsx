@@ -1,7 +1,7 @@
 import { INotification } from '@/notification/my-inbox/types/notifications';
 import { useBranchDetailsById } from '@/settings/structure/hooks/useBranchDetailsById';
 import { IconBuildings } from '@tabler/icons-react';
-import { AssigneeNotificationContent } from 'ui-modules';
+import { AssigneeNotificationContent, IUser } from 'ui-modules';
 
 export const BranchNotificationContent = ({
   action,
@@ -19,7 +19,7 @@ export const BranchNotificationContent = ({
       name={branchDetail?.title || '-'}
       contentType="branch"
       createdAt={createdAt}
-      fromUser={fromUser}
+      fromUser={fromUser || ({} as IUser)}
       Icon={IconBuildings}
     />
   );
