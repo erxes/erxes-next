@@ -5,6 +5,7 @@ import { debugError, debugInfo } from '@/utils/debugger';
 import { EmailService } from '@/utils/email/emailService';
 import { getUserById } from '@/utils/email/emailUtils';
 import { Job } from 'bullmq';
+
 import {
   INotificationConfigDocument,
   INotificationData,
@@ -17,7 +18,6 @@ export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
 ) => {
   const { subdomain, data } = job.data;
-  console.log(job.data, data);
 
   const models = await generateModels(subdomain);
   const emailService = new EmailService();
@@ -185,15 +185,15 @@ function checkUserNotificationSettings(
   const pluginSettings = (userSettings.plugins || {})[pluginName];
 
   // Plugin-level setting
-  if (type === 'email' && pluginSettings?.emailDisabled) return false;
-  if (type === 'inApp' && pluginSettings?.inAppDisabled) return false;
+  if (type === 'email' && !pluginSettings?.emailDisabled) return false;
+  if (type === 'inApp' && !pluginSettings?.inAppDisabled) return false;
 
   // Type-level setting
   const typeKey = data.notificationType || '';
   const typeSetting = (pluginSettings?.types || {})[typeKey];
 
-  if (type === 'email' && typeSetting?.emailDisabled) return false;
-  if (type === 'inApp' && typeSetting?.inAppDisabled) return false;
+  if (type === 'email' && !typeSetting?.emailDisabled) return false;
+  if (type === 'inApp' && !typeSetting?.inAppDisabled) return false;
 
   return true;
 }

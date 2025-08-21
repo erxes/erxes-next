@@ -7,18 +7,29 @@ import {
   ITaskFilter,
   ITaskUpdate,
 } from '@/task/@types/task';
-import { createTaskActivity } from '@/task/utils';
+import { createTaskActivity } from '@/task/activityUtils';
+import { createTaskNotification } from '~/modules/task/notificationUtils';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
   getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
-  createTask(doc: ITask): Promise<ITaskDocument>;
+  createTask({
+    doc,
+    userId,
+    subdomain,
+  }: {
+    doc: ITask;
+    userId: string;
+    subdomain: string;
+  }): Promise<ITaskDocument>;
   updateTask({
     doc,
     userId,
+    subdomain,
   }: {
     doc: ITaskUpdate;
     userId: string;
+    subdomain: string;
   }): Promise<ITaskDocument>;
   removeTask(TaskId: string): Promise<{ ok: number }>;
 }
@@ -79,7 +90,15 @@ export const loadTaskClass = (models: IModels) => {
       return models.Task.find(query).lean();
     }
 
-    public static async createTask(doc: ITask): Promise<ITaskDocument> {
+    public static async createTask({
+      doc,
+      userId,
+      subdomain,
+    }: {
+      doc: ITask;
+      userId: string;
+      subdomain: string;
+    }): Promise<ITaskDocument> {
       const [result] = await models.Task.aggregate([
         { $match: { teamId: doc.teamId } },
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
@@ -95,18 +114,31 @@ export const loadTaskClass = (models: IModels) => {
         }
       }
 
-      return models.Task.insertOne({
+      doc.createdBy = userId;
+
+      const task = await models.Task.insertOne({
         ...doc,
         number: nextNumber,
       });
+
+      await createTaskNotification({
+        task,
+        doc,
+        userId,
+        subdomain,
+      });
+
+      return task;
     }
 
     public static async updateTask({
       doc,
       userId,
+      subdomain,
     }: {
       doc: ITaskUpdate;
       userId: string;
+      subdomain: string;
     }) {
       const { _id, ...rest } = doc;
 
@@ -170,6 +202,13 @@ export const loadTaskClass = (models: IModels) => {
         task,
         doc,
         userId,
+      });
+
+      await createTaskNotification({
+        task,
+        doc,
+        userId,
+        subdomain,
       });
 
       return models.Task.findOneAndUpdate(
