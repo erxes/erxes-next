@@ -2,7 +2,8 @@ import { useNodeDropDownActions } from './hooks/useNodeDropDownActions';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Dispatch, SetStateAction } from 'react';
-import { AutomationNodesType, NodeData } from '../../../types';
+import { AutomationNodesType, NodeData } from '@/automations/types';
+
 import { EditForm } from './NodeEditForm';
 
 export const NodeDropdownActions = ({
@@ -53,7 +54,7 @@ export const NodeDropdownActions = ({
   );
 };
 
-const NodeRemoveActionDialog = ({
+export const NodeRemoveActionDialog = ({
   onRemoveNode,
 }: {
   onRemoveNode: () => void;
@@ -95,7 +96,10 @@ const NodeEditForm = ({
   setOpenDialog: Dispatch<SetStateAction<boolean>>;
   data: NodeData;
   id: string;
-  fieldName: AutomationNodesType;
+  fieldName:
+    | AutomationNodesType.Triggers
+    | AutomationNodesType.Actions
+    | AutomationNodesType.Workflows;
 }) => {
   return (
     <Dialog

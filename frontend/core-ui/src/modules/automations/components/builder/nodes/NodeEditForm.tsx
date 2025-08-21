@@ -2,11 +2,14 @@ import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefini
 import { Button, Dialog, Input } from 'erxes-ui';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { NodeData } from '../../../types';
+import { AutomationNodesType, NodeData } from '@/automations/types';
 
 type Props = {
   id: string;
-  fieldName: 'actions' | 'triggers';
+  fieldName:
+    | AutomationNodesType.Triggers
+    | AutomationNodesType.Actions
+    | AutomationNodesType.Workflows;
   data: NodeData;
   callback: () => void;
 };

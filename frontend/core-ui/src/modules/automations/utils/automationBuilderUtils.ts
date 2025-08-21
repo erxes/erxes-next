@@ -82,25 +82,31 @@ const generateNodeData = (
   props: any,
 ) => {
   if (nodeType === AutomationNodeType.Workflow) {
-    console.log({ node });
+    const { name, description, config, automationId } = node as Extract<
+      TAutomationNodeState,
+      { nodeType: AutomationNodeType.Workflow }
+    >;
     return {
-      label: node.name,
-      description: node.description,
-      config: node.config,
+      label: name,
+      description,
+      config,
       nodeType: AutomationNodeType.Workflow,
-      automationId: node.automationId,
+      automationId,
     };
   }
 
-  if (node.nodeType === AutomationNodeType.Action) {
-    const { id, label, description, icon, config, isCustom, nextActionId } =
-      node;
+  if (nodeType === AutomationNodeType.Action) {
+    const { label, description, icon, config, isCustom, nextActionId, type } =
+      node as Extract<
+        TAutomationNodeState,
+        { nodeType: AutomationNodeType.Action }
+      >;
     return {
       label,
       description,
       icon,
       nodeType: AutomationNodeType.Action,
-      type: node.type,
+      type: type,
       config,
       isCustom,
       nextActionId,
@@ -108,13 +114,17 @@ const generateNodeData = (
     };
   }
 
-  const { id, label, description, icon, config, isCustom, actionId } = node;
+  const { label, description, icon, config, isCustom, actionId, type } =
+    node as Extract<
+      TAutomationNodeState,
+      { nodeType: AutomationNodeType.Trigger }
+    >;
   return {
     label,
     description,
     icon,
     nodeType: AutomationNodeType.Action,
-    type: node.type,
+    type,
     config,
     isCustom,
     actionId,
@@ -138,14 +148,17 @@ const generateNodeData = (
 
 export const generateNode = (
   node: TAutomationNodeState,
-  nodeType: string,
+  nodeType:
+    | AutomationNodeType.Action
+    | AutomationNodeType.Trigger
+    | AutomationNodeType.Workflow,
   nodes: IAction[] & ITrigger[] & IWorkflowNode[],
   props: any,
   generatedNodes: Node<NodeData>[],
 ) => {
   const doc: any = {
     id: node.id,
-    data: generateNodeData(node, props),
+    data: generateNodeData(node, nodeType, props),
     position: generateNodePosition(nodes, node, generatedNodes),
     isConnectable: true,
     type: nodeType,

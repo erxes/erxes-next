@@ -7,6 +7,7 @@ import { useFormContext } from 'react-hook-form';
 const fields: Record<AutomationNodeType, AutomationNodesType> = {
   [AutomationNodeType.Trigger]: AutomationNodesType.Triggers,
   [AutomationNodeType.Action]: AutomationNodesType.Actions,
+  [AutomationNodeType.Workflow]: AutomationNodesType.Workflows,
 };
 
 export const useNodeDropDownActions = (

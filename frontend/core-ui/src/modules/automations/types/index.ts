@@ -41,6 +41,14 @@ export type NodeData = {
   ) => React.ReactNode;
 };
 
+export type WorkflowNodeData = {
+  automationId: string;
+  config: any;
+  description: string;
+  label: string;
+  nodeType: string;
+};
+
 export interface IAutomationDoc {
   name: string;
   status: string;
