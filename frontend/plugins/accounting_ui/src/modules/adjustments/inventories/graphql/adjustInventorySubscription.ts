@@ -1,9 +1,10 @@
 import { gql } from '@apollo/client';
+import { adjustInventoryFields } from '~/modules/adjustments/inventories/graphql/adjustInventoryQueries';
 
 export const ACCOUNTING_ADJUST_INVENTORY_CHANGED = gql`
-  subscription AccountingAdjustInventoryChanged($_id: String!) {
-    accountingAdjustInventoryChanged(_id: $_id) {
-      status
+  subscription AccountingAdjustInventoryChanged($adjustId: String!) {
+    accountingAdjustInventoryChanged(adjustId: $adjustId) {
+      ${adjustInventoryFields}
     }
   }
 `;

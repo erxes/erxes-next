@@ -369,8 +369,8 @@ export const adjustRunning = async (models, adjustInventory, beginDate, beforeAd
       await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
       graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
         accountingAdjustInventoryChanged: {
-          adjustId: adjustId,
-          type: 'accounting:invAdjust',
+          ...adjustInventory,
+          checkedDate: currentDate,
         },
       });
     } catch (e) {

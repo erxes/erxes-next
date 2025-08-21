@@ -53,10 +53,12 @@ const adjustInventoryMutations = {
       throw new Error('This adjusting cannot be published yet.');
     }
     await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.PUBLISH, modifiedBy: user._id } });
+
     graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
       accountingAdjustInventoryChanged: {
-        adjustId: adjustId,
-        type: 'accounting:invAdjust',
+        ...adjusting,
+        status: ADJ_INV_STATUSES.PUBLISH,
+        modifiedBy: user._id
       },
     });
 
@@ -71,8 +73,9 @@ const adjustInventoryMutations = {
     await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.DRAFT, modifiedBy: user._id } });
     graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
       accountingAdjustInventoryChanged: {
-        adjustId: adjustId,
-        type: 'accounting:invAdjust',
+        ...adjusting,
+        status: ADJ_INV_STATUSES.DRAFT,
+        modifiedBy: user._id
       },
     });
 
@@ -95,8 +98,9 @@ const adjustInventoryMutations = {
 
     graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
       accountingAdjustInventoryChanged: {
-        adjustId: adjustId,
-        type: 'accounting:invAdjust',
+        ...adjustInventory,
+        status: ADJ_INV_STATUSES.RUNNING,
+        modifiedBy: user._id
       },
     });
 

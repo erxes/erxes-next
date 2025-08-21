@@ -1,5 +1,3 @@
-// import { withFilter } from 'graphql-subscriptions';
-
 export default {
   name: 'accounting',
   typeDefs: `
@@ -11,8 +9,8 @@ export default {
        * Listen for conversation changes like status, assignee, read state
        */
       accountingAdjustInventoryChanged: {
-        subscribe: (_, { _id }) =>
-          graphqlPubsub.asyncIterator(`accountingAdjustInventoryChanged:${_id}`),
+        subscribe: (_, { adjustId }) =>
+          graphqlPubsub.asyncIterator(`accountingAdjustInventoryChanged:${adjustId}`),
       },
     };
   },

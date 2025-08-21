@@ -20,7 +20,7 @@ export const useAdjustInventoryDetail = (options: OperationVariables) => {
     }>({
       document: ACCOUNTING_ADJUST_INVENTORY_CHANGED,
       variables: {
-        _id: options.variables?.adjustId,
+        adjustId: options.variables?._id,
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
@@ -31,7 +31,7 @@ export const useAdjustInventoryDetail = (options: OperationVariables) => {
           // Get the cache ID for the conversation
           const newAdjustId = client.cache.identify({
             __typename: 'AdjustInventoryDetail',
-            _id: options.variables?.adjustId,
+            _id: options.variables?._id,
           });
 
           if (newAdjustId) {
@@ -52,8 +52,10 @@ export const useAdjustInventoryDetail = (options: OperationVariables) => {
         };
       },
     });
-    return unsubscribe;
-  }, [options.variables?.conversationId]);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return {
     adjustInventory,
