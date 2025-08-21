@@ -2,15 +2,15 @@ import { gql } from '@apollo/client';
 import { adjustInventoryFields } from './adjustInventoryQueries';
 
 export const ADJUST_INVENTORY_PUBLISH = gql`
-  mutation AdjustInventoryPublish($_id: String!) {
-    adjustInventoryPublish(_id: $_id) {
+  mutation AdjustInventoryPublish($adjustId: String!) {
+    adjustInventoryPublish(adjustId: $adjustId) {
       ${adjustInventoryFields}
     }
   }
 `;
 export const ADJUST_INVENTORY_CANCEL = gql`
-  mutation AdjustInventoryCancel($_id: String!) {
-    adjustInventoryCancel(_id: $_id) {
+  mutation AdjustInventoryCancel($adjustId: String!) {
+    adjustInventoryCancel(adjustId: $adjustId) {
       ${adjustInventoryFields}
     }
   }
