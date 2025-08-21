@@ -17,6 +17,7 @@ export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
 ) => {
   const { subdomain, data } = job.data;
+  console.log(job.data, data);
 
   const models = await generateModels(subdomain);
   const emailService = new EmailService();
@@ -24,7 +25,6 @@ export const handleCreateNotification = async (
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
-  console.log({ data });
 
   for (const userId of data?.userIds || []) {
     try {
@@ -40,6 +40,7 @@ export const handleCreateNotification = async (
             message: data.message,
             type: data.type,
             priority: data.priority,
+            metadata: data.metadata,
           },
           userId,
         );
