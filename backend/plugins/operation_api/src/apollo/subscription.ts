@@ -2,6 +2,7 @@ export default {
   name: 'operation',
   typeDefs: `
 			operationTaskChanged(_id: String!): Task
+      operationTasksChanged(_id: String!): [Task]
       operationActivityChanged(contentId: String!): OperationActivity
 		`,
   generateResolvers: (graphqlPubsub) => {

@@ -11,76 +11,76 @@ export const taskQueries = {
 
   getTasks: async (
     _parent: undefined,
-    params: ITaskFilter,
+    { filter }: { filter: ITaskFilter },
     { models }: IContext,
   ) => {
-    const filter: FilterQuery<ITaskDocument> = {};
+    const filterQuery: FilterQuery<ITaskDocument> = {};
 
-    if (params.name) {
-      filter.name = { $regex: params.name, $options: 'i' };
+    if (filter.name) {
+      filterQuery.name = { $regex: filter.name, $options: 'i' };
     }
 
-    if (params.status) {
-      filter.status = params.status;
+    if (filter.status) {
+      filterQuery.status = filter.status;
     }
 
-    if (params.priority) {
-      filter.priority = params.priority;
+    if (filter.priority) {
+      filterQuery.priority = filter.priority;
     }
 
-    if (params.startDate) {
-      filter.startDate = { $gte: params.startDate };
+    if (filter.startDate) {
+      filterQuery.startDate = { $gte: filter.startDate };
     }
 
-    if (params.targetDate) {
-      filter.targetDate = { $gte: params.targetDate };
+    if (filter.targetDate) {
+      filterQuery.targetDate = { $gte: filter.targetDate };
     }
 
-    if (params.createdAt) {
-      filter.createdAt = { $gte: params.createdAt };
+    if (filter.createdAt) {
+      filterQuery.createdAt = { $gte: filter.createdAt };
     }
 
-    if (params.teamId) {
-      filter.teamId = params.teamId;
+    if (filter.teamId) {
+      filterQuery.teamId = filter.teamId;
     }
 
-    if (params.createdBy) {
-      filter.createdBy = params.createdBy;
+    if (filter.createdBy) {
+      filterQuery.createdBy = filter.createdBy;
     }
 
-    if (params.assigneeId) {
-      filter.assigneeId = params.assigneeId;
+    if (filter.assigneeId) {
+      filterQuery.assigneeId = filter.assigneeId;
     }
 
-    if (params.cycleId) {
-      filter.cycleId = params.cycleId;
+    if (filter.cycleId) {
+      filterQuery.cycleId = filter.cycleId;
     }
 
-    if (params.projectId) {
-      filter.projectId = params.projectId;
+    if (filter.projectId) {
+      filterQuery.projectId = filter.projectId;
     }
 
-    if (params.estimatePoint) {
-      filter.estimatePoint = params.estimatePoint;
+    if (filter.estimatePoint) {
+      filterQuery.estimatePoint = filter.estimatePoint;
     }
 
-    if (params.teamId && params.projectId) {
-      delete filter.teamId;
+    if (filter.teamId && filter.projectId) {
+      delete filterQuery.teamId;
     }
 
     if (
-      params.userId &&
-      !params.teamId &&
-      !params.assigneeId &&
-      !params.projectId
+      filter.userId &&
+      !filter.teamId &&
+      !filter.assigneeId &&
+      !filter.projectId
     ) {
-      filter.assigneeId = params.userId;
+      filterQuery.assigneeId = filter.userId;
     }
 
     const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
       model: models.Task,
       params: { orderBy: { createdAt: -1 } },
-      query: filter,
+      query: filterQuery,
     });
 
     return { list, totalCount, pageInfo };

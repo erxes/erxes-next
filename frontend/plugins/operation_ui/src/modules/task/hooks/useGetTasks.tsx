@@ -13,7 +13,7 @@ import {
 } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
-import { currentUserState } from 'ui-modules/states';
+import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
@@ -52,10 +52,10 @@ export const useTasksVariables = (
     statusType: statusType || undefined,
     ...variables,
     ...(!variables?.teamId &&
-      !variables?.userIds &&
+      !variables?.userId &&
       !assignee &&
       currentUser?._id && {
-        userIds: [currentUser._id],
+        userId: currentUser._id,
       }),
   };
 };
@@ -70,7 +70,7 @@ export const useTasks = (
     GET_TASKS,
     {
       ...options,
-      variables,
+      variables: { filter: variables },
       skip: options?.skip || isUndefinedOrNull(variables.cursor),
       onError: (e) => {
         toast({
