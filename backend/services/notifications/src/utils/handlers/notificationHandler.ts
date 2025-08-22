@@ -5,6 +5,7 @@ import { debugError, debugInfo } from '@/utils/debugger';
 import { EmailService } from '@/utils/email/emailService';
 import { getUserById } from '@/utils/email/emailUtils';
 import { Job } from 'bullmq';
+
 import {
   INotificationConfigDocument,
   INotificationData,
@@ -24,7 +25,6 @@ export const handleCreateNotification = async (
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
-  console.log({ data });
 
   for (const userId of data?.userIds || []) {
     try {
@@ -40,6 +40,7 @@ export const handleCreateNotification = async (
             message: data.message,
             type: data.type,
             priority: data.priority,
+            metadata: data.metadata,
           },
           userId,
         );
@@ -184,15 +185,15 @@ function checkUserNotificationSettings(
   const pluginSettings = (userSettings.plugins || {})[pluginName];
 
   // Plugin-level setting
-  if (type === 'email' && pluginSettings?.emailDisabled) return false;
-  if (type === 'inApp' && pluginSettings?.inAppDisabled) return false;
+  if (type === 'email' && !pluginSettings?.emailDisabled) return false;
+  if (type === 'inApp' && !pluginSettings?.inAppDisabled) return false;
 
   // Type-level setting
   const typeKey = data.notificationType || '';
   const typeSetting = (pluginSettings?.types || {})[typeKey];
 
-  if (type === 'email' && typeSetting?.emailDisabled) return false;
-  if (type === 'inApp' && typeSetting?.inAppDisabled) return false;
+  if (type === 'email' && !typeSetting?.emailDisabled) return false;
+  if (type === 'inApp' && !typeSetting?.inAppDisabled) return false;
 
   return true;
 }

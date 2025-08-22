@@ -28,7 +28,7 @@ if (ENABLED_PLUGINS) {
   }
 }
 
-const totalProjectsCount = pluginsCount + DEFAULT_SERVICES.length;
+const totalProjectsCount = pluginsCount + 3;
 const totalProjects = `${plugins} ${services}`;
 
 const command = `npx nx run-many -t serve -p core-api ${totalProjects} gateway --verbose --parallel=${totalProjectsCount}`;

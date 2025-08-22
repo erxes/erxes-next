@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GET_CONFIGS = gql`
-  query configs {
+  query Configs {
     configs {
       _id
       code

@@ -36,4 +36,14 @@ startPlugin({
       return context;
     },
   },
+  meta: {
+    notificationModules: [
+      {
+        name: 'tasks',
+        description: 'Tasks',
+        icon: 'IconChecklist',
+        types: [{ name: 'taskAssignee', text: 'Task assignee' }],
+      },
+    ],
+  },
 });

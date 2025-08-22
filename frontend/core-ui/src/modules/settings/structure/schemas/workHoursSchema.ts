@@ -3,9 +3,9 @@ import { WorkDay } from '@/settings/structure/types/workhours';
 
 const timeSchema = z.string().optional();
 
-const workDaySchema = z
+const WORK_HOURS_SCHEMA = z
   .object({
-    inactive: z.boolean().default(true),
+    inactive: z.boolean().default(true).optional(),
     startFrom: timeSchema,
     endTo: timeSchema,
     lunchStartFrom: timeSchema,
@@ -14,9 +14,9 @@ const workDaySchema = z
   .optional()
   .nullable();
 
-export const workingHoursSchema = z.object(
+export const WORKING_HOURS_SCHEMA = z.object(
   Object.values(WorkDay).reduce((acc, day) => {
-    (acc as Record<string, any>)[day] = workDaySchema;
+    (acc as Record<string, any>)[day] = WORK_HOURS_SCHEMA;
     return acc;
   }, {} as Record<string, any>),
 );

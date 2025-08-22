@@ -1,4 +1,4 @@
-import { workingHoursSchema } from '@/settings/structure/schemas/workHoursSchema';
+import { WORKING_HOURS_SCHEMA } from '@/settings/structure/schemas/workHoursSchema';
 import { z } from 'zod';
 
 export enum TimeSlot {
@@ -51,4 +51,4 @@ export interface IWorkDay {
   lunchEndTo: string;
 }
 
-export type IWorkhoursForm = z.infer<typeof workingHoursSchema>;
+export type IWorkhoursForm = z.infer<typeof WORKING_HOURS_SCHEMA>;
