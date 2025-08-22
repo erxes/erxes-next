@@ -6,7 +6,6 @@ import { Block } from '@blocknote/core';
 import {
   SelectStatus,
   SelectTeam,
-  SelectPriority,
   SelectAssignee,
   DateSelect,
   SelectProject,
@@ -123,7 +122,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
       <Separator className="my-4" />
       <div className="min-h-56 overflow-y-auto">
         <BlockEditor
-          editor={editor} 
+          editor={editor}
           onChange={handleDescriptionChange}
           className="min-h-full"
         />

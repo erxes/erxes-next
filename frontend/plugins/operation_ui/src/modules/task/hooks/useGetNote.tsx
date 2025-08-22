@@ -6,11 +6,12 @@ interface IGetNoteQueryResponse {
   getNote: INote;
 }
 
-export const useGetNote = (id: string) => {
+export const useGetNote = (id: string | undefined) => {
   const { data, loading, refetch } = useQuery<IGetNoteQueryResponse>(GET_NOTE, {
     variables: {
       id,
     },
+    skip: !id,
   });
 
   return { note: data?.getNote, loading, refetch };

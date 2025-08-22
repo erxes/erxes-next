@@ -7,6 +7,7 @@ export const ACTIVITY_MODULES = {
   START_DATE: 'START_DATE',
   END_DATE: 'END_DATE',
   ASSIGNEE: 'ASSIGNEE',
+  NOTE: 'NOTE',
 };
 
 export const ACTIVITY_ACTIONS = {
