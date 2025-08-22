@@ -13,36 +13,38 @@ import { useState } from 'react';
 import { Block } from '@blocknote/core';
 import { useCreateNote } from '@/task/hooks/useCreateNote';
 import { useActivities } from '@/activity/hooks/useActivities';
-import { useGetNote} from '@/task/hooks/useGetNote';
+import { useGetNote } from '@/task/hooks/useGetNote';
 export const NotesField = ({ taskId }: { taskId: string }) => {
   const { activities } = useActivities(taskId);
   return (
     <div className="flex flex-col gap-2">
-      {  activities && activities
+      {/* {  activities && activities
         ?.filter((activity) => activity.module === 'NOTE')
         .map((activity) => (
           <NoteInput
             isEditable={true}
-            newValue={activity.metadata?.newValue}
+            // newValue={activity.metadata?.newValue}
             authorId={activity.createdBy}
             taskId={taskId}
           />
-        ))}
+        ))} */}
+      <NoteInput
+        isEditable={true}
+        taskId={taskId}
+      />
     </div>
   );
 };
 
 interface NoteInputProps {
   isEditable?: boolean;
-  newValue: string
-  authorId: string;
+  newValue?: string;
   taskId: string;
 }
 
 const NoteInput = ({
   isEditable,
   newValue,
-  authorId,
   taskId,
 }: NoteInputProps) => {
   const { note } = useGetNote(taskId);
