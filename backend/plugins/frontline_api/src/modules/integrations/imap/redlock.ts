@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import * as Redlock from 'redlock';
+import Redlock from 'redlock';
 import * as dotenv from 'dotenv';
 dotenv.config();
 

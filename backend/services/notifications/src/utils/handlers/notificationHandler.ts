@@ -25,9 +25,8 @@ export const handleCreateNotification = async (
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
-  console.log(data);
 
-  for (const userId of ['OQgac3z4G3I2LW9QPpAtL']) {
+  for (const userId of data?.userIds || []) {
     try {
       let notification: INotificationDocument | undefined;
 
@@ -68,17 +67,19 @@ export const handleCreateNotification = async (
         ),
       };
 
+      console.log({ notificationSettings });
+
       // In-app notification
-      // if (notificationSettings.inApp) {
-      notification = await createInAppNotification(
-        subdomain,
-        models,
-        data,
-        userId,
-      );
-      results.push({ userId, inApp: true, notificationId: notification._id });
-      debugInfo(`In-app notification created for user ${userId}`);
-      // }
+      if (notificationSettings.inApp) {
+        notification = await createInAppNotification(
+          subdomain,
+          models,
+          data,
+          userId,
+        );
+        results.push({ userId, inApp: true, notificationId: notification._id });
+        debugInfo(`In-app notification created for user ${userId}`);
+      }
 
       // Email notification
       if (notificationSettings.email) {
