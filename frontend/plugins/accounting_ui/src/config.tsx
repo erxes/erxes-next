@@ -8,9 +8,9 @@ const AccountingNavigation = lazy(() =>
   })),
 );
 
+
 export const CONFIG: IUIConfig = {
   name: 'accounting',
-  icon: IconCashBanknote,
   navigationGroup: {
     name: 'accounting',
     icon: IconCashBanknote,
@@ -20,6 +20,7 @@ export const CONFIG: IUIConfig = {
       </Suspense>
     ),
   },
+  icon: IconCashBanknote,
   modules: [
     {
       name: 'accounting',
@@ -30,31 +31,3 @@ export const CONFIG: IUIConfig = {
     },
   ],
 };
-
-// modules: [
-//   {
-//     name: 'accounting',
-//     icon: IconCashBanknote,
-//     path: 'accounting',
-//     hasSettings: true,
-//     hasRelationWidget: false,
-//   },
-// ],
-// submenus: [
-//   {
-//     name: 'main',
-//     path: 'accounting/main',
-//   },
-//   {
-//     name: 'records',
-//     path: 'accounting/records',
-//   },
-//   {
-//     name: 'adjustment',
-//     path: 'accounting/adjustment',
-//   },
-//   {
-//     name: 'odds',
-//     path: 'accounting/odd-transactions',
-//   },
-// ],

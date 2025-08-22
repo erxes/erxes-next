@@ -85,12 +85,13 @@ export const NavigationMenuGroup = forwardRef<
     children: React.ReactNode;
     separate?: boolean;
     className?: string;
+    defaultOpen?: boolean;
   }
->(({ name, children, separate = true, className, ...props }, ref) => {
+>(({ name, children, separate = true, defaultOpen=true, className, ...props }, ref) => {
   return (
     <>
       {separate && <Sidebar.Separator />}
-      <Collapsible defaultOpen className="group/collapsible-menu">
+      <Collapsible defaultOpen={defaultOpen} className="group/collapsible-menu">
         <Sidebar.Group {...props} ref={ref}>
           <Sidebar.GroupLabel asChild>
             <Collapsible.Trigger className="flex items-center gap-2">

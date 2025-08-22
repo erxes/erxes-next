@@ -13,10 +13,11 @@ import {
 } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
-import { currentUserState } from 'ui-modules/states';
+import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
+import { TASKS_CHANGED } from '@/task/graphql/subscriptions/tasksChanged';
 
 const TASKS_PER_PAGE = 30;
 
@@ -52,10 +53,10 @@ export const useTasksVariables = (
     statusType: statusType || undefined,
     ...variables,
     ...(!variables?.teamId &&
-      !variables?.userIds &&
+      !variables?.userId &&
       !assignee &&
       currentUser?._id && {
-        userIds: [currentUser._id],
+        userId: currentUser._id,
       }),
   };
 };
@@ -66,23 +67,31 @@ export const useTasks = (
   const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
   const variables = useTasksVariables(options?.variables);
   const { toast } = useToast();
-  const { data, loading, fetchMore } = useQuery<ICursorListResponse<ITask>>(
-    GET_TASKS,
-    {
-      ...options,
-      variables,
-      skip: options?.skip || isUndefinedOrNull(variables.cursor),
-      onError: (e) => {
-        toast({
-          title: 'Error',
-          description: e.message,
-          variant: 'destructive',
-        });
-      },
+  const { data, loading, fetchMore, subscribeToMore } = useQuery<
+    ICursorListResponse<ITask>
+  >(GET_TASKS, {
+    ...options,
+    variables: { filter: variables },
+    skip: options?.skip || isUndefinedOrNull(variables.cursor),
+    onError: (e) => {
+      toast({
+        title: 'Error',
+        description: e.message,
+        variant: 'destructive',
+      });
     },
-  );
+  });
 
   const { list: tasks, pageInfo, totalCount } = data?.getTasks || {};
+
+  useEffect(() => {
+    const unsubscribe = subscribeToMore<any>({
+      document: TASKS_CHANGED,
+      variables: { filter: variables },
+    });
+
+    return () => unsubscribe();
+  }, [subscribeToMore, variables]);
 
   useEffect(() => {
     if (isUndefinedOrNull(totalCount)) return;

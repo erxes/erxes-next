@@ -20,17 +20,22 @@ export const taskMutations = {
     params: ITaskUpdate,
     { models, user, subdomain }: IContext,
   ) => {
-    const updateTasked = await models.Task.updateTask({
+    const updatedTask = await models.Task.updateTask({
       doc: params,
       userId: user._id,
       subdomain,
     });
 
-    await graphqlPubsub.publish(`operationTaskChanged:${updateTasked._id}`, {
-      operationTaskChanged: updateTasked,
+    await graphqlPubsub.publish(`operationTaskChanged:${updatedTask._id}`, {
+      operationTaskChanged: updatedTask,
     });
 
-    return updateTasked;
+    // Subscription-д publish
+    graphqlPubsub.publish('operationTasksChanged', {
+      operationTasksChanged: updatedTask,
+    });
+
+    return updatedTask;
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {

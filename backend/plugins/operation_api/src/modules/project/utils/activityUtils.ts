@@ -74,21 +74,17 @@ export const createProjectActivity = async ({
         return models.Activity.deleteOne({ _id: lastActivity._id });
       }
 
-      return models.Activity.updateOne(
-        { _id: lastActivity._id },
-        {
-          $set: {
-            contentId: project._id,
-            action,
-            module,
-            metadata: {
-              newValue: toStr(newValue),
-              previousValue: toStr(lastActivity.metadata.previousValue),
-            },
-            createdBy: userId,
-          },
+      return models.Activity.updateActivity({
+        _id: lastActivity._id,
+        contentId: project._id,
+        action,
+        module,
+        metadata: {
+          newValue: toStr(newValue),
+          previousValue: toStr(lastActivity.metadata.previousValue),
         },
-      );
+        createdBy: userId,
+      });
     }
 
     return models.Activity.createActivity({

@@ -69,16 +69,16 @@ export const handleCreateNotification = async (
       };
 
       // In-app notification
-      if (notificationSettings.inApp) {
-        notification = await createInAppNotification(
-          subdomain,
-          models,
-          data,
-          userId,
-        );
-        results.push({ userId, inApp: true, notificationId: notification._id });
-        debugInfo(`In-app notification created for user ${userId}`);
-      }
+      // if (notificationSettings.inApp) {
+      notification = await createInAppNotification(
+        subdomain,
+        models,
+        data,
+        userId,
+      );
+      results.push({ userId, inApp: true, notificationId: notification._id });
+      debugInfo(`In-app notification created for user ${userId}`);
+      // }
 
       // Email notification
       if (notificationSettings.email) {

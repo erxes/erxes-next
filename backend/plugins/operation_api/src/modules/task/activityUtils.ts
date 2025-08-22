@@ -1,7 +1,6 @@
 import type { IModels } from '~/connectionResolvers';
 import type { ITask, ITaskDocument } from '@/task/@types/task';
 import { subMinutes, isAfter } from 'date-fns';
-import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 const ACTIONS = {
   CREATED: 'CREATED',
@@ -78,30 +77,17 @@ export const createTaskActivity = async ({
         return models.Activity.deleteOne({ _id: lastActivity._id });
       }
 
-      const updatedActivity = await models.Activity.findOneAndUpdate(
-        { _id: lastActivity._id },
-        {
-          $set: {
-            contentId: task._id,
-            action,
-            module,
-            metadata: {
-              newValue: toStr(newValue),
-              previousValue: toStr(lastActivity.metadata.previousValue),
-            },
-            createdBy: userId,
-          },
+      return models.Activity.updateActivity({
+        _id: lastActivity._id,
+        contentId: task._id,
+        action,
+        module,
+        metadata: {
+          newValue: toStr(newValue),
+          previousValue: toStr(lastActivity.metadata.previousValue),
         },
-        {
-          new: true,
-        },
-      );
-
-      await graphqlPubsub.publish(`operationActivityChanged:${task._id}`, {
-        operationActivityChanged: updatedActivity,
+        createdBy: userId,
       });
-
-      return updatedActivity;
     } else {
       const activity = await models.Activity.createActivity({
         contentId: task._id,
@@ -112,10 +98,6 @@ export const createTaskActivity = async ({
           previousValue: toStr(previousValue),
         },
         createdBy: userId,
-      });
-
-      await graphqlPubsub.publish(`operationActivityChanged:${task._id}`, {
-        operationActivityChanged: activity,
       });
 
       return activity;
