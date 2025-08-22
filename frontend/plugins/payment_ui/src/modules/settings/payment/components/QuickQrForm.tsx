@@ -1,8 +1,8 @@
 import { Input, Select, Switch } from 'erxes-ui';
 import React from 'react';
-import SelectDistrict from '~/modules/payment/components/SelectDistrict';
+import SelectDistrict from '~/modules/settings/payment/components/SelectDistrict';
 import { BANK_CODES, CITIES, MCC_CODES } from '~/modules/payment/constants';
-import { IPaymentDocument, BankCode, City, MccCode } from '../types/Payment';
+import { IPaymentDocument, BankCode, City, MccCode } from '../../../payment/types/Payment';
 
 type Props = {
   payment?: IPaymentDocument;

@@ -22,9 +22,9 @@ export const CONFIG: IUIConfig = {
   },
   modules: [
     {
-      name: 'invoice',
+      name: 'payment',
       icon: IconCurrencyDollar,
-      path: 'invoice',
+      path: 'payment',
       hasSettings: true,
       hasRelationWidget: false,
       hasFloatingWidget: false,

@@ -4,7 +4,7 @@ import { Form } from 'erxes-ui/components/form';
 import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import QuickQrForm from '~/modules/payment/components/QuickQrForm';
+import QuickQrForm from '~/modules/settings/payment/components/QuickQrForm';
 import { PAYMENT_KINDS } from '~/modules/payment/constants';
 import { IPayment } from '~/modules/payment/types/Payment';
 import { PaymentKind } from '~/modules/payment/types/PaymentMethods';

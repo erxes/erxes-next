@@ -11,7 +11,7 @@ const paymentMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
-        <Route path="/invoice" element={<IndexPage />} />       
+        <Route path="/" element={<IndexPage />} />       
       </Routes>
     </Suspense>
   );

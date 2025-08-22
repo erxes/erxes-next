@@ -19,7 +19,7 @@ export const IndexPage = () => {
                 <Button variant="ghost" asChild>
                   <Link to="/settings/payment">
                     <IconCurrencyDollar />
-                    payment
+                    Invoices
                   </Link>
                 </Button>
               </Breadcrumb.Item>

@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { PAYMENTS } from '~/modules/payment/graphql/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  IconCurrencyDollar,
+  IconPlus,
+  IconSettings
+} from '@tabler/icons-react';
+import { Breadcrumb, Button, Sheet, useConfirm, useToast } from 'erxes-ui';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { PageHeader } from 'ui-modules';
+import PaymentForm from '~/modules/settings/payment/components/PaymentForm';
+import PaymentTable from '~/modules/settings/payment/components/PaymentTable';
 import {
   ADD_PAYMENT,
   EDIT_PAYMENT,
   REMOVE_PAYMENT,
 } from '~/modules/payment/graphql/mutations';
+import { PAYMENTS } from '~/modules/payment/graphql/queries';
 import { IPayment, IPaymentDocument } from '~/modules/payment/types/Payment';
-import { Button, Sheet, useConfirm, useToast, Breadcrumb } from 'erxes-ui';
-import {
-  IconArrowBack,
-  IconCreditCard,
-  IconCurrencyDollar,
-  IconPlus,
-  IconSettings,
-} from '@tabler/icons-react';
-import PaymentTable from '~/modules/payment/components/PaymentTable';
-import PaymentForm from '~/modules/payment/components/PaymentForm';
-import { Link } from 'react-router-dom';
-import { PageHeader } from 'ui-modules';
 
 const PaymentModule = () => {
   const { data } = useQuery(PAYMENTS);

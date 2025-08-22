@@ -3,6 +3,6 @@ import { NavigationMenuLinkItem } from 'erxes-ui';
 
 export const PaymentNavigation = () => {
   return (
-    <NavigationMenuLinkItem name="Invoice" icon={IconCurrencyDollar} path="invoice" />
+    <NavigationMenuLinkItem name="Payment" icon={IconCurrencyDollar} path="payment" />
   );
 };

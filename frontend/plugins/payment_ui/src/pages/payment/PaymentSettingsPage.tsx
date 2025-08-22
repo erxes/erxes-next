@@ -1,4 +1,4 @@
-import PaymentSettings from '~/modules/payment/PaymentSettings'
+import PaymentSettings from '~/modules/settings/payment/components/PaymentSettings'
 
 
 const PaymentSettingsPage = () => {
