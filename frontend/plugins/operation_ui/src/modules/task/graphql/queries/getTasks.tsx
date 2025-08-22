@@ -24,7 +24,6 @@ export const GET_TASKS = gql`
         cycleId
         projectId
         estimatePoint
-        estimateChoices
       } 
       ${GQL_PAGE_INFO}
       totalCount

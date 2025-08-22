@@ -21,8 +21,6 @@ export const types = `
     estimatePoint: Int
     statusChangedDate: Date
     number: Int
-
-    estimateChoices: JSON
   }
 
   type TaskListResponse {

@@ -169,9 +169,9 @@ export const tasksColumns = (
       cell: ({ cell }) => {
         return (
           <SelectEstimatedPoint.InlineCell
-            estimateChoices={cell.row.original.estimateChoices}
             value={cell.row.original.estimatePoint || 0}
             id={cell.row.original._id}
+            teamId={cell.row.original.teamId}
           />
         );
       },

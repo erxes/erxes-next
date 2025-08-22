@@ -6,7 +6,6 @@ import { Block } from '@blocknote/core';
 import {
   SelectStatus,
   SelectTeam,
-  SelectPriority,
   SelectAssignee,
   DateSelect,
   SelectProject,
@@ -29,7 +28,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     targetDate,
     projectId,
     estimatePoint,
-    estimateChoices,
   } = task || {};
 
   const startDate = (task as any)?.startDate;
@@ -117,13 +115,13 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         <SelectEstimatedPoint.Detail
           value={estimatePoint}
           id={taskId}
-          estimateChoices={estimateChoices}
+          teamId={teamId}
         />
       </div>
       <Separator className="my-4" />
       <div className="min-h-56 overflow-y-auto">
         <BlockEditor
-          editor={editor} 
+          editor={editor}
           onChange={handleDescriptionChange}
           className="min-h-full"
         />
