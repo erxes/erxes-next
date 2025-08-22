@@ -12,7 +12,7 @@ export const createTaskNotification = async ({
   userId: string;
   subdomain: string;
 }) => {
-  if (doc.assigneeId) {
+  if (doc.assigneeId && doc.assigneeId !== userId) {
     sendNotification(subdomain, {
       title: 'Task assigned',
       message: `You have been assigned to task ${doc.name || task?.name}`,
@@ -25,7 +25,7 @@ export const createTaskNotification = async ({
       contentTypeId: task?._id,
       notificationType: 'taskAssignee',
       metadata: {
-        task: task?._id,
+        taskId: task?._id,
       },
     });
   }
