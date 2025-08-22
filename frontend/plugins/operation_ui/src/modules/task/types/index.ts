@@ -7,6 +7,16 @@ export interface IEstimateChoice {
   value: number;
 }
 
+export interface INote {
+  _id: string;
+  content: string;
+  createdAt: string;
+  createdBy: string;
+  itemId: string;
+  mentions: string[];
+  updatedAt: string;
+}
+
 export interface ITask {
   _id: string;
   name: string;

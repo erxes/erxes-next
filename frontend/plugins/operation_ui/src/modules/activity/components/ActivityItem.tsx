@@ -9,6 +9,7 @@ import {
   IconProgressCheck,
   IconUsersGroup,
   IconQuestionMark,
+  IconNote,
 } from '@tabler/icons-react';
 import { MembersInline } from 'ui-modules';
 import { ActivityStatus } from '@/activity/components/ActivityStatus';
@@ -16,6 +17,7 @@ import { ActivityAssignee } from '@/activity/components/ActivityAssignee';
 import { ActivityDate } from '@/activity/components/ActivityDate';
 import { ActivityTeam } from '@/activity/components/ActivityTeam';
 import { ActivityLead } from '@/activity/components/ActivityLead';
+import { ActivityNote } from '@/activity/components/ActivityNote';
 import { ActivityEstimate } from '@/activity/components/ActivityEstimate';
 
 export const ActivityItem = ({ activity }: { activity: IActivity }) => {
@@ -38,6 +40,8 @@ export const ActivityItem = ({ activity }: { activity: IActivity }) => {
       return <ActivityDate metadata={metadata} type="end" />;
     case ACTIVITY_MODULES.ASSIGNEE:
       return <ActivityAssignee metadata={metadata} />;
+    case ACTIVITY_MODULES.NOTE:
+      return <ActivityNote action={action} />;
     case ACTIVITY_MODULES.ESTIMATE_POINT:
       return <ActivityEstimate metadata={metadata} action={action} />;
     default:
@@ -75,6 +79,8 @@ export const ActivityIcon = ({ activity }: { activity: IActivity }) => {
           <MembersInline.Avatar />
         </MembersInline.Provider>
       );
+    case ACTIVITY_MODULES.NOTE:
+      return <IconNote className="size-4 text-accent-foreground" />;
 
     case ACTIVITY_MODULES.ESTIMATE_POINT:
       return (

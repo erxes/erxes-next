@@ -7,7 +7,8 @@ export const noteSchema = schemaWrapper(
       _id: mongooseStringRandomId,
       content: { type: String },
       itemId: { type: String },
-      userId: { type: String },
+      createdBy: { type: String },
+      mentions: { type: [String], default: [] },
     },
     {
       timestamps: true,
