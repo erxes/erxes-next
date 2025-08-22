@@ -14,7 +14,7 @@ import { AssignMemberInEditor } from 'ui-modules';
 import { IconCommand, IconCornerDownLeft } from '@tabler/icons-react';
 
 export const NoteInput = ({ taskId }: { taskId: string }) => {
-  const editor = useBlockEditor();
+  const editor = useBlockEditor({placeholder: "Leave a note..."});
   const { createNote } = useCreateNote();
   const {
     setHotkeyScopeAndMemorizePreviousScope,
