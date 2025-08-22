@@ -16,7 +16,7 @@ import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { CommentField } from '@/task/components/CommentField';
+import { NotesField } from '@/task/components/NotesField';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -129,7 +129,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         />
       </div>
       <ActivityList contentId={taskId} contentDetail={task} />
-      <CommentField />
+      <NotesField taskId={taskId} />
     </div>
   );
 };
