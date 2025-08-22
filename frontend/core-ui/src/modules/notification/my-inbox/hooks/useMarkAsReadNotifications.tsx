@@ -1,10 +1,10 @@
-import { ARCHIVE_NOTIFICATIONS } from '@/notification/my-inbox/graphql/notificationMutations';
+import { MARS_AS_READ_NOTIFICATIONS } from '@/notification/my-inbox/graphql/notificationMutations';
 import { selectedNotificationsState } from '@/notification/my-inbox/states/notificationState';
 import { useMutation } from '@apollo/client';
 import { parseDateRangeFromString, toast, useMultiQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 
-export const useArchiveNotifications = () => {
+export const useMarkAsReadNotifications = () => {
   const [{ status, priority, type, createdAt, fromUserId }] =
     useMultiQueryState<{
       status: 'read' | 'unread' | 'all';
@@ -17,36 +17,17 @@ export const useArchiveNotifications = () => {
     selectedNotificationsState,
   );
 
-  const [archive, { loading }] = useMutation(ARCHIVE_NOTIFICATIONS);
+  const [archive, { loading }] = useMutation(MARS_AS_READ_NOTIFICATIONS);
 
-  const archiveNotifications = ({
-    ids,
-    all,
-  }: {
-    ids?: string[];
-    all?: boolean;
-  }) => {
-    let variables: any = { ids };
-    if (all) {
-      variables = {
-        archiveAll: all,
-        filters: {
-          status: status?.toUpperCase() || 'UNREAD',
-          priority: priority?.toUpperCase(),
-          type: type?.toUpperCase(),
-          fromDate: parseDateRangeFromString(createdAt)?.from,
-          endDate: parseDateRangeFromString(createdAt)?.to,
-          fromUserId,
-        },
-      };
-    }
+  const markAsNotifications = () => {
+    let variables: any = { ids: selectedNotifications };
     archive({
       variables,
       onError: (error) => {
         toast({ title: 'Something went wrong', description: error?.message });
       },
       onCompleted: () => {
-        toast({ title: 'Archived successfully' });
+        toast({ title: 'Set mark as read notifications successfully' });
 
         setSelectedNotifications([]);
       },
@@ -55,7 +36,7 @@ export const useArchiveNotifications = () => {
 
   return {
     status,
-    archiveNotifications,
+    markAsNotifications,
     loading,
     selectedNotificationsCount: selectedNotifications.length,
     setSelectedNotifications,

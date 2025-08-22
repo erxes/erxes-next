@@ -1,3 +1,4 @@
+import { useMarkAsReadNotification } from '@/notification/my-inbox/hooks/useMarkAsReadNotification';
 import { useNotificationContext } from '@/notification/my-inbox/hooks/userNotficationContext';
 import { activeNotificationState } from '@/notification/my-inbox/states/notificationState';
 import { Button, cn } from 'erxes-ui';
@@ -14,7 +15,7 @@ export const NotificationContainer = ({
   onNotificationSelect?: () => void;
 }) => {
   const [searchParams] = useSearchParams();
-
+  const markAsRead = useMarkAsReadNotification();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ export const NotificationContainer = ({
     }`;
     notification && setActiveNotification(notification);
     onNotificationSelect?.();
+    markAsRead({ variables: { id } });
     navigate(newPath);
   };
 

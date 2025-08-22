@@ -13,7 +13,7 @@ const FROM_USER_FIELDS = `
       }
 `;
 
-const NOTIFICATION_FIELDS = `
+export const NOTIFICATION_FIELDS = `
       _id
       title
       message

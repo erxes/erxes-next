@@ -25,8 +25,9 @@ export const handleCreateNotification = async (
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
+  console.log(data);
 
-  for (const userId of data?.userIds || []) {
+  for (const userId of ['OQgac3z4G3I2LW9QPpAtL']) {
     try {
       let notification: INotificationDocument | undefined;
 
@@ -159,18 +160,20 @@ function shouldSendNotification(
 ): boolean {
   let shouldSend = true;
 
-  if (checkUserNotificationSettings(type, userSettings, data)) {
-    shouldSend = false;
-  }
+  if (userSettings) {
+    if (!isNotificationAllowedUser(type, userSettings, data)) {
+      shouldSend = false;
+    }
 
-  if (checkOrgNotificationConfig(type, defaultConfig, data)) {
-    shouldSend = false;
+    if (!isNotificationAllowedOrg(type, defaultConfig, data)) {
+      shouldSend = false;
+    }
   }
 
   return shouldSend;
 }
 
-function checkUserNotificationSettings(
+function isNotificationAllowedUser(
   type: 'email' | 'inApp',
   userSettings: IUserNotificationSettingsDocument | null,
   data: Extract<INotificationData, { kind: 'user' }>,
@@ -185,36 +188,6 @@ function checkUserNotificationSettings(
   const pluginSettings = (userSettings.plugins || {})[pluginName];
 
   // Plugin-level setting
-  if (type === 'email' && !pluginSettings?.emailDisabled) return false;
-  if (type === 'inApp' && !pluginSettings?.inAppDisabled) return false;
-
-  // Type-level setting
-  const typeKey = data.notificationType || '';
-  const typeSetting = (pluginSettings?.types || {})[typeKey];
-
-  if (type === 'email' && !typeSetting?.emailDisabled) return false;
-  if (type === 'inApp' && !typeSetting?.inAppDisabled) return false;
-
-  return true;
-}
-
-function checkOrgNotificationConfig(
-  type: 'email' | 'inApp',
-  defaultConfig: INotificationConfigDocument | null,
-  data: Extract<INotificationData, { kind: 'user' }>,
-) {
-  if (!defaultConfig) return true;
-
-  // Global-level setting
-  if (type === 'email' && defaultConfig.emailNotificationsDisabled)
-    return false;
-  if (type === 'inApp' && defaultConfig.inAppNotificationsDisabled)
-    return false;
-
-  const [pluginName] = (data?.contentType || '').split(':');
-  const pluginSettings = (defaultConfig.plugins || {})[pluginName];
-
-  // Plugin-level setting
   if (type === 'email' && pluginSettings?.emailDisabled) return false;
   if (type === 'inApp' && pluginSettings?.inAppDisabled) return false;
 
@@ -223,6 +196,43 @@ function checkOrgNotificationConfig(
   const typeSetting = (pluginSettings?.types || {})[typeKey];
 
   if (type === 'email' && typeSetting?.emailDisabled) return false;
+  if (type === 'inApp' && typeSetting?.inAppDisabled) return false;
+
+  return true;
+}
+
+function isNotificationAllowedOrg(
+  type: 'email' | 'inApp',
+  defaultConfig: INotificationConfigDocument | null,
+  data: Extract<INotificationData, { kind: 'user' }>,
+) {
+  if (!defaultConfig) return true;
+
+  const {
+    emailNotificationsDisabled,
+    inAppNotificationsDisabled,
+    plugins = {},
+  } = defaultConfig || {};
+
+  // Global-level setting
+  if (type === 'email' && emailNotificationsDisabled) return false;
+
+  if (type === 'inApp' && inAppNotificationsDisabled) return false;
+
+  const [pluginName] = (data?.contentType || '').split(':');
+  const pluginSettings = plugins[pluginName];
+
+  // Plugin-level setting
+  if (type === 'email' && pluginSettings?.emailDisabled) return false;
+
+  if (type === 'inApp' && pluginSettings?.inAppDisabled) return false;
+
+  // Type-level setting
+  const typeKey = data.notificationType || '';
+  const typeSetting = (pluginSettings?.types || {})[typeKey];
+
+  if (type === 'email' && typeSetting?.emailDisabled) return false;
+
   if (type === 'inApp' && typeSetting?.inAppDisabled) return false;
 
   return true;
