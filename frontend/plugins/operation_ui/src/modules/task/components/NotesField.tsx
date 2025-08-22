@@ -1,5 +1,5 @@
-import { NoteInputReadOnly } from '@/task/components/NodeInputReadOnly';
-import { NoteInput } from '@/task/components/NodeInput';
+import { NoteInputReadOnly } from '@/task/components/NoteInputReadOnly';
+import { NoteInput } from '@/task/components/NoteInput';
 import { useActivities } from '@/activity/hooks/useActivities';
 
 export const NotesField = ({ taskId }: { taskId: string }) => {
@@ -11,6 +11,7 @@ export const NotesField = ({ taskId }: { taskId: string }) => {
           ?.filter((activity) => activity.module === 'NOTE')
           .map((activity) => (
             <NoteInputReadOnly
+              key={activity._id}
               newValueId={activity.metadata?.newValue}
               authorId={activity.createdBy}
               createdAt={activity.createdAt?.toLocaleString()}

@@ -22,8 +22,9 @@ export const NoteInputReadOnly = ({
       >
         <span className="flex items-center gap-2 ">
           <MembersInline
-            memberIds={authorId ? [authorId] : undefined}
+            memberIds={authorId ? [authorId] : []}
             className="font-medium text-base"
+            placeholder="Unknown user"
           />
         </span>
         <RelativeDateDisplay value={createdAt.toLocaleString()} asChild>

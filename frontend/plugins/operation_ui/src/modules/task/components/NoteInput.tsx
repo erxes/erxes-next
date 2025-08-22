@@ -12,6 +12,7 @@ import { usePreviousHotkeyScope } from 'erxes-ui';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { AssignMemberInEditor } from 'ui-modules';
 import { IconCommand, IconCornerDownLeft } from '@tabler/icons-react';
+import type { Block } from '@blocknote/core';
 
 export const NoteInput = ({ taskId }: { taskId: string }) => {
   const editor = useBlockEditor({placeholder: "Leave a note..."});
@@ -22,8 +23,8 @@ export const NoteInput = ({ taskId }: { taskId: string }) => {
   } = usePreviousHotkeyScope();
 
   const onSend = async () => {
-    const content = editor?.document || [];
-    const isEmptyParagraph = (block: any) => {
+    const content = (editor?.document || []) as Block[];
+    const isEmptyParagraph = (block: Block) => {
       return (
         block.type === 'paragraph' &&
         (!block.content || block.content.length === 0) &&
