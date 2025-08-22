@@ -28,7 +28,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     targetDate,
     projectId,
     estimatePoint,
-    estimateChoices,
   } = task || {};
 
   const startDate = (task as any)?.startDate;
@@ -116,7 +115,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         <SelectEstimatedPoint.Detail
           value={estimatePoint}
           id={taskId}
-          estimateChoices={estimateChoices}
+          teamId={teamId}
         />
       </div>
       <Separator className="my-4" />
