@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   IconAlertSquareRounded,
@@ -50,6 +50,7 @@ export const tasksColumns = (
         const name = cell.getValue() as string;
         const [value, setValue] = useState(name);
         const { updateTask } = useUpdateTask();
+        const { teamId, projectId } = useParams();
         const navigate = useNavigate();
 
         const handleUpdate = () => {
@@ -59,6 +60,11 @@ export const tasksColumns = (
             });
           }
         };
+
+        const url =
+          teamId && !projectId
+            ? `/operation/team/${teamId}/tasks/${cell.row.original._id}`
+            : `/operation/tasks/${cell.row.original._id}`;
 
         return (
           <PopoverScoped
@@ -79,7 +85,7 @@ export const tasksColumns = (
                 variant="secondary"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`${cell.row.original._id}`);
+                  navigate(url);
                 }}
               >
                 {name}
