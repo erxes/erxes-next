@@ -31,42 +31,26 @@ export const types = `
     totalCount: Int,
   }
 
-  input TaskUpdate {
-    name: String
-    description: String
-    teamId: String
+  input ITaskFilter {
     status: String
     priority: Int
+    assigneeId: String
+    createdBy: String
+    cycleId: String
     labelIds: [String]
     tagIds: [String]
-    assigneeId: String
     startDate: Date
     targetDate: Date
-    cycleId: String
-    projectId: String
+    projectId: String 
+    teamId: String
     estimatePoint: Int
+    userId: String
+    name:String
+    statusType: Int
+    estimate: String
+
+    ${GQL_CURSOR_PARAM_DEFS}
   }
-`;
-
-const taskFilterParams = `
-  status: String
-  priority: Int
-  assigneeId: String
-  createdBy: String
-  cycleId: String
-  labelIds: [String]
-  tagIds: [String]
-  startDate: Date
-  targetDate: Date
-  projectId: String 
-  teamId: String
-  estimatePoint: Int
-  userId: String
-  name:String
-  statusType: Int
-  estimate: String
-
-  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 const createTaskParams = `
@@ -105,11 +89,11 @@ const updateTaskParams = `
 
 export const queries = `
   getTask(_id: String!): Task
-  getTasks(${taskFilterParams}): TaskListResponse
+  getTasks(filter: ITaskFilter): TaskListResponse
 `;
 
 export const mutations = `
   createTask(${createTaskParams}): Task
-  updateTask(${updateTaskParams} input: TaskUpdate): Task
+  updateTask(${updateTaskParams}): Task
   removeTask(_id: String!): Task
 `;

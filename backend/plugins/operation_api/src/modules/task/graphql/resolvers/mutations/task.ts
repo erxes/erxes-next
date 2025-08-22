@@ -30,6 +30,9 @@ export const taskMutations = {
       operationTaskChanged: updateTasked,
     });
 
+    await graphqlPubsub.publish(`operationTasksChanged`, {
+      operationTasksChanged: updateTasked,
+    });
     return updateTasked;
   },
 
