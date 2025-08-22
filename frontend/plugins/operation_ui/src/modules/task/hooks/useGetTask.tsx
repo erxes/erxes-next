@@ -23,13 +23,6 @@ export const useGetTask = (options: QueryHookOptions) => {
     const unsubscribe = subscribeToMore<ITaskChanged>({
       document: TASK_CHANGED,
       variables: { _id: task?._id },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!prev || !subscriptionData.data) return prev;
-
-        const newData = subscriptionData.data.operationTaskChanged;
-
-        return { getTask: newData };
-      },
     });
 
     return () => {
