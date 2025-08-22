@@ -9,7 +9,6 @@ export const TASKS_CHANGED = gql`
       status
       priority
       teamId
-      estimateChoices
       assigneeId
       startDate
       targetDate

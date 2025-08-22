@@ -19,7 +19,6 @@ export interface ITask {
   teamId: string;
   projectId: string;
   estimatePoint: number;
-  estimateChoices: IEstimateChoice[];
 }
 
 export interface IStatus {
