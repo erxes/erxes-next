@@ -20,11 +20,13 @@ export interface INote {
 export interface ITask {
   _id: string;
   name: string;
+  number: string;
   tagIds: string[];
   createdAt: string;
   priority: number;
   status: string;
-  targetDate: string;
+  startDate?: string;
+  targetDate?: string;
   assigneeId: string;
   teamId: string;
   projectId: string;

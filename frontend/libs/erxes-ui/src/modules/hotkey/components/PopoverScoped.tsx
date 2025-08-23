@@ -1,4 +1,4 @@
-import { Popover } from 'erxes-ui/components';
+import { Popover, type PopoverProps } from 'erxes-ui/components';
 import { usePreviousHotkeyScope } from '../hooks/usePreviousHotkeyScope';
 import {
   UseHotkeysOptionsWithoutBuggyOptions,
@@ -6,7 +6,6 @@ import {
 } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { Key } from 'erxes-ui/types';
 import { useState } from 'react';
-import { PopoverProps } from '@radix-ui/react-popover';
 
 export const PopoverScoped = ({
   scope,

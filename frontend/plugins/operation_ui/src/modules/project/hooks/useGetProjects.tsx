@@ -15,7 +15,7 @@ import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 
 const PROJECTS_PER_PAGE = 30;
 
@@ -83,11 +83,9 @@ export const useProjects = (
     setProjectTotalCount(totalCount);
   }, [totalCount, setProjectTotalCount]);
 
-  const handleFetchMore = ({
-    direction,
-  }: {
-    direction: EnumCursorDirection;
-  }) => {
+  const handleFetchMore = (
+    direction: EnumCursorDirection = EnumCursorDirection.FORWARD,
+  ) => {
     if (!validateFetchMore({ direction, pageInfo })) {
       return;
     }

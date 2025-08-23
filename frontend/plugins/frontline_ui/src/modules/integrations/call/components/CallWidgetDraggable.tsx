@@ -1,4 +1,4 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { IconPhoneFilled, IconX } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
 import {

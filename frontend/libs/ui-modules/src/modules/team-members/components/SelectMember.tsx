@@ -1,4 +1,5 @@
 import {
+  AvatarProps,
   Button,
   Combobox,
   Command,
@@ -85,7 +86,7 @@ const SelectMemberValue = ({
   size,
 }: {
   placeholder?: string;
-  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
+  size?: AvatarProps['size'];
 }) => {
   const { memberIds, members, setMembers } = useSelectMemberContext();
 
@@ -283,6 +284,7 @@ export const SelectMemberInlineCell = React.forwardRef<
     React.ComponentProps<typeof RecordTableInlineCell.Trigger> & {
       scope?: string;
       placeholder?: string;
+      size?: AvatarProps['size'];
     }
 >(
   (

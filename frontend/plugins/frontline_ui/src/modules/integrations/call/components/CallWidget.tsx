@@ -1,4 +1,4 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { IconDots } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui';
 import { CallWidgetDraggableRoot } from '@/integrations/call/components/CallWidgetDraggable';

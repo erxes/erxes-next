@@ -12,13 +12,8 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import {
-  SelectStatus,
-  SelectAssignee,
-  SelectTeam,
-  DateSelect,
-} from '@/task/components/select';
-import { SelectProject } from '@/task/components/select/SelectProject';
+import { DateSelectTask } from '@/task/components/select/DateSelectTask';
+import { SelectProject } from '@/task/components/select/SelectProjectTask';
 import {
   Badge,
   Input,
@@ -30,9 +25,12 @@ import { ITask } from '@/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
-import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPoint';
+import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
 import clsx from 'clsx';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
+import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
+import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
@@ -123,7 +121,7 @@ export const tasksColumns = (
           <SelectTaskPriority
             taskId={cell.row.original._id}
             value={cell.row.original.priority}
-            inInlineCell
+            variant="table"
           />
         );
       },
@@ -137,7 +135,8 @@ export const tasksColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectStatus.InlineCell
+          <SelectStatusTask
+            variant="table"
             teamId={cell.row.original.teamId}
             value={cell.row.original.status || '0'}
             id={cell.row.original._id}
@@ -151,10 +150,16 @@ export const tasksColumns = (
       header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
       cell: ({ cell }) => {
         return (
-          <SelectAssignee.InlineCell
+          <SelectAssigneeTask
+            variant="table"
             id={cell.row.original._id}
             value={cell.row.original.assigneeId}
             teamIds={[cell.row.original.teamId]}
+            scope={clsx(
+              TaskHotKeyScope.TaskTableCell,
+              cell.row.original._id,
+              'Assignee',
+            )}
           />
         );
       },
@@ -167,11 +172,13 @@ export const tasksColumns = (
         <RecordTable.InlineHead label="Estimate Point" icon={IconHash} />
       ),
       cell: ({ cell }) => {
+        const { _id, estimatePoint, teamId } = cell.row.original;
         return (
-          <SelectEstimatedPoint.InlineCell
-            value={cell.row.original.estimatePoint || 0}
-            id={cell.row.original._id}
-            teamId={cell.row.original.teamId}
+          <SelectEstimatedPoint
+            taskId={_id}
+            value={estimatePoint || 0}
+            teamId={teamId}
+            variant="table"
           />
         );
       },
@@ -184,16 +191,11 @@ export const tasksColumns = (
         <RecordTable.InlineHead label="Project" icon={IconClipboard} />
       ),
       cell: ({ cell }) => {
-        const { updateTask } = useUpdateTask();
-
         return (
-          <SelectProject.InlineCell
+          <SelectProject
             value={cell.row.original.projectId || ''}
-            onValueChange={(value) => {
-              updateTask({
-                variables: { _id: cell.row.original._id, projectId: value },
-              });
-            }}
+            taskId={cell.row.original._id}
+            variant="table"
           />
         );
       },
@@ -207,11 +209,10 @@ export const tasksColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectTeam.InlineCell
-            id={cell.row.original._id}
-            value={cell.row.original.teamId}
-            teams={_teams || []}
-            mode="single"
+          <SelectTeamTask
+            taskId={cell.row.original._id}
+            value={cell.row.original.teamId || ''}
+            variant="table"
           />
         );
       },
@@ -226,9 +227,9 @@ export const tasksColumns = (
       cell: ({ cell }) => {
         const startDate = cell.getValue() as string;
         return (
-          <DateSelect.InlineCell
-            type="start"
-            value={startDate ? new Date(startDate) : undefined}
+          <DateSelectTask
+            type="startDate"
+            value={startDate}
             id={cell.row.original._id}
           />
         );
@@ -244,9 +245,9 @@ export const tasksColumns = (
       cell: ({ cell }) => {
         const targetDate = cell.getValue() as string;
         return (
-          <DateSelect.InlineCell
-            type="target"
-            value={targetDate ? new Date(targetDate) : undefined}
+          <DateSelectTask
+            type="targetDate"
+            value={targetDate}
             id={cell.row.original._id}
           />
         );
