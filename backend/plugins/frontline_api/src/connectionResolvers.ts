@@ -104,11 +104,27 @@ import {
   loadFacebookBotClass,
 } from '~/modules/integrations/facebook/db/models/Bots';
 
+import {
+  ICustomerImapDocument,
+  IIntegrationImapDocument,
+  IMessageImapDocument,
+  ICustomerImapModel,
+  IIntegrationImapModel,
+  IMessageImapModel,
+  loadImapCustomerClass,
+  loadImapIntegrationClass,
+  loadImapMessageClass,
+  ILogImapModel,
+  ILogImapDocument,
+  loadImapLogClass,
+} from '~/modules/integrations/imap/models';
 export interface IModels {
+  //inbox
   Channels: IChannelModel;
   Integrations: IIntegrationModel;
   Conversations: IConversationModel;
   ConversationMessages: IMessageModel;
+  //facebook
   FacebookIntegrations: IFacebookIntegrationModel;
   FacebookAccounts: IFacebookAccountModel;
   FacebookCustomers: IFacebookCustomerModel;
@@ -119,7 +135,6 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
-
   //call
   CallIntegrations: ICallIntegrationModel;
   CallCustomers: ICallCustomerModel;
@@ -128,6 +143,11 @@ export interface IModels {
   CallOperators: ICallOperatorModel;
   CallCdrs: ICallCdrModel;
   FacebookBots: IFacebookBotModel;
+  //imap
+  ImapCustomers: ICustomerImapModel;
+  ImapIntegrations: IIntegrationImapModel;
+  ImapMessages: IMessageImapModel;
+  ImapLogs: ILogImapModel;
 }
 
 export interface IContext extends IMainContext {
@@ -141,6 +161,7 @@ export const loadClasses = (
   subdomain: string,
 ): IModels => {
   const models = {} as IModels;
+  //inbox models
   models.Channels = db.model<IChannelDocument, IChannelModel>(
     'channels',
     loadChannelClass(models),
@@ -157,6 +178,7 @@ export const loadClasses = (
     'conversation_messages',
     loadMessageClass(models),
   );
+  //facebook models
   models.FacebookAccounts = db.model<
     IFacebookAccountDocument,
     IFacebookAccountModel
@@ -176,7 +198,6 @@ export const loadClasses = (
     'conversation_messages_facebooks',
     loadFacebookConversationMessageClass(models),
   );
-
   models.FacebookCommentConversation = db.model<
     IFacebookCommentConversationDocument,
     IFacebookCommentConversationModel
@@ -207,14 +228,11 @@ export const loadClasses = (
     IFacebookConfigDocument,
     IFacebookConfigModel
   >('facebook_configs', loadFacebookConfigClass(models));
-
   //call models
-
   models.CallIntegrations = db.model<
     ICallIntegrationDocument,
     ICallIntegrationModel
   >('calls_integrations', loadCallIntegrationClass(models));
-
   models.CallCustomers = db.model<ICallCustomer, ICallCustomerModel>(
     'calls_customers',
     loadCallCustomerClass(models),
@@ -240,7 +258,23 @@ export const loadClasses = (
     'facebook_messengers_bots',
     loadFacebookBotClass(models),
   );
-
+  //imap models
+  models.ImapCustomers = db.model<ICustomerImapDocument, ICustomerImapModel>(
+    'imap_customers',
+    loadImapCustomerClass(models),
+  );
+  models.ImapIntegrations = db.model<
+    IIntegrationImapDocument,
+    IIntegrationImapModel
+  >('imap_integrations', loadImapIntegrationClass(models));
+  models.ImapMessages = db.model<IMessageImapDocument, IMessageImapModel>(
+    'imap_messages',
+    loadImapMessageClass(models),
+  );
+  models.ImapLogs = db.model<ILogImapDocument, ILogImapModel>(
+    'imap_logs',
+    loadImapLogClass(models),
+  );
   return models;
 };
 

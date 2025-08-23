@@ -4,7 +4,6 @@ require('dotenv').config();
 const { ENABLED_PLUGINS } = process.env;
 const { execSync } = require('child_process');
 
-// preapare services
 const DEFAULT_SERVICES = ['automations', 'logs', 'notifications'];
 
 const services = DEFAULT_SERVICES.map((service) => `${service}-service`).join(

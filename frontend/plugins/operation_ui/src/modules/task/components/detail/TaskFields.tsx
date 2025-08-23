@@ -6,7 +6,6 @@ import { Block } from '@blocknote/core';
 import {
   SelectStatus,
   SelectTeam,
-  SelectPriority,
   SelectAssignee,
   DateSelect,
   SelectProject,
@@ -16,6 +15,7 @@ import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
+import { NotesField } from '@/task/components/NotesField';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -28,7 +28,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     targetDate,
     projectId,
     estimatePoint,
-    estimateChoices,
   } = task || {};
 
   const startDate = (task as any)?.startDate;
@@ -116,18 +115,19 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         <SelectEstimatedPoint.Detail
           value={estimatePoint}
           id={taskId}
-          estimateChoices={estimateChoices}
+          teamId={teamId}
         />
       </div>
       <Separator className="my-4" />
       <div className="min-h-56 overflow-y-auto">
         <BlockEditor
-          editor={editor} 
+          editor={editor}
           onChange={handleDescriptionChange}
           className="min-h-full"
         />
       </div>
       <ActivityList contentId={taskId} contentDetail={task} />
+      <NotesField taskId={taskId} />
     </div>
   );
 };

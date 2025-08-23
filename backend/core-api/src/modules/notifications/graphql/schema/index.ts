@@ -105,6 +105,15 @@ enum NotificationType {
     WARNING
     ERROR
 }
+
+input NotificationFilters {
+    status:NotificationStatus,
+    priority:NotificationPriority,
+    type:NotificationType,
+    fromDate:String,
+    endDate:String,
+    fromUserId:String
+}
 `;
 
 const NOTIFICATIONS_QUERIES_PARAMS = `
@@ -132,6 +141,8 @@ export const mutations = `
     archiveNotifications(ids:[String],archiveAll:Boolean,filters:JSON):String
     editUserNotificationSettings(userSettings:JSON): JSON
     editOrganizationNotificationConfigs(configs: JSON!): JSON
+    markNotificationAsRead(_id:String!):JSON
+    markAsReadNotifications(${NOTIFICATIONS_QUERIES_PARAMS}):JSON
 `;
 
 export default { queries, mutations, types };

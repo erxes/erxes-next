@@ -92,17 +92,6 @@ export const notificationQueries = {
     if (!notification) {
       throw new Error('Not found notification');
     }
-
-    if (!notification?.isRead) {
-      await models.Notifications.updateOne(
-        { _id },
-        { $set: { isRead: true, readAt: new Date() } },
-      );
-      graphqlPubsub.publish(`notificationRead:${user._id}`, {
-        notificationRead: { userId: user._id },
-      });
-    }
-
     return notification;
   },
 

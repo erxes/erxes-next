@@ -1,22 +1,41 @@
 import { IContext } from '~/connectionResolvers';
 import { ITaskUpdate } from '@/task/@types/task';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const taskMutations = {
   createTask: async (
     _parent: undefined,
     params: ITaskUpdate,
-    { models, user }: IContext,
+    { models, user, subdomain }: IContext,
   ) => {
-    params.createdBy = user._id;
-    return models.Task.createTask(params);
+    return models.Task.createTask({
+      doc: params,
+      userId: user._id,
+      subdomain,
+    });
   },
 
   updateTask: async (
     _parent: undefined,
     params: ITaskUpdate,
-    { models, user }: IContext,
+    { models, user, subdomain }: IContext,
   ) => {
-    return models.Task.updateTask({ doc: params, userId: user._id });
+    const updatedTask = await models.Task.updateTask({
+      doc: params,
+      userId: user._id,
+      subdomain,
+    });
+
+    await graphqlPubsub.publish(`operationTaskChanged:${updatedTask._id}`, {
+      operationTaskChanged: updatedTask,
+    });
+
+    // Subscription-д publish
+    graphqlPubsub.publish('operationTasksChanged', {
+      operationTasksChanged: updatedTask,
+    });
+
+    return updatedTask;
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {

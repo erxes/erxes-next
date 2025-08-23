@@ -1,14 +1,14 @@
 import {
   Button,
+  DateInput,
   Form,
   Separator,
   Sheet,
   Switch,
+  TimeField,
   useQueryState,
 } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
-import { TimePicker } from '../../TimePicker';
-import { format, parse } from 'date-fns';
 import { workingHours } from '@/settings/structure/constants/work-days';
 import { IWorkhoursForm } from '@/settings/structure/types/workhours';
 import { useWorkhoursForm } from '@/settings/structure/hooks/useWorkhoursForm';
@@ -16,6 +16,7 @@ import { useFormContext } from 'react-hook-form';
 import { Fragment, useEffect } from 'react';
 import { useDepartmentDetailsById } from '@/settings/structure/hooks/useDepartmentDetailsById';
 import { useDepartmentInlineEdit } from '@/settings/structure/hooks/useDepartmentActions';
+import { parseTime } from '@internationalized/date';
 
 export const DepartmentWorkingHoursSheet = () => {
   const [workingHoursId] = useQueryState('workingHoursId');
@@ -135,15 +136,6 @@ const WeekDay = ({ weekDay }: { weekDay: string }) => {
   const form = useFormContext<IWorkhoursForm>();
   const isInactive = form.watch(`${weekDay}.inactive`) as boolean;
 
-  function parseTime(time: string | undefined) {
-    if (!time) return new Date();
-    return parse(time, 'HH:mm', new Date());
-  }
-
-  function formatTime(date: Date) {
-    return format(date, 'HH:mm');
-  }
-
   return (
     <div className="flex items-center gap-3 py-3" id={weekDay}>
       <Form.Field
@@ -174,11 +166,16 @@ const WeekDay = ({ weekDay }: { weekDay: string }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Control>
-                    <TimePicker
-                      className="w-[86px]"
-                      value={parseTime(field.value)}
-                      onChange={(date) => field.onChange(formatTime(date))}
-                    />
+                    <TimeField
+                      value={field.value ? parseTime(field.value) : null}
+                      onChange={(value) => {
+                        field.onChange(value?.toString());
+                      }}
+                    >
+                      <Form.Control>
+                        <DateInput />
+                      </Form.Control>
+                    </TimeField>
                   </Form.Control>
                 </Form.Item>
               )}
@@ -192,11 +189,16 @@ const WeekDay = ({ weekDay }: { weekDay: string }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Control>
-                    <TimePicker
-                      className="w-[86px]"
-                      value={parseTime(field.value)}
-                      onChange={(date) => field.onChange(formatTime(date))}
-                    />
+                    <TimeField
+                      value={field.value ? parseTime(field.value) : null}
+                      onChange={(value) => {
+                        field.onChange(value?.toString());
+                      }}
+                    >
+                      <Form.Control>
+                        <DateInput />
+                      </Form.Control>
+                    </TimeField>
                   </Form.Control>
                 </Form.Item>
               )}
@@ -212,11 +214,16 @@ const WeekDay = ({ weekDay }: { weekDay: string }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Control>
-                    <TimePicker
-                      className="w-[86px]"
-                      value={parseTime(field.value)}
-                      onChange={(date) => field.onChange(formatTime(date))}
-                    />
+                    <TimeField
+                      value={field.value ? parseTime(field.value) : null}
+                      onChange={(value) => {
+                        field.onChange(value?.toString());
+                      }}
+                    >
+                      <Form.Control>
+                        <DateInput />
+                      </Form.Control>
+                    </TimeField>
                   </Form.Control>
                 </Form.Item>
               )}
@@ -230,11 +237,16 @@ const WeekDay = ({ weekDay }: { weekDay: string }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Control>
-                    <TimePicker
-                      className="w-[86px]"
-                      value={parseTime(field.value)}
-                      onChange={(date) => field.onChange(formatTime(date))}
-                    />
+                    <TimeField
+                      value={field.value ? parseTime(field.value) : null}
+                      onChange={(value) => {
+                        field.onChange(value?.toString());
+                      }}
+                    >
+                      <Form.Control>
+                        <DateInput />
+                      </Form.Control>
+                    </TimeField>
                   </Form.Control>
                 </Form.Item>
               )}

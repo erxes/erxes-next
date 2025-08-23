@@ -29,12 +29,19 @@ import {
   types as CallTypes,
 } from '@/integrations/call/graphql/schema/call';
 
+import {
+  mutations as ImapMutations,
+  queries as ImapQueries,
+  types as ImapTypes,
+} from '@/integrations/imap/graphql/schema/imap';
+
 export const types = `
     ${ChannelsTypes}
     ${ConversationsTypes}
     ${IntegrationsTypes}
     ${FacebookTypes}
     ${CallTypes}
+    ${ImapTypes}
   `;
 export const queries = `
     ${ChannelsQueries}
@@ -42,6 +49,7 @@ export const queries = `
     ${IntegrationsQueries}
     ${FacebookQueries}
     ${CallQueries}
+    ${ImapQueries}
   `;
 
 export const mutations = `
@@ -50,5 +58,6 @@ export const mutations = `
    ${IntegrationsMutations}
    ${FacebookMutations}
    ${CallMutations}
+   ${ImapMutations}
 `;
 export default { types, queries, mutations };
