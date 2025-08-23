@@ -174,11 +174,20 @@ export const useNotifications = () => {
           ? [notificationId]
           : [];
         if (!status || status === 'unread') {
-          const updatedTotalCount =
-            (prev?.notifications?.totalCount || 0) - removedIds.length;
+          const updatedTotalCount = Math.max(
+            (prev?.notifications?.totalCount || 0) - removedIds.length,
+            0,
+          );
           const updatedList = (prev?.notifications?.list || []).filter(
             (notification) => !removedIds.includes(notification._id),
           );
+
+          if (
+            updatedList.length === 0 &&
+            prev.notifications?.pageInfo?.endCursor
+          ) {
+            handleFetchMore({ direction: EnumCursorDirection.FORWARD });
+          }
           return {
             ...prev,
             notifications: {
@@ -214,16 +223,25 @@ export const useNotifications = () => {
           : notificationId
           ? [notificationId]
           : [];
+        const updatedList = (prev?.notifications?.list || []).filter(
+          (notification) => !removedIds.includes(notification._id),
+        );
+        const updatedTotalCount = Math.max(
+          (prev?.notifications?.totalCount || 0) - removedIds.length,
+          0,
+        );
 
-        const updatedTotalCount =
-          (prev?.notifications?.totalCount || 0) - removedIds.length;
+        if (
+          updatedList.length === 0 &&
+          prev.notifications?.pageInfo?.endCursor
+        ) {
+          handleFetchMore({ direction: EnumCursorDirection.FORWARD });
+        }
         return {
           ...prev,
           notifications: {
             ...prev.notifications,
-            list: (prev?.notifications?.list || []).filter(
-              (notification) => !removedIds.includes(notification._id),
-            ),
+            list: updatedList,
             totalCount: updatedTotalCount,
           },
         };

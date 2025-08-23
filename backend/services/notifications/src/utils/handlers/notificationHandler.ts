@@ -18,7 +18,6 @@ export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
 ) => {
   const { subdomain, data } = job.data;
-
   const models = await generateModels(subdomain);
   const emailService = new EmailService();
   const results: any[] = [];
@@ -66,8 +65,6 @@ export const handleCreateNotification = async (
           data,
         ),
       };
-
-      console.log({ notificationSettings });
 
       // In-app notification
       if (notificationSettings.inApp) {
