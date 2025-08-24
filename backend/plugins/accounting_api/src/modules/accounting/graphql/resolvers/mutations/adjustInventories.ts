@@ -82,11 +82,8 @@ const adjustInventoryMutations = {
     return await models.AdjustInventories.getAdjustInventory(adjustId);
   },
 
-  async adjustInventoryRemove(_root, { _id }: { _id: string }, { models }: IContext) {
-    const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
-    if (adjusting.status === ADJ_INV_STATUSES.PUBLISH) {
-      throw new Error('this adjusting is published');
-    }
+  async adjustInventoryRemove(_root, { adjustId }: { adjustId: string }, { models }: IContext) {
+    return await models.AdjustInventories.removeAdjustInventory(adjustId);
   },
 
   async adjustInventoryRun(_root, { adjustId }: { adjustId: string }, { models, user, subdomain }: IContext) {

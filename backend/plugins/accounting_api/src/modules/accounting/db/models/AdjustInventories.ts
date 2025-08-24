@@ -35,7 +35,16 @@ export const loadAdjustInventoriesClass = (models: IModels, subdomain: string) =
     }
 
     public static async removeAdjustInventory(_id: string) {
-      return await models.AdjustInventories.deleteOne({ _id });
+      
+      const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
+      if (![ADJ_INV_STATUSES.DRAFT, ADJ_INV_STATUSES.PROCESS].includes(adjusting.status)) {
+        throw new Error('this adjusting cannot be delete yet, it has not been draft or cancel.');
+      }
+
+      await models.AdjustInvDetails.deleteMany({ adjustId: _id });
+
+      await models.AdjustInventories.deleteOne({ _id });
+      return 'success delete'
     }
   }
 

@@ -1,18 +1,20 @@
 import { OperationVariables, useMutation } from '@apollo/client';
-import { ADJUST_INVENTORY_RUN } from '../graphql/adjustInventoryChange';
 import { toast } from 'erxes-ui';
-import { ADJUST_INVENTORY_DETAIL_QUERY, ADJUST_INVENTORY_DETAILS_QUERY } from '../graphql/adjustInventoryQueries';
+import { ADJUST_INVENTORIES_QUERY } from '../graphql/adjustInventoryQueries';
 import { ACC_TRS__PER_PAGE } from '@/transactions/types/constants';
+import { ADJUST_INVENTORY_REMOVE } from '../graphql/adjustInventoryRemove';
+import { useNavigate } from 'react-router-dom';
 
-export const useAdjustInventoryRun = (adjustId: string, options?: OperationVariables) => {
-  const [_runMutation, { loading }] = useMutation(
-    ADJUST_INVENTORY_RUN,
+export const useAdjustInventoryRemove = (adjustId: string, options?: OperationVariables) => {
+  const navigate = useNavigate();
+  const [_removeMutation, { loading }] = useMutation(
+    ADJUST_INVENTORY_REMOVE,
     options,
   );
 
-  const runAdjust = (options?: OperationVariables) => {
+  const removeAdjust = (options?: OperationVariables) => {
 
-    return _runMutation({
+    return _removeMutation({
       ...options,
       variables: {
         adjustId,
@@ -32,29 +34,28 @@ export const useAdjustInventoryRun = (adjustId: string, options?: OperationVaria
           description: 'Inventory adjust running successfully',
         });
         options?.onCompleted?.(data)
+
       },
       refetchQueries: [
         {
-          query: ADJUST_INVENTORY_DETAIL_QUERY,
+          query: ADJUST_INVENTORIES_QUERY,
           variables: {
-            _id: adjustId
-          }
-        },
-        {
-          query: ADJUST_INVENTORY_DETAILS_QUERY,
-          variables: {
-            _id: adjustId,
+            ...options?.variables,
             page: 1,
             perPage: ACC_TRS__PER_PAGE,
           },
-        }
+        },
       ],
       awaitRefetchQueries: true,
+      update: (cache) => {
+        const pathname = "/accounting/adjustment/inventory";
+        navigate(pathname);
+      },
     });
   };
 
   return {
-    runAdjust,
+    removeAdjust,
     loading,
   };
 };

@@ -13,6 +13,7 @@ import { useAdjustInventoryPublish } from '../hooks/useAdjustInventoryPublish';
 import { useAdjustInventoryRun } from '../hooks/useAdjustInventoryRun';
 import { ADJ_INV_STATUSES } from '../types/AdjustInventory';
 import { adjustDetailTableColumns } from './AdjustInventoryDetailColumns';
+import { useAdjustInventoryRemove } from '~/modules/adjustments/inventories/hooks/useAdjustInventoryRemove';
 
 export const AdjustInventoryDetail = () => {
   // const parentId = useParams().parentId;
@@ -31,6 +32,7 @@ export const AdjustInventoryDetail = () => {
   const { runAdjust, loading: runLoading } = useAdjustInventoryRun(id ?? '');
   const { publishAdjust, loading: publishLoading } = useAdjustInventoryPublish(id ?? '');
   const { cancelAdjust, loading: cancelLoading } = useAdjustInventoryCancel(id ?? '');
+  const { removeAdjust, loading: removeLoading } = useAdjustInventoryRemove(id ?? '');
 
   if (loading || detailsLoading) {
     return <Spinner />;
@@ -53,7 +55,7 @@ export const AdjustInventoryDetail = () => {
   }
 
   const handleDelete = () => {
-    console.log('delete')
+    removeAdjust()
   }
 
   const renderEvents = () => {
