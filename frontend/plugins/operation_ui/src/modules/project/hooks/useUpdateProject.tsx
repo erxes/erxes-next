@@ -16,23 +16,6 @@ export const useUpdateProject = () => {
           variant: 'destructive',
         });
       },
-      update: (cache, { data }) => {
-        try {
-          cache.modify({
-            id: cache.identify(data?.updateProject),
-            fields: Object.keys(options?.variables || {}).reduce(
-              (fields: Record<string, () => any>, field) => {
-                fields[field] = () => (options?.variables || {})[field];
-                return fields;
-              },
-              {},
-            ),
-            optimistic: true,
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      },
     });
   };
 

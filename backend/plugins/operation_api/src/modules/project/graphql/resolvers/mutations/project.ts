@@ -2,6 +2,7 @@ import { IProjectUpdate } from '@/project/@types/project';
 import { checkUserRole } from '@/utils';
 import { TeamMemberRoles } from '@/team/@types/team';
 import { IContext } from '~/connectionResolvers';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const projectMutations = {
   createProject: async (
@@ -25,7 +26,7 @@ export const projectMutations = {
       allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
     });
 
-    return models.Project.createProject({
+    const createdProject = await models.Project.createProject({
       name,
       teamIds,
       startDate,
@@ -35,6 +36,15 @@ export const projectMutations = {
       description,
       leadId,
     });
+
+    graphqlPubsub.publish('operationProjectChanged', {
+      operationProjectChanged: {
+        type: 'create',
+        project: createdProject,
+      },
+    });
+
+    return createdProject;
   },
   updateProject: async (
     _parent: undefined,
@@ -49,13 +59,31 @@ export const projectMutations = {
       allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
     });
 
-    return models.Project.updateProject({
+    const updatedProject = await models.Project.updateProject({
       doc: params,
       userId: user._id,
       subdomain,
     });
+
+    graphqlPubsub.publish('operationProjectChanged', {
+      operationProjectChanged: {
+        type: 'update',
+        project: updatedProject,
+      },
+    });
+
+    return updatedProject;
   },
   removeProject: async (_parent: undefined, { _id }, { models }: IContext) => {
-    return models.Project.removeProject(_id);
+    const deletedProject = await models.Project.removeProject(_id);
+
+    graphqlPubsub.publish('operationProjectChanged', {
+      operationProjectChanged: {
+        type: 'delete',
+        project: deletedProject,
+      },
+    });
+
+    return deletedProject;
   },
 };

@@ -75,17 +75,18 @@ export const loadProjectClass = (models: IModels) => {
       return await models.Project.findOneAndUpdate(
         { _id },
         { $set: { ...rest } },
+        { new: true },
       );
     }
 
-    public static async removeProject(projectId: string[]) {
-      const task = await models.Task.findOne({ projectId: { $in: projectId } });
+    public static async removeProject(projectId: string) {
+      const task = await models.Task.findOne({ projectId });
 
       if (task) {
         throw new Error('Project has tasks');
       }
 
-      return models.Project.deleteOne({ _id: { $in: projectId } });
+      return models.Project.findOneAndDelete({ _id: projectId });
     }
   }
 

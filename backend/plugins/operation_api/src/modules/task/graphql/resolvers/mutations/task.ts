@@ -35,7 +35,6 @@ export const taskMutations = {
       subdomain,
     });
 
-    // Subscription-д publish
     graphqlPubsub.publish('operationTaskChanged', {
       operationTaskChanged: {
         type: 'update',

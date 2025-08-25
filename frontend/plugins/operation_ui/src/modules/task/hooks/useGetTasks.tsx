@@ -110,16 +110,15 @@ export const useTasks = (
           if (!exists) {
             updatedList = [task, ...currentList];
           }
-          console.log(task);
         }
 
-        if (type === 'updated') {
+        if (type === 'update') {
           updatedList = currentList.map((item: ITask) =>
             item._id === task._id ? { ...item, ...task } : item,
           );
         }
 
-        if (type === 'removed') {
+        if (type === 'remove') {
           updatedList = currentList.filter(
             (item: ITask) => item._id !== task._id,
           );
@@ -132,9 +131,9 @@ export const useTasks = (
             list: updatedList,
             pageInfo: prev.getTasks.pageInfo,
             totalCount:
-              type === 'created'
+              type === 'create'
                 ? prev.getTasks.totalCount + 1
-                : type === 'removed'
+                : type === 'remove'
                 ? prev.getTasks.totalCount - 1
                 : prev.getTasks.totalCount,
           },
