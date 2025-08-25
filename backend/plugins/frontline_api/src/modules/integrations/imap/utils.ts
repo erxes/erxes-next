@@ -433,8 +433,6 @@ const startDistributingJobs = async (subdomain: string) => {
         healthStatus: 'healthy',
       });
       for (const integration of integrations) {
-        console.log(integrations, '&&&&&&&&&');
-
         sendImapMessage({
           subdomain,
           action: 'listen',

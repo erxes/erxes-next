@@ -79,7 +79,7 @@ export async function imapUpdateIntegrations({
   } catch (e) {
     return {
       status: 'error',
-      errorMessage: `Failed to create integration: ${e.message}`,
+      errorMessage: `Failed to update integration: ${e.message}`,
     };
   }
 }
@@ -107,7 +107,7 @@ export async function imapRemoveIntegrations({
   } catch (e) {
     return {
       status: 'error',
-      errorMessage: `Failed to create integration: ${e.message}`,
+      errorMessage: `Failed to remove integration: ${e.message}`,
     };
   }
 }
