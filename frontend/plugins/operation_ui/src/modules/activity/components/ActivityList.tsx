@@ -3,6 +3,7 @@ import { ActivityIcon, ActivityItem } from '@/activity/components/ActivityItem';
 import { MembersInline } from 'ui-modules';
 import { RelativeDateDisplay } from 'erxes-ui';
 import { ITask } from '@/task/types';
+import { IProject } from '@/project/types';
 import { ActivityListProvider } from '@/activity/context/ActivityListContext';
 
 export const ActivityList = ({
@@ -10,7 +11,7 @@ export const ActivityList = ({
   contentDetail,
 }: {
   contentId: string;
-  contentDetail: ITask;
+  contentDetail: ITask | IProject;
 }) => {
   const { activities, loading } = useActivities(contentId);
 

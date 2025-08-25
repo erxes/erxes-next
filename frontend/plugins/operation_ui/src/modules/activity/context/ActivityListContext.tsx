@@ -1,13 +1,14 @@
 import { createContext, useContext } from 'react';
 import { ITask } from '@/task/types';
+import { IProject } from '@/project/types';
 
-export const ActivityListContext = createContext<ITask | null>(null);
+export const ActivityListContext = createContext<ITask | IProject | null>(null);
 
 export const ActivityListProvider = ({
   contentDetail,
   children,
 }: {
-  contentDetail: ITask | null;
+  contentDetail: ITask | IProject | null;
   children: React.ReactNode;
 }) => {
   return (

@@ -1,4 +1,4 @@
-import { IProjectDocument } from '@/project/@types/project';
+import { IProjectUpdate } from '@/project/@types/project';
 import { checkUserRole } from '@/utils';
 import { TeamMemberRoles } from '@/team/@types/team';
 import { IContext } from '~/connectionResolvers';
@@ -38,20 +38,10 @@ export const projectMutations = {
   },
   updateProject: async (
     _parent: undefined,
-    {
-      _id,
-      name,
-      teamIds,
-      startDate,
-      targetDate,
-      priority,
-      status,
-      description,
-      leadId,
-    }: IProjectDocument,
-    { models, user }: IContext,
+    params: IProjectUpdate,
+    { models, user, subdomain }: IContext,
   ) => {
-    const project = await models.Project.getProject(_id);
+    const project = await models.Project.getProject(params._id);
     await checkUserRole({
       models,
       teamIds: project.teamIds,
@@ -59,15 +49,10 @@ export const projectMutations = {
       allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
     });
 
-    return models.Project.updateProject(_id, {
-      name,
-      teamIds,
-      startDate,
-      targetDate,
-      priority,
-      status,
-      description,
-      leadId,
+    return models.Project.updateProject({
+      doc: params,
+      userId: user._id,
+      subdomain,
     });
   },
   removeProject: async (_parent: undefined, { _id }, { models }: IContext) => {
