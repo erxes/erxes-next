@@ -2,7 +2,6 @@ import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { ICycle, ICycleDocument } from '@/cycle/types';
 import { cycleSchema } from '@/cycle/db/definitions/cycle';
-import { STATUS_TYPES } from '~/modules/status/constants';
 
 export interface ICycleModel extends Model<ICycleDocument> {
   getCycle(_id: string): Promise<ICycleDocument>;
@@ -109,11 +108,6 @@ export const loadCycleClass = (models: IModels) => {
         { new: true },
       );
 
-      const status = await models.Status.find({
-        teamId: endedCycle?.teamId,
-        type: { $ne: STATUS_TYPES.COMPLETED },
-      });
-
       if (!endedCycle) {
         throw new Error('Cycle not found');
       }
@@ -145,7 +139,17 @@ export const loadCycleClass = (models: IModels) => {
         });
       }
 
-      return { endedCycle, nextCycle };
+      const unFinishedTasks = await models.Task.moveCycle(
+        endedCycle._id,
+        nextCycle?._id,
+      );
+
+      await models.Cycle.updateOne(
+        { _id: endedCycle._id },
+        { $set: { unFinishedTasks } },
+      );
+
+      return { endedCycle, nextCycle, unFinishedTasks };
     }
   }
 

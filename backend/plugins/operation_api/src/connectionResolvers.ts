@@ -22,7 +22,7 @@ import {
   IActivityModel,
 } from '@/activity/db/models/Activity';
 import { IActivityDocument } from '@/activity/types';
-import { loadCycleClass, ICycleModel } from '~/modules/cycle/db/models/Cycle';
+import { loadCycleClass, ICycleModel } from '@/cycle/db/models/Cycle';
 import { ICycleDocument } from '@/cycle/types';
 
 export interface IModels {
