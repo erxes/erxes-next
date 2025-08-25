@@ -158,14 +158,18 @@ export const useTasks = (
       return;
     }
 
+    console.log(pageInfo);
+
     fetchMore({
       variables: {
-        cursor:
-          direction === EnumCursorDirection.FORWARD
-            ? pageInfo?.endCursor
-            : pageInfo?.startCursor,
-        limit: TASKS_PER_PAGE,
-        direction,
+        filter: {
+          cursor:
+            direction === EnumCursorDirection.FORWARD
+              ? pageInfo?.endCursor
+              : pageInfo?.startCursor,
+          limit: TASKS_PER_PAGE,
+          direction,
+        },
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;

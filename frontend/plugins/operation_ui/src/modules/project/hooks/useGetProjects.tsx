@@ -153,12 +153,14 @@ export const useProjects = (
     }
     fetchMore({
       variables: {
-        cursor:
-          direction === EnumCursorDirection.FORWARD
-            ? pageInfo?.endCursor
-            : pageInfo?.startCursor,
-        limit: PROJECTS_PER_PAGE,
-        direction,
+        filter: {
+          cursor:
+            direction === EnumCursorDirection.FORWARD
+              ? pageInfo?.endCursor
+              : pageInfo?.startCursor,
+          limit: PROJECTS_PER_PAGE,
+          direction,
+        },
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
