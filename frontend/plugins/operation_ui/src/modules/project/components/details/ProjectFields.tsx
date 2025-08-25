@@ -20,6 +20,7 @@ import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
+import { ActivityList } from '@/activity/components/ActivityList';
 
 export const ProjectFields = ({ projectId }: { projectId: string }) => {
   const { project } = useGetProject({
@@ -88,6 +89,8 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedDescriptionContent]);
+  if (!project) return null;
+
   return (
     <div className="flex flex-col gap-3">
       <IconPicker
@@ -110,7 +113,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
       <div className="gap-2 flex flex-wrap w-full">
         <SelectStatus.Detail value={status} id={projectId} />
         <SelectProjectPriority projectId={projectId} value={priority} />
-        <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds}/>
+        <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds} />
         <DateSelect.Detail value={startDate} id={projectId} type="start" />
         <DateSelect.Detail value={targetDate} id={projectId} type="target" />
         <SelectTeam.Detail
@@ -128,6 +131,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
           className="min-h-full"
         />
       </div>
+      <ActivityList contentId={projectId} contentDetail={project} />
     </div>
   );
 };
