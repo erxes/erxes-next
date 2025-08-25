@@ -1,6 +1,7 @@
 import { Document, Model, Schema } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-// import { sendCoreMessage, sendInboxMessage } from '../src/messageBroker';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
+
 import * as nodemailer from 'nodemailer';
 
 interface IMapMail {
@@ -131,25 +132,31 @@ export const loadImapMessageClass = (models) => {
         ? { _id: customerId }
         : { status: { $ne: 'deleted' }, emails: { $in: to } };
 
-      // customer = await sendCoreMessage({
-      //   subdomain,
-      //   action: 'customers.findOne',
-      //   data: selector,
-      //   isRPC: true
-      // });
+      customer = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'customers',
+        action: 'findOne',
+        input: {
+          selector,
+        },
+      });
 
       if (!customer) {
         const [primaryEmail] = to;
 
-        // customer = await sendCoreMessage({
-        //   subdomain,
-        //   action: 'customers.createCustomer',
-        //   data: {
-        //     state: 'lead',
-        //     primaryEmail
-        //   },
-        //   isRPC: true
-        // });
+        customer = await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'mutation',
+          module: 'customers',
+          action: 'createCustomer',
+          input: {
+            doc: {
+              state: 'lead',
+              primaryEmail,
+            },
+          },
+        });
       }
 
       let integration;
@@ -167,15 +174,15 @@ export const loadImapMessageClass = (models) => {
       }
 
       if (!integration && conversationId) {
-        // const conversation = await sendInboxMessage({
-        //   subdomain,
-        //   action: 'conversations.findOne',
-        //   data: { _id: conversationId },
-        //   isRPC: true
-        // });
-        // integration = await models.Integrations.findOne({
-        //   inboxId: conversation.integrationId
-        // });
+        const conversation = await models.Conversations.findOne({
+          _id: conversationId,
+        });
+
+        if (conversation) {
+          integration = await models.ImapIntegrations.findOne({
+            inboxId: conversation.integrationId,
+          });
+        }
       }
 
       if (!integration) {
@@ -184,20 +191,16 @@ export const loadImapMessageClass = (models) => {
 
       if (conversationId) {
         if (shouldResolve) {
-          // await sendInboxMessage({
-          //   subdomain,
-          //   action: 'conversations.changeStatus',
-          //   data: { id: conversationId, status: 'closed' },
-          //   isRPC: true
-          // });
+          await models.Conversations.updateOne(
+            { _id: conversationId },
+            { status: 'closed' },
+          );
         }
         if (shouldOpen) {
-          // await sendInboxMessage({
-          //   subdomain,
-          //   action: 'conversations.changeStatus',
-          //   data: { id: conversationId, status: 'new' },
-          //   isRPC: true
-          // });
+          await models.Conversations.updateOne(
+            { _id: conversationId },
+            { status: 'new' },
+          );
         }
       }
 
@@ -230,26 +233,26 @@ export const loadImapMessageClass = (models) => {
 
       const info = await transporter.sendMail(mailData);
 
-      // models.Messages.create({
-      //   inboxIntegrationId: integration.inboxId,
-      //   inboxConversationId: conversationId,
-      //   createdAt: new Date(),
-      //   messageId: info.messageId,
-      //   inReplyTo: replyToMessageId,
-      //   references: mailData.references,
-      //   subject: mailData.subject,
-      //   body: mailData.html,
-      //   to: (mailData.to || []).map((to) => ({ name: to, address: to })),
-      //   from: [{ name: mailData.from, address: mailData.from }],
-      //   attachments: attachments
-      //     ? attachments.map(({ name, type, size }) => ({
-      //         filename: name,
-      //         type,
-      //         size
-      //       }))
-      //     : [],
-      //   type: 'SENT'
-      // });
+      models.ImapMessages.create({
+        inboxIntegrationId: integration.inboxId,
+        inboxConversationId: conversationId,
+        createdAt: new Date(),
+        messageId: info.messageId,
+        inReplyTo: replyToMessageId,
+        references: mailData.references,
+        subject: mailData.subject,
+        body: mailData.html,
+        to: (mailData.to || []).map((to) => ({ name: to, address: to })),
+        from: [{ name: mailData.from, address: mailData.from }],
+        attachments: attachments
+          ? attachments.map(({ name, type, size }) => ({
+              filename: name,
+              type,
+              size,
+            }))
+          : [],
+        type: 'SENT',
+      });
       return {
         info: info,
       };
