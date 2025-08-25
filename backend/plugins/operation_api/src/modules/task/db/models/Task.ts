@@ -7,8 +7,8 @@ import {
   ITaskFilter,
   ITaskUpdate,
 } from '@/task/@types/task';
-import { createTaskActivity } from '@/task/activityUtils';
-import { createTaskNotification } from '~/modules/task/notificationUtils';
+import { createActivity } from '@/activity/utils/createActivity';
+import { createTaskNotification } from '@/task/notificationUtils';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
@@ -197,11 +197,13 @@ export const loadTaskClass = (models: IModels) => {
         rest.status = newStatus?._id;
       }
 
-      await createTaskActivity({
-        models,
-        task,
-        doc,
+      await createActivity({
+        contentType: 'task',
+        oldDoc: task,
+        newDoc: doc,
+        subdomain,
         userId,
+        contentId: task._id,
       });
 
       await createTaskNotification({

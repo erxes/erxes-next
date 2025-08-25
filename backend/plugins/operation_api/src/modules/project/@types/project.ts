@@ -27,6 +27,10 @@ export interface IProjectFilter extends ICursorPaginateParams, IListParams {
   userId?: string;
 }
 
+export interface IProjectUpdate extends IProject {
+  _id: string;
+}
+
 export interface IProjectDocument extends IProject, Document {
   _id: string;
   createdAt: Date;
