@@ -5,6 +5,7 @@ import React, {
   createContext,
   useContext,
   useMemo,
+  useState,
 } from 'react';
 import * as JsSIP from 'jssip';
 import {
@@ -29,6 +30,17 @@ import {
   logger,
   parseCallDirection,
 } from '@/integrations/call/utils/callUtils';
+import {
+  ACTIVE_CALLS_SUBSCRIPTION,
+  AGENT_STATUS_SUBSCRIPTION,
+  CALL_STATISTIC_SUB,
+  QUEUE_STATS_SUBSCRIPTION,
+} from '@/integrations/call/graphql/subscriptions/subscriptions';
+import { useQuery, useSubscription } from '@apollo/client';
+import {
+  GET_ACTIVE_CALLS,
+  GET_QUEUE_STATUS,
+} from '@/integrations/call/graphql/queries/callDashboardQueries';
 
 // Context for SIP functionality
 const SipContext = createContext<SipContextValue | null>(null);
@@ -54,7 +66,38 @@ const SipProvider = ({
   // State
   const [sipState, setSipState] = useAtom(sipStateAtom);
   const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
+  const [calls, setCalls] = useState([]);
 
+  // const { data, loading } = useSubscription(CALL_STATISTIC_SUB);
+
+  const { data, loading, error } = useSubscription(QUEUE_STATS_SUBSCRIPTION, {
+    variables: { extension: '6518' },
+    onData: ({ data }) => {
+      console.log('New queue stats:', data.data?.callStatistic);
+      // Handle real-time updates
+      if (data.data?.callStatistic) {
+        // Update UI, show notifications, etc.
+        // showNotification(`Queue ${extension} updated`);
+      }
+    },
+    onError: (error) => {
+      console.error('Subscription error:', error);
+    },
+  });
+
+  useSubscription(AGENT_STATUS_SUBSCRIPTION, {
+    variables: { extension: '6518' },
+    onData: ({ data }) => {
+      console.log(data, '.......');
+    },
+  });
+
+  useSubscription(ACTIVE_CALLS_SUBSCRIPTION, {
+    variables: { extension: '6518' },
+    onData: ({ data }) => {
+      console.log('active call...', data);
+    },
+  });
   const setPersistentStates = useCallback(
     (isRegistered: boolean, isAvailable: boolean) => {
       setCallInfo({ isUnregistered: !isRegistered });
