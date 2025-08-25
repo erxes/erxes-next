@@ -81,8 +81,11 @@ export const createActivity = async (
         thirtyMinutesAgo,
       );
 
-      if (isRecent && newValue === lastActivity.metadata.previousValue) {
-        return models.Activity.deleteOne({ _id: lastActivity._id });
+      if (
+        isRecent &&
+        toStr(newValue) === toStr(lastActivity.metadata.previousValue)
+      ) {
+        return models.Activity.removeActivity(lastActivity._id);
       }
 
       return models.Activity.updateActivity({

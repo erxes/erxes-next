@@ -13,6 +13,7 @@ import {
 export interface IActivityModel extends Model<IActivityDocument> {
   createActivity(doc: IActivity): Promise<IActivityDocument>;
   updateActivity(doc: IActivityUpdate): Promise<IActivityDocument | null>;
+  removeActivity(activityId: string): Promise<IActivityDocument | null>;
 }
 
 export const loadActivityClass = (models: IModels) => {
@@ -23,7 +24,10 @@ export const loadActivityClass = (models: IModels) => {
       const activity = await models.Activity.create(doc);
 
       await graphqlPubsub.publish(`operationActivityChanged:${doc.contentId}`, {
-        operationActivityChanged: activity,
+        operationActivityChanged: {
+          type: 'created',
+          activity,
+        },
       });
 
       return activity;
@@ -41,10 +45,33 @@ export const loadActivityClass = (models: IModels) => {
       );
 
       await graphqlPubsub.publish(`operationActivityChanged:${doc.contentId}`, {
-        operationActivityChanged: updatedActivity,
+        operationActivityChanged: {
+          type: 'updated',
+          activity: updatedActivity,
+        },
       });
 
       return updatedActivity;
+    }
+
+    public static async removeActivity(
+      activityId: string,
+    ): Promise<IActivityDocument | null> {
+      const deletedActivity = await models.Activity.findOneAndDelete({
+        _id: activityId,
+      });
+
+      await graphqlPubsub.publish(
+        `operationActivityChanged:${deletedActivity?.contentId}`,
+        {
+          operationActivityChanged: {
+            type: 'removed',
+            activity: deletedActivity,
+          },
+        },
+      );
+
+      return deletedActivity;
     }
   }
 
