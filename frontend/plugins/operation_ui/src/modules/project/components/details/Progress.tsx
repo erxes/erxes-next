@@ -28,7 +28,7 @@ export const ProgressDot = ({
 };
 
 export const Progress = ({ projectId }: { projectId: string }) => {
-  const { projcetProgress } = useGetProjectProgress({
+  const { projectProgress } = useGetProjectProgress({
     variables: { _id: projectId },
     skip: !projectId,
   });
@@ -41,7 +41,7 @@ export const Progress = ({ projectId }: { projectId: string }) => {
           <p className="text-xs font-medium text-muted-foreground">Total:</p>
         </span>
         <p className="text-xs font-medium">
-          {projcetProgress?.totalScope || 0}
+          {projectProgress?.totalScope || 0}
         </p>
       </span>
       <span className="flex flex-col items-center gap-1">
@@ -50,7 +50,7 @@ export const Progress = ({ projectId }: { projectId: string }) => {
           <p className="text-xs font-medium text-muted-foreground">Started:</p>
         </span>
         <p className="text-xs font-medium">
-          {projcetProgress?.totalStartedScope || 0}
+          {projectProgress?.totalStartedScope || 0}
         </p>
       </span>
       <span className="flex flex-col items-center gap-1">
@@ -61,7 +61,7 @@ export const Progress = ({ projectId }: { projectId: string }) => {
           </p>
         </span>
         <p className="text-xs font-medium">
-          {projcetProgress?.totalCompletedScope || 0}
+          {projectProgress?.totalCompletedScope || 0}
         </p>
       </span>
     </div>
