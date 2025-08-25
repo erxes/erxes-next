@@ -30,6 +30,7 @@ export interface IListArgs extends ICursorPaginateParams {
   sortField: string;
   sortDirection: number;
   tagIds: string[];
+  excludeIds: string[];
   triggerTypes: string[];
 }
 
@@ -213,7 +214,14 @@ export const cursorPaginate = async <T extends Document>({
 };
 
 const generateFilter = (params: IListArgs) => {
-  const { status, searchValue, tagIds, triggerTypes, ids } = params;
+  const {
+    status,
+    searchValue,
+    tagIds,
+    triggerTypes,
+    ids,
+    excludeIds = [],
+  } = params;
 
   const filter: any = {
     status: { $nin: [AUTOMATION_STATUSES.ARCHIVED, 'template'] },
@@ -237,6 +245,9 @@ const generateFilter = (params: IListArgs) => {
 
   if (ids?.length) {
     filter._id = { $in: ids };
+  }
+  if (excludeIds.length) {
+    filter._id = { $nin: excludeIds };
   }
 
   return filter;

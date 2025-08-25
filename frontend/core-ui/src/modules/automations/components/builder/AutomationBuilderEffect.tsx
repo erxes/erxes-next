@@ -7,12 +7,13 @@ export const AutomationBuilderEffect = () => {
   const { triggers, actions, workflows } = useAutomationNodes();
   const { resetNodes } = useResetNodes();
 
-  useDeepCompareEffect(() => {
-    resetNodes();
-  }, [triggers, actions, workflows]);
+  // useDeepCompareEffect(() => {
+  //   resetNodes();
+  // }, [triggers, actions, workflows]);
 
   return <></>;
 };
+
 function useDeepCompareEffect(effect: React.EffectCallback, deps: any[]) {
   const prevDeps = useRef<any[]>([]);
 

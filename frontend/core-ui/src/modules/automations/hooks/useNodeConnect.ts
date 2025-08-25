@@ -1,19 +1,18 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { NodeData } from '@/automations/types';
+import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 import {
   checkIsValidConnect,
   connectionHandler,
   generateConnect,
 } from '@/automations/utils/automationConnectionUtils';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { addEdge, Connection, Node, useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 export const useNodeConnect = () => {
-  const { triggers, actions } = useAutomationNodes();
-  const { setValue } = useFormContext<TAutomationBuilderForm>();
+  const { triggers, actions, workflows, setNodesChangeToState } =
+    useAutomationNodes();
   const { getNodes, getEdges, getNode, setEdges } =
     useReactFlow<Node<NodeData>>();
 
@@ -22,16 +21,20 @@ export const useNodeConnect = () => {
 
   const { triggersConst, actionsConst } = useAutomation();
   const onConnection = (info: any) => {
-    const { triggers: updatedTriggers, actions: updatedActions } =
-      connectionHandler(triggers, actions, info, info.targetId, []);
-    setValue('triggers', updatedTriggers);
-    setValue(
-      'actions',
-      updatedActions.map((action) => ({
+    const {
+      triggers: updatedTriggers,
+      actions: updatedActions,
+      workFlows: updateWorkflows,
+    } = connectionHandler(triggers, actions, info, info.targetId, workflows);
+
+    setNodesChangeToState({
+      newTriggers: updatedTriggers,
+      newActions: updatedActions.map((action) => ({
         ...action,
         config: action.config || {},
       })),
-    );
+      newWorkflows: updateWorkflows,
+    });
   };
 
   const onConnect = useCallback(
@@ -39,6 +42,8 @@ export const useNodeConnect = () => {
       const source = getNode(params.source);
       setEdges((eds) => {
         const updatedEdges = addEdge({ ...params }, eds);
+
+        console.log({ params, source, updatedEdges });
 
         onConnection(generateConnect(params, source));
 

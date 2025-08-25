@@ -3,24 +3,25 @@ import { automationNodePositionSchema } from '@/automations/utils/AutomationForm
 import { z } from 'zod';
 
 const dragginWorkflowNode = z.object({
-  type: z.literal(AutomationNodeType.Workflow),
+  nodeType: z.literal(AutomationNodeType.Workflow),
   automationId: z.string(),
   name: z.string(),
   description: z.string(),
 });
 
 const draggingCommonNode = z.object({
-  type: z.union([
+  nodeType: z.union([
     z.literal(AutomationNodeType.Trigger),
     z.literal(AutomationNodeType.Action),
   ]),
+  type: z.string(),
   label: z.string(),
   description: z.string(),
   icon: z.string(),
   isCustom: z.boolean().optional(),
 });
 
-const dragginNodeProps = z.discriminatedUnion('type', [
+const dragginNodeProps = z.discriminatedUnion('nodeType', [
   dragginWorkflowNode,
   draggingCommonNode,
 ]);
@@ -32,7 +33,7 @@ const droppedNodeProps = z.intersection(
     awaitingToConnectNodeId: z.string().optional(),
   }),
   z.object({
-    type: z.literal(AutomationNodeType.Workflow),
+    nodeType: z.literal(AutomationNodeType.Workflow),
     automationId: z.string(),
     position: automationNodePositionSchema,
   }),

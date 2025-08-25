@@ -1,4 +1,4 @@
-import { getContentType } from '@/automations/utils/automationBuilderUtils';
+import { getContentType } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useFormContext, useWatch } from 'react-hook-form';
 

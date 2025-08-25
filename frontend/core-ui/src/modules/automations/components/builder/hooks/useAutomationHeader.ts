@@ -28,7 +28,7 @@ export const useAutomationHeader = () => {
   );
 
   const handleSave = async (values: TAutomationBuilderForm) => {
-    const { triggers, actions, name, status } = values;
+    const { triggers, actions, name, status, workflows } = values;
     const generateValues = () => {
       return {
         id,
@@ -54,15 +54,23 @@ export const useAutomationHeader = () => {
           label: a.label,
           description: a.description,
           position: a.position,
+          workflowId: a.workflowId,
         })),
+        workflows,
       };
     };
 
-    return save({ variables: generateValues() }).then(() => {
-      clearErrors();
-      toast({
-        title: 'Save successful',
-      });
+    return save({
+      variables: generateValues(),
+      onError: (error) => {
+        toast({ title: 'Something went wrong', description: error.message });
+      },
+      onCompleted: () => {
+        clearErrors();
+        toast({
+          title: 'Save successful',
+        });
+      },
     });
   };
 

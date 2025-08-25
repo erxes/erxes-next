@@ -48,11 +48,13 @@ const automationActionSchema = z.object({
   description: z.string(),
   isCustom: z.boolean().readonly().optional(),
   position: automationNodePositionSchema,
+  workflowId: z.string().optional(),
 });
 
 const automationWorkflowSchema = z.object({
   id: z.string(),
   automationId: z.string(),
+  nextActionId: z.string().optional(),
   name: z.string(),
   description: z.string(),
   config: z.record(z.any()),
@@ -84,6 +86,7 @@ const automationNodeStateSchema = z.discriminatedUnion('nodeType', [
 ]);
 
 export type TAutomationNodeState = z.infer<typeof automationNodeStateSchema>;
+export type TAutomationWorkflow = z.infer<typeof automationWorkflowSchema>;
 
 export type TAutomationBuilderForm = z.infer<
   typeof automationBuilderFormSchema

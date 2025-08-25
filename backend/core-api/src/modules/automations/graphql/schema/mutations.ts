@@ -3,6 +3,8 @@ const commonFields = `
   status: String
   triggers: [TriggerInput],
   actions: [ActionInput],
+  workflows: [WorkflowInput]
+
 `;
 
 const commonNoteFields = `

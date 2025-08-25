@@ -95,12 +95,25 @@ const actionSchema = new Schema(
   { _id: false },
 );
 
+const workflowSchema = new Schema(
+  {
+    id: { type: String, required: true },
+    automationId: { type: String, required: true },
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    config: { type: Object },
+    position: { type: Object },
+  },
+  { _id: false },
+);
+
 export const automationSchema = new Schema({
   _id: { type: Schema.Types.ObjectId },
   name: { type: String, required: true },
   status: { type: String, default: AUTOMATION_STATUSES.DRAFT },
   triggers: { type: [triggerSchema] },
   actions: { type: [actionSchema] },
+  workflows: { type: [workflowSchema] },
   createdAt: {
     type: Date,
     default: new Date(),

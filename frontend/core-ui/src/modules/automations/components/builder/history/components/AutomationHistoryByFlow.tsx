@@ -1,15 +1,14 @@
 import { useHistoryBeforeTitleContent } from '@/automations/components/builder/history/hooks/useHistoryBeforeTitleContent';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import {
-  generateEdges,
-  generateNodes,
-} from '@/automations/utils/automationBuilderUtils';
+
 import { Background, ConnectionMode, Controls, ReactFlow } from '@xyflow/react';
 import { IAutomationHistory } from 'ui-modules';
 import PrimaryEdge from '../../edges/PrimaryEdge';
 import ActionNode from '../../nodes/ActionNode';
 import TriggerNode from '../../nodes/TriggerNode';
+import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
+import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 
 const nodeTypes = {
   trigger: TriggerNode,

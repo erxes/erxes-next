@@ -23,8 +23,8 @@ import {
 } from '@/automations/utils/AutomationFormDefinitions';
 import { useAtom } from 'jotai';
 import { AutomationBuilderTabsType, IAutomation } from '../../types';
-import { deepCleanNulls } from '../../utils/automationBuilderUtils';
 import { AutomationHistories } from './history/components/AutomationHistories';
+import { deepCleanNulls } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 
 type AutomationBuilderProps = {
   detail?: IAutomation;

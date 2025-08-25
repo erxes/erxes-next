@@ -1,4 +1,3 @@
-import { getContentType } from '@/automations/utils/automationBuilderUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { getFieldsProperties, groupFieldsByType, IAction } from 'ui-modules';
@@ -6,6 +5,7 @@ import {
   IConfig,
   IManagePropertyFieldName,
 } from '../types/ManagePropertyTypes';
+import { getContentType } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 
 export const useManagePropertySidebarContent = (
   currentActionIndex: number,

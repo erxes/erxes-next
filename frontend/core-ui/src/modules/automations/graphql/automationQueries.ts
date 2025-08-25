@@ -61,6 +61,14 @@ query AutomationDetail($id: String!) {
       workflowId
       nextActionId
     }
+    workflows {
+      id
+      automationId
+      name
+      description
+      config
+      position
+    }
     createdUser {
       ${COMMON_USER_FIELDS}
     }
@@ -72,7 +80,7 @@ query AutomationDetail($id: String!) {
 `;
 
 export const AUTOMATIONS_MAIN_LIST = gql`
-query AutomationsMain($page: Int, $perPage: Int, $ids: [String], $excludeIds: Boolean, $searchValue: String, $sortField: String, $sortDirection: Int, $status: String, $tagIds: [String]) {
+query AutomationsMain($page: Int, $perPage: Int, $ids: [String], $excludeIds: [String], $searchValue: String, $sortField: String, $sortDirection: Int, $status: String, $tagIds: [String]) {
   automationsMain(page: $page, perPage: $perPage, ids: $ids, excludeIds: $excludeIds, searchValue: $searchValue, sortField: $sortField, sortDirection: $sortDirection, status: $status, tagIds: $tagIds) {
     list {
       _id

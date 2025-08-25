@@ -65,20 +65,19 @@ export const useAutomationNodeLibrarySidebar = () => {
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: AutomationNodeType,
     draggingNode: TDraggingNode,
   ) => {
+    console.log({ draggingNode });
     const data: TDroppedNode =
-      draggingNode.type === AutomationNodeType.Workflow
+      draggingNode.nodeType === AutomationNodeType.Workflow
         ? {
-            nodeType,
+            nodeType: AutomationNodeType.Workflow,
             automationId: draggingNode.automationId,
             name: draggingNode.name,
-            type: draggingNode.type,
             description: draggingNode.description,
           }
         : {
-            nodeType,
+            nodeType: draggingNode.nodeType,
             type: draggingNode.type,
             label: draggingNode.label,
             description: draggingNode.description,

@@ -1,21 +1,21 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { useNodeConnect } from '@/automations/hooks/useNodeConnect';
 import { useNodeEvents } from '@/automations/hooks/useNodeEvents';
-import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
-import { Node, useEdgesState, useNodesState } from '@xyflow/react';
+import { automationDropHandler } from '@/automations/utils/automationBuilderUtils/dropNodeHandler';
+import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
+import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
+import {
+  Node,
+  useEdgesState,
+  useNodesState,
+  useReactFlow,
+} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { themeState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
 import { NodeData } from '../types';
-import {
-  automationDropHandler,
-  generateEdges,
-  generateNodes,
-} from '../utils/automationBuilderUtils';
-import isEqual from 'lodash/isEqual';
 
 export const useReactFlowEditor = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -27,14 +27,15 @@ export const useReactFlowEditor = () => {
     reactFlowInstance,
     setReactFlowInstance,
   } = useAutomation();
-  const { setValue } = useFormContext<TAutomationBuilderForm>();
-  const { triggers, actions, workflows } = useAutomationNodes();
+  const { triggers, actions, workflows, setNodesChangeToState } =
+    useAutomationNodes();
+  const { getNodes, addNodes } = useReactFlow<Node<NodeData>>();
 
   const [nodes, _setNodes, onNodesChange] = useNodesState<Node<NodeData>>(
     generateNodes(triggers, actions, workflows),
   );
   const [edges, _setEdges, onEdgesChange] = useEdgesState<any>(
-    generateEdges(triggers, actions),
+    generateEdges(triggers, actions, workflows),
   );
 
   const { onNodeDoubleClick, onNodeDragStop } = useNodeEvents();
@@ -56,17 +57,10 @@ export const useReactFlowEditor = () => {
       workflows,
       event,
       reactFlowInstance,
+      getNodes,
+      addNodes,
     }) || {};
-    if (!isEqual(newTriggers, triggers)) {
-      setValue('triggers', newTriggers);
-    }
-    if (!isEqual(newActions, actions)) {
-      setValue('actions', newActions);
-    }
-    if (!isEqual(newWorkflows, workflows)) {
-      console.log({ newWorkflows });
-      setValue('workflows', newWorkflows);
-    }
+    setNodesChangeToState({ newTriggers, newActions, newWorkflows });
 
     if (awaitingToConnectNodeId) {
       setAwaitingToConnectNodeId('');

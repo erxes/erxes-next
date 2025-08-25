@@ -1,8 +1,7 @@
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import {
-  generateEdges,
-  generateNodes,
-} from '@/automations/utils/automationBuilderUtils';
+import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
+import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
+
 import { useReactFlow } from '@xyflow/react';
 
 export const useResetNodes = () => {
@@ -25,7 +24,7 @@ export const useResetNodes = () => {
       return node1;
     });
     setNodes(mergedArray);
-    const generatedEdges = generateEdges(triggers, actions);
+    const generatedEdges = generateEdges(triggers, actions, workflows);
     setEdges(generatedEdges);
   };
 

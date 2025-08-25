@@ -1,33 +1,30 @@
 import { useNodeDropDownActions } from '@/automations/components/builder/nodes/hooks/useNodeDropDownActions';
 import { NodeRemoveActionDialog } from '@/automations/components/builder/nodes/NodeDropdownActions';
+import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
 import { WorkflowActionMapper } from '@/automations/components/builder/nodes/WorkflowActionMapper';
 import {
   AutomationNodesType,
+  AutomationNodeType,
   NodeData,
   WorkflowNodeData,
 } from '@/automations/types';
 import {
+  IconArrowsMaximize,
   IconArrowsSplit2,
   IconDotsVertical,
   IconEdit,
 } from '@tabler/icons-react';
-import { Node, NodeProps } from '@xyflow/react';
-import { Button, cn, Dialog, DropdownMenu, Sheet } from 'erxes-ui';
-import { Dispatch, memo, SetStateAction } from 'react';
+import { Handle, Node, NodeProps, Position } from '@xyflow/react';
+import { Button, Card, cn, DropdownMenu, Sheet } from 'erxes-ui';
+import { Dispatch, memo, SetStateAction, useState } from 'react';
 
 const WorkflowNode = ({
   data,
   selected,
   id,
 }: NodeProps<Node<NodeData & WorkflowNodeData>>) => {
-  const {
-    fieldName,
-    isOpenDialog,
-    isOpenDropDown,
-    setOpenDropDown,
-    onRemoveNode,
-    setOpenDialog,
-  } = useNodeDropDownActions(id, data.nodeType);
+  const { isOpenDialog, isOpenDropDown, setOpenDropDown, onRemoveNode } =
+    useNodeDropDownActions(id, data.nodeType);
 
   return (
     <div className="flex flex-col">
@@ -36,10 +33,11 @@ const WorkflowNode = ({
       </div>
       <div
         className={cn(
-          'rounded-md shadow-md bg-background w-[280px] relative font-mono',
-          selected ? 'ring-2 ring-warning ring-offset-2' : '',
-          'transition-all duration-200',
-          data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
+          'rounded-md shadow-md bg-background w-[280px] relative font-mono transition-all duration-200',
+          {
+            'ring-2 ring-warning': selected,
+            'ring-2 ring-red-300 ring-offset-2': data?.error,
+          },
         )}
       >
         <div className="p-3 flex items-center justify-between border-b border-slate-200 gap-8">
@@ -51,6 +49,7 @@ const WorkflowNode = ({
           </div>
 
           <div className="flex items-center gap-1">
+            <WorkflowActionSelectorSheet data={data} />
             <DropdownMenu
               open={isOpenDropDown || isOpenDialog}
               onOpenChange={(open) => {
@@ -65,13 +64,6 @@ const WorkflowNode = ({
                 </Button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="w-42">
-                <WorkflowActionSelectorDialog
-                  isOpenDialog={isOpenDialog}
-                  setOpenDialog={setOpenDialog}
-                  data={data}
-                  id={id}
-                  fieldName={fieldName}
-                />
                 <DropdownMenu.Item asChild>
                   <NodeRemoveActionDialog onRemoveNode={onRemoveNode} />
                 </DropdownMenu.Item>
@@ -83,51 +75,70 @@ const WorkflowNode = ({
           <span className="text-xs text-accent-foreground ">
             {data.description}
           </span>
+          <WorkflowSelectedNodes {...data} />
         </div>
+        <NodeOutputHandler
+          nodeType={AutomationNodeType.Workflow}
+          handlerId={id}
+          className="!bg-warning"
+          addButtonClassName="hover:border-warning hover:text-warning "
+          showAddButton={false}
+        />
       </div>
     </div>
   );
 };
 
-const WorkflowActionSelectorDialog = ({
-  isOpenDialog,
-  setOpenDialog,
-  data,
-  id,
-  fieldName,
-}: {
-  isOpenDialog: boolean;
-  setOpenDialog: Dispatch<SetStateAction<boolean>>;
-  data: WorkflowNodeData;
-  id: string;
-  fieldName:
-    | AutomationNodesType.Triggers
-    | AutomationNodesType.Actions
-    | AutomationNodesType.Workflows;
-}) => {
+const WorkflowSelectedNodes = ({ automationId, config = {} }: any) => {
+  const { selectedActionIds = [] } = config || {};
+
+  return selectedActionIds.map((selectedActionId: string) => {
+    return (
+      <Card
+        key={`workflow-${selectedActionId}-left`}
+        className="relative bg-background shadow text-xs font-semibold rounded-xs m-2 p-2 text-mono"
+      >
+        <Handle
+          id={`workflow-${automationId}-${selectedActionId}-left`}
+          key={`workflow-${automationId}-${selectedActionId}-left`}
+          type="target"
+          position={Position.Left}
+          className={
+            '!left-4 !size-4 !bg-background !border !border-2 !rounded-full !border-accent-foreground !z-4'
+          }
+          isConnectable
+          title="workflow-connect"
+        />
+        <div className="ml-6 text-muted-foreground">
+          <p className="text-lg ">{selectedActionId}</p>
+          <span className="text-base">{selectedActionId}</span>
+        </div>
+      </Card>
+    );
+  });
+};
+
+const WorkflowActionSelectorSheet = ({ data }: { data: WorkflowNodeData }) => {
+  const [open, setOpen] = useState(false);
   return (
-    <Sheet
-      open={isOpenDialog}
-      onOpenChange={(open) => {
-        setOpenDialog(open);
-      }}
-    >
+    <Sheet open={open} onOpenChange={setOpen}>
       <Sheet.Trigger asChild>
         <Button variant="ghost" size="sm" className="w-full justify-start">
-          <IconEdit className="size-4" />
-          Select Actions
+          <IconArrowsMaximize className="size-4" />
         </Button>
       </Sheet.Trigger>
-      <Sheet.View className="p-0 md:w-[calc(100vw-theme(spacing.4))] flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none sm:max-w-screen-2xl">
+      <Sheet.View className="p-0 md:w-[calc(80vw-theme(spacing.4))] flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none sm:max-w-screen-2xl">
         <Sheet.Header>
-          <Sheet.Title>Workflow</Sheet.Title>
-          <Sheet.Description>
-            Select workflow action for connection
-          </Sheet.Description>
+          <div>
+            <Sheet.Title>Workflow</Sheet.Title>
+            <Sheet.Description>
+              Select workflow action for connection
+            </Sheet.Description>
+          </div>
           <Sheet.Close />
         </Sheet.Header>
         <Sheet.Content>
-          {isOpenDialog && <WorkflowActionMapper id={data.automationId} />}
+          {open && <WorkflowActionMapper id={data.automationId} />}
         </Sheet.Content>
       </Sheet.View>
     </Sheet>

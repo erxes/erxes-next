@@ -4,7 +4,7 @@ const queryParams = `
   page: Int
   perPage: Int
   ids: [String]
-  excludeIds: Boolean
+  excludeIds: [String]
   searchValue: String
   sortField: String
   sortDirection: Int

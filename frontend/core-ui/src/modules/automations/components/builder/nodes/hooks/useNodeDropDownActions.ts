@@ -1,6 +1,11 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
-import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
+import {
+  AutomationNodesType,
+  AutomationNodeType,
+  NodeData,
+} from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { Node, useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -15,6 +20,7 @@ export const useNodeDropDownActions = (
   nodeType: AutomationNodeType,
 ) => {
   const { queryParams, setQueryParams } = useAutomation();
+  const { setNodes } = useReactFlow<Node<NodeData>>();
 
   const { setValue, getValues } = useFormContext<TAutomationBuilderForm>();
   const [isOpenDropDown, setOpenDropDown] = useState(false);
@@ -34,6 +40,7 @@ export const useNodeDropDownActions = (
       )
       .filter((node) => node.id !== id);
 
+    setNodes((nodes) => nodes.filter((n) => n.id !== id));
     setValue(`${fieldName}`, updatedNodes);
 
     if (queryParams?.activeNodeId === id) {

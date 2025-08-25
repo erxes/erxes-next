@@ -1,3 +1,4 @@
+import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { NodeData } from '@/automations/types';
 import { onDisconnect } from '@/automations/utils/automationConnectionUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
@@ -40,9 +41,7 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
     Node<NodeData>,
     Edge<EdgeProps>
   >();
-  const [triggers = [], actions = []] = useWatch<TAutomationBuilderForm>({
-    name: ['triggers', 'actions'],
-  });
+  const { triggers, actions, workflows } = useAutomationNodes();
 
   return (
     <>
@@ -85,6 +84,7 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
                       nodes: getNodes(),
                       triggers,
                       actions,
+                      workflows,
                     });
                   }}
                 >

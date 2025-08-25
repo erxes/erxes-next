@@ -8,6 +8,7 @@ import {
   IAction,
   ITrigger,
   IWorkflowNode,
+  OptionalConnect,
 } from 'ui-modules';
 import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
 import {
@@ -258,85 +259,146 @@ export const generateNodes = (
 export const generateEdges = (
   triggers: ITrigger[],
   actions: IAction[],
+  workFlows: IWorkflowNode[] = [],
 ): Edge[] => {
-  let generatedEdges: any = [];
+  const generatedEdges: Edge[] = [];
 
-  const commonStyle = {
-    strokeWidth: 2,
-  };
-
+  // Common style & props reused across edges
+  const commonStyle = { strokeWidth: 2 };
   const commonEdgeDoc = {
-    updatable: 'target',
+    updatable: 'target' as const,
     sourceHandle: 'right',
     targetHandle: 'left',
   };
 
+  // Pre-index workflows for O(1) lookup
+  const workflowMap = new Map<string, IWorkflowNode>(
+    workFlows.map((wf) => [wf.id, wf]),
+  );
+
+  // --- Helper functions ---
+
+  const buildPrimaryEdge = (
+    nodeType: AutomationNodeType,
+    sourceId: string,
+    targetId: string,
+  ): Edge => ({
+    ...commonEdgeDoc,
+    id: `${nodeType}-${sourceId}`,
+    source: sourceId,
+    target: targetId,
+    style: commonStyle,
+    type: 'primary',
+    data: { type: nodeType },
+  });
+
+  const buildIfEdges = (
+    nodeType: AutomationNodeType,
+    edge: IAction,
+    config: Record<string, any>,
+  ): Edge[] => {
+    const { yes, no } = config;
+    return (['yes', 'no'] as const).flatMap((key) =>
+      config[key]
+        ? [
+            {
+              ...commonEdgeDoc,
+              id: `${nodeType}-${edge.id}-${key}`,
+              source: edge.id,
+              sourceHandle: `${key}-right`,
+              target: config[key],
+              style: commonStyle,
+              type: 'primary',
+              data: { type: nodeType },
+            },
+          ]
+        : [],
+    );
+  };
+
+  const buildOptionalEdges = (
+    nodeType: AutomationNodeType,
+    edge: IAction,
+    optionalConnects: OptionalConnect[],
+  ): Edge[] =>
+    optionalConnects.flatMap(({ actionId, sourceId, optionalConnectId }) =>
+      actionId
+        ? [
+            {
+              ...commonEdgeDoc,
+              id: `${nodeType}-${edge.id}-${optionalConnectId}`,
+              source: edge.id,
+              sourceHandle: `${sourceId}-${optionalConnectId}-right`,
+              target: actionId,
+              animated: true,
+              style: commonStyle,
+              type: 'primary',
+              data: { type: nodeType },
+            },
+          ]
+        : [],
+    );
+
+  const buildWorkflowEdges = (
+    nodeType: AutomationNodeType,
+    edge: IAction,
+  ): Edge[] => {
+    if (nodeType !== AutomationNodeType.Action) return [];
+    if (!edge.workflowId) return [];
+
+    const workflow = workflowMap.get(edge.workflowId);
+    if (!workflow?.config?.connections) return [];
+
+    return workflow.config.connections
+      .filter((conn: any) => conn.sourceActionId === edge.id.toString())
+      .map((conn: any) => ({
+        ...commonEdgeDoc,
+        id: `workflow-${workflow.id}-${conn.targetActionId}`,
+        source: conn.sourceActionId, // action id in current automation
+        target: `workflow-${workflow.id}-${conn.handle}`, // virtual workflow handle node
+        style: commonStyle,
+        type: 'workflow',
+        data: {
+          workflowId: workflow.id,
+          targetActionId: conn.targetActionId,
+          handle: conn.handle,
+        },
+      }));
+  };
+
+  // --- Main Loop ---
   for (const { type, edges } of [
-    { type: 'trigger', edges: triggers },
-    { type: 'action', edges: actions },
+    { type: AutomationNodeType.Trigger, edges: triggers },
+    { type: AutomationNodeType.Action, edges: actions },
   ]) {
-    const targetField = type === 'trigger' ? 'actionId' : 'nextActionId';
+    const targetField =
+      type === AutomationNodeType.Trigger ? 'actionId' : 'nextActionId';
 
     for (const edge of edges) {
       const target = (edge as any)[targetField];
+      const { optionalConnects = [], ...config } = edge?.config || {};
 
-      const edgeObj = {
-        ...commonEdgeDoc,
-        id: `${type}-${edge.id}`,
-        source: edge.id,
-        target: target,
-        style: { ...commonStyle },
-        type: 'primary',
-        data: {
-          type,
-        },
-      };
-
-      const {
-        optionalConnects = [],
-        workflowConnections = [],
-        ...config
-      } = edge?.config || {};
-
-      if (edge.type === 'if') {
-        const { yes, no } = config;
-
-        for (const [key, value] of Object.entries({ yes, no })) {
-          generatedEdges.push({
-            ...edgeObj,
-            id: `${type}-${edge.id}-${key}-${edgeObj.sourceHandle}`,
-            sourceHandle: `${key}-${edgeObj.sourceHandle}`,
-            target: value,
-          });
+      if (type === AutomationNodeType.Action) {
+        if (edge.type === 'if') {
+          generatedEdges.push(...buildIfEdges(type, edge as IAction, config));
+          continue;
         }
-        continue;
-      }
 
-      if (!!optionalConnects?.length) {
-        for (const {
-          actionId,
-          sourceId,
-          optionalConnectId,
-        } of optionalConnects) {
-          if (!actionId) {
-            continue;
-          }
-          generatedEdges.push({
-            ...edgeObj,
-            id: `${type}-${edge.id}-${optionalConnectId}`,
-            sourceHandle: `${sourceId}-${optionalConnectId}-${edgeObj.sourceHandle}`,
-            target: actionId,
-            animated: true,
-            style: { ...commonStyle },
-          });
+        if (optionalConnects.length > 0) {
+          generatedEdges.push(
+            ...buildOptionalEdges(type, edge as IAction, optionalConnects),
+          );
+        }
+
+        if (edge.workflowId) {
+          generatedEdges.push(...buildWorkflowEdges(type, edge as IAction));
+          continue;
         }
       }
 
-      if (!edgeObj?.target) {
-        continue;
+      if (target) {
+        generatedEdges.push(buildPrimaryEdge(type, edge.id.toString(), target));
       }
-
-      generatedEdges.push(edgeObj);
     }
   }
 
@@ -513,9 +575,9 @@ export const automationDropHandler = ({
     event.dataTransfer.getData('application/reactflow/draggingNode') || '{}',
   ) as TDroppedNode;
 
-  const { type, awaitingToConnectNodeId } = draggingNode;
+  const { nodeType, awaitingToConnectNodeId } = draggingNode;
 
-  if (!type) {
+  if (!nodeType) {
     return {
       actions,
       triggers,
@@ -537,12 +599,12 @@ export const automationDropHandler = ({
     actions,
     workflows,
     awaitingToConnectNodeId,
-    type,
+    type: nodeType,
     id,
   });
 
-  if (type === AutomationNodeType.Trigger) {
-    const { icon, label, description, isCustom } = draggingNode;
+  if (nodeType === AutomationNodeType.Trigger) {
+    const { icon, label, description, isCustom, type } = draggingNode;
     triggers = [
       ...triggers,
       {
@@ -557,7 +619,7 @@ export const automationDropHandler = ({
       },
     ];
   }
-  if (type === AutomationNodeType.Workflow) {
+  if (nodeType === AutomationNodeType.Workflow) {
     const { name, description, automationId } = draggingNode;
 
     workflows = [
@@ -572,8 +634,8 @@ export const automationDropHandler = ({
       },
     ];
   }
-  if (type === AutomationNodeType.Action) {
-    const { icon, label, isCustom, description } = draggingNode;
+  if (nodeType === AutomationNodeType.Action) {
+    const { icon, label, isCustom, description, type } = draggingNode;
     actions = [
       ...actions,
       {

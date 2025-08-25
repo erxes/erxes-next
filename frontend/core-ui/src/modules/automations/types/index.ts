@@ -35,6 +35,7 @@ export type NodeData = {
   isCustom?: boolean;
   nextActionId?: string;
   actionId?: string;
+  workflowId?: string;
   beforeTitleContent?: (
     id: string,
     type: AutomationNodeType,
@@ -82,6 +83,8 @@ export type AutomationDropHandlerParams = {
   triggers: ITrigger[];
   actions: IAction[];
   workflows?: IWorkflowNode[];
+  getNodes: () => Node<NodeData>[];
+  addNodes: (payload: Node<NodeData>[] | Node<NodeData>[]) => void;
 };
 
 export type TDraggingNode = {

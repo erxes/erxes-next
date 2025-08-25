@@ -1,5 +1,5 @@
 import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
-import { generateSendEmailRecipientMails } from '@/automations/utils/automationBuilderUtils';
+import { generateSendEmailRecipientMails } from '@/automations/utils/automationBuilderUtils/emailUtils';
 import { IconEye } from '@tabler/icons-react';
 import { Badge, Button, Label, Popover } from 'erxes-ui';
 import { useMemo } from 'react';

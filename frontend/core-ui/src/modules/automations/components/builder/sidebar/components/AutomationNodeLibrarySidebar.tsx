@@ -4,8 +4,9 @@ import { useAutomationsRecordTable } from '@/automations/hooks/useAutomationsRec
 import { AutomationNodeType } from '@/automations/types';
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { IconArrowsSplit2 } from '@tabler/icons-react';
+import { IconArrowsSplit2, IconExternalLink } from '@tabler/icons-react';
 import {
+  Button,
   Card,
   cn,
   Command,
@@ -14,7 +15,7 @@ import {
   Tabs,
 } from 'erxes-ui';
 import React from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import {
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
@@ -115,7 +116,6 @@ const TabContentWrapper = ({
     | IAutomationsActionConfigConstants[];
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: AutomationNodeType,
     { type, label, description, icon, isCustom }: any,
   ) => void;
 }) => {
@@ -156,7 +156,6 @@ const NodeLibraryRow = ({
   nodeType: AutomationNodeType;
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: AutomationNodeType,
     { type, label, description, icon, isCustom }: any,
   ) => void;
 }) => {
@@ -173,7 +172,7 @@ const NodeLibraryRow = ({
           },
         )}
         draggable
-        onDragStart={(event) => onDragStart(event, nodeType, item)}
+        onDragStart={(event) => onDragStart(event, { nodeType, ...item })}
       >
         <Card.Content className="p-3">
           <div className="flex items-center gap-4">
@@ -209,13 +208,17 @@ const AutomationsNodeLibrary = ({
 }: {
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: AutomationNodeType,
-    draggingNode: Extract<TDraggingNode, { type: AutomationNodeType.Workflow }>,
+    draggingNode: Extract<
+      TDraggingNode,
+      { nodeType: AutomationNodeType.Workflow }
+    >,
   ) => void;
 }) => {
   const { id } = useParams();
 
-  const { list } = useAutomationsRecordTable();
+  const { list } = useAutomationsRecordTable({
+    variables: { excludeIds: [id] },
+  });
 
   return list.map(({ _id, name = '', createdAt = '' }) => (
     <Command.Item value={name} asChild>
@@ -223,15 +226,15 @@ const AutomationsNodeLibrary = ({
         className="hover:shadow-md transition-shadow cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px] hover:border-warning"
         draggable
         onDragStart={(event) =>
-          onDragStart(event, AutomationNodeType.Workflow, {
-            type: AutomationNodeType.Workflow,
+          onDragStart(event, {
+            nodeType: AutomationNodeType.Workflow,
             automationId: _id,
             name,
             description: 'Hello World',
           })
         }
       >
-        <Card.Content className="p-3">
+        <Card.Content className="p-3 w-full">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-lg bg-warning/10 text-warning border-warning">
               <IconArrowsSplit2 />
@@ -246,6 +249,11 @@ const AutomationsNodeLibrary = ({
                 <RelativeDateDisplay.Value value={createdAt} />
               </p>
             </div>
+            <Link to={`/automations/edit/${_id}`}>
+              <Button variant="link">
+                <IconExternalLink />
+              </Button>
+            </Link>
           </div>
         </Card.Content>
       </Card>

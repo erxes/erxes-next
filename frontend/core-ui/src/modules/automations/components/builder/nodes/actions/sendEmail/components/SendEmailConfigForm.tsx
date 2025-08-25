@@ -1,10 +1,4 @@
-import { generateSendEmailRecipientMails } from '@/automations/utils/automationBuilderUtils';
-import {
-  IconCheck,
-  IconCircleDashedCheck,
-  IconEye,
-  IconX,
-} from '@tabler/icons-react';
+import { IconCheck, IconCircleDashedCheck, IconX } from '@tabler/icons-react';
 import {
   Badge,
   Button,
@@ -13,20 +7,16 @@ import {
   Form,
   Input,
   Label,
-  Popover,
   Separator,
   Tabs,
-  Tooltip,
 } from 'erxes-ui';
-import { useMemo, useState } from 'react';
-import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { useState } from 'react';
 import {
   IActionProps,
   PlaceHolderInput,
   SelectCustomer,
   SelectMember,
 } from 'ui-modules';
-import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
 import {
   useSendEmailCustomMailField,
   useSendEmailSidebarForm,

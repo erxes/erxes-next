@@ -41,11 +41,13 @@ const ActionNodeSourceHandler = ({
   type,
   nextActionId,
   config,
+  workflowId,
 }: {
   id: string;
   type: string;
   nextActionId?: string;
   config?: any;
+  workflowId?: string;
 }) => {
   if (type === 'if') {
     return (
@@ -87,14 +89,19 @@ const ActionNodeSourceHandler = ({
       className="!bg-success"
       handlerId={id}
       addButtonClassName="hover:text-success  hover:border-success"
-      showAddButton={!nextActionId}
+      showAddButton={!nextActionId && !workflowId}
       nodeType={AutomationNodeType.Action}
     />
   );
 };
 
-const ActionNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
-  const { beforeTitleContent, config, nextActionId } = data;
+const ActionNode = ({
+  data,
+  selected,
+  id,
+  ...sd
+}: NodeProps<Node<NodeData>>) => {
+  const { beforeTitleContent, config, nextActionId, workflowId } = data;
 
   return (
     <div className="flex flex-col" key={id}>
@@ -103,10 +110,11 @@ const ActionNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
       </div>
       <div
         className={cn(
-          'rounded-md shadow-md bg-background border border-muted w-[280px] font-mono',
-          selected ? 'ring-2 ring-success ring-offset-2' : '',
-          data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
-          'transition-all duration-200',
+          'rounded-md shadow-md bg-background border border-muted w-[280px] font-mono transition-all duration-200',
+          {
+            'ring-2 ring-success': selected,
+            'ring-2 ring-red-300': data?.error,
+          },
         )}
       >
         <div className="p-3 flex items-center justify-between border-b border-muted">
@@ -146,6 +154,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
           id={id}
           type={data.type}
           nextActionId={nextActionId}
+          workflowId={workflowId}
           config={config}
         />
       </div>

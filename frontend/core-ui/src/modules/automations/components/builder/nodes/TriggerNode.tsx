@@ -49,10 +49,11 @@ const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
       </div>
       <div
         className={cn(
-          'rounded-md shadow-md bg-background w-[280px] relative font-mono',
-          selected ? 'ring-2 ring-primary ring-offset-2' : '',
-          'transition-all duration-200',
-          data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
+          'rounded-md shadow-md bg-background w-[280px] relative font-mono transition-all duration-200',
+          {
+            'ring-2 ring-primary': selected,
+            'ring-2 ring-red-300': data?.error,
+          },
         )}
       >
         <div className="p-3 flex items-center justify-between border-b border-slate-200 gap-8">

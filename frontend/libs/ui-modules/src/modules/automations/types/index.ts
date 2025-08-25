@@ -191,6 +191,7 @@ export type IAutomationsActionConfigConstants = {
   isAvailableOptionalConnect?: boolean;
   emailRecipientsConst?: any;
   connectableActionTypes?: string[];
+  canBeTarget: boolean;
 };
 
 export type IAutomationNodeConfigConstants =
