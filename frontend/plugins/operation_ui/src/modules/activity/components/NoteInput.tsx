@@ -14,7 +14,7 @@ import { AssignMemberInEditor } from 'ui-modules';
 import { IconCommand, IconCornerDownLeft } from '@tabler/icons-react';
 import type { Block } from '@blocknote/core';
 
-export const NoteInput = ({ taskId }: { taskId: string }) => {
+export const NoteInput = ({ contentId }: { contentId: string }) => {
   const editor = useBlockEditor({placeholder: "Leave a note..."});
   const { createNote } = useCreateNote();
   const {
@@ -51,7 +51,7 @@ export const NoteInput = ({ taskId }: { taskId: string }) => {
     createNote({
       variables: {
         content: JSON.stringify(trimmedContent),
-        itemId: taskId,
+        itemId: contentId,
         mentions: getMentionedUserIds(trimmedContent),
       },
       onCompleted: () => {

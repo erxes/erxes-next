@@ -44,6 +44,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
   >(description ? JSON.parse(description) : undefined);
   const editor = useBlockEditor({
     initialContent: descriptionContent,
+    placeholder: 'Description...',
   });
   const { updateProject } = useUpdateProject();
   const currentUser = useAtomValue(currentUserState);
@@ -75,12 +76,15 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
+
   useEffect(() => {
+    if (!debouncedDescriptionContent) return;
     if (
-      !debouncedDescriptionContent ||
-      debouncedDescriptionContent === descriptionContent
-    )
+      JSON.stringify(debouncedDescriptionContent) ===
+      JSON.stringify(description ? JSON.parse(description) : undefined)
+    ) {
       return;
+    }
     updateProject({
       variables: {
         _id: projectId,
@@ -124,11 +128,11 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
         />
       </div>
       <Separator className="my-4" />
-      <div className="h-[60vh] overflow-y-auto overflow-x-hidden">
+      <div className="min-h-56 overflow-y-auto">
         <BlockEditor
           editor={editor}
           onChange={handleDescriptionChange}
-          className="min-h-full"
+          className="min-h-full read-only"
         />
       </div>
       <ActivityList contentId={projectId} contentDetail={project} />
