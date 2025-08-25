@@ -5,6 +5,7 @@ export interface ITeam {
   name: string;
   description: string;
   estimateType: number;
+  cycleEnabled?: boolean;
 }
 
 export interface ITeamDocument extends ITeam, Document {

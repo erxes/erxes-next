@@ -1,10 +1,19 @@
+import { Document } from 'mongoose';
+
 export interface ICycle {
-  _id: string;
   name: string;
+  description: string;
   startDate: Date;
   endDate: Date;
-  isEnd: boolean;
   teamId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  isCompleted: boolean;
+  isActive: boolean;
+  statistics?: object;
+  donePercent: number;
+  unFinishedTasks: string[];
+  number: number;
+}
+
+export interface ICycleDocument extends ICycle, Document {
+  _id: string;
 }
