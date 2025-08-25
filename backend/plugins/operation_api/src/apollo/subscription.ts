@@ -5,7 +5,9 @@ export default {
   name: 'operation',
   typeDefs: `
       operationTaskChanged(filter: ITaskFilter): TaskSubscription
+      operationProjectChanged(filter: IProjectFilter): ProjectSubscription
       operationActivityChanged(contentId: String!): OperationActivitySubscription
+
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
@@ -80,6 +82,59 @@ export default {
             ) {
               return false;
             }
+
+            return true;
+          },
+        ),
+      },
+
+      operationProjectChanged: {
+        resolve: (payload) => payload.operationProjectChanged,
+        subscribe: withFilter(
+          () => graphqlPubsub.asyncIterator('operationProjectChanged'),
+          async (payload, variables) => {
+            const project = payload.operationProjectChanged.project;
+            const filter = variables.filter || {};
+
+            if (!filter) return true;
+
+            if (filter._id && project._id === filter._id) {
+              return true;
+            }
+
+            if (filter.name) {
+              const regex = new RegExp(filter.name, 'i');
+              if (!regex.test(project.name)) return false;
+            }
+
+            if (filter.status && project.status !== filter.status) return false;
+            if (filter.priority && project.priority !== filter.priority)
+              return false;
+
+            if (
+              filter.startDate &&
+              new Date(project.startDate) < new Date(filter.startDate)
+            )
+              return false;
+
+            if (
+              filter.targetDate &&
+              new Date(project.targetDate) < new Date(filter.targetDate)
+            )
+              return false;
+
+            if (
+              filter.createdAt &&
+              new Date(project.createdAt) < new Date(filter.createdAt)
+            )
+              return false;
+
+            if (filter.teamId && !project.teamIds.includes(filter.teamId)) {
+              return false;
+            }
+            if (filter.createdBy && project.createdBy !== filter.createdBy)
+              return false;
+            if (filter.leadId && project.leadId !== filter.leadId) return false;
 
             return true;
           },

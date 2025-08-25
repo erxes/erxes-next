@@ -2,25 +2,24 @@ import { useMutation } from '@apollo/client';
 import { CREATE_PROJECT_MUTATION } from '@/project/graphql/mutation/createProject';
 import { useToast } from 'erxes-ui';
 import { useRecordTableCursor } from 'erxes-ui';
-import { GET_PROJECTS } from '@/project/graphql/queries/getProjects';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 
 export const useCreateProject = () => {
   const { toast } = useToast();
   const { setCursor } = useRecordTableCursor({
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
   });
+
   const [createProjectMutation, { loading, error }] = useMutation(
     CREATE_PROJECT_MUTATION,
     {
-      refetchQueries: [GET_PROJECTS],
       onCompleted: () => {
         toast({
           title: 'Success',
           description: 'Project created successfully',
           variant: 'default',
         });
-        setCursor(null);
+        setCursor('');
       },
       onError: (e) => {
         toast({

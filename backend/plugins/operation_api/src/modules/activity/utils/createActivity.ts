@@ -21,6 +21,7 @@ enum Module {
   ESTIMATE_POINT = 'ESTIMATE_POINT',
   PROJECT = 'PROJECT',
   LEAD = 'LEAD',
+  CYCLE = 'CYCLE',
 }
 
 const FIELD_TO_MODULE: Record<string, Module> = {
@@ -31,6 +32,7 @@ const FIELD_TO_MODULE: Record<string, Module> = {
   targetDate: Module.END_DATE,
   estimatePoint: Module.ESTIMATE_POINT,
   leadId: Module.LEAD,
+  cycleId: Module.CYCLE,
 };
 
 const toStr = (val: any): string | undefined =>
