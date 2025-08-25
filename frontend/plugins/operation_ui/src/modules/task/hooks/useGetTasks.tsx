@@ -17,9 +17,16 @@ import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
-import { TASKS_CHANGED } from '@/task/graphql/subscriptions/tasksChanged';
+import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
 
 const TASKS_PER_PAGE = 30;
+
+interface ITaskChanged {
+  operationTaskChanged: {
+    type: string;
+    task: ITask;
+  };
+}
 
 export const useTasksVariables = (
   variables?: QueryHookOptions<ICursorListResponse<ITask>>['variables'],
@@ -85,9 +92,54 @@ export const useTasks = (
   const { list: tasks, pageInfo, totalCount } = data?.getTasks || {};
 
   useEffect(() => {
-    const unsubscribe = subscribeToMore<any>({
-      document: TASKS_CHANGED,
+    const unsubscribe = subscribeToMore<ITaskChanged>({
+      document: TASK_CHANGED,
       variables: { filter: variables },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!prev || !subscriptionData.data) return prev;
+
+        const { type, task } = subscriptionData.data.operationTaskChanged;
+        const currentList = prev.getTasks.list;
+
+        let updatedList = currentList;
+
+        if (type === 'create') {
+          const exists = currentList.some(
+            (item: ITask) => item._id === task._id,
+          );
+          if (!exists) {
+            updatedList = [task, ...currentList];
+          }
+          console.log(task);
+        }
+
+        if (type === 'updated') {
+          updatedList = currentList.map((item: ITask) =>
+            item._id === task._id ? { ...item, ...task } : item,
+          );
+        }
+
+        if (type === 'removed') {
+          updatedList = currentList.filter(
+            (item: ITask) => item._id !== task._id,
+          );
+        }
+
+        return {
+          ...prev,
+          getTasks: {
+            ...prev.getTasks,
+            list: updatedList,
+            pageInfo: prev.getTasks.pageInfo,
+            totalCount:
+              type === 'created'
+                ? prev.getTasks.totalCount + 1
+                : type === 'removed'
+                ? prev.getTasks.totalCount - 1
+                : prev.getTasks.totalCount,
+          },
+        };
+      },
     });
 
     return () => unsubscribe();

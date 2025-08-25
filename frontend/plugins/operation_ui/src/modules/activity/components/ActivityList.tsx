@@ -64,7 +64,7 @@ export const ActivityList = ({
           ))}
         </div>
       </ActivityListProvider>
-      <span className="ml-2.5">
+      <span className="ml-2.5 mb-6">
         <NoteInput contentId={contentId} />
       </span>
     </div>

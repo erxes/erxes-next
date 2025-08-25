@@ -221,7 +221,7 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async removeTask(TaskId: string[]) {
-      return models.Task.deleteOne({ _id: { $in: TaskId } });
+      return models.Task.findOneAndDelete({ _id: { $in: TaskId } });
     }
   }
 
