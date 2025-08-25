@@ -1,4 +1,4 @@
-import { checkServiceRunning, sendWorkerQueue } from '../../utils';
+import { sendWorkerQueue } from '../../utils';
 import { z } from 'zod';
 const baseNotificationSchema = z.object({
   title: z.string(),
@@ -34,15 +34,11 @@ export const sendNotification = async (
   subdomain: string,
   data: { userIds: string[] } & Partial<INotificationData>,
 ) => {
-  if (!(await checkServiceRunning('notifications'))) {
-    return;
-  }
-
   sendWorkerQueue('notifications', 'notifications').add('notifications', {
     subdomain,
-    data: notificationZTypeSchema.parse({
+    data: {
       ...data,
       kind: data.kind ?? 'user',
-    }),
+    },
   });
 };

@@ -1,13 +1,26 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { projectSchema } from '@/project/db/definitions/project';
-import { IProject, IProjectDocument } from '@/project/@types/project';
+import {
+  IProject,
+  IProjectDocument,
+  IProjectUpdate,
+} from '@/project/@types/project';
+import { createActivity } from '@/activity/utils/createActivity';
 
 export interface IProjectModel extends Model<IProjectDocument> {
   getProject(_id: string): Promise<IProjectDocument>;
   getProjects(filter: any): Promise<IProjectDocument[]>;
   createProject(doc: IProject): Promise<IProjectDocument>;
-  updateProject(_id: string, doc: IProject): Promise<IProjectDocument>;
+  updateProject({
+    doc,
+    userId,
+    subdomain,
+  }: {
+    doc: IProjectUpdate;
+    userId: string;
+    subdomain: string;
+  }): Promise<IProjectDocument>;
   removeProject(projectId: string): Promise<{ ok: number }>;
 }
 
@@ -33,10 +46,35 @@ export const loadProjectClass = (models: IModels) => {
       return models.Project.insertOne(doc);
     }
 
-    public static async updateProject(_id: string, doc: IProject) {
+    public static async updateProject({
+      doc,
+      userId,
+      subdomain,
+    }: {
+      doc: IProjectUpdate;
+      userId: string;
+      subdomain: string;
+    }) {
+      const { _id, ...rest } = doc;
+
+      const project = await models.Project.findOne({ _id });
+
+      if (!project) {
+        throw new Error('Project not found');
+      }
+
+      await createActivity({
+        contentType: 'project',
+        oldDoc: project,
+        newDoc: doc,
+        subdomain,
+        userId,
+        contentId: project._id,
+      });
+
       return await models.Project.findOneAndUpdate(
         { _id },
-        { $set: { ...doc } },
+        { $set: { ...rest } },
       );
     }
 

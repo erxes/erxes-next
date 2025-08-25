@@ -12,7 +12,7 @@ import { handleMongoChangeEvent } from './mongo';
 import { handleNotifications } from '~/bullmq/notifications';
 
 export const initMQWorkers = async (redis: any) => {
-  console.info('Starting worker ...');
+  console.info('Starting worker log ...');
 
   console.info('Initialized databases');
   return new Promise<void>((resolve, reject) => {

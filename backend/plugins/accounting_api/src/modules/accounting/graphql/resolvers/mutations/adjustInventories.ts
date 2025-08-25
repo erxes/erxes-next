@@ -1,8 +1,8 @@
-import { getPureDate, getTomorrow } from 'erxes-api-shared/utils';
+import { getPureDate, graphqlPubsub } from 'erxes-api-shared/utils';
 import { IModels, IContext } from '~/connectionResolvers';
 import { IAdjustInventory, ADJ_INV_STATUSES } from '@/accounting/@types/adjustInventory';
 import { TR_STATUSES } from '@/accounting/@types/constants';
-import { calcInvTrs, fixInvTrs } from '../../../utils/inventories';
+import { adjustRunning } from '../../../utils/inventories';
 
 const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {
   const date = getPureDate(adjustInventory.date);
@@ -32,28 +32,6 @@ const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory
   return { beginDate, beforeAdjInv };
 }
 
-const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => {
-  if (!adjustInventory?.successDate) {
-    return beginDate;
-  }
-
-  // yavaandaa logoos delete iig mun shalgah yum baina
-  const betweenModifiedFirstTr = await models.Transactions.findOne({
-    date: { $gte: beginDate, $lte: adjustInventory.successDate },
-    'details.productId': { $exists: true, $ne: '' },
-    $or: [
-      { createdAt: { $gte: adjustInventory.checkedDate } },
-      { updatedAt: { $gte: adjustInventory.checkedDate } },
-    ]
-  }).sort({ date: 1 }).lean();
-
-  if (betweenModifiedFirstTr) {
-    return betweenModifiedFirstTr.date;
-  }
-
-  return adjustInventory.successDate;
-}
-
 const adjustInventoryMutations = {
   async adjustInventoryAdd(
     _root,
@@ -66,18 +44,42 @@ const adjustInventoryMutations = {
     return adjusting;
   },
 
-  async adjustInventoryPublish(_root, { _id }: { _id: string }, { models }: IContext) {
-    const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
+  async adjustInventoryPublish(_root, { adjustId }: { adjustId: string }, { models, user }: IContext) {
+    const adjusting = await models.AdjustInventories.getAdjustInventory(adjustId);
     if (adjusting.status === ADJ_INV_STATUSES.PUBLISH) {
       throw new Error('this adjusting is published');
     }
+    if (adjusting.status !== ADJ_INV_STATUSES.COMPLETE) {
+      throw new Error('This adjusting cannot be published yet.');
+    }
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.PUBLISH, modifiedBy: user._id } });
+
+    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+      accountingAdjustInventoryChanged: {
+        ...adjusting,
+        status: ADJ_INV_STATUSES.PUBLISH,
+        modifiedBy: user._id
+      },
+    });
+
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
   },
 
-  async adjustInventoryCancel(_root, { _id }: { _id: string }, { models }: IContext) {
-    const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
-    if (adjusting.status === ADJ_INV_STATUSES.PUBLISH) {
-      throw new Error('this adjusting is published');
+  async adjustInventoryCancel(_root, { adjustId }: { adjustId: string }, { models, user }: IContext) {
+    const adjusting = await models.AdjustInventories.getAdjustInventory(adjustId);
+    if (adjusting.status !== ADJ_INV_STATUSES.PUBLISH) {
+      throw new Error('this adjusting cannot be cancel yet, it has not been published.');
     }
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.DRAFT, modifiedBy: user._id } });
+    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+      accountingAdjustInventoryChanged: {
+        ...adjusting,
+        status: ADJ_INV_STATUSES.DRAFT,
+        modifiedBy: user._id
+      },
+    });
+
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
   },
 
   async adjustInventoryRemove(_root, { _id }: { _id: string }, { models }: IContext) {
@@ -89,71 +91,22 @@ const adjustInventoryMutations = {
 
   async adjustInventoryRun(_root, { adjustId }: { adjustId: string }, { models, user, subdomain }: IContext) {
     const adjustInventory = await models.AdjustInventories.getAdjustInventory(adjustId);
-    const date = adjustInventory.date;
+
     const { beginDate, beforeAdjInv } = await checkValidDate(models, adjustInventory);
 
-    let currentDate = await recheckValidDate(models, adjustInventory, beginDate);
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.RUNNING, modifiedBy: user._id } });
 
-    await models.AdjustInvDetails.cleanAdjustInvDetails({ adjustId });
-    if (beforeAdjInv) {
-      await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId });
-    }
+    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+      accountingAdjustInventoryChanged: {
+        ...adjustInventory,
+        status: ADJ_INV_STATUSES.RUNNING,
+        modifiedBy: user._id
+      },
+    });
 
-    const trFilter = {
-      'details.productId': { $exists: true, $ne: '' },
-      'details.accountId': { $exists: true, $ne: '' },
-      'branchId': { $exists: true, $ne: '' },
-      'departmentId': { $exists: true, $ne: '' },
-      status: { $in: TR_STATUSES.ACTIVE },
-    }
+    adjustRunning(models, adjustInventory, beginDate, beforeAdjInv);
 
-    if (currentDate < beginDate) {
-      console.log('xxxxxxxxxxxxx', currentDate, beginDate)
-      await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
-    }
-
-    // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
-    while (currentDate < date) {
-      console.log('dddddddddddddddd', currentDate, date)
-      const nextDate = getTomorrow(currentDate);
-
-      try {
-        await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
-      } catch (e) {
-        const now = new Date();
-        await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedDate: now } });
-        // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
-        // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
-        //   accountingsAdjustInventoriesRunner: {
-        //     userId: user._id,
-        //     adjustId,
-        //     data: {
-        //       ...adjustInventory,
-        //       checkedDate: now,
-        //       error: e.message,
-        //     }
-        //   }
-        // });
-        break;
-      }
-
-      const now = new Date();
-      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedDate: now } });
-      // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
-
-      // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
-      //   accountingsAdjustInventoriesRunner: {
-      //     userId: user._id,
-      //     adjustId,
-      //     data: {
-      //       ...adjustInventory,
-      //       successDate: currentDate,
-      //       lastDate: now,
-      //     }
-      //   }
-      // });
-      currentDate = nextDate;
-    }
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
   }
 };
 

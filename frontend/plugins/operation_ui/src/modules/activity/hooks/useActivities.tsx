@@ -5,13 +5,18 @@ import { IActivity } from '@/activity/types';
 import { ICursorListResponse } from 'erxes-ui';
 import { ACTIVITY_CHANGED } from '@/activity/graphql/subsciptions/activityChanged';
 
+interface ISubscriptionData {
+  operationActivityChanged: {
+    type: 'created' | 'updated' | 'removed';
+    activity: IActivity;
+  };
+}
+
 export const useActivities = (contentId: string) => {
   const { data, loading, refetch, subscribeToMore } = useQuery<
     ICursorListResponse<IActivity>
   >(GET_ACTIVITIES, {
-    variables: {
-      contentId,
-    },
+    variables: { contentId },
   });
 
   const {
@@ -21,29 +26,37 @@ export const useActivities = (contentId: string) => {
   } = data?.getOperationActivities || {};
 
   useEffect(() => {
-    const unsubscribe = subscribeToMore<any>({
+    const unsubscribe = subscribeToMore<ISubscriptionData>({
       document: ACTIVITY_CHANGED,
       variables: { contentId },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const newData = subscriptionData.data.operationActivityChanged;
+        const { type, activity } =
+          subscriptionData.data.operationActivityChanged;
+        const currentList = prev.getOperationActivities.list;
 
-        const prevList = prev.getOperationActivities.list;
+        let updatedList = currentList;
 
-        const existsIndex = prevList.findIndex(
-          (item: any) => item._id === newData._id,
-        );
+        if (type === 'created') {
+          const exists = currentList.some(
+            (item: IActivity) => item._id === activity._id,
+          );
+          if (!exists) {
+            updatedList = [...currentList, activity];
+          }
+        }
 
-        let updatedList;
+        if (type === 'updated') {
+          updatedList = currentList.map((item: IActivity) =>
+            item._id === activity._id ? { ...item, ...activity } : item,
+          );
+        }
 
-        if (existsIndex !== -1) {
-          updatedList = [
-            newData,
-            ...prevList.filter((_, idx) => idx !== existsIndex),
-          ];
-        } else {
-          updatedList = [newData, ...prevList];
+        if (type === 'removed') {
+          updatedList = currentList.filter(
+            (item: IActivity) => item._id !== activity._id,
+          );
         }
 
         return {
@@ -51,6 +64,13 @@ export const useActivities = (contentId: string) => {
           getOperationActivities: {
             ...prev.getOperationActivities,
             list: updatedList,
+            pageInfo: prev.getOperationActivities.pageInfo,
+            totalCount:
+              type === 'created'
+                ? prev.getOperationActivities.totalCount + 1
+                : type === 'removed'
+                ? prev.getOperationActivities.totalCount - 1
+                : prev.getOperationActivities.totalCount,
           },
         };
       },

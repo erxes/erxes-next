@@ -1,9 +1,9 @@
+import { NOTIFICATION_FIELDS } from '@/notification/my-inbox/graphql/notificationsQueries';
+
 export const NOTIFICATION_SUBSCRIPTION = `
 	subscription notificationInserted($userId: String) {
 		notificationInserted(userId: $userId) {
-			_id
-			title
-			message
+			${NOTIFICATION_FIELDS}
 		}
   }
 `;

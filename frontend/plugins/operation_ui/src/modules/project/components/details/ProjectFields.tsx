@@ -20,6 +20,7 @@ import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
+import { ActivityList } from '@/activity/components/ActivityList';
 
 export const ProjectFields = ({ projectId }: { projectId: string }) => {
   const { project } = useGetProject({
@@ -43,6 +44,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
   >(description ? JSON.parse(description) : undefined);
   const editor = useBlockEditor({
     initialContent: descriptionContent,
+    placeholder: 'Description...',
   });
   const { updateProject } = useUpdateProject();
   const currentUser = useAtomValue(currentUserState);
@@ -74,12 +76,15 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
+
   useEffect(() => {
+    if (!debouncedDescriptionContent) return;
     if (
-      !debouncedDescriptionContent ||
-      debouncedDescriptionContent === descriptionContent
-    )
+      JSON.stringify(debouncedDescriptionContent) ===
+      JSON.stringify(description ? JSON.parse(description) : undefined)
+    ) {
       return;
+    }
     updateProject({
       variables: {
         _id: projectId,
@@ -88,6 +93,8 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedDescriptionContent]);
+  if (!project) return null;
+
   return (
     <div className="flex flex-col gap-3">
       <IconPicker
@@ -110,7 +117,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
       <div className="gap-2 flex flex-wrap w-full">
         <SelectStatus.Detail value={status} id={projectId} />
         <SelectProjectPriority projectId={projectId} value={priority} />
-        <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds}/>
+        <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds} />
         <DateSelect.Detail value={startDate} id={projectId} type="start" />
         <DateSelect.Detail value={targetDate} id={projectId} type="target" />
         <SelectTeam.Detail
@@ -121,13 +128,14 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
         />
       </div>
       <Separator className="my-4" />
-      <div className="h-[60vh] overflow-y-auto overflow-x-hidden">
+      <div className="min-h-56 overflow-y-auto">
         <BlockEditor
           editor={editor}
           onChange={handleDescriptionChange}
-          className="min-h-full"
+          className="min-h-full read-only"
         />
       </div>
+      <ActivityList contentId={projectId} contentDetail={project} />
     </div>
   );
 };
