@@ -20,6 +20,7 @@ const userNotificationSchema = baseNotificationSchema.extend({
   contentTypeId: z.string(),
   action: z.string(),
   notificationType: z.string(),
+  allowMultiple: z.boolean().default(false),
 });
 
 // Union for notification

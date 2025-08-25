@@ -28,6 +28,7 @@ export interface INotificationDocument extends Document {
   // Timestamps
   createdAt: Date;
   expiresAt?: Date; // Auto-cleanup old notifications
+  updatedAt?: Date;
   isArchived: Boolean;
   kind: 'system' | 'user';
 }
@@ -102,6 +103,10 @@ export const notificationSchema = new Schema({
 
   expiresAt: {
     type: Date,
+  },
+  updatedAt: {
+    type: Date,
+    optional: true,
   },
   isArchived: {
     type: Boolean,
