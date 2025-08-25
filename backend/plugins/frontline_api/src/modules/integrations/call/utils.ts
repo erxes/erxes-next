@@ -975,3 +975,127 @@ const updateErxesConversation = async (subdomain, payload) => {
 
   return await receiveInboxMessage(subdomain, data);
 };
+
+// Enhanced WebSocket Handler with improved publishing
+export function enhancedHandleCallEvent(json, graphqlPubsub) {
+  try {
+    if (json.type !== 'request') return;
+
+    const messages = Array.isArray(json.message)
+      ? json.message
+      : [json.message];
+
+    for (const message of messages) {
+      const { eventname, eventbody, transactionid } = message;
+
+      console.log(`📞 ${eventname} EVENT:`, eventbody);
+
+      switch (eventname) {
+        case 'CallQueueStatus':
+          handleCallQueueStatus(eventbody, graphqlPubsub);
+          break;
+
+        case 'ActiveCallStatus':
+          handleActiveCallStatus(eventbody, graphqlPubsub);
+          break;
+
+        default:
+          console.log(`⚠️ Unhandled event: ${eventname}`);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error handling call event:', error);
+  }
+}
+
+function handleCallQueueStatus(eventBody, graphqlPubsub) {
+  const events = Array.isArray(eventBody) ? eventBody : [eventBody];
+
+  events.forEach((item) => {
+    const { extension } = item;
+
+    if (item.member) {
+      // Agent-specific events
+      console.log('📱 Agent event:', item);
+
+      // Publish to specific extension channel
+      if (extension) {
+        graphqlPubsub.publish(`callAgent_${extension}`, {
+          callStatistic: item,
+        });
+      }
+
+      // Publish to general channel
+      graphqlPubsub.publish('callAgent', {
+        callStatistic: item,
+      });
+
+      // Publish combined queue status
+      if (extension) {
+        graphqlPubsub.publish(`queueStatus_${extension}`, {
+          callStatistic: item,
+        });
+      }
+    } else {
+      // Queue statistics events
+      console.log('📊 Statistics event:', item);
+
+      // Publish to specific extension channel
+      if (extension) {
+        graphqlPubsub.publish(`callStatistic_${extension}`, {
+          callStatistic: item,
+        });
+      }
+
+      // Publish to general channel
+      graphqlPubsub.publish('callStatistic', {
+        callStatistic: item,
+      });
+
+      // Publish combined queue status
+      if (extension) {
+        graphqlPubsub.publish(`queueStatus_${extension}`, {
+          callStatistic: item,
+        });
+      }
+    }
+  });
+}
+
+function handleActiveCallStatus(eventBody, graphqlPubsub) {
+  const events = Array.isArray(eventBody) ? eventBody : [eventBody];
+
+  events.forEach((callEvent) => {
+    console.log('☎️ Active call event:', callEvent);
+
+    const { feature_calleenum, action, state, callernum, connectednum } =
+      callEvent;
+
+    // Publish to specific extension if available
+    if (feature_calleenum) {
+      graphqlPubsub.publish(`activeCallStatus_${feature_calleenum}`, {
+        activeCallStatus: callEvent,
+      });
+    }
+
+    // Publish to general channel
+    graphqlPubsub.publish('activeCallStatus', {
+      activeCallStatus: callEvent,
+    });
+
+    // Log call flow for debugging
+    switch (action) {
+      case 'add':
+        console.log(`📞 NEW CALL: ${callernum} → ${connectednum} (${state})`);
+        break;
+      case 'update':
+        console.log(
+          `📞 CALL UPDATE: ${callernum} → ${connectednum} (${state})`,
+        );
+        break;
+      case 'delete':
+        console.log(`📞 CALL ENDED: ${callEvent.channel}`);
+        break;
+    }
+  });
+}

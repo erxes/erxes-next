@@ -13,6 +13,11 @@ export default {
       waitingCallReceived(extension: String): String
       talkingCallReceived(extension: String): String
       agentCallReceived(extension: String): String
+
+      callStatistic(extension: String): CallStatistic
+      callAgent(extension: String): CallAgent
+      activeCallStatus(extension: String): ActiveCall
+      queueStatus(extension: String!): QueueStatus
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
@@ -190,6 +195,90 @@ export default {
             return response.extension === variables.extension;
           },
         ),
+      },
+      callStatistic: {
+        subscribe: (parent, args, { pubsub }) => {
+          const channel = args.extension
+            ? `callStatistic_${args.extension}`
+            : 'callStatistic';
+
+          return graphqlPubsub.asyncIterator([channel]);
+        },
+        resolve: (payload) => {
+          return payload.callStatistic;
+        },
+      },
+
+      callAgent: {
+        subscribe: (parent, args, { pubsub }) => {
+          const channel = args.extension
+            ? `callAgent_${args.extension}`
+            : 'callAgent';
+
+          return graphqlPubsub.asyncIterator([channel]);
+        },
+        resolve: (payload) => {
+          return payload.callStatistic; // Your current logic uses same payload
+        },
+      },
+
+      activeCallStatus: {
+        subscribe: (parent, args, { pubsub }) => {
+          const channel = args.extension
+            ? `activeCallStatus_${args.extension}`
+            : 'activeCallStatus';
+
+          return graphqlPubsub.asyncIterator([channel]);
+        },
+        resolve: (payload) => {
+          return payload.activeCallStatus;
+        },
+      },
+
+      queueStatus: {
+        subscribe: (parent, args, { pubsub }) => {
+          if (!args.extension) {
+            throw new Error(
+              'Extension is required for queue status subscription',
+            );
+          }
+
+          return graphqlPubsub.asyncIterator([
+            `queueStatus_${args.extension}`,
+            `callStatistic_${args.extension}`,
+            `callAgent_${args.extension}`,
+          ]);
+        },
+        resolve: async (payload, args, { models }) => {
+          // Combine statistics and agent data
+          const { extension } = args;
+          const statistics = payload.callStatistic;
+
+          // Transform agent data
+          const agents = statistics?.member
+            ? statistics.member.map((member) => ({
+                extension: member.member_extension,
+                name: `${member.first_name} ${member.last_name}`,
+                status: member.status,
+                callsAnswered: member.answer,
+                callsAbandoned: member.abandon,
+                talkTime: member.talktime,
+                pauseTime: member.pausetime,
+                pauseReason: member.pause_reason,
+              }))
+            : [];
+
+          return {
+            extension,
+            queuename: statistics?.queuename,
+            totalCalls: statistics?.callstotal,
+            waitingCalls: statistics?.callswaiting,
+            completedCalls: statistics?.callscomplete,
+            abandonedCalls: statistics?.callsabandoned,
+            agents,
+            statistics,
+          };
+        },
       },
     };
   },
