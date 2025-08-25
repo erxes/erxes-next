@@ -31,6 +31,8 @@ import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority'
 import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
 import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
 import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
+import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
+import { useSetAtom } from 'jotai';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
@@ -48,8 +50,7 @@ export const tasksColumns = (
         const name = cell.getValue() as string;
         const [value, setValue] = useState(name);
         const { updateTask } = useUpdateTask();
-        const { teamId, projectId } = useParams();
-        const navigate = useNavigate();
+        const setActiveTask = useSetAtom(taskDetailSheetState);
 
         const handleUpdate = () => {
           if (value !== name) {
@@ -58,11 +59,6 @@ export const tasksColumns = (
             });
           }
         };
-
-        const url =
-          teamId && !projectId
-            ? `/operation/team/${teamId}/tasks/${cell.row.original._id}`
-            : `/operation/tasks/${cell.row.original._id}`;
 
         return (
           <PopoverScoped
@@ -83,7 +79,7 @@ export const tasksColumns = (
                 variant="secondary"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(url);
+                  setActiveTask(cell.row.original._id);
                 }}
               >
                 {name}

@@ -184,7 +184,6 @@ const SelectAssigneeTaskRoot = ({
   variant: `${SelectTriggerVariant}`;
   teamIds?: string[] | string;
   id?: string;
-  exclude?: boolean;
 }) => {
   const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);

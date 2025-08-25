@@ -6,8 +6,7 @@ import {
   useQueryState,
   PopoverScoped,
 } from 'erxes-ui';
-import { useProjects } from '@/project/hooks/useGetProjects';
-import { IProject } from '@/project/types';
+import { useProjectsInline } from '@/project/hooks/useGetProjects';
 import React, { useState } from 'react';
 import {
   SelectProjectContext,
@@ -35,7 +34,7 @@ export const SelectProjectProvider = ({
 }) => {
   const { teamId: _teamId } = useParams();
 
-  const { projects, handleFetchMore, totalCount } = useProjects({
+  const { projects, handleFetchMore, totalCount } = useProjectsInline({
     variables: {
       teamIds: [teamId || _teamId],
     },
@@ -83,7 +82,11 @@ const SelectProjectValue = ({ placeholder }: { placeholder?: string }) => {
   );
 };
 
-const SelectProjectCommandItem = ({ project }: { project: IProject }) => {
+const SelectProjectCommandItem = ({
+  project,
+}: {
+  project: { _id: string; name: string };
+}) => {
   const { onValueChange, value } = useSelectProjectContext();
 
   return (

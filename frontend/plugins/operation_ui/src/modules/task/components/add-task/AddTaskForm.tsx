@@ -61,7 +61,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
       projectId: projectId || undefined,
       startDate: undefined,
       targetDate: undefined,
-      estimatePoint: undefined,
+      estimatePoint: 0,
     },
   });
 
@@ -97,7 +97,9 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.log(errors);
+        })}
         className="h-full flex flex-col"
       >
         <Sheet.Header className="flex items-center gap-2 ">

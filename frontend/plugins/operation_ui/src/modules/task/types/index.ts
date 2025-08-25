@@ -31,6 +31,7 @@ export interface ITask {
   teamId: string;
   projectId: string;
   estimatePoint: number;
+  updatedAt: string;
 }
 
 export interface IStatus {

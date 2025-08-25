@@ -49,7 +49,7 @@ export const useTasksVariables = (
   return {
     limit: TASKS_PER_PAGE,
     orderBy: {
-      createdAt: -1,
+      updatedAt: -1,
     },
     cursor,
     searchValue: searchValue || undefined,
@@ -80,6 +80,7 @@ export const useTasks = (
     ...options,
     variables: { filter: variables },
     skip: options?.skip || isUndefinedOrNull(variables.cursor),
+    fetchPolicy: 'cache-and-network',
     onError: (e) => {
       toast({
         title: 'Error',
@@ -142,7 +143,7 @@ export const useTasks = (
     });
 
     return () => unsubscribe();
-  }, [subscribeToMore, variables]);
+  }, []);
 
   useEffect(() => {
     if (isUndefinedOrNull(totalCount)) return;

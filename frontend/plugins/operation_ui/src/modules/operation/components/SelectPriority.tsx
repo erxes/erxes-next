@@ -84,14 +84,8 @@ const SelectPriorityBadgeValue = ({
   return <PriorityBadge priority={value} />;
 };
 
-const SelectPriorityValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectPriorityValue = () => {
   const { value } = useSelectPriorityContext();
-
-  const priority = PROJECT_PRIORITIES_OPTIONS[value];
-
-  if (!priority) {
-    return null;
-  }
 
   return (
     <>
@@ -147,15 +141,18 @@ const SelectPriorityRoot = ({
   return (
     <SelectPriorityProvider
       value={value}
-      onValueChange={onValueChange}
+      onValueChange={(value) => {
+        setOpen(false);
+        onValueChange(value);
+      }}
       variant={variant}
     >
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant={variant}>
           {variant === SelectTriggerVariant.TABLE ? (
-            <SelectPriorityBadgeValue placeholder="Priority" />
+            <SelectPriorityBadgeValue />
           ) : (
-            <SelectPriorityValue placeholder="Priority" />
+            <SelectPriorityValue />
           )}
         </SelectTriggerOperation>
         <SelectOperationContent variant={variant}>
@@ -190,7 +187,7 @@ const SelectPriorityFilterBar = ({ scope }: { scope?: string }) => {
     >
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="filter">
-          <SelectPriorityValue placeholder="Priority" />
+          <SelectPriorityValue />
         </SelectTriggerOperation>
         <SelectOperationContent variant="filter">
           <SelectPriorityContent />
@@ -214,7 +211,7 @@ export const SelectPriorityFormItem = ({
     <SelectPriorityProvider value={value} onValueChange={onValueChange}>
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="form">
-          <SelectPriorityValue placeholder="Priority" />
+          <SelectPriorityValue />
         </SelectTriggerOperation>
         <Combobox.Content>
           <SelectPriorityContent />

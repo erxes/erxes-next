@@ -9,6 +9,7 @@ import { HTMLAttributes } from 'react';
 export type BoardItemProps = {
   id: string;
   column: string;
+  sort?: unknown;
 } & Record<string, unknown>;
 
 export type BoardColumnProps = {

@@ -7,6 +7,7 @@ import {
 import { useAtom, useAtomValue } from 'jotai';
 import { tasksViewAtom } from '@/task/states/tasksViewState';
 import { lazy, Suspense } from 'react';
+import { TaskDetailSheet } from '@/task/components/TaskDetailSheet';
 
 const TasksRecordTable = lazy(() =>
   import('@/task/components/TasksRecordTable').then((mod) => ({
@@ -72,6 +73,7 @@ export const TasksView = () => {
     <Suspense>
       {view === 'list' && <TasksRecordTable />}
       {view === 'grid' && <TasksBoard />}
+      <TaskDetailSheet />
     </Suspense>
   );
 };

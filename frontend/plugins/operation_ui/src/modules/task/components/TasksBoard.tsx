@@ -31,7 +31,7 @@ export const TasksBoardNew = () => {
     name: status.label,
   }));
 
-  const tasks = useAtomValue(fetchedTasksState);
+  const [tasks, setTasks] = useAtom(fetchedTasksState);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -54,6 +54,18 @@ export const TasksBoardNew = () => {
         status: overColumn,
       },
     });
+    setTasks((prev) =>
+      prev.map((task) => {
+        if (task.id === activeItem?._id) {
+          return {
+            ...task,
+            column: overColumn,
+            sort: new Date().toISOString(),
+          };
+        }
+        return task;
+      }),
+    );
   };
 
   return (
@@ -64,7 +76,7 @@ export const TasksBoardNew = () => {
       boardId={clsx('tasks-board', teamId)}
     >
       {(column) => (
-        <Board id={column.id}>
+        <Board id={column.id} key={column.id}>
           <Board.Header>{column.name}</Board.Header>
           <TasksBoardCards column={column} />
         </Board>
@@ -77,7 +89,14 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
   const currentUser = useAtomValue(currentUserState);
   const { projectId } = useParams();
   const [taskCards, setTaskCards] = useAtom(fetchedTasksState);
-  const boardCards = taskCards.filter((task) => task.column === column.id);
+  const boardCards = taskCards
+    .filter((task) => task.column === column.id)
+    .sort((a, b) => {
+      if (a.sort && b.sort) {
+        return b.sort.toString().localeCompare(a.sort.toString());
+      }
+      return 0;
+    });
   const { tasks } = useTasks({
     variables: {
       projectId: projectId || undefined,
@@ -90,12 +109,15 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
   useEffect(() => {
     if (tasks) {
       setTaskCards((prev) => {
-        const previousTasks = prev.filter((task) => task.column !== column.id);
+        const previousTasks = prev.filter(
+          (task) => !tasks.some((t) => t._id === task.id),
+        );
         return [
           ...previousTasks,
           ...tasks.map((task) => ({
             id: task._id,
             column: task.status,
+            sort: task.updatedAt,
           })),
         ];
       });

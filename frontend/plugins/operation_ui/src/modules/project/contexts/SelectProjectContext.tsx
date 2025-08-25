@@ -1,10 +1,12 @@
-import { IProject } from '@/project/types';
 import { createContext, useContext } from 'react';
 
 interface SelectProjectContextType {
   value?: string;
   onValueChange: (value: string) => void;
-  projects: IProject[];
+  projects: {
+    _id: string;
+    name: string;
+  }[];
   handleFetchMore: () => void;
   totalCount?: number;
 }

@@ -1,5 +1,8 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_PROJECTS } from '@/project/graphql/queries/getProjects';
+import {
+  GET_PROJECTS,
+  GET_PROJECTS_INLINE,
+} from '@/project/graphql/queries/getProjects';
 import { IProject } from '@/project/types';
 import {
   useRecordTableCursor,
@@ -15,7 +18,7 @@ import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 import { PROJECT_CHANGED } from '@/project/graphql/subscriptions/projectChanged';
 
 interface IProjectChanged {
@@ -173,6 +176,67 @@ export const useProjects = (
       },
     });
   };
+
+  return {
+    loading,
+    projects,
+    handleFetchMore,
+    pageInfo,
+    totalCount,
+  };
+};
+export const useProjectsInline = (
+  options?: QueryHookOptions<
+    ICursorListResponse<{
+      _id: string;
+      name: string;
+    }>
+  >,
+) => {
+  const variables = useProjectsVariables(options?.variables);
+  const { data, loading, fetchMore } = useQuery<
+    ICursorListResponse<{
+      _id: string;
+      name: string;
+    }>
+  >(GET_PROJECTS_INLINE, {
+    ...options,
+    variables: { filter: variables },
+    skip: options?.skip || isUndefinedOrNull(variables.cursor),
+  });
+
+  const handleFetchMore = (
+    direction: EnumCursorDirection = EnumCursorDirection.FORWARD,
+  ) => {
+    if (!validateFetchMore({ direction, pageInfo })) {
+      return;
+    }
+    fetchMore({
+      variables: {
+        filter: {
+          cursor:
+            direction === EnumCursorDirection.FORWARD
+              ? pageInfo?.endCursor
+              : pageInfo?.startCursor,
+          limit: PROJECTS_PER_PAGE,
+          direction,
+        },
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+
+        return Object.assign({}, prev, {
+          getProjects: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.getProjects,
+            prevResult: prev.getProjects,
+          }),
+        });
+      },
+    });
+  };
+
+  const { list: projects, pageInfo, totalCount } = data?.getProjects || {};
 
   return {
     loading,

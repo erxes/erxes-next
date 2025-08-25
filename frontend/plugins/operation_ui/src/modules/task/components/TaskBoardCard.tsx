@@ -7,13 +7,14 @@ import { format } from 'date-fns';
 import { Button, CalendarNew, Popover } from 'erxes-ui';
 import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { atom, useAtomValue } from 'jotai';
+import { atom, useAtomValue, useSetAtom } from 'jotai';
 import { SelectProject } from '@/task/components/select/SelectProjectTask';
 import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
 import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
 import { DateSelectTask } from '@/task/components/select/DateSelectTask';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
 import { allTasksMapState } from '@/task/components/TasksBoard';
+import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
 
 export const taskBoardItemAtom = atom(
   (get) => (id: string) => get(allTasksMapState)[id],
@@ -33,9 +34,10 @@ export const TaskBoardCard = ({ id, column }: BoardCardProps) => {
     _id,
     createdAt,
   } = useAtomValue(taskBoardItemAtom)(id);
+  const setActiveTask = useSetAtom(taskDetailSheetState);
 
   return (
-    <div>
+    <div onClick={() => setActiveTask(_id)}>
       <div className="flex items-center justify-between h-9 px-1.5">
         <DateSelectTask
           value={startDate}
