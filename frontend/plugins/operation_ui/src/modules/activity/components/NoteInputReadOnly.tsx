@@ -1,38 +1,17 @@
-import { BlockEditorReadOnly, RelativeDateDisplay } from 'erxes-ui';
-import { MembersInline } from 'ui-modules';
+import { BlockEditorReadOnly } from 'erxes-ui';
 import { useGetNote } from '@/task/hooks/useGetNote';
 
 interface NoteInputReadOnlyProps {
   newValueId: string;
-  authorId?: string;
-  createdAt: string;
 }
 
 export const NoteInputReadOnly = ({
   newValueId,
-  authorId,
-  createdAt,
 }: NoteInputReadOnlyProps) => {
   const { note, loading } = useGetNote(newValueId);
 
   return (
-    <div className="flex flex-col border rounded-lg min-h-14 px-4 py-3  ">
-      <div
-        className="flex items-center gap-2"
-      >
-        <span className="flex items-center gap-2 ">
-          <MembersInline
-            memberIds={authorId ? [authorId] : []}
-            className="font-medium text-base"
-            placeholder="Unknown user"
-          />
-        </span>
-        <RelativeDateDisplay value={createdAt.toLocaleString()} asChild>
-          <div className="text-accent-foreground ml-2 cursor-default">
-            <RelativeDateDisplay.Value value={createdAt.toLocaleString()} />
-          </div>
-        </RelativeDateDisplay>
-      </div>
+    <div className="flex flex-col border rounded-lg min-h-14 px-4 py-3  ml-4">
       {!loading && (
         <BlockEditorReadOnly
           content={note?.content || ''}
@@ -42,7 +21,6 @@ export const NoteInputReadOnly = ({
     </div>
   );
 };
-
 
 // TODO: add options menu
 

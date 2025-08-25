@@ -6,7 +6,6 @@ const baseNotificationSchema = z.object({
   type: z.enum(['info', 'success', 'warning', 'error']),
   priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
   metadata: z.record(z.any()).optional(),
-  userIds: z.array(z.string()),
 });
 
 const systemNotificationSchema = baseNotificationSchema.extend({
@@ -37,9 +36,9 @@ export const sendNotification = async (
 ) => {
   sendWorkerQueue('notifications', 'notifications').add('notifications', {
     subdomain,
-    data: notificationZTypeSchema.parse({
+    data: {
       ...data,
       kind: data.kind ?? 'user',
-    }),
+    },
   });
 };

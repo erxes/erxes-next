@@ -30,7 +30,8 @@ export const NotificationContainer = ({
     }`;
     notification && setActiveNotification(notification);
     onNotificationSelect?.();
-    markAsRead({ variables: { id } });
+
+    id && markAsRead({ variables: { id } });
     navigate(newPath);
   };
 

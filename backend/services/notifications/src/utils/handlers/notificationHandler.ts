@@ -18,16 +18,14 @@ export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
 ) => {
   const { subdomain, data } = job.data;
-
   const models = await generateModels(subdomain);
   const emailService = new EmailService();
   const results: any[] = [];
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
-  console.log(data);
 
-  for (const userId of ['OQgac3z4G3I2LW9QPpAtL']) {
+  for (const userId of data?.userIds || []) {
     try {
       let notification: INotificationDocument | undefined;
 

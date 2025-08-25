@@ -5,13 +5,16 @@ export const noteMutations = {
   createNote: async (
     _parent: undefined,
     { content, itemId, mentions },
-    { models, user }: IContext,
+    { models, user, subdomain }: IContext,
   ) => {
     return models.Note.createNote({
-      content,
-      itemId,
-      mentions,
-      createdBy: user._id,
+      doc: {
+        content,
+        itemId,
+        mentions,
+        createdBy: user._id,
+      },
+      subdomain,
     });
   },
 
