@@ -12,7 +12,6 @@ export const useCreateProject = () => {
   });
   const [createProjectMutation, { loading, error }] = useMutation(
     CREATE_PROJECT_MUTATION,
-
     {
       refetchQueries: [GET_PROJECTS],
       onCompleted: () => {
