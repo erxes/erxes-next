@@ -1,145 +1,182 @@
-// import * as fs from 'fs';
-// import { Base64Decode } from 'base64-stream';
-// import typeDefs from './graphql/typeDefs';
-// import resolvers from './graphql/resolvers';
+import * as fs from 'fs';
+import * as path from 'path';
+import os from 'os';
+import { Base64Decode } from 'base64-stream';
+import express from 'express';
+import { generateModels, IModels } from '~/connectionResolvers';
+import {
+  getEnv,
+  getSubdomain,
+  getSaasOrganizations,
+} from 'erxes-api-shared/utils';
+import startDistributingJobs, {
+  findAttachmentParts,
+  createImap,
+  toUpper,
+  routeErrorHandling,
+} from './utils';
+import { debugError } from '~/modules/inbox/utils';
 
-// import { setupMessageConsumers } from './messageBroker';
-// import { generateModels } from '~/connectionResolvers';
-// import { getEnv, getSubdomain } from '@erxes/api-utils/src/core';
-// import startDistributingJobs, {
-//   findAttachmentParts,
-//   createImap,
-//   toUpper,
-//   routeErrorHandling,
-// } from './utils';
-// import { getSaasOrganizations } from 'erxes-api-shared/utils';
-// import express from 'express';
-// import { debugError } from '~/modules/inbox/utils';
+// Import IMAP consumers utils
+import {
+  imapCreateIntegrations,
+  imapUpdateIntegrations,
+  imapRemoveIntegrations,
+  ImapListen,
+  sendImapMessage,
+} from './messageBroker';
+import { models } from 'mongoose';
 
-// const app = express();
+// ================= IMAP APP ===================
+const initImapApp = async (app: express.Application) => {
+  app.use(express.json({ limit: '15mb' }));
 
-// export default {
-//   onServerInit: async () => {
-//     app.get(
-//       '/read-mail-attachment',
-//       routeErrorHandling(
-//         async (req, res, next) => {
-//           const subdomain = getSubdomain(req);
-//           const models = await generateModels(subdomain);
+  // ====== Read Mail Attachment Route ======
+  app.get(
+    '/read-mail-attachment',
+    routeErrorHandling(
+      async (req, res, next) => {
+        const subdomain = getSubdomain(req);
 
-//           const { messageId, integrationId, filename } = req.query;
+        const models = await generateModels(subdomain);
 
-//           const integration = await models.Integrations.findOne({
-//             inboxId: integrationId,
-//           });
+        const { messageId, integrationId, filename } = req.query as Record<
+          string,
+          string
+        >;
 
-//           if (!integration) {
-//             throw new Error('Integration not found');
-//           }
+        if (!messageId || !integrationId || !filename) {
+          return res.status(400).send('Missing required query parameters');
+        }
 
-//           const sentMessage = await models.Messages.findOne({
-//             messageId,
-//             inboxIntegrationId: integrationId,
-//             type: 'SENT',
-//           });
+        const integration = await models.ImapIntegrations.findOne({
+          inboxId: integrationId,
+        });
+        if (!integration) throw new Error('Integration not found');
 
-//           let folderType = 'INBOX';
+        const sentMessage = await models.ImapMessages.findOne({
+          messageId,
+          inboxIntegrationId: integrationId,
+          type: 'SENT',
+        });
 
-//           if (sentMessage) {
-//             folderType = '[Gmail]/Sent Mail';
-//           }
+        const folderType = sentMessage ? '[Gmail]/Sent Mail' : 'INBOX';
+        const imap = createImap(integration);
 
-//           const imap = createImap(integration);
+        imap.once('ready', () => {
+          imap.openBox(folderType, true, (err) => {
+            if (err) return next(err);
 
-//           imap.once('ready', () => {
-//             imap.openBox(folderType, true, async (err, box) => {
-//               imap.search(
-//                 [['HEADER', 'MESSAGE-ID', messageId]],
-//                 function (err, results) {
-//                   if (err) {
-//                     imap.end();
-//                     console.log('read-mail-attachment =============', err);
-//                     return next(err);
-//                   }
+            imap.search(
+              [['HEADER', 'MESSAGE-ID', messageId]],
+              (err, results) => {
+                if (err || !results || results.length === 0) {
+                  imap.end();
+                  return res.status(404).send('Message not found');
+                }
 
-//                   let f;
+                const f = imap.fetch(results, { bodies: '', struct: true });
 
-//                   try {
-//                     f = imap.fetch(results, { bodies: '', struct: true });
-//                   } catch (e) {
-//                     imap.end();
-//                     debugError('messageId ', messageId);
-//                     return next(e);
-//                   }
+                f.on('message', (msg) => {
+                  msg.once('attributes', (attrs) => {
+                    const attachments = findAttachmentParts(attrs.struct);
 
-//                   f.on('message', function (msg) {
-//                     msg.once('attributes', function (attrs) {
-//                       const attachments = findAttachmentParts(attrs.struct);
+                    if (!attachments || attachments.length === 0) {
+                      imap.end();
+                      return res.status(404).send('No attachments found');
+                    }
 
-//                       if (attachments.length === 0) {
-//                         imap.end();
-//                         return res.status(404).send('Not found');
-//                       }
+                    const attachment = attachments.find(
+                      (att) => att.params?.name === filename,
+                    );
+                    if (!attachment) {
+                      imap.end();
+                      return res.status(404).send('Attachment not found');
+                    }
 
-//                       for (let i = 0, len = attachments.length; i < len; ++i) {
-//                         const attachment = attachments[i];
+                    const tempPath = path.join(
+                      os.tmpdir(),
+                      `${Date.now()}-${attachment.params.name}`,
+                    );
 
-//                         if (attachment.params.name === filename) {
-//                           const f = imap.fetch(attrs.uid, {
-//                             bodies: [attachment.partID],
-//                             struct: true,
-//                           });
+                    const fetcher = imap.fetch(attrs.uid, {
+                      bodies: [attachment.partID],
+                      struct: true,
+                    });
 
-//                           f.on('message', (msg) => {
-//                             const filename = attachment.params.name;
-//                             const encoding = attachment.encoding;
+                    fetcher.on('message', (msg) => {
+                      msg.on('body', (stream) => {
+                        const writeStream = fs.createWriteStream(tempPath);
 
-//                             msg.on('body', function (stream) {
-//                               const writeStream = fs.createWriteStream(
-//                                 `${__dirname}/${filename}`,
-//                               );
+                        if (toUpper(attachment.encoding) === 'BASE64') {
+                          stream.pipe(new Base64Decode()).pipe(writeStream);
+                        } else {
+                          stream.pipe(writeStream);
+                        }
 
-//                               if (toUpper(encoding) === 'BASE64') {
-//                                 stream
-//                                   .pipe(new Base64Decode())
-//                                   .pipe(writeStream);
-//                               } else {
-//                                 stream.pipe(writeStream);
-//                               }
-//                             });
+                        writeStream.on('finish', () => {
+                          res.download(
+                            tempPath,
+                            attachment.params.name,
+                            (err) => {
+                              fs.unlink(tempPath, () => {});
+                              imap.end();
+                              if (err) return next(err);
+                            },
+                          );
+                        });
+                      });
+                    });
+                  });
+                });
 
-//                             msg.once('end', function () {
-//                               imap.end();
-//                               return res.download(`${__dirname}/${filename}`);
-//                             });
-//                           });
-//                         }
-//                       }
-//                     });
-//                   });
-//                 },
-//               );
-//             });
-//           });
+                f.once('error', (err) => {
+                  imap.end();
+                  next(err);
+                });
+              },
+            );
+          });
+        });
 
-//           imap.connect();
-//         },
-//         (res) => res.send('ok'),
-//       ),
-//     );
+        imap.once('error', (err) => next(err));
+        imap.connect();
+      },
+      (res) => res.send('ok'),
+    ),
+  );
 
-//     const VERSION = getEnv({ name: 'VERSION' });
+  // ====== Setup IMAP Consumers ======
 
-//     if (VERSION && VERSION === 'saas') {
-//       const organizations = await getOrganizations();
+  const setupMessageConsumers = async (subdomain: string) => {
+    const models: IModels = await generateModels(subdomain);
+    const integrations = await models.ImapIntegrations.find({
+      healthStatus: 'healthy',
+    });
 
-//       for (const org of organizations) {
-//         console.log(`Started listening for organization [${org.subdomain}]`);
-//         await startDistributingJobs(org.subdomain);
-//       }
-//     } else {
-//       startDistributingJobs('os');
-//     }
-//   },
-//   setupMessageConsumers,
-// };
+    for (const integration of integrations) {
+      await ImapListen({
+        subdomain,
+        data: { _id: (integration._id as any).toString() },
+      });
+    }
+  };
+
+  // ====== SaaS / OS job distribution ======
+  const VERSION = getEnv({ name: 'VERSION' });
+
+  if (VERSION === 'saas') {
+    const organizations = await getSaasOrganizations();
+    for (const org of organizations) {
+      await setupMessageConsumers(org.subdomain);
+      await startDistributingJobs(org.subdomain);
+    }
+  } else {
+    await setupMessageConsumers('os');
+    await startDistributingJobs('os');
+  }
+
+  console.log('IMAP plugin initialized successfully.');
+};
+
+export default initImapApp;

@@ -19,6 +19,12 @@ import {
   facebookRepairIntegrations,
   facebookCreateIntegrations,
 } from '@/integrations/facebook/messageBroker';
+
+import {
+  imapUpdateIntegrations,
+  imapRemoveIntegrations,
+  imapCreateIntegrations,
+} from '@/integrations/imap/messageBroker';
 import {
   callCreateIntegration,
   callRemoveIntergration,
@@ -59,7 +65,8 @@ export const sendCreateIntegration = async (
         return await facebookCreateIntegrations({ subdomain, data });
       case 'calls':
         return await callCreateIntegration({ subdomain, data });
-
+      case 'imap':
+        return await imapCreateIntegrations({ subdomain, data });
       case 'instagram':
         // TODO: Implement Instagram integration
         break;
@@ -89,6 +96,8 @@ export const sendUpdateIntegration = async (
         return await facebookUpdateIntegrations({ subdomain, data });
       case 'calls':
         return await callUpdateIntegration({ subdomain, data });
+      case 'imap':
+        return await imapUpdateIntegrations({ subdomain, data });
       case 'instagram':
         break;
 
@@ -116,6 +125,8 @@ export const sendRemoveIntegration = async (
         return await facebookRemoveIntegrations({ subdomain, data });
       case 'calls':
         return await callRemoveIntergration({ subdomain, data });
+      case 'imap':
+        return await imapRemoveIntegrations({ subdomain, data });
       case 'instagram':
         break;
 
