@@ -26,10 +26,8 @@ import {
   useContext,
   useState,
 } from 'react';
-import { createPortal } from 'react-dom';
-import tunnel from 'tunnel-rat';
 import { ScrollArea, cn } from 'erxes-ui';
-const t = tunnel();
+import { Portal } from 'radix-ui';
 export type { DragEndEvent } from '@dnd-kit/core';
 
 type KanbanItemProps = {
@@ -83,7 +81,6 @@ export type KanbanCardProps<T extends KanbanItemProps = KanbanItemProps> = T & {
 };
 export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   id,
-  name,
   children,
   className,
 }: KanbanCardProps<T>) => {
@@ -116,17 +113,21 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
         </div>
       </div>
       {activeCardId === id && (
-        <t.In>
-          <div
-            className={cn(
-              'cursor-grab gap-4 rounded-lg p-3 bg-background',
-              isDragging && 'cursor-grabbing shadow-focus',
-              className,
-            )}
-          >
-            {children}
+        <Portal.Root asChild>
+          <div>
+            <DragOverlay>
+              <div
+                className={cn(
+                  'cursor-grab gap-4 rounded-lg p-3 bg-background',
+                  isDragging && 'cursor-grabbing shadow-focus',
+                  className,
+                )}
+              >
+                {children}
+              </div>
+            </DragOverlay>
           </div>
-        </t.In>
+        </Portal.Root>
       )}
     </>
   );
@@ -297,13 +298,6 @@ export const KanbanProvider = <
         >
           {columns.map((column) => children(column))}
         </div>
-        {typeof window !== 'undefined' &&
-          createPortal(
-            <DragOverlay>
-              <t.Out />
-            </DragOverlay>,
-            document.body,
-          )}
       </DndContext>
     </KanbanContext.Provider>
   );

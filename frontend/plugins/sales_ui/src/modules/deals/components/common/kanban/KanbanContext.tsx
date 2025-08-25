@@ -28,10 +28,8 @@ import { Card } from './Card';
 import { IDeal } from '@/deals/types/deals';
 import { IStage } from '@/deals/types/stages';
 import { cn } from 'erxes-ui';
-import { createPortal } from 'react-dom';
-import tunnel from 'tunnel-rat';
+import { Portal } from 'radix-ui';
 
-const t = tunnel();
 export type { DragEndEvent } from '@dnd-kit/core';
 
 export const getTypeAndId = (id: string) => {
@@ -121,18 +119,24 @@ export const KanbanCard = ({
         </Card>
       </div>
       {activeCardId === featureId && (
-        <t.In>
-          <Card
-            className={cn(
-              'cursor-grab ring-2 ring-primary',
-              isDragging && 'cursor-grabbing',
-              className,
-            )}
-            card={card}
-          >
-            {children ?? <p className="m-0 font-medium text-sm">{card.name}</p>}
-          </Card>
-        </t.In>
+        <Portal.Root asChild>
+          <div>
+            <DragOverlay>
+              <Card
+                className={cn(
+                  'cursor-grab ring-2 ring-primary',
+                  isDragging && 'cursor-grabbing',
+                  className,
+                )}
+                card={card}
+              >
+                {children ?? (
+                  <p className="m-0 font-medium text-sm">{card.name}</p>
+                )}
+              </Card>
+            </DragOverlay>
+          </div>
+        </Portal.Root>
       )}
     </>
   );
@@ -441,13 +445,6 @@ export const KanbanProvider = <
             {columns.map((column) => children(column))}
           </div>
         </SortableContext>
-        {typeof window !== 'undefined' &&
-          createPortal(
-            <DragOverlay>
-              <t.Out />
-            </DragOverlay>,
-            document.body,
-          )}
       </DndContext>
     </KanbanContext.Provider>
   );

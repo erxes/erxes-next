@@ -6,7 +6,9 @@ interface IUseGetStatusByTeamResponse {
   getStatusesChoicesByTeam: IStatus[];
 }
 
-export const useGetStatusByTeam = (options: QueryHookOptions) => {
+export const useGetStatusByTeam = (
+  options: QueryHookOptions<IUseGetStatusByTeamResponse>,
+) => {
   const { data, loading, error } = useQuery<IUseGetStatusByTeamResponse>(
     GET_STATUS_BY_TEAM,
     options,

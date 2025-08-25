@@ -1,11 +1,10 @@
 import * as React from 'react';
 
-import { type DialogProps } from '@radix-ui/react-dialog';
 import { IconSearch } from '@tabler/icons-react';
 import { cva } from 'class-variance-authority';
 import { Command as CommandPrimitive } from 'cmdk';
 
-import { Dialog } from './dialog';
+import { Dialog, DialogProps } from './dialog';
 import { cn } from '../lib/utils';
 import { useRef } from 'react';
 import { useEffect } from 'react';

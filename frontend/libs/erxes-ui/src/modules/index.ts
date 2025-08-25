@@ -12,3 +12,4 @@ export * from './layout';
 export * from './preview/components/Preview';
 export * from './icons';
 export * from './navigation-menu';
+export * from './board';

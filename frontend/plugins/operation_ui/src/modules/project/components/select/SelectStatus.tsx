@@ -13,9 +13,8 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { IconProgressCheck } from '@tabler/icons-react';
-import { PROJECT_STATUS_OPTIONS } from '@/project/constants';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
-
+import { PROJECT_STATUS_OPTIONS } from '@/operation/constants/statusConstants';
 interface SelectStatusContextType {
   statuses: typeof PROJECT_STATUS_OPTIONS;
   statusIds: string[];

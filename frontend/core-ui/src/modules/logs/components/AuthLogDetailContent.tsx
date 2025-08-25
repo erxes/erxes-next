@@ -1,6 +1,5 @@
-import { SelectSeparator } from '@radix-ui/react-select';
 import dayjs from 'dayjs';
-import { Card, Label, Sheet } from 'erxes-ui';
+import { Card, Label, Sheet, Separator } from 'erxes-ui';
 import { UAParser } from 'ua-parser-js';
 import { ILogDoc } from '../types';
 import {
@@ -11,7 +10,6 @@ import {
   IconMail,
   IconMapPin,
   IconShield,
-  IconUser,
 } from '@tabler/icons-react';
 
 const getClientInfo = (headers: any) => {
@@ -99,7 +97,7 @@ export const AuthLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
           </div>
         </Card>
       </div>
-      <SelectSeparator />
+      <Separator />
       <div className="w-full flex flex-row justify-between">
         <Card className="flex flex-col gap-2 items-center size-36 justify-center">
           <div className="bg-warning/20 p-2 rounded-xl text-warning/80">

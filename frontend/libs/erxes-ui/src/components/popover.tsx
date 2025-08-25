@@ -1,8 +1,10 @@
 import * as React from 'react';
-
-import * as PopoverPrimitive from '@radix-ui/react-popover';
-
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { cn } from 'erxes-ui/lib/utils';
+
+export type PopoverProps = React.ComponentPropsWithoutRef<
+  typeof PopoverPrimitive.Root
+>;
 
 export const popoverClassName =
   'z-50 w-72 rounded-md bg-background p-4 shadow-lg outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0';

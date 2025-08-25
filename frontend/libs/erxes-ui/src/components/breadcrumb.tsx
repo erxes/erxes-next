@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { Slot } from '@radix-ui/react-slot';
-import { IconChevronRight, IconDots } from '@tabler/icons-react';
+import { Slot } from 'radix-ui';
+import { IconDots } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
 import { Separator } from './separator';
@@ -47,7 +47,7 @@ const BreadcrumbLink = React.forwardRef<
     asChild?: boolean;
   }
 >(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot : 'a';
+  const Comp = asChild ? Slot.Root : 'a';
 
   return (
     <Comp

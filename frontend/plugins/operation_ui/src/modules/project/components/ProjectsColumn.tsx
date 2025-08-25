@@ -23,9 +23,9 @@ import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ITeam } from '@/team/types';
 import {
   SelectStatus,
-  SelectTeam,
   SelectLead,
   DateSelect,
+  SelectProjectTeam,
 } from '@/project/components/select';
 import clsx from 'clsx';
 import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
@@ -142,10 +142,10 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectTeam.InlineCell
-            id={cell.row.original._id}
+          <SelectProjectTeam
+            projectId={cell.row.original._id}
             value={cell.row.original.teamIds || []}
-            teams={_teams || []}
+            variant="table"
           />
         );
       },

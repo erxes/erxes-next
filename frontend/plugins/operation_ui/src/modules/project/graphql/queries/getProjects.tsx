@@ -25,3 +25,15 @@ export const GET_PROJECTS = gql`
     }
   }
 `;
+
+export const GET_PROJECTS_INLINE = gql`
+  query GetProjectsInline($filter: IProjectFilter) {
+    getProjects(filter: $filter) {
+      list {
+        _id
+        name
+      }
+       ${GQL_PAGE_INFO}
+    }
+  }
+`;

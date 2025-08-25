@@ -7,29 +7,26 @@ import {
   Separator,
   useBlockEditor,
   BlockEditor,
-  cn,
 } from 'erxes-ui';
 import { TAddProject, addProjectSchema } from '@/project/types';
 import { useCreateProject } from '@/project/hooks/useCreateProject';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Block } from '@blocknote/core';
 import {
   SelectStatus,
-  SelectTeam,
   SelectLead,
   DateSelect,
 } from '@/project/components/select';
-import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
-import { SelectPriority } from '@/task/components';
+import { SelectTeam } from '@/team/components/SelectTeam';
+import { SelectPriority } from '@/operation/components/SelectPriority';
 
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
   const { createProject } = useCreateProject();
-  const { teams } = useGetCurrentUsersTeams();
   const editor = useBlockEditor();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const form = useForm<TAddProject>({
@@ -44,12 +41,6 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
       targetDate: undefined,
     },
   });
-
-  useEffect(() => {
-    if (teams && teams.length > 0 && !form.getValues('teamIds').length) {
-      form.setValue('teamIds', [teams[0]._id]);
-    }
-  }, [teams, form]);
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
@@ -82,19 +73,8 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               <Form.Item className="space-y-0">
                 <Form.Label className="sr-only">Team</Form.Label>
                 <SelectTeam.FormItem
-                  {...field}
-                  teams={teams}
-                  className={cn(
-                    'm-0',
-                    teamId && 'hover:bg-background cursor-default',
-                  )}
-                  onClick={
-                    teamId
-                      ? (e) => {
-                          e.preventDefault();
-                        }
-                      : undefined
-                  }
+                  value={field.value}
+                  onValueChange={field.onChange}
                 />
               </Form.Item>
             )}
@@ -154,7 +134,10 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Priority</Form.Label>
-                  <SelectPriority.FormItem {...field} />
+                  <SelectPriority.FormItem
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  />
                 </Form.Item>
               )}
             />

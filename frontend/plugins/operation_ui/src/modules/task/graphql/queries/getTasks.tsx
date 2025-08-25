@@ -15,6 +15,7 @@ export const GET_TASKS = gql`
         status
         priority
         teamId
+        number
         assigneeId
         startDate
         targetDate

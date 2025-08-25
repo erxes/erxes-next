@@ -1,13 +1,14 @@
-import React, { createContext, useContext } from 'react';
-import { IProject } from '@/project/types';
+import { createContext, useContext } from 'react';
 
 interface SelectProjectContextType {
-  projects: IProject[];
-  projectIds: string[];
-  onSelect: (project: IProject) => void;
-  setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
-  loading: boolean;
-  error: string | null;
+  value?: string;
+  onValueChange: (value: string) => void;
+  projects: {
+    _id: string;
+    name: string;
+  }[];
+  handleFetchMore: () => void;
+  totalCount?: number;
 }
 
 export const SelectProjectContext = createContext<

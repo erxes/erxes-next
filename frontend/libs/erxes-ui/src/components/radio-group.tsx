@@ -1,8 +1,10 @@
 import * as React from 'react';
-
-import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
-
+import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 import { cn } from 'erxes-ui/lib';
+
+export type RadioGroupProps = React.ComponentPropsWithoutRef<
+  typeof RadioGroupPrimitive.Root
+>;
 
 const RadioGroupRoot = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,

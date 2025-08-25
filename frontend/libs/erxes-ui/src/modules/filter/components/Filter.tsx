@@ -236,8 +236,15 @@ const FilterBar = React.forwardRef<
 
 const FilterBarItem = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & {
+    queryKey?: string;
+  }
+>(({ className, queryKey, ...props }, ref) => {
+  const [query] = useFilterQueryState<string>(queryKey || 'root');
+
+  if (queryKey && !query) {
+    return null;
+  }
   return (
     <div
       ref={ref}

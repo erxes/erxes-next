@@ -7,6 +7,7 @@
     "strict": true,
     "paths": {
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
       "@/*": ["frontend/plugins/operation_ui/src/modules/*"],
       "@": ["frontend/plugins/operation_ui/src/modules"],
       "~/*": ["frontend/plugins/operation_ui/src/*"],

@@ -1,5 +1,3 @@
-// import * as TabsPrimitive from '@radix-ui/react-tabs';
-
 import { Sidebar, Tabs, useQueryState } from 'erxes-ui';
 
 export const SalesDetailLeftSidebar = ({

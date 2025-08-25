@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { Popover } from 'erxes-ui/components/popover';
-import { PopoverTrigger } from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { ICONS } from '@/knowledgebase/constants'; // adjust path as needed
 import { Button } from 'erxes-ui';
-import { PopoverContent } from '@radix-ui/react-popover';
 import { Command } from 'erxes-ui';
 import { IconCheck } from '@tabler/icons-react';
 
@@ -19,7 +18,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
   const icon = ICONS.find((icon) => icon.value === value);
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverPrimitive.Trigger asChild>
         <Button
           variant="outline"
           role="combobox"
@@ -35,8 +34,8 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             <span>Select icon...</span>
           )}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0 max-h-64 overflow-auto">
+      </PopoverPrimitive.Trigger>
+      <PopoverPrimitive.Content className="w-[250px] p-0 max-h-64 overflow-auto">
         <Command>
           <Command.Input placeholder="Search icons..." className="h-9" />
           <div className="max-h-52 overflow-y-auto">
@@ -62,7 +61,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             </Command.Group>
           </div>
         </Command>
-      </PopoverContent>
+      </PopoverPrimitive.Content>
     </Popover>
   );
 }
