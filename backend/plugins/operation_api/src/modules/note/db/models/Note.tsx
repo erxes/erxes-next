@@ -2,11 +2,18 @@ import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { noteSchema } from '@/note/db/definitions/note';
 import { INote, INoteDocument } from '@/note/types';
+import { createNotifications } from '~/utils/notifications';
 
 export interface INoteModel extends Model<INoteDocument> {
   getNote(_id: string): Promise<INoteDocument>;
   getNotes(filter: FilterQuery<INoteDocument>): Promise<INoteDocument[]>;
-  createNote(doc: INote): Promise<INoteDocument>;
+  createNote({
+    doc,
+    subdomain,
+  }: {
+    doc: INote;
+    subdomain: string;
+  }): Promise<INoteDocument>;
   updateNote(doc: INoteDocument): Promise<INoteDocument>;
   removeNote({
     _id,
@@ -35,7 +42,13 @@ export const loadNoteClass = (models: IModels) => {
       return models.Note.find(filter).lean();
     }
 
-    public static async createNote(doc: INote): Promise<INoteDocument> {
+    public static async createNote({
+      doc,
+      subdomain,
+    }: {
+      doc: INote;
+      subdomain: string;
+    }): Promise<INoteDocument> {
       const note = await models.Note.create(doc);
 
       await models.Activity.createActivity({
@@ -48,6 +61,29 @@ export const loadNoteClass = (models: IModels) => {
         },
         createdBy: doc.createdBy,
       });
+
+      if (doc.mentions && doc.mentions.length > 0) {
+        const userIds = doc.mentions.filter(
+          (userId) => userId !== doc.createdBy,
+        );
+
+        let contentType = 'task';
+
+        const project = await models.Project.findOne({ _id: doc.itemId });
+
+        if (project) {
+          contentType = 'project';
+        }
+
+        await createNotifications({
+          contentType,
+          contentTypeId: doc.itemId,
+          fromUserId: doc.createdBy,
+          subdomain,
+          notificationType: 'note',
+          userIds,
+        });
+      }
 
       return note;
     }
