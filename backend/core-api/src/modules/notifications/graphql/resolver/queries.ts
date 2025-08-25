@@ -1,10 +1,5 @@
 import { INotificationDocument } from 'erxes-api-shared/core-modules';
-import {
-  cursorPaginate,
-  getPlugin,
-  getPlugins,
-  graphqlPubsub,
-} from 'erxes-api-shared/utils';
+import { cursorPaginate, getPlugin, getPlugins } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { CORE_NOTIFICATION_MODULES } from '~/modules/notifications/constants';
 import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
@@ -92,17 +87,6 @@ export const notificationQueries = {
     if (!notification) {
       throw new Error('Not found notification');
     }
-
-    if (!notification?.isRead) {
-      await models.Notifications.updateOne(
-        { _id },
-        { $set: { isRead: true, readAt: new Date() } },
-      );
-      graphqlPubsub.publish(`notificationRead:${user._id}`, {
-        notificationRead: { userId: user._id },
-      });
-    }
-
     return notification;
   },
 

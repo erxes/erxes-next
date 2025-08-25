@@ -25,26 +25,27 @@ const sendWelcomeNotification = async ({
 }) => {
   const { userId, action, source } = logDoc || {};
 
-  const isFirstLogin =
-    (await models.Logs.countDocuments({
-      source: 'auth',
-      status: 'success',
-      action: 'login',
-      userId,
-    })) === 1;
-
-  if (isFirstLogin && source === 'auth' && action === 'login' && userId) {
-    sendNotification(subdomain, {
-      title: 'Welcome to erxes 🎉',
-      message:
-        'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
-      type: 'info',
-      userIds: [userId],
-      priority: 'low',
-      kind: 'system',
-      metadata: {
-        template: 'welcomeMessage',
-      },
-    });
+  if (source === 'auth' && action === 'login' && userId) {
+    const isFirstLogin =
+      (await models.Logs.countDocuments({
+        source: 'auth',
+        status: 'success',
+        action: 'login',
+        userId,
+      })) === 1;
+    if (isFirstLogin) {
+      sendNotification(subdomain, {
+        title: 'Welcome to erxes 🎉',
+        message:
+          'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
+        type: 'info',
+        userIds: [userId],
+        priority: 'low',
+        kind: 'system',
+        metadata: {
+          template: 'welcomeMessage',
+        },
+      });
+    }
   }
 };

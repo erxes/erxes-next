@@ -13,6 +13,10 @@ export interface IActivity {
   createdBy: string;
 }
 
+export interface IActivityUpdate extends IActivity {
+  _id: string;
+}
+
 export interface IActivityDocument extends IActivity, Document {
   _id: string;
   createdAt: Date;
