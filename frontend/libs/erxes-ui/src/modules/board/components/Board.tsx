@@ -1,7 +1,4 @@
-'use client';
 import type {
-  Announcements,
-  DndContextProps,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
@@ -21,69 +18,54 @@ import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ScrollArea } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
-import { Portal } from 'radix-ui';
 import {
-  createContext,
-  type HTMLAttributes,
-  type ReactNode,
-  useContext,
-  useState,
-} from 'react';
+  BoardCardProps,
+  BoardColumnProps,
+  BoardContextProps,
+  BoardHeaderProps,
+  BoardItemProps,
+  BoardProps,
+  BoardProviderProps,
+} from '../types/boardTypes';
+import { Portal } from 'radix-ui';
+import { type HTMLAttributes, useContext } from 'react';
+import { BoardContext } from '../contexts/BoardContext';
+import { activeCardIdState } from '../states/boardStates';
+import { useAtomValue, useSetAtom } from 'jotai';
 export type { DragEndEvent } from '@dnd-kit/core';
 
-type BoardItemProps = {
+const BoardCards = ({
+  id,
+  children,
+  className,
+  items,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & {
   id: string;
-  name: string;
-  column: string;
-} & Record<string, unknown>;
-
-type BoardColumnProps = {
-  id: string;
-  name: string;
-} & Record<string, unknown>;
-type BoardContextProps<
-  T extends BoardItemProps = BoardItemProps,
-  C extends BoardColumnProps = BoardColumnProps,
-> = {
-  columns: C[];
-  data: T[];
-  activeCardId: string | null;
-};
-const BoardContext = createContext<BoardContextProps>({
-  columns: [],
-  data: [],
-  activeCardId: null,
-});
-export type BoardProps = {
-  id: string;
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
-};
-const BoardRoot = ({ id, children, className }: BoardProps) => {
-  const { isOver, setNodeRef } = useDroppable({
-    id,
-  });
-
+  items: string[];
+}) => {
   return (
-    <div
-      className={cn(
-        'flex size-full min-h-40 min-w-80 flex-col overflow-hidden transition-all bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-t-md dark:from-primary/40 dark:to-primary/20',
-        isOver && 'shadow-focus',
-        className,
-      )}
-      ref={setNodeRef}
-    >
-      {children}
-    </div>
+    <ScrollArea className="overflow-hidden">
+      <SortableContext items={items}>
+        <div
+          className={cn(
+            'flex flex-grow flex-col gap-2 p-2 pt-px relative',
+            className,
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </SortableContext>
+      <ScrollArea.Bar orientation="vertical" />
+    </ScrollArea>
   );
 };
-export type BoardCardProps<T extends BoardItemProps = BoardItemProps> = T & {
-  children?: ReactNode;
-  className?: string;
-};
+
 const BoardCard = <T extends BoardItemProps = BoardItemProps>({
   id,
-  name,
   children,
   className,
 }: BoardCardProps<T>) => {
@@ -97,7 +79,8 @@ const BoardCard = <T extends BoardItemProps = BoardItemProps>({
   } = useSortable({
     id,
   });
-  const { activeCardId } = useContext(BoardContext) as BoardContextProps;
+  const { boardId } = useContext(BoardContext) as BoardContextProps;
+  const activeCardId = useAtomValue(activeCardIdState(boardId));
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
@@ -135,62 +118,6 @@ const BoardCard = <T extends BoardItemProps = BoardItemProps>({
     </>
   );
 };
-export type BoardCardsProps<T extends BoardItemProps = BoardItemProps> = Omit<
-  HTMLAttributes<HTMLDivElement>,
-  'children' | 'id'
-> & {
-  children: (item: T) => ReactNode;
-  id: string;
-};
-
-const BoardCards = <T extends BoardItemProps = BoardItemProps>({
-  children,
-  className,
-  ...props
-}: BoardCardsProps<T>) => {
-  const { data } = useContext(BoardContext) as BoardContextProps<T>;
-  const filteredData = data.filter((item) => item.column === props.id);
-  const items = filteredData.map((item) => item.id);
-  return (
-    <ScrollArea className="overflow-hidden">
-      <SortableContext items={items}>
-        <div
-          className={cn(
-            'flex flex-grow flex-col gap-2 p-2 pt-px relative',
-            className,
-          )}
-          {...props}
-        >
-          {filteredData.map(children)}
-        </div>
-      </SortableContext>
-      <ScrollArea.Bar orientation="vertical" />
-    </ScrollArea>
-  );
-};
-export type BoardHeaderProps = HTMLAttributes<HTMLDivElement>;
-export const BoardHeader = ({ className, ...props }: BoardHeaderProps) => (
-  <div
-    className={cn(
-      'm-0 px-3 h-10 flex-none font-semibold text-sm flex items-center justify-between',
-      className,
-    )}
-    {...props}
-  />
-);
-export type BoardProviderProps<
-  T extends BoardItemProps = BoardItemProps,
-  C extends BoardColumnProps = BoardColumnProps,
-> = Omit<DndContextProps, 'children'> & {
-  children: (column: C) => ReactNode;
-  className?: string;
-  columns: C[];
-  data: T[];
-  onDataChange?: (data: T[]) => void;
-  onDragStart?: (event: DragStartEvent) => void;
-  onDragEnd?: (event: DragEndEvent) => void;
-  onDragOver?: (event: DragOverEvent) => void;
-};
 
 const BoardProvider = <
   T extends BoardItemProps = BoardItemProps,
@@ -204,9 +131,11 @@ const BoardProvider = <
   columns,
   data,
   onDataChange,
+  boardId,
   ...props
 }: BoardProviderProps<T, C>) => {
-  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const setActiveCardId = useSetAtom(activeCardIdState(boardId));
+
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -221,6 +150,7 @@ const BoardProvider = <
     }),
     useSensor(KeyboardSensor),
   );
+
   const handleDragStart = (event: DragStartEvent) => {
     const card = data.find((item) => item.id === event.active.id);
     if (card) {
@@ -228,6 +158,7 @@ const BoardProvider = <
     }
     onDragStart?.(event);
   };
+
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) {
@@ -253,6 +184,7 @@ const BoardProvider = <
     }
     onDragOver?.(event);
   };
+
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveCardId(null);
     onDragEnd?.(event);
@@ -266,30 +198,10 @@ const BoardProvider = <
     newData = arrayMove(newData, oldIndex, newIndex);
     onDataChange?.(newData);
   };
-  const announcements: Announcements = {
-    onDragStart({ active }) {
-      const { name, column } = data.find((item) => item.id === active.id) ?? {};
-      return `Picked up the card "${name}" from the "${column}" column`;
-    },
-    onDragOver({ active, over }) {
-      const { name } = data.find((item) => item.id === active.id) ?? {};
-      const newColumn = columns.find((column) => column.id === over?.id)?.name;
-      return `Dragged the card "${name}" over the "${newColumn}" column`;
-    },
-    onDragEnd({ active, over }) {
-      const { name } = data.find((item) => item.id === active.id) ?? {};
-      const newColumn = columns.find((column) => column.id === over?.id)?.name;
-      return `Dropped the card "${name}" into the "${newColumn}" column`;
-    },
-    onDragCancel({ active }) {
-      const { name } = data.find((item) => item.id === active.id) ?? {};
-      return `Cancelled dragging the card "${name}"`;
-    },
-  };
+
   return (
-    <BoardContext.Provider value={{ columns, data, activeCardId }}>
+    <BoardContext.Provider value={{ columns, data, boardId }}>
       <DndContext
-        accessibility={{ announcements }}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}
@@ -310,9 +222,38 @@ const BoardProvider = <
   );
 };
 
+export const BoardHeader = ({ className, ...props }: BoardHeaderProps) => (
+  <div
+    className={cn(
+      'm-0 px-3 h-10 flex-none font-semibold text-sm flex items-center justify-between',
+      className,
+    )}
+    {...props}
+  />
+);
+
+export const BoardRoot = ({ id, children, className }: BoardProps) => {
+  const { isOver, setNodeRef } = useDroppable({
+    id,
+  });
+
+  return (
+    <div
+      className={cn(
+        'flex size-full min-h-40 min-w-80 flex-col overflow-hidden transition-all bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-t-md dark:from-primary/40 dark:to-primary/20',
+        isOver && 'shadow-focus',
+        className,
+      )}
+      ref={setNodeRef}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const Board = Object.assign(BoardRoot, {
   Provider: BoardProvider,
-  Card: BoardCard,
-  Cards: BoardCards,
   Header: BoardHeader,
+  Cards: BoardCards,
+  Card: BoardCard,
 });
