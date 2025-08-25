@@ -69,7 +69,7 @@ export const loadNoteClass = (models: IModels) => {
 
         let contentType = 'task';
 
-        const project = await models.Project.findOne({ _id: doc.itemId });
+        const project = await models.Project.exists({ _id: doc.itemId });
 
         if (project) {
           contentType = 'project';
