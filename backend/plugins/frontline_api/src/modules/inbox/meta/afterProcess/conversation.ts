@@ -46,6 +46,7 @@ export const conversationAfterProcessWorkers = {
           contentTypeId: _id,
           action: 'resolved',
           priority: 'medium',
+          allowMultiple: true,
         });
       }
 
@@ -66,6 +67,7 @@ export const conversationAfterProcessWorkers = {
           notificationType: 'conversationStateChange',
           action: 'resolved',
           priority: 'medium',
+          allowMultiple: true,
         });
       }
     }
