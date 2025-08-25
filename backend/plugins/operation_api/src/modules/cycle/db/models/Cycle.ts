@@ -6,21 +6,9 @@ import { cycleSchema } from '@/cycle/db/definitions/cycle';
 export interface ICycleModel extends Model<ICycleDocument> {
   getCycle(_id: string): Promise<ICycleDocument>;
   getCycles(filter: FilterQuery<ICycleDocument>): Promise<ICycleDocument[]>;
-  createCycle({
-    doc,
-    subdomain,
-  }: {
-    doc: ICycle;
-    subdomain: string;
-  }): Promise<ICycleDocument>;
+  createCycle({ doc }: { doc: ICycle }): Promise<ICycleDocument>;
   updateCycle(doc: ICycleDocument): Promise<ICycleDocument>;
-  removeCycle({
-    _id,
-    userId,
-  }: {
-    _id: string;
-    userId: string;
-  }): Promise<{ ok: number }>;
+  removeCycle({ _id }: { _id: string }): Promise<{ ok: number }>;
 }
 
 export const loadCycleClass = (models: IModels) => {
@@ -31,6 +19,11 @@ export const loadCycleClass = (models: IModels) => {
         throw new Error('Cycle not found');
       }
       return cycle;
+    }
+
+    public static async removeCycle({ _id }: { _id: string }) {
+      const cycles = await models.Cycle.deleteOne({ _id });
+      return cycles;
     }
 
     public static async createCycle({
@@ -73,7 +66,8 @@ export const loadCycleClass = (models: IModels) => {
     }
 
     public static async updateCycle(doc: ICycleDocument) {
-      const cycle = await models.Cycle.findOne({ _id: doc._id });
+      const { _id, ...rest } = doc;
+      const cycle = await models.Cycle.findOne({ _id });
 
       if (cycle && cycle.isCompleted) {
         throw new Error('Completed cycle cannot be updated');
@@ -95,15 +89,16 @@ export const loadCycleClass = (models: IModels) => {
       }
 
       return models.Cycle.findOneAndUpdate(
-        { _id: doc._id },
-        { $set: doc },
+        { _id },
+        { $set: rest },
         { new: true },
       );
     }
 
     public static async endCycle(doc: ICycleDocument) {
+      const { _id, ...rest } = doc;
       const endedCycle = await models.Cycle.findOneAndUpdate(
-        { _id: doc._id },
+        { _id },
         { $set: { isCompleted: true, isActive: false } },
         { new: true },
       );
@@ -114,7 +109,7 @@ export const loadCycleClass = (models: IModels) => {
 
       let nextCycle = await models.Cycle.findOneAndUpdate(
         {
-          teamId: doc.teamId,
+          teamId: rest.teamId,
           isCompleted: false,
           startDate: { $gte: new Date() },
         },
@@ -130,12 +125,13 @@ export const loadCycleClass = (models: IModels) => {
         const newEndDate = new Date(newStartDate.getTime() + duration);
 
         nextCycle = await models.Cycle.create({
-          teamId: doc.teamId,
+          teamId: rest.teamId,
           startDate: newStartDate,
           endDate: newEndDate,
           isActive: true,
           isCompleted: false,
           name: `Cycle ${newStartDate.toDateString()}`,
+          number: endedCycle.number + 1,
         });
       }
 

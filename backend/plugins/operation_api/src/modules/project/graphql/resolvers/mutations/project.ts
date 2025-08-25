@@ -17,15 +17,8 @@ export const projectMutations = {
       description,
       leadId,
     },
-    { models, user }: IContext,
+    { models }: IContext,
   ) => {
-    await checkUserRole({
-      models,
-      teamIds,
-      userId: user._id,
-      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
-    });
-
     const createdProject = await models.Project.createProject({
       name,
       teamIds,

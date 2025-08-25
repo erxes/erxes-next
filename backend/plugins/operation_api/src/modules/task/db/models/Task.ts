@@ -239,9 +239,9 @@ export const loadTaskClass = (models: IModels) => {
 
       for (const taskId of taskIds) {
         await models.Activity.createActivity({
-          action: 'move',
+          action: 'CHANGED',
           contentId: taskId,
-          module: 'task',
+          module: 'CYCLE',
           metadata: {
             newValue: newCycleId,
             previousValue: cycleId,
