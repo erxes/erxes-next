@@ -1,5 +1,5 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_PROJECT_PROGRESS_BY_MEMBER } from '~/modules/project/graphql/queries/getProjectProgressByMember';
+import { GET_PROJECT_PROGRESS_BY_MEMBER } from '@/project/graphql/queries/getProjectProgressByMember';
 import { IProjectProgressByMember } from '@/project/types';
 import { useEffect } from 'react';
 import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';

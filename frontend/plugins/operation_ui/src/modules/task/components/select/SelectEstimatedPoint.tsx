@@ -12,7 +12,7 @@ import {
 } from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
-import { useGetEstimateChoiceByTeam } from '~/modules/task/hooks/useGetEstimateChoiceByTeam';
+import { useGetEstimateChoiceByTeam } from '@/task/hooks/useGetEstimateChoiceByTeam';
 
 interface SelectEstimatedPointContextType {
   estimateChoices: IEstimateChoice[];

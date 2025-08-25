@@ -1,5 +1,5 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_PROJECT_PROGRESS_BY_TEAM } from '~/modules/project/graphql/queries/getProjectProgressByTeam';
+import { GET_PROJECT_PROGRESS_BY_TEAM } from '@/project/graphql/queries/getProjectProgressByTeam';
 import { IProjectProgressByTeam } from '@/project/types';
 
 interface IGetProjectQueryResponse {

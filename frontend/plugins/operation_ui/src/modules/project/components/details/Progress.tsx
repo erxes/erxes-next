@@ -1,4 +1,4 @@
-import { useGetProjectProgress } from '~/modules/project/hooks/useGetProjectProgress';
+import { useGetProjectProgress } from '@/project/hooks/useGetProjectProgress';
 import { IconCircleFilled } from '@tabler/icons-react';
 import { cn, Tooltip } from 'erxes-ui';
 
