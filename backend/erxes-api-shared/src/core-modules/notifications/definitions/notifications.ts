@@ -28,7 +28,7 @@ export interface INotificationDocument extends Document {
   // Timestamps
   createdAt: Date;
   expiresAt?: Date; // Auto-cleanup old notifications
-  isArchived: Boolean;
+  isArchived: boolean;
   kind: 'system' | 'user';
 }
 
