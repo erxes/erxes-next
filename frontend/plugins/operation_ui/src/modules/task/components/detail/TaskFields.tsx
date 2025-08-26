@@ -15,7 +15,6 @@ import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { NotesField } from '@/task/components/NotesField';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -38,6 +37,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
   >(description ? JSON.parse(description) : undefined);
   const editor = useBlockEditor({
     initialContent: descriptionContent,
+    placeholder: 'Description...',
   });
   const { updateTask } = useUpdateTask();
   const [name, setName] = useState(_name);
@@ -64,13 +64,14 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
-
   useEffect(() => {
+    if (!debouncedDescriptionContent) return;
     if (
-      !debouncedDescriptionContent ||
-      debouncedDescriptionContent === descriptionContent
-    )
+      JSON.stringify(debouncedDescriptionContent) ===
+      JSON.stringify(description ? JSON.parse(description) : undefined)
+    ) {
       return;
+    }
     updateTask({
       variables: {
         _id: taskId,
@@ -79,7 +80,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedDescriptionContent]);
-
   return (
     <div className="flex flex-col gap-3">
       <Input
@@ -123,11 +123,10 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         <BlockEditor
           editor={editor}
           onChange={handleDescriptionChange}
-          className="min-h-full"
+          className="min-h-full read-only"
         />
       </div>
       <ActivityList contentId={taskId} contentDetail={task} />
-      <NotesField taskId={taskId} />
     </div>
   );
 };

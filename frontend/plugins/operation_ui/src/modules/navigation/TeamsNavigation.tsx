@@ -4,7 +4,6 @@ import { currentUserState } from 'ui-modules';
 import { useNavigate } from 'react-router';
 import {
   Button,
-  Checkbox,
   Collapsible,
   DropdownMenu,
   IconComponent,
@@ -16,11 +15,8 @@ import {
   useToast,
 } from 'erxes-ui';
 import {
-  IconArchive,
-  IconBell,
   IconCaretRightFilled,
   IconChecklist,
-  IconChevronRight,
   IconClipboard,
   IconDotsVertical,
   IconLink,

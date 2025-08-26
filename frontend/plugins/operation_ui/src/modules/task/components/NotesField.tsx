@@ -1,9 +1,9 @@
 import { NoteInputReadOnly } from '@/task/components/NoteInputReadOnly';
-import { NoteInput } from '@/task/components/NoteInput';
+import { NoteInput } from '@/activity/components/NoteInput';
 import { useActivities } from '@/activity/hooks/useActivities';
 
-export const NotesField = ({ taskId }: { taskId: string }) => {
-  const { activities } = useActivities(taskId);
+export const NotesField = ({ contentId }: { contentId: string }) => {
+  const { activities } = useActivities(contentId);
   return (
     <div className="flex flex-col gap-4 mb-14">
       {activities &&
@@ -17,7 +17,7 @@ export const NotesField = ({ taskId }: { taskId: string }) => {
               createdAt={activity.createdAt?.toLocaleString()}
             />
           ))}
-      <NoteInput taskId={taskId} />
+      <NoteInput contentId={contentId} />
     </div>
   );
 };

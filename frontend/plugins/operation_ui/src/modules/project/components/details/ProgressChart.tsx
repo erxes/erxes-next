@@ -1,6 +1,6 @@
 import { ChartContainer } from 'erxes-ui';
 import { CartesianGrid, XAxis, AreaChart, Area, YAxis } from 'recharts';
-import { useGetProjectProgressChart } from '~/modules/project/hooks/useGetProjectProgressChart';
+import { useGetProjectProgressChart } from '@/project/hooks/useGetProjectProgressChart';
 import { format, parseISO, endOfDay, isAfter, subDays } from 'date-fns';
 
 export const ProgressChart = ({ projectId }: { projectId: string }) => {

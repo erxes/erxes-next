@@ -32,8 +32,6 @@ export const useActivities = (contentId: string) => {
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        console.log('subscriptionData', subscriptionData);
-
         const { type, activity } =
           subscriptionData.data.operationActivityChanged;
         const currentList = prev.getOperationActivities.list;
@@ -45,7 +43,7 @@ export const useActivities = (contentId: string) => {
             (item: IActivity) => item._id === activity._id,
           );
           if (!exists) {
-            updatedList = [activity, ...currentList];
+            updatedList = [...currentList, activity];
           }
         }
 
