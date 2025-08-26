@@ -89,7 +89,7 @@ const SelectStatusValue = ({
 }) => {
   const { statusId, statuses } = useSelectStatusContext();
   const selectedStatus = statuses.find((status) => status.value === statusId);
-
+  console.log({ selectedStatus, statusId, statuses });
   if (!selectedStatus) {
     return (
       <span className="text-accent-foreground/80">
@@ -188,22 +188,18 @@ export const SelectStatusFilterView = ({
 
 export const SelectStatusTypeFilterView = ({
   onValueChange,
-  queryKey,
 }: {
   onValueChange?: (value: string) => void;
-  queryKey?: string;
 }) => {
-  const [statusType, setStatusType] = useQueryState<string>(
-    queryKey || 'statusType',
-  );
+  const [statusType, setStatusType] = useQueryState<number>('statusType');
   const { resetFilterState } = useFilterContext();
   return (
-    <Filter.View filterKey={queryKey || 'statusType'}>
+    <Filter.View filterKey={'statusType'}>
       <SelectStatusProvider
         statuses={DEFAULT_TEAM_STATUSES}
-        value={statusType || ''}
+        value={statusType?.toString() || ''}
         onValueChange={(value) => {
-          setStatusType(value);
+          setStatusType(Number(value));
           resetFilterState();
           onValueChange?.(value);
         }}
@@ -218,14 +214,12 @@ export const SelectStatusFilterBar = ({
   iconOnly,
   onValueChange,
   queryKey,
-  statuses = [],
 }: {
   iconOnly?: boolean;
   onValueChange?: (value: string) => void;
   queryKey?: string;
-  statuses?: IStatus[];
 }) => {
-  const [status, setStatus] = useQueryState<string>(queryKey || 'statusType');
+  const [status, setStatus] = useQueryState<number>(queryKey || 'status');
   const [open, setOpen] = useState(false);
 
   if (status === null) return null;
@@ -237,17 +231,17 @@ export const SelectStatusFilterBar = ({
         {!iconOnly && 'Status'}
       </Filter.BarName>
       <SelectStatusProvider
-        value={status || ''}
+        value={status?.toString() || ''}
         onValueChange={(value) => {
           if (value) {
-            setStatus(value);
+            setStatus(Number(value));
           } else {
             setStatus(null);
           }
           setOpen(false);
           onValueChange?.(value);
         }}
-        statuses={statuses}
+        statuses={DEFAULT_TEAM_STATUSES}
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>

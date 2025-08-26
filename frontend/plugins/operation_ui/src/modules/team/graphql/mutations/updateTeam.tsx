@@ -8,6 +8,7 @@ export const UPDATE_TEAM = gql`
     $description: String
     $memberIds: [String]
     $estimateType: Int
+    $cycleEnabled: Boolean
   ) {
     teamUpdate(
       _id: $_id
@@ -16,6 +17,7 @@ export const UPDATE_TEAM = gql`
       description: $description
       memberIds: $memberIds
       estimateType: $estimateType
+      cycleEnabled: $cycleEnabled
     ) {
       _id
     }

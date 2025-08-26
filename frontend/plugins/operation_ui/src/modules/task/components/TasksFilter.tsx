@@ -99,7 +99,7 @@ export const TasksFilter = () => {
         <SelectAssignee.FilterBar />
         {teamId && <SelectTeam.FilterBar />}
         <SelectPriority.FilterBar />
-        <SelectStatus.FilterBar />
+        <SelectStatus.FilterBar queryKey="statusType" />
         <TasksFilterPopover />
         <TasksTotalCount />
       </Filter.Bar>

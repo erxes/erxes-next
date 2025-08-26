@@ -7,6 +7,7 @@ import { ProjectDetailPage } from '~/pages/ProjectDetailPage';
 import { ProjectLayout } from '@/project/components/ProjectLayout';
 import { TasksRecordTable } from '@/task/components/TasksRecordTable';
 import { TaskDetailPage } from '~/pages/TaskDetailPage';
+import { CyclesPage } from '~/pages/CyclesPage';
 
 const taskMain = () => {
   return (
@@ -24,9 +25,10 @@ const taskMain = () => {
         </Route>
 
         <Route path="team/:teamId">
-          <Route index element={<Navigate to="projects" replace />} />
+          <Route index element={<Navigate to="tasks" replace />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="tasks" element={<TasksPage />} />
+          <Route path="cycles" element={<CyclesPage />} />  
 
           <Route path="tasks/:taskId" element={<TaskDetailPage />} />
 
