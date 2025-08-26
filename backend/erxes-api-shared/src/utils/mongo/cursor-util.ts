@@ -1,4 +1,4 @@
-import { SortOrder, FilterQuery, Model } from 'mongoose';
+import { SortOrder, FilterQuery, Model, Types } from 'mongoose';
 
 export interface CursorPaginateParams<T> {
   model: Model<T>;
@@ -33,14 +33,23 @@ export const encodeCursor = (item: any, sortFields: string[]): string => {
     }
   }
 
-  cursorData._id = item._id;
+  // Handle ObjectId serialization
+  cursorData._id =
+    item._id instanceof Types.ObjectId ? item._id.toString() : item._id;
 
   return Buffer.from(JSON.stringify(cursorData)).toString('base64');
 };
 
 export const decodeCursor = (cursor: string): any => {
   try {
-    return JSON.parse(Buffer.from(cursor, 'base64').toString());
+    const decoded = JSON.parse(Buffer.from(cursor, 'base64').toString());
+
+    // Convert _id back to ObjectId if it's a valid ObjectId string
+    if (decoded._id && Types.ObjectId.isValid(decoded._id)) {
+      decoded._id = new Types.ObjectId(decoded._id);
+    }
+
+    return decoded;
   } catch {
     throw new Error('Invalid cursor format');
   }

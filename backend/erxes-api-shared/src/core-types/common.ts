@@ -21,8 +21,6 @@ export interface ICursorPaginateParams {
   direction?: 'forward' | 'backward';
   cursorMode?: 'inclusive' | 'exclusive';
   orderBy?: Record<string, SortOrder>;
-  sortMode?: 'simple' | 'aggregation';
-  aggregationPipeline?: any[];
 }
 
 export interface ICursorPaginateResult<T> {
