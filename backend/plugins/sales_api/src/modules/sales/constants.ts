@@ -101,3 +101,69 @@ export const CLOSE_DATE_TYPES = {
     },
   ],
 };
+
+export const BOARD_ITEM_EXTENDED_FIELDS = [
+  {
+    _id: Math.random(),
+    name: 'boardName',
+    label: 'Board name',
+    type: 'string',
+  },
+  {
+    _id: Math.random(),
+    name: 'pipelineName',
+    label: 'Pipeline name',
+    type: 'string',
+  },
+  {
+    _id: Math.random(),
+    name: 'stageName',
+    label: 'Stage name',
+    type: 'string',
+  },
+  {
+    _id: Math.random(),
+    name: 'assignedUserEmail',
+    label: 'Assigned user email',
+    type: 'string',
+  },
+  {
+    _id: Math.random(),
+    name: 'labelIds',
+    label: 'Label',
+    type: 'string',
+  },
+  {
+    _id: Math.random(),
+    name: 'totalAmount',
+    label: 'Total Amount',
+    type: 'number',
+  },
+];
+
+export const BOARD_ITEM_EXPORT_EXTENDED_FIELDS = [
+  {
+    _id: Math.random(),
+    name: 'totalAmount',
+    label: 'Total Amount',
+    type: 'number',
+  },
+  {
+    _id: Math.random(),
+    name: 'totalLabelCount',
+    label: 'Total Label Counts',
+    type: 'number',
+  },
+  {
+    _id: Math.random(),
+    name: 'stageMovedUser',
+    label: 'Stage Moved User',
+    type: 'string',
+  },
+  {
+    _id: Math.random(),
+    name: 'internalNotes',
+    label: 'Internal Notes',
+    type: 'string',
+  },
+];

@@ -2,6 +2,7 @@ import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { NodeData } from '@/automations/types';
 import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
+import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
 import {
   checkIsValidConnect,
   connectionHandler,
@@ -13,7 +14,7 @@ import { useCallback } from 'react';
 export const useNodeConnect = () => {
   const { triggers, actions, workflows, setNodesChangeToState } =
     useAutomationNodes();
-  const { getNodes, getEdges, getNode, setEdges } =
+  const { getNodes, setNodes, getEdges, getNode, setEdges } =
     useReactFlow<Node<NodeData>>();
 
   const nodes = getNodes();
@@ -35,6 +36,8 @@ export const useNodeConnect = () => {
       })),
       newWorkflows: updateWorkflows,
     });
+
+    setNodes(generateNodes(triggers, actions, workflows));
   };
 
   const onConnect = useCallback(
@@ -42,8 +45,6 @@ export const useNodeConnect = () => {
       const source = getNode(params.source);
       setEdges((eds) => {
         const updatedEdges = addEdge({ ...params }, eds);
-
-        console.log({ params, source, updatedEdges });
 
         onConnection(generateConnect(params, source));
 

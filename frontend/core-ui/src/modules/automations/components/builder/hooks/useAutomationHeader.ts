@@ -10,11 +10,12 @@ import { useMutation } from '@apollo/client';
 import { useReactFlow } from '@xyflow/react';
 import { useIsMobile, toast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 export const useAutomationHeader = () => {
   const { handleSubmit, clearErrors } =
     useFormContext<TAutomationBuilderForm>();
+  const navigate = useNavigate();
 
   const { setQueryParams, reactFlowInstance } = useAutomation();
   const { actions, triggers } = useAutomationNodes();
@@ -63,13 +64,20 @@ export const useAutomationHeader = () => {
     return save({
       variables: generateValues(),
       onError: (error) => {
-        toast({ title: 'Something went wrong', description: error.message });
+        toast({
+          title: 'Something went wrong',
+          description: error.message,
+          variant: 'destructive',
+        });
       },
-      onCompleted: () => {
+      onCompleted: ({ automationsAdd }) => {
         clearErrors();
         toast({
           title: 'Save successful',
         });
+        if (!id && automationsAdd) {
+          navigate(`/automations/edit/${automationsAdd._id}`);
+        }
       },
     });
   };
@@ -120,13 +128,20 @@ export const useAutomationHeader = () => {
     } else {
       const errorKeys = Object.keys(errors || {});
       if (errorKeys?.length > 0) {
-        const errorMessage = (errors as Record<string, { message?: string }>)[
-          errorKeys[0]
-        ]?.message;
+        const { message, ref } =
+          (errors as Record<string, { message?: string; ref: any }>)[
+            errorKeys[0]
+          ] || {};
+        console.log({ errors });
         toast({
-          title: 'Error',
-          description: errorMessage,
+          title: 'Something went wrong',
+          description: message,
+          variant: 'destructive',
         });
+
+        if (ref) {
+          ref?.focus();
+        }
       }
     }
   };

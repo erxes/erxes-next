@@ -47,6 +47,9 @@ export const EditForm = ({ id, fieldName, data, callback }: Props) => {
   return (
     <Dialog.Content>
       <Dialog.Title>Edit Node</Dialog.Title>
+      <Dialog.Description>
+        Customize the name and description of this node for better clarity.
+      </Dialog.Description>
       <Input name="label" value={doc.label} onChange={handleChange} />
       <Input
         type="textarea"

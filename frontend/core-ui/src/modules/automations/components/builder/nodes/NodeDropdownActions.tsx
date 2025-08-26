@@ -17,6 +17,8 @@ export const NodeDropdownActions = ({
     fieldName,
     isOpenDialog,
     isOpenDropDown,
+    isOpenRemoveAlert,
+    setOpenRemoveAlert,
     setOpenDialog,
     setOpenDropDown,
     onRemoveNode,
@@ -24,9 +26,9 @@ export const NodeDropdownActions = ({
 
   return (
     <DropdownMenu
-      open={isOpenDropDown || isOpenDialog}
+      open={isOpenDropDown || isOpenDialog || isOpenRemoveAlert}
       onOpenChange={(open) => {
-        if (!isOpenDialog) {
+        if (!isOpenDialog || !isOpenRemoveAlert) {
           setOpenDropDown(open);
         }
       }}
@@ -37,18 +39,18 @@ export const NodeDropdownActions = ({
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="w-42">
-        <DropdownMenu.Item asChild>
-          <NodeEditForm
-            isOpenDialog={isOpenDialog}
-            setOpenDialog={setOpenDialog}
-            data={data}
-            id={id}
-            fieldName={fieldName}
-          />
-        </DropdownMenu.Item>
-        <DropdownMenu.Item asChild>
-          <NodeRemoveActionDialog onRemoveNode={onRemoveNode} />
-        </DropdownMenu.Item>
+        <NodeEditForm
+          isOpenDialog={isOpenDialog}
+          setOpenDialog={setOpenDialog}
+          data={data}
+          id={id}
+          fieldName={fieldName}
+        />
+        <NodeRemoveActionDialog
+          onRemoveNode={onRemoveNode}
+          isOpenRemoveAlert={isOpenRemoveAlert}
+          setOpenRemoveAlert={setOpenRemoveAlert}
+        />
       </DropdownMenu.Content>
     </DropdownMenu>
   );
@@ -56,16 +58,22 @@ export const NodeDropdownActions = ({
 
 export const NodeRemoveActionDialog = ({
   onRemoveNode,
+  isOpenRemoveAlert,
+  setOpenRemoveAlert,
 }: {
   onRemoveNode: () => void;
+  isOpenRemoveAlert: boolean;
+  setOpenRemoveAlert: Dispatch<SetStateAction<boolean>>;
 }) => {
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpenRemoveAlert} onOpenChange={setOpenRemoveAlert}>
       <AlertDialog.Trigger asChild>
-        <Button variant="ghost" size="sm" className="w-full justify-start">
-          <IconTrash className="size-4 text-destructive" />
-          Delete
-        </Button>
+        <DropdownMenu.Item asChild>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
+            <IconTrash className="size-4 text-destructive" />
+            Delete
+          </Button>
+        </DropdownMenu.Item>
       </AlertDialog.Trigger>
       <AlertDialog.Content>
         <AlertDialog.Header>
@@ -102,17 +110,14 @@ const NodeEditForm = ({
     | AutomationNodesType.Workflows;
 }) => {
   return (
-    <Dialog
-      open={isOpenDialog}
-      onOpenChange={(open) => {
-        setOpenDialog(open);
-      }}
-    >
+    <Dialog open={isOpenDialog} onOpenChange={setOpenDialog}>
       <Dialog.Trigger asChild>
-        <Button variant="ghost" size="sm" className="w-full justify-start">
-          <IconEdit className="size-4" />
-          Edit
-        </Button>
+        <DropdownMenu.Item asChild>
+          <Button variant="ghost" size="sm" className="w-full justify-start">
+            <IconEdit className="size-4" />
+            Edit
+          </Button>
+        </DropdownMenu.Item>
       </Dialog.Trigger>
       <EditForm
         id={id}

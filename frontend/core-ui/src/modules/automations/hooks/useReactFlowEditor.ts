@@ -26,10 +26,11 @@ export const useReactFlowEditor = () => {
     setAwaitingToConnectNodeId,
     reactFlowInstance,
     setReactFlowInstance,
+    setQueryParams,
   } = useAutomation();
   const { triggers, actions, workflows, setNodesChangeToState } =
     useAutomationNodes();
-  const { getNodes, addNodes } = useReactFlow<Node<NodeData>>();
+  const { getNodes, addNodes, setNodes } = useReactFlow<Node<NodeData>>();
 
   const [nodes, _setNodes, onNodesChange] = useNodesState<Node<NodeData>>(
     generateNodes(triggers, actions, workflows),
@@ -51,6 +52,7 @@ export const useReactFlowEditor = () => {
       actions: newActions,
       triggers: newTriggers,
       workflows: newWorkflows,
+      newNodeId,
     } = automationDropHandler({
       triggers,
       actions,
@@ -64,6 +66,13 @@ export const useReactFlowEditor = () => {
 
     if (awaitingToConnectNodeId) {
       setAwaitingToConnectNodeId('');
+    }
+
+    if (nodes.find((node) => node.type === 'scratch')) {
+      setNodes((nodes) => nodes.filter((node) => node.type !== 'scratch'));
+      if (newNodeId) {
+        setQueryParams({ activeNodeId: newNodeId });
+      }
     }
   };
 

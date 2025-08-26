@@ -20,7 +20,7 @@ import {
 } from './@types';
 import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
 
-import { can } from 'erxes-api-shared/core-modules';
+import { can, sendNotification } from 'erxes-api-shared/core-modules';
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import moment from 'moment';
 import { DeleteResult } from 'mongoose';
@@ -1563,4 +1563,48 @@ export const getAmountsMap = async (
     }
   });
   return amountsMap;
+};
+
+export const itemsAdd = async (
+  models: IModels,
+  subdomain: string,
+  doc: IDeal & {
+    proccessId: string;
+    aboveItemId: string;
+  },
+  type: string,
+  createModel: any,
+  user?: IUserDocument,
+  docModifier?: any,
+) => {
+  doc.initialStageId = doc.stageId;
+  doc.watchedUserIds = user && [user._id];
+
+  const modifiedDoc = docModifier ? docModifier(doc) : doc;
+
+  const extendedDoc = {
+    ...modifiedDoc,
+    modifiedBy: user && user._id,
+    userId: user ? user._id : doc.userId,
+    order: await getNewOrder({
+      collection: models.Deals,
+      stageId: doc.stageId,
+      aboveItemId: doc.aboveItemId,
+    }),
+  };
+
+  if (extendedDoc.customFieldsData) {
+    // clean custom field values
+    extendedDoc.customFieldsData = await sendTRPCMessage({
+      pluginName: 'core',
+      module: 'fields',
+      action: 'prepareCustomFieldsData',
+      input: extendedDoc.customFieldsData,
+      defaultValue: [],
+    });
+  }
+
+  const item = await createModel(extendedDoc);
+
+  return item;
 };

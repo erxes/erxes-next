@@ -221,7 +221,7 @@ const AutomationsNodeLibrary = ({
   });
 
   return list.map(({ _id, name = '', createdAt = '' }) => (
-    <Command.Item value={name} asChild>
+    <Command.Item key={_id} value={name} asChild>
       <Card
         className="hover:shadow-md transition-shadow cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px] hover:border-warning"
         draggable

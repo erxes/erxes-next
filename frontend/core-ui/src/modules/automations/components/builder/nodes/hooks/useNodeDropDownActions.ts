@@ -25,6 +25,7 @@ export const useNodeDropDownActions = (
   const { setValue, getValues } = useFormContext<TAutomationBuilderForm>();
   const [isOpenDropDown, setOpenDropDown] = useState(false);
   const [isOpenDialog, setOpenDialog] = useState(false);
+  const [isOpenRemoveAlert, setOpenRemoveAlert] = useState(false);
 
   const fieldName = fields[nodeType] as AutomationNodesType;
   const actionFieldName =
@@ -45,6 +46,16 @@ export const useNodeDropDownActions = (
 
     if (queryParams?.activeNodeId === id) {
       setQueryParams({ activeNodeId: null });
+      if (fieldName === 'triggers' && !updatedNodes?.length) {
+        setNodes([
+          {
+            id: 'scratch-node',
+            type: 'scratch',
+            data: {} as any,
+            position: { x: 0, y: 0 },
+          },
+        ]);
+      }
     }
   };
 
@@ -52,6 +63,8 @@ export const useNodeDropDownActions = (
     fieldName,
     isOpenDialog,
     isOpenDropDown,
+    isOpenRemoveAlert,
+    setOpenRemoveAlert,
     setOpenDialog,
     setOpenDropDown,
     onRemoveNode,

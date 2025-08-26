@@ -5,7 +5,7 @@ import {
   IConditionsForPreview,
   IField,
   IOperator,
-  SegmentFormProps,
+  TSegmentForm,
 } from '../types';
 
 import { Path } from 'react-hook-form';
@@ -110,7 +110,7 @@ export const getSegmentFormDefaultValues = (
     getSubSegments,
   } = segment;
 
-  const values: SegmentFormProps = {
+  const values: TSegmentForm = {
     name: name || '',
     description: description || '',
     config: config || {},

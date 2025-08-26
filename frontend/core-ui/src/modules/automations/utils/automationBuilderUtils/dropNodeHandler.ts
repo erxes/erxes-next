@@ -34,6 +34,7 @@ export const automationDropHandler = ({
   [AutomationNodesType.Actions]: IAction[];
   [AutomationNodesType.Triggers]: ITrigger[];
   [AutomationNodesType.Workflows]?: IWorkflowNode[];
+  newNodeId?: string;
 } => {
   event.preventDefault();
 
@@ -41,7 +42,6 @@ export const automationDropHandler = ({
     event.dataTransfer.getData('application/reactflow/draggingNode') || '{}',
   ) as TDroppedNode;
 
-  console.log({ draggingNode });
   const { nodeType, awaitingToConnectNodeId } = draggingNode;
 
   if (!nodeType) {
@@ -90,7 +90,7 @@ export const automationDropHandler = ({
       >,
       AutomationNodeType.Trigger,
       triggers || [],
-      {},
+      { nodeIndex: (triggers || []).length },
       getNodes(),
     );
     addNodes(generatedNode);
@@ -115,7 +115,7 @@ export const automationDropHandler = ({
       >,
       AutomationNodeType.Workflow,
       workflows || [],
-      {},
+      { nodeIndex: (workflows || []).length },
       getNodes(),
     );
     addNodes(generatedNode);
@@ -142,12 +142,12 @@ export const automationDropHandler = ({
       >,
       AutomationNodeType.Action,
       actions || [],
-      {},
+      { nodeIndex: (actions || []).length },
       getNodes(),
     );
     addNodes(generatedNode);
     actions = [...actions, newNode];
   }
 
-  return { triggers, actions, workflows };
+  return { triggers, actions, workflows, newNodeId: id };
 };

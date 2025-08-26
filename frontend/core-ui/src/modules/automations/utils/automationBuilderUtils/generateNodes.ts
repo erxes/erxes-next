@@ -63,7 +63,7 @@ const generateNodeData = (
     label,
     description,
     icon,
-    nodeType: AutomationNodeType.Action,
+    nodeType: AutomationNodeType.Trigger,
     type,
     config,
     isCustom,

@@ -272,6 +272,7 @@ import {
   IconForms,
   IconDeviceLaptop,
   IconClockPlay,
+  IconPigMoney,
 } from '@tabler/icons-react';
 
 export const ALL_ICONS = {
@@ -548,4 +549,5 @@ export const ALL_ICONS = {
   IconForms,
   IconDeviceLaptop,
   IconClockPlay,
+  IconPigMoney,
 };

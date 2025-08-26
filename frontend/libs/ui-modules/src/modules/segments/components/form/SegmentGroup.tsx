@@ -1,21 +1,16 @@
 import { IconTrash } from '@tabler/icons-react';
 import { Button, Card, Label } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { SegmentFormProps } from '../../types';
+import { TSegmentForm } from '../../types';
 import { SegmentProperty } from './SegmentProperty';
+import { useSegment } from 'ui-modules/modules/segments/context/SegmentProvider';
 type Props = {
-  form: UseFormReturn<SegmentFormProps>;
   parentFieldName?: `conditionSegments.${number}`;
   onRemove?: () => void;
-  contentType: string;
 };
 
-export const SegmentGroup = ({
-  form,
-  parentFieldName,
-  onRemove,
-  contentType,
-}: Props) => {
+export const SegmentGroup = ({ parentFieldName, onRemove }: Props) => {
+  const { form, contentType } = useSegment();
   const { control } = form;
 
   const {
@@ -56,10 +51,8 @@ export const SegmentGroup = ({
             <div key={(condition as any).id}>
               <SegmentProperty
                 index={index}
-                form={form}
                 parentFieldName={parentFieldName}
                 condition={condition}
-                contentType={contentType}
                 remove={() => remove(index)}
                 isFirst={index === 0}
                 isLast={index === conditionFields.length - 1}
