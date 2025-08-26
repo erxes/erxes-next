@@ -41,7 +41,7 @@ export const updateMongoDocumentOrder = async (
   const ids: string[] = [];
   const bulkOps: Array<{
     updateOne: {
-      filter: { _id: string };
+      query: { _id: string };
       update: { order: number };
     };
   }> = [];
@@ -53,7 +53,7 @@ export const updateMongoDocumentOrder = async (
 
     bulkOps.push({
       updateOne: {
-        filter: { _id },
+        query: { _id },
         update: selector,
       },
     });
@@ -87,27 +87,26 @@ export const defaultPaginate = (
 
 export const cursorPaginate = async <T extends Document>({
   model,
-  limit = 20,
-  cursor,
-  direction = 'forward',
-  sortBy = {},
-  filter = {},
+  params,
+  query,
 }: CursorPaginateParams<T>): Promise<CursorResult<T>> => {
+  const { limit = 20, cursor, direction = 'forward', orderBy = {} } = params;
+
   if (limit < 1 || limit > 100) {
     throw new Error('Limit must be between 1 and 100');
   }
 
-  const baseQuery = { ...filter };
+  const baseQuery = { ...query };
 
   if (cursor) {
-    const cursorQuery = buildCursorQuery(cursor, sortBy, direction);
+    const cursorQuery = buildCursorQuery(cursor, orderBy, direction);
     Object.assign(baseQuery, cursorQuery);
   }
 
-  const sortFields = Object.keys(sortBy);
+  const sortFields = Object.keys(orderBy);
   const sortOrder: Record<string, 1 | -1> = {};
 
-  for (const [field, order] of Object.entries(sortBy)) {
+  for (const [field, order] of Object.entries(orderBy)) {
     const normalizedOrder = order === 1 || order === 'asc' ? 1 : -1;
     sortOrder[field] =
       direction === 'forward'
@@ -125,7 +124,7 @@ export const cursorPaginate = async <T extends Document>({
       .sort(sortOrder)
       .limit(limit + 1)
       .lean(),
-    model.countDocuments(filter as FilterQuery<T>),
+    model.countDocuments(query as FilterQuery<T>),
   ]);
 
   const hasMore = items.length > limit;

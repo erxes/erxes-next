@@ -2,7 +2,7 @@ import { IContext } from '~/connectionResolvers';
 import { ITaskFilter } from '@/task/@types/task';
 import { ITaskDocument } from '@/task/@types/task';
 import { FilterQuery } from 'mongoose';
-import { perfectCursorPaginate } from 'erxes-api-shared/utils';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 
 export const taskQueries = {
   getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -77,17 +77,16 @@ export const taskQueries = {
       filterQuery.assigneeId = filter.userId;
     }
 
-    const { list, totalCount, pageInfo } =
-      await perfectCursorPaginate<ITaskDocument>({
-        model: models.Task,
-        limit: filter.limit || 20,
-        cursor: filter.cursor || undefined,
-        direction: filter.direction || 'forward',
-        sortBy: {
-          createdAt: 'desc',
+    const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
+      model: models.Task,
+      params: {
+        ...filter,
+        orderBy: {
+          createdAt: 'asc',
         },
-        filter: filterQuery,
-      });
+      },
+      query: filterQuery,
+    });
 
     return { list, totalCount, pageInfo };
   },

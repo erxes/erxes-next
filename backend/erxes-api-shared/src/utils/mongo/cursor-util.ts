@@ -2,11 +2,13 @@ import { SortOrder, FilterQuery, Model } from 'mongoose';
 
 export interface CursorPaginateParams<T> {
   model: Model<T>;
-  limit?: number;
-  cursor?: string;
-  direction?: 'forward' | 'backward';
-  sortBy?: Record<string, SortOrder>;
-  filter?: FilterQuery<T>;
+  params: {
+    limit?: number;
+    cursor?: string;
+    direction?: 'forward' | 'backward';
+    orderBy?: Record<string, SortOrder>;
+  };
+  query?: FilterQuery<T>;
 }
 
 export interface PageInfo {
@@ -46,11 +48,11 @@ export const decodeCursor = (cursor: string): any => {
 
 export const buildCursorQuery = (
   cursor: string,
-  sortBy: Record<string, SortOrder>,
+  orderBy: Record<string, SortOrder>,
   direction: 'forward' | 'backward',
 ): Record<string, any> => {
   const cursorData = decodeCursor(cursor);
-  const sortFields = Object.keys(sortBy);
+  const sortFields = Object.keys(orderBy);
 
   if (sortFields.length === 0) {
     const operator = direction === 'forward' ? '$gt' : '$lt';
@@ -61,7 +63,7 @@ export const buildCursorQuery = (
 
   for (let i = 0; i < sortFields.length; i++) {
     const field = sortFields[i];
-    const sortOrder = sortBy[field];
+    const sortOrder = orderBy[field];
     const isAscending = sortOrder === 1 || sortOrder === 'asc';
 
     const condition: Record<string, any> = {};

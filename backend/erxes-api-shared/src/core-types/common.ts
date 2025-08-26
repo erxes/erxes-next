@@ -17,7 +17,7 @@ export interface IRuleDocument extends IRule, Document {
 }
 export interface ICursorPaginateParams {
   limit?: number;
-  cursor?: string | null;
+  cursor?: string;
   direction?: 'forward' | 'backward';
   cursorMode?: 'inclusive' | 'exclusive';
   orderBy?: Record<string, SortOrder>;

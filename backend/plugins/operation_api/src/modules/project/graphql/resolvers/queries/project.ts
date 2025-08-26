@@ -65,13 +65,8 @@ export const projectQueries = {
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IProjectDocument>({
         model: models.Project,
-        limit: filter.limit || 20,
-        cursor: filter.cursor || undefined,
-        direction: filter.direction || 'forward',
-        sortBy: {
-          createdAt: 'desc',
-        },
-        filter: filterQuery,
+        params: filter,
+        query: filterQuery,
       });
 
     return { list, totalCount, pageInfo };
