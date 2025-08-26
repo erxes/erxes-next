@@ -133,9 +133,6 @@ export const automationQueries = {
           orderBy: {
             createdAt: -1,
           },
-          fieldTypes: {
-            createdAt: 'date',
-          },
         },
         query: filter,
       });

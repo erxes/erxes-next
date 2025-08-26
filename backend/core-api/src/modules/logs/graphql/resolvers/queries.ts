@@ -63,10 +63,6 @@ export const logQueries = {
       params: {
         ...args,
         orderBy: { createdAt: -1 },
-        fieldTypes: {
-          _id: 'objectId',
-          createdAt: 'date',
-        },
       },
       query: filter,
     });
