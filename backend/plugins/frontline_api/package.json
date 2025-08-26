@@ -13,12 +13,17 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
+    "base64-stream": "^1.0.0",
     "debug": "^4.4.0",
+    "dotenv": "^17.2.1",
     "erxes-api-shared": "workspace:^",
     "fast-xml-parser": "^5.2.5",
     "fbgraph": "^1.4.4",
+    "ioredis": "^5.7.0",
+    "mailparser": "^3.7.4",
     "moment-timezone": "^0.5.48",
-    "redlock": "5.0.0-beta.2",
+    "node-imap": "^0.9.6",
+    "redlock": "4.2.0",
     "string-strip-html": "^13.4.12",
     "strip-html": "^1.0.2"
   }
