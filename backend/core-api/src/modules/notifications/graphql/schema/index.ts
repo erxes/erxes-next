@@ -78,6 +78,7 @@ type Notification {
     action:String
     emailDelivery:EmailDelivery
     kind:String
+    updatedAt: Date
 }
 
 type NotificationsList {

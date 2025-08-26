@@ -1,8 +1,6 @@
 import { graphqlPubsub } from 'erxes-api-shared/utils';
-import { AnyBulkWriteOperation, model } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
-// import { BulkWriteOperation } from 'mongodb';
 
 export const notificationMutations = {
   async archiveNotification(_root, { _id }, { models, user }: IContext) {
