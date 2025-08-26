@@ -1,12 +1,12 @@
 // scripts/start-dev.js
 require('dotenv').config();
 
-const { ENABLED_PLUGINS, ENABDLED_SERVICES } = process.env;
+const { ENABLED_PLUGINS, ENABLED_SERVICES } = process.env;
 const { execSync } = require('child_process');
 
 let plugins = '';
 let services = '';
-const projectsCount = 2;
+let projectsCount = 2;
 
 if (ENABLED_PLUGINS) {
   try {
@@ -20,10 +20,11 @@ if (ENABLED_PLUGINS) {
     process.exit(1);
   }
 }
-if (ENABDLED_SERVICES) {
+
+if (ENABLED_SERVICES) {
   try {
-    services = ENABDLED_SERVICES.split(',')
-      .map((plugin) => `${plugin}-service`)
+    services = ENABLED_SERVICES.split(',')
+      .map((service) => `${service}-service`)
       .join(' ');
 
     projectsCount += services.split(' ').length;

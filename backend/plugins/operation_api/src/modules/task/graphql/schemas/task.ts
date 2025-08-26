@@ -30,6 +30,7 @@ export const types = `
   }
 
   input ITaskFilter {
+    _id: String
     status: String
     priority: Int
     assigneeId: String
@@ -48,6 +49,11 @@ export const types = `
     estimate: String
 
     ${GQL_CURSOR_PARAM_DEFS}
+  }
+
+  type TaskSubscription {
+    type: String
+    task: Task
   }
 `;
 

@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { ITeamFilter } from '@/team/@types/team';
-import { getTeamEstimateChoises } from '~/modules/team/utils';
+import { getTeamEstimateChoises } from '@/team/utils';
 
 export const teamQueries = {
   getTeam: async (_parent: undefined, { _id }, { models }: IContext) => {

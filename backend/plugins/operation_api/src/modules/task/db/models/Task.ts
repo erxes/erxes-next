@@ -9,6 +9,7 @@ import {
 } from '@/task/@types/task';
 import { createActivity } from '@/activity/utils/createActivity';
 import { createTaskNotification } from '@/task/notificationUtils';
+import { STATUS_TYPES } from '~/modules/status/constants';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
@@ -31,7 +32,8 @@ export interface ITaskModel extends Model<ITaskDocument> {
     userId: string;
     subdomain: string;
   }): Promise<ITaskDocument>;
-  removeTask(TaskId: string): Promise<{ ok: number }>;
+  removeTask(taskId: string): Promise<{ ok: number }>;
+  moveCycle(cycleId: string, newCycleId: string): Promise<{ ok: number }>;
 }
 
 export const loadTaskClass = (models: IModels) => {
@@ -221,7 +223,39 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async removeTask(TaskId: string[]) {
-      return models.Task.deleteOne({ _id: { $in: TaskId } });
+      return models.Task.findOneAndDelete({ _id: { $in: TaskId } });
+    }
+
+    public static async moveCycle(cycleId: string, newCycleId: string) {
+      const statuses = await models.Status.find({
+        cycleId,
+        type: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.CANCELLED] },
+      }).distinct('_id');
+
+      const taskIds = await models.Task.find({
+        cycleId,
+        status: { $nin: statuses },
+      }).distinct('_id');
+
+      for (const taskId of taskIds) {
+        await models.Activity.createActivity({
+          action: 'CHANGED',
+          contentId: taskId,
+          module: 'CYCLE',
+          metadata: {
+            newValue: newCycleId,
+            previousValue: cycleId,
+          },
+          createdBy: 'system',
+        });
+      }
+
+      await models.Task.updateMany(
+        { _id: { $in: taskIds } },
+        { $set: { cycleId: newCycleId } },
+      );
+
+      return taskIds;
     }
   }
 
