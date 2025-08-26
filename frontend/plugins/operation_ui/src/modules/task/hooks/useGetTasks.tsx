@@ -2,7 +2,6 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_TASKS } from '@/task/graphql/queries/getTasks';
 import { ITask } from '@/task/types';
 import {
-  useRecordTableCursor,
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
@@ -16,7 +15,6 @@ import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
 import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
 import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
 
 const TASKS_PER_PAGE = 30;
@@ -42,17 +40,12 @@ export const useTasksVariables = (
       statusType: string;
     }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
   const currentUser = useAtomValue(currentUserState);
-  const { cursor } = useRecordTableCursor({
-    sessionKey: TASKS_CURSOR_SESSION_KEY,
-  });
 
   return {
+    cursor: '',
     limit: TASKS_PER_PAGE,
-    orderBy: {
-      createdAt: -1,
-    },
-    cursor,
-    searchValue: searchValue || undefined,
+    direction: 'forward',
+    name: searchValue || undefined,
     assigneeId: assignee || undefined,
     teamId: teamId || team,
     priority: priority || undefined,
@@ -158,17 +151,17 @@ export const useTasks = (
       return;
     }
 
-    console.log(pageInfo);
-
     fetchMore({
       variables: {
         filter: {
+          ...variables,
           cursor:
             direction === EnumCursorDirection.FORWARD
               ? pageInfo?.endCursor
               : pageInfo?.startCursor,
           limit: TASKS_PER_PAGE,
-          direction,
+          direction:
+            direction === EnumCursorDirection.FORWARD ? 'forward' : 'backward',
         },
       },
       updateQuery: (prev, { fetchMoreResult }) => {

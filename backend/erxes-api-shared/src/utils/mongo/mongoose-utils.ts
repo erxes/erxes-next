@@ -1,13 +1,14 @@
-import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
+import mongoose, { Schema, Document, FilterQuery } from 'mongoose';
 import { nanoid } from 'nanoid';
-import { ICursorPaginateParams, ICursorPaginateResult } from '../../core-types';
-import {
-  computeOperator,
-  encodeCursor,
-  getCursor,
-  getPaginationInfo,
-} from './cursor-util';
+
 import { mongooseStringRandomId } from './mongoose-types';
+import {
+  CursorPaginateParams,
+  CursorResult,
+  encodeCursor,
+  buildCursorQuery,
+  PageInfo,
+} from './cursor-util';
 
 export interface IOrderInput {
   _id: string;
@@ -84,6 +85,75 @@ export const defaultPaginate = (
   return collection.limit(_limit).skip((_page - 1) * _limit);
 };
 
+export const cursorPaginate = async <T extends Document>({
+  model,
+  limit = 20,
+  cursor,
+  direction = 'forward',
+  sortBy = {},
+  filter = {},
+}: CursorPaginateParams<T>): Promise<CursorResult<T>> => {
+  if (limit < 1 || limit > 100) {
+    throw new Error('Limit must be between 1 and 100');
+  }
+
+  const baseQuery = { ...filter };
+
+  if (cursor) {
+    const cursorQuery = buildCursorQuery(cursor, sortBy, direction);
+    Object.assign(baseQuery, cursorQuery);
+  }
+
+  const sortFields = Object.keys(sortBy);
+  const sortOrder: Record<string, 1 | -1> = {};
+
+  for (const [field, order] of Object.entries(sortBy)) {
+    const normalizedOrder = order === 1 || order === 'asc' ? 1 : -1;
+    sortOrder[field] =
+      direction === 'forward'
+        ? normalizedOrder
+        : normalizedOrder === 1
+        ? -1
+        : 1;
+  }
+
+  sortOrder._id = (direction === 'forward' ? 1 : -1) as 1 | -1;
+
+  const [items, totalCount] = await Promise.all([
+    model
+      .find(baseQuery as FilterQuery<T>)
+      .sort(sortOrder)
+      .limit(limit + 1)
+      .lean(),
+    model.countDocuments(filter as FilterQuery<T>),
+  ]);
+
+  const hasMore = items.length > limit;
+  let list = hasMore ? items.slice(0, limit) : items;
+
+  if (direction === 'backward') {
+    list = list.reverse();
+  }
+
+  const startCursor =
+    list.length > 0 ? encodeCursor(list[0], sortFields) : null;
+  const endCursor =
+    list.length > 0 ? encodeCursor(list[list.length - 1], sortFields) : null;
+
+  const pageInfo: PageInfo = {
+    hasNextPage: direction === 'forward' ? hasMore : Boolean(cursor),
+    hasPreviousPage: direction === 'backward' ? hasMore : Boolean(cursor),
+    startCursor,
+    endCursor,
+  };
+
+  return {
+    list: list as T[],
+    totalCount,
+    pageInfo,
+  };
+};
+
 export const checkCollectionCodeDuplication = async (
   collection: any,
   code: string,
@@ -98,145 +168,6 @@ export const checkCollectionCodeDuplication = async (
 
   if (category) {
     throw new Error('Code must be unique');
-  }
-};
-
-export const cursorPaginate = async <T extends Document>({
-  model,
-  params,
-  query,
-}: {
-  model: Model<T>;
-  params: ICursorPaginateParams;
-  query: mongoose.FilterQuery<T>;
-}): Promise<ICursorPaginateResult<T>> => {
-  const {
-    limit = 20,
-    direction = 'forward',
-    orderBy = {},
-    cursorMode = 'exclusive',
-  } = params;
-
-  if (limit < 1) {
-    throw new Error('Limit must be greater than 0');
-  }
-
-  if (!('_id' in orderBy)) {
-    orderBy['_id'] = 1;
-  }
-
-  const baseQuery: mongoose.FilterQuery<T> = { ...query };
-
-  const baseSort: Record<string, SortOrder> = { ...orderBy, _id: 1 };
-
-  if (direction === 'backward') {
-    for (const key in baseSort) {
-      baseSort[key] = baseSort[key] === 1 ? -1 : 1;
-    }
-  }
-
-  const cursor = getCursor(params);
-
-  if (cursor) {
-    const conditions: Record<string, any> = {};
-
-    const sortKeys = Object.keys(baseSort);
-
-    const orConditions: Record<string, any>[] = [];
-
-    for (let i = 0; i < sortKeys.length; i++) {
-      const field = sortKeys[i];
-
-      const andCondition: Record<string, any> = {};
-
-      for (let j = 0; j < i; j++) {
-        const prevField = sortKeys[j];
-        andCondition[prevField] = cursor[prevField];
-      }
-
-      const fieldOperator = computeOperator(
-        orderBy[field] === 1,
-        direction === 'forward',
-        cursorMode,
-      );
-
-      andCondition[field] = { [fieldOperator]: cursor[field] };
-
-      orConditions.push(andCondition);
-    }
-
-    conditions['$or'] = orConditions;
-
-    Object.assign(baseQuery, conditions);
-  }
-
-  const _limit = Math.min(Number(limit), 50);
-
-  try {
-    const [documents, totalCount] = await Promise.all([
-      model
-        .find(baseQuery)
-        .sort(baseSort)
-        .limit(_limit + 1)
-        .lean<T[]>(),
-      model.countDocuments(query),
-    ]);
-
-    const hasMore = documents.length > _limit;
-
-    if (hasMore) {
-      documents.pop();
-    }
-
-    if (direction === 'backward') {
-      documents.reverse();
-    }
-
-    if (documents.length === 0) {
-      return {
-        list: [],
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: Boolean(cursor),
-          startCursor: null,
-          endCursor: null,
-        },
-        totalCount,
-      };
-    }
-
-    const startCursor = encodeCursor<T>(documents[0], orderBy);
-    const endCursor = encodeCursor<T>(documents[documents.length - 1], orderBy);
-
-    const { hasNextPage, hasPreviousPage } = getPaginationInfo(
-      direction,
-      Boolean(cursor),
-      hasMore,
-    );
-
-    const pageInfo = {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
-    };
-
-    return {
-      // Currently adds cursor directly to data items;
-      // Can be replaced with a proper Relay-style `edges`/`node` structure.
-      list: documents.map((document) => ({
-        ...document,
-        cursor: encodeCursor(document, orderBy),
-      })),
-      pageInfo,
-      totalCount,
-    };
-  } catch (error) {
-    throw new Error(
-      `Cursor pagination failed: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`,
-    );
   }
 };
 
