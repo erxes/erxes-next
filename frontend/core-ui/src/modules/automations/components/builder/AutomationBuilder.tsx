@@ -1,165 +1,86 @@
-import {
-  Background,
-  Controls,
-  Edge,
-  EdgeProps,
-  MiniMap,
-  Node,
-  OnInit,
-  ReactFlow,
-  ReactFlowInstance,
-  ReactFlowProvider,
-} from '@xyflow/react';
-import { useEffect, useState } from 'react';
+import { ReactFlowProvider } from '@xyflow/react';
+import { useEffect } from 'react';
 
 import '@xyflow/react/dist/style.css';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { useMultiQueryState, useQueryState } from 'erxes-ui';
-import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
+import { Tabs, useMultiQueryState } from 'erxes-ui';
+import { AutomationBuilderDnDProvider } from '../../context/AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
-import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
+import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
+import { AutomationProvider } from '@/automations/context/AutomationProvider';
+import {
+  automationBuilderActiveTabState,
+  automationBuilderSiderbarOpenState,
+} from '@/automations/states/automationState';
 import {
   automationBuilderFormSchema,
-  TAutomationProps,
+  TAutomationBuilderForm,
 } from '@/automations/utils/AutomationFormDefinitions';
-import { IAutomation, NodeData } from '../../types';
+import { useAtom } from 'jotai';
+import { AutomationBuilderTabsType, IAutomation } from '../../types';
 import { deepCleanNulls } from '../../utils/automationBuilderUtils';
 import { AutomationHistories } from './history/components/AutomationHistories';
-import ConnectionLine from './edges/connectionLine';
-import PrimaryEdge from './edges/PrimaryEdge';
-import ActionNode from './nodes/ActionNode';
-import TriggerNode from './nodes/TriggerNode';
-import { AutomationProvider } from '@/automations/components/builder/hooks/useAutomation';
-import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
 
-const nodeTypes = {
-  trigger: TriggerNode as any,
-  action: ActionNode as any,
-  scratch: PlaceHolderNode,
+type AutomationBuilderProps = {
+  detail?: IAutomation;
 };
-const edgeTypes = {
-  primary: PrimaryEdge,
-};
-const Builder = ({
-  reactFlowInstance,
-  setReactFlowInstance,
-}: {
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
-  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
-}) => {
-  const {
-    theme,
-    resetNodes,
-    reactFlowWrapper,
-    nodes,
-    edges,
-    onNodesChange,
-    onEdgesChange,
-    editorWrapper,
-    onConnect,
-    onDrop,
-    isValidConnection,
-    onNodeDoubleClick,
-    onNodeDragStop,
-    onDragOver,
-    triggers,
-    actions,
-  } = useReactFlowEditor({ reactFlowInstance });
 
-  useEffect(() => {
-    resetNodes();
-  }, [JSON.stringify(triggers), JSON.stringify(actions)]);
-
-  return (
-    <div className="h-full" ref={reactFlowWrapper}>
-      <ReactFlow
-        ref={editorWrapper}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onDrop={onDrop}
-        isValidConnection={isValidConnection}
-        onNodeDoubleClick={onNodeDoubleClick}
-        onInit={setReactFlowInstance}
-        onDragOver={onDragOver}
-        fitView
-        connectionLineComponent={ConnectionLine}
-        onNodeDragStop={onNodeDragStop}
-        colorMode={theme}
-        minZoom={0.1}
-      >
-        <Controls />
-        <Background />
-        <MiniMap pannable position="top-left" />
-      </ReactFlow>
-    </div>
+export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
+  const [activeTab, setActiveTab] = useAtom(automationBuilderActiveTabState);
+  const [isOpenSideBar, setOpenSidebar] = useAtom(
+    automationBuilderSiderbarOpenState,
   );
-};
-
-const AutomationBuilderWrapper = ({
-  activeTab,
-  reactFlowInstance,
-  setReactFlowInstance,
-}: {
-  activeTab: 'builder' | 'history';
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
-  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
-}) => {
-  if (activeTab === 'history') {
-    return <AutomationHistories />;
-  }
-
-  return (
-    <div className="relative h-full flex flex-col grow">
-      <Builder
-        reactFlowInstance={reactFlowInstance}
-        setReactFlowInstance={setReactFlowInstance}
-      />
-      <AutomationBuilderSidebar />
-    </div>
-  );
-};
-
-export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
   const [queryParams] = useMultiQueryState<{
     activeNodeId: string;
-    activeTab: 'builder' | 'history';
+    activeTab: AutomationBuilderTabsType;
   }>(['activeNodeId', 'activeTab']);
-  const { activeNodeId, activeTab } = queryParams;
 
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
-
-  const form = useForm<TAutomationProps>({
+  const form = useForm<TAutomationBuilderForm>({
     resolver: zodResolver(automationBuilderFormSchema),
-    defaultValues: {
-      isMinimized: activeNodeId ? false : true,
-      activeTab: activeTab || 'builder',
-      detail: deepCleanNulls(detail),
-    },
+    defaultValues: deepCleanNulls(detail),
   });
 
-  const activeBulderTab = form.watch('activeTab');
+  useEffect(() => {
+    if (activeTab !== queryParams.activeTab) {
+      setActiveTab(queryParams.activeTab || AutomationBuilderTabsType.Builder);
+    }
+
+    if (queryParams.activeNodeId && !isOpenSideBar) {
+      setOpenSidebar(true);
+    }
+  }, [queryParams?.activeTab, queryParams?.activeNodeId]);
 
   return (
     <AutomationProvider>
       <ReactFlowProvider>
         <AutomationBuilderDnDProvider>
           <FormProvider {...form}>
-            <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
-            <AutomationBuilderWrapper
-              activeTab={activeBulderTab}
-              reactFlowInstance={reactFlowInstance}
-              setReactFlowInstance={setReactFlowInstance}
-            />
+            <Tabs value={activeTab} className="h-screen flex flex-col">
+              <AutomationBuilderHeader />
+              {activeTab === 'builder' && (
+                <Tabs.Content
+                  value="builder"
+                  className="flex-1 h-full relative"
+                >
+                  {/* <AutomationBuilderCanvas /> */}
+                  <InspectorPanel />
+                  <AutomationBuilderSidebar />
+                </Tabs.Content>
+              )}
+              {activeTab === 'history' && (
+                <Tabs.Content
+                  value="history"
+                  className="flex-1 flex flex-col h-full"
+                >
+                  <AutomationHistories />
+                </Tabs.Content>
+              )}
+            </Tabs>
           </FormProvider>
         </AutomationBuilderDnDProvider>
       </ReactFlowProvider>

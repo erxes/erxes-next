@@ -1,4 +1,4 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
 import {
   coreActionNames,

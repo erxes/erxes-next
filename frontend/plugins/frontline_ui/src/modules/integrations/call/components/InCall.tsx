@@ -8,7 +8,7 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Button, ButtonProps, cn } from 'erxes-ui';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import { CallNumber } from '@/integrations/call/components/CallNumber';
@@ -25,7 +25,7 @@ export const InCall = () => {
 
   return (
     <>
-      <div className="text-center space-y-2 p-2 pb-6">
+      <div className="text-center space-y-2 px-2 py-6">
         <CallInfo />
       </div>
       <Transfer />

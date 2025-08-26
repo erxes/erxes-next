@@ -1,12 +1,12 @@
 import { SlashMenuProps } from 'erxes-ui';
-import { USERS_GROUP_FORM_SCHEAMA } from 'frontend/core-ui/src/modules/settings/permission/schema/usersGroup';
-import { z } from 'zod';
 
 export interface IUser {
   _id: string;
   email?: string;
   username?: string;
   details?: {
+    firstName?: string;
+    lastName?: string;
     fullName?: string;
     avatar?: string;
   };

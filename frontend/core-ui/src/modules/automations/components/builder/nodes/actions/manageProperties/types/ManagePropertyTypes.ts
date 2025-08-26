@@ -27,7 +27,7 @@ export interface IConfig {
   rules: IManagePropertyRule[];
 }
 
-export type IManagePropertyFieldName = `detail.actions.${number}.config`;
+export type IManagePropertyFieldName = `actions.${number}.config`;
 
 export interface RuleProps {
   rule: IManagePropertyRule;

@@ -22,18 +22,25 @@ const MailConfigForm = () => {
   const MAIL_SERVICE = useWatch({ control, name: 'DEFAULT_EMAIL_SERVICE' });
 
   useEffect(() => {
-    if (configs === undefined) {
-      methods.reset();
-    } else {
-      const values = configs.reduce((acc: any, config: any) => {
+    if (!configs) {
+      methods.reset({
+        DEFAULT_EMAIL_SERVICE: 'SES',
+      });
+      return;
+    }
+
+    const values = configs.reduce(
+      (acc: Record<string, string>, config: any) => {
         acc[config.code] = config.value;
         return acc;
-      }, {});
+      },
+      {},
+    );
 
-      methods.reset({
-        ...values,
-      });
-    }
+    methods.reset({
+      ...values,
+      DEFAULT_EMAIL_SERVICE: values.DEFAULT_EMAIL_SERVICE ?? 'SES',
+    });
   }, [configs, methods]);
 
   return (
@@ -80,7 +87,6 @@ const MailConfigForm = () => {
                           ))}
                         </Select.Content>
                       </Select>
-                      <Form.Message className="text-destructive" />
                     </Form.Item>
                   )}
                 />
@@ -153,7 +159,6 @@ const MailConfigForm = () => {
                     <Form.Control>
                       <Input type={type} {...field} className="h-7" />
                     </Form.Control>
-                    <Form.Message className="text-destructive" />
                   </Form.Item>
                 )}
               />
@@ -182,7 +187,6 @@ const MailConfigForm = () => {
                     <Form.Control>
                       <Input type={type} {...field} className="h-7" />
                     </Form.Control>
-                    <Form.Message className="text-destructive" />
                   </Form.Item>
                 )}
               />

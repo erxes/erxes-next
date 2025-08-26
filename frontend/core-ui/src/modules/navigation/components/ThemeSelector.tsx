@@ -1,40 +1,61 @@
-import { IconDevices, IconMoon, IconSun } from '@tabler/icons-react';
-
-import { DropdownMenu } from 'erxes-ui';
+import { IconDeviceLaptop, IconMoon, IconSun } from '@tabler/icons-react';
+import { ToggleGroup, Tooltip } from 'erxes-ui';
 import { ThemeOption, themeState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 
 export const ThemeSelector = () => {
   const [theme, setTheme] = useAtom(themeState);
+
   return (
-    <DropdownMenu.Sub>
-      <DropdownMenu.SubTrigger>
-        <IconSun />
-        <span className="flex-1 flex items-center justify-between">
-          Theme <span className="text-muted-foreground">{theme}</span>
-        </span>
-      </DropdownMenu.SubTrigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.SubContent className="min-w-32">
-          <DropdownMenu.RadioGroup
-            value={theme}
-            onValueChange={(value) => setTheme(value as ThemeOption)}
-          >
-            <DropdownMenu.RadioItem value="light">
-              <IconSun className="size-4 mr-2" />
-              Light
-            </DropdownMenu.RadioItem>
-            <DropdownMenu.RadioItem value="dark">
-              <IconMoon className="size-4 mr-2" />
-              Dark
-            </DropdownMenu.RadioItem>
-            <DropdownMenu.RadioItem value="system">
-              <IconDevices className="size-4 mr-2" />
-              System
-            </DropdownMenu.RadioItem>
-          </DropdownMenu.RadioGroup>
-        </DropdownMenu.SubContent>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Sub>
+    <div className="flex items-center gap-2 px-2 font-medium h-7">
+      Change Theme
+      <Tooltip.Provider delayDuration={100}>
+        <ToggleGroup
+          value={theme}
+          type="single"
+          size="sm"
+          className="ml-auto h-6 bg-accent rounded gap-0.5 text-accent-foreground"
+          onValueChange={(value) => setTheme(value as ThemeOption)}
+        >
+          <Tooltip>
+            <ToggleGroup.Item
+              value="light"
+              className="data-[state=on]:bg-background h-full data-[state=on]:shadow-sm px-1 min-w-6"
+              asChild
+            >
+              <Tooltip.Trigger>
+                <IconSun />
+              </Tooltip.Trigger>
+            </ToggleGroup.Item>
+            <Tooltip.Content alignOffset={4}>Light</Tooltip.Content>
+          </Tooltip>
+          <Tooltip>
+            <ToggleGroup.Item
+              value="dark"
+              className="data-[state=on]:bg-background h-full data-[state=on]:shadow-sm px-1 min-w-6"
+              asChild
+            >
+              <Tooltip.Trigger>
+                <IconMoon />
+              </Tooltip.Trigger>
+            </ToggleGroup.Item>
+            <Tooltip.Content alignOffset={4}>Dark</Tooltip.Content>
+          </Tooltip>
+          <Tooltip>
+            <ToggleGroup.Item
+              value="system"
+              className="data-[state=on]:bg-background h-full data-[state=on]:shadow-sm px-1 min-w-6"
+              asChild
+            >
+              <Tooltip.Trigger>
+                <IconDeviceLaptop />
+              </Tooltip.Trigger>
+            </ToggleGroup.Item>
+
+            <Tooltip.Content alignOffset={4}>System</Tooltip.Content>
+          </Tooltip>
+        </ToggleGroup>
+      </Tooltip.Provider>
+    </div>
   );
 };

@@ -77,6 +77,7 @@ type Notification {
     isRead: Boolean
     action:String
     emailDelivery:EmailDelivery
+    kind:String
 }
 
 type NotificationsList {
@@ -103,6 +104,15 @@ enum NotificationType {
     SUCCESS
     WARNING
     ERROR
+}
+
+input NotificationFilters {
+    status:NotificationStatus,
+    priority:NotificationPriority,
+    type:NotificationType,
+    fromDate:String,
+    endDate:String,
+    fromUserId:String
 }
 `;
 
@@ -131,6 +141,8 @@ export const mutations = `
     archiveNotifications(ids:[String],archiveAll:Boolean,filters:JSON):String
     editUserNotificationSettings(userSettings:JSON): JSON
     editOrganizationNotificationConfigs(configs: JSON!): JSON
+    markNotificationAsRead(_id:String!):JSON
+    markAsReadNotifications(${NOTIFICATIONS_QUERIES_PARAMS}):JSON
 `;
 
 export default { queries, mutations, types };

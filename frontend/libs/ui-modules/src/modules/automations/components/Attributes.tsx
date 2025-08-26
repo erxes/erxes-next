@@ -9,7 +9,7 @@ import {
 } from 'erxes-ui';
 import { useAttributes } from 'ui-modules/modules/automations/hooks/useAttributes';
 import { useSelectionConfig } from 'ui-modules/modules/automations/hooks/useSelectionConfig';
-import { IField } from '../../segments';
+import { IField } from 'ui-modules/modules/segments';
 
 type Props = {
   value: string;

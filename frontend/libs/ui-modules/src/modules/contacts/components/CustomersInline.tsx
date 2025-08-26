@@ -12,7 +12,7 @@ import {
 } from 'erxes-ui';
 import { ICustomer } from '../types';
 import { useEffect } from 'react';
-import { useCustomersInline } from '../hooks';
+import { useCustomerInline } from '../hooks';
 import React from 'react';
 
 interface CustomersInlineProviderProps {
@@ -52,46 +52,43 @@ const CustomersInlineProvider = ({
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
-      {customerIds?.some(
-        (id) => !customers?.some((customer) => customer._id === id),
-      ) && (
-        <CustomerInlineEffectComponent
-          customerIdsWithNoDetails={customerIds.filter(
-            (id) => !customers?.some((customer) => customer._id === id),
-          )}
-        />
-      )}
+      {customerIds
+        ?.filter((id) => !customers?.some((customer) => customer._id === id))
+        ?.map((id) => (
+          <CustomerInlineEffectComponent key={id} customerId={id} />
+        ))}
     </CustomersInlineContext.Provider>
   );
 };
 
 const CustomerInlineEffectComponent = ({
-  customerIdsWithNoDetails,
+  customerId,
 }: {
-  customerIdsWithNoDetails: string[];
+  customerId: string;
 }) => {
   const { updateCustomers, customers } = useCustomersInlineContext();
-  const { customers: detailMissingCustomers } = useCustomersInline({
+  const { customer } = useCustomerInline({
     variables: {
-      ids: customerIdsWithNoDetails,
+      _id: customerId,
     },
+    skip: !customerId,
   });
 
   useEffect(() => {
-    if (detailMissingCustomers && detailMissingCustomers.length > 0) {
-      const existingCustomersMap = new Map(
-        customers?.map((customer) => [customer._id, customer]),
-      );
-      const newCustomers = detailMissingCustomers.filter(
-        (customer) => !existingCustomersMap.has(customer._id),
-      );
+    const newCustomers = [...(customers || [])].filter(
+      (c) => c._id !== customerId,
+    );
 
-      if (newCustomers.length > 0) {
-        updateCustomers?.([...(customers || []), ...newCustomers]);
-      }
+    if (newCustomers.some((c) => c._id === customerId)) {
+      updateCustomers?.(newCustomers);
+      return;
     }
+    if (customer) {
+      updateCustomers?.([...newCustomers, { ...customer, _id: customerId }]);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detailMissingCustomers, updateCustomers, customerIdsWithNoDetails]);
+  }, [customer]);
 
   return null;
 };

@@ -24,14 +24,14 @@ export function useBrandsEdit() {
           fields: fieldsToUpdate,
         });
       },
-      onCompleted: (data) => {
+      onCompleted(data) {
         if (data.brandsEdit) {
           toast({
             title: 'Brand updated successfully',
           });
         }
       },
-      onError: (error) => {
+      onError(error) {
         toast({
           title: error.message,
           variant: 'destructive',

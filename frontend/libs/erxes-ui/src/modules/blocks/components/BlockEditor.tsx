@@ -1,21 +1,19 @@
-import { BlockNoteView } from '@blocknote/shadcn';
-import '@blocknote/shadcn/style.css';
 import {
   createReactInlineContentSpec,
   SuggestionMenuController,
 } from '@blocknote/react';
+import { BlockNoteView } from '@blocknote/shadcn';
+import '@blocknote/shadcn/style.css';
 
+import { Button, Tooltip } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
 import 'erxes-ui/modules/blocks/styles/styles.css';
 import { themeState } from 'erxes-ui/state';
+import { useAtomValue } from 'jotai';
+import { useState } from 'react';
+import { BlockEditorProps } from '../types';
 import { SlashMenu } from './SlashMenu';
 import { Toolbar } from './Toolbar';
-import { Button, Tooltip } from 'erxes-ui/components';
-import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
-import { Key } from 'erxes-ui/types/Key';
-import { useAtomValue } from 'jotai';
-import { BlockEditorProps } from '../types';
-import { cn } from 'erxes-ui/lib';
 
 export const BlockEditor = ({
   editor,
@@ -29,6 +27,7 @@ export const BlockEditor = ({
   style,
   disabled,
   variant = 'default',
+  sideMenu = false,
 }: BlockEditorProps) => {
   const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
@@ -38,6 +37,7 @@ export const BlockEditor = ({
       theme={theme as 'light' | 'dark'}
       editor={editor}
       slashMenu={false}
+      sideMenu={sideMenu}
       onFocus={() => {
         setFocus(true);
         onFocus?.();
@@ -93,6 +93,28 @@ export const Mention = createReactInlineContentSpec(
     render: (props) => (
       <span className="bg-primary/10 p-1 rounded font-bold text-sm text-primary inline-flex items-center">
         @{props.inlineContent.props.fullName}
+      </span>
+    ),
+  },
+);
+
+export const Attribute = createReactInlineContentSpec(
+  {
+    type: 'attribute',
+    propSchema: {
+      name: {
+        default: 'Unknown',
+      },
+      value: {
+        default: '',
+      },
+    },
+    content: 'none',
+  },
+  {
+    render: (props) => (
+      <span className="bg-yellow-50 p-1 rounded font-bold text-sm text-yellow-900 inline-flex items-center">
+        {props.inlineContent.props.name}
       </span>
     ),
   },

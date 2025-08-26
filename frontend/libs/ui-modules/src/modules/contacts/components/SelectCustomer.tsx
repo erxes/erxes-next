@@ -4,13 +4,16 @@ import { useSelectCustomerContext } from '../hooks/useSelectCustomerContext';
 import { useCustomers } from '../hooks';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
-import { cn, Combobox, Command, Form, Popover } from 'erxes-ui';
-import { CustomersInline } from './CustomersInline';
 import {
-  RecordTablePopover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
+  cn,
+  Combobox,
+  Command,
+  Form,
+  Popover,
+  PopoverScoped,
+  RecordTableInlineCell,
 } from 'erxes-ui';
+import { CustomersInline } from './CustomersInline';
 
 interface SelectCustomerProviderProps {
   children: React.ReactNode;
@@ -158,14 +161,14 @@ const SelectCustomerInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectCustomer.Value />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectCustomer.Content />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectCustomerProvider>
   );
 };

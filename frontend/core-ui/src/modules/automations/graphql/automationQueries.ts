@@ -3,7 +3,7 @@ import {
   GQL_CURSOR_PARAM_DEFS,
   GQL_CURSOR_PARAMS,
 } from 'erxes-ui';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 const COMMON_USER_FIELDS = `
       _id

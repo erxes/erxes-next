@@ -2,7 +2,7 @@ import { useNodeDropDownActions } from './hooks/useNodeDropDownActions';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Dispatch, SetStateAction } from 'react';
-import { NodeData } from '../../../types';
+import { AutomationNodesType, NodeData } from '../../../types';
 import { EditForm } from './NodeEditForm';
 
 export const NodeDropdownActions = ({
@@ -95,7 +95,7 @@ const NodeEditForm = ({
   setOpenDialog: Dispatch<SetStateAction<boolean>>;
   data: NodeData;
   id: string;
-  fieldName: 'triggers' | 'actions';
+  fieldName: AutomationNodesType;
 }) => {
   return (
     <Dialog

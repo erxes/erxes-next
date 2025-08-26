@@ -7,15 +7,16 @@ import {
   updateIntegrationQueues,
 } from '~/modules/integrations/call/utils';
 
-export const createIntegration = async (subdomain: string, { data }) => {
+export const createIntegration = async (subdomain: string, data) => {
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const domain = getDomain(subdomain);
 
   const models = await generateModels(subdomain);
 
-  const { integrationId, doc } = data;
+  const { integrationId, data: doc } = data;
+
   try {
-    const docData = JSON.parse(doc.data);
+    const docData = JSON.parse(doc);
 
     const updateData = {
       inboxId: integrationId,

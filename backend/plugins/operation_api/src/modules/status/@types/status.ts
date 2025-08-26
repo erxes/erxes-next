@@ -9,6 +9,7 @@ export interface IStatus {
   description?: string;
   color?: string;
   type: StatusType;
+  order: number;
 }
 
 export interface IStatusEditInput {
@@ -18,6 +19,7 @@ export interface IStatusEditInput {
   description?: string;
   color?: string;
   type: StatusType;
+  order: number;
 }
 
 export interface IStatusDocument extends IStatus, Document {

@@ -2,12 +2,13 @@ import { Form, Textarea } from 'erxes-ui';
 import { FacebookMessageProps } from '~/widgets/automations/modules/facebook/components/action/types/messageActionForm';
 import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
 import { InputTextCounter } from './InputTextCounter';
+import { useReplyMessageAction } from '~/widgets/automations/modules/facebook/components/action/context/ReplyMessageProvider';
 
 export const FacebookTextMessage = ({
   index,
   message,
-  control,
 }: FacebookMessageProps) => {
+  const { control } = useReplyMessageAction();
   const limit = (message.buttons || []).length ? 640 : 2000;
 
   return (

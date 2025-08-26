@@ -1,5 +1,5 @@
 import { Icon, IconProps } from '@tabler/icons-react';
-import { Avatar, Button, readFile, Skeleton } from 'erxes-ui';
+import { Avatar, Button, readImage, Skeleton } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { IUser } from 'ui-modules/modules/team-members';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
@@ -52,7 +52,7 @@ export const AssigneeNotificationContent = ({
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm text-foreground">
           <Avatar className="size-6">
             <Avatar.Image
-              src={readFile(fromUser?.details?.avatar || '')}
+              src={readImage(fromUser?.details?.avatar || '')}
               alt={fromUser?.details?.fullName || ''}
             />
             <Avatar.Fallback className="rounded-lg">

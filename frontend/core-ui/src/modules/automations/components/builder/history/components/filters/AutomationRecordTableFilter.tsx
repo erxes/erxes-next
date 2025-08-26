@@ -3,7 +3,7 @@ import { AutomationHistoriesFilterDialogs } from '@/automations/components/build
 import { AutomationHistoriesFilterMenu } from '@/automations/components/builder/history/components/filters/AutomationHistoriesFilterMenu';
 import { AutomationHistoriesFilterViews } from '@/automations/components/builder/history/components/filters/AutomationHistoriesFilterViews';
 import { AUTOMATION_HISTORIES_CURSOR_SESSION_KEY } from '@/automations/constants';
-import { StatusBadgeValue } from '@/automations/types';
+import { AutomationsHotKeyScope, StatusBadgeValue } from '@/automations/types';
 import { Combobox, Filter, useMultiQueryState } from 'erxes-ui';
 
 export const AutomationHistoriesRecordTableFilter = () => {
@@ -21,7 +21,7 @@ export const AutomationHistoriesRecordTableFilter = () => {
       id="automation-histories-filter"
       sessionKey={AUTOMATION_HISTORIES_CURSOR_SESSION_KEY}
     >
-      <Filter.Popover scope={'automation-histories-filter'}>
+      <Filter.Popover scope={AutomationsHotKeyScope.HistoriesFilter}>
         <Filter.Trigger isFiltered={hasFilters} />
         <Combobox.Content>
           <AutomationHistoriesFilterMenu />

@@ -5,7 +5,7 @@ import {
   IAutomationExecutionDocument,
 } from 'erxes-api-shared/core-modules';
 import { isInSegment } from '@/utils/segments/utils';
-import { executeActions } from '@/utils/utils';
+import { executeActions } from '@/executions/executeActions';
 
 export const handleifAction = async (
   subdomain: string,

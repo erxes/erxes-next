@@ -1,15 +1,14 @@
 import { useNavigate } from 'react-router';
 
-import { Icon, IconX } from '@tabler/icons-react';
+import { IconChevronLeft } from '@tabler/icons-react';
 
-import { Sidebar, IUIConfig } from 'erxes-ui';
+import { Sidebar, IUIConfig, NavigationMenuLinkItem } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { SETTINGS_PATH_DATA } from '../constants/data';
-import { NavigationButton } from '@/navigation/components/NavigationButton';
 
 import { useMemo } from 'react';
 import { usePageTrackerStore } from 'react-page-tracker';
@@ -24,7 +23,7 @@ export function SettingsSidebar() {
 
         Object.values(pluginsMetaData).forEach((plugin) => {
           const settingsModules = plugin.modules
-            .filter((module) => module.hasSettings)
+            .filter((module) => module.hasSettings || module.settingsOnly)
             .map((module) => ({
               ...module,
               pluginName: plugin.name,
@@ -42,86 +41,81 @@ export function SettingsSidebar() {
 
   return (
     <>
-      <SettingsExitButton />
-      <Sidebar.Content className="styled-scroll">
-        <Sidebar.Group>
-          <Sidebar.GroupLabel>Account </Sidebar.GroupLabel>
-          <Sidebar.GroupContent>
-            <Sidebar.Menu>
-              {SETTINGS_PATH_DATA.account.map((item) => (
-                <NavigationButton
-                  key={item.name}
-                  pathPrefix={AppPath.Settings}
-                  pathname={item.path}
-                  name={item.name}
-                  icon={item.icon}
-                />
-              ))}
-            </Sidebar.Menu>
-          </Sidebar.GroupContent>
-        </Sidebar.Group>
-        <Sidebar.Group>
-          <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
-          <Sidebar.GroupContent>
-            <Sidebar.Menu>
-              {SETTINGS_PATH_DATA.nav.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <NavigationButton
-                    pathPrefix={AppPath.Settings}
-                    pathname={item.path}
-                    name={item.name}
-                    icon={item.icon}
-                  />
-                </Sidebar.MenuItem>
-              ))}
-            </Sidebar.Menu>
-          </Sidebar.GroupContent>
-        </Sidebar.Group>
+      <Sidebar.Content className="styled-scroll gap-2">
+        <SettingsExitButton />
+        <SettingsNavigationGroup name="Account">
+          {SETTINGS_PATH_DATA.account.map((item) => (
+            <NavigationMenuLinkItem
+              key={item.name}
+              pathPrefix={AppPath.Settings}
+              path={item.path}
+              name={item.name}
+            />
+          ))}
+        </SettingsNavigationGroup>
+        <SettingsNavigationGroup name="Workspace">
+          {SETTINGS_PATH_DATA.nav.map((item) => (
+            <Sidebar.MenuItem key={item.name}>
+              <NavigationMenuLinkItem
+                pathPrefix={AppPath.Settings}
+                path={item.path}
+                name={item.name}
+              />
+            </Sidebar.MenuItem>
+          ))}
+        </SettingsNavigationGroup>
 
-        <Sidebar.Group>
-          <Sidebar.GroupLabel>Core Modules</Sidebar.GroupLabel>
-
-          <Sidebar.GroupContent>
-            <Sidebar.Menu>
-              {CORE_MODULES.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <NavigationButton
-                    pathPrefix={AppPath.Settings}
-                    pathname={item.path}
-                    name={item.name}
-                    icon={item.icon as Icon}
-                  />
-                </Sidebar.MenuItem>
-              ))}
-            </Sidebar.Menu>
-          </Sidebar.GroupContent>
-        </Sidebar.Group>
+        <SettingsNavigationGroup name="Core modules">
+          {CORE_MODULES.filter((item) => item.hasSettings).map((item) => (
+            <Sidebar.MenuItem key={item.name}>
+              <NavigationMenuLinkItem
+                pathPrefix={AppPath.Settings}
+                path={item.path}
+                name={item.name}
+              />
+            </Sidebar.MenuItem>
+          ))}
+        </SettingsNavigationGroup>
 
         {Array.from(pluginsWithSettingsModules.entries()).map(
           ([pluginName, modules]) => (
-            <Sidebar.Group key={pluginName}>
-              <Sidebar.GroupLabel>{pluginName}</Sidebar.GroupLabel>
-              <Sidebar.GroupContent>
-                <Sidebar.Menu>
-                  {modules.map((item) => (
-                    <Sidebar.MenuItem key={item.name}>
-                      <NavigationButton
-                        pathPrefix={AppPath.Settings}
-                        pathname={item.path}
-                        name={item.name}
-                        icon={item.icon as Icon}
-                      />
-                    </Sidebar.MenuItem>
-                  ))}
-                </Sidebar.Menu>
-              </Sidebar.GroupContent>
-            </Sidebar.Group>
+            <SettingsNavigationGroup
+              key={pluginName}
+              name={pluginName.charAt(0).toUpperCase() + pluginName.slice(1)}
+            >
+              {modules.map((item) => (
+                <Sidebar.MenuItem key={item.name}>
+                  <NavigationMenuLinkItem
+                    pathPrefix={AppPath.Settings}
+                    path={item.path}
+                    name={item.name}
+                  />
+                </Sidebar.MenuItem>
+              ))}
+            </SettingsNavigationGroup>
           ),
         )}
       </Sidebar.Content>
     </>
   );
 }
+
+export const SettingsNavigationGroup = ({
+  name,
+  children,
+}: {
+  name: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <Sidebar.Group>
+      <Sidebar.GroupLabel className="h-4">{name}</Sidebar.GroupLabel>
+      <Sidebar.GroupContent className="pt-1">
+        <Sidebar.Menu>{children}</Sidebar.Menu>
+      </Sidebar.GroupContent>
+    </Sidebar.Group>
+  );
+};
 
 export const SettingsExitButton = () => {
   const navigate = useNavigate();
@@ -136,8 +130,8 @@ export const SettingsExitButton = () => {
     <Sidebar.Header className="pb-0 px-4">
       <Sidebar.Menu>
         <Sidebar.MenuItem>
-          <Sidebar.MenuButton className="h-10" onClick={handleExitSettings}>
-            <IconX />
+          <Sidebar.MenuButton onClick={handleExitSettings}>
+            <IconChevronLeft />
             <span>Exit Settings</span>
           </Sidebar.MenuButton>
         </Sidebar.MenuItem>

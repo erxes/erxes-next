@@ -1,23 +1,29 @@
 import { CoreNotificationContent } from '@/notification/my-inbox/components/contents/CoreNotificationContent';
+import { SystemNotificationContents } from '@/notification/my-inbox/components/contents/system/SystemNotificationContents';
+import { UnknownSystemNotificationContent } from '@/notification/my-inbox/components/contents/system/UnknownSystemNotificationContent';
 import { NoNotificationSelected } from '@/notification/my-inbox/components/NoNotificationSelected';
 import { NotificationContentSkeleton } from '@/notification/my-inbox/components/NotificationContentSkeleton';
-import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
+// import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
 import { useNotification } from '@/notification/my-inbox/hooks/useNotification';
-import { INotification } from '@/notification/my-inbox/types/notifications';
 import {
-  IconMailCheck,
-  IconMailX,
-  IconNotificationOff,
-} from '@tabler/icons-react';
-import { Button, cn, Label, Tooltip } from 'erxes-ui';
-import { ErrorBoundary } from 'react-error-boundary';
-import { PageHeader } from 'ui-modules';
+  INotification,
+  INotificationKind,
+} from '@/notification/my-inbox/types/notifications';
+// import {
+//   IconMailCheck,
+//   IconMailX,
+//   IconNotificationOff,
+// } from '@tabler/icons-react';
+// import { Button, cn, Label, Tooltip } from 'erxes-ui';
+import { Suspense } from 'react';
+// import { ErrorBoundary } from 'react-error-boundary';
+// import { PageHeader } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const NotificationContent = () => {
   const { notification, loading } = useNotification();
-  const { loading: archiveLoading, archiveNotification } =
-    useArchiveNotification();
+  // const { loading: archiveLoading, archiveNotification } =
+  //   useArchiveNotification();
 
   if (loading) {
     return <NotificationContentSkeleton />;
@@ -25,15 +31,11 @@ export const NotificationContent = () => {
   if (!notification) {
     return <NoNotificationSelected />;
   }
-  const { contentType = '', emailDelivery } = notification || {};
-
-  const [pluginName, moduleName, collectionType] = (contentType || '')
-    .replace(':', '.')
-    .split('.');
+  // const { emailDelivery } = notification || {};
 
   return (
     <div className="flex flex-col h-full">
-      <PageHeader className="sm:justify-end flex items-center gap-2 flex-none pr-8">
+      {/* <PageHeader className="sm:justify-end flex items-center gap-2 flex-none pr-8">
         {emailDelivery && (
           <div className="mr-auto font-semibold text-accent-foreground text-xs flex items-center gap-2">
             <span>Email Delivery:</span>
@@ -72,31 +74,42 @@ export const NotificationContent = () => {
             <div id="notifications-actions-slot" className="flex gap-2" />
           </ErrorBoundary>
         </PageHeader.End>
-      </PageHeader>
+      </PageHeader> */}
 
       <div className="flex-grow overflow-hidden">
-        <NotificationContentWrapper
-          pluginName={pluginName}
-          moduleName={moduleName}
-          collectionType={collectionType}
-          notification={notification}
-        />
+        <NotificationContentWrapper notification={notification} />
       </div>
     </div>
   );
 };
 
 const NotificationContentWrapper = ({
-  pluginName,
-  moduleName,
-  collectionType,
   notification,
 }: {
-  pluginName: string;
-  moduleName: string;
-  collectionType: string;
   notification: INotification;
 }) => {
+  if (notification.kind === INotificationKind.SYSTEM) {
+    const { template = '' } = notification?.metadata || {};
+
+    const SystemComponent =
+      SystemNotificationContents[
+        template as keyof typeof SystemNotificationContents
+      ];
+    return SystemComponent ? (
+      <Suspense fallback={<NotificationContentSkeleton />}>
+        <SystemComponent />
+      </Suspense>
+    ) : (
+      <UnknownSystemNotificationContent />
+    );
+  }
+
+  const [pluginName, moduleName, collectionType] = (
+    notification?.contentType || ''
+  )
+    .replace(':', '.')
+    .split('.');
+
   if (pluginName === 'core') {
     const CoreNotificationComponent =
       CoreNotificationContent[

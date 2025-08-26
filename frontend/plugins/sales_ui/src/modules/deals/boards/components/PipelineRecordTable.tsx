@@ -5,10 +5,7 @@ import {
   Input,
   Popover,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   RecordTableTree,
   RelativeDateDisplay,
   useConfirm,
@@ -155,7 +152,7 @@ export const pipelinesColumns: ColumnDef<
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -164,7 +161,7 @@ export const pipelinesColumns: ColumnDef<
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <RecordTableTree.Trigger
               // order={cell.row.original.order || ''}
               order=""
@@ -173,11 +170,11 @@ export const pipelinesColumns: ColumnDef<
             >
               {cell.getValue() as string}
             </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_name} onChange={onChange} disabled={loading} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 300,
@@ -196,9 +193,9 @@ export const pipelinesColumns: ColumnDef<
           : 'default';
 
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge variant={variant}>{(cell.getValue() as string) || '-'}</Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -211,9 +208,9 @@ export const pipelinesColumns: ColumnDef<
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableCellDisplay>
+          <RecordTableInlineCell>
             <RelativeDateDisplay.Value value={cell.getValue() as string} />
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         </RelativeDateDisplay>
       );
     },
@@ -224,9 +221,9 @@ export const pipelinesColumns: ColumnDef<
     header: () => <RecordTable.InlineHead icon={IconUser} label="Created by" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           {cell.getValue() as string}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

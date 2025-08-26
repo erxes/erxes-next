@@ -9,10 +9,12 @@ export const getPluginsRoutes = () => {
   const plugins = Object.values(pluginsMetaData || {});
 
   const allModules = plugins.flatMap((plugin) =>
-    plugin.modules.map((module) => ({
-      ...module,
-      pluginName: plugin.name,
-    })),
+    plugin.modules
+      .filter((module) => !module.settingsOnly)
+      .map((module) => ({
+        ...module,
+        pluginName: plugin.name,
+      })),
   );
 
   return allModules.map((module) => (
@@ -36,7 +38,7 @@ export const getPluginsSettingsRoutes = () => {
 
   const settingsModules = plugins.flatMap((plugin) =>
     plugin.modules
-      .filter((module) => module.hasSettings)
+      .filter((module) => module.hasSettings || module.settingsOnly)
       .map((module) => ({
         ...module,
         pluginName: plugin.name,

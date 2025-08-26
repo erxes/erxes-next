@@ -1,6 +1,6 @@
 import { INotification } from '@/notification/my-inbox/types/notifications';
 import { IconBuildings } from '@tabler/icons-react';
-import { AssigneeNotificationContent } from 'ui-modules';
+import { AssigneeNotificationContent, IUser } from 'ui-modules';
 import { useDepartmentById } from 'ui-modules/modules/structure/hooks/useDepartmentById';
 
 export const DepartmentNotificationContent = ({
@@ -19,7 +19,7 @@ export const DepartmentNotificationContent = ({
       name={departmentDetail?.title || '-'}
       contentType="department"
       createdAt={createdAt}
-      fromUser={fromUser}
+      fromUser={fromUser || ({} as IUser)}
       Icon={IconBuildings}
     />
   );

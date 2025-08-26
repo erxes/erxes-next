@@ -9,4 +9,5 @@ export interface ICompany {
   primaryPhone?: string;
   phones?: string[];
   phoneValidationStatus?: 'valid' | 'invalid';
+  ownerId?: string;
 }

@@ -4,11 +4,7 @@ import { useMutation } from '@apollo/client';
 import { parseDateRangeFromString, toast, useMultiQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 
-export const useArchiveNotifications = ({
-  callback,
-}: {
-  callback: () => void;
-}) => {
+export const useArchiveNotifications = () => {
   const [{ status, priority, type, createdAt, fromUserId }] =
     useMultiQueryState<{
       status: 'read' | 'unread' | 'all';
@@ -47,7 +43,7 @@ export const useArchiveNotifications = ({
     archive({
       variables,
       onError: (error) => {
-        toast({ title: 'Something went error', description: error?.message });
+        toast({ title: 'Something went wrong', description: error?.message });
       },
       onCompleted: () => {
         toast({ title: 'Archived successfully' });
@@ -55,7 +51,6 @@ export const useArchiveNotifications = ({
         setSelectedNotifications([]);
       },
     });
-    callback && callback();
   };
 
   return {

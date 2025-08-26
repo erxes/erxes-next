@@ -79,7 +79,7 @@ export const facebookConstants = {
       name: 'facebook-messenger-bots',
       label: 'Facebook Messenger',
       description: 'Generate Facebook Messenger Bots',
-      logo: '/images/integrations/fb-messenger.png',
+      logo: 'fb-messenger.webp',
       totalCountQueryName: 'facebookMessengerBotsTotalCount',
     },
   ],

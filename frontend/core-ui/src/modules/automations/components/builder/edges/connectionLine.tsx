@@ -1,14 +1,6 @@
 import { ConnectionLineComponentProps } from '@xyflow/react';
 import { cn } from 'erxes-ui';
 
-// const checkIsOptionalConnect = (id = '') => {
-//   const hasTwoHyphens = id.split('-').length - 1 === 2;
-
-//   const endsWithRight = id.endsWith('right');
-
-//   return hasTwoHyphens && endsWithRight;
-// };
-
 const ConnectionLine = ({
   fromX,
   fromY,
@@ -16,10 +8,7 @@ const ConnectionLine = ({
   toY,
   ...props
 }: ConnectionLineComponentProps) => {
-  const { fromHandle, fromNode, toNode, connectionStatus } = props;
-  //   const isOptionalConnect = checkIsOptionalConnect(fromHandle?.id);
-
-  //   const isNear = Math.abs(toX - handleX) < 20 && Math.abs(toY - handleY) < 20;
+  const { fromHandle, fromNode } = props;
 
   return (
     <g>

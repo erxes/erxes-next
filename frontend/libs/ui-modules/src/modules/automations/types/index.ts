@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 
 export type IActionProps = {
   currentActionIndex: number;
@@ -32,10 +32,11 @@ export type IAction<TConfig = any> = {
   nextActionId?: string;
   isAvailable?: boolean;
   style?: any;
-  config?: TConfig & IConfig;
+  config: TConfig & IConfig;
   position?: any;
   isAvailableOptionalConnect?: boolean;
   workflowId?: string;
+  isCustom?: boolean;
 
   count?: number;
 };
@@ -91,7 +92,7 @@ export type BaseAutomationRemoteProps = {
 
 export type AutomationTriggerFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
-    formRef: RefObject<{
+    formRef: React.RefObject<{
       submit: () => void;
     }>;
     componentType: 'triggerForm';
@@ -101,7 +102,7 @@ export type AutomationTriggerFormProps<TConfig = any> =
 
 export type AutomationActionFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
-    formRef: RefObject<{
+    formRef: React.RefObject<{
       submit: () => void;
     }>;
     componentType: 'actionForm';

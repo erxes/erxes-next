@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const EDIT_USER_NOTIFICATION_SETTINGS = gql`
   mutation EditUserNotificationSettings($userSettings: JSON) {

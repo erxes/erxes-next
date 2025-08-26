@@ -6,7 +6,6 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
       "~/*": ["frontend/plugins/accounting_ui/src/*"],
       "~": ["frontend/plugins/accounting_ui/src"],

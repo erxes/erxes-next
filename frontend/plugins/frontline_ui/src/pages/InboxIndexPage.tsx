@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { InboxLayout } from '@/inbox/components/InboxLayout';
 import { ConversationDetail } from '@/inbox/conversations/conversation-detail/components/ConversationDetail';
 import { Conversations } from '@/inbox/conversations/components/Conversations';
-import { InboxMainFilter } from '@/inbox/components/InboxMainFilter';
 
 const InboxIndexPage = () => {
   return (
@@ -38,7 +37,6 @@ const InboxIndexPage = () => {
       </PageHeader>
       <InboxLayout
         conversations={<Conversations />}
-        mainFilters={<InboxMainFilter />}
         conversationDetail={<ConversationDetail />}
       />
     </div>

@@ -1,6 +1,6 @@
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
 import { IconAdjustmentsAlt } from '@tabler/icons-react';
-import { Handle, NodeProps, Position } from '@xyflow/react';
+import { Handle, Node, NodeProps, Position } from '@xyflow/react';
 import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { NodeData } from '../../../types';
@@ -60,11 +60,7 @@ const ActionNodeSourceHandler = ({
           showAddButton={!config?.yes}
           nodeType="action"
         >
-          <div
-            className="ml-4 text-xs text-muted-foreground fixed -top-2"
-            // key="yes-right"
-            // id="yes-right"
-          >
+          <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
             True
           </div>
         </NodeOutputHandler>
@@ -97,7 +93,7 @@ const ActionNodeSourceHandler = ({
   );
 };
 
-const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
+const ActionNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
   const { beforeTitleContent, config, nextActionId } = data;
 
   return (

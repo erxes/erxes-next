@@ -8,29 +8,33 @@ export const STATUS_TYPES = {
 
 export const DEFAULT_STATUSES = [
   {
-    name: 'Backlog',
+    name: 'backlog',
     type: STATUS_TYPES.BACKLOG,
-    color: '#FF0000',
-    teamId: '',
+    color: '#6B7280',
+    order: 0,
   },
   {
-    name: 'Todo',
+    name: 'todo',
     type: STATUS_TYPES.UNSTARTED,
-    color: '#FF0000',
+    color: '#3B82F6',
+    order: 0,
   },
   {
-    name: 'In Progress',
+    name: 'in progress',
     type: STATUS_TYPES.STARTED,
-    color: '#FF0000',
+    color: '#F59E0B',
+    order: 0,
   },
   {
-    name: 'Done',
+    name: 'done',
     type: STATUS_TYPES.COMPLETED,
-    color: '#FF0000',
+    color: '#10B981',
+    order: 0,
   },
   {
-    name: 'Cancelled',
+    name: 'cancelled',
     type: STATUS_TYPES.CANCELLED,
-    color: '#FF0000',
+    color: '#EF4444',
+    order: 0,
   },
 ];

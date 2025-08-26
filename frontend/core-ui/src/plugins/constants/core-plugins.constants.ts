@@ -1,25 +1,23 @@
 import {
-  IconShoppingCart,
-  IconBookmarks,
-  IconChartPie,
-  IconMagnet,
-  IconUser,
-  IconBuilding,
-  IconSpiral,
-  IconCategory,
+  IconAddressBook,
   IconAffiliate,
-  IconReport,
-  IconMailbox,
+  IconBuilding,
+  IconCategory,
+  IconChartPie,
+  IconFile,
+  IconMagnet,
+  IconShoppingCart,
+  IconSpiral,
+  IconUser,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 
 export const CORE_MODULES: IUIConfig['modules'] = [
   {
     name: 'contacts',
-    icon: IconBookmarks,
+    icon: IconAddressBook,
     path: 'contacts',
-    hasSettings: true,
-    hasRelationWidget: true,
+    hasSettings: false,
     submenus: [
       {
         name: 'customers',
@@ -53,7 +51,6 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconShoppingCart,
     path: 'products',
     hasSettings: true,
-    hasRelationWidget: true,
     submenus: [
       {
         name: 'categories',
@@ -67,20 +64,22 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconChartPie,
     path: 'segments',
     hasSettings: false,
-    hasRelationWidget: true,
   },
   {
     name: 'automations',
     icon: IconAffiliate,
     path: 'automations',
     hasSettings: true,
-    hasRelationWidget: true,
   },
   {
     name: 'logs',
-    icon: IconReport,
     path: 'logs',
+    settingsOnly: true,
+  },
+  {
+    name: 'documents',
+    icon: IconFile,
+    path: 'documents',
     hasSettings: false,
-    hasRelationWidget: true,
   },
 ];

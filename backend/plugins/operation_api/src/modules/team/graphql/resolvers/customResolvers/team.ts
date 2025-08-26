@@ -9,4 +9,12 @@ export const Team = {
   ) => {
     return models.Task.countDocuments({ teamId: team._id });
   },
+
+  memberCount: async (
+    team: ITeamDocument,
+    _params: undefined,
+    { models }: IContext,
+  ) => {
+    return models.TeamMember.countDocuments({ teamId: team._id });
+  },
 };

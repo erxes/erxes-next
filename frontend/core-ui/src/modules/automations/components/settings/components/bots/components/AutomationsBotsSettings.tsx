@@ -3,36 +3,37 @@ import {
   useAutomationBotTotalCount,
 } from '@/automations/components/settings/components/bots/hooks/useAutomationBots';
 import { IAutomationBot } from '@/automations/components/settings/components/bots/types/automationBots';
-import { Card, cn, ScrollArea, Spinner } from 'erxes-ui';
+import { Card, cn, getPluginAssetsUrl, ScrollArea, Spinner } from 'erxes-ui';
 import { Link } from 'react-router';
 
 const BotCard = ({ bot }: { bot: IAutomationBot }) => {
-  const { totalCount, loading } = useAutomationBotTotalCount(
-    bot.totalCountQueryName,
-  );
+  const { name, label, description, logo, pluginName, totalCountQueryName } =
+    bot || {};
+  const { totalCount, loading } =
+    useAutomationBotTotalCount(totalCountQueryName);
 
   return (
-    <Card key={bot.name} className="h-auto p-3 flex flex-col gap-2 rounded-lg">
-      <Link to={`/settings/automations/bots/${bot.name}`}>
-        <div className="flex gap-2">
+    <Card key={name} className="h-auto p-3 flex flex-col gap-2 rounded-lg">
+      <Link to={`/settings/automations/bots/${name}`}>
+        <div className="flex gap-2 mb-2 items-center">
           <div
             className={cn(
               'size-8 rounded overflow-hidden shadow-sm bg-background',
             )}
           >
             <img
-              src={bot.logo}
-              alt={bot.name}
-              className="w-full h-full object-contain"
+              src={getPluginAssetsUrl(pluginName, logo)}
+              alt={name}
+              className="w-full h-full object-contain p-1"
             />
           </div>
-          <h6 className="font-semibold text-sm self-center">{bot.label}</h6>
+          <h6 className="font-semibold text-sm self-center">{label}</h6>
           <div className="text-xs text-muted-foreground font-mono ml-auto">
             {loading ? <Spinner /> : totalCount}
           </div>
         </div>
         <div className="text-sm text-muted-foreground font-medium">
-          {bot.description}
+          {description}
         </div>
       </Link>
     </Card>

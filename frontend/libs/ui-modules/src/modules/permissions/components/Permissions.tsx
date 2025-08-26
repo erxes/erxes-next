@@ -170,7 +170,7 @@ export const PermissionsRecordTable = ({ module }: { module?: string }) => {
     <RecordTable.Provider
       columns={permissionColumns}
       data={permissions || []}
-      stickyColumns={['more', 'checkbox', 'module', 'action']}
+      stickyColumns={['more', 'checkbox', 'module']}
       className="m-3"
     >
       <RecordTable.CursorProvider

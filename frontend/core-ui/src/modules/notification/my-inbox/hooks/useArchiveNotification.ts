@@ -30,7 +30,7 @@ export const useArchiveNotification = () => {
         navigate(`/my-inbox${queryString ? `?${queryString}` : ''}`);
       })
       .catch((error) =>
-        toast({ title: 'Something went error', description: error?.message }),
+        toast({ title: 'Something went wrong', description: error?.message }),
       );
   };
 

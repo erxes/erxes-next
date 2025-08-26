@@ -1,19 +1,60 @@
 import { IContext } from '~/connectionResolvers';
+import { ITaskUpdate } from '@/task/@types/task';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const taskMutations = {
-  createTask: async (_parent: undefined, { name }, { models }: IContext) => {
-    return models.Task.createTask({ name });
+  createTask: async (
+    _parent: undefined,
+    params: ITaskUpdate,
+    { models, user, subdomain }: IContext,
+  ) => {
+    const task = await models.Task.createTask({
+      doc: params,
+      userId: user._id,
+      subdomain,
+    });
+
+    graphqlPubsub.publish('operationTaskChanged', {
+      operationTaskChanged: {
+        type: 'create',
+        task,
+      },
+    });
+
+    return task;
   },
 
   updateTask: async (
     _parent: undefined,
-    { _id, name },
-    { models }: IContext,
+    params: ITaskUpdate,
+    { models, user, subdomain }: IContext,
   ) => {
-    return models.Task.updateTask(_id, { name });
+    const updatedTask = await models.Task.updateTask({
+      doc: params,
+      userId: user._id,
+      subdomain,
+    });
+
+    graphqlPubsub.publish('operationTaskChanged', {
+      operationTaskChanged: {
+        type: 'update',
+        task: updatedTask,
+      },
+    });
+
+    return updatedTask;
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {
-    return models.Task.removeTask(_id);
+    const deletedTask = await models.Task.removeTask(_id);
+
+    graphqlPubsub.publish('operationTaskChanged', {
+      operationTaskChanged: {
+        type: 'delete',
+        task: deletedTask,
+      },
+    });
+
+    return deletedTask;
   },
 };

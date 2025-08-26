@@ -7,20 +7,28 @@ import {
 export interface IProject {
   name: string;
   description?: string;
-  teamId: string;
-  priority?: string;
-  startDate: Date;
-  endDate: Date;
+  teamIds: string[];
+  priority: number;
+  startDate?: Date;
+  status: number;
+  targetDate?: Date;
+  leadId?: string;
 }
 
 export interface IProjectFilter extends ICursorPaginateParams, IListParams {
   name?: string;
   description?: string;
-  teamId?: string;
-  priority?: string;
+  teamIds?: string[];
+  priority: number;
   startDate?: Date;
-  endDate?: Date;
+  targetDate?: Date;
+  leadId?: string;
+  status?: number;
   userId?: string;
+}
+
+export interface IProjectUpdate extends IProject {
+  _id: string;
 }
 
 export interface IProjectDocument extends IProject, Document {

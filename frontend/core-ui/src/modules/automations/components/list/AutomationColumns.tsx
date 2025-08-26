@@ -6,15 +6,12 @@ import {
   cn,
   RecordTable,
   readImage,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   RelativeDateDisplay,
   Switch,
   Label,
+  Popover,
 } from 'erxes-ui';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IAction, ITrigger, SelectTags } from 'ui-modules';
 import { IAutomation } from '../../types';
@@ -57,8 +54,8 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
       const status = cell.getValue() as 'active' | 'draft';
       const [edit] = useMutation(AUTOMATION_EDIT);
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
+        <Popover>
+          <RecordTableInlineCell.Trigger>
             <div className="w-full flex justify-center">
               <Badge
                 variant={status === 'active' ? 'success' : 'secondary'}
@@ -69,9 +66,9 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
                 {status}
               </Badge>
             </div>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent className="w-24 h-12 flex justify-center items-center space-x-2">
-            <Label htmlFor="mode">InActive</Label>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content className="w-24 h-12 flex justify-center items-center space-x-2">
+            <Label htmlFor="mode">Inactive</Label>
             <Switch
               id="mode"
               onCheckedChange={(open) =>
@@ -84,8 +81,8 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
               }
               checked={status === 'active'}
             />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 80,
@@ -97,10 +94,10 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     cell: ({ cell }) => {
       const triggers = (cell.getValue() || []) as ITrigger[];
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <IconPointerBolt size={12} />
           {triggers?.length}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 80,
@@ -112,10 +109,10 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     cell: ({ cell }) => {
       const actions = (cell.getValue() || []) as IAction[];
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <IconShare size={12} />
           {actions?.length}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
     size: 80,
@@ -128,7 +125,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
       const user = (cell.getValue() || {}) as IUser;
       const { details } = user;
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Avatar className="h-6 w-6 rounded-full">
             <Avatar.Image
               src={readImage(details?.avatar)}
@@ -139,7 +136,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
             </Avatar.Fallback>
           </Avatar>
           {generateUserName(user)}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -151,7 +148,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
       const user = (cell.getValue() || {}) as IUser;
       const { details } = user;
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Avatar className="h-6 w-6 rounded-full">
             <Avatar.Image
               src={readImage(details?.avatar)}
@@ -162,7 +159,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
             </Avatar.Fallback>
           </Avatar>
           {generateUserName(user)}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -173,9 +170,9 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableCellDisplay>
+          <RecordTableInlineCell>
             <RelativeDateDisplay.Value value={cell.getValue() as string} />
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         </RelativeDateDisplay>
       );
     },
@@ -187,9 +184,9 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableCellDisplay>
+          <RecordTableInlineCell>
             <RelativeDateDisplay.Value value={cell.getValue() as string} />
-          </RecordTableCellDisplay>
+          </RecordTableInlineCell>
         </RelativeDateDisplay>
       );
     },

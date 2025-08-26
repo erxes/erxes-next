@@ -1,18 +1,16 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   IconAlignJustified,
   IconLabel,
   IconMessageCog,
   IconMessages,
-  IconUser,
   IconUsersGroup,
 } from '@tabler/icons-react';
 import { Cell, ColumnDef } from '@tanstack/table-core';
 import {
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   Input,
   Textarea,
   TextOverflowTooltip,
@@ -52,13 +50,13 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     cell: ({ cell }) => {
       const { channelsEdit } = useChannelsEdit();
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableCellDisplay>
+        <Popover>
+          <RecordTableInlineCell.Trigger>
+            <RecordTableInlineCell>
               <TextOverflowTooltip value={cell.row.original.name} />
-            </RecordTableCellDisplay>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+            </RecordTableInlineCell>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input
               value={cell.getValue() as string}
               onChange={(e) =>
@@ -73,8 +71,8 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
                 )
               }
             />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -88,13 +86,13 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     cell: ({ cell }) => {
       const { channelsEdit } = useChannelsEdit();
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableCellDisplay>
+        <Popover>
+          <RecordTableInlineCell.Trigger>
+            <RecordTableInlineCell>
               <TextOverflowTooltip value={cell.row.original.description} />
-            </RecordTableCellDisplay>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+            </RecordTableInlineCell>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Textarea
               value={cell.getValue() as string}
               onChange={(e) =>
@@ -110,8 +108,8 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
                 )
               }
             />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
     size: 250,
@@ -125,9 +123,9 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     cell: ({ cell }) => {
       const { channelsEdit } = useChannelsEdit();
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           -
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
         // <SelectMember.InlineCell
         //   scope={
         //     ChannelHotKeyScope.ChannelSettingsPage +
@@ -156,9 +154,9 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
       <RecordTable.InlineHead label="Conversations" icon={IconMessages} />
     ),
     cell: ({ cell }) => (
-      <RecordTableCellDisplay className="justify-center">
+      <RecordTableInlineCell className="justify-center">
         {cell.getValue() as number}
-      </RecordTableCellDisplay>
+      </RecordTableInlineCell>
     ),
   },
   {
@@ -170,9 +168,9 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     cell: ({ cell }) => {
       const { integrationIds } = cell.row.original || [];
       return (
-        <RecordTableCellDisplay className="justify-center">
+        <RecordTableInlineCell className="justify-center">
           {integrationIds?.length as number}
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

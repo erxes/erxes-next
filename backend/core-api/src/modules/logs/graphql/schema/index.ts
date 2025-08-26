@@ -2,7 +2,7 @@ export const types = `
     type Log {
       _id: String
       createdAt: Date
-      payload:String,
+      payload:JSON,
       source:String,
       action:String,
       status:String,
@@ -10,7 +10,7 @@ export const types = `
       cursor:String,
 
       user:User
-      prevObject:String
+      prevObject:JSON
     }
 
     type MainLogsList {
@@ -43,5 +43,6 @@ const commonQueryParams = `
 
 export const queries = `
     logsMainList(${commonQueryParams}):MainLogsList
+    logDetail(_id:String!):Log
 `;
 export default { types, queries };

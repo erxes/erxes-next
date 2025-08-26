@@ -19,7 +19,7 @@ export const AutomationHistories = () => {
   } = useAutomationHistories();
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <>
       <PageSubHeader>
         <AutomationHistoriesRecordTableFilter />
         <div className="text-muted-foreground font-medium text-sm whitespace-nowrap h-7 leading-7">
@@ -27,15 +27,15 @@ export const AutomationHistories = () => {
             ? `${totalCount} records found`
             : loading && <Skeleton className="w-20 h-4 inline-block mt-1.5" />}
         </div>
-        <Button variant="ghost" onClick={() => refetch()}>
+        <Button variant="ghost" disabled={loading} onClick={() => refetch()}>
           <IconRefresh />
         </Button>
       </PageSubHeader>
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1">
         <RecordTable.Provider
           columns={automationHistoriesColumns({ triggersConst, actionsConst })}
           data={list}
-          className="mt-1.5"
+          className="mt-1.5 h-full overflow-auto"
           stickyColumns={['more']}
         >
           <RecordTable.CursorProvider
@@ -60,6 +60,6 @@ export const AutomationHistories = () => {
           </RecordTable.CursorProvider>
         </RecordTable.Provider>
       </div>
-    </div>
+    </>
   );
 };

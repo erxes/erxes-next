@@ -25,7 +25,6 @@ export const sendDesktopNotification = (doc: {
   title: string;
   content?: string;
 }) => {
-  console.log({ permission: Notification.permission });
   const notify = () => {
     try {
       const notification = new Notification(doc.title, {
@@ -33,7 +32,6 @@ export const sendDesktopNotification = (doc: {
         icon: '/favicon.png',
         dir: 'ltr',
       });
-      console.log({ notificationDesktop: notification });
 
       notification.onclick = () => {
         window.focus();
@@ -46,7 +44,6 @@ export const sendDesktopNotification = (doc: {
 
   // Browser doesn't support Notification api
   if (!('Notification' in window)) {
-    console.log('shit');
     return;
   }
 

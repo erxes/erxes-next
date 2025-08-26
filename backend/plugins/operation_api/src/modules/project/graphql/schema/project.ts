@@ -4,25 +4,18 @@ export const types = `
 type Project {
     _id: String
     name: String
+    icon: String
     description: String
-    status: String!
-    priority: String
-    teamId: String!
+    status: Int
+    priority: Int
+    teamIds: [String]!
+    leadId: String
     startDate: Date
-    endDate: Date
+    targetDate: Date
     createdAt: Date
     updatedAt: Date
 }
 
-input ProjectFilter {
-    name: String
-    description: String
-    status: String!
-    priority: String
-    startDate: Date
-    endDate: Date
-    ${GQL_CURSOR_PARAM_DEFS}
-}  
 
 type ProjectListResponse {
     list: [Project],
@@ -30,25 +23,62 @@ type ProjectListResponse {
     totalCount: Int,
 }
 
-`;
-
-const projectFilterParams = `
+input IProjectFilter {
+    _id: String
     name: String
     description: String
-    status: String!
-    priority: String
+    status: Int
+    priority: Int
+    teamIds: [String]
+    leadId: String
     startDate: Date
-    endDate: Date
+    targetDate: Date
+    userId: String
     ${GQL_CURSOR_PARAM_DEFS}
+}
+
+type ProjectSubscription {
+    type: String
+    project: Project
+}
+`;
+
+const createProjectParams = `
+  name: String!
+  leadId: String
+  icon: String
+  description: String
+  status: Int
+  priority: Int
+  teamIds: [String!]!
+  startDate: Date
+  targetDate: Date
+`;
+
+const updateProjectParams = `
+  _id: String!
+  name: String
+  leadId: String
+  icon: String
+  description: String
+  status: Int
+  priority: Int
+  teamIds: [String]
+  startDate: Date
+  targetDate: Date
 `;
 
 export const queries = `
     getProject(_id: String!): Project
-    getProjects(${projectFilterParams}): ProjectListResponse
+    getProjects(filter: IProjectFilter): ProjectListResponse
+    getProjectProgress(_id: String!): JSON
+    getProjectProgressByMember(_id: String!): JSON
+    getProjectProgressByTeam(_id: String!): JSON
+    getProjectProgressChart(_id: String!): JSON
 `;
 
 export const mutations = `
-    createProject(name: String!, description: String!, status: String!, teamId: String!, startDate: Date, endDate: Date): Project
-    updateProject(_id: String!, name: String!, description: String!, status: String!, teamId: String!, startDate: Date, endDate: Date): Project
-    removeProject(_id: String!): Project
+  createProject(${createProjectParams}): Project
+  updateProject(${updateProjectParams}): Project
+  removeProject(_id: String!): JSON
 `;

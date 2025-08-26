@@ -21,7 +21,7 @@ export type NodeData = {
   id: string;
   nodeIndex: number;
   label: string;
-  nodeType: 'trigger' | 'action';
+  nodeType: AutomationNodeType;
   icon?: string;
   description?: string;
   type: string;
@@ -36,7 +36,7 @@ export type NodeData = {
   actionId?: string;
   beforeTitleContent?: (
     id: string,
-    type: 'action' | 'trigger',
+    type: AutomationNodeType,
   ) => React.ReactNode;
 };
 
@@ -71,15 +71,13 @@ export type AutomationDropHandlerParams = {
   /** The drag event triggered when an item is dropped onto the drop target. */
   event: React.DragEvent<HTMLDivElement>;
   /** Instance of React Flow to interact with the flow canvas and nodes. */
-  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
-  /** List of trigger definitions available for automation. */
-  triggers: any[];
-  /** List of action definitions available for automation. */
-  actions: any[];
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>> | null;
+  triggers: ITrigger[];
+  actions: IAction[];
 };
 
 export type TDraggingNode = {
-  nodeType: 'trigger' | 'action';
+  nodeType: AutomationNodeType;
   type: string;
   label: string;
   description: string;
@@ -89,3 +87,30 @@ export type TDraggingNode = {
 };
 export type StatusBadgeValue =
   (typeof STATUSES_BADGE_VARIABLES)[keyof typeof STATUSES_BADGE_VARIABLES];
+
+export enum AutomationsHotKeyScope {
+  Builder = 'automation-builder',
+  BuilderSideBar = 'automation-builder-sidebar',
+  BuilderPanel = 'automation-builder-panel',
+  HistoriesFilter = 'automation-histories-filter',
+}
+
+export enum AutomationsPath {
+  Index = '/automations',
+  Detail = '/edit/:id',
+}
+
+export enum AutomationNodeType {
+  Trigger = 'trigger',
+  Action = 'action',
+}
+
+export enum AutomationNodesType {
+  Triggers = 'triggers',
+  Actions = 'actions',
+}
+
+export enum AutomationBuilderTabsType {
+  Builder = 'builder',
+  History = 'history',
+}

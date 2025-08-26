@@ -1,14 +1,13 @@
-import { FullNameField, Label } from 'erxes-ui';
-import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
+import { Label } from 'erxes-ui';
+import { useCustomerDetailWithParams } from '@/contacts/customers/customer-detail/hooks/useCustomerDetailWithParams';
 import { IconDeviceMobileMessage, IconMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
 import { Avatar, Button, readImage } from 'erxes-ui';
-import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
-import { SelectCompany } from 'ui-modules';
+import { CustomerName, SelectCompany, useCustomerEdit } from 'ui-modules';
 export const CustomerDetailGeneral = () => {
-  const { customerDetail } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetailWithParams();
   const {
     _id,
     firstName,
@@ -29,29 +28,15 @@ export const CustomerDetailGeneral = () => {
           </Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col items-start">
-          <FullNameField
-            scope={ContactsHotKeyScope.CustomerDetailPage + '.' + _id + '.Name'}
-            closeOnEnter
+          <CustomerName
+            _id={_id}
             firstName={firstName || ''}
-            lastName={
-              middleName
-                ? `${middleName || ''} ${lastName || ''}`
-                : lastName || ''
-            }
-            onClose={(_firstName, _lastName) => {
-              if (_firstName !== firstName || _lastName !== lastName) {
-                customerEdit({
-                  variables: {
-                    _id,
-                    firstName: _firstName,
-                    lastName: _lastName,
-                  },
-                });
-              }
-            }}
+            lastName={lastName || ''}
+            middleName={middleName || ''}
+            scope={ContactsHotKeyScope.CustomerDetailPage + '.' + _id + '.Name'}
           />
         </div>
-        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto "> 
+        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto ">
           <Button
             variant="outline"
             className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"

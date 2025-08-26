@@ -14,6 +14,7 @@ import { LOGS_CURSOR_SESSION_KEY } from '../constants/logFilter';
 import { useLogs } from '../hooks/useLogs';
 import { logColumns } from './LogColumns';
 import { LogsRecordTableFilter } from './filters/LogsRecordTableFilter';
+import { LogDetailSheet } from '@/logs/components/LogDetailSheet';
 
 export const LogsRecordTable = () => {
   const {
@@ -27,6 +28,7 @@ export const LogsRecordTable = () => {
 
   return (
     <div className="flex flex-col h-full pt-0">
+      <LogDetailSheet />
       <PageHeader className="p-3 mx-0" separatorClassName="mb-0">
         <PageHeader.Start>
           <Breadcrumb>
@@ -50,7 +52,12 @@ export const LogsRecordTable = () => {
             : loading && <Skeleton className="w-20 h-4 inline-block mt-1.5" />}
         </div>
       </PageSubHeader>
-      <RecordTable.Provider columns={logColumns} data={list} className="m-3">
+      <RecordTable.Provider
+        columns={logColumns}
+        data={list}
+        stickyColumns={['detail']}
+        className="m-3"
+      >
         <RecordTable.CursorProvider
           hasPreviousPage={hasPreviousPage}
           hasNextPage={hasNextPage}
@@ -74,7 +81,7 @@ export const LogsRecordTable = () => {
                 </tr>
               )}
 
-              {!loading && <RecordTable.RowSkeleton rows={40} />}
+              {loading && <RecordTable.RowSkeleton rows={40} />}
               <RecordTable.RowList />
               <RecordTable.CursorForwardSkeleton
                 handleFetchMore={handleFetchMore}

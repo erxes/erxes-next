@@ -57,7 +57,7 @@ function createBackendPlugin(pluginName, moduleName) {
     description: '',
     main: 'index.js',
     scripts: {
-      dev: 'tsx watch src/main.ts',
+      dev: 'nodemon src/main.ts',
       build:
         'tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json',
       start: 'node -r tsconfig-paths/register dist/src/main.js',
