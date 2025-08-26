@@ -1,8 +1,8 @@
 import { IContext } from '~/connectionResolvers';
 import { ITaskFilter } from '@/task/@types/task';
-import { cursorPaginate } from 'erxes-api-shared/utils';
 import { ITaskDocument } from '@/task/@types/task';
 import { FilterQuery } from 'mongoose';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 
 export const taskQueries = {
   getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -79,7 +79,12 @@ export const taskQueries = {
 
     const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
       model: models.Task,
-      params: { ...filter },
+      params: {
+        ...filter,
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
       query: filterQuery,
     });
 

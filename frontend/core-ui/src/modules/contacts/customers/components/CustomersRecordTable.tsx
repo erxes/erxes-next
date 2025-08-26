@@ -7,6 +7,7 @@ export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
   const { sessionKey } = useIsCustomerLeadSessionKey();
+
   return (
     <RecordTable.Provider
       columns={customersColumns}

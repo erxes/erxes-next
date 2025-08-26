@@ -69,11 +69,13 @@ export const pipelineQueries = {
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IPipelineDocument>({
         model: models.Pipelines,
-        params: {
-          ...params,
-          orderBy: { order: 1, createdAt: -1 },
+        limit: params.limit || 20,
+        cursor: params.cursor || undefined,
+        direction: params.direction || 'forward',
+        sortBy: {
+          createdAt: 'desc',
         },
-        query,
+        filter: query,
       });
 
     return { list, totalCount, pageInfo };
