@@ -246,7 +246,7 @@ export const automationQueries = {
     return models.Automations.find(filter).countDocuments();
   },
 
-  async automationConstants(_root, {}) {
+  async automationConstants(_root, _args) {
     const plugins = await getPlugins();
 
     const constants: {
