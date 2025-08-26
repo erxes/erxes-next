@@ -6,8 +6,9 @@ import {
 } from '@tabler/icons-react';
 import { useAtom, useAtomValue } from 'jotai';
 import { tasksViewAtom } from '@/task/states/tasksViewState';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { TaskDetailSheet } from '@/task/components/TaskDetailSheet';
+import { useParams } from 'react-router-dom';
 
 const TasksRecordTable = lazy(() =>
   import('@/task/components/TasksRecordTable').then((mod) => ({
@@ -17,15 +18,21 @@ const TasksRecordTable = lazy(() =>
 
 const TasksBoard = lazy(() =>
   import('@/task/components/TasksBoard').then((mod) => ({
-    default: mod.TasksBoardNew,
+    default: mod.TasksBoard,
   })),
 );
 
 export const TasksViewControl = () => {
+  const { teamId } = useParams();
   const [view, setView] = useAtom(tasksViewAtom);
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (!teamId) {
+    return null;
+  }
 
   return (
-    <PopoverScoped>
+    <PopoverScoped open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
         <Button variant="ghost">
           <IconAdjustmentsHorizontal />
@@ -38,7 +45,10 @@ export const TasksViewControl = () => {
           defaultValue="list"
           className="grid grid-cols-2 gap-2"
           value={view}
-          onValueChange={(value) => setView(value as 'list' | 'grid')}
+          onValueChange={(value) => {
+            setView(value as 'list' | 'grid');
+            setIsOpen(false);
+          }}
         >
           <ToggleGroup.Item value="list" asChild>
             <Button
@@ -68,11 +78,11 @@ export const TasksViewControl = () => {
 
 export const TasksView = () => {
   const view = useAtomValue(tasksViewAtom);
+  const { teamId } = useParams();
 
   return (
     <Suspense>
-      {view === 'list' && <TasksRecordTable />}
-      {view === 'grid' && <TasksBoard />}
+      {view === 'list' || !teamId ? <TasksRecordTable /> : <TasksBoard />}
       <TaskDetailSheet />
     </Suspense>
   );

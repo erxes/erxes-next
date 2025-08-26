@@ -89,7 +89,6 @@ const SelectMemberValue = ({
   size?: AvatarProps['size'];
 }) => {
   const { memberIds, members, setMembers } = useSelectMemberContext();
-
   return (
     <MembersInline
       memberIds={memberIds}

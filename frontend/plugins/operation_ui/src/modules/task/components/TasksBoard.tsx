@@ -2,7 +2,15 @@ import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 import { useTasks } from '@/task/hooks/useGetTasks';
 import { ITask } from '@/task/types';
 import type { DragEndEvent } from '@dnd-kit/core';
-import { Board, BoardColumnProps, BoardItemProps } from 'erxes-ui';
+import {
+  Board,
+  BoardColumnProps,
+  BoardItemProps,
+  Button,
+  EnumCursorDirection,
+  Skeleton,
+  SkeletonArray,
+} from 'erxes-ui';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
@@ -10,11 +18,19 @@ import { currentUserState } from 'ui-modules';
 import { TaskBoardCard } from '@/task/components/TaskBoardCard';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import clsx from 'clsx';
+import { taskCountByBoardAtom } from '@/task/states/tasksTotalCountState';
+import { IconPlus } from '@tabler/icons-react';
+import { StatusInlineIcon } from '@/task/components/StatusInline';
+import {
+  taskCreateDefaultValuesState,
+  taskCreateSheetState,
+} from '@/task/states/taskCreateSheetState';
+import { useInView } from 'react-intersection-observer';
 
 const fetchedTasksState = atom<BoardItemProps[]>([]);
 export const allTasksMapState = atom<Record<string, ITask>>({});
 
-export const TasksBoardNew = () => {
+export const TasksBoard = () => {
   const { teamId } = useParams();
   const allTasksMap = useAtomValue(allTasksMapState);
   const { updateTask } = useUpdateTask();
@@ -29,9 +45,12 @@ export const TasksBoardNew = () => {
   const columns = statuses?.map((status) => ({
     id: status.value,
     name: status.label,
+    type: status.type,
+    color: status.color,
   }));
 
   const [tasks, setTasks] = useAtom(fetchedTasksState);
+  const setTaskCountByBoard = useSetAtom(taskCountByBoardAtom);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -66,6 +85,11 @@ export const TasksBoardNew = () => {
         return task;
       }),
     );
+    setTaskCountByBoard((prev) => ({
+      ...prev,
+      [activeItem?.status]: prev[activeItem?.status] - 1 || 0,
+      [overColumn]: (prev[overColumn] || 0) + 1,
+    }));
   };
 
   return (
@@ -76,8 +100,7 @@ export const TasksBoardNew = () => {
       boardId={clsx('tasks-board', teamId)}
     >
       {(column) => (
-        <Board id={column.id} key={column.id}>
-          <Board.Header>{column.name}</Board.Header>
+        <Board id={column.id} key={column.id} sortBy="updated">
           <TasksBoardCards column={column} />
         </Board>
       )}
@@ -89,6 +112,8 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
   const currentUser = useAtomValue(currentUserState);
   const { projectId } = useParams();
   const [taskCards, setTaskCards] = useAtom(fetchedTasksState);
+  const [taskCountByBoard, setTaskCountByBoard] = useAtom(taskCountByBoardAtom);
+
   const boardCards = taskCards
     .filter((task) => task.column === column.id)
     .sort((a, b) => {
@@ -97,9 +122,9 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
       }
       return 0;
     });
-  const { tasks } = useTasks({
+  const { tasks, totalCount, loading, handleFetchMore } = useTasks({
     variables: {
-      projectId: projectId || undefined,
+      projectId,
       userId: currentUser?._id,
       status: column.id,
     },
@@ -131,18 +156,100 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
     }
   }, [tasks, setTaskCards, setAllTasksMap, column.id]);
 
+  useEffect(() => {
+    if (totalCount) {
+      setTaskCountByBoard((prev) => ({
+        ...prev,
+        [column.id]: totalCount || 0,
+      }));
+    }
+  }, [totalCount, setTaskCountByBoard, column.id]);
+
   return (
-    <Board.Cards id={column.id} items={boardCards.map((task) => task.id)}>
-      {boardCards.map((task) => (
-        <Board.Card
-          key={task.id}
-          id={task.id}
-          name={task.name}
-          column={column.id}
-        >
-          <TaskBoardCard id={task.id} column={column.id} />
-        </Board.Card>
-      ))}
-    </Board.Cards>
+    <>
+      <Board.Header>
+        <h4 className="capitalize flex items-center gap-1 pl-1">
+          <StatusInlineIcon
+            type={column.type as string}
+            color={column.color as string}
+          />
+          {column.name}
+          <span className="text-accent-foreground font-medium pl-1">
+            {loading ? (
+              <Skeleton className="size-4 rounded" />
+            ) : (
+              taskCountByBoard[column.id] || 0
+            )}
+          </span>
+        </h4>
+        <TaskCreateSheetTrigger status={column.id} />
+      </Board.Header>
+      <Board.Cards id={column.id} items={boardCards.map((task) => task.id)}>
+        {loading ? (
+          <SkeletonArray
+            className="p-24 w-full rounded shadow-xs opacity-80"
+            count={10}
+          />
+        ) : (
+          boardCards.map((task) => (
+            <Board.Card
+              key={task.id}
+              id={task.id}
+              name={task.name}
+              column={column.id}
+            >
+              <TaskBoardCard id={task.id} column={column.id} />
+            </Board.Card>
+          ))
+        )}
+        <TaskCardsFetchMore
+          totalCount={totalCount || 0}
+          currentLength={boardCards.length}
+          handleFetchMore={() =>
+            handleFetchMore({ direction: EnumCursorDirection.FORWARD })
+          }
+        />
+      </Board.Cards>
+    </>
+  );
+};
+
+export const TaskCardsFetchMore = ({
+  totalCount,
+  handleFetchMore,
+  currentLength,
+}: {
+  totalCount: number;
+  handleFetchMore: () => void;
+  currentLength: number;
+}) => {
+  const { ref: bottomRef } = useInView({
+    onChange: (inView) => inView && handleFetchMore(),
+  });
+
+  if (!totalCount || currentLength >= totalCount || currentLength === 0) {
+    return null;
+  }
+
+  return (
+    <div ref={bottomRef}>
+      <Skeleton className="p-12 w-full rounded shadow-xs opacity-80" />
+    </div>
+  );
+};
+
+const TaskCreateSheetTrigger = ({ status }: { status: string }) => {
+  const setOpenCreateTask = useSetAtom(taskCreateSheetState);
+  const setDefaultValues = useSetAtom(taskCreateDefaultValuesState);
+
+  const handleClick = () => {
+    setDefaultValues({ status });
+    setOpenCreateTask(true);
+  };
+
+  return (
+    <Button variant="ghost" size="icon" onClick={handleClick}>
+      <IconPlus />
+    </Button>
   );
 };

@@ -8,11 +8,13 @@ import {
   useScopedHotkeys,
   useSetHotkeyScope,
 } from 'erxes-ui';
-import { useState } from 'react';
 import { AddTaskForm } from './AddTaskForm';
+import { useAtom } from 'jotai';
+import { taskCreateSheetState } from '@/task/states/taskCreateSheetState';
+
 export const AddTaskSheet = () => {
   const setHotkeyScope = useSetHotkeyScope();
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useAtom(taskCreateSheetState);
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
   const onOpen = () => {
     setOpen(true);

@@ -1,10 +1,7 @@
 import { BoardCardProps, Separator } from 'erxes-ui';
-import {
-  IconCalendarClock,
-  IconCalendarEventFilled,
-} from '@tabler/icons-react';
+import { IconCalendarEventFilled } from '@tabler/icons-react';
 import { format } from 'date-fns';
-import { Button, CalendarNew, Popover } from 'erxes-ui';
+import { Button } from 'erxes-ui';
 import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
 import { atom, useAtomValue, useSetAtom } from 'jotai';
@@ -15,6 +12,7 @@ import { DateSelectTask } from '@/task/components/select/DateSelectTask';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
 import { allTasksMapState } from '@/task/components/TasksBoard';
 import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
+import { taskCountByBoardAtom } from '@/task/states/tasksTotalCountState';
 
 export const taskBoardItemAtom = atom(
   (get) => (id: string) => get(allTasksMapState)[id],
@@ -35,6 +33,7 @@ export const TaskBoardCard = ({ id, column }: BoardCardProps) => {
     createdAt,
   } = useAtomValue(taskBoardItemAtom)(id);
   const setActiveTask = useSetAtom(taskDetailSheetState);
+  const setTaskCountByBoard = useSetAtom(taskCountByBoardAtom);
 
   return (
     <div onClick={() => setActiveTask(_id)}>
@@ -62,6 +61,13 @@ export const TaskBoardCard = ({ id, column }: BoardCardProps) => {
           <SelectStatusTask
             variant="card"
             value={column}
+            onValueChange={(value) =>
+              setTaskCountByBoard((prev) => ({
+                ...prev,
+                [column]: prev[column] - 1 || 0,
+                [value]: (prev[value] || 0) + 1,
+              }))
+            }
             id={_id}
             teamId={teamId}
           />
@@ -94,35 +100,5 @@ export const TaskBoardCard = ({ id, column }: BoardCardProps) => {
         />
       </div>
     </div>
-  );
-};
-
-export const KanbanDatePicker = ({
-  date,
-  onChange,
-}: {
-  date: Date;
-  onChange: (date: Date) => void;
-}) => {
-  return (
-    <Popover>
-      <Popover.Trigger>
-        <Button
-          variant="ghost"
-          className="text-muted-foreground font-semibold px-1"
-          size="sm"
-        >
-          <IconCalendarClock />
-          {format(date, 'MMM dd')}
-        </Button>
-      </Popover.Trigger>
-      <Popover.Content className="p-0 max-w-none w-auto overflow-hidden">
-        <CalendarNew
-          mode="single"
-          selected={date}
-          onSelect={(date) => onChange(date as Date)}
-        />
-      </Popover.Content>
-    </Popover>
   );
 };

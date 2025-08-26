@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { IEstimateChoice } from '@/task/types';
-import { Button, cn, Combobox, Command, PopoverScoped } from 'erxes-ui';
+import {
+  Badge,
+  Button,
+  cn,
+  Combobox,
+  Command,
+  isUndefinedOrNull,
+  PopoverScoped,
+} from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
 import { useGetEstimateChoiceByTeam } from '~/modules/task/hooks/useGetEstimateChoiceByTeam';
 import {
@@ -34,28 +42,33 @@ export const SelectEstimatedPointProvider = ({
   value,
   onValueChange,
   teamId,
+  variant,
 }: {
   children: React.ReactNode;
   value?: number;
   onValueChange: (value: number) => void;
   teamId: string;
+  variant?: `${SelectTriggerVariant}`;
 }) => {
   const { estimateChoices } = useGetEstimateChoiceByTeam({
     variables: { teamId },
     skip: !teamId,
   });
   const handleValueChange = (estimate: number) => {
-    if (!estimate) return;
+    if (isUndefinedOrNull(estimate)) return;
     onValueChange?.(estimate);
   };
 
   if (!estimateChoices || !estimateChoices?.length) {
+    if (variant === SelectTriggerVariant.CARD) {
+      return (
+        <Badge variant="secondary" className="opacity-50">
+          Estimate not enabled
+        </Badge>
+      );
+    }
     return (
-      <Button
-        variant="secondary"
-        className="h-7 text-muted-foreground"
-        disabled
-      >
+      <Button variant="secondary" className="text-muted-foreground" disabled>
         Estimate not enabled
       </Button>
     );
@@ -172,6 +185,7 @@ export const SelectEstimatedPointRoot = ({
         setOpen(false);
       }}
       teamId={teamId}
+      variant={variant}
     >
       <PopoverScoped open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant={variant}>

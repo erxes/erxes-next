@@ -30,8 +30,12 @@ import {
 import { Portal } from 'radix-ui';
 import { type HTMLAttributes, useContext } from 'react';
 import { BoardContext } from '../contexts/BoardContext';
-import { activeCardIdState } from '../states/boardStates';
+import {
+  activeCardIdState,
+  dragOverBoardColumnIdState,
+} from '../states/boardStates';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { AnimatePresence, motion } from 'motion/react';
 export type { DragEndEvent } from '@dnd-kit/core';
 
 const BoardCards = ({
@@ -135,6 +139,9 @@ const BoardProvider = <
   ...props
 }: BoardProviderProps<T, C>) => {
   const setActiveCardId = useSetAtom(activeCardIdState(boardId));
+  const setDragOverBoardColumnId = useSetAtom(
+    dragOverBoardColumnIdState(boardId),
+  );
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -165,38 +172,21 @@ const BoardProvider = <
       return;
     }
     const activeItem = data.find((item) => item.id === active.id);
-    const overItem = data.find((item) => item.id === over.id);
     if (!activeItem) {
       return;
     }
-    const activeColumn = activeItem.column;
-    const overColumn =
-      overItem?.column ||
-      columns.find((col) => col.id === over.id)?.id ||
-      columns[0]?.id;
-    if (activeColumn !== overColumn) {
-      let newData = [...data];
-      const activeIndex = newData.findIndex((item) => item.id === active.id);
-      const overIndex = newData.findIndex((item) => item.id === over.id);
-      newData[activeIndex].column = overColumn;
-      newData = arrayMove(newData, activeIndex, overIndex);
-      onDataChange?.(newData);
+    const overItem = data.find((item) => item.id === over.id);
+    if (overItem) {
+      setDragOverBoardColumnId(overItem.column as string);
     }
+
     onDragOver?.(event);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveCardId(null);
+    setDragOverBoardColumnId(null);
     onDragEnd?.(event);
-    const { active, over } = event;
-    if (!over || active.id === over.id) {
-      return;
-    }
-    let newData = [...data];
-    const oldIndex = newData.findIndex((item) => item.id === active.id);
-    const newIndex = newData.findIndex((item) => item.id === over.id);
-    newData = arrayMove(newData, oldIndex, newIndex);
-    onDataChange?.(newData);
   };
 
   return (
@@ -225,14 +215,23 @@ const BoardProvider = <
 export const BoardHeader = ({ className, ...props }: BoardHeaderProps) => (
   <div
     className={cn(
-      'm-0 px-3 h-10 flex-none font-semibold text-sm flex items-center justify-between',
+      'm-0 px-2 h-10 flex-none font-semibold text-sm flex items-center justify-between',
       className,
     )}
     {...props}
   />
 );
 
-export const BoardRoot = ({ id, children, className }: BoardProps) => {
+export const BoardRoot = ({
+  id,
+  children,
+  className,
+  sortBy,
+}: BoardProps & { sortBy?: string }) => {
+  const { boardId } = useContext(BoardContext) as BoardContextProps;
+  const dragOverBoardColumnId = useAtomValue(
+    dragOverBoardColumnIdState(boardId),
+  );
   const { isOver, setNodeRef } = useDroppable({
     id,
   });
@@ -240,13 +239,26 @@ export const BoardRoot = ({ id, children, className }: BoardProps) => {
   return (
     <div
       className={cn(
-        'flex size-full min-h-40 min-w-80 flex-col overflow-hidden transition-all bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-t-md dark:from-primary/40 dark:to-primary/20',
-        isOver && 'shadow-focus',
+        'flex size-full min-h-40 min-w-80 flex-col overflow-hidden transition-all bg-gradient-to-b from-[#e0e7ff] to-[#e0e7ff50] rounded-t-md dark:from-primary/40 dark:to-primary/20 relative',
         className,
       )}
       ref={setNodeRef}
     >
       {children}
+      <AnimatePresence>
+        {(isOver || dragOverBoardColumnId === id) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+            className="absolute inset-0 top-8 rounded-t-md bg-background/30 backdrop-blur-sm flex items-center justify-center"
+          >
+            Board ordered by{' '}
+            <span className="font-medium capitalize ml-1">{sortBy}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

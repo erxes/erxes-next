@@ -147,12 +147,14 @@ const SelectStatusTaskRoot = ({
   teamId,
   variant,
   scope,
+  onValueChange,
 }: {
   value: string;
   id: string;
   teamId: string;
   variant: `${SelectTriggerVariant}`;
   scope?: string;
+  onValueChange?: (value: string) => void;
 }) => {
   const [open, setOpen] = useState(false);
   const { updateTask } = useUpdateTask();
@@ -165,6 +167,7 @@ const SelectStatusTaskRoot = ({
           status: value,
         },
       });
+      onValueChange?.(value);
     }
     setOpen(false);
   };

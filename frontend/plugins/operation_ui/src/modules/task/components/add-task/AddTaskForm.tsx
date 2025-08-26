@@ -17,7 +17,7 @@ import { SelectProject } from '@/task/components/select/SelectProjectTask';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 import { useGetProject } from '@/project/hooks/useGetProject';
 import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
@@ -28,6 +28,7 @@ import { SelectPriority } from '@/operation/components/SelectPriority';
 import { DateSelectTask } from '@/task/components/select/DateSelectTask';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
 import { SelectTeam } from '@/team/components/SelectTeam';
+import { taskCreateDefaultValuesState } from '@/task/states/taskCreateSheetState';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId, projectId } = useParams<{
@@ -40,6 +41,9 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { createTask } = useCreateTask();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const editor = useBlockEditor();
+  const [defaultValuesState, setDefaultValues] = useAtom(
+    taskCreateDefaultValuesState,
+  );
 
   const { project } = useGetProject({
     variables: { _id: projectId || '' },
@@ -50,19 +54,21 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     teamId ? teamId : project?.teamIds?.[0] ? project?.teamIds?.[0] : undefined,
   );
 
+  const defaultValues = {
+    teamId: _teamId || undefined,
+    name: '',
+    status: '',
+    priority: 0,
+    assigneeId: teamId ? undefined : currentUser?._id,
+    projectId: projectId || undefined,
+    startDate: undefined,
+    targetDate: undefined,
+    estimatePoint: 0,
+  };
+
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
-    defaultValues: {
-      teamId: _teamId || undefined,
-      name: '',
-      status: '',
-      priority: 0,
-      assigneeId: teamId ? undefined : currentUser?._id,
-      projectId: projectId || undefined,
-      startDate: undefined,
-      targetDate: undefined,
-      estimatePoint: 0,
-    },
+    defaultValues,
   });
 
   useEffect(() => {
@@ -71,6 +77,14 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
       _setTeamId(teams[0]._id);
     }
   }, [teams, form, teamId, currentUser]);
+
+  useEffect(() => {
+    if (defaultValuesState) {
+      form.reset({ ...defaultValues, ...defaultValuesState });
+      setDefaultValues(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultValuesState, form, setDefaultValues]);
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;

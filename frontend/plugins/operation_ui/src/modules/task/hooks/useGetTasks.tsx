@@ -7,14 +7,13 @@ import {
   validateFetchMore,
   EnumCursorDirection,
   ICursorListResponse,
-  useMultiQueryState,
   useToast,
   isUndefinedOrNull,
+  useNonNullMultiQueryState,
 } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
-import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
 import { currentUserState } from 'ui-modules';
-import { useSetAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
 import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
@@ -32,8 +31,8 @@ export const useTasksVariables = (
   variables?: QueryHookOptions<ICursorListResponse<ITask>>['variables'],
 ) => {
   const { teamId } = useParams();
-  const [{ searchValue, assignee, team, priority, statusType, status }] =
-    useMultiQueryState<{
+  const { searchValue, assignee, team, priority, statusType, status } =
+    useNonNullMultiQueryState<{
       searchValue: string;
       assignee: string;
       team: string;
@@ -52,12 +51,12 @@ export const useTasksVariables = (
       updatedAt: -1,
     },
     cursor,
-    searchValue: searchValue || undefined,
-    assigneeId: assignee || undefined,
+    searchValue: searchValue,
+    assigneeId: assignee,
     teamId: teamId || team,
-    priority: priority || undefined,
-    status: status || undefined,
-    statusType: statusType || undefined,
+    priority: priority,
+    status: status,
+    statusType: statusType,
     ...variables,
     ...(!variables?.teamId &&
       !variables?.userId &&
@@ -71,7 +70,6 @@ export const useTasksVariables = (
 export const useTasks = (
   options?: QueryHookOptions<ICursorListResponse<ITask>>,
 ) => {
-  const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
   const variables = useTasksVariables(options?.variables);
   const { toast } = useToast();
   const { data, loading, fetchMore, subscribeToMore } = useQuery<
@@ -145,11 +143,6 @@ export const useTasks = (
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (isUndefinedOrNull(totalCount)) return;
-    setTaskTotalCount(totalCount);
-  }, [totalCount, setTaskTotalCount]);
-
   const handleFetchMore = ({
     direction,
   }: {
@@ -159,11 +152,10 @@ export const useTasks = (
       return;
     }
 
-    console.log(pageInfo);
-
     fetchMore({
       variables: {
         filter: {
+          ...variables,
           cursor:
             direction === EnumCursorDirection.FORWARD
               ? pageInfo?.endCursor

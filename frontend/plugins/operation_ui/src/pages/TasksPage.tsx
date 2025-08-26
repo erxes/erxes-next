@@ -16,6 +16,7 @@ export const TasksPage = () => {
   const basePath = teamId
     ? `/operation/team/${teamId}/tasks`
     : `/operation/tasks`;
+
   return (
     <>
       <PageHeader>

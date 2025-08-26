@@ -5,7 +5,6 @@ import {
   Filter,
   Popover,
   PopoverScoped,
-  RecordTableInlineCell,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -22,6 +21,7 @@ import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
 import { useDebounce } from 'use-debounce';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
+  SelectOperationContent,
   SelectTriggerOperation,
   SelectTriggerVariant,
 } from '@/operation/components/SelectOperation';
@@ -200,11 +200,6 @@ const SelectAssigneeTaskRoot = ({
     setOpen(false);
   };
 
-  const Content =
-    variant === SelectTriggerVariant.TABLE
-      ? RecordTableInlineCell.Content
-      : Combobox.Content;
-
   return (
     <SelectAssigneeProvider
       value={value}
@@ -215,9 +210,9 @@ const SelectAssigneeTaskRoot = ({
         <SelectTriggerOperation variant={variant === 'card' ? 'icon' : variant}>
           <SelectAssigneeValue variant={variant} />
         </SelectTriggerOperation>
-        <Content>
+        <SelectOperationContent variant={variant}>
           <SelectTeamMemberContent teamIds={teamIds} exclude={false} />
-        </Content>
+        </SelectOperationContent>
       </PopoverScoped>
     </SelectAssigneeProvider>
   );

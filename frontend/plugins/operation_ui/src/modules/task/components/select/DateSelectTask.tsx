@@ -128,6 +128,7 @@ export const DateSelectTrigger = ({
           variant="ghost"
           className="text-muted-foreground font-semibold px-1"
           size="sm"
+          onClick={(e) => e.stopPropagation()}
         >
           {children}
         </Button>
@@ -184,7 +185,7 @@ export const DateSelectTaskRoot = ({
         <DateSelectTrigger>
           <DateSelectValue placeholder="not specified" />
         </DateSelectTrigger>
-        <Content className="w-fit">
+        <Content className="w-fit" onClick={(e) => e.stopPropagation()}>
           <DateSelectContent />
         </Content>
       </PopoverScoped>
