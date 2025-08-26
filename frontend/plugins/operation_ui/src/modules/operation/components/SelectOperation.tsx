@@ -32,7 +32,14 @@ export const SelectTriggerOperation = ({
   if (variant === SelectTriggerVariant.CARD) {
     return (
       <Popover.Trigger asChild>
-        <Badge variant="secondary">{children}</Badge>
+        <Badge
+          variant="secondary"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          {children}
+        </Badge>
       </Popover.Trigger>
     );
   }
@@ -57,7 +64,13 @@ export const SelectTriggerOperation = ({
   if (variant === SelectTriggerVariant.ICON) {
     return (
       <Popover.Trigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           {children}
         </Button>
       </Popover.Trigger>
@@ -86,6 +99,7 @@ export const SelectOperationContent = ({
   return (
     <Combobox.Content
       sideOffset={variant === SelectTriggerVariant.CARD ? 4 : 8}
+      onClick={(e) => e.stopPropagation()}
     >
       {children}
     </Combobox.Content>
