@@ -1,4 +1,4 @@
-import { TeamEstimateTypes } from '~/modules/team/@types/team';
+import { TeamEstimateTypes } from '@/team/@types/team';
 
 export const getTeamEstimateChoises = async (
   estimateType: TeamEstimateTypes,

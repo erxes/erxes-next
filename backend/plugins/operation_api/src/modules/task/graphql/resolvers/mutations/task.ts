@@ -6,30 +6,55 @@ export const taskMutations = {
   createTask: async (
     _parent: undefined,
     params: ITaskUpdate,
-    { models, user }: IContext,
+    { models, user, subdomain }: IContext,
   ) => {
-    params.createdBy = user._id;
-    return models.Task.createTask(params);
+    const task = await models.Task.createTask({
+      doc: params,
+      userId: user._id,
+      subdomain,
+    });
+
+    graphqlPubsub.publish('operationTaskChanged', {
+      operationTaskChanged: {
+        type: 'create',
+        task,
+      },
+    });
+
+    return task;
   },
 
   updateTask: async (
     _parent: undefined,
     params: ITaskUpdate,
-    { models, user }: IContext,
+    { models, user, subdomain }: IContext,
   ) => {
-    const updateTasked = await models.Task.updateTask({
+    const updatedTask = await models.Task.updateTask({
       doc: params,
       userId: user._id,
+      subdomain,
     });
 
-    await graphqlPubsub.publish(`operationTaskChanged:${updateTasked._id}`, {
-      operationTaskChanged: updateTasked,
+    graphqlPubsub.publish('operationTaskChanged', {
+      operationTaskChanged: {
+        type: 'update',
+        task: updatedTask,
+      },
     });
 
-    return updateTasked;
+    return updatedTask;
   },
 
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {
-    return models.Task.removeTask(_id);
+    const deletedTask = await models.Task.removeTask(_id);
+
+    graphqlPubsub.publish('operationTaskChanged', {
+      operationTaskChanged: {
+        type: 'delete',
+        task: deletedTask,
+      },
+    });
+
+    return deletedTask;
   },
 };

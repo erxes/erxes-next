@@ -10,7 +10,10 @@ interface IGetTaskQueryResponse {
 }
 
 interface ITaskChanged {
-  operationTaskChanged: ITask;
+  operationTaskChanged: {
+    type: string;
+    task: ITask;
+  };
 }
 
 export const useGetTask = (options: QueryHookOptions) => {
@@ -22,13 +25,15 @@ export const useGetTask = (options: QueryHookOptions) => {
   useEffect(() => {
     const unsubscribe = subscribeToMore<ITaskChanged>({
       document: TASK_CHANGED,
-      variables: { _id: task?._id },
+      variables: { filter: { _id: task?._id } },
       updateQuery: (prev, { subscriptionData }) => {
-        if (!prev || !subscriptionData.data) return prev;
+        if (!subscriptionData.data) return prev;
 
-        const newData = subscriptionData.data.operationTaskChanged;
+        const newTask = subscriptionData.data.operationTaskChanged.task;
 
-        return { getTask: newData };
+        return {
+          getTask: newTask,
+        };
       },
     });
 

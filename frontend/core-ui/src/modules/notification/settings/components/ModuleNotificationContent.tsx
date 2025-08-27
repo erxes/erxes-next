@@ -1,11 +1,9 @@
 import { NotifTypeRowContent } from '@/notification/settings/components/NotifTypeRowContent';
 import { ModuleNotificationSettingsProps } from '@/notification/settings/types/notificationSettings';
-import { Command } from 'cmdk';
 import { IconComponent, Label } from 'erxes-ui';
 
 export const ModuleNotificationContent = ({
   pluginName,
-  moduleName,
   iconName,
   description,
   types,

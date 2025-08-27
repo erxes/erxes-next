@@ -38,4 +38,5 @@ export interface ITaskDocument extends ITask, Document {
 export interface ITaskFilter extends ICursorPaginateParams, IListParams, ITask {
   userId?: string;
   createdAt?: Date;
+  statusType?: number;
 }

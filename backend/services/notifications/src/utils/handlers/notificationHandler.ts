@@ -5,6 +5,7 @@ import { debugError, debugInfo } from '@/utils/debugger';
 import { EmailService } from '@/utils/email/emailService';
 import { getUserById } from '@/utils/email/emailUtils';
 import { Job } from 'bullmq';
+
 import {
   INotificationConfigDocument,
   INotificationData,
@@ -17,14 +18,12 @@ export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
 ) => {
   const { subdomain, data } = job.data;
-
   const models = await generateModels(subdomain);
   const emailService = new EmailService();
   const results: any[] = [];
 
   // Get default configuration for this notification type
   const defaultConfig = await models.NotificationConfigs.findOne({});
-  console.log({ data });
 
   for (const userId of data?.userIds || []) {
     try {
@@ -40,6 +39,7 @@ export const handleCreateNotification = async (
             message: data.message,
             type: data.type,
             priority: data.priority,
+            metadata: data.metadata,
           },
           userId,
         );
@@ -67,16 +67,16 @@ export const handleCreateNotification = async (
       };
 
       // In-app notification
-      if (notificationSettings.inApp) {
-        notification = await createInAppNotification(
-          subdomain,
-          models,
-          data,
-          userId,
-        );
-        results.push({ userId, inApp: true, notificationId: notification._id });
-        debugInfo(`In-app notification created for user ${userId}`);
-      }
+      // if (notificationSettings.inApp) {
+      notification = await createInAppNotification(
+        subdomain,
+        models,
+        data,
+        userId,
+      );
+      results.push({ userId, inApp: true, notificationId: notification._id });
+      debugInfo(`In-app notification created for user ${userId}`);
+      // }
 
       // Email notification
       if (notificationSettings.email) {
@@ -158,18 +158,20 @@ function shouldSendNotification(
 ): boolean {
   let shouldSend = true;
 
-  if (checkUserNotificationSettings(type, userSettings, data)) {
-    shouldSend = false;
-  }
+  if (userSettings) {
+    if (!isNotificationAllowedUser(type, userSettings, data)) {
+      shouldSend = false;
+    }
 
-  if (checkOrgNotificationConfig(type, defaultConfig, data)) {
-    shouldSend = false;
+    if (!isNotificationAllowedOrg(type, defaultConfig, data)) {
+      shouldSend = false;
+    }
   }
 
   return shouldSend;
 }
 
-function checkUserNotificationSettings(
+function isNotificationAllowedUser(
   type: 'email' | 'inApp',
   userSettings: IUserNotificationSettingsDocument | null,
   data: Extract<INotificationData, { kind: 'user' }>,
@@ -197,24 +199,30 @@ function checkUserNotificationSettings(
   return true;
 }
 
-function checkOrgNotificationConfig(
+function isNotificationAllowedOrg(
   type: 'email' | 'inApp',
   defaultConfig: INotificationConfigDocument | null,
   data: Extract<INotificationData, { kind: 'user' }>,
 ) {
   if (!defaultConfig) return true;
 
+  const {
+    emailNotificationsDisabled,
+    inAppNotificationsDisabled,
+    plugins = {},
+  } = defaultConfig || {};
+
   // Global-level setting
-  if (type === 'email' && defaultConfig.emailNotificationsDisabled)
-    return false;
-  if (type === 'inApp' && defaultConfig.inAppNotificationsDisabled)
-    return false;
+  if (type === 'email' && emailNotificationsDisabled) return false;
+
+  if (type === 'inApp' && inAppNotificationsDisabled) return false;
 
   const [pluginName] = (data?.contentType || '').split(':');
-  const pluginSettings = (defaultConfig.plugins || {})[pluginName];
+  const pluginSettings = plugins[pluginName];
 
   // Plugin-level setting
   if (type === 'email' && pluginSettings?.emailDisabled) return false;
+
   if (type === 'inApp' && pluginSettings?.inAppDisabled) return false;
 
   // Type-level setting
@@ -222,6 +230,7 @@ function checkOrgNotificationConfig(
   const typeSetting = (pluginSettings?.types || {})[typeKey];
 
   if (type === 'email' && typeSetting?.emailDisabled) return false;
+
   if (type === 'inApp' && typeSetting?.inAppDisabled) return false;
 
   return true;

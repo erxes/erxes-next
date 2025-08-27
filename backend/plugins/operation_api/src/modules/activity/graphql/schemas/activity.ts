@@ -23,6 +23,11 @@ export const types = `
         pageInfo: PageInfo
         totalCount: Int,
     }
+
+    type OperationActivitySubscription {
+        type: String
+        activity: OperationActivity
+    }
 `;
 
 const activityFilterParams = `

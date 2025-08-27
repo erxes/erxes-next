@@ -22,6 +22,8 @@ import {
   IActivityModel,
 } from '@/activity/db/models/Activity';
 import { IActivityDocument } from '@/activity/types';
+import { loadCycleClass, ICycleModel } from '@/cycle/db/models/Cycle';
+import { ICycleDocument } from '@/cycle/types';
 
 export interface IModels {
   Task: ITaskModel;
@@ -31,10 +33,12 @@ export interface IModels {
   Project: IProjectModel;
   Note: INoteModel;
   Activity: IActivityModel;
+  Cycle: ICycleModel;
 }
 
 export interface IContext extends IMainContext {
   models: IModels;
+  subdomain: string;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {
@@ -73,6 +77,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Activity = db.model<IActivityDocument, IActivityModel>(
     'operation_activities',
     loadActivityClass(models),
+  );
+
+  models.Cycle = db.model<ICycleDocument, ICycleModel>(
+    'operation_cycles',
+    loadCycleClass(models),
   );
 
   return models;

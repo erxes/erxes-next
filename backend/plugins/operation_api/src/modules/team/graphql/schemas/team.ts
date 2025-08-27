@@ -11,6 +11,7 @@ export const types = `
         estimateType: Int 
         createdAt: Date
         updatedAt: Date
+        cycleEnabled: Boolean
 
         taskCount: Int
         memberCount: Int
@@ -35,7 +36,7 @@ export const queries = `
 
 export const mutations = `
     teamAdd(name: String!, description: String, icon: String!, memberIds: [String]): Team
-    teamUpdate(_id: String!, name: String, description: String, icon: String, memberIds: [String], estimateType: Int): Team
+    teamUpdate(_id: String!, name: String, description: String, icon: String, memberIds: [String], estimateType: Int, cycleEnabled: Boolean): Team
     teamRemove(_id: String!): Team
     teamAddMembers(_id: String!, memberIds: [String]): [TeamMember]
     teamRemoveMember(_id: String!): TeamMember

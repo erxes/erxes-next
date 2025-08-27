@@ -12,7 +12,7 @@ import {
 } from 'erxes-ui';
 import { IconHash } from '@tabler/icons-react';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
-import { useGetEstimateChoiceByTeam } from '~/modules/task/hooks/useGetEstimateChoiceByTeam';
+import { useGetEstimateChoiceByTeam } from '@/task/hooks/useGetEstimateChoiceByTeam';
 
 interface SelectEstimatedPointContextType {
   estimateChoices: IEstimateChoice[];
@@ -166,14 +166,14 @@ export const SelectEstimatedPointInlineCell = ({
   id,
   onValueChange,
   scope,
-  estimateChoices,
+  teamId,
   ...props
 }: {
   value?: number | string;
   id?: string;
   onValueChange?: (value: string | string[]) => void;
   scope?: string;
-  estimateChoices?: IEstimateChoice[];
+  teamId?: string;
 } & Omit<
   React.ComponentProps<typeof SelectEstimatedPointProvider>,
   'children' | 'onValueChange' | 'value' | 'estimateChoices'
@@ -181,7 +181,12 @@ export const SelectEstimatedPointInlineCell = ({
   const { updateTask } = useUpdateTask();
   const [open, setOpen] = useState(false);
 
-  if (!estimateChoices) {
+  const { estimateChoices } = useGetEstimateChoiceByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
+
+  if (estimateChoices?.length === 0) {
     return (
       <div className="text-muted-foreground p-2">Estimate not enabled</div>
     );
@@ -360,11 +365,29 @@ export const SelectEstimatedPointDetail = React.forwardRef<
     placeholder?: string;
     value?: number | string;
     id?: string;
-    estimateChoices?: IEstimateChoice[];
+    teamId?: string;
   }
->(({ className, placeholder, value, id, estimateChoices, ...props }, ref) => {
+>(({ className, placeholder, value, id, teamId, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const { updateTask } = useUpdateTask();
+
+  const { estimateChoices } = useGetEstimateChoiceByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
+
+  if (!estimateChoices || !estimateChoices?.length) {
+    return (
+      <Button
+        variant="secondary"
+        className="h-7 text-muted-foreground"
+        disabled
+      >
+        Estimate not enabled
+      </Button>
+    );
+  }
+
   const stringValue =
     typeof value === 'number' ? value.toString() : value || '';
 
@@ -382,18 +405,6 @@ export const SelectEstimatedPointDetail = React.forwardRef<
     }
     setOpen(false);
   };
-
-  if (!estimateChoices) {
-    return (
-      <Button
-        variant="secondary"
-        className="h-7 text-muted-foreground"
-        disabled
-      >
-        Estimate not enabled
-      </Button>
-    );
-  }
 
   return (
     <SelectEstimatedPointProvider

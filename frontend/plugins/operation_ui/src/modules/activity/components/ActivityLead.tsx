@@ -1,6 +1,6 @@
 import { IActivity } from '@/activity/types';
 import { Badge } from 'erxes-ui';
-import { CustomersInline } from 'ui-modules';
+import { MembersInline } from 'ui-modules';
 
 export const ActivityLead = ({
   metadata,
@@ -16,14 +16,14 @@ export const ActivityLead = ({
         <>
           from
           <Badge variant="secondary" className="flex-none">
-            <CustomersInline customerIds={[previousValue]} />
+            <MembersInline memberIds={[previousValue]} />
           </Badge>
         </>
       )}
       to
       {newValue && (
         <Badge variant="secondary" className="flex-none">
-          <CustomersInline customerIds={[newValue]} />
+          <MembersInline memberIds={[newValue]} />
         </Badge>
       )}
     </div>
