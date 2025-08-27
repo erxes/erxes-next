@@ -1,5 +1,5 @@
 import { cn } from 'erxes-ui/lib';
-import { RecordTableCell } from '../record-table-cell/components/RecordTableCell';
+import { RecordTableCell } from './RecordTableCell';
 import { useRecordTable } from './RecordTableProvider';
 import { RecordTableRow } from './RecordTableRow';
 import { flexRender } from '@tanstack/react-table';

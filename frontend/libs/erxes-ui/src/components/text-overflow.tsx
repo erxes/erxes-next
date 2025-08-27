@@ -23,13 +23,22 @@ export const TextOverflowTooltip = forwardRef<
       }
     };
 
-    checkOverflow();
-    window.addEventListener('resize', checkOverflow);
-    return () => window.removeEventListener('resize', checkOverflow);
+    const timeoutId = setTimeout(checkOverflow, 100);
+
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      setTimeout(checkOverflow, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [value, textRef]);
 
   return (
-    <Tooltip.Provider>
+    <Tooltip.Provider delayDuration={100}>
       <Tooltip>
         <Tooltip.Trigger asChild>
           <span ref={textRef} className={cn('truncate w-full', className)}>

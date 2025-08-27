@@ -1,3 +1,4 @@
+import { PROJECT_PRIORITIES_OPTIONS } from '@/operation/constants/priorityLabels';
 import { Badge, cn } from 'erxes-ui';
 
 import React from 'react';
@@ -54,7 +55,7 @@ export const PriorityTitle = React.forwardRef<
   HTMLSpanElement,
   React.ComponentProps<'span'> & { priority: number }
 >(({ priority, className, ...props }, ref) => {
-  const text = ['No Priority', 'Minor', 'Medium', 'High', 'Critical'][priority];
+  const text = PROJECT_PRIORITIES_OPTIONS[priority];
   return (
     <span
       ref={ref}

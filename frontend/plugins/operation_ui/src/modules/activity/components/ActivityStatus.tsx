@@ -4,8 +4,8 @@ import { ITask } from '@/task/types';
 import { IProject } from '@/project/types';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
-import { PROJECT_STATUS_OPTIONS } from '@/project/constants';
 import { Badge } from 'erxes-ui';
+import { PROJECT_STATUS_OPTIONS } from '@/operation/constants/statusConstants';
 
 const isTask = (content: ITask | IProject): content is ITask => {
   return 'teamId' in content;

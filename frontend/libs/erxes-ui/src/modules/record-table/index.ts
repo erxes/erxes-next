@@ -7,7 +7,7 @@ import {
 } from './components/RecordTableProvider';
 import { RecordTableRoot } from './components/RecordTableRoot';
 import { RecordTableRowSkeleton } from './components/RecordTableRowSkeleton';
-import { RecordTableCell } from './record-table-cell/components/RecordTableCell';
+import { RecordTableCell } from './components/RecordTableCell';
 import { RecordTableInlineHead } from './components/RecordTableInlineHead';
 import { Table } from 'erxes-ui/components';
 import { RecordTableRowList } from './components/RecordTableRowList';

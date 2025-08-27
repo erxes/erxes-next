@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecordTableHotkey } from '../contexts/RecordTableHotkeyContext';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from 'radix-ui';
 import { mergeRefs } from 'react-merge-refs';
 import { cn } from 'erxes-ui/lib';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'erxes-ui/types';
 
 export const RecordTableHotKeyControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot> & {
+  React.ElementRef<typeof Slot.Root>,
+  React.ComponentPropsWithoutRef<typeof Slot.Root> & {
     rowId: string;
     rowIndex: number;
   }
@@ -48,7 +48,7 @@ export const RecordTableHotKeyControl = React.forwardRef<
   }, [activeCell]);
 
   return (
-    <Slot
+    <Slot.Root
       ref={mergeRefs([ref, controlRef])}
       {...props}
       onClickCapture={() => {
