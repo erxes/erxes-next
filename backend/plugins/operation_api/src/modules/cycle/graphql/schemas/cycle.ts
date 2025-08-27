@@ -33,7 +33,7 @@ export const types = `
 export const queries = `
     getCycle(_id: String): Cycle
     getCycles(teamId: String, ${GQL_CURSOR_PARAM_DEFS}): [CycleListResponse]
-    getCyclesActive(teamId: String,  ${GQL_CURSOR_PARAM_DEFS}): [CycleListResponse]
+    getCyclesActive(teamId: String,  ${GQL_CURSOR_PARAM_DEFS}): [Cycle]
 `;
 
 export const mutations = `
