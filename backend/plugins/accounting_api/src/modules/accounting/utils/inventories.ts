@@ -43,8 +43,8 @@ const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => 
     date: { $gte: beginDate, $lte: adjustInventory.successDate },
     'details.productId': { $exists: true, $ne: '' },
     $or: [
-      { createdAt: { $gte: adjustInventory.checkedDate } },
-      { updatedAt: { $gte: adjustInventory.checkedDate } },
+      { updatedAt: { $exists: false }, createdAt: { $gte: adjustInventory.checkedAt } },
+      { updatedAt: { $gte: adjustInventory.checkedAt } },
     ]
   }).sort({ date: 1 }).lean();
 
@@ -414,32 +414,33 @@ export const adjustRunning = async (models: IModels, user: IUserDocument, { adju
       graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
         accountingAdjustInventoryChanged: {
           ...adjustInventory,
-          checkedDate: currentDate,
+          successDate: currentDate,
+          checkedAt: currentDate,
         },
       });
     } catch (e) {
       const now = new Date();
-      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedDate: now } });
+      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedAt: now } });
       // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
       graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
         accountingAdjustInventoryChanged: {
           ...adjustInventory,
           error: e.message,
-          checkedDate: now
+          checkedAt: now
         },
       });
       break;
     }
 
     const now = new Date();
-    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedDate: now } });
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedAt: now } });
     // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
 
     graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
       accountingAdjustInventoryChanged: {
         ...adjustInventory,
         successDate: nextDate,
-        checkedDate: now
+        checkedAt: now
       },
     });
     currentDate = nextDate;

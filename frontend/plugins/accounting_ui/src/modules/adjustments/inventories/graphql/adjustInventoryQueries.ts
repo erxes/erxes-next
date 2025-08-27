@@ -14,7 +14,7 @@ export const adjustInventoryFields = `
   warning
   beginDate
   successDate
-  checkedDate
+  checkedAt
 `;
 
 export const adjustInvDetailFields = `

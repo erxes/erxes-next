@@ -41,8 +41,8 @@ export const adjustInventoriesSchema = schemaWrapper(
     error: { type: String, optional: true, label: 'error' },
     warning: { type: String, optional: true, label: 'warning' },
     beginDate: { type: Date, label: 'date' }, // өмнөх хаалтын огноо эсвэл анхны гүйлгээний огноо
-    checkedDate: { type: Date, label: 'date' }, // 
-    successDate: { type: Date, label: 'current date' }, // хамгийн сүүлийн амжилттай ажилласан огноо, зорилго date тэй тэнцүү байх
+    checkedAt: { type: Date, label: 'date' }, // хамгийн сүүлд шалгасан огноо, modifiedAt ийн түвшнийх буюу системийн огноогоор
+    successDate: { type: Date, label: 'current date' }, // хамгийн сүүлийн амжилттай ажилласан огноо, зорилго date тэй тэнцүү байх, tr.date ийн түвшнийх
     createdBy: { type: String, label: 'Created user' },
     modifiedBy: { type: String, optional: true, label: 'Modified user' },
     createdAt: { type: Date, default: new Date(), label: 'Created at' }, // үүссэн огноо

@@ -40,7 +40,7 @@ export interface IAdjustInventory extends ICommonAdjusting {
   warning?: string;
   beginDate?: Date;
   successDate?: Date;
-  checkedDate?: Date;
+  checkedAt?: Date;
 
   createdAt?: Date;
   createdBy?: string;
