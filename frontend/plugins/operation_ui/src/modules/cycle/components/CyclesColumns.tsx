@@ -1,24 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useNavigate, useParams } from 'react-router';
-import { useUpdateTask } from '@/task/hooks/useUpdateTask';
-import {
-  IconAlertSquareRounded,
-  IconClipboard,
-  IconCalendarFilled,
-  IconHash,
-  IconLabelFilled,
-  IconProgressCheck,
-  IconUser,
-  IconUsersGroup,
-} from '@tabler/icons-react';
+import { IconCalendarFilled, IconLabelFilled } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import {
-  SelectStatus,
-  SelectAssignee,
-  SelectTeam,
-  DateSelect,
-} from '@/task/components/select';
-import { SelectProject } from '@/task/components/select/SelectProject';
+import { DateSelect } from '@/cycle/components/DateSelect';
 import {
   Badge,
   Input,
@@ -28,9 +12,10 @@ import {
 } from 'erxes-ui';
 import { ICycle } from '@/cycle/types';
 import { useState } from 'react';
-import { ITeam } from '@/team/types';
-import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
+import { CycleHotKeyScope } from '@/cycle/CycleHotkeyScope';
+import { useUpdateCycle } from '@/cycle/hooks/useUpdateCycle';
 import clsx from 'clsx';
+import { CircularProgressBar } from '@/cycle/components/CircularProgressBar';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICycle>;
 export const cyclesColumns: ColumnDef<ICycle>[] = [
@@ -44,14 +29,14 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     cell: ({ cell }) => {
       const name = cell.getValue() as string;
       const [value, setValue] = useState(name);
-      const { updateTask } = useUpdateTask();
+      const { updateCycle } = useUpdateCycle();
       const { teamId, projectId } = useParams();
       const navigate = useNavigate();
 
       const handleUpdate = () => {
         if (value !== name) {
-          updateTask({
-            variables: { _id: cell.row.original._id, name: value },
+          updateCycle({
+            variables: { input: { _id: cell.row.original._id, name: value } },
           });
         }
       };
@@ -70,7 +55,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
             }
           }}
           scope={clsx(
-            TaskHotKeyScope.TaskTableCell,
+            CycleHotKeyScope.CycleTableCell,
             cell.row.original._id,
             'Name',
           )}
@@ -104,143 +89,56 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     },
     size: 240,
   },
-  //   {
-  //     id: 'priority',
-  //     accessorKey: 'priority',
-  //     header: () => (
-  //       <RecordTable.InlineHead label="Priority" icon={IconAlertSquareRounded} />
-  //     ),
-  //     cell: ({ cell }) => {
-  //       return (
-  //         <SelectTaskPriority
-  //           taskId={cell.row.original._id}
-  //           value={cell.row.original.priority}
-  //           inInlineCell
-  //         />
-  //       );
-  //     },
-  //     size: 170,
-  //   },
-  //   {
-  //     id: 'status',
-  //     accessorKey: 'status',
-  //     header: () => (
-  //       <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
-  //     ),
-  //     cell: ({ cell }) => {
-  //       return (
-  //         <SelectStatus.InlineCell
-  //           teamId={cell.row.original.teamId}
-  //           value={cell.row.original.status || '0'}
-  //           id={cell.row.original._id}
-  //         />
-  //       );
-  //     },
-  //     size: 170,
-  //   },
-  //   {
-  //     id: 'assigneeId',
-  //     header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
-  //     cell: ({ cell }) => {
-  //       return (
-  //         <SelectAssignee.InlineCell
-  //           id={cell.row.original._id}
-  //           value={cell.row.original.assigneeId}
-  //           teamIds={[cell.row.original.teamId]}
-  //         />
-  //       );
-  //     },
-  //     size: 240,
-  //   },
-  //   {
-  //     id: 'estimatePoint',
-  //     accessorKey: 'estimatePoint',
-  //     header: () => (
-  //       <RecordTable.InlineHead label="Estimate Point" icon={IconHash} />
-  //     ),
-  //     cell: ({ cell }) => {
-  //       return (
-  //         <SelectEstimatedPoint.InlineCell
-  //           value={cell.row.original.estimatePoint || 0}
-  //           id={cell.row.original._id}
-  //           teamId={cell.row.original.teamId}
-  //         />
-  //       );
-  //     },
-  //     size: 240,
-  //   },
-  //   {
-  //     id: 'project',
-  //     accessorKey: 'project',
-  //     header: () => (
-  //       <RecordTable.InlineHead label="Project" icon={IconClipboard} />
-  //     ),
-  //     cell: ({ cell }) => {
-  //       const { updateTask } = useUpdateTask();
-
-  //       return (
-  //         <SelectProject.InlineCell
-  //           value={cell.row.original.projectId || ''}
-  //           onValueChange={(value) => {
-  //             updateTask({
-  //               variables: { _id: cell.row.original._id, projectId: value },
-  //             });
-  //           }}
-  //         />
-  //       );
-  //     },
-  //     size: 240,
-  //   },
-
-  //   {
-  //     id: 'teamId',
-  //     header: () => <RecordTable.InlineHead label="Team" icon={IconUsersGroup} />,
-  //     cell: ({ cell }) => {
-  //       return (
-  //         <SelectTeam.InlineCell
-  //           id={cell.row.original._id}
-  //           value={cell.row.original.teamId}
-  //           teams={_teams || []}
-  //           mode="single"
-  //         />
-  //       );
-  //     },
-  //     size: 240,
-  //   },
-  //   {
-  //     id: 'startDate',
-  //     accessorKey: 'startDate',
-  //     header: () => (
-  //       <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
-  //     ),
-  //     cell: ({ cell }) => {
-  //       const startDate = cell.getValue() as string;
-  //       return (
-  //         <DateSelect.InlineCell
-  //           type="start"
-  //           value={startDate ? new Date(startDate) : undefined}
-  //           id={cell.row.original._id}
-  //         />
-  //       );
-  //     },
-  //     size: 240,
-  //   },
-  //   {
-  //     id: 'targetDate',
-  //     accessorKey: 'targetDate',
-  //     header: () => (
-  //       <RecordTable.InlineHead label="Target Date" icon={IconCalendarFilled} />
-  //     ),
-  //     cell: ({ cell }) => {
-  //       const targetDate = cell.getValue() as string;
-  //       return (
-  //         <DateSelect.InlineCell
-  //           type="target"
-  //           value={targetDate ? new Date(targetDate) : undefined}
-  //           id={cell.row.original._id}
-  //         />
-  //       );
-  //     },
-  //     size: 240,
-  //   },
+  {
+    id: 'startDate',
+    accessorKey: 'startDate',
+    header: () => (
+      <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
+    ),
+    cell: ({ cell }) => {
+      const startDate = cell.getValue() as string;
+      console.log(startDate);
+      return (
+        <DateSelect.InlineCell
+          type="start"
+          value={startDate ? new Date(startDate) : undefined}
+          id={cell.row.original._id}
+        />
+      );
+    },
+    size: 240,
+  },
+  {
+    id: 'endDate',
+    accessorKey: 'endDate',
+    header: () => (
+      <RecordTable.InlineHead label="End Date" icon={IconCalendarFilled} />
+    ),
+    cell: ({ cell }) => {
+      const { endDate, startDate } = cell.row.original;
+      return (
+        <DateSelect.InlineCell
+          startDate={startDate ? new Date(startDate) : undefined}
+          type="end"
+          value={endDate ? new Date(endDate) : undefined}
+          id={cell.row.original._id}
+        />
+      );
+    },
+    size: 240,
+  },
+  {
+    id: 'donePercent',
+    accessorKey: 'donePercent',
+    header: () => (
+      <RecordTable.InlineHead label="End Date" icon={IconCalendarFilled} />
+    ),
+    cell: ({ cell }) => {
+      const { donePercent } = cell.row.original;
+      return (
+        <CircularProgressBar percentage={50} />
+      );
+    },
+    size: 240,
+  },
 ];

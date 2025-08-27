@@ -6,7 +6,7 @@ import {
 } from 'erxes-ui';
 
 export const GET_CYCLES = gql`
-query GetCycles($teamId: String, $orderBy: JSON, $sortMode: String, $aggregationPipeline: [JSON] ${GQL_CURSOR_PARAM_DEFS}) {
+query GetCyclesRecordTable($teamId: String, $orderBy: JSON, $sortMode: String, $aggregationPipeline: [JSON] ${GQL_CURSOR_PARAM_DEFS}) {
   getCycles(teamId: $teamId, orderBy: $orderBy, sortMode: $sortMode, aggregationPipeline: $aggregationPipeline ${GQL_CURSOR_PARAMS}) {
     list {
       _id

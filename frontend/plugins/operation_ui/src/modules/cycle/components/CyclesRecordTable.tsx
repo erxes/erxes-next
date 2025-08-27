@@ -1,19 +1,12 @@
-import { tasksColumns } from '@/task/components/TasksColumn';
-import { PageSubHeader, RecordTable } from 'erxes-ui';
+import { RecordTable } from 'erxes-ui';
 import { useGetCycles } from '@/cycle/hooks/useGetCycles';
-import { currentUserState } from 'ui-modules';
-import { useAtomValue } from 'jotai';
 import { CYCLES_CURSOR_SESSION_KEY } from '@/cycle/constants';
 import { cyclesColumns } from '@/cycle/components/CyclesColumns';
 
 export const CyclesRecordTable = () => {
-  const currentUser = useAtomValue(currentUserState);
-
   const { cycles, handleFetchMore, pageInfo, loading } = useGetCycles();
 
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
-
-
 
   return (
     <div className="flex flex-col overflow-hidden h-full">

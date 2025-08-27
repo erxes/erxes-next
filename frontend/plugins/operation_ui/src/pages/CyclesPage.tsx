@@ -1,34 +1,35 @@
-import { Breadcrumb } from 'erxes-ui';
-import { useParams } from 'react-router-dom';
+import { Breadcrumb, Button } from 'erxes-ui';
+import { Link, useParams } from 'react-router-dom';
 import { PageHeader } from 'ui-modules';
-import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 import { Separator } from 'erxes-ui';
 import { CyclesRecordTable } from '@/cycle/components/CyclesRecordTable';
+import { AddCycleSheet } from '@/cycle/components/add-cycle/AddCycle';
+import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
+import { IconCalendarRepeat } from '@tabler/icons-react';
 
 export const CyclesPage = () => {
-  //   const { teamId } = useParams();
-
-  //   // Determine base path
-  //   const basePath = teamId
-  //     ? `/operation/team/${teamId}/tasks`
-  //     : `/operation/tasks`;
+  const { teamId } = useParams();
+  const link = `/operation/team/${teamId}/cycles`;
   return (
     <>
       <PageHeader>
-        {/* <PageHeader.Start>
+        <PageHeader.Start>
           <Breadcrumb>
             <Breadcrumb.List className="gap-1">
-              {teamId && (
-                <>
-                  <TeamBreadCrumb />
-                  <Separator.Inline />
-                </>
-              )}
-              <TaskBreadCrump link={basePath} />
+              <TeamBreadCrumb />
+              <Separator.Inline />
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to={link}>
+                    <IconCalendarRepeat />
+                    Cycles
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
             </Breadcrumb.List>
           </Breadcrumb>
-        </PageHeader.Start> */}
-        <AddTaskSheet />
+        </PageHeader.Start>
+        <AddCycleSheet />
       </PageHeader>
       <CyclesRecordTable />
     </>

@@ -1,3 +1,4 @@
+
 import { CYCLES_CURSOR_SESSION_KEY } from '@/cycle/constants';
 import { GET_CYCLES } from '@/cycle/graphql/queries/getCycles';
 import { useQuery, QueryHookOptions } from '@apollo/client';
@@ -40,7 +41,6 @@ export const useGetCycles = (
   options?: QueryHookOptions<ICursorListResponse<ICycle>>,
 ) => {
   const variables = useCyclesVariables(options?.variables);
-  console.log(variables)
   const { toast } = useToast();
   const { data, loading, error, fetchMore } = useQuery<
     ICursorListResponse<ICycle>
@@ -63,7 +63,6 @@ export const useGetCycles = (
     setCycleTotalCount(totalCount);
   }, [totalCount, setCycleTotalCount]);
 
- 
   const handleFetchMore = ({
     direction,
   }: {
