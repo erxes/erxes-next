@@ -23,3 +23,24 @@ export interface MccCode {
   value: string;
   label: string;
 }
+
+export interface IInvoice {
+  _id: string;
+  amount: number;
+  contentType: string;
+  contentTypeId: string;
+  createdAt: Date;
+  currency: string;
+  customer: string;
+  customerId: string;
+  customerType: string;
+  description: string;
+  invoiceNumber: string;
+  status: string;
+  transactions: {
+    amount: number;
+    createdAt: Date;
+    status: string;
+    paymentKind: string;
+  }[];
+}

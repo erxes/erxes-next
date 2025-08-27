@@ -29,3 +29,30 @@ export const DISTRICTS = gql`
     qpayGetDistricts(cityCode: $cityCode)
   }
 `;
+
+export const INVOICES = gql`
+query Invoices($kind: String, $status: String, $searchValue: String, $contentType: String, $contentTypeId: String, $limit: Int, $cursor: String, $direction: CURSOR_DIRECTION) {
+  invoices(kind: $kind, status: $status, searchValue: $searchValue, contentType: $contentType, contentTypeId: $contentTypeId, limit: $limit, cursor: $cursor, direction: $direction) {
+    list {
+      _id
+      amount
+      contentType
+      contentTypeId
+      createdAt
+      currency
+      customer
+      customerId
+      customerType
+      description
+      invoiceNumber
+      status
+      transactions {
+        amount
+        createdAt
+        status
+        paymentKind
+      }
+    }
+  }
+}
+`;

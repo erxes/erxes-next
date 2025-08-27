@@ -1,14 +1,14 @@
 import { RecordTable } from 'erxes-ui';
-import { invoiceColumns } from './InvoiceColumns';
+import { invoicesColumns } from './InvoiceColumns';
 
-import { useBrands } from '../hooks/use-invoices';
+import { useInvoices } from '../hooks/use-invoices';
 
 export function InvoiceRecordTable() {
   const { invoices, loading } = useInvoices();
   return (
     <RecordTable.Provider
       data={invoices || []}
-      columns={invoiceColumns}
+      columns={invoicesColumns}
       className="m-3"
     >
       <RecordTable.Scroll>
