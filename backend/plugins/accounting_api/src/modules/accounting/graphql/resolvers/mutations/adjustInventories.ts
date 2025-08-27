@@ -1,36 +1,7 @@
-import { getPureDate, graphqlPubsub } from 'erxes-api-shared/utils';
-import { IModels, IContext } from '~/connectionResolvers';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
 import { IAdjustInventory, ADJ_INV_STATUSES } from '@/accounting/@types/adjustInventory';
-import { TR_STATUSES } from '@/accounting/@types/constants';
-import { adjustRunning } from '../../../utils/inventories';
-
-const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {
-  const date = getPureDate(adjustInventory.date);
-  const afterAdjInvs = await models.AdjustInventories.find({ date: { $gte: date }, status: ADJ_INV_STATUSES.PUBLISH }).lean();
-
-  if (afterAdjInvs.length) {
-    throw new Error('Үүнээс хойш батлагдсан тохируулга байгаа учир энэ огноонд тохируулга үүсгэх шаардлагагүй.');
-  }
-
-  const lowBeforeAdjInvs = await models.AdjustInventories.find({ date: { $lt: date }, status: { $ne: ADJ_INV_STATUSES.PUBLISH } }).lean();
-  if (lowBeforeAdjInvs.length) {
-    throw new Error('Энэнээс урагш дутуу гүйцэтгэлтэй тохируулга байна. Түүнийг устгах эсвэл гүйцээж байж энэ огноонд тохируулга үүсгэнэ үү.');
-  }
-
-  const beforeAdjInv = await models.AdjustInventories.findOne({ date: { $lt: date }, status: ADJ_INV_STATUSES.PUBLISH }).sort({ date: -1 }).lean();
-
-  let beginDate = beforeAdjInv?.date;
-  if (!beginDate) {
-    const firstTr = await models.Transactions.findOne({ date: { $lte: date }, 'details.productId': { $exists: true, $ne: '' }, status: { $in: TR_STATUSES.ACTIVE } }).sort({ date: 1 }).lean();
-    beginDate = firstTr?.date;
-  }
-
-  if (!beginDate) {
-    throw new Error('ҮҮнээс урагш гүйлгээ ч алга, тохируулга ч алга. Тиймээс тохируулах шаардлагагүй.');
-  }
-
-  return { beginDate, beforeAdjInv };
-}
+import { adjustRunning, checkValidDate } from '../../../utils/inventories';
 
 const adjustInventoryMutations = {
   async adjustInventoryAdd(
@@ -52,6 +23,24 @@ const adjustInventoryMutations = {
     if (adjusting.status !== ADJ_INV_STATUSES.COMPLETE) {
       throw new Error('This adjusting cannot be published yet.');
     }
+
+    const betweenModifiedTrs = await models.Transactions.find({
+
+    }).lean()
+
+    if (betweenModifiedTrs.length) {
+      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.PROCESS, modifiedBy: '' } });
+
+      graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+        accountingAdjustInventoryChanged: {
+          ...adjusting,
+          status: ADJ_INV_STATUSES.PROCESS,
+          modifiedBy: ''
+        },
+      });
+      throw new Error('This adjusting cannot be published yet. Cause: modified some transactions');
+    }
+
     await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.PUBLISH, modifiedBy: user._id } });
 
     graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
@@ -86,7 +75,7 @@ const adjustInventoryMutations = {
     return await models.AdjustInventories.removeAdjustInventory(adjustId);
   },
 
-  async adjustInventoryRun(_root, { adjustId }: { adjustId: string }, { models, user, subdomain }: IContext) {
+  async adjustInventoryRun(_root, { adjustId }: { adjustId: string }, { models, user }: IContext) {
     const adjustInventory = await models.AdjustInventories.getAdjustInventory(adjustId);
 
     const { beginDate, beforeAdjInv } = await checkValidDate(models, adjustInventory);
@@ -101,7 +90,7 @@ const adjustInventoryMutations = {
       },
     });
 
-    adjustRunning(models, adjustInventory, beginDate, beforeAdjInv);
+    adjustRunning(models, user, { adjustInventory, beginDate, beforeAdjInv });
 
     return await models.AdjustInventories.getAdjustInventory(adjustId);
   }

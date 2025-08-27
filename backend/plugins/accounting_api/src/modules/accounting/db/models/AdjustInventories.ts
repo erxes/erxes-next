@@ -29,13 +29,12 @@ export const loadAdjustInventoriesClass = (models: IModels, subdomain: string) =
     }
 
     public static async updateAdjustInventory(_id: string, doc: IAdjustInventory) {
-      const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
+      await models.AdjustInventories.getAdjustInventory(_id);
       await models.AdjustInventories.updateOne({ _id }, { $set: { ...doc, updatedAt: new Date() } });
       return await models.AdjustInventories.getAdjustInventory(_id);
     }
 
     public static async removeAdjustInventory(_id: string) {
-      
       const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
       if (![ADJ_INV_STATUSES.DRAFT, ADJ_INV_STATUSES.PROCESS].includes(adjusting.status)) {
         throw new Error('this adjusting cannot be delete yet, it has not been draft or cancel.');
@@ -115,6 +114,10 @@ export const loadAdjustInvDetailsClass = (models: IModels, subdomain: string) =>
     }
 
     public static async cleanAdjustInvDetails({ adjustId }: { adjustId: string }) {
+      await models.AdjustInvDetails.deleteMany({ adjustId, remainder: { $eq: 0 }, cost: { $eq: 0 } });
+    }
+
+    public static async cacheAdjustInvDetails({ adjustId }: { adjustId: string }) {
       await models.AdjustInvDetails.deleteMany({ adjustId, remainder: { $eq: 0 }, cost: { $eq: 0 } });
     }
 

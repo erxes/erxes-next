@@ -1,6 +1,14 @@
 import { Document } from 'mongoose';
 import { ICommonAdjusting } from './commonAdjusting';
 
+interface ICommonAdjInvDetail {
+  remainder: number;
+  cost: number;
+  unitCost: number;
+  soonInCount?: number;
+  soonOutCount?: number;
+}
+
 export interface IAdjustInvDetailParams {
   productId: string;
   accountId: string;
@@ -12,16 +20,10 @@ export interface IAdjustInvDetailParamsId extends IAdjustInvDetailParams {
   adjustId: string;
 }
 
-export interface IAdjustInvDetail extends IAdjustInvDetailParamsId {
-  remainder: number;
-  cost: number;
-  unitCost: number;
-  soonInCount?: number;
-  soonOutCount?: number;
-
+export interface IAdjustInvDetail extends IAdjustInvDetailParamsId, ICommonAdjInvDetail {
   error?: string;
   warning?: string;
-  byDate?: any;
+  infoPerDate?: ICommonAdjInvDetail[];
 }
 
 export interface IAdjustInvDetailDocument extends IAdjustInvDetail, Document {

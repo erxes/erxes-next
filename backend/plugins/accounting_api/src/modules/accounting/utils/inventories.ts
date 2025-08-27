@@ -1,8 +1,74 @@
 import { IModels } from "~/connectionResolvers";
-import { ADJ_INV_STATUSES, IAdjustInvDetailParams } from "../@types/adjustInventory";
+import { ADJ_INV_STATUSES, IAdjustInvDetailParams, IAdjustInventory, IAdjustInventoryDocument } from "../@types/adjustInventory";
 import { JOURNALS, TR_STATUSES } from "../@types/constants";
 import { ITransactionDocument, ITrDetail } from "../@types/transaction";
-import { fixNum, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
+import { fixNum, getPureDate, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
+import { IUserDocument } from "erxes-api-shared/core-types";
+
+export const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {
+  const date = getPureDate(adjustInventory.date);
+  const afterAdjInvs = await models.AdjustInventories.find({ date: { $gte: date }, status: ADJ_INV_STATUSES.PUBLISH }).lean();
+
+  if (afterAdjInvs.length) {
+    throw new Error('Үүнээс хойш батлагдсан тохируулга байгаа учир энэ огноонд тохируулга үүсгэх шаардлагагүй.');
+  }
+
+  const lowBeforeAdjInvs = await models.AdjustInventories.find({ date: { $lt: date }, status: { $ne: ADJ_INV_STATUSES.PUBLISH } }).lean();
+  if (lowBeforeAdjInvs.length) {
+    throw new Error('Энэнээс урагш дутуу гүйцэтгэлтэй тохируулга байна. Түүнийг устгах эсвэл гүйцээж байж энэ огноонд тохируулга үүсгэнэ үү.');
+  }
+
+  const beforeAdjInv = await models.AdjustInventories.findOne({ date: { $lt: date }, status: ADJ_INV_STATUSES.PUBLISH }).sort({ date: -1 }).lean();
+
+  let beginDate = beforeAdjInv?.date;
+  if (!beginDate) {
+    const firstTr = await models.Transactions.findOne({ date: { $lte: date }, 'details.productId': { $exists: true, $ne: '' }, status: { $in: TR_STATUSES.ACTIVE } }).sort({ date: 1 }).lean();
+    beginDate = firstTr?.date;
+  }
+
+  if (!beginDate) {
+    throw new Error('Үүнээс урагш гүйлгээ ч алга, тохируулга ч алга. Тиймээс тохируулах шаардлагагүй.');
+  }
+
+  return { beginDate, beforeAdjInv };
+}
+
+const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => {
+  if (!adjustInventory?.successDate) {
+    return beginDate;
+  }
+
+  // yavaandaa logoos delete iig mun shalgah yum baina
+  const betweenModifiedFirstTr = await models.Transactions.findOne({
+    date: { $gte: beginDate, $lte: adjustInventory.successDate },
+    'details.productId': { $exists: true, $ne: '' },
+    $or: [
+      { createdAt: { $gte: adjustInventory.checkedDate } },
+      { updatedAt: { $gte: adjustInventory.checkedDate } },
+    ]
+  }).sort({ date: 1 }).lean();
+
+  if (betweenModifiedFirstTr) {
+    return betweenModifiedFirstTr.date;
+  }
+
+  return adjustInventory.successDate;
+}
+
+const checkPrepare = async (models: IModels, adjustInventory: IAdjustInventoryDocument, beforeAdjInv?: IAdjustInventoryDocument) => {
+  const detailsCount = await models.AdjustInvDetails.countDocuments({ adjustId: adjustInventory._id })
+
+  // first time
+  if (!detailsCount) {
+    if (beforeAdjInv?._id) {
+      await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId: adjustInventory._id });
+    }
+    return;
+  }
+
+
+  return;
+}
 
 const calcTrs = async (models: IModels, {
   adjustId, aggregateTrs, multiplier = 1
@@ -317,29 +383,7 @@ const fixInvTrs = async (models: IModels, {
   await fixOutTrs(models, { adjustId, outAggrs })
 }
 
-const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => {
-  if (!adjustInventory?.successDate) {
-    return beginDate;
-  }
-
-  // yavaandaa logoos delete iig mun shalgah yum baina
-  const betweenModifiedFirstTr = await models.Transactions.findOne({
-    date: { $gte: beginDate, $lte: adjustInventory.successDate },
-    'details.productId': { $exists: true, $ne: '' },
-    $or: [
-      { createdAt: { $gte: adjustInventory.checkedDate } },
-      { updatedAt: { $gte: adjustInventory.checkedDate } },
-    ]
-  }).sort({ date: 1 }).lean();
-
-  if (betweenModifiedFirstTr) {
-    return betweenModifiedFirstTr.date;
-  }
-
-  return adjustInventory.successDate;
-}
-
-export const adjustRunning = async (models, adjustInventory, beginDate, beforeAdjInv) => {
+export const adjustRunning = async (models: IModels, user: IUserDocument, { adjustInventory, beginDate, beforeAdjInv }: { adjustInventory: IAdjustInventoryDocument, beginDate: Date, beforeAdjInv?: IAdjustInventoryDocument | null }) => {
   let currentDate = await recheckValidDate(models, adjustInventory, beginDate);
   const date = adjustInventory.date;
   const adjustId = adjustInventory._id;
@@ -377,17 +421,13 @@ export const adjustRunning = async (models, adjustInventory, beginDate, beforeAd
       const now = new Date();
       await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedDate: now } });
       // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
-      // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
-      //   accountingsAdjustInventoriesRunner: {
-      //     userId: user._id,
-      //     adjustId,
-      //     data: {
-      //       ...adjustInventory,
-      //       checkedDate: now,
-      //       error: e.message,
-      //     }
-      //   }
-      // });
+      graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+        accountingAdjustInventoryChanged: {
+          ...adjustInventory,
+          error: e.message,
+          checkedDate: now
+        },
+      });
       break;
     }
 
@@ -395,17 +435,13 @@ export const adjustRunning = async (models, adjustInventory, beginDate, beforeAd
     await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedDate: now } });
     // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
 
-    // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
-    //   accountingsAdjustInventoriesRunner: {
-    //     userId: user._id,
-    //     adjustId,
-    //     data: {
-    //       ...adjustInventory,
-    //       successDate: currentDate,
-    //       lastDate: now,
-    //     }
-    //   }
-    // });
+    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+      accountingAdjustInventoryChanged: {
+        ...adjustInventory,
+        successDate: nextDate,
+        checkedDate: now
+      },
+    });
     currentDate = nextDate;
   }
 
