@@ -2,7 +2,6 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_TASKS } from '@/task/graphql/queries/getTasks';
 import { ITask } from '@/task/types';
 import {
-  useRecordTableCursor,
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
@@ -15,7 +14,6 @@ import { useParams } from 'react-router-dom';
 import { currentUserState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
 import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
 
 const TASKS_PER_PAGE = 30;
@@ -41,17 +39,15 @@ export const useTasksVariables = (
       statusType: string;
     }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
   const currentUser = useAtomValue(currentUserState);
-  const { cursor } = useRecordTableCursor({
-    sessionKey: TASKS_CURSOR_SESSION_KEY,
-  });
 
   return {
+    cursor: '',
     limit: TASKS_PER_PAGE,
     orderBy: {
       updatedAt: -1,
     },
-    cursor,
-    searchValue: searchValue,
+    direction: 'forward',
+    name: searchValue,
     assigneeId: assignee,
     teamId: teamId || team,
     priority: priority,
@@ -140,8 +136,9 @@ export const useTasks = (
       },
     });
 
-    return () => unsubscribe();
-  }, []);
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variables]);
 
   const handleFetchMore = ({
     direction,
@@ -161,7 +158,8 @@ export const useTasks = (
               ? pageInfo?.endCursor
               : pageInfo?.startCursor,
           limit: TASKS_PER_PAGE,
-          direction,
+          direction:
+            direction === EnumCursorDirection.FORWARD ? 'forward' : 'backward',
         },
       },
       updateQuery: (prev, { fetchMoreResult }) => {

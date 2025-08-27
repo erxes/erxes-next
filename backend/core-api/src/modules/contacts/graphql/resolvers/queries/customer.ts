@@ -20,8 +20,10 @@ export const customerQueries = {
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
-    const filter: FilterQuery<ICustomerDocument> =
-      await generateFilter(params, models);
+    const filter: FilterQuery<ICustomerDocument> = await generateFilter(
+      params,
+      models,
+    );
 
     const { list, totalCount, pageInfo } =
       await cursorPaginate<ICustomerDocument>({
