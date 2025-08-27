@@ -4,9 +4,8 @@ import {
   Badge,
   RecordTable,
   RecordTableInlineCell,
-  RelativeDateDisplay
+  RelativeDateDisplay,
 } from 'erxes-ui';
-
 
 import { IInvoice } from '~/modules/payment/types/Payment';
 
@@ -73,7 +72,13 @@ export const invoicesColumns: ColumnDef<IInvoice>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableInlineCell>
-          <Badge variant={cell.getValue() as string === 'paid' ? 'success' : 'destructive'}>{cell.getValue() as string}</Badge>
+          <Badge
+            variant={
+              (cell.getValue() as string) === 'paid' ? 'success' : 'destructive'
+            }
+          >
+            {cell.getValue() as string}
+          </Badge>
         </RecordTableInlineCell>
       );
     },
