@@ -1,40 +1,12 @@
 import gql from 'graphql-tag';
-import {
-  GQL_CURSOR_PARAM_DEFS,
-  GQL_CURSOR_PARAMS,
-  GQL_PAGE_INFO,
-} from 'erxes-ui';
+import { GQL_PAGE_INFO } from 'erxes-ui';
 
 export const GET_TASKS = gql`
   query GetTasks(
-    $assigneeId: String
-    $createdBy: String
-    $status: String
-    $priority: Int
-    $startDate: Date
-    $targetDate: Date
-    $projectId: String 
-    $teamId: String
-    $statusType: Int
-    $estimatePoint: Int
-    $orderBy: JSON
-    $userId: String
-    ${GQL_CURSOR_PARAM_DEFS}
+    $filter: ITaskFilter
   ) {
     getTasks(
-      assigneeId: $assigneeId
-      createdBy: $createdBy
-      status: $status
-      priority: $priority
-      startDate: $startDate
-      statusType: $statusType
-      targetDate: $targetDate
-      projectId: $projectId
-      teamId: $teamId
-      estimatePoint: $estimatePoint
-      orderBy: $orderBy
-      userId: $userId
-      ${GQL_CURSOR_PARAMS}
+      filter: $filter
     ) {
       list {
         _id
@@ -52,7 +24,6 @@ export const GET_TASKS = gql`
         cycleId
         projectId
         estimatePoint
-        estimateChoices
       } 
       ${GQL_PAGE_INFO}
       totalCount

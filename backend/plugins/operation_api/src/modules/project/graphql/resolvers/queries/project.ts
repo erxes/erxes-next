@@ -18,55 +18,55 @@ export const projectQueries = {
 
   getProjects: async (
     _parent: undefined,
-    params: IProjectFilter,
+    { filter }: { filter: IProjectFilter },
     { models }: IContext,
   ) => {
-    const filter: FilterQuery<IProjectDocument> = {};
+    const filterQuery: FilterQuery<IProjectDocument> = {};
 
-    if (params.name) {
-      filter.name = { $regex: params.name, $options: 'i' };
+    if (filter.name) {
+      filterQuery.name = { $regex: filter.name, $options: 'i' };
     }
 
-    if (params.status) {
-      filter.status = params.status;
+    if (filter.status) {
+      filterQuery.status = filter.status;
     }
 
-    if (params.priority) {
-      filter.priority = params.priority;
+    if (filter.priority) {
+      filterQuery.priority = filter.priority;
     }
 
-    if (params.startDate) {
-      filter.startDate = { $gte: params.startDate };
+    if (filter.startDate) {
+      filterQuery.startDate = { $gte: filter.startDate };
     }
 
-    if (params.targetDate) {
-      filter.targetDate = { $gte: params.targetDate };
+    if (filter.targetDate) {
+      filterQuery.targetDate = { $gte: filter.targetDate };
     }
 
-    if (params.leadId) {
-      filter.leadId = params.leadId;
+    if (filter.leadId) {
+      filterQuery.leadId = filter.leadId;
     }
 
-    if (params.teamIds && params.teamIds.length > 0) {
-      filter.teamIds = { $in: params.teamIds };
+    if (filter.teamIds && filter.teamIds.length > 0) {
+      filterQuery.teamIds = { $in: filter.teamIds };
     }
 
     if (
-      (params.teamIds && params.teamIds.length <= 0 && params.userId) ||
-      !params.teamIds
+      (filter.teamIds && filter.teamIds.length <= 0 && filter.userId) ||
+      !filter.teamIds
     ) {
       const teamIds = await models.TeamMember.find({
-        memberId: params.userId,
+        memberId: filter.userId,
       }).distinct('teamId');
 
-      filter.teamIds = { $in: teamIds };
+      filterQuery.teamIds = { $in: teamIds };
     }
 
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IProjectDocument>({
         model: models.Project,
-        params,
-        query: filter,
+        params: filter,
+        query: filterQuery,
       });
 
     return { list, totalCount, pageInfo };

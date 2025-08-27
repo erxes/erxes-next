@@ -18,7 +18,9 @@ const config: ModuleFederationConfig = {
     './config': './src/config.tsx',
     './operation': './src/modules/main/Main.tsx',
     './teamSettings': './src/modules/team/Settings.tsx',
-    './relationWidget': './src/widgets/RelationWidgets.tsx',
+    './relationWidget': './src/widgets/relation/RelationWidgets.tsx',
+    './notificationWidget':
+      './src/widgets/notifications/NotificationsWidgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

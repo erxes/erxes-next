@@ -27,6 +27,7 @@ export const BlockEditor = ({
   style,
   disabled,
   variant = 'default',
+  sideMenu = false,
 }: BlockEditorProps) => {
   const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
@@ -36,6 +37,7 @@ export const BlockEditor = ({
       theme={theme as 'light' | 'dark'}
       editor={editor}
       slashMenu={false}
+      sideMenu={sideMenu}
       onFocus={() => {
         setFocus(true);
         onFocus?.();

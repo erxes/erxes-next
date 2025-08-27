@@ -42,7 +42,7 @@ export const ProjectLayout = () => {
           <AddTaskSheet />
         </PageHeader.End>
       </PageHeader>
-      <div className="flex overflow-hidden w-full">
+      <div className="flex overflow-hidden w-full h-full">
         <Outlet />
         <ProjectsSideWidget projectId={projectId || ''} />
       </div>
