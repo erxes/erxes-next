@@ -1,5 +1,4 @@
-import { Popover as PopoverPrimitive } from 'radix-ui';
-import { IconPhoneFilled, IconX } from '@tabler/icons-react';
+import { Popover as PopoverPrimitive, Portal } from 'radix-ui';
 import { Button } from 'erxes-ui';
 import {
   DndContext,
@@ -9,7 +8,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useMemo, memo, useCallback } from 'react';
+import { useMemo, memo, useCallback, useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
 import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
@@ -18,9 +17,11 @@ import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAto
 export const CallWidgetDraggable = memo(
   ({
     children,
+    trigger,
     position,
   }: {
     children: React.ReactNode;
+    trigger: React.ReactNode;
     position: { x: number; y: number };
   }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -39,22 +40,22 @@ export const CallWidgetDraggable = memo(
     );
 
     return (
-      <>
+      <Portal.Root>
         <PopoverPrimitive.Trigger ref={setNodeRef} style={style} asChild>
           <Button
             variant="secondary"
             size="icon"
-            className="fixed bottom-10 right-10 z-50 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
+            className="fixed bottom-10 z-50 right-10 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
             onClick={() => setOpen(!open)}
             {...listeners}
             {...attributes}
           >
-            {open ? <IconX /> : <IconPhoneFilled className="text-primary" />}
+            {trigger}
           </Button>
         </PopoverPrimitive.Trigger>
 
         {children}
-      </>
+      </Portal.Root>
     );
   },
 );
@@ -63,8 +64,10 @@ CallWidgetDraggable.displayName = 'CallWidgetDraggable';
 
 export const CallWidgetDraggableRoot = ({
   children,
+  trigger,
 }: {
   children: React.ReactNode;
+  trigger: React.ReactNode;
 }) => {
   const setOpen = useSetAtom(callWidgetOpenAtom);
   const [position, setPosition] = useAtom(callWidgetPositionState);
@@ -83,24 +86,40 @@ export const CallWidgetDraggableRoot = ({
 
   const sensors = useSensors(mouseSensor, touchSensor);
 
+  const checkPosition = useCallback((x: number, y: number) => {
+    return {
+      x: Math.min(40, Math.max((window.innerWidth - 88) * -1, x)),
+      y: Math.min(40, Math.max((window.innerHeight - 88) * -1, y)),
+    };
+  }, []);
+
   // Memoize drag end handler to prevent recreating function
   const handleDragEnd = useCallback(
     (event: any) => {
       const { delta } = event;
-      setPosition((prev) => ({
-        x: Math.min(window.innerWidth - 100, prev.x + delta.x),
-        y: Math.max((window.innerHeight - 100) * -1, prev.y + delta.y),
-      }));
+      setPosition((prev) => checkPosition(prev.x + delta.x, prev.y + delta.y));
     },
-    [setPosition],
+    [setPosition, checkPosition],
   );
+
+  //handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setPosition((prev) => checkPosition(prev.x, prev.y));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setPosition, checkPosition]);
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
       onDragStart={() => setOpen(false)}
       sensors={sensors}
     >
-      <CallWidgetDraggable position={position}>{children}</CallWidgetDraggable>
+      <CallWidgetDraggable position={position} trigger={trigger}>
+        {children}
+      </CallWidgetDraggable>
     </DndContext>
   );
 };
