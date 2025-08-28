@@ -6,12 +6,13 @@ import { BaseAPI } from '~/apis/base';
 import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
 import { IGolomtInvoice } from '~/apis/types';
 import { ITransactionDocument } from '~/modules/payment/@types/transactions';
-import { graphqlPubsub, isEnabled, random } from 'erxes-api-shared/utils';
-
-// import { randomAlphanumeric } from '@erxes/api-utils/src/random';
-// import graphqlPubsub from '@erxes/api-utils/src/graphqlPubsub';
-// import { isEnabled } from '@erxes/api-utils/src/serviceDiscovery';
-// import { sendMessage } from '@erxes/api-utils/src/messageBroker';
+import {
+  graphqlPubsub,
+  isEnabled,
+  random,
+  sendWorkerMessage,
+} from 'erxes-api-shared/utils';
+import { splitType } from 'erxes-api-shared/core-modules';
 
 export const hmac256 = (key, message) => {
   const hash = crypto.createHmac('sha256', key).update(message);
@@ -22,7 +23,7 @@ export const notificationHandler = async (
   models: IModels,
   subdomain: string,
   data: any,
-  res: any
+  res: any,
 ) => {
   const { errorCode, transactionId, errorDesc } = data;
 
@@ -38,7 +39,9 @@ export const notificationHandler = async (
   const payment = await models.PaymentMethods.getPayment(transaction.paymentId);
 
   if (payment.kind !== 'golomt') {
-    res.status(400).json({ status: 'error', message: 'Payment method kind is mismatched' });
+    res
+      .status(400)
+      .json({ status: 'error', message: 'Payment method kind is mismatched' });
     return;
   }
 
@@ -77,50 +80,62 @@ export const notificationHandler = async (
       });
     }
 
-    const [serviceName] = invoice.contentType.split(':');
+    const [pluginName, moduleName, collectionType] = splitType(
+      invoice.contentType,
+    );
 
-    if (await isEnabled(serviceName)) {
-      // TODO: implement this after plugin communication is implemented
-      // try {
-      //   sendMessage(`${serviceName}:paymentTransactionCallback`, {
-      //     subdomain,
-      //     data: {
-      //       ...transaction,
-      //       apiResponse: 'success',
-      //     },
-      //     defaultValue: null,
-      //   });
+    if (await isEnabled(pluginName)) {
+      try {
+        await sendWorkerMessage({
+          subdomain,
+          pluginName,
+          queueName: 'payments',
+          jobName: 'transactionCallback',
+          data: {
+            ...transaction,
+            moduleName,
+            collectionType,
+            apiResponse: 'success',
+          },
+          defaultValue: null,
+        });
 
-      //   if (result === 'paid') {
-      //     sendMessage(`${serviceName}:paymentCallback`, {
-      //       subdomain,
-      //       data: {
-      //         ...invoice,
-      //         status: 'paid',
-      //       },
-      //     });
+        if (result === 'paid') {
+          await sendWorkerMessage({
+            subdomain,
+            pluginName,
+            queueName: 'payments',
+            jobName: 'callback',
+            data: {
+              ...invoice,
+              moduleName,
+              collectionType,
+              status: 'paid',
+            },
+            defaultValue: null,
+          });
 
-      //     if (invoice.callback) {
-      //       try {
-      //         await fetch(invoice.callback, {
-      //           method: 'POST',
-      //           headers: {
-      //             'Content-Type': 'application/json',
-      //           },
-      //           body: JSON.stringify({
-      //             _id: invoice._id,
-      //             amount: invoice.amount,
-      //             status: 'paid',
-      //           }),
-      //         });
-      //       } catch (e) {
-      //         console.error('Error: ', e);
-      //       }
-      //     }
-      //   }
-      // } catch (e) {
-      //   console.error('Error: ', e);
-      // }
+          if (invoice.callback) {
+            try {
+              await fetch(invoice.callback, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  _id: invoice._id,
+                  amount: invoice.amount,
+                  status: 'paid',
+                }),
+              });
+            } catch (e) {
+              console.error('Error: ', e);
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Error: ', e);
+      }
     }
   } catch (e) {
     throw new Error(e.message);
@@ -179,7 +194,7 @@ export class GolomtAPI extends BaseAPI {
   }
 
   async authorize() {
-    const callback = `${this.domain}/pl-payment/callback/golomt`;
+    const callback = `${this.domain}/pl:payment/callback/golomt`;
     // const transactionId = randomAlphanumeric(10);
 
     const transactionId = random('aA0', 10);
@@ -218,7 +233,7 @@ export class GolomtAPI extends BaseAPI {
   async createInvoice(transaction: ITransactionDocument) {
     const amount = transaction.amount.toString();
 
-    const callback = `${this.domain}/pl-payment/callback/golomt?transactionId=${transaction._id}`;
+    const callback = `${this.domain}/pl:payment/callback/golomt?transactionId=${transaction._id}`;
 
     let transactionId = transaction._id;
 

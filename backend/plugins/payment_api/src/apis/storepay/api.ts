@@ -205,7 +205,7 @@ export class StorePayAPI extends BaseAPI {
         mobileNumber: details.phone,
         description: invoice.description || 'transaction',
         storeId: this.store_id,
-        callbackUrl: `${this.domain}/pl-payment/callback/${PAYMENTS.storepay.kind}`,
+        callbackUrl: `${this.domain}/pl:payment/callback/${PAYMENTS.storepay.kind}`,
       };
 
       const possibleAmount = await this.checkLoanAmount(details.phone);

@@ -5,7 +5,8 @@ import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/trpc/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
-
+import { PAYMENTS } from '~/constants';
+import { callbackHandler } from '~/apis/controller';
 
 startPlugin({
   name: 'payment',
@@ -14,6 +15,14 @@ startPlugin({
     typeDefs: await typeDefs(),
     resolvers,
   }),
+  hasSubscriptions: true,
+  subscriptionPluginPath: require('path').resolve(
+    __dirname,
+    'apollo',
+    process.env.NODE_ENV === 'production'
+      ? 'subscription.js'
+      : 'subscription.ts',
+  ),
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);
 
@@ -34,9 +43,22 @@ startPlugin({
     },
   },
 
+  apiHandlers: PAYMENTS.ALL.flatMap((kind) => [
+    {
+      path: `/callback/${kind}`,
+      method: 'GET',
+      resolver: callbackHandler,
+    },
+    {
+      path: `/callback/${kind}`,
+      method: 'POST',
+      resolver: callbackHandler,
+    },
+  ]),
+
   onServerInit: async (app) => {
-    app.use('/static', express.static(path.join(__dirname, '/public')));  
-    app.use('/widget', express.static(path.join(__dirname, '/public/widget')));  
+    app.use('/static', express.static(path.join(__dirname, '/public')));
+    app.use('/widget', express.static(path.join(__dirname, '/public/widget')));
     app.get('/widget/*', (req, res) => {
       res.sendFile(path.join(__dirname, '/public/widget/index.html'));
     });

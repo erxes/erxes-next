@@ -282,7 +282,7 @@ export class QPayQuickQrAPI extends VendorBaseAPI {
         merchant_id: this.config.merchantId,
         amount: invoice.amount,
         currency: 'MNT',
-        callback_url: `${this.domain}/pl-payment/callback/${PAYMENTS.qpayQuickqr.kind}?_id=${invoice._id}`,
+        callback_url: `${this.domain}/pl:payment/callback/${PAYMENTS.qpayQuickqr.kind}?_id=${invoice._id}`,
         description: invoice.description || 'Гүйлгээ',
         mcc_code: this.config.mccCode,
         bank_accounts: [

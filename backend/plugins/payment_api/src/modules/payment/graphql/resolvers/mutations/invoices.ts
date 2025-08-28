@@ -1,5 +1,5 @@
-import { checkPermission, requireLogin } from 'erxes-api-shared/core-modules';
-import { getEnv } from 'erxes-api-shared/utils';
+import { checkPermission, requireLogin, splitType } from 'erxes-api-shared/core-modules';
+import { getEnv, sendWorkerMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { IInvoice } from '~/modules/payment/@types/invoices';
 
@@ -32,7 +32,7 @@ const mutations = {
       ...params,
     });
 
-    return `${domain}/pl-payment/invoice/${invoice._id}`;
+    return `${domain}/pl:payment/invoice/${invoice._id}`;
   },
 
   async invoiceCreate(
@@ -59,15 +59,22 @@ const mutations = {
     if (status === 'paid') {
       const invoice = await models.Invoices.getInvoice({ _id }, true);
       if (invoice.contentType) {
-        const [serviceName] = invoice.contentType.split(':');
-
-        // sendMessage(`${serviceName}:paymentCallback`, {
-        //   subdomain,
-        //   data: {
-        //     ...invoice,
-        //     status: 'paid',
-        //   },
-        // });
+        const [pluginName, moduleName, collectionType] = splitType(invoice.contentType);
+        
+        await sendWorkerMessage({
+          subdomain,
+          pluginName,
+          queueName: 'payments',
+          jobName: 'paymentCallback',
+          data: {
+            ...invoice,
+            status: 'paid',
+            moduleName,
+            collectionType,
+            apiResponse: 'success',
+          },
+          defaultValue: null,
+        });
       }
 
       if (invoice.callback) {

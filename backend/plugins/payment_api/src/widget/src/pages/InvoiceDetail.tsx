@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import Loader from '../components/Loader';
 import Payment from '../components/Payment';
@@ -6,8 +6,11 @@ import {
   ADD_TRANSACTION,
   CHECK_INVOICE,
   INVOICE,
-  PAYMENTS_QRY
+  INVOICE_SUBSCRIPTION,
+  PAYMENTS_QRY,
+  TRANSACTION_SUBSCRIPTION
 } from '../lib/graphql';
+import React from 'react';
 
 const InvoiceDetail = () => {
   const { id } = useParams();
@@ -16,13 +19,13 @@ const InvoiceDetail = () => {
 
   const [addTransaction, addTransactionResponse] = useMutation(ADD_TRANSACTION);
 
-  // const invoiceSubscription = useSubscription(INVOICE_SUBSCRIPTION, {
-  //   variables: { invoiceId: id },
-  // });
+  const invoiceSubscription = useSubscription(INVOICE_SUBSCRIPTION, {
+    variables: { invoiceId: id },
+  });
 
-  // const transactionSubscription = useSubscription(TRANSACTION_SUBSCRIPTION, {
-  //   variables: { invoiceId: id },
-  // });
+  const transactionSubscription = useSubscription(TRANSACTION_SUBSCRIPTION, {
+    variables: { invoiceId: id },
+  });
 
   const invoiceDetailQuery = useQuery(INVOICE, {
     variables: { id },
@@ -40,28 +43,28 @@ const InvoiceDetail = () => {
     },
   });
 
-  // React.useEffect(() => {
-  //   if (invoiceSubscription.data?.invoiceUpdated) {
-  //     const message = {
-  //       fromPayment: true,
-  //       message: 'paymentSuccessfull',
-  //       invoiceId: id,
-  //       invoice: invoiceSubscription.data.invoiceUpdated,
-  //       contentType: invoiceDetail.contentType,
-  //       contentTypeId: invoiceDetail.contentTypeId,
-  //     };
+  React.useEffect(() => {
+    if (invoiceSubscription.data?.invoiceUpdated) {
+      const message = {
+        fromPayment: true,
+        message: 'paymentSuccessfull',
+        invoiceId: id,
+        invoice: invoiceSubscription.data.invoiceUpdated,
+        contentType: invoiceDetail.contentType,
+        contentTypeId: invoiceDetail.contentTypeId,
+      };
 
-  //     const res = invoiceSubscription.data.invoiceUpdated;
-  //     if (res.status === 'paid') {
-  //       window.alert('Payment has been successfully processed. Thank you!');
-  //       postMessage(message);
-  //     }
-  //   }
+      const res = invoiceSubscription.data.invoiceUpdated;
+      if (res.status === 'paid') {
+        window.alert('Payment has been successfully processed. Thank you!');
+        postMessage(message);
+      }
+    }
 
-  //   if (transactionSubscription.data?.transactionUpdated) {
-  //     invoiceDetailQuery.refetch();
-  //   }
-  // }, [invoiceSubscription.data, transactionSubscription.data]);
+    if (transactionSubscription.data?.transactionUpdated) {
+      invoiceDetailQuery.refetch();
+    }
+  }, [invoiceSubscription.data, transactionSubscription.data]);
 
   if (invoiceDetailQuery.loading || paymentsLoading) {
     return (
