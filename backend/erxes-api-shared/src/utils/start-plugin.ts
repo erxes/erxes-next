@@ -38,6 +38,7 @@ import {
 } from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
+import { startPayments } from '../common-modules/payment/worker';
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ type IMeta = {
   automations?: AutomationConfigs;
   segments?: SegmentConfigs;
   afterProcess?: AfterProcessConfigs;
+  payments?: any;
   notificationModules?: any[];
 };
 
@@ -115,6 +117,8 @@ export async function startPlugin(
   if (configs.expressRouter) {
     app.use(configs.expressRouter);
   }
+
+
 
   if (configs.middlewares) {
     for (const middleware of configs.middlewares) {
@@ -284,7 +288,7 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments, afterProcess, notificationModules } =
+    const { automations, segments, afterProcess, notificationModules, payments } =
       configs.meta || {};
 
     if (automations) {
@@ -305,6 +309,10 @@ export async function startPlugin(
         'notificationModules',
         notificationModules,
       );
+    }
+
+    if (payments) {
+      await startPayments(configs.name, payments);
     }
   } // end configs.meta if
 
