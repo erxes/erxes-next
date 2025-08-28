@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PaymentContext } from '../hooks/use-payment';
 import PaymentMethod from './PaymentMethod';
 import PaymentDialog from './PaymentDialog';
+declare const __VITE_API_URL__: string;
 
 type Props = {
   invoiceDetail: any;
@@ -16,7 +17,12 @@ type Props = {
 const Payment = (props: Props) => {
   const { invoiceDetail, payments } = props;
   const transactions = invoiceDetail.transactions || [];
-  const apiDomain = import.meta.env.VITE_API_URL;
+
+  const apiDomain =
+    typeof import.meta !== 'undefined'
+      ? import.meta.env.VITE_API_URL
+      : process.env['VITE_API_URL'] || __VITE_API_URL__;
+      
   const [currentTransaction, setCurrentTransaction] = useState<any>(
     props.newTransaction,
   );

@@ -5,11 +5,15 @@ import { createClient } from 'graphql-ws';
 import { ApolloLink, split } from '@apollo/client/link/core';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-const apiUrl = import.meta.env.VITE_API_URL;
-const wsUri = apiUrl?.replace('http', 'ws');
+declare const __VITE_API_URL__: string;
+const apiDomain = typeof import.meta !== 'undefined' 
+  ? import.meta.env.VITE_API_URL 
+  : process.env['VITE_API_URL'] || __VITE_API_URL__;
+  
+const wsUri = apiDomain?.replace('http', 'ws');
 
 const httpLink = createHttpLink({
-  uri: `${apiUrl}/graphql`,
+  uri: `${apiDomain}/graphql`,
   credentials: 'include',
 });
 
