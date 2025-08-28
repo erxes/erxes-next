@@ -151,7 +151,7 @@ export class QpayAPI extends BaseAPI {
         callback_url: `${this.domain}/pl-payment/callback/${PAYMENTS.qpay.kind}?_id=${transaction._id}`,
       };
 
-      console.log("callback_url", `${this.domain}/pl:payment/callback/${PAYMENTS.qpay.kind}?_id=${transaction._id}`)
+      // console.debug("callback_url", `${this.domain}/pl:payment/callback/${PAYMENTS.qpay.kind}?_id=${transaction._id}`)
 
       const res = await this.request({
         method: 'POST',
@@ -188,7 +188,8 @@ export class QpayAPI extends BaseAPI {
   }
 
   async checkInvoice(transaction: ITransactionDocument) {
-    return PAYMENT_STATUS.PAID;
+    // NOTE: uncomment next line for testing purposes
+    // return PAYMENT_STATUS.PAID;
     return this.check(transaction);
   }
 
