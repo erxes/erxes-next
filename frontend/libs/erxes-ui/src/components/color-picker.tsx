@@ -92,7 +92,7 @@ ColorPickerTrigger.displayName = 'ColorPickerTrigger';
 const ColorPickerContent = ({
   setOpen,
 }: {
-  setOpen: (open: boolean) => void;
+  setOpen?: (open: boolean) => void;
 }) => {
   const { value, onValueChange, colors } = useColorPickerContext();
 
@@ -106,7 +106,7 @@ const ColorPickerContent = ({
             style={{ backgroundColor: color }}
             onClick={() => {
               onValueChange?.(color);
-              setOpen(false);
+              setOpen?.(false);
             }}
           >
             {value === color && (

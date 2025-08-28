@@ -1,4 +1,4 @@
-import { SelectPriority } from '@/priority/components/SelectPriority';
+import { SelectPriority } from '@/operation/components/SelectPriority';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 
 export const SelectProjectPriority = ({
@@ -11,11 +11,10 @@ export const SelectProjectPriority = ({
   inInlineCell?: boolean;
 }) => {
   const { updateProject } = useUpdateProject();
-  const SelectComponent = inInlineCell
-    ? SelectPriority.InlineCell
-    : SelectPriority.Detail;
+
   return (
-    <SelectComponent
+    <SelectPriority
+      variant={inInlineCell ? 'table' : 'detail'}
       value={value}
       onValueChange={(value) =>
         updateProject({

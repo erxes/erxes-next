@@ -40,9 +40,6 @@ export const useAddCallHistory = () => {
         const callConversationId = callHistoryAdd?.conversationId;
         setHistoryId(callHistoryId);
         setCurrentCallConversationId(callConversationId);
-        toast({
-          title: 'Successfully updated status',
-        });
       },
       onError: (e) => {
         setHistoryId('');

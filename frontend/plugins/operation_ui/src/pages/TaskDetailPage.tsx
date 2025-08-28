@@ -29,7 +29,6 @@ export const TaskDetailPage = () => {
                 <TaskBreadCrump link={`/operation/tasks`} />
               )}
               <Separator.Inline />
-
               <TaskDetailBreadCrump />
             </Breadcrumb.List>
           </Breadcrumb>

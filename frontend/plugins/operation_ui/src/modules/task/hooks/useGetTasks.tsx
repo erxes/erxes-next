@@ -6,14 +6,13 @@ import {
   validateFetchMore,
   EnumCursorDirection,
   ICursorListResponse,
-  useMultiQueryState,
   useToast,
   isUndefinedOrNull,
+  useNonNullMultiQueryState,
 } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
-import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
 import { currentUserState } from 'ui-modules';
-import { useSetAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
 
@@ -30,8 +29,8 @@ export const useTasksVariables = (
   variables?: QueryHookOptions<ICursorListResponse<ITask>>['variables'],
 ) => {
   const { teamId } = useParams();
-  const [{ searchValue, assignee, team, priority, statusType, status }] =
-    useMultiQueryState<{
+  const { searchValue, assignee, team, priority, statusType, status } =
+    useNonNullMultiQueryState<{
       searchValue: string;
       assignee: string;
       team: string;
@@ -44,13 +43,16 @@ export const useTasksVariables = (
   return {
     cursor: '',
     limit: TASKS_PER_PAGE,
+    orderBy: {
+      updatedAt: -1,
+    },
     direction: 'forward',
-    name: searchValue || undefined,
-    assigneeId: assignee || undefined,
+    name: searchValue,
+    assigneeId: assignee,
     teamId: teamId || team,
-    priority: priority || undefined,
-    status: status || undefined,
-    statusType: statusType || undefined,
+    priority: priority,
+    status: status,
+    statusType: statusType,
     ...variables,
     ...(!variables?.teamId &&
       !variables?.userId &&
@@ -64,7 +66,6 @@ export const useTasksVariables = (
 export const useTasks = (
   options?: QueryHookOptions<ICursorListResponse<ITask>>,
 ) => {
-  const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
   const variables = useTasksVariables(options?.variables);
   const { toast } = useToast();
   const { data, loading, fetchMore, subscribeToMore } = useQuery<
@@ -73,6 +74,7 @@ export const useTasks = (
     ...options,
     variables: { filter: variables },
     skip: options?.skip || isUndefinedOrNull(variables.cursor),
+    fetchPolicy: 'cache-and-network',
     onError: (e) => {
       toast({
         title: 'Error',
@@ -134,13 +136,9 @@ export const useTasks = (
       },
     });
 
-    return () => unsubscribe();
-  }, [subscribeToMore, variables]);
-
-  useEffect(() => {
-    if (isUndefinedOrNull(totalCount)) return;
-    setTaskTotalCount(totalCount);
-  }, [totalCount, setTaskTotalCount]);
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variables]);
 
   const handleFetchMore = ({
     direction,

@@ -10,7 +10,7 @@ import { PageContainer, Switch, Tooltip } from 'erxes-ui';
 import { useState } from 'react';
 import { IconInfoCircle } from '@tabler/icons-react';
 import React from 'react';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from 'radix-ui';
 
 interface SelectContainerProps {
   children: React.ReactElement<{ mode?: 'single' | 'multiple' }>;
@@ -49,9 +49,9 @@ const SelectContainer = ({
         )}
       </div>
       <div className="w-full">
-        <Slot {...{ mode: isMultipleMode ? 'multiple' : 'single' }}>
+        <Slot.Root {...{ mode: isMultipleMode ? 'multiple' : 'single' }}>
           {children}
-        </Slot>
+        </Slot.Root>
       </div>
     </div>
   );
@@ -212,7 +212,12 @@ export const SelectComponentIndexPage = () => {
               label="Member Select"
               description="Select team members"
             >
-              <SelectMember value={memberId} onValueChange={setMemberId} />
+              <SelectMember
+                value={memberId}
+                onValueChange={(value) => {
+                  setMemberId(value as string);
+                }}
+              />
             </SelectContainer>
             {/* <SelectContainer
               label="Branch Select"

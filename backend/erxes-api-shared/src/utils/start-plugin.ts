@@ -1,23 +1,25 @@
-import * as dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
+import * as dotenv from 'dotenv';
+
 import cookieParser from 'cookie-parser';
 
 import cors from 'cors';
 import express, {
-  Router,
   Request as ApiRequest,
   Response as ApiResponse,
   Application,
+  Router,
 } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import * as http from 'http';
 import * as path from 'path';
 
+import { AnyRouter } from '@trpc/server/unstable-core-do-not-import';
+import rateLimit from 'express-rate-limit';
 import {
   SegmentConfigs,
   startAutomations,
@@ -36,7 +38,6 @@ import {
 } from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
-import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 

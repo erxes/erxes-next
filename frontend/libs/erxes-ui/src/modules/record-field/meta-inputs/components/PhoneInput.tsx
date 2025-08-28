@@ -149,7 +149,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           <Combobox.TriggerBase
             variant="secondary"
             aria-expanded={open}
-            className={cn('h-8 text-xl w-auto pl-2 pr-2.5', className)}
+            className={cn('text-xl w-auto pl-2 pr-2.5', className)}
           >
             {selectedCountry.flag}
           </Combobox.TriggerBase>
