@@ -11,4 +11,5 @@ export const addTaskSchema = z.object({
   assigneeId: z.string().optional(),
   projectId: z.string().optional(),
   estimatePoint: z.number().optional(),
+  cycleId: z.string().optional(),
 });

@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
+import { SelectCycle } from '@/task/components/select/SelectCycle';
 import {
   SelectStatus,
   SelectTeam,
@@ -31,9 +32,10 @@ import { currentUserState } from 'ui-modules';
 import { useGetProject } from '@/project/hooks/useGetProject';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
-  const { teamId, projectId } = useParams<{
+  const { teamId, projectId, cycleId } = useParams<{
     teamId?: string;
     projectId?: string;
+    cycleId?: string;
   }>();
 
   const { teams } = useGetCurrentUsersTeams();
@@ -54,7 +56,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
     defaultValues: {
-      teamId: _teamId || undefined,
+      teamId: _teamId,
       name: '',
       status: '',
       priority: 0,
@@ -63,6 +65,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
       startDate: undefined,
       targetDate: undefined,
       estimatePoint: undefined,
+      cycleId: cycleId,
     },
   });
 
@@ -253,6 +256,20 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                     mode="single"
                     value={field.value || ''}
                     teamId={form.getValues('teamId') || _teamId}
+                  />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              name="cycleId"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="sr-only">Cycle</Form.Label>
+                  <SelectCycle
+                    {...field}
+                    teamId={form.getValues('teamId') || _teamId}
+                    value={field.value || ''}
                   />
                 </Form.Item>
               )}

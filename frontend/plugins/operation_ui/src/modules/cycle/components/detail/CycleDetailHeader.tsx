@@ -21,11 +21,11 @@ export const CycleDetailHeader = () => {
             <Separator.Inline />
             <CyclesBreadcrumb link={`/operation/team/${teamId}/cycles`} />
             <Separator.Inline />
-            <Breadcrumb.Item className="text-sm font-medium">
+            <Breadcrumb.Item className="text-sm font-medium px-3 py-1">
               {cycleDetail?.name}
             </Breadcrumb.Item>
             <Separator.Inline />
-            <Breadcrumb.Item className="text-sm font-medium">
+            <Breadcrumb.Item className="text-sm font-medium px-3 py-1">
               Tasks
             </Breadcrumb.Item>
           </Breadcrumb.List>

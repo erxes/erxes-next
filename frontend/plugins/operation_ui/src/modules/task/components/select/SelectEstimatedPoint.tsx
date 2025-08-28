@@ -102,7 +102,7 @@ const SelectEstimatedPointValue = ({
   if (selectedEstimates.length === 0) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select estimate...'}
+        {placeholder || 'Select estimate'}
       </span>
     );
   }
