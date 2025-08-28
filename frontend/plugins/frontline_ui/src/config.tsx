@@ -15,12 +15,6 @@ const FrontlineSubGroups = lazy(() =>
   })),
 );
 
-const FrontlineActions = lazy(() =>
-  import('./modules/FrontlineActions').then((module) => ({
-    default: module.FrontlineActions,
-  })),
-);
-
 export const CONFIG: IUIConfig = {
   name: 'frontline',
   navigationGroup: {
@@ -34,11 +28,6 @@ export const CONFIG: IUIConfig = {
     subGroups: () => (
       <Suspense fallback={<div />}>
         <FrontlineSubGroups />
-      </Suspense>
-    ),
-    actions: () => (
-      <Suspense fallback={<div />}>
-        <FrontlineActions />
       </Suspense>
     ),
   },
@@ -57,6 +46,12 @@ export const CONFIG: IUIConfig = {
       path: 'ticket',
       hasSettings: true,
       hasRelationWidget: true,
+    },
+    {
+      name: 'frontline',
+      icon: IconMail,
+      path: 'frontline',
+      hasSettings: false,
     },
   ],
 };
