@@ -329,7 +329,7 @@ const PaymentForm = ({ payment, onSave, onCancel }: Props) => {
           {renderQuickQr()}
 
           {/* Action Buttons */}
-          <div className="sticky bottom-0 left-0 w-full bg-white p-4z-10">
+          <div className="sticky bottom-0 left-0 w-full bg-white p-4 z-10">
             <div className="flex gap-3 pt-6 ">
               <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : payment ? 'Update' : 'Save'}{' '}
