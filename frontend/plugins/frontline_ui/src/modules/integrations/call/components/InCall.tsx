@@ -8,17 +8,20 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Button, ButtonProps, cn } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import { CallNumber } from '@/integrations/call/components/CallNumber';
-import { intervalToDuration } from 'date-fns';
 import {
   Transfer,
   TransferTrigger,
 } from '@/integrations/call/components/CallTransfer';
 import { useNavigate } from 'react-router';
-import { historyIdAtom } from '@/integrations/call/states/callStates';
+import {
+  callDurationAtom,
+  historyIdAtom,
+} from '@/integrations/call/states/callStates';
+import { useCallDuration } from '@/integrations/call/hooks/useCallDuration';
 
 export const InCall = () => {
   const { stopCall } = useSip();
@@ -136,29 +139,16 @@ export const SelectCustomer = () => {
 
 const CallInfo = () => {
   const sip = useAtomValue(sipStateAtom);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [time, setTime] = useState({ minutes: '00', seconds: '00' });
+  const setStartDate = useSetAtom(callDurationAtom);
+  const time = useCallDuration();
 
   useEffect(() => {
     if (sip.callStatus === CallStatusEnum.ACTIVE) {
       setStartDate(new Date());
+    } else {
+      setStartDate(null);
     }
-  }, [sip.callStatus]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      if (!startDate) return;
-      const duration = intervalToDuration({ start: startDate, end: now });
-
-      const minutes = String(duration.minutes ?? 0).padStart(2, '0');
-      const seconds = String(duration.seconds ?? 0).padStart(2, '0');
-
-      setTime({ minutes, seconds });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [startDate]);
+  }, [setStartDate, sip.callStatus]);
 
   return (
     <>
@@ -167,9 +157,11 @@ const CallInfo = () => {
         {sip.callStatus === CallStatusEnum.ACTIVE && 'In call'}
       </div>
       <CallNumber />
-      <div className="text-center text-accent-foreground text-sm">
-        Duration: {startDate && `${time.minutes}:${time.seconds}`}
-      </div>
+      {sip.callStatus === CallStatusEnum.ACTIVE && (
+        <div className="text-center text-accent-foreground text-sm">
+          Duration: {time}
+        </div>
+      )}
     </>
   );
 };
