@@ -41,7 +41,7 @@ jobs:
 
       - name: Build payment widget client
         run: |
-          cd erxes-next/backend/plugins/payment_api/src/widget
+          cd backend/plugins/payment_api/src/widget
           pnpm install
           pnpm build
 
