@@ -1,20 +1,18 @@
-import { createGenerateModels } from 'erxes-api-shared/utils';
 import { IMainContext } from 'erxes-api-shared/core-types';
-import { IPaymentDocument } from '@/payment/@types/payment';
-
+import { createGenerateModels } from 'erxes-api-shared/utils';
 import mongoose from 'mongoose';
-
-import { loadPaymentClass, IPaymentModel } from '@/payment/db/models/payment';
+import { IInvoiceDocument } from '~/modules/payment/@types/invoices';
+import { IPaymentDocument } from '~/modules/payment/@types/payment';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
 import {
   IInvoiceModel,
   loadInvoiceClass,
 } from '~/modules/payment/db/models/Invoices';
+import { IPaymentModel, loadPaymentClass } from '~/modules/payment/db/models/payment';
 import {
   ITransactionModel,
   loadTransactionClass,
 } from '~/modules/payment/db/models/Transactions';
-import { IInvoiceDocument } from '~/modules/payment/@types/invoices';
-import { ITransactionDocument } from '~/modules/payment/@types/transactions';
 
 export interface IModels {
   PaymentMethods: IPaymentModel;

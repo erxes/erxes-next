@@ -4,7 +4,7 @@ import './index.css';
 import App from './App.tsx';
 
 import { ApolloProvider } from '@apollo/client';
-import { client } from './lib/apollo-client.ts';
+import { client } from './lib/apollo-client';
 
 interface ApolloProps {
   children: any;

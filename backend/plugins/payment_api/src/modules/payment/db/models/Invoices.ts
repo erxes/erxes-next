@@ -1,8 +1,10 @@
 import { Model } from 'mongoose';
+import ErxesPayment from '~/apis/ErxesPayment';
 import { IModels } from '~/connectionResolvers';
 import { PAYMENT_STATUS } from '~/constants';
 import { IInvoice, IInvoiceDocument } from '~/modules/payment/@types/invoices';
 import { invoiceSchema } from '~/modules/payment/db/definitions/invoices';
+import redis from '~/utils/redis';
 
 
 
@@ -192,7 +194,7 @@ export const loadInvoiceClass = (models: IModels) => {
 
       await models.Invoices.deleteMany({ _id: { $in: invoiceIds } });
 
-      redisUtils.removeInvoices(_ids);
+      redis.removeInvoices(_ids);
 
       return 'removed';
     }
