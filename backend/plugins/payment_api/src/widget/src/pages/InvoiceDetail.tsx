@@ -47,7 +47,7 @@ const InvoiceDetail = () => {
     if (invoiceSubscription.data?.invoiceUpdated) {
       const message = {
         fromPayment: true,
-        message: 'paymentSuccessfull',
+        message: 'paymentSuccessful',
         invoiceId: id,
         invoice: invoiceSubscription.data.invoiceUpdated,
         contentType: invoiceDetail.contentType,
@@ -105,7 +105,7 @@ const InvoiceDetail = () => {
           window.alert('Payment has been successfully processed. Thank you!');
           const message = {
             fromPayment: true,
-            message: 'paymentSuccessfull',
+            message: 'paymentSuccessful',
             invoiceId: id,
             invoice: invoiceDetail,
             contentType: invoiceDetail.contentType,
@@ -139,7 +139,7 @@ const InvoiceDetail = () => {
     window.alert('Payment has been successfully processed. Thank you!');
     postMessage({
       fromPayment: true,
-      message: 'paymentSuccessfull',
+      message: 'paymentSuccessful',
       invoiceId: id,
       invoice: invoiceDetail,
       contentType: invoiceDetail.contentType,
