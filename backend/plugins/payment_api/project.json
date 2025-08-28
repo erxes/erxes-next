@@ -10,15 +10,11 @@
       "cache": true,
       "options": {
         "cwd": "backend/plugins/payment_api",
-        "commands": [
-          "pnpm build"
-        ]
+        "commands": ["pnpm build"]
       },
-      "dependsOn": [
-        "^build",
-        "build:packageJson"
-      ]
+      "dependsOn": ["^build", "build:packageJson"]
     },
+
     "build:packageJson": {
       "executor": "@nx/js:tsc",
       "options": {
@@ -26,31 +22,31 @@
         "tsConfig": "backend/plugins/payment_api/tsconfig.build.json",
         "outputPath": "backend/plugins/payment_api/dist",
         "updateBuildableProjectDepsInPackageJson": true,
+
         "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
+
     "start": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        "typecheck",
-        "build"
-      ],
+      "dependsOn": ["typecheck", "build"],
       "options": {
         "cwd": "backend/plugins/payment_api",
         "command": "NODE_ENV=development node dist/src/main.js"
       }
     },
+
     "serve": {
       "executor": "nx:run-commands",
+
       "options": {
         "cwd": "backend/plugins/payment_api",
         "command": "NODE_ENV=development pnpm dev"
       }
     },
+
     "docker-build": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "command": "docker build -f backend/plugins/payment_api/Dockerfile . -t erxes/erxes-next-payment_api"
     }
   }
