@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useNavigate, useParams } from 'react-router';
-import { IconCalendarFilled, IconLabelFilled } from '@tabler/icons-react';
+import {
+  IconCalendarFilled,
+  IconProgressCheck,
+  IconLabelFilled,
+  IconProgress,
+} from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import { DateSelect } from '@/cycle/components/DateSelect';
 import {
@@ -9,13 +14,26 @@ import {
   RecordTable,
   RecordTableInlineCell,
   PopoverScoped,
+  ChartContainer,
 } from 'erxes-ui';
 import { ICycle } from '@/cycle/types';
 import { useState } from 'react';
 import { CycleHotKeyScope } from '@/cycle/CycleHotkeyScope';
 import { useUpdateCycle } from '@/cycle/hooks/useUpdateCycle';
+import { ChartConfig } from 'erxes-ui';
 import clsx from 'clsx';
-import { CircularProgressBar } from '@/cycle/components/CircularProgressBar';
+import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
+import { CycleStatusDisplay } from '@/cycle/components/CycleStatusDisplay';
+
+const chartConfig = {
+  visitors: {
+    label: 'Visitors',
+  },
+  safari: {
+    label: 'Done',
+    color: 'hsl(var(--primary))',
+  },
+} satisfies ChartConfig;
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICycle>;
 export const cyclesColumns: ColumnDef<ICycle>[] = [
@@ -97,7 +115,6 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     ),
     cell: ({ cell }) => {
       const startDate = cell.getValue() as string;
-      console.log(startDate);
       return (
         <DateSelect.InlineCell
           type="start"
@@ -131,12 +148,62 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     id: 'donePercent',
     accessorKey: 'donePercent',
     header: () => (
-      <RecordTable.InlineHead label="End Date" icon={IconCalendarFilled} />
+      <RecordTable.InlineHead label="Done Percent" icon={IconProgress} />
     ),
     cell: ({ cell }) => {
       const { donePercent } = cell.row.original;
       return (
-        <CircularProgressBar percentage={50} />
+        <RecordTableInlineCell>
+          <ChartContainer config={chartConfig} className="aspect-square size-6">
+            <RadialBarChart
+              width={24}
+              height={24}
+              cx={12}
+              cy={12}
+              innerRadius={6}
+              outerRadius={10}
+              data={[
+                {
+                  name: 'Progress',
+                  value: donePercent,
+                  fill: 'hsl(var(--primary))',
+                },
+              ]}
+              startAngle={90}
+              endAngle={-270}
+            >
+              <PolarAngleAxis
+                type="number"
+                domain={[0, 100]}
+                angleAxisId={0}
+                tick={false}
+              />
+              <RadialBar
+                background={{ fill: 'hsl(var(--border))' }}
+                dataKey="value"
+                cornerRadius={10}
+              />
+            </RadialBarChart>
+          </ChartContainer>
+          <span className="text-sm text-accent-foreground">{donePercent}%</span>
+        </RecordTableInlineCell>
+      );
+    },
+    size: 240,
+  },
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: () => (
+      <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
+    ),
+    cell: ({ cell }) => {
+      // const { isActive, isCompleted} = cell.row.original;
+      const { isActive, isCompleted } = { isActive: true, isCompleted: false };
+      return (
+        <RecordTableInlineCell>
+          <CycleStatusDisplay isActive={isActive} isCompleted={isCompleted} />
+        </RecordTableInlineCell>
       );
     },
     size: 240,

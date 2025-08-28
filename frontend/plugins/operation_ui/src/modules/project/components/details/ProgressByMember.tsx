@@ -41,7 +41,7 @@ export const ProgressByMember = ({ projectId }: { projectId: string }) => {
                   config={chartConfig}
                   className="aspect-square size-6"
                 >
-                  <RadialBarChart
+                  <RadialBarChart 
                     width={24}
                     height={24}
                     cx={12}
