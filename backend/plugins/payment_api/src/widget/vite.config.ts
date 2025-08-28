@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 
-import path from 'path';
+import * as path from 'path';
 
 export default defineConfig({
   plugins: [react()],
