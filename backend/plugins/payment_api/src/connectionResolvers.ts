@@ -8,7 +8,7 @@ import {
   IInvoiceModel,
   loadInvoiceClass,
 } from '~/modules/payment/db/models/Invoices';
-import { IPaymentModel, loadPaymentClass } from '~/modules/payment/db/models/payment';
+import { IPaymentModel, loadPaymentClass } from '~/modules/payment/db/models/Payment';
 import {
   ITransactionModel,
   loadTransactionClass,
