@@ -9,11 +9,12 @@ import { TasksFilter } from '@/task/components/TasksFilter';
 import { useParams } from 'react-router-dom';
 
 export const TasksRecordTable = () => {
-  const { projectId } = useParams();
+  const { projectId, cycleId } = useParams();
   const currentUser = useAtomValue(currentUserState);
 
   const variables = {
     projectId: projectId || undefined,
+    cycleId: cycleId || undefined,
     userId: currentUser?._id,
   };
 

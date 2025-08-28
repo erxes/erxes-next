@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import {
   IconCalendarFilled,
   IconProgressCheck,
@@ -48,7 +48,6 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
       const name = cell.getValue() as string;
       const [value, setValue] = useState(name);
       const { updateCycle } = useUpdateCycle();
-      const { teamId, projectId } = useParams();
       const navigate = useNavigate();
 
       const handleUpdate = () => {
@@ -59,10 +58,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
         }
       };
 
-      const url =
-        teamId && !projectId
-          ? `/operation/team/${teamId}/tasks/${cell.row.original._id}`
-          : `/operation/tasks/${cell.row.original._id}`;
+      const url = `/operation/team/${cell.row.original.teamId}/cycles/${cell.row.original._id}`;
 
       return (
         <PopoverScoped

@@ -8,8 +8,9 @@ import { ProjectLayout } from '@/project/components/ProjectLayout';
 import { TasksRecordTable } from '@/task/components/TasksRecordTable';
 import { TaskDetailPage } from '~/pages/TaskDetailPage';
 import { CyclesPage } from '~/pages/CyclesPage';
+import { CycleDetailPage } from '~/pages/CycleDetailPage';
 
-const taskMain = () => {  
+const taskMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
@@ -29,6 +30,7 @@ const taskMain = () => {
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="tasks" element={<TasksPage />} />
           <Route path="cycles" element={<CyclesPage />} />
+          <Route path="cycles/:cycleId" element={<CycleDetailPage />} />
           <Route path="tasks/:taskId" element={<TaskDetailPage />} />
           <Route path="projects/:projectId" element={<ProjectLayout />}>
             <Route index element={<Navigate to="overview" replace />} />

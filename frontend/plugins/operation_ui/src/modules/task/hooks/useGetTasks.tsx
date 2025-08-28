@@ -47,7 +47,7 @@ export const useTasksVariables = (
     direction: 'forward',
     name: searchValue || undefined,
     assigneeId: assignee || undefined,
-    teamId: teamId || team,
+    teamId: teamId || team || undefined,
     priority: priority || undefined,
     status: status || undefined,
     statusType: statusType || undefined,

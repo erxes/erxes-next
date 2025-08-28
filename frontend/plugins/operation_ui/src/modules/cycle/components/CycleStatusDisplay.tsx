@@ -1,5 +1,4 @@
 import { IconCircleFilled, IconCheck, IconClock } from '@tabler/icons-react';
-import { cn } from 'erxes-ui';
 
 export const CycleStatusDisplay = ({
   isActive,
