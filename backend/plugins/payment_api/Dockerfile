@@ -50,7 +50,7 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 
 # Copy built widget
-COPY --from=widget-build /app/backend/plugins/payment_api/src/widget/dist ./dist/public/widget
+COPY --from=widget-build /app/backend/plugins/payment_api/public/widget ./dist/public/widget
 
 # Use non-root user
 USER 1000
