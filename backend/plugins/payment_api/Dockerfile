@@ -17,7 +17,6 @@ COPY backend/erxes-api-shared ./backend/erxes-api-shared
 COPY backend/plugins/payment_api ./backend/plugins/payment_api
 
 # Install dependencies for all workspace projects
-# Use --no-frozen-lockfile to avoid lockfile mismatch issues
 RUN pnpm install --no-frozen-lockfile
 
 # -------------------------
@@ -38,7 +37,7 @@ RUN pnpm nx build payment_api
 FROM deps AS widget-build
 WORKDIR /app/backend/plugins/payment_api/src/widget
 
-# Widget deps already installed via pnpm workspace
+# Build widget (outputs to ../public/widget)
 RUN pnpm build
 
 # -------------------------
@@ -49,8 +48,8 @@ WORKDIR /app
 # Copy built backend
 COPY --from=build /app/dist ./dist
 
-# Copy built widget
-COPY --from=widget-build /app/backend/plugins/payment_api/public/widget ./dist/public/widget
+# Copy the entire public directory (which now contains the widget)
+COPY --from=widget-build /app/backend/plugins/payment_api/src/public ./dist/src/public
 
 # Use non-root user
 USER 1000
