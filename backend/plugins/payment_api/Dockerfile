@@ -37,6 +37,7 @@ COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 # Install widget dependencies
 WORKDIR /app/backend/plugins/payment_api/src/widget
 COPY ./backend/plugins/payment_api/src/widget/package.json ./
+RUN npm install -g pnpm
 RUN pnpm install
 
 # Build widget
