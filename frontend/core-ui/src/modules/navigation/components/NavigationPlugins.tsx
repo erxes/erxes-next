@@ -31,7 +31,7 @@ export const NavigationPlugins = () => {
   const navigationGroups = usePluginsNavigationGroups();
   const [activePlugin, setActivePlugin] = useAtom(activePluginState);
 
-  if (activePlugin) {
+  if (activePlugin && navigationGroups[activePlugin]) {
     return (
       <>
         <NavigationMenuGroup
