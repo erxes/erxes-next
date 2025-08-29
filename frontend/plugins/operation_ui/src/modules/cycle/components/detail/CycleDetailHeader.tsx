@@ -24,10 +24,6 @@ export const CycleDetailHeader = () => {
             <Breadcrumb.Item className="text-sm font-medium px-3 py-1">
               {cycleDetail?.name}
             </Breadcrumb.Item>
-            <Separator.Inline />
-            <Breadcrumb.Item className="text-sm font-medium px-3 py-1">
-              Tasks
-            </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>
       </PageHeader.Start>

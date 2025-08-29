@@ -38,7 +38,6 @@ export const taskCursorPaginationWithAggregation = async ({
   const [items, totalCount] = await Promise.all([
     models.Task.aggregate([
       { $match: baseQuery as FilterQuery<ITaskDocument> },
-      // Join status collection
       {
         $lookup: {
           from: 'operation_statuses',

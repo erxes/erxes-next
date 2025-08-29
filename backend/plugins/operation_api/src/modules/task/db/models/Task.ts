@@ -235,7 +235,7 @@ export const loadTaskClass = (models: IModels) => {
     public static async moveCycle(cycleId: string, newCycleId: string) {
       const statuses = await models.Status.find({
         cycleId,
-        type: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.CANCELLED] },
+        type: { $nin: [STATUS_TYPES.COMPLETED] },
       }).distinct('_id');
 
       const taskIds = await models.Task.find({
