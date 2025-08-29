@@ -47,7 +47,8 @@
   },
   "exclude": [
     "dist",
-    "frontend/**/*"
+    "frontend/**/*",
+    "src/widget"
   ],
   "include": [
     "src/**/*.ts",
