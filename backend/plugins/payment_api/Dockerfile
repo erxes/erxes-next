@@ -33,7 +33,6 @@ FROM node:22-alpine AS widget-build
 WORKDIR /app
 
 COPY ./backend/plugins/payment_api/src/widget/package.json ./backend/plugins/payment_api/src/widget/
-COPY ./backend/plugins/payment_api/src/widget/pnpm-lock.yaml ./backend/plugins/payment_api/src/widget/
 
 RUN npm install -g pnpm
 RUN cd ./backend/plugins/payment_api/src/widget && pnpm install --frozen-lockfile
