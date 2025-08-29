@@ -1,28 +1,14 @@
-import {
-  Form,
-  Sheet,
-  Input,
-  Separator,
-  Button,
-  BlockEditor,
-  useBlockEditor,
-} from 'erxes-ui';
+import { Form, Sheet, Input, Button } from 'erxes-ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addCycleSchema } from '@/cycle/validations';
 import { ICycleInputType } from '@/cycle/types';
 import { DateSelect } from '@/project/components/select';
-import { Block } from '@blocknote/core';
-import { useState } from 'react';
 import { useCreateCycle } from '@/cycle/hooks/useCreateCycle';
 import { useParams } from 'react-router-dom';
 
 export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
-  const editor = useBlockEditor({
-    placeholder: 'Add description...',
-  });
-  const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const { createCycle } = useCreateCycle();
   const form = useForm<ICycleInputType>({
     resolver: zodResolver(addCycleSchema),
@@ -41,24 +27,13 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
           startDate: data.startDate,
           endDate: data.endDate,
           teamId: data.teamId,
-          description: JSON.stringify(descriptionContent),
         },
       },
       onCompleted: () => {
         onClose();
         form.reset();
-        editor?.removeBlocks(editor?.document);
-        setDescriptionContent(undefined);
       },
     });
-  };
-
-  const handleDescriptionChange = async () => {
-    const content = await editor?.document;
-    if (content) {
-      content.pop();
-      setDescriptionContent(content as Block[]);
-    }
   };
 
   return (
@@ -117,14 +92,6 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
               )}
             />
           </div>
-          <Separator className="my-4" />
-          <div className="h-[60vh] overflow-y-auto">
-            <BlockEditor
-              editor={editor}
-              onChange={handleDescriptionChange}
-              className="min-h-full read-only"
-            />
-          </div>
         </Sheet.Content>
         <Sheet.Footer className="flex justify-end flex-shrink-0 gap-1 px-5">
           <Button
@@ -134,8 +101,6 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
             onClick={() => {
               onClose();
               form.reset();
-              editor?.removeBlocks(editor?.document);
-              setDescriptionContent(undefined);
             }}
           >
             Cancel

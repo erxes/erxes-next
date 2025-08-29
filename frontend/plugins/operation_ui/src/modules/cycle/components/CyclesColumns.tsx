@@ -194,8 +194,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
       <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
     ),
     cell: ({ cell }) => {
-      // const { isActive, isCompleted} = cell.row.original;
-      const { isActive, isCompleted } = { isActive: true, isCompleted: false };
+      const { isActive, isCompleted} = cell.row.original;
       return (
         <RecordTableInlineCell>
           <CycleStatusDisplay isActive={isActive} isCompleted={isCompleted} />
