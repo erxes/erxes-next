@@ -3,7 +3,6 @@ import { ITaskFilter } from '@/task/@types/task';
 import { ITaskDocument } from '@/task/@types/task';
 import { FilterQuery } from 'mongoose';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { taskCursorPaginationWithAggregation } from '@/task/graphql/resolvers/utils';
 
 export const taskQueries = {
   getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -77,27 +76,19 @@ export const taskQueries = {
     ) {
       filterQuery.assigneeId = filter.userId;
     }
-    if (filter.status) {
-      const { list, totalCount, pageInfo } =
-        await cursorPaginate<ITaskDocument>({
-          model: models.Task,
-          params: {
-            ...filter,
-            orderBy: {
-              createdAt: 'asc',
-            },
-          },
-          query: filterQuery,
-        });
 
-      return { list, totalCount, pageInfo };
-    }
-    const { list, totalCount, pageInfo } =
-      await taskCursorPaginationWithAggregation({
-        models,
-        params: { ...filter },
-        query: filterQuery,
-      });
+    const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
+      model: models.Task,
+      params: {
+        ...filter,
+        orderBy: {
+          statusType: 'asc',
+          createdAt: 'asc',
+        },
+      },
+      query: filterQuery,
+    });
+
     return { list, totalCount, pageInfo };
   },
 };

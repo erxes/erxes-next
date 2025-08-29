@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate, useParams } from 'react-router';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   IconAlertSquareRounded,
@@ -103,26 +102,7 @@ export const tasksColumns = (
       },
       size: 240,
     },
-    {
-      id: 'priority',
-      accessorKey: 'priority',
-      header: () => (
-        <RecordTable.InlineHead
-          label="Priority"
-          icon={IconAlertSquareRounded}
-        />
-      ),
-      cell: ({ cell }) => {
-        return (
-          <SelectTaskPriority
-            taskId={cell.row.original._id}
-            value={cell.row.original.priority}
-            variant="table"
-          />
-        );
-      },
-      size: 170,
-    },
+
     {
       id: 'status',
       accessorKey: 'status',
@@ -141,6 +121,7 @@ export const tasksColumns = (
       },
       size: 170,
     },
+
     {
       id: 'assigneeId',
       header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
@@ -160,6 +141,26 @@ export const tasksColumns = (
         );
       },
       size: 240,
+    },
+    {
+      id: 'priority',
+      accessorKey: 'priority',
+      header: () => (
+        <RecordTable.InlineHead
+          label="Priority"
+          icon={IconAlertSquareRounded}
+        />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <SelectTaskPriority
+            taskId={cell.row.original._id}
+            value={cell.row.original.priority}
+            variant="table"
+          />
+        );
+      },
+      size: 170,
     },
     {
       id: 'estimatePoint',
