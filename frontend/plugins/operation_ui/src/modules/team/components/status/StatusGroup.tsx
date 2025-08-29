@@ -22,7 +22,7 @@ import { useState, useEffect } from 'react';
 import { useStatusesByType } from '@/team/hooks/useGetStatus';
 import { useUpdateStatus } from '@/team/hooks/useUpdateStatus';
 import { useSortable } from '@dnd-kit/sortable';
-import { ITeamStatus, TeamStatusTypes } from '@/team/types';
+import { ITeamStatus } from '@/team/types';
 import { TEAM_STATUS_FORM_SCHEMA } from '@/team/schemas';
 import {
   Button,
@@ -41,7 +41,6 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
-import { TeamStatusIcons } from '@/team/constants';
 import { useParams } from 'react-router';
 import { useDeleteStatus } from '@/team/hooks/useDeleteStatus';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
@@ -196,7 +195,7 @@ export const StatusForm = ({
   statusType,
   editingStatus,
 }: {
-  statusType: TeamStatusTypes;
+  statusType: number;
   editingStatus?: ITeamStatus;
 }) => {
   const { addStatus } = useAddStatus();
@@ -346,11 +345,7 @@ export const StatusForm = ({
   );
 };
 
-export const StatusGroup = ({
-  statusType,
-}: {
-  statusType: TeamStatusTypes;
-}) => {
+export const StatusGroup = ({ statusType }: { statusType: number }) => {
   const { statuses = [], loading } = useStatusesByType({ type: statusType });
   const { updateStatus } = useUpdateStatus();
   const { toast } = useToast();
@@ -404,9 +399,7 @@ export const StatusGroup = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 justify-between w-full bg-accent py-1 pr-2 pl-4 rounded-md">
           <div className="flex items-center gap-2 ">
-            <p className="text-base font-medium">
-              {statusType.charAt(0).toUpperCase() + statusType.slice(1)}
-            </p>
+            <p className="text-base font-medium">{statusType}</p>
           </div>
           <Button
             variant="ghost"

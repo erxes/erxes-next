@@ -8,7 +8,7 @@ export const GET_TEAM = gql`
       icon
       description
       estimateType
-
+      cycleEnabled
       taskCount
       memberCount
       createdAt

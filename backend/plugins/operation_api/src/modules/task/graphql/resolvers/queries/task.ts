@@ -82,6 +82,7 @@ export const taskQueries = {
       params: {
         ...filter,
         orderBy: {
+          statusType: 'asc',
           createdAt: 'asc',
         },
       },

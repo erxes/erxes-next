@@ -2,6 +2,7 @@ import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { ICycle, ICycleDocument } from '@/cycle/types';
 import { cycleSchema } from '@/cycle/db/definitions/cycle';
+import { isSameDay } from 'date-fns';
 
 export interface ICycleModel extends Model<ICycleDocument> {
   getCycle(_id: string): Promise<ICycleDocument>;
@@ -40,6 +41,7 @@ export const loadCycleClass = (models: IModels) => {
       if (startDate > endDate) {
         throw new Error('Start date must be before end date');
       }
+
       const overlappingCycle = await models.Cycle.findOne({
         teamId: doc.teamId,
         $or: [
@@ -51,13 +53,21 @@ export const loadCycleClass = (models: IModels) => {
       });
 
       if (overlappingCycle) {
-        throw new Error('New cycle overlaps with an existing cycle');
+        throw new Error('New cycle with an existing cycle');
+      }
+
+      if (doc.startDate < new Date()) {
+        throw new Error('New cycle start date must be in the future');
       }
 
       const [result] = await models.Cycle.aggregate([
         { $match: { teamId: doc.teamId } },
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
       ]);
+
+      if (isSameDay(doc.startDate, new Date())) {
+        doc.isActive = true;
+      }
 
       const nextNumber = (result?.maxNumber || 0) + 1;
       doc.number = nextNumber;

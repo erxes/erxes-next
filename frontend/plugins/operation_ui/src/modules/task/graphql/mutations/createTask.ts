@@ -10,6 +10,7 @@ export const CREATE_TASK_MUTATION = gql`
     $startDate: Date
     $targetDate: Date
     $assigneeId: String
+    $cycleId: String
     $projectId: String
   ) {
     createTask(
@@ -21,6 +22,7 @@ export const CREATE_TASK_MUTATION = gql`
       startDate: $startDate
       targetDate: $targetDate
       assigneeId: $assigneeId
+      cycleId: $cycleId
       projectId: $projectId
     ) {
       _id

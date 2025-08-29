@@ -59,7 +59,7 @@ export const TeamDetails = () => {
       <MemberSection team={team} />
       <EstimateSection team={team} />
       <StatusSection team={team} />
-      <CycleSection />
+      <CycleSection team={team} />
     </div>
   );
 };

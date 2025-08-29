@@ -281,11 +281,16 @@ export function TopicItem(props: {
                               sub._id === searchParams.get('categoryId');
                             const IconComponent = getIconComponent(sub.icon);
                             return (
-                              <Sidebar.SubItem key={sub._id}>
-                                <Sidebar.SubButton
-                                  asChild
-                                  isActive={isSubActive}
-                                  className="w-full"
+                              <div
+                                key={sub._id}
+                                className="group/menu-item relative"
+                              >
+                                <div
+                                  className={cn(
+                                    'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 outline-none font-semibold hover:bg-accent focus-visible:ring-2 active:bg-accent disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 text-sm group-data-[collapsible=icon]:hidden',
+                                    isSubActive &&
+                                      'bg-primary/10 text-primary font-semibold',
+                                  )}
                                 >
                                   <div className="flex items-center justify-between w-full">
                                     <Link
@@ -297,7 +302,7 @@ export function TopicItem(props: {
                                           <IconComponent
                                             className={cn(
                                               'text-accent-foreground',
-                                              isSubmenuActive && 'text-primary',
+                                              isSubActive && 'text-primary',
                                             )}
                                           />
                                         )}
@@ -307,8 +312,8 @@ export function TopicItem(props: {
 
                                     {renderCategoryActions(sub, true)}
                                   </div>
-                                </Sidebar.SubButton>
-                              </Sidebar.SubItem>
+                                </div>
+                              </div>
                             );
                           })}
                         </div>
