@@ -9,7 +9,7 @@ import {
 } from '@/task/@types/task';
 import { createActivity } from '@/activity/utils/createActivity';
 import { createTaskNotification } from '@/task/notificationUtils';
-import { STATUS_TYPES } from '~/modules/status/constants';
+import { STATUS_TYPES } from '@/status/constants/types';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;

@@ -1,0 +1,1 @@
+export const CYCLES_CURSOR_SESSION_KEY = 'cycles_cursor_session_key';

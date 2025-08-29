@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { IStatusFilter } from '@/status/@types/status';
-import { STATUS_TYPES } from '@/status/constants';
+import { STATUS_TYPES } from '@/status/constants/types';
 
 export const statusQueries = {
   getStatus: async (_parent: undefined, { _id }, { models }: IContext) => {

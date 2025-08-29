@@ -155,6 +155,7 @@ export const useProjects = (
     fetchMore({
       variables: {
         filter: {
+          ...variables,
           cursor:
             direction === EnumCursorDirection.FORWARD
               ? pageInfo?.endCursor

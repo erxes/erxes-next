@@ -33,7 +33,6 @@ export const ProjectLayout = () => {
                 <ProjectBreadCrumb link={`/operation/projects`} />
               )}
               <Separator.Inline />
-
               <ProjectDetailBreadCrumb />
             </Breadcrumb.List>
           </Breadcrumb>
