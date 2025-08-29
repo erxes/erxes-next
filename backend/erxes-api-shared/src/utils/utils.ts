@@ -1,10 +1,11 @@
-import { IOrderInput } from '../core-types';
 import dayjs from 'dayjs';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import fetch from 'node-fetch'; // or global fetch in Node 18+
+import { IOrderInput } from '../core-types';
 import { randomAlphanumeric } from './random';
 import { redis } from './redis';
-import { Request, Response } from 'express';
-import fetch from 'node-fetch'; // or global fetch in Node 18+
+import { random } from './string';
 
 export const getEnv = ({
   name,
@@ -207,7 +208,7 @@ export const checkUserIds = (
 };
 
 const generateRandomEmail = () => {
-  return randomAlphanumeric(15) + '@gmail.com';
+  return random('Aa', 15) + '@gmail.com';
 };
 
 export const getUniqueValue = async (

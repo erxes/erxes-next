@@ -5,7 +5,6 @@ export type IUIConfig = {
     name: string;
     icon: React.ElementType;
     content: () => React.ReactNode;
-    actions?: () => React.ReactNode;
     subGroups?: () => React.ReactNode;
   };
   modules: {

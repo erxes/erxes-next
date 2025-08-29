@@ -26,7 +26,7 @@ export const AddMembers = () => {
 
   const { toast } = useToast();
 
-  const { addTeamMember } = useAddTeamMember();
+  const { addTeamMember, loading } = useAddTeamMember();
 
   const [_open, _setOpen] = useState<boolean>(false);
   const setHotkeyScope = useSetHotkeyScope();
@@ -99,7 +99,7 @@ export const AddMembers = () => {
             className="flex flex-col size-full gap-5"
           >
             <MemberForm form={form} />
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" disabled={loading}>
               Add
             </Button>
           </form>

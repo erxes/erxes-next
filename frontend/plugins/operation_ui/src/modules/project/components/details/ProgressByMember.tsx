@@ -1,5 +1,5 @@
 import { useGetProjectProgressByMember } from '@/project/hooks/useGetProjectProgressByMember';
-import { Button, ChartConfig, ChartContainer, HoverCard } from 'erxes-ui';
+import { Button, ChartContainer, HoverCard } from 'erxes-ui';
 import { MembersInline } from 'ui-modules';
 
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
@@ -37,11 +37,8 @@ export const ProgressByMember = ({ projectId }: { projectId: string }) => {
                   placeholder="No Assignee"
                 />
 
-                <ChartContainer
-                  config={chartConfig}
-                  className="aspect-square size-6"
-                >
-                  <RadialBarChart 
+                <ChartContainer config={{}} className="aspect-square size-6">
+                  <RadialBarChart
                     width={24}
                     height={24}
                     cx={12}
@@ -107,13 +104,3 @@ export const ProgressByMember = ({ projectId }: { projectId: string }) => {
     </div>
   );
 };
-
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  safari: {
-    label: 'Done',
-    color: 'hsl(var(--primary))',
-  },
-} satisfies ChartConfig;

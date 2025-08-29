@@ -1,7 +1,7 @@
 import { Button, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { UseHotkeysOptionsWithoutBuggyOptions } from 'erxes-ui/modules/hotkey';
 
 export interface ReactTablePopoverProps
