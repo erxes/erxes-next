@@ -34,7 +34,6 @@ WORKDIR /app/backend/plugins/payment_api/src/widget
 
 COPY ./backend/plugins/payment_api/src/widget/package.json ./
 COPY ./backend/plugins/payment_api/src/widget/pnpm-lock.yaml ./
-COPY ./backend/plugins/payment_api/src/widget/pnpm-workspace.yaml ./
 
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
