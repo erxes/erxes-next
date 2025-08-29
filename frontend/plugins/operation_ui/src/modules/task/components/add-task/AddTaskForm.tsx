@@ -40,7 +40,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
 
   const { teams } = useGetCurrentUsersTeams();
   const currentUser = useAtomValue(currentUserState);
-  const { createTask } = useCreateTask();
+  const { createTask, loading: createTaskLoading } = useCreateTask();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const editor = useBlockEditor();
 
@@ -52,7 +52,6 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const [_teamId, _setTeamId] = useState<string | undefined>(
     teamId ? teamId : project?.teamIds?.[0] ? project?.teamIds?.[0] : undefined,
   );
-
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
     defaultValues: {
@@ -67,6 +66,9 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
       estimatePoint: undefined,
       cycleId: cycleId,
     },
+  });
+  useEffect(() => {
+    form.setFocus('name');
   });
 
   useEffect(() => {
@@ -269,7 +271,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   <SelectCycle
                     {...field}
                     teamId={form.getValues('teamId') || _teamId}
-                    value={field.value || ''}
+                    value={field.value}
                   />
                 </Form.Item>
               )}
@@ -301,6 +303,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={createTaskLoading}
           >
             Save
           </Button>

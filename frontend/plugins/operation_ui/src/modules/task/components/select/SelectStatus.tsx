@@ -89,7 +89,6 @@ const SelectStatusValue = ({
 }) => {
   const { statusId, statuses } = useSelectStatusContext();
   const selectedStatus = statuses.find((status) => status.value === statusId);
-  console.log({ selectedStatus, statusId, statuses });
   if (!selectedStatus) {
     return (
       <span className="text-accent-foreground/80">
@@ -340,6 +339,7 @@ export const SelectStatusFormItem = React.forwardRef<
     const [open, setOpen] = useState(false);
     const { statuses } = useGetStatusByTeam({
       variables: { teamId },
+      skip: !teamId,
     });
 
     useEffect(() => {

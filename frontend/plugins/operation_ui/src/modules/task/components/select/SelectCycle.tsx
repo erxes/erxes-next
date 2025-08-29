@@ -13,15 +13,18 @@ export const SelectCycle = ({
   onChange: (value: string | undefined) => void;
 }) => {
   const { activeCycles } = useGetActiveCycles(teamId);
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(
+    value || 'no-cycle',
+  );
   const selectedCycle = activeCycles?.find(
     (cycle) => cycle._id === selectedValue,
   );
   return (
     <Select
-      value={selectedValue === undefined ? 'no-cycle' : selectedValue}
+      value={selectedValue}
       onValueChange={(value) => {
         setSelectedValue(value);
+        console.log(value, 'inside');
         onChange(value === 'no-cycle' ? undefined : value);
       }}
     >
