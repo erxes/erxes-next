@@ -34,8 +34,12 @@ FROM --platform=linux/amd64 build AS widget-build
 COPY ./backend/plugins/payment_api /app/backend/plugins/payment_api
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
-# Build widget from the widget directory
+# Install widget dependencies
 WORKDIR /app/backend/plugins/payment_api/src/widget
+COPY ./backend/plugins/payment_api/src/widget/package.json ./
+RUN pnpm install
+
+# Build widget
 RUN pnpm build
 
 # Final stage: Run the application
