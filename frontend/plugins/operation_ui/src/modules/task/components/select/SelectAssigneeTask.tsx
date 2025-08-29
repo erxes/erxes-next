@@ -235,6 +235,7 @@ export const SelectAssigneeTaskFormItem = ({
       value={value}
       onValueChange={(value) => {
         onValueChange(value as string);
+        setOpen(false);
       }}
       mode="single"
     >

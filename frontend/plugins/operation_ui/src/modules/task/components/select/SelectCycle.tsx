@@ -2,7 +2,7 @@ import { Button, Select, TextOverflowTooltip, Form } from 'erxes-ui';
 import { useGetActiveCycles } from '@/cycle/hooks/useGetActiveCycles';
 import { IconCalendarRepeat, IconBan } from '@tabler/icons-react';
 import { useState } from 'react';
-
+import { useGetTeam } from '@/team/hooks/useGetTeam';
 export const SelectCycle = ({
   teamId,
   value,
@@ -12,6 +12,7 @@ export const SelectCycle = ({
   value: string | undefined;
   onChange: (value: string | undefined) => void;
 }) => {
+  const { team } = useGetTeam({ variables: { _id: teamId }, skip: !teamId });
   const { activeCycles } = useGetActiveCycles(teamId);
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     value || 'no-cycle',
@@ -20,6 +21,7 @@ export const SelectCycle = ({
     (cycle) => cycle._id === selectedValue,
   );
 
+  if (!team?.cycleEnabled) return null;
   return (
     <Select
       value={selectedValue}
