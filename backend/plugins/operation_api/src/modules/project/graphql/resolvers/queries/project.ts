@@ -3,7 +3,7 @@ import { IProjectFilter } from '@/project/@types/project';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IProjectDocument } from '@/project/@types/project';
 import { FilterQuery } from 'mongoose';
-import { STATUS_TYPES } from '@/status/constants';
+import { STATUS_TYPES } from '@/status/constants/types';
 import {
   fillMissingDays,
   fillUntilTargetDate,

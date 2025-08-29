@@ -1,4 +1,4 @@
-import { STATUS_TYPES } from '~/modules/status/constants';
+import { STATUS_TYPES } from '@/status/constants/types';
 import { IContext } from '~/connectionResolvers';
 import { ICycleDocument } from '~/modules/cycle/types';
 
