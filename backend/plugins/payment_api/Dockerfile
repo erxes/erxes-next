@@ -35,7 +35,7 @@ WORKDIR /app
 COPY ./backend/plugins/payment_api/src/widget/package.json ./backend/plugins/payment_api/src/widget/
 
 RUN npm install -g pnpm
-RUN cd ./backend/plugins/payment_api/src/widget && pnpm install --frozen-lockfile
+RUN cd ./backend/plugins/payment_api/src/widget && pnpm install
 
 COPY ./backend/plugins/payment_api/src/widget ./backend/plugins/payment_api/src/widget
 
