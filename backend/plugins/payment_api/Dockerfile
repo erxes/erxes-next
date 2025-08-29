@@ -24,6 +24,8 @@ COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 WORKDIR /app/backend/plugins/payment_api
 
 ENV NX_DAEMON=false
+
+RUN npx nx reset
 RUN npx nx build:packageJson payment_api
 RUN npx nx build payment_api
 
