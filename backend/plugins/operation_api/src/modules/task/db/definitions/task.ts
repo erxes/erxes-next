@@ -26,6 +26,7 @@ export const taskSchema = schemaWrapper(
         default: new Date(),
       },
       number: { type: Number, label: 'Number', default: 0 },
+      statusType: { type: Number, label: 'Status Type', default: 0 },
     },
     {
       timestamps: true,

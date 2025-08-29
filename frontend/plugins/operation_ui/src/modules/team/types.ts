@@ -18,15 +18,6 @@ export enum TeamEstimateTypes {
   EXPONENTIAL = '4',
 }
 
-export enum TeamStatusTypes {
-  Backlog = 'backlog',
-  Unstarted = 'unstarted',
-  Started = 'started',
-  Completed = 'completed',
-  Cancelled = 'cancelled',
-}
-
-
 export interface ITeam {
   _id: string;
   name: string;
@@ -55,7 +46,7 @@ export interface ITeamStatus {
   description: string;
   color: string;
   order: number;
-  type: TeamStatusTypes;
+  type: number;
 }
 
 export type TTeamForm = z.infer<typeof TEAM_FORM_SCHEMA>;
