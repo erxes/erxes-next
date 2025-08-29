@@ -22,6 +22,7 @@ export interface ITask {
   targetDate?: Date;
   createdAt?: Date;
   statusChangedDate?: Date;
+  statusType?: number;
 }
 
 export interface ITaskUpdate extends ITask {

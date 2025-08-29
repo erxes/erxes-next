@@ -52,7 +52,6 @@ const allowedOrigins = [
 const corsOptions = {
   credentials: true,
   origin: (origin, callback) => {
-    console.debug('Origin:', origin);
     if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
       callback(null, true);
     } else {
