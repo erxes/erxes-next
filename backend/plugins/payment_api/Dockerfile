@@ -1,65 +1,58 @@
-# -------------------------
-# Stage 0: Base + Install pnpm
-FROM node:22-alpine AS base
+# Base image for common dependencies
+FROM --platform=linux/amd64 node:22-alpine AS build
+
+# Set working directory
 WORKDIR /app
+
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
+
+COPY ./backend/plugins/payment_api/package.json /app/backend/plugins/payment_api/
+COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
+
+# Install pnpm and dependencies
+RUN npm install -g pnpm
+RUN pnpm install
+
+# Build the test project
+FROM --platform=linux/amd64 build AS payment_api-build
+
+# Copy source code
+COPY ./backend/plugins/payment_api /app/backend/plugins/payment_api
+COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
+
+# Build following exact sequence
+WORKDIR /app/backend/plugins/payment_api
+
+ENV NX_DAEMON=false
+RUN npx nx build:packageJson payment_api
+RUN npx nx build payment_api
+
+# --- Add widget build ---
+WORKDIR /app/backend/plugins/payment_api/src/widget
+RUN pnpm install
+RUN pnpm run build
+
+# Final stage: Run the application
+FROM --platform=linux/amd64 node:22-alpine as payment_api
+
+WORKDIR /app
+
+# Copy built applications from previous stages
+COPY --chown=1000 --from=payment_api-build /app /app
+
+# Install pnpm for production
 RUN npm install -g pnpm
 
-# -------------------------
-# Stage 1: Copy source & install workspace dependencies
-FROM base AS deps
-WORKDIR /app
+# Install production dependencies
+WORKDIR /app/backend/plugins/payment_api/dist
+RUN pnpm install
 
-# Copy workspace root files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
-
-# Copy all backend projects
-COPY backend/erxes-api-shared ./backend/erxes-api-shared
-COPY backend/plugins/payment_api ./backend/plugins/payment_api
-
-# Install dependencies for the entire monorepo
-RUN pnpm install --no-frozen-lockfile
-
-# -------------------------
-# Stage 2: Build backend
-FROM deps AS build
-WORKDIR /app
-ENV NX_DAEMON=false
-
-# Build shared libs first
-RUN pnpm nx build erxes-api-shared
-
-# Build backend app
-RUN pnpm nx build payment_api
-
-# -------------------------
-# Stage 3: Build widget (lighter)
-FROM base AS widget-build
-WORKDIR /app/widget
-
-# Copy only the widget package.json and source
-COPY backend/plugins/payment_api/src/widget/package.json ./
-COPY backend/plugins/payment_api/src/widget ./src
-
-# Install only widget deps
-RUN pnpm install --no-frozen-lockfile
-
-# Build widget with Vite
-RUN pnpm build --cwd ./src
-
-# -------------------------
-# Stage 4: Runtime
-FROM node:22-alpine AS runtime
-WORKDIR /app
-
-# Copy backend build
-COPY --from=build /app/dist ./dist
-
-# Copy widget build
-COPY --from=widget-build /app/widget/dist ./dist/public/widget
-
-# Use non-root user
-USER 1000
+# Set environment variables
 ENV NODE_ENV=production
 
-# Start backend
-CMD ["node", "dist/src/main.js"]
+# Use non root user
+USER 1000
+
+# Start the application
+CMD ["node", "src/main.js"]
+
