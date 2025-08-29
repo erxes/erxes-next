@@ -10,7 +10,7 @@ export const taskSchema = schemaWrapper(
       description: { type: String, label: 'Description' },
       status: { type: String, label: 'Status', required: true },
       teamId: { type: String, label: 'Team ID', required: true },
-      priority: { type: String, label: 'Priority' },
+      priority: { type: Number, label: 'Priority', default: 0 },
       labelIds: { type: [String], label: 'Label IDs' },
       tagIds: { type: [String], label: 'Tag IDs' },
       assigneeId: { type: String, label: 'Assignee' },

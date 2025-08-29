@@ -1,4 +1,4 @@
-import { SortOrder, FilterQuery, Model, Types } from 'mongoose';
+import { SortOrder, FilterQuery, Model, Types, PipelineStage } from 'mongoose';
 
 export interface CursorPaginateParams<T> {
   model: Model<T>;
@@ -9,6 +9,17 @@ export interface CursorPaginateParams<T> {
     orderBy?: Record<string, SortOrder>;
   };
   query?: FilterQuery<T>;
+}
+
+export interface CursorPaginateParamsWithAggregation<T> {
+  model: Model<T>;
+  pipeline: PipelineStage[];
+  params: {
+    limit?: number;
+    cursor?: string;
+    direction?: 'forward' | 'backward';
+    orderBy?: Record<string, SortOrder>;
+  };
 }
 
 export interface PageInfo {
