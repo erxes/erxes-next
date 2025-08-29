@@ -1,8 +1,5 @@
-import { TasksRecordTable } from '@/task/components/TasksRecordTable';
+import { TasksLayout } from '@/task/components/TasksLayout';
+
 export const CycleDetail = () => {
-  return (
-    <div className="flex overflow-hidden w-full h-full">
-      <TasksRecordTable />
-    </div>
-  );
+  return <TasksLayout />;
 };

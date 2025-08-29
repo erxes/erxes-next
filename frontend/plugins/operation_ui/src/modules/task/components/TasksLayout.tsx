@@ -1,11 +1,15 @@
-import { Outlet } from 'react-router-dom';
-
-import { PageContainer } from 'erxes-ui';
+import { PageSubHeader } from 'erxes-ui';
+import { TasksFilter } from '@/task/components/TasksFilter';
+import { TasksView, TasksViewControl } from '@/task/components/TasksView';
 
 export const TasksLayout = () => {
   return (
-    <PageContainer>
-      <Outlet />
-    </PageContainer>
+    <div className="flex flex-col overflow-hidden w-full h-full">
+      <PageSubHeader>
+        <TasksFilter />
+        <TasksViewControl />
+      </PageSubHeader>
+      <TasksView />
+    </div>
   );
 };
