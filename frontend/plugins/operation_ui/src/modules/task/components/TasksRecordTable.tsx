@@ -10,12 +10,13 @@ import { useEffect } from 'react';
 import { taskTotalCountAtom } from '@/task/states/tasksTotalCountState';
 
 export const TasksRecordTable = () => {
-  const { projectId } = useParams();
+  const { projectId, cycleId } = useParams();
   const currentUser = useAtomValue(currentUserState);
   const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
 
   const variables = {
     projectId: projectId || undefined,
+    cycleId: cycleId || undefined,
     userId: currentUser?._id,
   };
 

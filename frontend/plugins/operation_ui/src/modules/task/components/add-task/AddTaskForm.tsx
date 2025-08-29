@@ -29,16 +29,18 @@ import { DateSelectTask } from '@/task/components/select/DateSelectTask';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
 import { SelectTeam } from '@/team/components/SelectTeam';
 import { taskCreateDefaultValuesState } from '@/task/states/taskCreateSheetState';
+import { SelectCycle } from '@/task/components/select/SelectCycle';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
-  const { teamId, projectId } = useParams<{
+  const { teamId, projectId, cycleId } = useParams<{
     teamId?: string;
     projectId?: string;
+    cycleId?: string;
   }>();
 
   const { teams } = useGetCurrentUsersTeams();
   const currentUser = useAtomValue(currentUserState);
-  const { createTask } = useCreateTask();
+  const { createTask, loading: createTaskLoading } = useCreateTask();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const editor = useBlockEditor();
   const [defaultValuesState, setDefaultValues] = useAtom(
@@ -64,11 +66,15 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     startDate: undefined,
     targetDate: undefined,
     estimatePoint: 0,
+    cycleId: cycleId,
   };
 
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
     defaultValues,
+  });
+  useEffect(() => {
+    form.setFocus('name');
   });
 
   useEffect(() => {
@@ -262,6 +268,20 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 </Form.Item>
               )}
             />
+            <Form.Field
+              name="cycleId"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="sr-only">Cycle</Form.Label>
+                  <SelectCycle
+                    {...field}
+                    teamId={form.getValues('teamId') || _teamId}
+                    value={field.value}
+                  />
+                </Form.Item>
+              )}
+            />
           </div>
           <Separator className="my-4" />
           <div className="h-[60vh] overflow-y-auto">
@@ -289,6 +309,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={createTaskLoading}
           >
             Save
           </Button>

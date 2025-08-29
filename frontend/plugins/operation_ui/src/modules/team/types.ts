@@ -35,7 +35,7 @@ export interface ITeam {
   estimateType: TeamEstimateTypes;
   createdAt: string;
   updatedAt: string;
-
+  cycleEnabled: boolean;
   taskCount: number;
   memberCount: number;
 }

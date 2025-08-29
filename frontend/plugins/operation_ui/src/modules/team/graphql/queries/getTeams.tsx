@@ -20,6 +20,7 @@ export const GET_TEAMS = gql`
       estimateType
       createdAt
       updatedAt
+      cycleEnabled
       taskCount
       memberCount
     }

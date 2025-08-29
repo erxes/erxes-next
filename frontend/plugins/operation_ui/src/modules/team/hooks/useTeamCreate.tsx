@@ -4,7 +4,7 @@ import { GET_TEAMS } from '@/team/graphql/queries/getTeams';
 import { ITeam } from '@/team/types';
 
 interface CreateTeamMutationResponse {
-  createTeam: ITeam;
+  teamAdd: ITeam;
 }
 
 export const useTeamCreate = () => {
