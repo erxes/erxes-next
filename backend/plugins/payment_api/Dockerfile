@@ -1,4 +1,3 @@
-@ -0,0 +1,53 @@
 # Base image for common dependencies
 FROM --platform=linux/amd64 node:22-alpine AS build
 
@@ -39,6 +38,7 @@ COPY --chown=1000 --from=payment_api-build /app /app
 # Copy prebuilt widget from CI output
 COPY ./backend/plugins/payment_api/src/widget/dist ./dist/widget
 
+
 # Install pnpm for production
 RUN npm install -g pnpm
 
@@ -54,3 +54,4 @@ USER 1000
 
 # Start the application
 CMD ["node", "src/main.js"]
+
