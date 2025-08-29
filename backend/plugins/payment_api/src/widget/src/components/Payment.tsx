@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PaymentContext } from '../hooks/use-payment';
 import PaymentMethod from './PaymentMethod';
 import PaymentDialog from './PaymentDialog';
@@ -15,8 +15,16 @@ type Props = {
 
 const Payment = (props: Props) => {
   const { invoiceDetail, payments } = props;
-  const transactions = invoiceDetail.transactions || [];
-  const apiDomain = import.meta.env.VITE_API_URL;
+  const transactions = useMemo(
+    () => invoiceDetail.transactions || [],
+    [invoiceDetail.transactions],
+  );
+
+  const apiDomain =
+    typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL
+      ? import.meta.env.VITE_API_URL
+      : process.env.VITE_API_URL;
+
   const [currentTransaction, setCurrentTransaction] = useState<any>(
     props.newTransaction,
   );

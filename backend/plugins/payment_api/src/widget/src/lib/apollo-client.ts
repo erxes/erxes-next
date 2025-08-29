@@ -5,11 +5,15 @@ import { createClient } from 'graphql-ws';
 import { ApolloLink, split } from '@apollo/client/link/core';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-const apiUrl = import.meta.env.VITE_API_URL;
-const wsUri = apiUrl?.replace('http', 'ws');
+const apiDomain =
+  typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL
+    ? import.meta.env.VITE_API_URL
+    : process.env.VITE_API_URL;
+
+const wsUri = apiDomain?.replace('http', 'ws');
 
 const httpLink = createHttpLink({
-  uri: `${apiUrl}/graphql`,
+  uri: `${apiDomain}/graphql`,
   credentials: 'include',
 });
 
@@ -17,8 +21,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.map(({ message, locations, path }) =>
       console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
     );
 
   if (networkError) console.error(`[Network error]: ${networkError}`);
@@ -26,8 +30,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `${wsUri}/graphql`
-  })
+    url: `${wsUri}/graphql`,
+  }),
 );
 
 const splitLink = split(

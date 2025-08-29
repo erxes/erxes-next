@@ -1,12 +1,17 @@
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 
-import path from 'path';
+import * as path from 'path';
 
 export default defineConfig({
+  base: '/pl:payment/widget/',
+  server: {
+    port: 5173,
+    hmr: true
+  },
   plugins: [react()],
   root: __dirname, // Set root to `src/widget`
-  base: '/pl:payment/widget/',
+  
   build: {
     outDir: '../public/widget',
     emptyOutDir: true,

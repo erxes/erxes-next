@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/main.ts && pnpm dev:widget",
     "dev:widget": "cd src/widget && pnpm dev",
-    "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json && cd widget && pnpm build",
+    "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "start": "node -r tsconfig-paths/register dist/src/main.js"
   },
   "keywords": [],
