@@ -90,13 +90,13 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
       }
       if (action.endsWith('All')) {
         return (
-          <RecordTableInlineCell className="justify-center">
+          <RecordTableInlineCell>
             <Badge>All</Badge>
           </RecordTableInlineCell>
         );
       }
       return (
-        <RecordTableInlineCell className="justify-center">
+        <RecordTableInlineCell>
           <Badge>{cell.getValue() as string}</Badge>
         </RecordTableInlineCell>
       );
