@@ -153,7 +153,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Control>
                   <Input
                     {...field}
-                    className="shadow-none focus-visible:shadow-none h-8 text-xl"
+                    className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
                     placeholder="Task Name"
                   />
                 </Form.Control>

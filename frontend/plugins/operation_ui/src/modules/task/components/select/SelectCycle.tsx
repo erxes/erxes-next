@@ -19,12 +19,12 @@ export const SelectCycle = ({
   const selectedCycle = activeCycles?.find(
     (cycle) => cycle._id === selectedValue,
   );
+
   return (
     <Select
       value={selectedValue}
       onValueChange={(value) => {
         setSelectedValue(value);
-        console.log(value, 'inside');
         onChange(value === 'no-cycle' ? undefined : value);
       }}
     >
@@ -56,27 +56,41 @@ export const SelectCycle = ({
           </Select.Item>
         )}
         <Select.Separator />
-        {selectedValue !== 'no-cycle' && (
-          <Select.Item value="no-cycle" key="no-cycle">
-            <span className="flex items-center gap-2 font-medium">
-              <IconBan className="size-4" />
-              No cycle
-            </span>
-          </Select.Item>
-        )}
-        {activeCycles &&
-          activeCycles
-            .filter((cycle) => cycle._id !== selectedValue)
-            .map((cycle) => (
-              <Select.Item
-                key={cycle._id}
-                value={cycle._id}
-                className="font-medium"
-              >
-                <TextOverflowTooltip value={cycle.name} />
+
+        {activeCycles && activeCycles.length > 0 ? (
+          <>
+            {selectedValue !== 'no-cycle' && (
+              <Select.Item value="no-cycle" key="no-cycle">
+                <span className="flex items-center gap-2 font-medium">
+                  <IconBan className="size-4" />
+                  No cycle
+                </span>
               </Select.Item>
-            ))}
+            )}
+            {activeCycles
+              .filter((cycle) => cycle._id !== selectedValue)
+              .map((cycle) => (
+                <Select.Item
+                  key={cycle._id}
+                  value={cycle._id}
+                  className="font-medium"
+                >
+                  <TextOverflowTooltip value={cycle.name} />
+                </Select.Item>
+              ))}
+          </>
+        ) : (
+          <SelectCycleEmpty />
+        )}
       </Select.Content>
     </Select>
+  );
+};
+
+const SelectCycleEmpty = () => {
+  return (
+    <div className="flex items-center gap-2 font-medium text-muted-foreground h-16 justify-center ">
+      No cycle on the selected team
+    </div>
   );
 };
