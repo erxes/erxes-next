@@ -4,7 +4,6 @@ import { currentUserState } from 'ui-modules';
 import { useNavigate } from 'react-router';
 import {
   Button,
-  Checkbox,
   Collapsible,
   DropdownMenu,
   IconComponent,
@@ -16,11 +15,9 @@ import {
   useToast,
 } from 'erxes-ui';
 import {
-  IconArchive,
-  IconBell,
+  IconCalendarRepeat,
   IconCaretRightFilled,
   IconChecklist,
-  IconChevronRight,
   IconClipboard,
   IconDotsVertical,
   IconLink,
@@ -31,6 +28,7 @@ type Team = {
   _id: string;
   name: string;
   icon?: string;
+  cycleEnabled: boolean;
 };
 
 function LoadingSkeleton() {
@@ -92,6 +90,15 @@ function TeamItem({ team }: TeamItemProps) {
                 className="pl-6 font-medium"
                 icon={IconChecklist}
               />
+              {team.cycleEnabled && (
+                <NavigationMenuLinkItem
+                  name="Cycles"
+                  pathPrefix="operation/team"
+                  path={`${team._id}/cycles`}
+                  className="pl-6 font-medium"
+                  icon={IconCalendarRepeat}
+                />
+              )}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
         </Collapsible.Content>

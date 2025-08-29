@@ -39,12 +39,14 @@ export const teamMutations = {
       description,
       icon,
       estimateType,
+      cycleEnabled,
     }: {
       _id: string;
       name: string;
       description: string;
       icon: string;
       estimateType: number;
+      cycleEnabled: boolean;
     },
     { models, user }: IContext,
   ) => {
@@ -60,6 +62,7 @@ export const teamMutations = {
       description,
       icon,
       estimateType,
+      cycleEnabled,
     });
   },
 

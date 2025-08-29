@@ -1,0 +1,276 @@
+import React, { useState } from 'react';
+import {
+  cn,
+  Combobox,
+  Command,
+  Filter,
+  PopoverScoped,
+  useQueryState,
+} from 'erxes-ui';
+import { IStatus } from '@/task/types';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
+import { DEFAULT_TEAM_STATUSES } from '@/team/constants';
+import { StatusInlineIcon } from '@/task/components/StatusInline';
+import {
+  SelectOperationContent,
+  SelectTriggerOperation,
+  SelectTriggerVariant,
+} from '@/operation/components/SelectOperation';
+
+interface SelectStatusContextType {
+  value: string;
+  onValueChange: (status: string) => void;
+  loading?: boolean;
+  error?: any;
+  statuses?: IStatus[];
+}
+
+const SelectStatusContext = React.createContext<SelectStatusContextType | null>(
+  null,
+);
+
+const useSelectStatusContext = () => {
+  const context = React.useContext(SelectStatusContext);
+  if (!context) {
+    throw new Error(
+      'useSelectStatusContext must be used within SelectStatusProvider',
+    );
+  }
+  return context;
+};
+
+export const SelectStatusProvider = ({
+  value,
+  onValueChange,
+  teamId,
+  children,
+}: {
+  value: string;
+  onValueChange: (status: string) => void;
+  children: React.ReactNode;
+  teamId?: string;
+}) => {
+  const handleValueChange = (status: string) => {
+    if (!status) return;
+    onValueChange?.(status);
+  };
+  const { statuses, loading, error } = useGetStatusByTeam({
+    variables: { teamId },
+    skip: !teamId,
+  });
+  return (
+    <SelectStatusContext.Provider
+      value={{
+        value: value || '',
+        onValueChange: handleValueChange,
+        statuses: teamId ? statuses : DEFAULT_TEAM_STATUSES,
+        loading,
+        error,
+      }}
+    >
+      {children}
+    </SelectStatusContext.Provider>
+  );
+};
+
+const SelectStatusValue = ({
+  placeholder,
+  className,
+}: {
+  placeholder?: string;
+  className?: string;
+}) => {
+  const { value, statuses } = useSelectStatusContext();
+  const selectedStatus = statuses?.find((status) => status.value === value);
+
+  if (!selectedStatus) {
+    return (
+      <span className="text-accent-foreground/80">
+        {placeholder || 'Status'}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <StatusInlineIcon
+        type={selectedStatus.type}
+        color={selectedStatus.color}
+      />
+      <p className={cn('font-medium text-sm', className)}>
+        {selectedStatus.label}
+      </p>
+    </div>
+  );
+};
+
+const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
+  const { onValueChange, value } = useSelectStatusContext();
+  const { label, value: statusValue, type, color } = status || {};
+
+  return (
+    <Command.Item
+      value={statusValue}
+      onSelect={() => {
+        onValueChange(statusValue);
+      }}
+    >
+      <div className="flex items-center gap-2 flex-1">
+        <StatusInlineIcon type={type} color={color} />
+        <span className="font-medium">{label}</span>
+      </div>
+      <Combobox.Check checked={value === statusValue} />
+    </Command.Item>
+  );
+};
+
+const SelectStatusContent = () => {
+  const { statuses } = useSelectStatusContext();
+  return (
+    <Command>
+      <Command.Input placeholder="Search status" />
+      <Command.Empty>No status found</Command.Empty>
+      <Command.List>
+        {statuses?.map((status) => (
+          <SelectStatusCommandItem key={status.value} status={status} />
+        ))}
+      </Command.List>
+    </Command>
+  );
+};
+
+const SelectStatusTaskRoot = ({
+  value,
+  id,
+  teamId,
+  variant,
+  scope,
+  onValueChange,
+}: {
+  value: string;
+  id: string;
+  teamId: string;
+  variant: `${SelectTriggerVariant}`;
+  scope?: string;
+  onValueChange?: (value: string) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+
+  const handleValueChange = (value: string) => {
+    if (id) {
+      updateTask({
+        variables: {
+          _id: id,
+          status: value,
+        },
+      });
+      onValueChange?.(value);
+    }
+    setOpen(false);
+  };
+
+  return (
+    <SelectStatusProvider
+      teamId={teamId}
+      value={value}
+      onValueChange={handleValueChange}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <SelectTriggerOperation variant={variant}>
+          <SelectStatusValue placeholder="Status" />
+        </SelectTriggerOperation>
+        <SelectOperationContent variant={variant}>
+          <SelectStatusContent />
+        </SelectOperationContent>
+      </PopoverScoped>
+    </SelectStatusProvider>
+  );
+};
+
+export const SelectStatusTaskFilterView = ({ teamId }: { teamId?: string }) => {
+  const [status, setStatus] = useQueryState<string>(
+    teamId ? 'status' : 'statusType',
+  );
+  return (
+    <Filter.View filterKey={teamId ? 'status' : 'statusType'}>
+      <SelectStatusProvider
+        value={status || ''}
+        onValueChange={(value) => setStatus(value as string)}
+      >
+        <SelectStatusContent />
+      </SelectStatusProvider>
+    </Filter.View>
+  );
+};
+
+export const SelectStatusTaskFilterBar = ({
+  teamId,
+  scope,
+}: {
+  teamId?: string;
+  scope?: string;
+}) => {
+  const [status, setStatus] = useQueryState<string>(
+    teamId ? 'status' : 'statusType',
+  );
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectStatusProvider
+      value={status || ''}
+      onValueChange={(value) => {
+        setStatus(value);
+        setOpen(false);
+      }}
+    >
+      <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
+        <Filter.BarButton filterKey={teamId ? 'status' : 'statusType'}>
+          <SelectStatusValue placeholder="Status" />
+        </Filter.BarButton>
+        <Combobox.Content>
+          <SelectStatusContent />
+        </Combobox.Content>
+      </PopoverScoped>
+    </SelectStatusProvider>
+  );
+};
+
+export const SelectStatusTaskFormItem = ({
+  value,
+  onValueChange,
+  teamId,
+  scope,
+}: {
+  value: string;
+  onValueChange: (value: string) => void;
+  teamId?: string;
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectStatusProvider
+      value={value}
+      onValueChange={onValueChange}
+      teamId={teamId}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <SelectTriggerOperation variant="form">
+          <SelectStatusValue placeholder="Status" />
+        </SelectTriggerOperation>
+        <Combobox.Content>
+          <SelectStatusContent />
+        </Combobox.Content>
+      </PopoverScoped>
+    </SelectStatusProvider>
+  );
+};
+
+export const SelectStatusTask = Object.assign(SelectStatusTaskRoot, {
+  Provider: SelectStatusProvider,
+  Value: SelectStatusValue,
+  Content: SelectStatusContent,
+  FilterView: SelectStatusTaskFilterView,
+  FilterBar: SelectStatusTaskFilterBar,
+  FormItem: SelectStatusTaskFormItem,
+});

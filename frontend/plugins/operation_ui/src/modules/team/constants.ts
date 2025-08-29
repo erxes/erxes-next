@@ -3,7 +3,6 @@ import { IconCircle } from '@tabler/icons-react';
 import { IconCircleDot } from '@tabler/icons-react';
 import { IconCircleCheck } from '@tabler/icons-react';
 import { IconCircleX } from '@tabler/icons-react';
-import { TeamStatusTypes } from '@/team/types';
 
 export const TeamStatusIcons = {
   backlog: IconCircleDashed,
@@ -11,6 +10,14 @@ export const TeamStatusIcons = {
   started: IconCircleDot,
   completed: IconCircleCheck,
   cancelled: IconCircleX,
+};
+
+export const TeamStatusTypes = {
+  Backlog: 3,
+  Unstarted: 2,
+  Started: 1,
+  Completed: 4,
+  Cancelled: 5,
 };
 
 export const DEFAULT_TEAM_STATUSES = [

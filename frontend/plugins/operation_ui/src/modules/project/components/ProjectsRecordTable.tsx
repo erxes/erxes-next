@@ -1,12 +1,12 @@
 import { projectsColumns } from '@/project/components/ProjectsColumn';
 import { RecordTable, PageSubHeader } from 'erxes-ui';
 import { useProjects } from '@/project/hooks/useGetProjects';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ProjectsFilter } from '@/project/components/ProjectsFilter';
 import { useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 
 export const ProjectsRecordTable = () => {
   const { teamId } = useParams();

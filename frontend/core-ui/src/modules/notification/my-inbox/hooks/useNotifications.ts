@@ -19,9 +19,25 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import strip from 'strip-ansi';
-import { currentUserState, IPageInfo, IUser } from 'ui-modules';
+import { currentUserState, IUser } from 'ui-modules';
 type NotificationInsertedData = {
   notificationInserted: INotification;
+};
+
+type NotificationRead = {
+  notificationRead: {
+    userId: string;
+    notificationId?: string;
+    notificationIds?: string[];
+  };
+};
+
+type NotificationArchived = {
+  notificationArchived: {
+    userId: string;
+    notificationId?: string;
+    notificationIds?: string[];
+  };
 };
 
 type NotificationsQueryResponse = ICursorListResponse<INotification>;
@@ -60,17 +76,13 @@ export const useNotifications = () => {
   const { data, loading, subscribeToMore, refetch, fetchMore } =
     useQuery<NotificationsQueryResponse>(NOTIFICATIONS, {
       variables: {
-        ids:
-          currentNotificationId && (!status || status === 'unread')
-            ? [currentNotificationId]
-            : undefined,
         limit: NOTIFICATIONS_LIMIT,
         status: status?.toUpperCase() || 'UNREAD',
         priority: priority?.toUpperCase(),
         type: type?.toUpperCase(),
         fromDate: parseDateRangeFromString(createdAt)?.from,
         endDate: parseDateRangeFromString(createdAt)?.to,
-        fromUserId,
+        fromUserId: fromUserId ?? undefined,
         ...generateOrderBy(orderBy),
       },
     });
@@ -119,22 +131,120 @@ export const useNotifications = () => {
 
         sendDesktopNotification({ title, content: strip(message || '') });
 
-        refetch();
+        const prevList = prev.notifications?.list || [];
+
+        if (status !== 'read') {
+          const existsIndex = prevList.findIndex(
+            (item: any) => item._id === notificationInserted._id,
+          );
+
+          let updatedList;
+
+          if (existsIndex !== -1) {
+            updatedList = [
+              notificationInserted,
+              ...prevList.filter((_, idx) => idx !== existsIndex),
+            ];
+          } else {
+            updatedList = [notificationInserted, ...prevList];
+          }
+
+          return {
+            ...prev,
+            notifications: {
+              ...prev.notifications,
+              totalCount: prev?.notifications?.totalCount + 1,
+              list: updatedList,
+            },
+          };
+        }
+        return prev;
       },
     });
-    const notificationRead = subscribeToMore({
+    const notificationRead = subscribeToMore<NotificationRead>({
       document: gql(NOTIFICATION_READ),
       variables: { userId: currentUser ? currentUser._id : null },
-      updateQuery: () => {
-        refetch();
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        const { notificationId, notificationIds = [] } =
+          data?.notificationRead || {};
+
+        const removedIds = notificationIds.length
+          ? notificationIds
+          : notificationId
+          ? [notificationId]
+          : [];
+        if (!status || status === 'unread') {
+          const updatedTotalCount = Math.max(
+            (prev?.notifications?.totalCount || 0) - removedIds.length,
+            0,
+          );
+          const updatedList = (prev?.notifications?.list || []).filter(
+            (notification) => !removedIds.includes(notification._id),
+          );
+
+          if (
+            updatedList.length === 0 &&
+            prev.notifications?.pageInfo?.endCursor
+          ) {
+            handleFetchMore({ direction: EnumCursorDirection.FORWARD });
+          }
+          return {
+            ...prev,
+            notifications: {
+              ...prev.notifications,
+              list: updatedList,
+              totalCount: updatedTotalCount,
+            },
+          };
+        }
+
+        return {
+          ...prev,
+          notifications: {
+            ...prev.notifications,
+            list: (prev?.notifications?.list || []).map((notification) =>
+              removedIds.includes(notification._id)
+                ? { ...notification, isRead: true }
+                : notification,
+            ),
+          },
+        };
       },
     });
 
-    const notificationArchived = subscribeToMore({
+    const notificationArchived = subscribeToMore<NotificationArchived>({
       document: gql(NOTIFICATION_ARCHIVED),
       variables: { userId: currentUser ? currentUser._id : null },
-      updateQuery: () => {
-        refetch();
+      updateQuery: (prev, { subscriptionData: { data } }) => {
+        const { notificationId, notificationIds = [] } =
+          data?.notificationArchived || {};
+        const removedIds = notificationIds.length
+          ? notificationIds
+          : notificationId
+          ? [notificationId]
+          : [];
+        const updatedList = (prev?.notifications?.list || []).filter(
+          (notification) => !removedIds.includes(notification._id),
+        );
+        const updatedTotalCount = Math.max(
+          (prev?.notifications?.totalCount || 0) - removedIds.length,
+          0,
+        );
+
+        if (
+          updatedList.length === 0 &&
+          prev.notifications?.pageInfo?.endCursor
+        ) {
+          handleFetchMore({ direction: EnumCursorDirection.FORWARD });
+        }
+        return {
+          ...prev,
+          notifications: {
+            ...prev.notifications,
+            list: updatedList,
+            totalCount: updatedTotalCount,
+          },
+        };
       },
     });
 

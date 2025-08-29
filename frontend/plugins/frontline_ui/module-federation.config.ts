@@ -18,6 +18,7 @@ const config: ModuleFederationConfig = {
     './config': './src/config.tsx',
     './inbox': './src/modules/inbox/Main.tsx',
     './ticket': './src/modules/ticket/Main.tsx',
+    './frontline': './src/modules/integrations/Main.tsx',
     './inboxSettings': './src/modules/inbox/Settings.tsx',
     './ticketSettings': './src/modules/ticket/Settings.tsx',
     './automationsWidget':

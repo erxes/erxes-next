@@ -4,4 +4,5 @@ export enum TaskHotKeyScope {
   TaskAddSheet = 'task-add-sheet',
   TaskEditSheet = 'task-edit-sheet',
   TaskTableCell = 'task-table-cell',
+  NoteInput = 'note-input',
 }

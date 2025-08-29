@@ -47,7 +47,10 @@ const SkeletonRow = React.forwardRef<
   return (
     <Table.Row ref={ref} className={cn('h-cell', className)} {...props}>
       {Array.from({ length: columnCount }).map((_, index) => (
-        <Table.Cell key={index} className={cn('border-r-0 px-2')}>
+        <Table.Cell
+          key={index}
+          className={cn('border-r-0 px-2 group-hover/table-row:bg-background')}
+        >
           <Skeleton className="h-4 w-full min-w-4" />
         </Table.Cell>
       ))}

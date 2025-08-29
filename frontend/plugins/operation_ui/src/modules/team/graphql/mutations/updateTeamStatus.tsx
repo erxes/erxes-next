@@ -7,7 +7,7 @@ export const UPDATE_TEAM_STATUS = gql`
     $description: String
     $color: String
     $order: Int
-    $type: String
+    $type: Int
   ) {
     updateStatus(
       _id: $_id

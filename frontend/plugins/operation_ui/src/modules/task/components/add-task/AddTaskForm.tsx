@@ -6,7 +6,6 @@ import {
   Separator,
   useBlockEditor,
   BlockEditor,
-  cn,
 } from 'erxes-ui';
 import { TAddTask, addTaskSchema } from '@/task/types';
 import { useCreateTask } from '@/task/hooks/useCreateTask';
@@ -14,33 +13,39 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
-import {
-  SelectStatus,
-  SelectTeam,
-  SelectPriority,
-  SelectAssignee,
-  DateSelect,
-  SelectEstimatedPoint,
-} from '@/task/components/select';
-import { SelectProject } from '@/task/components/select/SelectProject';
+import { SelectProject } from '@/task/components/select/SelectProjectTask';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 import { useGetProject } from '@/project/hooks/useGetProject';
+import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
+import clsx from 'clsx';
+import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
+import { SelectPriority } from '@/operation/components/SelectPriority';
+import { DateSelectTask } from '@/task/components/select/DateSelectTask';
+import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
+import { SelectTeam } from '@/team/components/SelectTeam';
+import { taskCreateDefaultValuesState } from '@/task/states/taskCreateSheetState';
+import { SelectCycle } from '@/task/components/select/SelectCycle';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
-  const { teamId, projectId } = useParams<{
+  const { teamId, projectId, cycleId } = useParams<{
     teamId?: string;
     projectId?: string;
+    cycleId?: string;
   }>();
 
   const { teams } = useGetCurrentUsersTeams();
   const currentUser = useAtomValue(currentUserState);
-  const { createTask } = useCreateTask();
+  const { createTask, loading: createTaskLoading } = useCreateTask();
   const [descriptionContent, setDescriptionContent] = useState<Block[]>();
   const editor = useBlockEditor();
+  const [defaultValuesState, setDefaultValues] = useAtom(
+    taskCreateDefaultValuesState,
+  );
 
   const { project } = useGetProject({
     variables: { _id: projectId || '' },
@@ -51,19 +56,25 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     teamId ? teamId : project?.teamIds?.[0] ? project?.teamIds?.[0] : undefined,
   );
 
+  const defaultValues = {
+    teamId: _teamId || undefined,
+    name: '',
+    status: '',
+    priority: 0,
+    assigneeId: teamId ? undefined : currentUser?._id,
+    projectId: projectId || undefined,
+    startDate: undefined,
+    targetDate: undefined,
+    estimatePoint: 0,
+    cycleId: cycleId,
+  };
+
   const form = useForm<TAddTask>({
     resolver: zodResolver(addTaskSchema),
-    defaultValues: {
-      teamId: _teamId || undefined,
-      name: '',
-      status: '',
-      priority: 0,
-      assigneeId: teamId ? undefined : currentUser?._id,
-      projectId: projectId || undefined,
-      startDate: undefined,
-      targetDate: undefined,
-      estimatePoint: undefined,
-    },
+    defaultValues,
+  });
+  useEffect(() => {
+    form.setFocus('name');
   });
 
   useEffect(() => {
@@ -72,6 +83,14 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
       _setTeamId(teams[0]._id);
     }
   }, [teams, form, teamId, currentUser]);
+
+  useEffect(() => {
+    if (defaultValuesState) {
+      form.reset({ ...defaultValues, ...defaultValuesState });
+      setDefaultValues(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultValuesState, form, setDefaultValues]);
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
@@ -98,7 +117,9 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.log(errors);
+        })}
         className="h-full flex flex-col"
       >
         <Sheet.Header className="flex items-center gap-2 ">
@@ -109,24 +130,12 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               <Form.Item className="space-y-0">
                 <Form.Label className="sr-only">Team</Form.Label>
                 <SelectTeam.FormItem
-                  {...field}
-                  onChange={(value) => {
+                  value={field.value || ''}
+                  onValueChange={(value) => {
                     field.onChange(value);
                     form.resetField('projectId');
                   }}
                   mode="single"
-                  teams={teams}
-                  className={cn(
-                    'm-0',
-                    teamId && 'hover:bg-background cursor-default',
-                  )}
-                  onClick={
-                    teamId
-                      ? (e) => {
-                          e.preventDefault();
-                        }
-                      : undefined
-                  }
                 />
               </Form.Item>
             )}
@@ -158,11 +167,11 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Status</Form.Label>
-                  <SelectStatus.FormItem
-                    {...field}
-                    value={field.value}
-                    onChange={(value) => field.onChange(value.toString())}
+                  <SelectStatusTask.FormItem
+                    value={field.value || ''}
+                    onValueChange={(value) => field.onChange(value)}
                     teamId={form.getValues('teamId') || _teamId}
+                    scope={clsx(TaskHotKeyScope.TasksPage, 'form', 'Status')}
                   />
                 </Form.Item>
               )}
@@ -173,7 +182,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Priority</Form.Label>
-                  <SelectPriority.FormItem {...field} />
+                  <SelectPriority.FormItem
+                    value={field.value || 0}
+                    onValueChange={(value) => field.onChange(value)}
+                  />
                 </Form.Item>
               )}
             />
@@ -183,9 +195,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Assignee</Form.Label>
-                  <SelectAssignee.FormItem
-                    {...field}
-                    mode="single"
+                  <SelectAssigneeTask.FormItem
                     value={field.value || ''}
                     onValueChange={(value: any) => {
                       field.onChange(value);
@@ -202,14 +212,11 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Item>
                   <Form.Label className="sr-only">Project</Form.Label>
                   <SelectProject.FormItem
-                    {...field}
-                    mode="single"
                     value={field.value || ''}
                     onValueChange={(value: any) => {
                       field.onChange(value);
                     }}
                     teamId={form.getValues('teamId') || undefined}
-                    placeholder="Project"
                   />
                 </Form.Item>
               )}
@@ -220,10 +227,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Start Date</Form.Label>
-                  <DateSelect.FormItem
-                    {...field}
-                    type="start"
+                  <DateSelectTask.FormItem
+                    value={field.value}
                     placeholder="Start Date"
+                    onValueChange={(value) => field.onChange(value)}
                   />
                 </Form.Item>
               )}
@@ -234,9 +241,9 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Target Date</Form.Label>
-                  <DateSelect.FormItem
-                    {...field}
-                    type="target"
+                  <DateSelectTask.FormItem
+                    value={field.value}
+                    onValueChange={(value) => field.onChange(value)}
                     placeholder="Target Date"
                   />
                 </Form.Item>
@@ -249,10 +256,28 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Item>
                   <Form.Label className="sr-only">Estimate Point</Form.Label>
                   <SelectEstimatedPoint.FormItem
+                    value={field.value || 0}
+                    onValueChange={(value) => field.onChange(value)}
+                    teamId={form.getValues('teamId') || _teamId || ''}
+                    scope={clsx(
+                      TaskHotKeyScope.TasksPage,
+                      'form',
+                      'Estimate Point',
+                    )}
+                  />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              name="cycleId"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="sr-only">Cycle</Form.Label>
+                  <SelectCycle
                     {...field}
-                    mode="single"
-                    value={field.value || ''}
                     teamId={form.getValues('teamId') || _teamId}
+                    value={field.value}
                   />
                 </Form.Item>
               )}
@@ -284,6 +309,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={createTaskLoading}
           >
             Save
           </Button>

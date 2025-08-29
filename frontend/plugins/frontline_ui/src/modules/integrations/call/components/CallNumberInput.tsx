@@ -2,16 +2,29 @@ import { Button, cn, formatPhoneNumber, Input } from 'erxes-ui';
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 import { IconBackspace } from '@tabler/icons-react';
 import { useAtom, useSetAtom } from 'jotai';
+import { useSip } from '@/integrations/call/components/SipProvider';
 
 export const CallNumberInput = () => {
   const [number, setNumber] = useAtom(callNumberState);
+  const { startCall } = useSip();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(number);
+    if (number.length === 0) return;
+    startCall(number);
+  };
+
   return (
     <div className="flex items-center flex-col mt-2">
-      <Input
-        className="text-center"
-        value={formatPhoneNumber({ value: number, defaultCountry: 'MN' })}
-        onChange={(e) => setNumber(e.target.value.replace(' ', ''))}
-      />
+      <form onSubmit={handleSubmit} className="w-full">
+        <Input
+          className="text-center"
+          value={formatPhoneNumber({ value: number, defaultCountry: 'MN' })}
+          onChange={(e) => setNumber(e.target.value.replace(' ', ''))}
+        />
+        <button className="sr-only" type="submit" />
+      </form>
       <div className="pt-3 pb-6 gap-1 grid grid-cols-12 w-full">
         <CallNumberInputButton value="1" />
         <CallNumberInputButton value="2" />

@@ -22,9 +22,9 @@ type ProjectListResponse {
     pageInfo: PageInfo
     totalCount: Int,
 }
-`;
 
-const projectFilterParams = `
+input IProjectFilter {
+    _id: String
     name: String
     description: String
     status: Int
@@ -35,6 +35,12 @@ const projectFilterParams = `
     targetDate: Date
     userId: String
     ${GQL_CURSOR_PARAM_DEFS}
+}
+
+type ProjectSubscription {
+    type: String
+    project: Project
+}
 `;
 
 const createProjectParams = `
@@ -64,7 +70,7 @@ const updateProjectParams = `
 
 export const queries = `
     getProject(_id: String!): Project
-    getProjects(${projectFilterParams}): ProjectListResponse
+    getProjects(filter: IProjectFilter): ProjectListResponse
     getProjectProgress(_id: String!): JSON
     getProjectProgressByMember(_id: String!): JSON
     getProjectProgressByTeam(_id: String!): JSON

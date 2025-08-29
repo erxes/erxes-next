@@ -1,7 +1,8 @@
-import { IProjectDocument } from '@/project/@types/project';
+import { IProjectUpdate } from '@/project/@types/project';
 import { checkUserRole } from '@/utils';
 import { TeamMemberRoles } from '@/team/@types/team';
 import { IContext } from '~/connectionResolvers';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const projectMutations = {
   createProject: async (
@@ -16,16 +17,9 @@ export const projectMutations = {
       description,
       leadId,
     },
-    { models, user }: IContext,
+    { models }: IContext,
   ) => {
-    await checkUserRole({
-      models,
-      teamIds,
-      userId: user._id,
-      allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
-    });
-
-    return models.Project.createProject({
+    const createdProject = await models.Project.createProject({
       name,
       teamIds,
       startDate,
@@ -35,23 +29,22 @@ export const projectMutations = {
       description,
       leadId,
     });
+
+    graphqlPubsub.publish('operationProjectChanged', {
+      operationProjectChanged: {
+        type: 'create',
+        project: createdProject,
+      },
+    });
+
+    return createdProject;
   },
   updateProject: async (
     _parent: undefined,
-    {
-      _id,
-      name,
-      teamIds,
-      startDate,
-      targetDate,
-      priority,
-      status,
-      description,
-      leadId,
-    }: IProjectDocument,
-    { models, user }: IContext,
+    params: IProjectUpdate,
+    { models, user, subdomain }: IContext,
   ) => {
-    const project = await models.Project.getProject(_id);
+    const project = await models.Project.getProject(params._id);
     await checkUserRole({
       models,
       teamIds: project.teamIds,
@@ -59,18 +52,31 @@ export const projectMutations = {
       allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
     });
 
-    return models.Project.updateProject(_id, {
-      name,
-      teamIds,
-      startDate,
-      targetDate,
-      priority,
-      status,
-      description,
-      leadId,
+    const updatedProject = await models.Project.updateProject({
+      doc: params,
+      userId: user._id,
+      subdomain,
     });
+
+    graphqlPubsub.publish('operationProjectChanged', {
+      operationProjectChanged: {
+        type: 'update',
+        project: updatedProject,
+      },
+    });
+
+    return updatedProject;
   },
   removeProject: async (_parent: undefined, { _id }, { models }: IContext) => {
-    return models.Project.removeProject(_id);
+    const deletedProject = await models.Project.removeProject(_id);
+
+    graphqlPubsub.publish('operationProjectChanged', {
+      operationProjectChanged: {
+        type: 'delete',
+        project: deletedProject,
+      },
+    });
+
+    return deletedProject;
   },
 };

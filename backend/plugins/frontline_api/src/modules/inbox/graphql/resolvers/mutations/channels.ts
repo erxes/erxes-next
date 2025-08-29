@@ -3,6 +3,7 @@ import {
   IChannel,
   IChannelsEdit,
 } from '@/inbox/@types/channels';
+import { sendNotification } from 'erxes-api-shared/core-modules';
 import { checkUserIds } from 'erxes-api-shared/utils';
 
 import { IContext } from '~/connectionResolvers';
@@ -35,6 +36,18 @@ export const channelMutations = {
   ) {
     const channel = await models.Channels.createChannel(doc, user._id);
     await sendChannelNotifications(subdomain, channel, 'invited', user);
+    sendNotification(subdomain, {
+      title: 'Assigned on Channel',
+      message: `You assigned on ${channel.name} channel`,
+      type: 'info',
+      fromUserId: user._id,
+      userIds: doc.memberIds || [],
+      contentType: 'frontline:inbox.channel',
+      contentTypeId: (channel?._id as string) || '',
+      action: 'resolved',
+      priority: 'medium',
+      notificationType: 'channelMembersChange',
+    });
 
     return channel;
   },
@@ -56,20 +69,35 @@ export const channelMutations = {
 
     const updated = await models.Channels.updateChannel(_id, doc);
 
-    await sendChannelNotifications(
-      subdomain,
-      channel,
-      'invited',
-      user,
-      addedUserIds,
-    );
-    await sendChannelNotifications(
-      subdomain,
-      channel,
-      'removed',
-      user,
-      removedUserIds,
-    );
+    if (addedUserIds.length) {
+      sendNotification(subdomain, {
+        title: 'Assigned on Channel',
+        message: `You assigned on ${channel.name} channel`,
+        type: 'info',
+        fromUserId: 'OQgac3z4G3I2LW9QPpAtL',
+        userIds: addedUserIds,
+        contentType: 'frontline:inbox.channel',
+        contentTypeId: channel._id as string,
+        action: 'resolved',
+        priority: 'medium',
+        notificationType: 'channelMembersChange',
+      });
+    }
+
+    if (removedUserIds.length) {
+      sendNotification(subdomain, {
+        title: 'Removed from Channel',
+        message: `You removed from ${channel.name} channel`,
+        type: 'info',
+        fromUserId: 'OQgac3z4G3I2LW9QPpAtL',
+        userIds: removedUserIds,
+        contentType: 'frontline:inbox.channel',
+        contentTypeId: channel._id as string,
+        action: 'resolved',
+        priority: 'medium',
+        notificationType: 'channelMembersChange',
+      });
+    }
 
     return updated;
   },
@@ -83,7 +111,18 @@ export const channelMutations = {
     { user, models, subdomain }: IContext,
   ) {
     const channel = await models.Channels.getChannel(_id);
-    await sendChannelNotifications(subdomain, channel, 'removed', user);
+    sendNotification(subdomain, {
+      title: 'Removed from Channel',
+      message: `You removed from ${channel.name} channel`,
+      type: 'info',
+      fromUserId: 'OQgac3z4G3I2LW9QPpAtL',
+      userIds: channel.memberIds || [],
+      contentType: 'frontline:inbox.channel',
+      contentTypeId: channel._id as string,
+      action: 'resolved',
+      priority: 'medium',
+      notificationType: 'channelMembersChange',
+    });
     await models.Channels.removeChannel(_id);
     return true;
   },

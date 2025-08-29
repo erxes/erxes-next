@@ -11,3 +11,19 @@ export const Skeleton = ({
     />
   );
 };
+
+export const SkeletonArray = ({
+  className,
+  count,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+  count: number;
+}) => {
+  return Array.from({ length: count }).map((_, index) => (
+    <div
+      key={index}
+      className={cn('animate-pulse rounded-md bg-accent', className)}
+      {...props}
+    />
+  ));
+};

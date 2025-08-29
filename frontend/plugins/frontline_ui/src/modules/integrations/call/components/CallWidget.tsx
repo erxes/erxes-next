@@ -1,4 +1,4 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { IconDots } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui';
 import { CallWidgetDraggableRoot } from '@/integrations/call/components/CallWidgetDraggable';
@@ -18,6 +18,7 @@ import {
   IncomingCallAudio,
   IncomingCall,
 } from '@/integrations/call/components/IncomingCall';
+import { CallTriggerContent } from '@/integrations/call/components/CallTriggerContent';
 
 export const CallWidgetContent = () => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
@@ -76,23 +77,24 @@ export const CallWidget = () => {
     <>
       <IncomingCallAudio />
       <PopoverPrimitive.Root open={open}>
-        <CallWidgetDraggableRoot>
-          <PopoverPrimitive.Content
-            align="end"
-            sideOffset={12}
-            onOpenAutoFocus={(e) => {
-              e.preventDefault();
-            }}
-            ref={popoverContentRef}
-            style={
-              {
-                '--radix-popper-content-height': contentHeight,
-              } as CSSProperties
-            }
-            className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
-          >
-            <CallWidgetContent></CallWidgetContent>
-          </PopoverPrimitive.Content>
+        <CallWidgetDraggableRoot trigger={<CallTriggerContent />}>
+          <PopoverPrimitive.Portal>
+            <PopoverPrimitive.Content
+              sideOffset={12}
+              onOpenAutoFocus={(e) => {
+                e.preventDefault();
+              }}
+              ref={popoverContentRef}
+              style={
+                {
+                  '--radix-popper-content-height': contentHeight,
+                } as CSSProperties
+              }
+              className="z-[100] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
+            >
+              <CallWidgetContent />
+            </PopoverPrimitive.Content>
+          </PopoverPrimitive.Portal>
         </CallWidgetDraggableRoot>
       </PopoverPrimitive.Root>
     </>

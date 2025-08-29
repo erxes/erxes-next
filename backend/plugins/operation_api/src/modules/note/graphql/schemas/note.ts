@@ -3,21 +3,25 @@ export const types = `
         _id: String
         content: String
         itemId: String
-        userId: String
+        createdBy: String
+        mentions: [String]
+
+        createdAt: String
+        updatedAt: String
     }
 `;
 
 const createNoteParams = `
-    content: String!
-    itemId: String!
-    userId: String!
+    content: String
+    itemId: String
+    mentions: [String]
 `;
 
 const updateNoteParams = `
     _id: String!
     content: String
     itemId: String
-    userId: String
+    mentions: [String]
 `;
 
 export const queries = `

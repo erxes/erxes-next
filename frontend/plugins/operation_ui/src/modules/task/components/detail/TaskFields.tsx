@@ -3,20 +3,17 @@ import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useDebounce } from 'use-debounce';
 import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
-import {
-  SelectStatus,
-  SelectTeam,
-  SelectPriority,
-  SelectAssignee,
-  DateSelect,
-  SelectProject,
-  SelectEstimatedPoint,
-} from '@/task/components/select';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { CommentField } from '@/task/components/CommentField';
+import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
+import { DateSelectTask } from '@/task/components/select/DateSelectTask';
+import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
+import { SelectProject } from '@/task/components/select/SelectProjectTask';
+import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
+import { NotesField } from '@/task/components/NotesField';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -29,7 +26,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     targetDate,
     projectId,
     estimatePoint,
-    estimateChoices,
   } = task || {};
 
   const startDate = (task as any)?.startDate;
@@ -40,6 +36,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
   >(description ? JSON.parse(description) : undefined);
   const editor = useBlockEditor({
     initialContent: descriptionContent,
+    placeholder: 'Description...',
   });
   const { updateTask } = useUpdateTask();
   const [name, setName] = useState(_name);
@@ -66,13 +63,14 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
-
   useEffect(() => {
+    if (!debouncedDescriptionContent) return;
     if (
-      !debouncedDescriptionContent ||
-      debouncedDescriptionContent === descriptionContent
-    )
+      JSON.stringify(debouncedDescriptionContent) ===
+      JSON.stringify(description ? JSON.parse(description) : undefined)
+    ) {
       return;
+    }
     updateTask({
       variables: {
         _id: taskId,
@@ -81,7 +79,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedDescriptionContent]);
-
   return (
     <div className="flex flex-col gap-3">
       <Input
@@ -91,45 +88,49 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="gap-2 flex flex-wrap w-full">
-        <SelectStatus.Detail
+        <SelectStatusTask
+          variant="detail"
           value={status}
           id={taskId}
-          teamId={teamId || undefined}
+          teamId={teamId}
         />
-        <SelectTaskPriority taskId={taskId} value={priority} />
-        <SelectAssignee.Detail
+        <SelectTaskPriority taskId={taskId} value={priority} variant="detail" />
+        <SelectAssigneeTask
+          variant="detail"
           value={assigneeId}
           id={taskId}
           teamIds={teamId ? [teamId] : undefined}
         />
-        <DateSelect.Detail
+        <DateSelectTask
           value={startDate ? new Date(startDate) : undefined}
           id={taskId}
-          type="start"
+          type="startDate"
+          variant="detail"
         />
-        <DateSelect.Detail
+        <DateSelectTask
           value={targetDate ? new Date(targetDate) : undefined}
           id={taskId}
-          type="target"
+          type="targetDate"
+          variant="detail"
         />
-        <SelectTeam.Detail value={teamId} id={taskId} teams={teams} />
-        <SelectProject.Detail value={projectId} id={taskId} />
-        <SelectEstimatedPoint.Detail
+        <SelectTeamTask taskId={taskId} value={teamId || ''} variant="detail" />
+        <SelectProject value={projectId} taskId={taskId} variant="detail" />
+        <SelectEstimatedPoint
           value={estimatePoint}
-          id={taskId}
-          estimateChoices={estimateChoices}
+          taskId={taskId}
+          teamId={teamId}
+          variant="detail"
         />
       </div>
       <Separator className="my-4" />
       <div className="min-h-56 overflow-y-auto">
         <BlockEditor
-          editor={editor} 
+          editor={editor}
           onChange={handleDescriptionChange}
-          className="min-h-full"
+          className="min-h-full read-only"
         />
       </div>
       <ActivityList contentId={taskId} contentDetail={task} />
-      <CommentField />
     </div>
   );
 };

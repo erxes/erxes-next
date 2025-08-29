@@ -63,6 +63,10 @@ export const CallIntegrationEdit = () => {
       ],
       onCompleted() {
         setEditSheet(null);
+        toast({
+          title: 'Integration updated',
+          description: 'Integration updated successfully',
+        });
       },
       onError(e) {
         toast({
@@ -86,7 +90,9 @@ export const CallIntegrationEdit = () => {
         name: integrationDetail.name || '',
         phone: callsIntegrationDetail?.phone || '',
         websocketServer: callsIntegrationDetail?.wsServer || '',
-        queues: callsIntegrationDetail?.queues || '',
+        queues: Array.isArray(callsIntegrationDetail?.queues)
+          ? callsIntegrationDetail?.queues.join(',')
+          : callsIntegrationDetail?.queues || '',
         operators: callsIntegrationDetail?.operators || '',
         brandId: integrationDetail.brandId,
         channelIds:
