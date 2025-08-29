@@ -59,7 +59,6 @@ export const SelectStatusProvider = ({
     variables: { teamId },
     skip: !teamId,
   });
-
   return (
     <SelectStatusContext.Provider
       value={{

@@ -108,6 +108,10 @@ export const loadTaskClass = (models: IModels) => {
 
       const nextNumber = (result?.maxNumber || 0) + 1;
 
+      const status = await models.Status.getStatus(doc.status || '');
+
+      doc.statusType = status.type;
+
       if (doc.projectId && doc.teamId) {
         const project = await models.Project.findOne({ _id: doc.projectId });
 
@@ -152,6 +156,8 @@ export const loadTaskClass = (models: IModels) => {
 
       if (doc.status && doc.status !== task.status) {
         rest.statusChangedDate = new Date();
+        const status = await models.Status.getStatus(doc.status || '');
+        rest.statusType = status.type;
       }
 
       if (task.projectId && doc.teamId && doc.teamId !== task.teamId) {

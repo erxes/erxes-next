@@ -1,6 +1,5 @@
 import { addTaskSchema } from '@/task/types/validations';
 import { z } from 'zod';
-import { TeamStatusTypes } from '@/team/types';
 
 export interface IEstimateChoice {
   label: string;
@@ -38,7 +37,7 @@ export interface IStatus {
   value: string;
   label: string;
   color: string;
-  type: TeamStatusTypes;
+  type: number;
 }
 
 export type TAddTask = z.infer<typeof addTaskSchema>;

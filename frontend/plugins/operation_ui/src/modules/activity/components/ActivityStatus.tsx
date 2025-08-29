@@ -13,10 +13,8 @@ const isTask = (content: ITask | IProject): content is ITask => {
 
 export const ActivityStatus = ({
   metadata,
-  action,
 }: {
   metadata: IActivity['metadata'];
-  action: IActivity['action'];
 }) => {
   const { previousValue, newValue } = metadata;
   const contentDetail = useActivityListContext();
@@ -29,7 +27,7 @@ export const ActivityStatus = ({
   const getTaskStatus = (value?: string) => {
     return (
       statuses?.find((status) => status.value === value) || {
-        type: '',
+        type: 0,
         color: '',
         label: '',
       }
