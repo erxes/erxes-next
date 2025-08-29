@@ -27,6 +27,23 @@ ENV NX_DAEMON=false
 RUN npx nx build:packageJson payment_api
 RUN npx nx build payment_api
 
+# Build vite widget
+FROM node:22-alpine AS widget-build
+
+WORKDIR /app/backend/plugins/payment_api/src/widget
+
+COPY ./backend/plugins/payment_api/src/widget/package.json ./
+COPY ./backend/plugins/payment_api/src/widget/pnpm-lock.yaml ./
+COPY ./backend/plugins/payment_api/src/widget/pnpm-workspace.yaml ./
+
+RUN npm install -g pnpm
+RUN pnpm install --frozen-lockfile
+
+COPY ./backend/plugins/payment_api/src/widget ./
+
+# Build widget (Vite)
+RUN pnpm build
+
 # Final stage: Run the application
 FROM --platform=linux/amd64 node:22-alpine as payment_api
 
@@ -37,6 +54,9 @@ COPY --chown=1000 --from=payment_api-build /app /app
 
 # Copy prebuilt widget into public folder
 COPY ./backend/plugins/payment_api/src/widget/public/widget ./dist/public/widget
+
+# Copy widget build (Vite output is usually in dist or public)
+COPY --from=widget-build /app/dist ./dist/public/widget
 
 
 # Install pnpm for production
