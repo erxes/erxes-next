@@ -1,70 +1,59 @@
-# Base image for common dependencies
-FROM --platform=linux/amd64 node:22-alpine AS build
-
-# Set working directory
+# -------------------------
+# Stage 0: Base
+FROM node:22-alpine AS base
 WORKDIR /app
-
-COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-
-COPY ./backend/plugins/payment_api/package.json /app/backend/plugins/payment_api/
-COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
-
-# Install pnpm and dependencies
 RUN npm install -g pnpm
-RUN pnpm install
 
-# Build the test project
-FROM --platform=linux/amd64 build AS payment_api-build
+# Copy root workspace files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
 
-# Copy source code
-COPY ./backend/plugins/payment_api /app/backend/plugins/payment_api
-COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
+# Install root dependencies
+RUN pnpm install --frozen-lockfile
 
-# Build following exact sequence
-WORKDIR /app/backend/plugins/payment_api
-
+# -------------------------
+# Stage 1: Build erxes-api-shared
+FROM base AS erxes-api-shared-build
+WORKDIR /app
+COPY backend/erxes-api-shared ./backend/erxes-api-shared
 ENV NX_DAEMON=false
-RUN npx nx build:packageJson payment_api
-RUN npx nx build payment_api
+RUN pnpm nx build erxes-api-shared
 
-# Build vite widget
-FROM node:22-alpine AS widget-build
+# -------------------------
+# Stage 2: Build payment_api backend
+FROM base AS payment_api-build
+WORKDIR /app
+COPY backend/plugins/payment_api ./backend/plugins/payment_api
+COPY --from=erxes-api-shared-build /app/dist ./dist
+ENV NX_DAEMON=false
+RUN pnpm nx build:packageJson payment_api
+RUN pnpm nx build payment_api
 
+# -------------------------
+# Stage 3: Build widget
+FROM base AS widget-build
+WORKDIR /app/backend/plugins/payment_api/src/widget
+
+# Copy widget source
+COPY backend/plugins/payment_api/src/widget ./
+
+# Install widget dependencies and build
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
+
+# -------------------------
+# Stage 4: Final runtime image
+FROM node:22-alpine AS payment_api
 WORKDIR /app
 
-COPY ./backend/plugins/payment_api/src/widget/package.json ./backend/plugins/payment_api/src/widget/
+# Copy backend dist
+COPY --from=payment_api-build /app/dist ./dist
 
-RUN npm install -g pnpm
-RUN cd ./backend/plugins/payment_api/src/widget && pnpm install
+# Copy built widget into public folder
+COPY --from=widget-build /app/dist ./dist/public/widget
 
-COPY ./backend/plugins/payment_api/src/widget ./backend/plugins/payment_api/src/widget
-
-# Build widget (Vite)
-RUN cd ./backend/plugins/payment_api/src/widget && pnpm build
-
-# Final stage: Run the application
-FROM --platform=linux/amd64 node:22-alpine as payment_api
-
-WORKDIR /app
-
-# Copy built applications from previous stages
-COPY --chown=1000 --from=payment_api-build /app /app
-
-# Copy widget build from widget-build stage
-COPY --from=widget-build /app/backend/plugins/payment_api/src/widget/dist ./dist/public/widget
-
-# Install pnpm for production
-RUN npm install -g pnpm
-
-# Install production dependencies
-WORKDIR /app/backend/plugins/payment_api/dist
-RUN pnpm install --prod
-
-# Set environment variables
+# Use non-root user
+USER 1000
 ENV NODE_ENV=production
 
-# Use non root user
-USER 1000
-
-# Start the application
+# Start backend
 CMD ["node", "src/main.js"]
