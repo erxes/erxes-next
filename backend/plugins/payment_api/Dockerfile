@@ -1,4 +1,3 @@
-@ -0,0 +1,53 @@
 # Base image for common dependencies
 FROM --platform=linux/amd64 node:22-alpine AS build
 
@@ -51,3 +50,4 @@ USER 1000
 
 # Start the application
 CMD ["node", "src/main.js"]
+
