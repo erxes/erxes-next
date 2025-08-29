@@ -1,5 +1,5 @@
 import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
-import { Resizable, useQueryState } from 'erxes-ui';
+import { Separator, useQueryState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 
 export const InboxLayout = ({
@@ -17,17 +17,10 @@ export const InboxLayout = ({
   }
 
   return (
-    <Resizable.PanelGroup
-      direction="horizontal"
-      className="flex-1 overflow-hidden"
-    >
-      <Resizable.Panel minSize={20} maxSize={35} defaultSize={30}>
-        {conversations}
-      </Resizable.Panel>
-      <Resizable.Handle />
-      <Resizable.Panel minSize={20} defaultSize={70}>
-        {conversationDetail}
-      </Resizable.Panel>
-    </Resizable.PanelGroup>
+    <div className="flex flex-auto overflow-hidden">
+      <div className="flex-none w-72">{conversations}</div>
+      <Separator orientation="vertical" />
+      <div className="flex-auto">{conversationDetail}</div>
+    </div>
   );
 };

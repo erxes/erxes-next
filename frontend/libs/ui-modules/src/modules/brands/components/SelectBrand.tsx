@@ -208,12 +208,8 @@ export const SelectBrandFilterBar = ({
   );
   const [open, setOpen] = useState(false);
 
-  if (!brand) {
-    return null;
-  }
-
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'brand'}>
       <Filter.BarName>
         <IconLabel />
         {!iconOnly && 'Brand'}
@@ -242,7 +238,6 @@ export const SelectBrandFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectBrandProvider>
-      <Filter.BarClose filterKey={queryKey || 'brand'} />
     </Filter.BarItem>
   );
 };

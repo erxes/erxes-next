@@ -32,39 +32,34 @@ export const AccountsFilterBar = () => {
   const isFiltered = Object.values(queries).some((query) => !!query);
 
   if (!isFiltered) return null;
-  const { code, name, categoryId, currency, kind, journal, due } = queries;
+  const { code, name } = queries;
 
   return (
     <Filter.Bar>
-      {!!code && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconHash />
-            Code
-          </Filter.BarName>
-          <Filter.BarButton filterKey="code" inDialog>
-            {code}
-          </Filter.BarButton>
-          <Filter.BarClose filterKey="code" />
-        </Filter.BarItem>
-      )}
-      {!!name && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconLabelFilled />
-            Name
-          </Filter.BarName>
-          <Filter.BarButton filterKey="name" inDialog>
-            {name}
-          </Filter.BarButton>
-          <Filter.BarClose filterKey="name" />
-        </Filter.BarItem>
-      )}
-      {!!categoryId && <FilterBarCategory />}
-      {!!currency && <FilterBarCurrency />}
-      {!!kind && <FilterBarKind />}
-      {!!journal && <FilterBarJournal />}
-      {!!due && <FilterBarDue />}
+      <Filter.BarItem queryKey="code">
+        <Filter.BarName>
+          <IconHash />
+          Code
+        </Filter.BarName>
+        <Filter.BarButton filterKey="code" inDialog>
+          {code}
+        </Filter.BarButton>
+      </Filter.BarItem>
+
+      <Filter.BarItem queryKey="name">
+        <Filter.BarName>
+          <IconLabelFilled />
+          Name
+        </Filter.BarName>
+        <Filter.BarButton filterKey="name" inDialog>
+          {name}
+        </Filter.BarButton>
+      </Filter.BarItem>
+      <FilterBarCategory />
+      <FilterBarCurrency />
+      <FilterBarKind />
+      <FilterBarJournal />
+      <FilterBarDue />
     </Filter.Bar>
   );
 };
@@ -73,7 +68,7 @@ const FilterBarCategory = () => {
   const [categoryId, setCategoryId] = useQueryState<string>('categoryId');
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="categoryId">
       <Filter.BarName>
         <IconLayoutGridAdd />
         Category
@@ -85,7 +80,6 @@ const FilterBarCategory = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose filterKey="categoryId" />
     </Filter.BarItem>
   );
 };
@@ -94,7 +88,7 @@ const FilterBarCurrency = () => {
   const [currency, setCurrency] = useQueryState<CurrencyCode>('currency');
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="currency">
       <Filter.BarName>
         <IconCoins />
         Currency
@@ -105,7 +99,6 @@ const FilterBarCurrency = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose filterKey="currency" />
     </Filter.BarItem>
   );
 };
@@ -114,7 +107,7 @@ const FilterBarKind = () => {
   const [kind, setKind] = useQueryState<string>('kind');
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="kind">
       <Filter.BarName>
         <IconToggleRightFilled />
         Kind
@@ -125,7 +118,6 @@ const FilterBarKind = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose filterKey="kind" />
     </Filter.BarItem>
   );
 };
@@ -133,7 +125,7 @@ const FilterBarJournal = () => {
   const [journal, setJournal] = useQueryState<string>('journal');
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="journal">
       <Filter.BarName>
         <IconNotebook />
         Journal
@@ -144,20 +136,18 @@ const FilterBarJournal = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose filterKey="journal" />
     </Filter.BarItem>
   );
 };
 
 const FilterBarDue = () => {
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="due">
       <Filter.BarName>
         <IconCalendarEventFilled />
         Due date
       </Filter.BarName>
       <Filter.Date filterKey="due" />
-      <Filter.BarClose filterKey="due" />
     </Filter.BarItem>
   );
 };

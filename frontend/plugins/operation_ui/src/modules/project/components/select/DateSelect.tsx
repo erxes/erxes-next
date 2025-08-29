@@ -222,12 +222,10 @@ export const DateSelectFilterBar = ({
   const [date, setDate] = useQueryState<string>(queryKey || 'Date');
   const [open, setOpen] = useState(false);
 
-  if (!date) return null;
-
-  const dateValue = new Date(date);
+  const dateValue = date ? new Date(date) : undefined;
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'Date'}>
       <Filter.BarName>
         <IconCalendarTime />
         {!iconOnly && ' Date'}
@@ -255,7 +253,6 @@ export const DateSelectFilterBar = ({
           </Popover.Content>
         </Popover>
       </DateSelectProvider>
-      <Filter.BarClose filterKey={queryKey || 'Date'} />
     </Filter.BarItem>
   );
 };

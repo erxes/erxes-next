@@ -48,47 +48,37 @@ export const DocumentsFilter = () => {
 };
 
 const DocumentFilterBar = ({ queries }: { queries: DocumentFilterState }) => {
-  const { searchValue, contentType, createdAt, assignedTo } = queries || {};
+  const { searchValue, contentType, assignedTo } = queries || {};
 
   return (
     <>
-      {contentType && (
-        <Filter.BarItem key="contentType">
-          <Filter.BarName>
-            <IconFileFilled />
-            Document Type
-          </Filter.BarName>
-          <Filter.BarButton filterKey="contentType">
-            {DOCUMENTS_TYPES_SET[contentType || '']?.label || contentType}
-          </Filter.BarButton>
-          <Filter.BarClose filterKey="contentType" />
-        </Filter.BarItem>
-      )}
+      <Filter.BarItem queryKey="contentType">
+        <Filter.BarName>
+          <IconFileFilled />
+          Document Type
+        </Filter.BarName>
+        <Filter.BarButton filterKey="contentType">
+          {DOCUMENTS_TYPES_SET[contentType || '']?.label || contentType}
+        </Filter.BarButton>
+      </Filter.BarItem>
 
-      {searchValue && (
-        <Filter.BarItem key="searchValue">
-          <Filter.BarName>
-            <IconSearch />
-            Search
-          </Filter.BarName>
-          <Filter.BarButton filterKey="searchValue" inDialog>
-            {searchValue}
-          </Filter.BarButton>
-          <Filter.BarClose filterKey="searchValue" />
-        </Filter.BarItem>
-      )}
+      <Filter.BarItem queryKey="searchValue">
+        <Filter.BarName>
+          <IconSearch />
+          Search
+        </Filter.BarName>
+        <Filter.BarButton filterKey="searchValue" inDialog>
+          {searchValue}
+        </Filter.BarButton>
+      </Filter.BarItem>
 
-      {createdAt && (
-        <Filter.BarItem key="createdAt">
-          <Filter.BarName>
-            <IconCalendarPlus />
-            Created At
-          </Filter.BarName>
-          <Filter.Date filterKey="createdAt" />
-          <Filter.BarClose filterKey="createdAt" />
-        </Filter.BarItem>
-      )}
-
+      <Filter.BarItem queryKey="createdAt">
+        <Filter.BarName>
+          <IconCalendarPlus />
+          Created At
+        </Filter.BarName>
+        <Filter.Date filterKey="createdAt" />
+      </Filter.BarItem>
       {assignedTo && <SelectMember.FilterBar />}
     </>
   );
