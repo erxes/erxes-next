@@ -35,8 +35,8 @@ WORKDIR /app
 # Copy built applications from previous stages
 COPY --chown=1000 --from=payment_api-build /app /app
 
-# Copy prebuilt widget from CI output
-COPY ./backend/plugins/payment_api/src/widget/dist ./dist/widget
+# Copy prebuilt widget into public folder
+COPY ./backend/plugins/payment_api/src/widget/public/widget ./dist/public/widget
 
 
 # Install pnpm for production
