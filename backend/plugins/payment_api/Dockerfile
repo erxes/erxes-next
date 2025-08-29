@@ -30,18 +30,18 @@ RUN npx nx build payment_api
 # Build vite widget
 FROM node:22-alpine AS widget-build
 
-WORKDIR /app/backend/plugins/payment_api/src/widget
+WORKDIR /app
 
-COPY ./backend/plugins/payment_api/src/widget/package.json ./
-COPY ./backend/plugins/payment_api/src/widget/pnpm-lock.yaml ./
+COPY ./backend/plugins/payment_api/src/widget/package.json ./backend/plugins/payment_api/src/widget/
+COPY ./backend/plugins/payment_api/src/widget/pnpm-lock.yaml ./backend/plugins/payment_api/src/widget/
 
 RUN npm install -g pnpm
-RUN pnpm install --frozen-lockfile
+RUN cd ./backend/plugins/payment_api/src/widget && pnpm install --frozen-lockfile
 
-COPY ./backend/plugins/payment_api/src/widget ./
+COPY ./backend/plugins/payment_api/src/widget ./backend/plugins/payment_api/src/widget
 
 # Build widget (Vite)
-RUN pnpm build
+RUN cd ./backend/plugins/payment_api/src/widget && pnpm build
 
 # Final stage: Run the application
 FROM --platform=linux/amd64 node:22-alpine as payment_api
@@ -51,19 +51,15 @@ WORKDIR /app
 # Copy built applications from previous stages
 COPY --chown=1000 --from=payment_api-build /app /app
 
-# Copy prebuilt widget into public folder
-COPY ./backend/plugins/payment_api/src/widget/public/widget ./dist/public/widget
-
-# Copy widget build (Vite output is usually in dist or public)
-COPY --from=widget-build /app/dist ./dist/public/widget
-
+# Copy widget build from widget-build stage
+COPY --from=widget-build /app/backend/plugins/payment_api/src/widget/dist ./dist/public/widget
 
 # Install pnpm for production
 RUN npm install -g pnpm
 
 # Install production dependencies
 WORKDIR /app/backend/plugins/payment_api/dist
-RUN pnpm install
+RUN pnpm install --prod
 
 # Set environment variables
 ENV NODE_ENV=production
@@ -73,4 +69,3 @@ USER 1000
 
 # Start the application
 CMD ["node", "src/main.js"]
-
