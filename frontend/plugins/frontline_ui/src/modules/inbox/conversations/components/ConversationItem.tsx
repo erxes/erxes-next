@@ -67,11 +67,11 @@ export const ConversationItem = ({
             </div>
           </div>
           <ConversationItemContent />
-          {tagIds &&
+          {/* {tagIds &&
             tagIds.length > 0 &&
             tagIds.map((tagId) => (
               <TagBadge key={tagId} tagId={tagId} variant="secondary" />
-            ))}
+            ))} */}
         </CustomersInline.Provider>
       </ConversationContainer>
     );

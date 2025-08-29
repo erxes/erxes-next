@@ -1,6 +1,8 @@
-import { cn, Skeleton } from 'erxes-ui';
+import { cn, Filter, Skeleton } from 'erxes-ui';
 import { useConversationListContext } from '../hooks/useConversationListContext';
 import { ConversationFilterBar } from '@/inbox/conversations/components/ConversationsFilter';
+import { useAtomValue } from 'jotai';
+import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
 export const ConversationsHeader = ({
   children,
@@ -8,27 +10,34 @@ export const ConversationsHeader = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="pl-6 pr-4 py-2 space-y-1 bg-sidebar">
-      <div className="flex items-center justify-between">
-        {children}
-        <ConversationCount />
+    <Filter id="conversations-filter-bar">
+      <div className="pl-6 pr-4 py-2 space-y-1 bg-sidebar">
+        <div className="flex items-center justify-between">
+          {children}
+          <ConversationCount />
+        </div>
+        <ConversationFilterBar />
+        <Filter.Dialog>
+          <Filter.DialogDateView filterKey="created" />
+        </Filter.Dialog>
       </div>
-      <ConversationFilterBar />
-    </div>
+    </Filter>
   );
 };
 
 export const ConversationCount = ({ className }: { className?: string }) => {
   const { totalCount, loading } = useConversationListContext();
+  const inboxLayout = useAtomValue(inboxLayoutState);
 
   return (
     <span
       className={cn(
-        'text-muted-foreground inline-flex items-center gap-1 text-sm font-medium ml-auto',
+        'text-accent-foreground inline-flex items-center gap-1 text-sm font-medium ml-auto',
         className,
       )}
     >
-      {loading ? <Skeleton className="w-4 h-4" /> : totalCount} conversations
+      {loading ? <Skeleton className="w-4 h-4" /> : totalCount}
+      {inboxLayout === 'list' && ' conversations'}
     </span>
   );
 };

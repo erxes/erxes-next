@@ -285,8 +285,8 @@ importers:
         specifier: ^2.19.3
         version: 2.19.3(react@18.3.1)
       react-day-picker:
-        specifier: ^9.5.0
-        version: 9.6.5(react@18.3.1)
+        specifier: ^9.9.0
+        version: 9.9.0(react@18.3.1)
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
@@ -1829,8 +1829,8 @@ packages:
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
 
-  '@date-fns/tz@1.2.0':
-    resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
+  '@date-fns/tz@1.4.1':
+    resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -12789,8 +12789,8 @@ packages:
     peerDependencies:
       react: '*'
 
-  react-day-picker@9.6.5:
-    resolution: {integrity: sha512-/LsK+2tv+ByIbO9NcRFfbt2MX0ngcLP7sQBxL/dwgaPj6XzHIh364d78ZFwMZyQzOJ93GPEdM1ZCv5FlUttNGw==}
+  react-day-picker@9.9.0:
+    resolution: {integrity: sha512-NtkJbuX6cl/VaGNb3sVVhmMA6LSMnL5G3xNL+61IyoZj0mUZFWTg4hmj7PHjIQ8MXN9dHWhUHFoJWG6y60DKSg==}
     engines: {node: '>=18'}
     peerDependencies:
       react: '>=16.8.0'
@@ -16297,7 +16297,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@date-fns/tz@1.2.0': {}
+  '@date-fns/tz@1.4.1': {}
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -30414,9 +30414,9 @@ snapshots:
       reactcss: 1.2.3(react@18.3.1)
       tinycolor2: 1.6.0
 
-  react-day-picker@9.6.5(react@18.3.1):
+  react-day-picker@9.9.0(react@18.3.1):
     dependencies:
-      '@date-fns/tz': 1.2.0
+      '@date-fns/tz': 1.4.1
       date-fns: 4.1.0
       date-fns-jalali: 4.1.0-0
       react: 18.3.1
