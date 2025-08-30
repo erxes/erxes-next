@@ -75,7 +75,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   });
   useEffect(() => {
     form.setFocus('name');
-  });
+  }, []);
 
   useEffect(() => {
     if (teams && teams.length > 0 && !form.getValues('teamId') && !teamId) {
@@ -288,7 +288,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="min-h-full"
+              className="read-only min-h-full"
             />
           </div>
         </Sheet.Content>

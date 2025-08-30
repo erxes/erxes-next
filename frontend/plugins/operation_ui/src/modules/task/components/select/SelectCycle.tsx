@@ -1,4 +1,4 @@
-import { Button, Select, TextOverflowTooltip, Form } from 'erxes-ui';
+import { Button, Select, Form } from 'erxes-ui';
 import { useGetActiveCycles } from '@/cycle/hooks/useGetActiveCycles';
 import { IconCalendarRepeat, IconBan } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ export const SelectCycle = ({
   return (
     <Select
       value={selectedValue}
-      onValueChange={(value) => {
+      onValueChange={(value: string) => {
         setSelectedValue(value);
         onChange(value === 'no-cycle' ? undefined : value);
       }}
@@ -47,7 +47,13 @@ export const SelectCycle = ({
             value={selectedValue || ''}
             className="font-medium"
           >
-            <TextOverflowTooltip value={selectedCycle.name} />
+            <span className="flex gap-2 items-center">
+              <span className="font-medium">{selectedCycle.name}</span>
+              <span className="text-xs text-muted-foreground">
+                {new Date(selectedCycle.startDate).toLocaleDateString()} -{' '}
+                {new Date(selectedCycle.endDate).toLocaleDateString()}
+              </span>
+            </span>
           </Select.Item>
         ) : (
           <Select.Item value="no-cycle" key="no-cycle">
@@ -77,7 +83,13 @@ export const SelectCycle = ({
                   value={cycle._id}
                   className="font-medium"
                 >
-                  <TextOverflowTooltip value={cycle.name} />
+                  <span className="flex gap-2 items-center">
+                    <span className="font-medium">{cycle.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(cycle.startDate).toLocaleDateString()} -{' '}
+                      {new Date(cycle.endDate).toLocaleDateString()}
+                    </span>
+                  </span>
                 </Select.Item>
               ))}
           </>
