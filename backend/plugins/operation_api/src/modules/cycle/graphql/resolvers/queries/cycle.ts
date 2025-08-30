@@ -42,14 +42,103 @@ export const cycleQueries = {
 
     return { list, totalCount, pageInfo };
   },
-
   getCycleProgress: async (
     _parent: undefined,
     { _id },
     { models }: IContext,
   ) => {
-    const cycle = await models.Cycle.getCycle(_id);
-    return cycle;
+    const result = await models.Task.aggregate([
+      {
+        $match: {
+          cycleId: _id,
+        },
+      },
+      {
+        $facet: {
+          totalScope: [
+            { $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } } },
+            {
+              $group: {
+                _id: null,
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          started: [
+            { $match: { statusType: STATUS_TYPES.STARTED } },
+            {
+              $group: {
+                _id: null,
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          completed: [
+            { $match: { statusType: STATUS_TYPES.COMPLETED } },
+            {
+              $group: {
+                _id: null,
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalScope: {
+            $ifNull: [{ $arrayElemAt: ['$totalScope.totalScope', 0] }, 0],
+          },
+          totalStartedScope: {
+            $ifNull: [{ $arrayElemAt: ['$started.totalScope', 0] }, 0],
+          },
+          totalCompletedScope: {
+            $ifNull: [{ $arrayElemAt: ['$completed.totalScope', 0] }, 0],
+          },
+        },
+      },
+    ]);
+
+    return result?.[0] || {};
   },
 
   getCycleProgressChart: async (
@@ -174,7 +263,276 @@ export const cycleQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const cycle = await models.Cycle.getCycle(_id);
-    return cycle;
+    return models.Task.aggregate([
+      {
+        $match: {
+          cycleId: _id,
+        },
+      },
+      {
+        $facet: {
+          totalScope: [
+            { $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } } },
+            {
+              $group: {
+                _id: '$assigneeId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          started: [
+            { $match: { statusType: STATUS_TYPES.STARTED } },
+            {
+              $group: {
+                _id: '$assigneeId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          completed: [
+            { $match: { statusType: STATUS_TYPES.COMPLETED } },
+            {
+              $group: {
+                _id: '$assigneeId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          merged: {
+            $map: {
+              input: '$totalScope',
+              as: 'ts',
+              in: {
+                assigneeId: '$$ts._id',
+                totalScope: '$$ts.totalScope',
+                totalStartedScope: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$started',
+                              as: 'st',
+                              cond: { $eq: ['$$st._id', '$$ts._id'] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ['$$match.totalScope', 0] },
+                  },
+                },
+                totalCompletedScope: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$completed',
+                              as: 'cm',
+                              cond: { $eq: ['$$cm._id', '$$ts._id'] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ['$$match.totalScope', 0] },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      { $unwind: '$merged' },
+      { $replaceRoot: { newRoot: '$merged' } },
+      { $sort: { totalScope: -1 } },
+    ]);
+  },
+
+  getCycleProgressByProject: async (
+    _parent: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    return models.Task.aggregate([
+      {
+        $match: {
+          cycleId: _id,
+        },
+      },
+      {
+        $facet: {
+          totalScope: [
+            { $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } } },
+            {
+              $group: {
+                _id: '$projectId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          started: [
+            { $match: { statusType: STATUS_TYPES.STARTED } },
+            {
+              $group: {
+                _id: '$projectId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          completed: [
+            { $match: { statusType: STATUS_TYPES.COMPLETED } },
+            {
+              $group: {
+                _id: '$projectId',
+                totalScope: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          { $eq: ['$estimatePoint', null] },
+                          { $eq: ['$estimatePoint', 0] },
+                        ],
+                      },
+                      1,
+                      '$estimatePoint',
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          merged: {
+            $map: {
+              input: '$totalScope',
+              as: 'ts',
+              in: {
+                projectId: '$$ts._id',
+                totalScope: '$$ts.totalScope',
+                totalStartedScope: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$started',
+                              as: 'st',
+                              cond: { $eq: ['$$st._id', '$$ts._id'] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ['$$match.totalScope', 0] },
+                  },
+                },
+                totalCompletedScope: {
+                  $let: {
+                    vars: {
+                      match: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: '$completed',
+                              as: 'cm',
+                              cond: { $eq: ['$$cm._id', '$$ts._id'] },
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                    in: { $ifNull: ['$$match.totalScope', 0] },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      { $unwind: '$merged' },
+      { $replaceRoot: { newRoot: '$merged' } },
+      { $sort: { totalScope: -1 } },
+    ]);
   },
 };
