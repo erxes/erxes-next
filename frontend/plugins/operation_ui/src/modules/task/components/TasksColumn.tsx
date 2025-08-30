@@ -192,6 +192,7 @@ export const tasksColumns = (
           <SelectProject
             value={cell.row.original.projectId || ''}
             taskId={cell.row.original._id}
+            teamId={cell.row.original.teamId}
             variant="table"
           />
         );

@@ -406,6 +406,7 @@ export const cycleQueries = {
       {
         $match: {
           cycleId: _id,
+          projectId: { $exists: true },
         },
       },
       {

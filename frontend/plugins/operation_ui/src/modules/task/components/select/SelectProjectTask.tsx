@@ -182,22 +182,25 @@ const SelectProjectRoot = ({
   value,
   scope,
   variant,
+  teamId,
 }: {
   taskId: string;
   value: string;
   scope?: string;
   variant: `${SelectTriggerVariant}`;
+  teamId?: string;
 }) => {
   const [open, setOpen] = useState(false);
   const { updateTask } = useUpdateTask();
 
   return (
     <SelectProjectProvider
+      teamId={teamId}
       onValueChange={(value) => {
         updateTask({
           variables: {
             _id: taskId,
-            projectIds: value,
+            projectId: value,
           },
         });
         setOpen(false);
