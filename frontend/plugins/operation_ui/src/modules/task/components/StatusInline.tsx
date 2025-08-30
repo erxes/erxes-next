@@ -11,16 +11,19 @@ import React from 'react';
 import { TeamStatusTypes } from '@/team/constants';
 
 export const StatusInlineIcon = React.forwardRef<
-  Icon,
-  React.ComponentProps<Icon> & { type: number; color?: string }
+  SVGSVGElement,
+  React.ComponentProps<'svg'> & { type: number; color?: string }
 >(({ type, color, style, className, ...props }) => {
-  const TeamStatusIcon = {
+  const TeamStatusIconMap: Record<number, React.ComponentType<any>> = {
     [TeamStatusTypes.Backlog]: IconCircleDashed,
     [TeamStatusTypes.Unstarted]: IconCircle,
     [TeamStatusTypes.Started]: IconCircleDot,
     [TeamStatusTypes.Completed]: IconCircleCheck,
     [TeamStatusTypes.Cancelled]: IconCircleX,
-  }[type] as React.ComponentType<React.ComponentProps<Icon>>;
+  };
+
+  const numericType = typeof type === 'string' ? parseInt(type, 10) : type;
+  const TeamStatusIcon = TeamStatusIconMap[numericType];
 
   if (!TeamStatusIcon) {
     return null;
@@ -34,3 +37,5 @@ export const StatusInlineIcon = React.forwardRef<
     />
   );
 });
+
+StatusInlineIcon.displayName = 'StatusInlineIcon';
