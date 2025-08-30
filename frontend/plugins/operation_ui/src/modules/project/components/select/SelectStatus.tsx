@@ -303,7 +303,7 @@ export const SelectStatusInlineCell = ({
     >
       <PopoverScoped
         open={open}
-        onOpenChange={setOpen}
+      onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >

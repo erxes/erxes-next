@@ -75,7 +75,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   });
   useEffect(() => {
     form.setFocus('name');
-  });
+  }, []);
 
   useEffect(() => {
     if (teams && teams.length > 0 && !form.getValues('teamId') && !teamId) {
@@ -153,7 +153,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Control>
                   <Input
                     {...field}
-                    className="shadow-none focus-visible:shadow-none h-8 text-xl"
+                    className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
                     placeholder="Task Name"
                   />
                 </Form.Control>
@@ -288,7 +288,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="min-h-full"
+              className="read-only min-h-full"
             />
           </div>
         </Sheet.Content>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   cn,
   Combobox,
@@ -12,6 +12,7 @@ import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 import { DEFAULT_TEAM_STATUSES } from '@/team/constants';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
+import { TeamStatusTypes } from '@/team/constants';
 import {
   SelectOperationContent,
   SelectTriggerOperation,
@@ -45,11 +46,13 @@ export const SelectStatusProvider = ({
   onValueChange,
   teamId,
   children,
+  variant,
 }: {
   value: string;
   onValueChange: (status: string) => void;
   children: React.ReactNode;
   teamId?: string;
+  variant?: `${SelectTriggerVariant}`;
 }) => {
   const handleValueChange = (status: string) => {
     if (!status) return;
@@ -59,6 +62,15 @@ export const SelectStatusProvider = ({
     variables: { teamId },
     skip: !teamId,
   });
+  const fallBackStatus = statuses?.find(
+    (status) => status.type === TeamStatusTypes.Backlog,
+  )?.value;
+  useEffect(() => {
+    if (variant === SelectTriggerVariant.FORM && fallBackStatus) {
+      onValueChange(fallBackStatus);
+    }
+  }, [variant, fallBackStatus, onValueChange]);
+
   return (
     <SelectStatusContext.Provider
       value={{
@@ -253,6 +265,7 @@ export const SelectStatusTaskFormItem = ({
       value={value}
       onValueChange={onValueChange}
       teamId={teamId}
+      variant="form"
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant="form">

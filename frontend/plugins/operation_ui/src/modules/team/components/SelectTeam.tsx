@@ -236,9 +236,15 @@ const SelectTeamFormItem = ({
   onValueChange: (value: string | string[]) => void;
   mode?: 'single' | 'multiple';
 }) => {
+  const [open, setOpen] = useState(false);
   return (
-    <SelectTeamProvider value={value} onValueChange={onValueChange} mode={mode}>
-      <PopoverScoped>
+    <SelectTeamProvider
+      value={value}
+      onValueChange={onValueChange}
+      mode={mode}
+      setOpen={setOpen}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="form">
           <SelectTeamValue />
         </SelectTriggerOperation>

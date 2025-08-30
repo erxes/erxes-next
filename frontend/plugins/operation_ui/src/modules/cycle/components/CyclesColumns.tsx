@@ -53,7 +53,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
       const handleUpdate = () => {
         if (value !== name) {
           updateCycle({
-            variables: { input: { _id: cell.row.original._id, name: value } },
+            variables: { _id: cell.row.original._id, name: value },
           });
         }
       };
@@ -90,12 +90,12 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
               value={value || ''}
               onChange={(e) => setValue(e.target.value)}
               autoFocus
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleUpdate();
-                }
-              }}
+              // onKeyDown={(e) => {
+              //   if (e.key === 'Enter') {
+              //     e.preventDefault();
+              //     handleUpdate();
+              //   }
+              // }}
             />
           </RecordTableInlineCell.Content>
         </PopoverScoped>
