@@ -237,7 +237,10 @@ const SelectTeamFormItem = ({
   mode?: 'single' | 'multiple';
 }) => {
   const [open, setOpen] = useState(false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> ecfa457b (fix: operation fix status)
   return (
     <SelectTeamProvider
       value={value}

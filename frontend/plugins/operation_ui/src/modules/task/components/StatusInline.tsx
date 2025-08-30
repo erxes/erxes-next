@@ -1,5 +1,4 @@
 import {
-  type Icon,
   IconCircle,
   IconCircleCheck,
   IconCircleDashed,

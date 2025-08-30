@@ -10,8 +10,9 @@ import {
 import { IStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { DEFAULT_TEAM_STATUSES, TeamStatusTypes } from '@/team/constants';
+import { DEFAULT_TEAM_STATUSES } from '@/team/constants';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
+import { TeamStatusTypes } from '@/team/constants';
 import {
   SelectOperationContent,
   SelectTriggerOperation,
@@ -45,11 +46,13 @@ export const SelectStatusProvider = ({
   onValueChange,
   teamId,
   children,
+  variant,
 }: {
   value: string;
   onValueChange: (status: string) => void;
   children: React.ReactNode;
   teamId?: string;
+  variant?: `${SelectTriggerVariant}`;
 }) => {
   const handleValueChange = (status: string) => {
     if (!status) return;
@@ -254,9 +257,11 @@ export const SelectStatusTaskFormItem = ({
   });
 
   const [open, setOpen] = useState(false);
+
   const fallBackStatus = statuses?.find(
     (status) => status.type === TeamStatusTypes.Backlog,
   )?.value;
+
   useEffect(() => {
     if (fallBackStatus) {
       onValueChange(fallBackStatus);
@@ -268,6 +273,7 @@ export const SelectStatusTaskFormItem = ({
       value={value}
       onValueChange={onValueChange}
       teamId={teamId}
+      variant="form"
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant="form">
