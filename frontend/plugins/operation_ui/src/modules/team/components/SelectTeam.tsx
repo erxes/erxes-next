@@ -237,7 +237,6 @@ const SelectTeamFormItem = ({
   mode?: 'single' | 'multiple';
 }) => {
   const [open, setOpen] = useState(false);
-
   return (
     <SelectTeamProvider
       value={value}

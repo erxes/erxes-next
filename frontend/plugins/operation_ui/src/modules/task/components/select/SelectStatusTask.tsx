@@ -62,6 +62,14 @@ export const SelectStatusProvider = ({
     variables: { teamId },
     skip: !teamId,
   });
+  const fallBackStatus = statuses?.find(
+    (status) => status.type === TeamStatusTypes.Backlog,
+  )?.value;
+  useEffect(() => {
+    if (variant === SelectTriggerVariant.FORM && fallBackStatus) {
+      onValueChange(fallBackStatus);
+    }
+  }, [variant, fallBackStatus, onValueChange]);
 
   return (
     <SelectStatusContext.Provider
