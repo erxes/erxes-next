@@ -17,7 +17,7 @@ import {
   useFilterQueryState,
   useQueryState,
 } from 'erxes-ui';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 interface SelectTeamContextType {
   value: string | string[];
@@ -237,7 +237,7 @@ const SelectTeamFormItem = ({
   mode?: 'single' | 'multiple';
 }) => {
   const [open, setOpen] = useState(false);
-  
+
   return (
     <SelectTeamProvider
       value={value}
