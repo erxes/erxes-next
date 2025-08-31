@@ -101,12 +101,17 @@ export const loadAdjustInvDetailsClass = (models: IModels, subdomain: string) =>
       while (step * per <= preAdjustDetailsCount) {
         const skip = step * per;
         const sourceDetails = await models.AdjustInvDetails.find({
-          adjustId: sourceAdjustId
+          adjustId: sourceAdjustId,
+          $or: [
+            { remainder: { $eq: 0 } },
+            { cost: { $eq: 0 } }
+          ]
         }).skip(skip).limit(per).lean();
 
         await models.AdjustInvDetails.insertMany(sourceDetails?.map(sd => ({
           ...sd,
-          _id: nanoid()
+          _id: nanoid(),
+          infoPerDate: {}
         })));
 
         step++

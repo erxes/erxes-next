@@ -4,6 +4,26 @@ import { JOURNALS, TR_STATUSES } from "../@types/constants";
 import { ITransactionDocument, ITrDetail } from "../@types/transaction";
 import { fixNum, getPureDate, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
 import { IUserDocument } from "erxes-api-shared/core-types";
+import { now } from "mongoose";
+
+export const modifierWrapper = async (models: IModels, adjustInventory: IAdjustInventoryDocument, modifier: any, hasObj = false) => {
+  const adjustId = adjustInventory._id;
+
+  await models.AdjustInventories.updateAdjustInventory(adjustId, modifier);
+
+  graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+    accountingAdjustInventoryChanged: {
+      ...adjustInventory,
+      ...modifier
+    },
+  });
+
+  if (hasObj) {
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
+  }
+
+  return;
+}
 
 export const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {
   const date = getPureDate(adjustInventory.date);
@@ -31,6 +51,31 @@ export const checkValidDate = async (models: IModels, adjustInventory: IAdjustIn
   }
 
   return { beginDate, beforeAdjInv };
+}
+
+export const detailsClear = async (models: IModels, user: IUserDocument, adjustInventory: IAdjustInventoryDocument, date?: Date) => {
+  const adjustId = adjustInventory._id;
+  if (!date || !adjustInventory.beginDate || !adjustInventory.successDate) {
+    const { beforeAdjInv } = await checkValidDate(models, adjustInventory);
+    if (beforeAdjInv) {
+      await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId });
+    }
+
+    return await modifierWrapper(models, adjustInventory, { successDate: null, modifiedBy: user._id }, true);
+  }
+
+  if (!(date && ((adjustInventory.beginDate && adjustInventory.beginDate < date) || (adjustInventory.successDate && adjustInventory.successDate > date)))) {
+    throw new Error('wrong date')
+  }
+
+  const details = await models.AdjustInvDetails.find({ adjustId });
+  for (const detail of details) {
+    const newInfos = detail.infoPerDate?.filter(ip => ip.date < date).sort((a, b) => a.date > b.date ? 1 : -1) || [];
+    const newLastInfo = newInfos[newInfos.length - 1];
+
+    await models.AdjustInvDetails.updateOne({ _id: detail._id }, { $set: { ...detail, ...newLastInfo, infoPerDate: newInfos } });
+  }
+  return await modifierWrapper(models, adjustInventory, { successDate: date, modifiedBy: user._id }, true);
 }
 
 const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => {
@@ -384,67 +429,68 @@ const fixInvTrs = async (models: IModels, {
 }
 
 export const adjustRunning = async (models: IModels, user: IUserDocument, { adjustInventory, beginDate, beforeAdjInv }: { adjustInventory: IAdjustInventoryDocument, beginDate: Date, beforeAdjInv?: IAdjustInventoryDocument | null }) => {
-  let currentDate = await recheckValidDate(models, adjustInventory, beginDate);
-  const date = adjustInventory.date;
-  const adjustId = adjustInventory._id;
+  try {
+    let currentDate = await recheckValidDate(models, adjustInventory, beginDate);
+    const date = adjustInventory.date;
+    const adjustId = adjustInventory._id;
 
-  await models.AdjustInvDetails.cleanAdjustInvDetails({ adjustId });
-  if (beforeAdjInv) {
-    await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId });
-  }
+    await detailsClear(models, user, adjustInventory, currentDate);
 
-  const trFilter = {
-    'details.productId': { $exists: true, $ne: '' },
-    'details.accountId': { $exists: true, $ne: '' },
-    'branchId': { $exists: true, $ne: '' },
-    'departmentId': { $exists: true, $ne: '' },
-    status: { $in: TR_STATUSES.ACTIVE },
-  }
+    const trFilter = {
+      'details.productId': { $exists: true, $ne: '' },
+      'details.accountId': { $exists: true, $ne: '' },
+      'branchId': { $exists: true, $ne: '' },
+      'departmentId': { $exists: true, $ne: '' },
+      status: { $in: TR_STATUSES.ACTIVE },
+    }
 
-  if (currentDate < beginDate) {
-    await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
-  }
+    // cachees bolson uchir ene barag hereggui baih yostoi
+    // if (currentDate < beginDate) {
+    //   await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
+    // }
 
-  // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
-  while (currentDate < date) {
-    const nextDate = getTomorrow(currentDate);
+    // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
+    while (currentDate < date) {
+      const nextDate = getTomorrow(currentDate);
 
-    try {
-      await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
-      graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
-        accountingAdjustInventoryChanged: {
-          ...adjustInventory,
-          successDate: currentDate,
-          checkedAt: currentDate,
-        },
-      });
-    } catch (e) {
+      try {
+        await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
+        graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+          accountingAdjustInventoryChanged: {
+            ...adjustInventory,
+            successDate: currentDate,
+            checkedAt: currentDate,
+          },
+        });
+      } catch (e) {
+        const now = new Date();
+        await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedAt: now } });
+        // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
+        graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+          accountingAdjustInventoryChanged: {
+            ...adjustInventory,
+            error: e.message,
+            checkedAt: now
+          },
+        });
+        break;
+      }
+
       const now = new Date();
-      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedAt: now } });
-      // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
+      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { checkedAt: now } });
+
       graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
         accountingAdjustInventoryChanged: {
           ...adjustInventory,
-          error: e.message,
+
           checkedAt: now
         },
       });
-      break;
+      currentDate = nextDate;
     }
 
-    const now = new Date();
-    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedAt: now } });
-    // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
-
-    graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
-      accountingAdjustInventoryChanged: {
-        ...adjustInventory,
-        successDate: nextDate,
-        checkedAt: now
-      },
-    });
-    currentDate = nextDate;
+    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.COMPLETE } });
+  } catch (e) {
+    modifierWrapper(models, adjustInventory, { checkedDate: now, error: e.message, status: ADJ_INV_STATUSES.PROCESS })
   }
-
-  await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.COMPLETE } });
 }

@@ -8,6 +8,9 @@ interface ICommonAdjInvDetail {
   soonInCount?: number;
   soonOutCount?: number;
 }
+interface ICommonAdjInvDetailInfo extends ICommonAdjInvDetail {
+  date: Date;
+}
 
 export interface IAdjustInvDetailParams {
   productId: string;
@@ -23,7 +26,7 @@ export interface IAdjustInvDetailParamsId extends IAdjustInvDetailParams {
 export interface IAdjustInvDetail extends IAdjustInvDetailParamsId, ICommonAdjInvDetail {
   error?: string;
   warning?: string;
-  infoPerDate?: ICommonAdjInvDetail[];
+  infoPerDate?: ICommonAdjInvDetailInfo[];
 }
 
 export interface IAdjustInvDetailDocument extends IAdjustInvDetail, Document {

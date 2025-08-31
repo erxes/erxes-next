@@ -93,4 +93,5 @@ export const mutations = `
   adjustInventoryCancel(adjustId: String!): AdjustInventory
   adjustInventoryRemove(adjustId: String!): String
   adjustInventoryRun(adjustId: String!): AdjustInventory
+  adjustInventoryClear(adjustId: String!): AdjustInventory
 `;
