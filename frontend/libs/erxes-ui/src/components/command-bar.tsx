@@ -1,7 +1,5 @@
 import * as React from 'react';
-
-import * as PopoverPrimitive from '@radix-ui/react-popover';
-
+import { Popover as PopoverPrimitive } from 'radix-ui';
 import { cn } from '../lib/utils';
 import { Button } from './button';
 import { IconX } from '@tabler/icons-react';

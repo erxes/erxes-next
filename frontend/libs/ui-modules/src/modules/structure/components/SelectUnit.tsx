@@ -351,7 +351,7 @@ export const SelectUnitFilterBar = () => {
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="unitId">
       <Filter.BarName>
         <IconUsers />
         Unit
@@ -378,7 +378,6 @@ export const SelectUnitFilterBar = () => {
           </Combobox.Content>
         </Popover>
       </SelectUnitProvider>
-      <Filter.BarClose filterKey={'unitId'} />
     </Filter.BarItem>
   );
 };

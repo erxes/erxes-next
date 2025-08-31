@@ -41,20 +41,28 @@ app.use(
 
 app.use(cookieParser());
 
+const allowedOrigins = [
+  ...(DOMAIN ? [DOMAIN] : []),
+  ...(isDev ? ['http://localhost:3001', 'http://localhost:5173'] : []),
+  ...(ALLOWED_DOMAINS || '').split(','),
+  ...(CLIENT_PORTAL_DOMAINS || '').split(','),
+  ...(process.env.ALLOWED_ORIGINS || '').split(',').map((c) => c && RegExp(c)),
+];
+
 const corsOptions = {
   credentials: true,
-  origin: [
-    ...(DOMAIN ? [DOMAIN] : []),
-    ...(isDev ? ['http://localhost:3001'] : []),
-    ...(ALLOWED_DOMAINS || '').split(','),
-    ...(CLIENT_PORTAL_DOMAINS || '').split(','),
-    ...(process.env.ALLOWED_ORIGINS || '')
-      .split(',')
-      .map((c) => c && RegExp(c)),
-  ],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+      callback(null, true);
+    } else {
+      console.error('Origin not allowed:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(router);
 
 const fileLimiter = rateLimit({

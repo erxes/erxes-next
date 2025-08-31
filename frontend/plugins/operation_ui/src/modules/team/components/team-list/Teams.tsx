@@ -1,4 +1,4 @@
-import { Skeleton, Table } from 'erxes-ui';
+import { Skeleton, Table, TextOverflowTooltip } from 'erxes-ui';
 import { IconComponent } from 'erxes-ui';
 import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { format } from 'date-fns';
@@ -16,7 +16,9 @@ export function Teams() {
         <Table>
           <Table.Header>
             <Table.Row className="rounded-t-md">
-              <Table.Head className="w-auto rounded-tl-md pl-2">Title</Table.Head>
+              <Table.Head className="w-auto rounded-tl-md pl-2">
+                Title
+              </Table.Head>
               <Table.Head className="w-20">Members</Table.Head>
               <Table.Head className="w-20">Tasks</Table.Head>
               <Table.Head className="w-32">Created At</Table.Head>
@@ -38,7 +40,7 @@ export function Teams() {
                         <span className="[1lh] flex items-center">
                           <IconComponent name={team.icon} className="size-4" />
                         </span>
-                        {team.name}
+                        <TextOverflowTooltip value={team.name} />
                       </span>
                     </Table.Cell>
                     <Table.Cell className="border-none px-2 w-20">

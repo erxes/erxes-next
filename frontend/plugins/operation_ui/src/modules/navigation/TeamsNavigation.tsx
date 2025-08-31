@@ -15,6 +15,7 @@ import {
   useToast,
 } from 'erxes-ui';
 import {
+  IconCalendarRepeat,
   IconCaretRightFilled,
   IconChecklist,
   IconClipboard,
@@ -27,6 +28,7 @@ type Team = {
   _id: string;
   name: string;
   icon?: string;
+  cycleEnabled: boolean;
 };
 
 function LoadingSkeleton() {
@@ -88,6 +90,15 @@ function TeamItem({ team }: TeamItemProps) {
                 className="pl-6 font-medium"
                 icon={IconChecklist}
               />
+              {team.cycleEnabled && (
+                <NavigationMenuLinkItem
+                  name="Cycles"
+                  pathPrefix="operation/team"
+                  path={`${team._id}/cycles`}
+                  className="pl-6 font-medium"
+                  icon={IconCalendarRepeat}
+                />
+              )}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
         </Collapsible.Content>

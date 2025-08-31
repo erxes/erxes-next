@@ -1,21 +1,21 @@
-import { SelectPriority } from '@/priority/components/SelectPriority';
+import { SelectTriggerVariant } from '@/operation/components/SelectOperation';
+import { SelectPriority } from '@/operation/components/SelectPriority';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 
 export const SelectTaskPriority = ({
   taskId,
   value,
-  inInlineCell = false,
+  variant,
 }: {
   taskId: string;
   value?: number;
-  inInlineCell?: boolean;
+  variant: `${SelectTriggerVariant}`;
 }) => {
   const { updateTask } = useUpdateTask();
-  const SelectComponent = inInlineCell
-    ? SelectPriority.InlineCell
-    : SelectPriority.Detail;
+
   return (
-    <SelectComponent
+    <SelectPriority
+      variant={variant}
       value={value}
       onValueChange={(value) =>
         updateTask({

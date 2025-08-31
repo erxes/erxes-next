@@ -1,7 +1,7 @@
 import { Label, RadioGroup } from 'erxes-ui/components';
-import { type RadioGroupProps } from '@radix-ui/react-radio-group';
 import { forwardRef, useId, ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from 'erxes-ui/lib';
+import { type RadioGroupProps } from './radio-group';
 
 export interface ChoiceboxGroupProps
   extends Omit<RadioGroupProps, 'className'> {

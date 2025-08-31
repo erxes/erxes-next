@@ -8,6 +8,7 @@ const coreLibraries = new Set([
   'jotai',
   'ui-modules',
   'react-i18next',
+  'radix-ui',
 ]);
 
 export default coreLibraries;

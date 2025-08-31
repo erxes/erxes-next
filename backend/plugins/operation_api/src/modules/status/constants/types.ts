@@ -1,10 +1,10 @@
 export const STATUS_TYPES = {
-  BACKLOG: 'backlog',
-  UNSTARTED: 'unstarted',
-  STARTED: 'started',
-  COMPLETED: 'completed',
-  CANCELLED: 'cancelled',
-} as const;
+  BACKLOG: 3,
+  UNSTARTED: 2,
+  STARTED: 1,
+  COMPLETED: 4,
+  CANCELLED: 5,
+};
 
 export const DEFAULT_STATUSES = [
   {

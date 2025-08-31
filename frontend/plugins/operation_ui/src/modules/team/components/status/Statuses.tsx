@@ -1,5 +1,5 @@
 import { StatusGroup } from '@/team/components/status/StatusGroup';
-import { TeamStatusTypes } from '@/team/types';
+import { TeamStatusTypes } from '@/team/constants';
 
 export const Statuses = () => {
   return (

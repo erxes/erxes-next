@@ -4,6 +4,7 @@ import {
   Dialog,
   RadioGroup,
   Tabs,
+  ToggleGroup,
 } from 'erxes-ui/components';
 import { useEffect, useId, useRef, useState } from 'react';
 import { getActiveTab } from '../utils/getActiveTab';
@@ -57,13 +58,20 @@ export const FilterDialogDateView = ({ filterKey }: { filterKey: string }) => {
             {filterKey}
           </Dialog.Title>
           <div>
-            <Tabs.List>
-              <Tabs.Trigger value="day">Day</Tabs.Trigger>
-              <Tabs.Trigger value="month">Month</Tabs.Trigger>
-              <Tabs.Trigger value="quarter">Quarter</Tabs.Trigger>
-              <Tabs.Trigger value="halfYear">Half Year</Tabs.Trigger>
-              <Tabs.Trigger value="year">Year</Tabs.Trigger>
-            </Tabs.List>
+            <ToggleGroup
+              type="single"
+              variant="outline"
+              size="sm"
+              value={tabs}
+              onValueChange={setTabs}
+              className="inline-flex"
+            >
+              <ToggleGroup.Item value="day">Day</ToggleGroup.Item>
+              <ToggleGroup.Item value="month">Month</ToggleGroup.Item>
+              <ToggleGroup.Item value="quarter">Quarter</ToggleGroup.Item>
+              <ToggleGroup.Item value="halfYear">Half Year</ToggleGroup.Item>
+              <ToggleGroup.Item value="year">Year</ToggleGroup.Item>
+            </ToggleGroup>
           </div>
         </Dialog.Header>
         <div className="border-y border-muted py-6 flex justify-center h-[22rem] overflow-auto">

@@ -7,7 +7,7 @@ export const ADD_STATUS = gql`
     $description: String
     $color: String
     $order: Int
-    $type: String
+    $type: Int
   ) {
     addStatus(
       name: $name

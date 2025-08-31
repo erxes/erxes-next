@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { CREATE_PROJECT_MUTATION } from '@/project/graphql/mutation/createProject';
 import { useToast } from 'erxes-ui';
 import { useRecordTableCursor } from 'erxes-ui';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 
 export const useCreateProject = () => {
   const { toast } = useToast();

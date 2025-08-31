@@ -16,11 +16,6 @@ import { SelectUsersGroupContext } from '../contexts/SelectUsersGroupContext';
 import { GroupsInline } from 'ui-modules/modules/team-members/components/GroupsInline';
 import { IconUsers } from '@tabler/icons-react';
 
-type Props = {
-  value?: string;
-  onValueChange: (value: string) => void;
-};
-
 const SelectUsersGroupProvider = ({
   children,
   mode = 'single',
@@ -157,7 +152,7 @@ export const SelectUsersGroupFormItem = ({
 
 const SelectUsersGroupsFilterItem = () => {
   return (
-    <Filter.Item filterKey={'groupId'}>
+    <Filter.Item value="groupId">
       <IconUsers />
       Users group
     </Filter.Item>
@@ -188,7 +183,7 @@ export const SelectUsersGroupBar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="groupId">
       <Filter.BarName>
         <IconUsers />
         Users group
@@ -215,7 +210,6 @@ export const SelectUsersGroupBar = () => {
           </Combobox.Content>
         </Popover>
       </SelectUsersGroupProvider>
-      <Filter.BarClose filterKey="groupId" />
     </Filter.BarItem>
   );
 };

@@ -1,4 +1,5 @@
 import {
+  AvatarProps,
   Button,
   Combobox,
   Command,
@@ -85,10 +86,9 @@ const SelectMemberValue = ({
   size,
 }: {
   placeholder?: string;
-  size?: 'lg' | 'sm' | 'xl' | 'default' | 'xs';
+  size?: AvatarProps['size'];
 }) => {
   const { memberIds, members, setMembers } = useSelectMemberContext();
-
   return (
     <MembersInline
       memberIds={memberIds}
@@ -247,7 +247,7 @@ export const SelectMemberFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'assignedTo'}>
       <Filter.BarName>
         <IconUser />
         {!iconOnly && 'Assigned To'}
@@ -272,7 +272,6 @@ export const SelectMemberFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectMemberProvider>
-      <Filter.BarClose filterKey={queryKey || 'assignedTo'} />
     </Filter.BarItem>
   );
 };
@@ -283,6 +282,7 @@ export const SelectMemberInlineCell = React.forwardRef<
     React.ComponentProps<typeof RecordTableInlineCell.Trigger> & {
       scope?: string;
       placeholder?: string;
+      size?: AvatarProps['size'];
     }
 >(
   (

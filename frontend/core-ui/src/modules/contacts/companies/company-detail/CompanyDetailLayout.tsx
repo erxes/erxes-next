@@ -1,6 +1,6 @@
 import { Resizable, Sidebar, Tabs, useQueryState } from 'erxes-ui';
 import { CompanyDetailSheet } from '@/contacts/companies/company-detail/CompanyDetailSheet';
-import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { Tabs as TabsPrimitive } from 'radix-ui';
 
 export const CompanyDetailLayout = ({
   children,

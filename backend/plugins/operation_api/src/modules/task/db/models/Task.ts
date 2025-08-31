@@ -9,7 +9,7 @@ import {
 } from '@/task/@types/task';
 import { createActivity } from '@/activity/utils/createActivity';
 import { createTaskNotification } from '@/task/notificationUtils';
-import { STATUS_TYPES } from '~/modules/status/constants';
+import { STATUS_TYPES } from '@/status/constants/types';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
@@ -108,6 +108,10 @@ export const loadTaskClass = (models: IModels) => {
 
       const nextNumber = (result?.maxNumber || 0) + 1;
 
+      const status = await models.Status.getStatus(doc.status || '');
+
+      doc.statusType = status.type;
+
       if (doc.projectId && doc.teamId) {
         const project = await models.Project.findOne({ _id: doc.projectId });
 
@@ -152,6 +156,8 @@ export const loadTaskClass = (models: IModels) => {
 
       if (doc.status && doc.status !== task.status) {
         rest.statusChangedDate = new Date();
+        const status = await models.Status.getStatus(doc.status || '');
+        rest.statusType = status.type;
       }
 
       if (task.projectId && doc.teamId && doc.teamId !== task.teamId) {
@@ -229,7 +235,7 @@ export const loadTaskClass = (models: IModels) => {
     public static async moveCycle(cycleId: string, newCycleId: string) {
       const statuses = await models.Status.find({
         cycleId,
-        type: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.CANCELLED] },
+        type: { $nin: [STATUS_TYPES.COMPLETED] },
       }).distinct('_id');
 
       const taskIds = await models.Task.find({

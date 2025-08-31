@@ -3,7 +3,7 @@ import { IProjectFilter } from '@/project/@types/project';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IProjectDocument } from '@/project/@types/project';
 import { FilterQuery } from 'mongoose';
-import { STATUS_TYPES } from '@/status/constants';
+import { STATUS_TYPES } from '@/status/constants/types';
 import {
   fillMissingDays,
   fillUntilTargetDate,
@@ -77,23 +77,6 @@ export const projectQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
-
-    const startedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.STARTED] },
-    }).distinct('_id');
-
-    const completedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.COMPLETED] },
-    }).distinct('_id');
-
-    const canceledStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.CANCELLED] },
-    }).distinct('_id');
-
     const result = await models.Task.aggregate([
       {
         $match: {
@@ -103,7 +86,7 @@ export const projectQueries = {
       {
         $facet: {
           totalScope: [
-            { $match: { status: { $nin: canceledStatusIds } } },
+            { $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } } },
             {
               $group: {
                 _id: null,
@@ -125,7 +108,7 @@ export const projectQueries = {
             },
           ],
           started: [
-            { $match: { status: { $in: startedStatusIds } } },
+            { $match: { statusType: STATUS_TYPES.STARTED } },
             {
               $group: {
                 _id: null,
@@ -147,7 +130,7 @@ export const projectQueries = {
             },
           ],
           completed: [
-            { $match: { status: { $in: completedStatusIds } } },
+            { $match: { statusType: STATUS_TYPES.COMPLETED } },
             {
               $group: {
                 _id: null,
@@ -193,23 +176,6 @@ export const projectQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
-
-    const startedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.STARTED] },
-    }).distinct('_id');
-
-    const completedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.COMPLETED] },
-    }).distinct('_id');
-
-    const canceledStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.CANCELLED] },
-    }).distinct('_id');
-
     return models.Task.aggregate([
       {
         $match: {
@@ -219,7 +185,7 @@ export const projectQueries = {
       {
         $facet: {
           totalScope: [
-            { $match: { status: { $nin: canceledStatusIds } } },
+            { $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } } },
             {
               $group: {
                 _id: '$assigneeId',
@@ -241,7 +207,7 @@ export const projectQueries = {
             },
           ],
           started: [
-            { $match: { status: { $in: startedStatusIds } } },
+            { $match: { statusType: STATUS_TYPES.STARTED } },
             {
               $group: {
                 _id: '$assigneeId',
@@ -263,7 +229,7 @@ export const projectQueries = {
             },
           ],
           completed: [
-            { $match: { status: { $in: completedStatusIds } } },
+            { $match: { statusType: STATUS_TYPES.COMPLETED } },
             {
               $group: {
                 _id: '$assigneeId',
@@ -349,23 +315,6 @@ export const projectQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const teamIds = await models.Project.findOne({ _id }).distinct('teamIds');
-
-    const startedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.STARTED] },
-    }).distinct('_id');
-
-    const completedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.COMPLETED] },
-    }).distinct('_id');
-
-    const canceledStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.CANCELLED] },
-    }).distinct('_id');
-
     return models.Task.aggregate([
       {
         $match: {
@@ -375,7 +324,7 @@ export const projectQueries = {
       {
         $facet: {
           totalScope: [
-            { $match: { status: { $nin: canceledStatusIds } } },
+            { $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } } },
             {
               $group: {
                 _id: '$teamId',
@@ -397,7 +346,7 @@ export const projectQueries = {
             },
           ],
           started: [
-            { $match: { status: { $in: startedStatusIds } } },
+            { $match: { statusType: STATUS_TYPES.STARTED } },
             {
               $group: {
                 _id: '$teamId',
@@ -419,7 +368,7 @@ export const projectQueries = {
             },
           ],
           completed: [
-            { $match: { status: { $in: completedStatusIds } } },
+            { $match: { statusType: STATUS_TYPES.COMPLETED } },
             {
               $group: {
                 _id: '$teamId',
@@ -511,29 +460,12 @@ export const projectQueries = {
       return [];
     }
 
-    const teamIds = project?.teamIds || [];
-
-    const startedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.STARTED] },
-    }).distinct('_id');
-
-    const completedStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.COMPLETED] },
-    }).distinct('_id');
-
-    const canceledStatusIds = await models.Status.find({
-      teamId: { $in: teamIds },
-      type: { $in: [STATUS_TYPES.CANCELLED] },
-    }).distinct('_id');
-
     const [totalScopeResult] = await models.Task.aggregate([
       {
         $match: { projectId: _id },
       },
       {
-        $match: { status: { $nin: canceledStatusIds } },
+        $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } },
       },
       {
         $group: {
@@ -568,7 +500,7 @@ export const projectQueries = {
       {
         $match: {
           projectId: _id,
-          status: { $in: [...startedStatusIds, ...completedStatusIds] },
+          statusType: { $in: [STATUS_TYPES.STARTED, STATUS_TYPES.COMPLETED] },
           statusChangedDate: { $ne: null },
         },
       },
@@ -581,8 +513,8 @@ export const projectQueries = {
               day: { $dayOfMonth: '$statusChangedDate' },
             },
           },
-          isStarted: { $in: ['$status', startedStatusIds] },
-          isCompleted: { $in: ['$status', completedStatusIds] },
+          isStarted: { $eq: ['$statusType', STATUS_TYPES.STARTED] },
+          isCompleted: { $eq: ['$statusType', STATUS_TYPES.COMPLETED] },
           estimateValue: {
             $cond: [
               {
@@ -616,6 +548,7 @@ export const projectQueries = {
         },
       },
     ]);
+
     const chartData: {
       totalScope: number;
       chartData: { date: Date; started: number; completed: number }[];
@@ -668,6 +601,7 @@ export const projectQueries = {
       );
       return chartData;
     }
+
     if (chartDataAggregation.length > 0 && project.startDate) {
       const startDate = new Date(project.startDate);
       const firstDate = new Date(chartDataAggregation[0].date);
@@ -703,6 +637,7 @@ export const projectQueries = {
         return chartData;
       }
     }
+
     if (chartDataAggregation.length > 0 && chartDataAggregation.length < 7) {
       chartData.chartData = fillFromLastDate(chartDataAggregation, 7);
 

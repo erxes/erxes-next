@@ -9,7 +9,7 @@ export interface ITask {
   teamId: string;
   description?: string;
   status?: string;
-  priority?: string;
+  priority?: number;
   labelIds?: string[];
   tagIds?: string[];
   assigneeId?: string;
@@ -22,6 +22,7 @@ export interface ITask {
   targetDate?: Date;
   createdAt?: Date;
   statusChangedDate?: Date;
+  statusType?: number;
 }
 
 export interface ITaskUpdate extends ITask {
@@ -38,5 +39,4 @@ export interface ITaskDocument extends ITask, Document {
 export interface ITaskFilter extends ICursorPaginateParams, IListParams, ITask {
   userId?: string;
   createdAt?: Date;
-  statusType?: number;
 }
