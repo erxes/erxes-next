@@ -1,8 +1,8 @@
-import { getIntegrationsKinds } from '@/inbox/utils';
+import { getIntegrationsKinds } from '~/modules/inbox/utils';
 import { IContext } from '~/connectionResolvers';
 import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
-import { IChannelDocument } from '@/inbox/@types/channels';
+import { IChannelDocument } from '~/modules/inbox/@types/channels';
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 const generateFilterQuery = async (
   { kind, channelId, brandId, searchValue, tag, status },

@@ -1,4 +1,4 @@
-import { cursorParams } from '@/inbox/graphql/schemas/conversation';
+import { cursorParams } from '~/modules/inbox/graphql/schemas/conversation';
 export const types = `
   input InputRule {
     _id : String!,
@@ -48,7 +48,7 @@ export const types = `
 
     brand: Brand
 
-    channels: [Channel]
+    channel: Channel
 
 
     healthStatus: JSON
@@ -170,7 +170,7 @@ export const queries = `
     perPage: Int,
     kind: String,
     searchValue: String,
-    channelId: String,
+    channelId: String!,
     brandId: String,
     tag: String,
     status: String,
@@ -188,6 +188,7 @@ export const queries = `
 
 export const mutations = `
   integrationsCreateMessengerOnboarding(
+    channelId: String!,
     brandName: String!,
     languageCode: String
     color: String
@@ -197,6 +198,7 @@ export const mutations = `
 
   integrationsEditMessengerOnboarding(
     _id: String!,
+    channelId: String!,
     brandId: String!,
     brandName: String!,
     languageCode: String
@@ -205,39 +207,43 @@ export const mutations = `
   ): Integration
 
   integrationsCreateMessengerIntegration(
+    channelId: String!,
     name: String!,
     brandId: String!,
     languageCode: String
-    channelIds: [String]
+    channelId: String
     ): Integration
 
   integrationsEditMessengerIntegration(
     _id: String!,
+    channelId: String!,
     name: String!,
     brandId: String!,
     languageCode: String
-    channelIds: [String]
+    channelId: String
   ): Integration
 
   integrationsSaveMessengerAppearanceData(
     _id: String!,
+    channelId: String!,
     uiOptions: MessengerUiOptions): Integration
 
   integrationsSaveMessengerConfigs(
     _id: String!,
+    channelId: String!,
     messengerData: IntegrationMessengerData,
     callData: IntegrationCallData
     ): Integration
 
   integrationsCreateExternalIntegration(
     kind: String!,
+    channelId: String!,
     name: String!,
     brandId: String!,
     accountId: String,
-    channelIds: [String]
     data: JSON): Integration
 
-  integrationsEditCommonFields(_id: String!, name: String!, brandId: String!, channelIds: [String], details: JSON): Integration
+  integrationsEditCommonFields(_id: String!, name: String!, brandId: String!, channelId: String, details: JSON): Integration
 
   integrationsRemove(_id: String!): JSON
   integrationsRemoveAccount(_id: String!, kind: String): JSON
@@ -250,14 +256,14 @@ export const mutations = `
   integrationsCreateLeadIntegration(
     name: String!,
     brandId: String!,
-    channelIds: [String]
+    channelId: String
     ): Integration
 
   integrationsEditLeadIntegration(
     _id: String!
     name: String!,
     brandId: String!,
-    channelIds: [String]
+    channelId: String
   ): Integration
   integrationsCopyLeadIntegration(_id: String!): Integration
 `;

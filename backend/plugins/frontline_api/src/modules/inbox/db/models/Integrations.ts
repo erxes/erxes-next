@@ -10,14 +10,14 @@ import {
   IMessengerData,
   IUiOptions,
   ITicketData,
-} from '@/inbox/@types/integrations';
-import { integrationSchema } from '@/inbox/db/definitions/integrations';
+} from '~/modules/inbox/@types/integrations';
+import { integrationSchema } from '~/modules/inbox/db/definitions/integrations';
 export interface IMessengerIntegration {
   kind: string;
   name: string;
   brandId: string;
   languageCode: string;
-  channelIds?: string[];
+  channelId: string;
 }
 
 export interface IExternalIntegrationParams {
@@ -25,7 +25,7 @@ export interface IExternalIntegrationParams {
   name: string;
   brandId: string;
   accountId: string;
-  channelIds?: string[];
+  channelId: string;
 }
 
 interface IIntegrationBasicInfo {

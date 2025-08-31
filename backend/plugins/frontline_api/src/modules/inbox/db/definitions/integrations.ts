@@ -255,7 +255,7 @@ export const integrationSchema = schemaWrapper(
   new Schema({
     _id: mongooseStringRandomId,
     createdUserId: { type: String, label: 'Created by' },
-
+    channelId: { type: String, label: 'Channel id' },
     kind: {
       type: String,
       label: 'Kind',

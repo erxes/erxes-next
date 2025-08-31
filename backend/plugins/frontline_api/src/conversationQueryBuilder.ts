@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 
-import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
+import { CONVERSATION_STATUSES } from '~/modules/inbox/db/definitions/constants';
 import { IModels } from '~/connectionResolvers';
 import { fixDate } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';

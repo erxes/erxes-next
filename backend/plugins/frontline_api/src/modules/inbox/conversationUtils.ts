@@ -1,9 +1,9 @@
 import * as _ from 'underscore';
-import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
+import { CONVERSATION_STATUSES } from '~/modules/inbox/db/definitions/constants';
 import { IListArgs } from '~/conversationQueryBuilder';
 import { fixDate, fetchEs } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
-import { getIntegrationsKinds } from '@/inbox/utils';
+import { getIntegrationsKinds } from '~/modules/inbox/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export interface ICountBy {

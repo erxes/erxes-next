@@ -158,6 +158,7 @@ export interface IUiOptionsDocument extends IUiOptions, Document {}
 
 export interface IIntegration {
   kind: string;
+  channelId: string;
   name?: string;
   brandId?: string;
   languageCode?: string;
@@ -169,7 +170,6 @@ export interface IIntegration {
   uiOptions?: IUiOptions;
   isActive?: boolean;
   isConnected?: boolean;
-  channelIds?: string[];
   departmentIds?: string[];
   visibility?: string;
 }

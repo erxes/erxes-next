@@ -1,4 +1,4 @@
-import { IIntegrationDocument } from '@/inbox/@types/integrations';
+import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
 import { IContext } from '~/connectionResolvers';
 import { facebookStatus } from '@/integrations/facebook/messageBroker';
 export const integrationStatus = async (
