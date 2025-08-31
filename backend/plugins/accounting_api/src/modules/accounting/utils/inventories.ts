@@ -68,27 +68,24 @@ export const detailsClear = async (models: IModels, user: IUserDocument, adjustI
     throw new Error('wrong date')
   }
 
-  const details = await models.AdjustInvDetails.find({ adjustId });
+  const details = await models.AdjustInvDetails.find({ adjustId }).lean();
   for (const detail of details) {
     const newInfos: ICommonAdjInvDetailInfo[] = (detail.infoPerDate || [])
       .filter(ip => ip.date < date)
       .sort((a, b) => a.date > b.date ? 1 : -1) || [];
 
     const lastInfo: ICommonAdjInvDetailInfo | undefined = newInfos[newInfos.length - 1];
-    if (lastInfo?._id) {
-      delete lastInfo._id
-    }
 
     // update from lastInfoDate
     await models.AdjustInvDetails.updateOne({ _id: detail._id }, {
       $set: {
         ...detail,
         infoPerDate: newInfos,
-        remainder: lastInfo.remainder,
-        cost: lastInfo.cost,
-        unitCost: lastInfo.unitCost,
-        soonInCount: lastInfo.soonInCount,
-        soonOutCount: lastInfo.soonOutCount,
+        remainder: lastInfo?.remainder ?? 0,
+        cost: lastInfo?.cost ?? 0,
+        unitCost: lastInfo?.unitCost ?? 0,
+        soonInCount: lastInfo?.soonInCount ?? 0,
+        soonOutCount: lastInfo?.soonOutCount ?? 0,
       }
     });
   }
@@ -209,7 +206,7 @@ const fixOutTrs = async (models: IModels, {
     const { _id, records } = outTrs;
     const { accountId, branchId, departmentId, productId } = _id;
 
-    if (!branchId || !departmentId || productId || accountId) {
+    if (!branchId || !departmentId || !productId || !accountId) {
       continue
     }
 
@@ -237,6 +234,7 @@ const fixOutTrs = async (models: IModels, {
       const { details } = rec;
       const { count, amount } = details;
       const newCost = fixNum((count ?? 0) * unitCost);
+
       if (newCost !== amount) {
         remainder -= fixNum(count ?? 0);
         cost -= newCost;
@@ -247,7 +245,9 @@ const fixOutTrs = async (models: IModels, {
           {
             $set: {
               'details.$[d].unitPrice': unitCost,
-              'details.$[d].amount': newCost
+              'details.$[d].amount': newCost,
+              sumDt: 0,
+              sumCt: fixNum(rec.sumCt - amount + newCost),
             }
           },
           { arrayFilters: [{ 'd._id': { $eq: details._id } }] }
@@ -280,7 +280,7 @@ const fixMoveTrs = async (models: IModels, {
     const { _id, records } = outcomeTrs;
     const { accountId, branchId, departmentId, productId } = _id;
 
-    if (!branchId || !departmentId || productId || accountId) {
+    if (!branchId || !departmentId || !productId || !accountId) {
       continue
     }
 
@@ -293,8 +293,8 @@ const fixMoveTrs = async (models: IModels, {
 
     const adjustDetail = await models.AdjustInvDetails.getAdjustInvDetail({ ...detailFilter, adjustId });
 
-    let remainder = fixNum((adjustDetail.remainder ?? 0));
-    let cost = fixNum((adjustDetail.cost ?? 0));
+    let remainder = fixNum((adjustDetail?.remainder ?? 0));
+    let cost = fixNum((adjustDetail?.cost ?? 0));
     const unitCost = fixNum(cost / (remainder ?? 1));
 
     if (remainder < sumCount) {
@@ -426,7 +426,7 @@ const fixInvTrs = async (models: IModels, {
   const outAggrs = await models.Transactions.aggregate([
     { $match: { ...commonMatch, journal: JOURNALS.INV_OUT } },
     ...commonAggregates
-  ])
+  ]);
   await fixOutTrs(models, { adjustId, outAggrs });
 }
 

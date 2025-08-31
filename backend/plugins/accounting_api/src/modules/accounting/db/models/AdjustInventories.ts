@@ -134,12 +134,14 @@ export const loadAdjustInvDetailsClass = (models: IModels, subdomain: string) =>
         if (hasResp) {
           return await models.AdjustInvDetails.findOne({ _id: oldDetail._id });
         }
+        return;
       }
 
       const newDetail = await models.AdjustInvDetails.create({ ...args });
       if (hasResp) {
         return newDetail;
       }
+      return;
     }
 
     public static async increaseAdjustInvDetail({
