@@ -12,6 +12,7 @@ import { TeamStatusTypes } from '@/team/constants';
 export const StatusInlineIcon = React.forwardRef<
   SVGSVGElement,
   React.ComponentProps<'svg'> & { type: any; color?: string }
+
 >(({ type, color, style, className, ...props }) => {
   const TeamStatusIconMap: Record<number, React.ComponentType<any>> = {
     [TeamStatusTypes.Backlog]: IconCircleDashed,
