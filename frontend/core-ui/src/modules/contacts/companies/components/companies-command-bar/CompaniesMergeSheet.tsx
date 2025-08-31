@@ -4,7 +4,7 @@ import {
 } from '@tabler/icons-react';
 import { Button, Sheet, cn } from 'erxes-ui';
 import { ReactNode } from 'react';
-import { CompaniesMergeTooltip } from '@/contacts/companies/components/companies-command-bar/merge/CompaniesMergeTooltip';
+import { CompaniesMergeTooltip } from '@/contacts/companies/components/companies-command-bar/CompaniesMergeTooltip';
 
 const noop = () => {
   //

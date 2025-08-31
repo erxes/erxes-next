@@ -10,4 +10,10 @@ export interface ICompany {
   phones?: string[];
   phoneValidationStatus?: 'valid' | 'invalid';
   ownerId?: string;
+  isSubscribed?: string;
+  description?: string;
+  code?: string;
+  tagIds?: string[];
+  score?: number;
+  location?: string;
 }

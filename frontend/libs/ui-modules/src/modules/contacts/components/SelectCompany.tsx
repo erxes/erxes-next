@@ -259,7 +259,7 @@ const SelectCompanyDetail = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <Button
-            className={cn('w-min inline-flex text-sm font-medium', className)}
+            className={cn('w-min inline-flex shadow-xs font-medium', className)}
             variant="outline"
           >
             Add Companies

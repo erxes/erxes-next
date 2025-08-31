@@ -3,6 +3,7 @@ import { CustomersRecordTable } from '@/contacts/customers/components/CustomersR
 import { CustomersFilter } from '@/contacts/customers/components/CustomersFilter';
 import { CustomerDetail } from '@/contacts/customers/customer-detail/components/CustomerDetail';
 import { PageContainer, PageSubHeader } from 'erxes-ui';
+import { ContactsDetailSheet } from '@/contacts/components/ContactsDetail';
 export const CustomersIndexPage = () => {
   return (
     <PageContainer>
@@ -11,7 +12,9 @@ export const CustomersIndexPage = () => {
         <CustomersFilter />
       </PageSubHeader>
       <CustomersRecordTable />
-      <CustomerDetail />
+      <ContactsDetailSheet queryKey="contactId" title="Customer Details">
+        <CustomerDetail />
+      </ContactsDetailSheet>
     </PageContainer>
   );
 };

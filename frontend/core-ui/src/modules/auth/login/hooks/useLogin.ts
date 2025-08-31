@@ -14,10 +14,12 @@ import { AppPath } from '@/types/paths/AppPath';
 import { useSetAtom } from 'jotai';
 
 export const useLogin = () => {
-  const [login] = useMutation(Login);
-  const [logout] = useMutation(Logout);
-  const [forgotPassword] = useMutation(ForgotPassword);
-  const [resetPassword] = useMutation(ResetPassword);
+  const [login, { loading }] = useMutation(Login, {});
+  const [logout, { loading: logoutLoading }] = useMutation(Logout);
+  const [forgotPassword, { loading: forgotPasswordLoading }] =
+    useMutation(ForgotPassword);
+  const [resetPassword, { loading: resetPasswordLoading }] =
+    useMutation(ResetPassword);
   const setCurrentUser = useSetAtom(currentUserState);
   const setIsCurrentUserLoaded = useSetAtom(isCurrentUserLoadedState);
 
@@ -25,22 +27,26 @@ export const useLogin = () => {
 
   const client = useApolloClient();
 
-  const handleCrendentialsLogin = useCallback(
-    async (email: string, password: string) => {
-      await login({ variables: { email, password } })
-        .then((response) => {
-          setIsCurrentUserLoaded(false);
-          return response.data && navigate(AppPath.Index);
-        })
-        .catch((e) => {
-          toast({
-            title: 'Email or password is incorrect',
-            description: e.message,
-          });
+  const handleCrendentialsLogin = ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) =>
+    login({
+      variables: { email, password },
+      onCompleted() {
+        setIsCurrentUserLoaded(false);
+        navigate(AppPath.Index);
+      },
+      onError(error) {
+        toast({
+          title: 'Email or password is incorrect',
+          description: error.message,
         });
-    },
-    [login, navigate, setIsCurrentUserLoaded],
-  );
+      },
+    });
 
   const handleLogout = useCallback(async () => {
     await logout();
@@ -96,6 +102,8 @@ export const useLogin = () => {
   );
 
   return {
+    loading:
+      loading || logoutLoading || forgotPasswordLoading || resetPasswordLoading,
     handleLogout,
     handleCrendentialsLogin,
     handleForgotPassword,

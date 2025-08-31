@@ -1,8 +1,6 @@
 import { cn, Filter, Skeleton } from 'erxes-ui';
 import { useConversationListContext } from '../hooks/useConversationListContext';
 import { ConversationFilterBar } from '@/inbox/conversations/components/ConversationsFilter';
-import { useAtomValue } from 'jotai';
-import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
 export const ConversationsHeader = ({
   children,
@@ -27,17 +25,15 @@ export const ConversationsHeader = ({
 
 export const ConversationCount = ({ className }: { className?: string }) => {
   const { totalCount, loading } = useConversationListContext();
-  const inboxLayout = useAtomValue(inboxLayoutState);
 
   return (
     <span
       className={cn(
-        'text-accent-foreground inline-flex items-center gap-1 text-sm font-medium ml-auto',
+        'text-accent-foreground inline-flex items-center gap-1 text-sm font-medium ml-auto truncate',
         className,
       )}
     >
-      {loading ? <Skeleton className="w-4 h-4" /> : totalCount}
-      {inboxLayout === 'list' && ' conversations'}
+      {loading ? <Skeleton className="w-4 h-4" /> : totalCount} conversations
     </span>
   );
 };

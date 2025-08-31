@@ -10,7 +10,7 @@ export const useCustomerEdit = () => {
     variables,
     onError,
     ...options
-  }: MutationHookOptions<{ customersEdit: { _id: string } }, ICustomer>) => {
+  }: MutationHookOptions<{ customersEdit: { _id: string } }>) => {
     mutate({
       ...options,
       variables,
@@ -30,7 +30,6 @@ export const useCustomerEdit = () => {
       onError: (error) => {
         if (onError) {
           onError(error);
-          return;
         }
         toast({
           title: 'Error',

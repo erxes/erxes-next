@@ -26,6 +26,7 @@ export const MembersInlineRoot = ({
   updateMembers,
   className,
   size,
+  allowUnassigned,
 }: {
   members?: IUser[];
   memberIds?: string[];
@@ -33,6 +34,7 @@ export const MembersInlineRoot = ({
   updateMembers?: (members: IUser[]) => void;
   className?: string;
   size?: AvatarProps['size'];
+  allowUnassigned?: boolean;
 }) => {
   return (
     <MembersInlineProvider
@@ -41,6 +43,7 @@ export const MembersInlineRoot = ({
       placeholder={placeholder}
       updateMembers={updateMembers}
       size={size}
+      allowUnassigned={allowUnassigned}
     >
       <MembersInlineAvatar size={size} />
       <MembersInlineTitle className={className} />
@@ -55,6 +58,7 @@ export const MembersInlineProvider = ({
   placeholder,
   updateMembers,
   size,
+  allowUnassigned,
 }: {
   children?: React.ReactNode;
   memberIds?: string[];
@@ -62,6 +66,7 @@ export const MembersInlineProvider = ({
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
   size?: AvatarProps['size'];
+  allowUnassigned?: boolean;
 }) => {
   const [_members, _setMembers] = useState<IUser[]>(members || []);
 
@@ -76,6 +81,7 @@ export const MembersInlineProvider = ({
           : placeholder,
         updateMembers: updateMembers || _setMembers,
         size,
+        allowUnassigned,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
@@ -125,7 +131,8 @@ export const MembersInlineAvatar = ({
 }: AvatarProps & {
   containerClassName?: string;
 }) => {
-  const { members, loading, memberIds, size } = useMembersInlineContext();
+  const { members, loading, memberIds, size, allowUnassigned } =
+    useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
 
   const sortedMembers = [...members].sort((a, b) => {
@@ -172,10 +179,14 @@ export const MembersInlineAvatar = ({
     );
   };
 
-  if (members.length === 0)
-    return (
-      <IconUserCancel className="text-muted-foreground flex-none size-4" />
-    );
+  if (members.length === 0) {
+    if (allowUnassigned) {
+      return (
+        <IconUserCancel className="text-muted-foreground flex-none size-4" />
+      );
+    }
+    return null;
+  }
 
   if (members.length === 1) return renderAvatar(members[0]);
 
@@ -208,12 +219,18 @@ export const MembersInlineAvatar = ({
 };
 
 export const MembersInlineTitle = ({ className }: { className?: string }) => {
-  const { members, loading, placeholder } = useMembersInlineContext();
+  const { members, loading, placeholder, allowUnassigned } =
+    useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
   const isCurrentUser = members.some((m) => m._id === currentUser._id);
 
   const getDisplayValue = () => {
-    if (!members || members.length === 0) return 'No assignee';
+    if (!members || members.length === 0) {
+      if (allowUnassigned) {
+        return 'No assignee';
+      }
+      return undefined;
+    }
 
     if (members.length === 1) {
       return members?.[0].details?.fullName;

@@ -1,10 +1,9 @@
 import {
   CompaniesMergeSheet,
   CompaniesMergeSheetTrigger,
-} from '@/contacts/companies/components/companies-command-bar/merge/CompaniesMergeSheet';
+} from '@/contacts/companies/components/companies-command-bar/CompaniesMergeSheet';
 import { Row } from '@tanstack/table-core';
 import { TCompany } from '@/contacts/types/companyType';
-import _ from 'lodash';
 
 interface CompaniesMergeProps {
   companies: TCompany[];
@@ -17,26 +16,20 @@ export const CompaniesMerge = ({ companies, rows }: CompaniesMergeProps) => {
   return CompaniesMergeLogic({ companies, rows });
 };
 
-const CompaniesMergeLogic = ({ companies, rows }: CompaniesMergeProps) => {
-  const customizer = (objValue: any, srcValue: any, key: string) => {
+const CompaniesMergeLogic = ({ companies }: CompaniesMergeProps) => {
+  const merge = (objValue: unknown, srcValue: unknown, key: string) => {
     if (objValue === null) return srcValue;
     else if (srcValue === null) return objValue;
-    else if (_.isArray(objValue) && _.isArray(srcValue))
+    else if (Array.isArray(objValue) && Array.isArray(srcValue))
       return objValue.concat(srcValue);
-    else if (_.isObject(objValue) && _.isObject(srcValue))
-      return _.mergeWith(objValue, srcValue, customizer);
+    else if (typeof objValue === 'object' && typeof srcValue === 'object')
+      return { ...objValue, ...srcValue };
     else if (objValue !== srcValue) {
       const type = key === 'avatar' ? 'avatar' : 'string';
       return { conflicted: true, objValue, srcValue, type };
     }
     return undefined;
   };
-
-  const mergedCompany = _.mergeWith(
-    _.cloneDeep(companies[0]),
-    companies[1],
-    customizer,
-  );
 
   return (
     <CompaniesMergeSheet className="p-6 flex gap-2 h-full">
@@ -50,9 +43,7 @@ const CompaniesMergeLogic = ({ companies, rows }: CompaniesMergeProps) => {
           </span>
         </div>
       </div>
-      <div className="flex-[1.2] h-full ml-5 flex flex-col gap-2">
-        
-      </div>
+      <div className="flex-[1.2] h-full ml-5 flex flex-col gap-2"></div>
     </CompaniesMergeSheet>
   );
 };

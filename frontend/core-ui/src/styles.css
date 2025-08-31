@@ -8,7 +8,7 @@
     --font-mono: 'Roboto Mono', monospace;
     --background: 0 0% 100%;
     --foreground: 240 6% 10%;
-    --primary: 244 76% 59%;
+    --primary: 243 75% 59%;
     --primary-foreground: 0 0% 98%;
     --secondary: 244 53% 85%;
     --muted: 0 0% 95%;
@@ -37,7 +37,7 @@
   .dark {
     --background: 0 0% 9%; /* primary/white */
     --foreground: 240 6% 97%; /* primary/black */
-    --primary: 244 76% 59%; /* primary/purple */
+    --primary: 243 75% 59%; /* primary/purple */
     --primary-foreground: 0 0% 98%; /* primary/white */
     --secondary: 244 53% 16%; /* secondary/purple */
     --muted: 0 0% 14%; /* secondary/gray */
