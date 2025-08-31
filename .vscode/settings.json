@@ -7,5 +7,8 @@
   "nxConsole.nxWorkspacePath": "",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[plaintext]": {
+    "editor.defaultFormatter": "lkrms.inifmt"
+  }
 }

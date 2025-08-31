@@ -5,11 +5,11 @@ import TriggerNode from '@/automations/components/builder/nodes/TriggerNode';
 import WorkflowNode from '@/automations/components/builder/nodes/WorkflowNode';
 import { AUTOMATION_DETAIL } from '@/automations/graphql/automationQueries';
 import { AutomationNodeType, IAutomation, NodeData } from '@/automations/types';
+import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 import {
   generateNode,
   generateNodes,
 } from '@/automations/utils/automationBuilderUtils/generateNodes';
-import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 import {
   TAutomationBuilderForm,
   TAutomationNodeState,
@@ -27,7 +27,7 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { Button, Card, Checkbox, Sheet, Spinner, themeState } from 'erxes-ui';
+import { Card, Checkbox, Spinner, themeState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { useFormContext } from 'react-hook-form';
 import { IAction } from 'ui-modules';
@@ -60,11 +60,13 @@ export const WorkflowActionMapper = ({ id }: { id?: string }) => {
 };
 
 const useWorkflowMapperBeforeTitleContent = (
+  selectedActionIds: string[],
   onSelectActionWorkflow: (actionId: string, checked: boolean) => void,
 ) => {
   const beforeTitleContent = (id: string, type: AutomationNodeType) => {
     return (
       <Checkbox
+        checked={selectedActionIds.includes(id)}
         onCheckedChange={(checked) =>
           onSelectActionWorkflow(id, Boolean(checked))
         }
@@ -145,6 +147,7 @@ const WorkflowActionCanvas = ({
     useActionsWorkflow(automationId);
 
   const { beforeTitleContent } = useWorkflowMapperBeforeTitleContent(
+    selectedActionIds,
     onSelectActionWorkflow,
   );
 

@@ -38,7 +38,7 @@ export const AutomationSettingsRoutes = () => {
 
         <Route path="/agents" element={<AutomationAiAgentsSettingsPage />} />
         <Route
-          path="/agents/:kind"
+          path="/agents/:id"
           element={<AutomationAiAgentDetailSettingsPage />}
         />
       </Routes>

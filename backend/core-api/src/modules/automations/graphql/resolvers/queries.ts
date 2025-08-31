@@ -2,6 +2,7 @@ import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
 
 import {
   AUTOMATION_STATUSES,
+  embedTextCF,
   IAutomationDocument,
   IAutomationExecutionDocument,
   IAutomationsActionConfig,
@@ -20,6 +21,7 @@ import {
 import { Document, FilterQuery, Model, SortOrder, Types } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
+import { AiTrainingService } from '~/modules/automations/services/aiTraining';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -523,6 +525,19 @@ export const automationQueries = {
     }
 
     return botsConstants;
+  },
+
+  async automationsAiAgents(_root, { kind }, { models }: IContext) {
+    return await models.AiAgents.find(kind ? { provider: kind } : {});
+  },
+
+  async automationsAiAgentDetail(_root, _, { models }: IContext) {
+    return await models.AiAgents.findOne({});
+  },
+
+  async getTrainingStatus(_root, { agentId }, { models }: IContext) {
+    const trainingService = new AiTrainingService(models);
+    return await trainingService.getTrainingStatus(agentId);
   },
 };
 

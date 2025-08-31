@@ -90,6 +90,14 @@ export const UI_ACTIONS = [
     description: 'Delay until event is triggered',
     isAvailable: true,
   },
+  {
+    type: 'aiAgent',
+    icon: 'IconAi',
+    label: 'Ai Agent',
+    description:
+      'Handle workflow conversations by topic using AI agents with embedded knowledge',
+    isAvailable: true,
+  },
 ];
 
 export const UI_TRIGGERS = [

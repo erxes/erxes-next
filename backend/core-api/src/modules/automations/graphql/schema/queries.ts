@@ -38,6 +38,9 @@ const queries = `
   automationsTotalCount(status: String): automationsTotalCountResponse
   automationConstants: JSON
   automationBotsConstants:JSON
+  automationsAiAgents(kind:String):JSON
+  automationsAiAgentDetail:JSON
+  getTrainingStatus(agentId: String!): TrainingProgress!
 `;
 
 export default queries;

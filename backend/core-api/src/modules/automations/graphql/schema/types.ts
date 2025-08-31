@@ -118,6 +118,20 @@ const types = `
   input WorkflowInput {
     ${workflowTypes}
   }
+
+  type TrainingProgress {
+    agentId: String!
+    totalFiles: Int!
+    processedFiles: Int!
+    status: String!
+    error: String
+  }
+
+  type AiAgentMessage {
+    message: String!
+    relevantFile: String
+    similarity: Float
+  }
 `;
 
 export default types;

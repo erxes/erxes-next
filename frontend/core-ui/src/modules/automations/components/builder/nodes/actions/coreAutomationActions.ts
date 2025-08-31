@@ -1,3 +1,4 @@
+import AiAgentComponents from '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgent';
 import BranchComponents from '@/automations/components/builder/nodes/actions/branches/components/Branches';
 import DelayComponents from '@/automations/components/builder/nodes/actions/delay/components/Delay';
 import ManagePropertiesComponents from '@/automations/components/builder/nodes/actions/manageProperties/component/ManageProperties';
@@ -10,6 +11,7 @@ const coreActions = {
   setProperty: ManagePropertiesComponents,
   sendEmail: SendEmailComponents,
   waitEvent: WaitEventComponents,
+  aiAgent: AiAgentComponents,
 };
 
 type ActionName = keyof typeof coreActions;

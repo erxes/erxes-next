@@ -146,6 +146,8 @@ import {
   loadClass as loadExecutionClass,
 } from './modules/automations/db/models/Executions';
 import {
+  AiAgentDocument,
+  aiAgentSchema,
   emailDeliverySchema,
   IAutomationDocument,
   IAutomationExecutionDocument,
@@ -156,6 +158,8 @@ import {
   notificationConfigSchema,
   notificationSchema,
   userNotificationSettingsSchema,
+  aiEmbeddingSchema,
+  IAiEmbeddingDocument,
 } from 'erxes-api-shared/core-modules';
 
 export interface IModels {
@@ -196,6 +200,8 @@ export interface IModels {
   NotificationConfigs: Model<INotificationConfigDocument>;
   UserNotificationSettings: Model<IUserNotificationSettingsDocument>;
   EmailDeliveries: Model<IEmailDeliveryDocument>;
+  AiAgents: Model<AiAgentDocument>;
+  AiEmbeddings: Model<IAiEmbeddingDocument>;
 }
 
 export interface IContext extends IMainContext {
@@ -369,6 +375,20 @@ export const loadClasses = (
     IEmailDeliveryDocument,
     Model<IEmailDeliveryDocument>
   >('email_deliveries', emailDeliverySchema);
+  models.EmailDeliveries = db.model<
+    IEmailDeliveryDocument,
+    Model<IEmailDeliveryDocument>
+  >('email_deliveries', emailDeliverySchema);
+
+  models.AiAgents = db.model<AiAgentDocument, Model<AiAgentDocument>>(
+    'automations_ai_agents',
+    aiAgentSchema,
+  );
+
+  models.AiEmbeddings = db.model<
+    IAiEmbeddingDocument,
+    Model<IAiEmbeddingDocument>
+  >('ai_embeddings', aiEmbeddingSchema);
 
   const db_name = db.name;
 
@@ -383,5 +403,5 @@ export const loadClasses = (
 };
 
 export const generateModels = createGenerateModels<IModels>(loadClasses, {
-  ignoreModels: ['logs', 'automations_executions'],
+  ignoreModels: ['logs', 'automations_executions', 'ai_embeddings'],
 });

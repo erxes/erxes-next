@@ -23,8 +23,14 @@ const WorkflowNode = ({
   selected,
   id,
 }: NodeProps<Node<NodeData & WorkflowNodeData>>) => {
-  const { isOpenDialog, isOpenDropDown, setOpenDropDown, onRemoveNode } =
-    useNodeDropDownActions(id, data.nodeType);
+  const {
+    isOpenDialog,
+    isOpenDropDown,
+    isOpenRemoveAlert,
+    setOpenRemoveAlert,
+    setOpenDropDown,
+    onRemoveNode,
+  } = useNodeDropDownActions(id, data.nodeType);
 
   return (
     <div className="flex flex-col">
@@ -51,9 +57,9 @@ const WorkflowNode = ({
           <div className="flex items-center gap-1">
             <WorkflowActionSelectorSheet data={data} />
             <DropdownMenu
-              open={isOpenDropDown || isOpenDialog}
+              open={isOpenDropDown || isOpenDialog || isOpenRemoveAlert}
               onOpenChange={(open) => {
-                if (!isOpenDialog) {
+                if (!isOpenDialog || !isOpenRemoveAlert) {
                   setOpenDropDown(open);
                 }
               }}
@@ -65,7 +71,11 @@ const WorkflowNode = ({
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="w-42">
                 <DropdownMenu.Item asChild>
-                  <NodeRemoveActionDialog onRemoveNode={onRemoveNode} />
+                  <NodeRemoveActionDialog
+                    onRemoveNode={onRemoveNode}
+                    isOpenRemoveAlert={isOpenRemoveAlert}
+                    setOpenRemoveAlert={setOpenRemoveAlert}
+                  />
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu>
