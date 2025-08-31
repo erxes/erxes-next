@@ -1,10 +1,10 @@
+import { IUserDocument } from "erxes-api-shared/core-types";
+import { fixNum, getPureDate, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
+import { now } from "mongoose";
 import { IModels } from "~/connectionResolvers";
-import { ADJ_INV_STATUSES, IAdjustInvDetailParams, IAdjustInventory, IAdjustInventoryDocument } from "../@types/adjustInventory";
+import { ADJ_INV_STATUSES, IAdjustInvDetailParams, IAdjustInventory, IAdjustInventoryDocument, ICommonAdjInvDetailInfo } from "../@types/adjustInventory";
 import { JOURNALS, TR_STATUSES } from "../@types/constants";
 import { ITransactionDocument, ITrDetail } from "../@types/transaction";
-import { fixNum, getPureDate, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
-import { IUserDocument } from "erxes-api-shared/core-types";
-import { now } from "mongoose";
 
 export const modifierWrapper = async (models: IModels, adjustInventory: IAdjustInventoryDocument, modifier: any, hasObj = false) => {
   const adjustId = adjustInventory._id;
@@ -70,10 +70,27 @@ export const detailsClear = async (models: IModels, user: IUserDocument, adjustI
 
   const details = await models.AdjustInvDetails.find({ adjustId });
   for (const detail of details) {
-    const newInfos = detail.infoPerDate?.filter(ip => ip.date < date).sort((a, b) => a.date > b.date ? 1 : -1) || [];
-    const newLastInfo = newInfos[newInfos.length - 1];
+    const newInfos: ICommonAdjInvDetailInfo[] = (detail.infoPerDate || [])
+      .filter(ip => ip.date < date)
+      .sort((a, b) => a.date > b.date ? 1 : -1) || [];
 
-    await models.AdjustInvDetails.updateOne({ _id: detail._id }, { $set: { ...detail, ...newLastInfo, infoPerDate: newInfos } });
+    const lastInfo: ICommonAdjInvDetailInfo | undefined = newInfos[newInfos.length - 1];
+    if (lastInfo?._id) {
+      delete lastInfo._id
+    }
+
+    // update from lastInfoDate
+    await models.AdjustInvDetails.updateOne({ _id: detail._id }, {
+      $set: {
+        ...detail,
+        infoPerDate: newInfos,
+        remainder: lastInfo.remainder,
+        cost: lastInfo.cost,
+        unitCost: lastInfo.unitCost,
+        soonInCount: lastInfo.soonInCount,
+        soonOutCount: lastInfo.soonOutCount,
+      }
+    });
   }
   return await modifierWrapper(models, adjustInventory, { successDate: date, modifiedBy: user._id }, true);
 }
@@ -98,21 +115,6 @@ const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => 
   }
 
   return adjustInventory.successDate;
-}
-
-const checkPrepare = async (models: IModels, adjustInventory: IAdjustInventoryDocument, beforeAdjInv?: IAdjustInventoryDocument) => {
-  const detailsCount = await models.AdjustInvDetails.countDocuments({ adjustId: adjustInventory._id })
-
-  // first time
-  if (!detailsCount) {
-    if (beforeAdjInv?._id) {
-      await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId: adjustInventory._id });
-    }
-    return;
-  }
-
-
-  return;
 }
 
 const calcTrs = async (models: IModels, {
@@ -425,7 +427,7 @@ const fixInvTrs = async (models: IModels, {
     { $match: { ...commonMatch, journal: JOURNALS.INV_OUT } },
     ...commonAggregates
   ])
-  await fixOutTrs(models, { adjustId, outAggrs })
+  await fixOutTrs(models, { adjustId, outAggrs });
 }
 
 export const adjustRunning = async (models: IModels, user: IUserDocument, { adjustInventory, beginDate, beforeAdjInv }: { adjustInventory: IAdjustInventoryDocument, beginDate: Date, beforeAdjInv?: IAdjustInventoryDocument | null }) => {
@@ -446,7 +448,7 @@ export const adjustRunning = async (models: IModels, user: IUserDocument, { adju
 
     // cachees bolson uchir ene barag hereggui baih yostoi
     // if (currentDate < beginDate) {
-    //   await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
+    // await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
     // }
 
     // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
@@ -455,41 +457,69 @@ export const adjustRunning = async (models: IModels, user: IUserDocument, { adju
 
       try {
         await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
-        graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
-          accountingAdjustInventoryChanged: {
-            ...adjustInventory,
-            successDate: currentDate,
-            checkedAt: currentDate,
-          },
-        });
+
+        let bulkOps: Array<{
+          updateOne: {
+            filter: { _id: string };
+            update: { $push: { infoPerDate: ICommonAdjInvDetailInfo } };
+          };
+        }> = [];
+
+        // toCache
+        let step = 0;
+        const per = 1000;
+        const summary = await models.AdjustInvDetails.find({ adjustId }).countDocuments();
+
+        while (step * per <= summary) {
+          bulkOps = [];
+          const details = await models.AdjustInvDetails.find({ adjustId })
+            .sort({ accountId: 1, branchId: 1, departmentId: 1, productId: 1 })
+            .skip(step * per)
+            .limit(step).lean();
+          for (const detail of details) {
+            bulkOps.push({
+              updateOne: {
+                filter: { _id: detail._id },
+                update: {
+                  $push: {
+                    infoPerDate: {
+                      date: currentDate,
+                      remainder: detail.remainder,
+                      cost: detail.cost,
+                      unitCost: detail.unitCost,
+                      soonInCount: detail.soonInCount,
+                      soonOutCount: detail.soonOutCount,
+                    }
+                  }
+                },
+              },
+            });
+          }
+          if (bulkOps.length) {
+            await models.AdjustInvDetails.bulkWrite(bulkOps);
+          }
+          step++;
+        }
+        // end toCache
+
+        await modifierWrapper(models, adjustInventory, {
+          checkedAt: new Date(), successDate: nextDate
+        })
       } catch (e) {
         const now = new Date();
-        await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedAt: now } });
-        // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
-        graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
-          accountingAdjustInventoryChanged: {
-            ...adjustInventory,
-            error: e.message,
-            checkedAt: now
-          },
-        });
+        await modifierWrapper(models, adjustInventory, {
+          error: e.message,
+          checkedAt: now
+        })
         break;
       }
 
-      const now = new Date();
-      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { checkedAt: now } });
-
-      graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
-        accountingAdjustInventoryChanged: {
-          ...adjustInventory,
-
-          checkedAt: now
-        },
-      });
       currentDate = nextDate;
     }
 
-    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.COMPLETE } });
+    await modifierWrapper(models, adjustInventory, {
+      checkedAt: new Date(), status: ADJ_INV_STATUSES.COMPLETE, error: ''
+    })
   } catch (e) {
     modifierWrapper(models, adjustInventory, { checkedDate: now, error: e.message, status: ADJ_INV_STATUSES.PROCESS })
   }

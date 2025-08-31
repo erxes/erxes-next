@@ -4,6 +4,7 @@ import { ADJ_INV_STATUSES } from '../../@types/adjustInventory';
 
 const infoPerDateSchema = new Schema({
   _id: mongooseStringRandomId,
+  date: { type: Date, label: 'date' },
   remainder: { type: Number, optional: true, label: 'remainder' },
   cost: { type: Number, optional: true, label: 'cost' },
   unitCost: { type: Number, optional: true, label: 'unitCost' },
@@ -28,9 +29,13 @@ export const adjustInvDetailsSchema = schemaWrapper(
     warning: { type: String, optional: true, label: 'warning' },
     createdAt: { type: Date, default: new Date(), label: 'Created at' },
     updatedAt: { type: Date, optional: true, label: 'Modified at' },
-    infoPerDate: { type: [infoPerDateSchema], optional: true, }
+    infoPerDate: { type: [infoPerDateSchema], defaultValue: [], }
   })
 );
+
+adjustInvDetailsSchema.index({
+  accountId: 1, branchId: 1, departmentId: 1, productId: 1
+})
 
 export const adjustInventoriesSchema = schemaWrapper(
   new Schema({

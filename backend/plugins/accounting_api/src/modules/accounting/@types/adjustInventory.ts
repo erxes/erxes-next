@@ -1,14 +1,15 @@
 import { Document } from 'mongoose';
 import { ICommonAdjusting } from './commonAdjusting';
 
-interface ICommonAdjInvDetail {
+export interface ICommonAdjInvDetail {
   remainder: number;
   cost: number;
   unitCost: number;
   soonInCount?: number;
   soonOutCount?: number;
 }
-interface ICommonAdjInvDetailInfo extends ICommonAdjInvDetail {
+export interface ICommonAdjInvDetailInfo extends ICommonAdjInvDetail {
+  _id?: string;
   date: Date;
 }
 
