@@ -1,8 +1,8 @@
 import { STATUS_TYPES } from '@/status/constants/types';
 import { IContext } from '~/connectionResolvers';
-import { ICycleDocument } from '~/modules/cycle/types';
+import { ICycleDocument } from '@/cycle/types';
 
-export default {
+export const Cycle = {
   async donePercent(
     cycle: ICycleDocument,
     _args: undefined,
@@ -42,6 +42,6 @@ export default {
       return 0;
     }
 
-    return result[0].doneTasks / result[0].totalTasks;
+    return (result[0].doneTasks / result[0].totalTasks) * 100;
   },
 };
