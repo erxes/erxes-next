@@ -73,9 +73,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     resolver: zodResolver(addTaskSchema),
     defaultValues,
   });
+
   useEffect(() => {
     form.setFocus('name');
-  }, []);
+  }, [form]);
 
   useEffect(() => {
     if (teams && teams.length > 0 && !form.getValues('teamId') && !teamId) {
