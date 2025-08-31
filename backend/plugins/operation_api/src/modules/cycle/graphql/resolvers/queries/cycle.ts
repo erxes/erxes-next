@@ -1,8 +1,8 @@
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { ICycleDocument } from '~/modules/cycle/types';
+import { ICycleDocument } from '@/cycle/types';
 import { STATUS_TYPES } from '@/status/constants/types';
-import { fillMissingDays } from '~/modules/project/utils/charUtils';
+import { fillMissingDays } from '@/project/utils/charUtils';
 import { differenceInCalendarDays } from 'date-fns';
 
 export const cycleQueries = {
