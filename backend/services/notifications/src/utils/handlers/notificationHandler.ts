@@ -136,13 +136,42 @@ async function createInAppNotification(
   data: INotificationData,
   userId: string,
 ) {
-  const notification = await models.Notifications.create({
+  let notification: INotificationDocument;
+
+  const updateData = {
     ...data,
     userId,
+    isRead: false,
     priorityLevel: PRIORITY_ORDER[data?.priority || 'medium'],
-    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  });
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+  };
 
+  if (data.kind === 'user' && !data.allowMultiple) {
+    // Update existing notification
+    notification = await models.Notifications.findOneAndUpdate(
+      {
+        contentTypeId: data.contentTypeId,
+        contentType: data.contentType,
+        userId,
+      },
+      updateData,
+      { new: true, upsert: true }, // Return the updated document
+    );
+
+    if (!notification) {
+      throw new Error('Failed to update existing notification');
+    }
+  } else {
+    // Create new notification
+    notification = await models.Notifications.create({
+      ...data,
+      userId,
+      priorityLevel: PRIORITY_ORDER[data?.priority || 'medium'],
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+  }
+
+  // Publish the notification event
   graphqlPubsub.publish(`notificationInserted:${subdomain}:${userId}`, {
     notificationInserted: { ...notification.toObject() },
   });
