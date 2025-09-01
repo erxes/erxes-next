@@ -11,6 +11,7 @@ import {
 } from '@/operation/components/SelectOperation';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { SelectOperationContent } from '@/operation/components/SelectOperation';
+import { format } from 'date-fns';
 
 interface SelectCycleContextType {
   value?: string;
@@ -79,11 +80,20 @@ const SelectCycleValue = ({ placeholder }: { placeholder?: string }) => {
       </div>
     );
 
+  const selectedCycle = activeCycles.find((c) => c._id === value);
+
   return (
     <div className="flex items-center gap-2">
       <IconCalendarRepeat className="size-4" />
       <span className="truncate font-medium">
-        {activeCycles.find((c) => c._id === value)?.name}
+        {selectedCycle?.name}&nbsp;
+        <span className="text-xs text-muted-foreground">
+          {selectedCycle?.startDate &&
+            format(new Date(selectedCycle.startDate), 'MMM dd')}
+          -
+          {selectedCycle?.endDate &&
+            format(new Date(selectedCycle.endDate), 'MMM dd')}
+        </span>
       </span>
     </div>
   );
@@ -96,7 +106,13 @@ const SelectCycleCommandItem = ({ cycle }: { cycle: ICycle }) => {
     <Command.Item value={cycle._id} onSelect={() => onValueChange(cycle._id)}>
       <div className="flex items-center gap-2">
         <IconCalendarRepeat className="size-4" />
-        <span className="truncate font-medium">{cycle.name}</span>
+        <span className="truncate font-medium">
+          {cycle.name}&nbsp;
+          <span className="text-xs text-muted-foreground">
+            {cycle.startDate && format(new Date(cycle.startDate), 'MMM dd')}-{' '}
+            {cycle.endDate && format(new Date(cycle.endDate), 'MMM dd')}
+          </span>
+        </span>
       </div>
       <Combobox.Check checked={value === cycle._id} />
     </Command.Item>

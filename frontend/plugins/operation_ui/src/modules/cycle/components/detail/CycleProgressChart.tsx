@@ -2,8 +2,17 @@ import { ChartContainer } from 'erxes-ui';
 import { CartesianGrid, XAxis, AreaChart, Area, YAxis } from 'recharts';
 import { useGetCycleProgressChart } from '@/cycle/hooks/useGetCycleProgressChart';
 import { format, parseISO, endOfDay, isAfter, subDays } from 'date-fns';
+import { IGetCycleProgressChart } from '@/cycle/hooks/useGetCycleProgressChart';
 
-export const CycleProgressChart = ({ cycleId }: { cycleId: string }) => {
+export const CycleProgressChart = ({
+  cycleId,
+  isCompleted,
+  statistics,
+}: {
+  cycleId: string;
+  isCompleted: boolean;
+  statistics: any;
+}) => {
   const statusColors = {
     started: 'hsl(var(--warning))', // in progress
     completed: 'hsl(var(--success))', // done
@@ -23,10 +32,14 @@ export const CycleProgressChart = ({ cycleId }: { cycleId: string }) => {
 
   const { getCycleProgressChart } = useGetCycleProgressChart({
     variables: { _id: cycleId },
+    skip: !cycleId || isCompleted,
   });
 
-  const rawData = getCycleProgressChart?.chartData || [];
-  const totalScopeValue = getCycleProgressChart?.totalScope || 0;
+  const progress =
+    getCycleProgressChart || (statistics.chartData as IGetCycleProgressChart);
+
+  const rawData = progress?.chartData || [];
+  const totalScopeValue = progress?.totalScope || 0;
 
   const todayEnd = endOfDay(new Date());
   const yesterdayEnd = endOfDay(subDays(new Date(), 1));

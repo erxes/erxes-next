@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   Calendar,
@@ -43,16 +43,6 @@ const useDateSelectContext = () => {
   return context;
 };
 
-const getDateColorClass = (date: Date): string => {
-  const daysUntil = differenceInDays(date, new Date());
-
-  if (daysUntil < 0) return 'text-red-500';
-  if (daysUntil <= 3) return 'text-amber-500';
-  if (daysUntil <= 7) return 'text-yellow-500';
-  if (daysUntil <= 14) return 'text-blue-500';
-  return 'text-green-500';
-};
-
 export const DateSelectProvider = ({
   children,
   ...props
@@ -86,7 +76,7 @@ const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <>
-      <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
+      <IconCalendarTime className={`size-4`} />
       {format(
         value,
         value.getFullYear() === new Date().getFullYear()
