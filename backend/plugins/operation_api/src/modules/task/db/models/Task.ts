@@ -203,6 +203,7 @@ export const loadTaskClass = (models: IModels) => {
 
         rest.number = nextNumber;
         rest.status = newStatus?._id;
+        rest.cycleId = '';
       }
 
       await createActivity({

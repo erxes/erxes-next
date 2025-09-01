@@ -31,6 +31,7 @@ export interface ITask {
   projectId: string;
   estimatePoint: number;
   updatedAt: string;
+  cycleId?: string;
 }
 
 export interface IStatus {
