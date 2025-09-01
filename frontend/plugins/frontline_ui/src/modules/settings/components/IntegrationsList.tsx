@@ -35,6 +35,7 @@ export const IntegrationsList = () => {
   const { integrations, loading, error } = useIntegrations({
     variables: {
       kind: params?.kind,
+      channelId: params?.channelId,
     },
     skip: !params?.kind,
   });

@@ -464,15 +464,10 @@ export const loadClass = (models: IModels, subdomain: string) => {
         userId,
       );
 
-      const channelIds = await models.Channels.find(
-        { integrationIds: { $in: [id] } },
-        { _id: 1 },
-      ).lean();
-
-      if (channelIds.length > 0) {
-        await models.Channels.updateMany(
-          { _id: { $in: channelIds } },
-          { $push: { integrationIds: newIntegration._id } },
+      if (sourceIntegration.channelId) {
+        await models.Integrations.updateOne(
+          { _id: newIntegration._id },
+          { $set: { channelId: sourceIntegration.channelId } },
         );
       }
 

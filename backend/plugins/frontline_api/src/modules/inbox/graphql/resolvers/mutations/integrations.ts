@@ -215,9 +215,24 @@ export const integrationMutations = {
     if (!channel) {
       channel = await models.Channels.createChannel({
         channelDoc: { name: 'Default channel' },
-        memberIds: [user._id],
         adminId: user._id,
       });
+      await models.ChannelMembers.create({
+        channelId: channel._id,
+        memberId: user._id,
+      });
+    } else {
+      const isMember = await models.ChannelMembers.exists({
+        channelId: channel._id,
+        memberId: user._id,
+      });
+
+      if (!isMember) {
+        await models.ChannelMembers.create({
+          channelId: channel._id,
+          memberId: user._id,
+        });
+      }
     }
 
     const integrationDocs = {
@@ -253,6 +268,11 @@ export const integrationMutations = {
       input: { _id: brandId, fields: { name: fields.brandName } },
     });
     const integration = await models.Integrations.getIntegration({ _id });
+
+    if (!integration) {
+      throw new Error('Integration not found');
+    }
+
     const channel = await models.Channels.findOne({
       name: 'Default channel',
     });

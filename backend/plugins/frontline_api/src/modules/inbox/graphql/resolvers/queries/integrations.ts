@@ -2,8 +2,8 @@ import { getIntegrationsKinds } from '~/modules/inbox/utils';
 import { IContext } from '~/connectionResolvers';
 import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
-import { IChannelDocument } from '~/modules/inbox/@types/channels';
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
+import { IChannelDocument } from '~/modules/channel/@types/channel';
 const generateFilterQuery = async (
   { kind, channelId, brandId, searchValue, tag, status },
   models,
@@ -16,8 +16,7 @@ const generateFilterQuery = async (
 
   // filter integrations by channel
   if (channelId) {
-    const channel = await models.Channels.getChannel(channelId);
-    query._id = { $in: channel.integrationIds || [] };
+    query.channelId = channelId;
   }
 
   // filter integrations by brand
@@ -233,23 +232,21 @@ export const integrationQueries = {
         : 0;
     }
 
-    // Counting integrations by channel
-    const channels = await models.Channels.find({}); // No need for 'as IChannelDocument[]' if models.Channels is typed
-    if (channels) {
+    const channels = await models.Channels.find({});
+    if (channels && channels.length > 0) {
       for (const channel of channels as IChannelDocument[]) {
         const countQueryResult = await count({
-          _id: { $in: channel.integrationIds },
+          channelId: channel._id,
           ...qry,
         });
 
-        counts.byChannel[channel._id as string] = !args.channelId
+        counts.byChannel[channel._id.toString()] = !args.channelId
           ? countQueryResult
-          : args.channelId === channel._id
+          : args.channelId === channel._id.toString()
           ? countQueryResult
           : 0;
       }
     }
-
     // Counting integrations by brand
 
     const brands = await sendTRPCMessage({

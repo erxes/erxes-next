@@ -15,7 +15,7 @@ export const GET_INTEGRATION_DETAIL = gql`
       messengerData
       uiOptions
       isConnected
-      channels {
+      channel {
         _id
       }
       departmentIds

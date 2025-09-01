@@ -14,11 +14,9 @@ export interface IChannelModel extends Model<IChannelDocument> {
 
   createChannel({
     channelDoc,
-    memberIds,
     adminId,
   }: {
     channelDoc: IChannel;
-    memberIds: string[];
     adminId: string;
   }): Promise<IChannelDocument>;
   updateChannel(_id: string, doc: IChannel, userId: string): IChannelDocument;
@@ -31,13 +29,9 @@ export const loadChannelClass = (models: IModels) => {
     /*
      * Get a Channel
      */
-    public static async getChannel(_id: string) {
-      const channel = await models.Channels.findOne({ _id });
-
-      if (!channel) {
-        throw new Error('Channel not found');
-      }
-
+    public static async getChannel(_id: string): Promise<IChannelDocument> {
+      const channel = await models.Channels.findOne({ _id }).lean();
+      if (!channel) throw new Error('Channel not found');
       return channel;
     }
 
@@ -50,10 +44,7 @@ export const loadChannelClass = (models: IModels) => {
       memberIds: string[];
       adminId: string;
     }): Promise<IChannelDocument> {
-      if (!adminId) {
-        throw new Error('userId must be supplied');
-      }
-      const roles: IChannelMember[] = [];
+      if (!adminId) throw new Error('userId must be supplied');
 
       const channel = await models.Channels.insertOne({
         ...channelDoc,
@@ -61,7 +52,7 @@ export const loadChannelClass = (models: IModels) => {
         createdBy: adminId,
       });
 
-      roles.push(
+      const roles: IChannelMember[] = [
         {
           memberId: adminId,
           channelId: channel._id,
@@ -72,7 +63,7 @@ export const loadChannelClass = (models: IModels) => {
           channelId: channel._id,
           role: ChannelMemberRoles.MEMBER,
         })),
-      );
+      ];
 
       await models.ChannelMembers.createChannelMembers(roles);
 
@@ -102,24 +93,22 @@ export const loadChannelClass = (models: IModels) => {
     public static async updateUserChannels(
       channelIds: string[],
       userId: string,
-    ) {
-      // remove from previous channels
-      await models.Channels.updateMany(
-        { memberIds: { $in: [userId] } },
-        { $pull: { memberIds: userId } },
-      );
+    ): Promise<IChannelDocument[]> {
+      await models.ChannelMembers.deleteMany({ memberId: userId });
 
-      // add to given channels
-      await models.Channels.updateMany(
-        { _id: { $in: channelIds } },
-        { $push: { memberIds: userId } },
-      );
+      const newRoles: IChannelMember[] = channelIds.map((channelId) => ({
+        memberId: userId,
+        channelId,
+        role: ChannelMemberRoles.MEMBER,
+      }));
+      await models.ChannelMembers.createChannelMembers(newRoles);
 
-      return models.Channels.find({ _id: { $in: channelIds } });
+      return models.Channels.find({ _id: { $in: channelIds } }).lean();
     }
 
     public static removeChannel(_id: string) {
-      return models.Channels.deleteOne({ _id });
+      models.Channels.deleteOne({ _id });
+      models.ChannelMembers.deleteMany({ channelId: _id });
     }
 
     public static async getChannels(
@@ -127,19 +116,13 @@ export const loadChannelClass = (models: IModels) => {
     ): Promise<IChannelDocument[]> {
       const query: FilterQuery<IChannelDocument> = {};
 
-      if (params.name) {
-        query.name = params.name;
-      }
-
-      if (params.description) {
-        query.description = params.description;
-      }
+      if (params.name) query.name = params.name;
+      if (params.description) query.description = params.description;
 
       if (params.userId) {
         const channelIds = await models.ChannelMembers.find({
           memberId: params.userId,
         }).distinct('channelId');
-
         query._id = { $in: channelIds };
       }
 
