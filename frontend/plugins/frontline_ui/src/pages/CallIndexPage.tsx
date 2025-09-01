@@ -10,7 +10,7 @@ export const CallIndexPage = () => {
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>
-            <Breadcrumb.List className="gap-1">
+            <Breadcrumb.List>
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
                   <Link to="/frontline/calls">

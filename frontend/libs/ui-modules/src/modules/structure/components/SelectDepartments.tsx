@@ -191,9 +191,9 @@ export const SelectDepartmentsItem = ({
   return (
     <SelectTree.Item
       key={department._id}
-      id={department._id}
+      _id={department._id}
       name={department.title}
-      order={department.order}
+      order={department.order || ''}
       hasChildren={department.hasChildren}
       selected={isSelected}
       onSelect={() => onSelect(department)}
@@ -516,7 +516,7 @@ export const SelectDepartmentsFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={filterKey}>
       <Filter.BarName>
         <IconFolder />
         {label}
@@ -544,7 +544,6 @@ export const SelectDepartmentsFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectDepartmentsProvider>
-      <Filter.BarClose filterKey={filterKey} />
     </Filter.BarItem>
   );
 };

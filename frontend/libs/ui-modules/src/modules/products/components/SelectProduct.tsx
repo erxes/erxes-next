@@ -290,7 +290,7 @@ export const SelectProductFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'product'}>
       <Filter.BarName>
         <IconShoppingCart />
         {!iconOnly && 'Products'}
@@ -319,7 +319,6 @@ export const SelectProductFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectProductProvider>
-      <Filter.BarClose filterKey={queryKey || 'product'} />
     </Filter.BarItem>
   );
 };

@@ -4,7 +4,7 @@ import {
   PageInfo,
 } from 'erxes-api-shared/utils';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { ITaskDocument } from '~/modules/task/@types/task';
+import { ITaskDocument } from '@/task/@types/task';
 import { IModels } from '~/connectionResolvers';
 
 export const taskCursorPaginationWithAggregation = async ({
@@ -38,7 +38,6 @@ export const taskCursorPaginationWithAggregation = async ({
   const [items, totalCount] = await Promise.all([
     models.Task.aggregate([
       { $match: baseQuery as FilterQuery<ITaskDocument> },
-      // Join status collection
       {
         $lookup: {
           from: 'operation_statuses',

@@ -19,6 +19,7 @@ import { ActivityTeam } from '@/activity/components/ActivityTeam';
 import { ActivityLead } from '@/activity/components/ActivityLead';
 import { ActivityNote } from '@/activity/components/ActivityNote';
 import { ActivityEstimate } from '@/activity/components/ActivityEstimate';
+import { ActivityCycle } from '@/activity/components/ActivityCycle';
 
 export const ActivityItem = ({ activity }: { activity: IActivity }) => {
   const { metadata, action } = activity;
@@ -27,7 +28,7 @@ export const ActivityItem = ({ activity }: { activity: IActivity }) => {
     case ACTIVITY_MODULES.NAME:
       return <Name metadata={metadata} />;
     case ACTIVITY_MODULES.STATUS:
-      return <ActivityStatus metadata={metadata} action={action} />;
+      return <ActivityStatus metadata={metadata} />;
     case ACTIVITY_MODULES.LEAD:
       return <ActivityLead metadata={metadata} />;
     case ACTIVITY_MODULES.PRIORITY:
@@ -44,6 +45,8 @@ export const ActivityItem = ({ activity }: { activity: IActivity }) => {
       return <ActivityNote action={action} />;
     case ACTIVITY_MODULES.ESTIMATE_POINT:
       return <ActivityEstimate metadata={metadata} action={action} />;
+    case ACTIVITY_MODULES.CYCLE:
+      return <ActivityCycle metadata={metadata} action={action} />;
     default:
       return <div>Unknown module</div>;
   }

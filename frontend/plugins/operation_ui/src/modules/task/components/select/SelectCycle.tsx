@@ -1,82 +1,219 @@
-import { Button, Select, TextOverflowTooltip, Form } from 'erxes-ui';
+import React from 'react';
+import { PopoverScoped, Combobox, Command } from 'erxes-ui';
 import { useGetActiveCycles } from '@/cycle/hooks/useGetActiveCycles';
-import { IconCalendarRepeat, IconBan } from '@tabler/icons-react';
+import { IconCalendarRepeat } from '@tabler/icons-react';
 import { useState } from 'react';
+import { useGetTeam } from '@/team/hooks/useGetTeam';
+import { ICycle } from '@/cycle/types';
+import {
+  SelectTriggerOperation,
+  SelectTriggerVariant,
+} from '@/operation/components/SelectOperation';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { SelectOperationContent } from '@/operation/components/SelectOperation';
+import { format } from 'date-fns';
 
-export const SelectCycle = ({
+interface SelectCycleContextType {
+  value?: string;
+  onValueChange: (value: string) => void;
+  activeCycles: ICycle[];
+}
+
+const SelectCycleContext = React.createContext<SelectCycleContextType | null>(
+  null,
+);
+
+const useSelectCycleContext = () => {
+  const context = React.useContext(SelectCycleContext);
+  if (!context) {
+    throw new Error(
+      'useSelectCycleContext must be used within SelectCycleProvider',
+    );
+  }
+  return context;
+};
+
+export const SelectCycleFormItem = ({
+  onValueChange,
   teamId,
+  scope,
   value,
-  onChange,
 }: {
-  teamId: string | undefined;
-  value: string | undefined;
-  onChange: (value: string | undefined) => void;
+  teamId?: string;
+  scope?: string;
+  onValueChange: (value: string) => void;
+  value?: string;
 }) => {
-  const { activeCycles } = useGetActiveCycles(teamId);
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    value || 'no-cycle',
-  );
-  const selectedCycle = activeCycles?.find(
-    (cycle) => cycle._id === selectedValue,
-  );
+  const [open, setOpen] = useState(false);
+
   return (
-    <Select
-      value={selectedValue}
-      onValueChange={(value) => {
-        setSelectedValue(value);
-        console.log(value, 'inside');
-        onChange(value === 'no-cycle' ? undefined : value);
+    <SelectCycleProvider
+      value={value}
+      onValueChange={(value: string) => {
+        onValueChange(value);
+        setOpen(false);
       }}
+      teamId={teamId}
     >
-      <Form.Control>
-        <Select.Primitive.Trigger asChild>
-          <Button variant="outline">
-            {selectedCycle && <IconCalendarRepeat className="size-4" />}
-            <span className="font-medium">
-              <Select.Value placeholder="No cycle" />
-            </span>
-          </Button>
-        </Select.Primitive.Trigger>
-      </Form.Control>
-      <Select.Content className=" max-h-[300px] w-[280px]">
-        {selectedCycle !== undefined ? (
-          <Select.Item
-            key={selectedValue}
-            value={selectedValue || ''}
-            className="font-medium"
-          >
-            <TextOverflowTooltip value={selectedCycle.name} />
-          </Select.Item>
-        ) : (
-          <Select.Item value="no-cycle" key="no-cycle">
-            <span className="flex items-center gap-2 font-medium">
-              <IconBan className="size-4" />
-              No cycle
-            </span>
-          </Select.Item>
-        )}
-        <Select.Separator />
-        {selectedValue !== 'no-cycle' && (
-          <Select.Item value="no-cycle" key="no-cycle">
-            <span className="flex items-center gap-2 font-medium">
-              <IconBan className="size-4" />
-              No cycle
-            </span>
-          </Select.Item>
-        )}
-        {activeCycles &&
-          activeCycles
-            .filter((cycle) => cycle._id !== selectedValue)
-            .map((cycle) => (
-              <Select.Item
-                key={cycle._id}
-                value={cycle._id}
-                className="font-medium"
-              >
-                <TextOverflowTooltip value={cycle.name} />
-              </Select.Item>
-            ))}
-      </Select.Content>
-    </Select>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <SelectTriggerOperation variant="form">
+          <SelectCycleValue />
+        </SelectTriggerOperation>
+        <SelectOperationContent variant="form">
+          <SelectCycleContent />
+        </SelectOperationContent>
+      </PopoverScoped>
+    </SelectCycleProvider>
   );
 };
+
+const SelectCycleValue = ({ placeholder }: { placeholder?: string }) => {
+  const { activeCycles, value } = useSelectCycleContext();
+
+  if (!value)
+    return (
+      <div className="flex items-center gap-2 text-accent-foreground">
+        <IconCalendarRepeat className="size-4" />
+        <span className="truncate font-medium">
+          {placeholder || 'Select cycle'}
+        </span>
+      </div>
+    );
+
+  const selectedCycle = activeCycles.find((c) => c._id === value);
+
+  return (
+    <div className="flex items-center gap-2">
+      <IconCalendarRepeat className="size-4" />
+      <span className="truncate font-medium">
+        {selectedCycle?.name}&nbsp;
+        <span className="text-xs text-muted-foreground">
+          {selectedCycle?.startDate &&
+            format(new Date(selectedCycle.startDate), 'MMM dd')}
+          -
+          {selectedCycle?.endDate &&
+            format(new Date(selectedCycle.endDate), 'MMM dd')}
+        </span>
+      </span>
+    </div>
+  );
+};
+
+const SelectCycleCommandItem = ({ cycle }: { cycle: ICycle }) => {
+  const { onValueChange, value } = useSelectCycleContext();
+
+  return (
+    <Command.Item value={cycle._id} onSelect={() => onValueChange(cycle._id)}>
+      <div className="flex items-center gap-2">
+        <IconCalendarRepeat className="size-4" />
+        <span className="truncate font-medium">
+          {cycle.name}&nbsp;
+          <span className="text-xs text-muted-foreground">
+            {cycle.startDate && format(new Date(cycle.startDate), 'MMM dd')}-{' '}
+            {cycle.endDate && format(new Date(cycle.endDate), 'MMM dd')}
+          </span>
+        </span>
+      </div>
+      <Combobox.Check checked={value === cycle._id} />
+    </Command.Item>
+  );
+};
+
+const SelectCycleContent = () => {
+  const { activeCycles } = useSelectCycleContext();
+
+  return (
+    <Command id="cycle-command-menu">
+      <Command.Input placeholder="Search cycle" />
+      <Command.Empty>No cycle found</Command.Empty>
+      <Command.List>
+        <SelectCycleCommandItem
+          cycle={{ _id: '', name: 'No cycle' } as ICycle}
+        />
+        {activeCycles.map((cycle) => (
+          <SelectCycleCommandItem key={cycle._id} cycle={cycle} />
+        ))}
+      </Command.List>
+    </Command>
+  );
+};
+
+const SelectCycleProvider = ({
+  children,
+  value,
+  onValueChange,
+  teamId,
+  taskId,
+}: {
+  children: React.ReactNode;
+  value?: string;
+  onValueChange: (value: string) => void;
+  teamId?: string;
+  taskId?: string;
+}) => {
+  const { team } = useGetTeam({ variables: { _id: teamId }, skip: !teamId });
+  const { activeCycles } = useGetActiveCycles(teamId, taskId);
+
+  if (!team?.cycleEnabled) return null;
+
+  const handleValueChange = (cycleId: string) => {
+    onValueChange(cycleId);
+  };
+
+  return (
+    <SelectCycleContext.Provider
+      value={{
+        value,
+        onValueChange: handleValueChange,
+        activeCycles: activeCycles || [],
+      }}
+    >
+      {children}
+    </SelectCycleContext.Provider>
+  );
+};
+
+const SelectCycleRoot = ({
+  value,
+  taskId,
+  teamId,
+  variant,
+}: {
+  value: string;
+  taskId: string;
+  teamId: string;
+  variant: `${SelectTriggerVariant}`;
+}) => {
+  const [open, setOpen] = useState(false);
+  const { updateTask } = useUpdateTask();
+
+  return (
+    <SelectCycleProvider
+      value={value}
+      onValueChange={(value) => {
+        updateTask({
+          variables: {
+            _id: taskId,
+            cycleId: value,
+          },
+        });
+        setOpen(false);
+      }}
+      teamId={teamId}
+      taskId={taskId}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen}>
+        <SelectTriggerOperation variant={variant}>
+          <SelectCycleValue />
+        </SelectTriggerOperation>
+        <SelectOperationContent variant={variant}>
+          <SelectCycleContent />
+        </SelectOperationContent>
+      </PopoverScoped>
+    </SelectCycleProvider>
+  );
+};
+
+export const SelectCycle = Object.assign(SelectCycleRoot, {
+  FormItem: SelectCycleFormItem,
+});

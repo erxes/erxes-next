@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate, useParams } from 'react-router';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import {
   IconAlertSquareRounded,
@@ -10,6 +9,7 @@ import {
   IconProgressCheck,
   IconUser,
   IconUsersGroup,
+  IconCalendarRepeat,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import { DateSelectTask } from '@/task/components/select/DateSelectTask';
@@ -33,11 +33,14 @@ import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
 import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
 import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
 import { useSetAtom } from 'jotai';
+import { SelectCycle } from '@/task/components/select/SelectCycle';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
+  _team: ITeam | undefined,
 ): ColumnDef<ITask>[] => {
   const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ITask>;
+
   return [
     checkBoxColumn,
     {
@@ -103,26 +106,7 @@ export const tasksColumns = (
       },
       size: 240,
     },
-    {
-      id: 'priority',
-      accessorKey: 'priority',
-      header: () => (
-        <RecordTable.InlineHead
-          label="Priority"
-          icon={IconAlertSquareRounded}
-        />
-      ),
-      cell: ({ cell }) => {
-        return (
-          <SelectTaskPriority
-            taskId={cell.row.original._id}
-            value={cell.row.original.priority}
-            variant="table"
-          />
-        );
-      },
-      size: 170,
-    },
+
     {
       id: 'status',
       accessorKey: 'status',
@@ -141,6 +125,7 @@ export const tasksColumns = (
       },
       size: 170,
     },
+
     {
       id: 'assigneeId',
       header: () => <RecordTable.InlineHead label="Assignee" icon={IconUser} />,
@@ -162,6 +147,26 @@ export const tasksColumns = (
       size: 240,
     },
     {
+      id: 'priority',
+      accessorKey: 'priority',
+      header: () => (
+        <RecordTable.InlineHead
+          label="Priority"
+          icon={IconAlertSquareRounded}
+        />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <SelectTaskPriority
+            taskId={cell.row.original._id}
+            value={cell.row.original.priority}
+            variant="table"
+          />
+        );
+      },
+      size: 170,
+    },
+    {
       id: 'estimatePoint',
       accessorKey: 'estimatePoint',
       header: () => (
@@ -181,6 +186,24 @@ export const tasksColumns = (
       size: 240,
     },
     {
+      id: 'cycleId',
+      accessorKey: 'cycleId',
+      header: () => (
+        <RecordTable.InlineHead label="Cycle" icon={IconCalendarRepeat} />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <SelectCycle
+            taskId={cell.row.original._id}
+            value={cell.row.original.cycleId || ''}
+            teamId={cell.row.original.teamId}
+            variant="table"
+          />
+        );
+      },
+      size: 240,
+    },
+    {
       id: 'project',
       accessorKey: 'project',
       header: () => (
@@ -191,6 +214,7 @@ export const tasksColumns = (
           <SelectProject
             value={cell.row.original.projectId || ''}
             taskId={cell.row.original._id}
+            teamId={cell.row.original.teamId}
             variant="table"
           />
         );

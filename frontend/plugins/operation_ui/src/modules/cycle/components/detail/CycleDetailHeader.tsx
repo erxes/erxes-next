@@ -5,6 +5,7 @@ import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
 import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 import { CyclesBreadcrumb } from '@/cycle/components/CyclesBreadcrumb';
 import { useGetCycle } from '@/cycle/hooks/useGetCycle';
+
 export const CycleDetailHeader = () => {
   const { teamId, cycleId } = useParams<{
     teamId?: string;
@@ -23,10 +24,6 @@ export const CycleDetailHeader = () => {
             <Separator.Inline />
             <Breadcrumb.Item className="text-sm font-medium px-3 py-1">
               {cycleDetail?.name}
-            </Breadcrumb.Item>
-            <Separator.Inline />
-            <Breadcrumb.Item className="text-sm font-medium px-3 py-1">
-              Tasks
             </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>

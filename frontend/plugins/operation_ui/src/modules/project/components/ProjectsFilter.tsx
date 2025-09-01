@@ -93,7 +93,7 @@ export const ProjectsFilter = () => {
     <Filter id="Projects-filter" sessionKey={PROJECTS_CURSOR_SESSION_KEY}>
       <Filter.Bar>
         {name && (
-          <Filter.BarItem>
+          <Filter.BarItem queryKey="name">
             <Filter.BarName>
               <IconSearch />
               Search
@@ -101,7 +101,6 @@ export const ProjectsFilter = () => {
             <Filter.BarButton filterKey="name" inDialog>
               {name}
             </Filter.BarButton>
-            <Filter.BarClose filterKey="name" />
           </Filter.BarItem>
         )}
         <SelectLead.FilterBar />
@@ -112,7 +111,6 @@ export const ProjectsFilter = () => {
               Team
             </Filter.BarName>
             <SelectTeam.FilterBar />
-            <Filter.BarClose filterKey="team" />
           </Filter.BarItem>
         )}
         <Filter.BarItem queryKey="priority">
@@ -121,7 +119,6 @@ export const ProjectsFilter = () => {
             Priority
           </Filter.BarName>
           <SelectPriority.FilterBar />
-          <Filter.BarClose filterKey="priority" />
         </Filter.BarItem>
         <ProjectsFilterPopover />
         <ProjectsTotalCount />

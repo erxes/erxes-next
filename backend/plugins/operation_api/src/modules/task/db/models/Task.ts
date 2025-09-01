@@ -203,6 +203,7 @@ export const loadTaskClass = (models: IModels) => {
 
         rest.number = nextNumber;
         rest.status = newStatus?._id;
+        rest.cycleId = '';
       }
 
       await createActivity({
@@ -233,14 +234,9 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async moveCycle(cycleId: string, newCycleId: string) {
-      const statuses = await models.Status.find({
-        cycleId,
-        type: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.CANCELLED] },
-      }).distinct('_id');
-
       const taskIds = await models.Task.find({
         cycleId,
-        status: { $nin: statuses },
+        statusType: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.COMPLETED] },
       }).distinct('_id');
 
       for (const taskId of taskIds) {

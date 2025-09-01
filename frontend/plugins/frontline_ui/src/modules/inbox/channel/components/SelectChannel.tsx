@@ -233,7 +233,7 @@ export const SelectChannelFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'channelId'}>
       <Filter.BarName>
         <IconTopologyStar3 />
         {!iconOnly && 'Select Channel'}
@@ -262,7 +262,6 @@ export const SelectChannelFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectChannelProvider>
-      <Filter.BarClose filterKey={queryKey || 'channelId'} />
     </Filter.BarItem>
   );
 };
