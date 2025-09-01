@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
 import { useUpdateCycle } from '@/cycle/hooks/useUpdateCycle';
 import {
   Calendar,
@@ -42,23 +42,6 @@ const useDateSelectContext = () => {
   return context;
 };
 
-const getDateColorClass = (date: Date): string => {
-  const today = new Date();
-  const daysUntil = differenceInDays(date, today);
-
-  if (daysUntil < 0) {
-    return 'text-red-500';
-  } else if (daysUntil <= 3) {
-    return 'text-amber-500';
-  } else if (daysUntil <= 7) {
-    return 'text-yellow-500';
-  } else if (daysUntil <= 14) {
-    return 'text-blue-500';
-  } else {
-    return 'text-green-500';
-  }
-};
-
 export const DateSelectProvider = ({
   children,
   value,
@@ -99,7 +82,7 @@ const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <span className="flex items-center justify-center gap-2">
-      <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
+      <IconCalendarTime className={`size-4`} />
       {format(value, 'MMM d, yyyy')}
     </span>
   );
@@ -129,7 +112,7 @@ const DateSelectFormItemValue = ({
 
   return (
     <span className="flex items-center justify-center gap-2">
-      <IconCalendarTime className={`size-4 ${getDateColorClass(value)}`} />
+      <IconCalendarTime className={`size-4`} />
       <p className="font-medium text-base text-foreground">
         {format(value, 'MMM d, yyyy')}
       </p>
@@ -248,7 +231,7 @@ type DateSelectInlineCellBaseProps = {
 
 type StartProps = DateSelectInlineCellBaseProps & {
   type: 'start';
-  startDate?: Date
+  startDate?: Date;
 };
 
 type EndProps = DateSelectInlineCellBaseProps & {

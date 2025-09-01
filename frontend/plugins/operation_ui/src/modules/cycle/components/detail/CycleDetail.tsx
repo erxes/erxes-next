@@ -9,7 +9,7 @@ export const CycleDetail = () => {
 
   return (
     <>
-      <CycleSideWidget projectId={cycleId || ''} />
+      <CycleSideWidget cycleId={cycleId || ''} />
       <TasksLayout />
     </>
   );

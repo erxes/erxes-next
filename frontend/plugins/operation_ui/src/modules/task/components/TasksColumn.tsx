@@ -9,6 +9,7 @@ import {
   IconProgressCheck,
   IconUser,
   IconUsersGroup,
+  IconCalendarRepeat,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import { DateSelectTask } from '@/task/components/select/DateSelectTask';
@@ -32,11 +33,14 @@ import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
 import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
 import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
 import { useSetAtom } from 'jotai';
+import { SelectCycle } from '@/task/components/select/SelectCycle';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
+  _team: ITeam | undefined,
 ): ColumnDef<ITask>[] => {
   const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ITask>;
+
   return [
     checkBoxColumn,
     {
@@ -175,6 +179,24 @@ export const tasksColumns = (
             taskId={_id}
             value={estimatePoint || 0}
             teamId={teamId}
+            variant="table"
+          />
+        );
+      },
+      size: 240,
+    },
+    {
+      id: 'cycleId',
+      accessorKey: 'cycleId',
+      header: () => (
+        <RecordTable.InlineHead label="Cycle" icon={IconCalendarRepeat} />
+      ),
+      cell: ({ cell }) => {
+        return (
+          <SelectCycle
+            taskId={cell.row.original._id}
+            value={cell.row.original.cycleId || ''}
+            teamId={cell.row.original.teamId}
             variant="table"
           />
         );

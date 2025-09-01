@@ -62,6 +62,25 @@ export const projectQueries = {
       filterQuery.teamIds = { $in: teamIds };
     }
 
+    if (filter.active) {
+      const statusFilter: any = {
+        $nin: [STATUS_TYPES.CANCELLED, STATUS_TYPES.COMPLETED],
+      };
+
+      if (filter.taskId) {
+        const task = await models.Task.findOne({ _id: filter.taskId });
+
+        if (task?.projectId) {
+          // status нь active эсвэл тухайн task-ийн project байж болно
+          filterQuery.$or = [{ status: statusFilter }, { _id: task.projectId }];
+        } else {
+          filterQuery.status = statusFilter;
+        }
+      } else {
+        filterQuery.status = statusFilter;
+      }
+    }
+
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IProjectDocument>({
         model: models.Project,

@@ -118,8 +118,6 @@ export async function startPlugin(
     app.use(configs.expressRouter);
   }
 
-
-
   if (configs.middlewares) {
     for (const middleware of configs.middlewares) {
       app.use(middleware);
@@ -166,11 +164,6 @@ export async function startPlugin(
   }
 
   if (configs.hasSubscriptions) {
-    const fileLimiter = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
-      message: 'Too many requests from this IP, please try again later.',
-    });
     app.get('/subscriptionPlugin.js', async (_req, res) => {
       res.sendFile(path.join(configs.subscriptionPluginPath));
     });
@@ -288,8 +281,13 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments, afterProcess, notificationModules, payments } =
-      configs.meta || {};
+    const {
+      automations,
+      segments,
+      afterProcess,
+      notificationModules,
+      payments,
+    } = configs.meta || {};
 
     if (automations) {
       await startAutomations(configs.name, automations);

@@ -3,15 +3,17 @@ import { GET_CYCLE_PROGRESS_CHART } from '@/cycle/graphql/queries/getCycleProgre
 import { useEffect } from 'react';
 import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
 
+export interface IGetCycleProgressChart {
+  totalScope: number;
+  chartData: {
+    date: string;
+    started: number;
+    completed: number;
+  }[];
+}
+
 interface IGetCycleQueryResponse {
-  getCycleProgressChart: {
-    totalScope: number;
-    chartData: {
-      date: string;
-      started: number;
-      completed: number;
-    }[];
-  };
+  getCycleProgressChart: IGetCycleProgressChart;
 }
 
 export const useGetCycleProgressChart = (options: QueryHookOptions) => {
