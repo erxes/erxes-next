@@ -113,7 +113,7 @@ export function SettingsRoutes() {
         />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
-          path={SettingsPath.NotificationCatchAll}
+          path={SettingsPath.Notification}
           element={<NotificationSettingsRoutes />}
         />
         <Route

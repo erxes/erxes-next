@@ -5,8 +5,8 @@ export const CHANGE_PASSWORD_SCHEMA = z
     currentPassword: z
       .string({
         required_error: 'Please provide your current password',
-        message: 'Please provide your current password',
       })
+      .trim()
       .min(8, { message: 'Please provide your current password' }),
     newPassword: z
       .string()

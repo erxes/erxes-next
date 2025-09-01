@@ -34,24 +34,24 @@ const PasswordStrength = ({ value, reTypeValue, errors }: TProps) => {
 
   const strength = checkStrength(value, reTypeValue);
 
-  const strengthScore = useMemo(() => {
-    return strength.filter((req) => req.met).length;
-  }, [strength]);
+  // const strengthScore = useMemo(() => {
+  //   return strength.filter((req) => req.met).length;
+  // }, [strength]);
 
-  const getStrengthColor = (score: number) => {
-    if (score === 0) return 'bg-border';
-    if (score <= 1) return 'bg-red-500';
-    if (score <= 2) return 'bg-orange-500';
-    if (score === 3) return 'bg-amber-500';
-    return 'bg-emerald-500';
-  };
+  // const getStrengthColor = (score: number) => {
+  //   if (score === 0) return 'bg-border';
+  //   if (score <= 1) return 'bg-red-500';
+  //   if (score <= 2) return 'bg-orange-500';
+  //   if (score === 3) return 'bg-amber-500';
+  //   return 'bg-emerald-500';
+  // };
 
-  const getStrengthText = (score: number) => {
-    if (score === 0) return 'Enter a password';
-    if (score <= 2) return 'Weak password';
-    if (score === 3) return 'Medium password';
-    return 'Strong password';
-  };
+  // const getStrengthText = (score: number) => {
+  //   if (score === 0) return 'Enter a password';
+  //   if (score <= 2) return 'Weak password';
+  //   if (score === 3) return 'Medium password';
+  //   return 'Strong password';
+  // };
 
   // {/* <div
   //   className="bg-border mt-3 mb-4 h-1 w-full overflow-hidden rounded-full"

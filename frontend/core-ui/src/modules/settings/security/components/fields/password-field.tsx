@@ -21,7 +21,7 @@ export const PasswordInput: FC<Omit<ComponentProps<typeof Input>, 'type'>> = ({
           onClick={toggleVisibility}
           aria-label={isVisible ? 'Hide password' : 'Show password'}
           aria-pressed={isVisible}
-          aria-controls="password"
+          aria-controls={id}
         >
           {isVisible ? (
             <IconEyeOff size={16} aria-hidden="true" />

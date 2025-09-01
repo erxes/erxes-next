@@ -163,7 +163,7 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
                 },
                 onError: (error: ApolloError) =>
                   toast({ title: error.message, variant: 'destructive' }),
-                onCompleted: () => toast({ title: 'Users has been updated' }),
+                onCompleted: () => toast({ title: 'Users have been updated' }),
               },
               ['memberIds'],
             )

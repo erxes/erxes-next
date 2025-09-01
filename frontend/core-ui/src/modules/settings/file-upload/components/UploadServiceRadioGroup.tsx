@@ -39,22 +39,8 @@ export function UploadServiceRadioGroup({ form, selected }: Props) {
                     checked={config.value.toLocaleUpperCase() === selected}
                     className="sr-only after:absolute after:inset-0"
                   />
-                  <config.icon
-                    className={cn(
-                      // selected === config.value
-                      //   ? 'stroke-primary'
-                      //   : 'stroke-primary/40',
-                      'stroke-primary',
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      // selected === config.value ? 'opacity-100' : 'opacity-40',
-                      '',
-                    )}
-                  >
-                    {config.label}
-                  </span>
+                  <config.icon className={cn('stroke-primary')} />
+                  <span>{config.label}</span>
                 </motion.label>
               ))}
           </RadioGroup>

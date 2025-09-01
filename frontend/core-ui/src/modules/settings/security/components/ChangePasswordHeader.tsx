@@ -3,6 +3,7 @@ import { IconKey } from '@tabler/icons-react';
 import { Breadcrumb, Button } from 'erxes-ui';
 import { Link } from 'react-router';
 import { PageHeader, PageHeaderStart } from 'ui-modules';
+import { SettingsPath } from '@/types/paths/SettingsPath';
 
 export const ChangePasswordHeader = () => {
   return (
@@ -12,7 +13,7 @@ export const ChangePasswordHeader = () => {
           <Breadcrumb.List className="gap-1">
             <Breadcrumb.Item>
               <Button variant="ghost" asChild>
-                <Link to="/settings/change-password">
+                <Link to={SettingsPath.ChangePassword} aria-current="page">
                   <IconKey />
                   Change password
                 </Link>

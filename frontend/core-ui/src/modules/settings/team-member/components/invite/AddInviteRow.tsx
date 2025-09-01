@@ -19,11 +19,6 @@ export const AddInviteRowButton = ({
     password: '',
   };
 
-    // groupId: '',
-    // unitId: '',
-    // branchId: '',
-    // departmentId: '',
-    
   return (
     <>
       <Button
