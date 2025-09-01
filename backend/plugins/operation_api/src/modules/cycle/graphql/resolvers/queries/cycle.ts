@@ -23,15 +23,27 @@ export const cycleQueries = {
   },
 
   getCyclesActive: async (_parent: undefined, params, { models }: IContext) => {
+    if (params.taskId) {
+      const task = await models.Task.findOne({
+        _id: params.taskId,
+        statusType: STATUS_TYPES.COMPLETED,
+        cycleId: { $ne: null },
+      });
+
+      params.cycleId = task?.cycleId;
+    }
+
     const { list, totalCount, pageInfo } = await cursorPaginate<ICycleDocument>(
       {
         model: models.Cycle,
         params,
         query: {
           teamId: params.teamId,
+
           $or: [
             { isActive: true },
             { isCompleted: false },
+            { _id: params?.cycleId || null },
             {
               startDate: { $lte: new Date() },
             },

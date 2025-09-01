@@ -1,7 +1,7 @@
 import React from 'react';
 import { PopoverScoped, Combobox, Command } from 'erxes-ui';
 import { useGetActiveCycles } from '@/cycle/hooks/useGetActiveCycles';
-import { IconCalendarRepeat, IconClipboard } from '@tabler/icons-react';
+import { IconCalendarRepeat } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useGetTeam } from '@/team/hooks/useGetTeam';
 import { ICycle } from '@/cycle/types';
@@ -72,7 +72,7 @@ const SelectCycleValue = ({ placeholder }: { placeholder?: string }) => {
   if (!value)
     return (
       <div className="flex items-center gap-2 text-accent-foreground">
-        <IconClipboard className="size-4" />
+        <IconCalendarRepeat className="size-4" />
         <span className="truncate font-medium">
           {placeholder || 'Select cycle'}
         </span>
@@ -81,7 +81,7 @@ const SelectCycleValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <div className="flex items-center gap-2">
-      <IconClipboard className="size-4" />
+      <IconCalendarRepeat className="size-4" />
       <span className="truncate font-medium">
         {activeCycles.find((c) => c._id === value)?.name}
       </span>
@@ -127,14 +127,16 @@ const SelectCycleProvider = ({
   value,
   onValueChange,
   teamId,
+  taskId,
 }: {
   children: React.ReactNode;
   value?: string;
   onValueChange: (value: string) => void;
   teamId?: string;
+  taskId?: string;
 }) => {
   const { team } = useGetTeam({ variables: { _id: teamId }, skip: !teamId });
-  const { activeCycles } = useGetActiveCycles(teamId);
+  const { activeCycles } = useGetActiveCycles(teamId, taskId);
 
   if (!team?.cycleEnabled) return null;
 
@@ -182,6 +184,7 @@ const SelectCycleRoot = ({
         setOpen(false);
       }}
       teamId={teamId}
+      taskId={taskId}
     >
       <PopoverScoped open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant={variant}>

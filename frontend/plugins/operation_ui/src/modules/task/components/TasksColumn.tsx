@@ -37,8 +37,10 @@ import { SelectCycle } from '@/task/components/select/SelectCycle';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
+  _team: ITeam | undefined,
 ): ColumnDef<ITask>[] => {
   const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ITask>;
+
   return [
     checkBoxColumn,
     {

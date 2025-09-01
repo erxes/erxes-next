@@ -10,7 +10,6 @@ import {
 import { IStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { DEFAULT_TEAM_STATUSES } from '@/team/constants';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
 import { TeamStatusTypes } from '@/team/constants';
 import {
@@ -46,13 +45,11 @@ export const SelectStatusProvider = ({
   onValueChange,
   teamId,
   children,
-  variant,
 }: {
   value: string;
   onValueChange: (status: string) => void;
   children: React.ReactNode;
   teamId?: string;
-  variant?: `${SelectTriggerVariant}`;
 }) => {
   const handleValueChange = (status: string) => {
     if (!status) return;
@@ -62,21 +59,13 @@ export const SelectStatusProvider = ({
     variables: { teamId },
     skip: !teamId,
   });
-  const fallBackStatus = statuses?.find(
-    (status) => status.type === TeamStatusTypes.Backlog,
-  )?.value;
-  useEffect(() => {
-    if (variant === SelectTriggerVariant.FORM && fallBackStatus) {
-      onValueChange(fallBackStatus);
-    }
-  }, [variant, fallBackStatus, onValueChange]);
 
   return (
     <SelectStatusContext.Provider
       value={{
         value: value || '',
         onValueChange: handleValueChange,
-        statuses: teamId ? statuses : DEFAULT_TEAM_STATUSES,
+        statuses,
         loading,
         error,
       }}
@@ -205,10 +194,12 @@ export const SelectStatusTaskFilterView = ({ teamId }: { teamId?: string }) => {
   const [status, setStatus] = useQueryState<string>(
     teamId ? 'status' : 'statusType',
   );
+
   return (
     <Filter.View filterKey={teamId ? 'status' : 'statusType'}>
       <SelectStatusProvider
         value={status || ''}
+        teamId={teamId}
         onValueChange={(value) => setStatus(value as string)}
       >
         <SelectStatusContent />
@@ -228,8 +219,10 @@ export const SelectStatusTaskFilterBar = ({
     teamId ? 'status' : 'statusType',
   );
   const [open, setOpen] = useState(false);
+
   return (
     <SelectStatusProvider
+      teamId={teamId}
       value={status || ''}
       onValueChange={(value) => {
         setStatus(value);
@@ -271,17 +264,19 @@ export const SelectStatusTaskFormItem = ({
   )?.value;
 
   useEffect(() => {
-    if (fallBackStatus) {
+    if (fallBackStatus && !value) {
       onValueChange(fallBackStatus);
     }
-  }, [fallBackStatus, onValueChange]);
+  }, [fallBackStatus, value, onValueChange]);
 
   return (
     <SelectStatusProvider
       value={value}
-      onValueChange={onValueChange}
+      onValueChange={(value) => {
+        onValueChange(value);
+        setOpen(false);
+      }}
       teamId={teamId}
-      variant="form"
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant="form">
