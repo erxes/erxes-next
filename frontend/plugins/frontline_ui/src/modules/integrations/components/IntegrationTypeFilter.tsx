@@ -124,7 +124,7 @@ export const IntegrationTypeFilterBar = ({
   console.log(integrationTypeId);
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="integrationType">
       <Filter.BarName>
         <IconPlug />
         {!iconOnly && 'Integration Type'}
@@ -147,7 +147,6 @@ export const IntegrationTypeFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectIntegrationTypeProvider>
-      <Filter.BarClose filterKey="integrationType" />
     </Filter.BarItem>
   );
 };

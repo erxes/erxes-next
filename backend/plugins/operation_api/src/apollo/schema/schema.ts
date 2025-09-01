@@ -29,7 +29,7 @@ import {
 import {
   queries as ActivityQueries,
   types as ActivityTypes,
-} from '~/modules/activity/graphql/schemas/activity';
+} from '@/activity/graphql/schemas/activity';
 
 import {
   queries as CycleQueries,

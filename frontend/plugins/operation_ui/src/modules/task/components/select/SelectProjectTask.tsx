@@ -20,28 +20,32 @@ import {
   SelectTriggerVariant,
 } from '@/operation/components/SelectOperation';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { IProject } from '@/project/types';
 
 export const SelectProjectProvider = ({
   children,
   value,
   onValueChange,
   teamId,
+  taskId,
 }: {
   children: React.ReactNode;
   value?: string;
   onValueChange: (value: string) => void;
   teamId?: string;
+  taskId?: string;
 }) => {
   const { teamId: _teamId } = useParams();
 
   const { projects, handleFetchMore, totalCount } = useProjectsInline({
     variables: {
       teamIds: [teamId || _teamId],
+      active: true,
+      taskId: taskId,
     },
   });
 
   const handleValueChange = (value: string) => {
-    if (!value) return;
     onValueChange(value);
   };
 
@@ -111,6 +115,9 @@ const SelectProjectContent = () => {
       <Command.Input placeholder="Search project" />
       <Command.Empty>No project found</Command.Empty>
       <Command.List>
+        <SelectProjectCommandItem
+          project={{ _id: '', name: 'No project' } as IProject}
+        />
         {projects.map((project) => (
           <SelectProjectCommandItem key={project._id} project={project} />
         ))}
@@ -182,22 +189,25 @@ const SelectProjectRoot = ({
   value,
   scope,
   variant,
+  teamId,
 }: {
   taskId: string;
   value: string;
   scope?: string;
   variant: `${SelectTriggerVariant}`;
+  teamId?: string;
 }) => {
   const [open, setOpen] = useState(false);
   const { updateTask } = useUpdateTask();
 
   return (
     <SelectProjectProvider
+      teamId={teamId}
       onValueChange={(value) => {
         updateTask({
           variables: {
             _id: taskId,
-            projectIds: value,
+            projectId: value,
           },
         });
         setOpen(false);

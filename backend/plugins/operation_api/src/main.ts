@@ -1,8 +1,16 @@
-import { startPlugin } from 'erxes-api-shared/utils';
+import { redis, startPlugin } from 'erxes-api-shared/utils';
 import { typeDefs } from '~/apollo/typeDefs';
-import { appRouter } from '~/trpc/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
+import { Router } from 'express';
+import { initMQWorkers } from '~/worker';
+export const router: Router = Router();
+
+router.get('/endCycle', async (req, res) => {
+  const models = await generateModels('os');
+  await models.Cycle.endCycle('kOc9pGV0sGXolGnw9isoD');
+  res.json({ message: 'Cycle ended' });
+});
 
 startPlugin({
   name: 'operation',
@@ -26,16 +34,12 @@ startPlugin({
 
     return context;
   },
-  trpcAppRouter: {
-    router: appRouter,
-    createContext: async (subdomain, context) => {
-      const models = await generateModels(subdomain);
-
-      context.models = models;
-
-      return context;
-    },
+  onServerInit: async () => {
+    await initMQWorkers(redis);
   },
+
+  expressRouter: router,
+
   meta: {
     notificationModules: [
       {

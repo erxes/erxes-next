@@ -220,7 +220,7 @@ export const SelectStatusFilterBar = ({
   if (status === null) return null;
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'status'}>
       <Filter.BarName>
         <IconProgressCheck />
         {!iconOnly && 'Status'}
@@ -254,7 +254,6 @@ export const SelectStatusFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectStatusProvider>
-      <Filter.BarClose filterKey={queryKey || 'status'} />
     </Filter.BarItem>
   );
 };
@@ -304,7 +303,7 @@ export const SelectStatusInlineCell = ({
     >
       <PopoverScoped
         open={open}
-        onOpenChange={setOpen}
+      onOpenChange={setOpen}
         scope={finalScope}
         closeOnEnter
       >

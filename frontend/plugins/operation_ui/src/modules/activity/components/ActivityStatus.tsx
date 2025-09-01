@@ -50,7 +50,10 @@ export const ActivityStatus = ({
       const status = getTaskStatus(value);
       return (
         <Badge variant="secondary" className="capitalize">
-          <StatusInlineIcon type={status?.type} color={status?.color} />
+          <StatusInlineIcon
+            type={status?.type as number}
+            color={status?.color}
+          />
           {status?.label}
         </Badge>
       );

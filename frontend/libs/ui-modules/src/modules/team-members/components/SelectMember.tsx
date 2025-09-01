@@ -247,7 +247,7 @@ export const SelectMemberFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'assignedTo'}>
       <Filter.BarName>
         <IconUser />
         {!iconOnly && 'Assigned To'}
@@ -272,7 +272,6 @@ export const SelectMemberFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectMemberProvider>
-      <Filter.BarClose filterKey={queryKey || 'assignedTo'} />
     </Filter.BarItem>
   );
 };

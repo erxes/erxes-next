@@ -18,7 +18,7 @@ export const CallQueueRecordTable = () => {
   const callConfig = useAtomValue(callConfigAtom);
   const { inboxId } = callConfig || {};
 
-  const { callQueueList, loading, error } = useCallQueueList({
+  const { callQueueList, loading } = useCallQueueList({
     variables: { inboxId },
     skip: !inboxId,
   });
@@ -30,7 +30,7 @@ export const CallQueueRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={columns}
-      data={callQueueList || [{}]}
+      data={callQueueList || (loading ? [{}] : [])}
       className="m-3"
       stickyColumns={['queue']}
     >
@@ -55,7 +55,7 @@ const columns: ColumnDef<any>[] = [
     header: 'Queue',
     accessorKey: 'queue',
     size: 240,
-    cell: ({ cell }) => {
+    cell: ({ row, cell }) => {
       const {
         queue,
         queuechairman,
@@ -66,7 +66,8 @@ const columns: ColumnDef<any>[] = [
         avg_wait,
         avg_talk,
         answered_rate,
-      } = cell.row.original;
+      } = row.original;
+      console.log(row.original);
       return (
         <HoverCard openDelay={100}>
           <HoverCard.Trigger asChild>
@@ -83,15 +84,14 @@ const columns: ColumnDef<any>[] = [
             sideOffset={4}
             side="right"
             align="start"
-            className="w-64 p-0"
+            className="w-64 bg-accent p-1 rounded-xl"
           >
-            <h4 className="text-sm font-medium p-3">
+            <h4 className="text-xs uppercase font-mono font-semibold px-2 leading-8">
               {queue} - {queuechairman}
             </h4>
-            <Separator />
-            <div className="p-3 flex flex-col gap-1 text-sm">
+            <div className="p-3 flex flex-col text-sm bg-background shadow-sm rounded-lg">
               <div className="grid grid-cols-2 gap-1 pb-3">
-                <p className="flex-auto space-y-1 text-center">
+                <div className="flex-auto space-y-1 text-center">
                   <span className="text-foreground ml-auto font-semibold flex items-center gap-1">
                     <ProgressChart
                       value={Math.round(abandoned_rate)}
@@ -102,8 +102,8 @@ const columns: ColumnDef<any>[] = [
                   <legend className="text-accent-foreground text-xs">
                     abandoned
                   </legend>
-                </p>
-                <p className="flex-auto space-y-1 text-center">
+                </div>
+                <div className="flex-auto space-y-1 text-center">
                   <span className="text-foreground ml-auto font-semibold flex items-center gap-1">
                     <ProgressChart
                       value={Math.round(answered_rate)}
@@ -114,28 +114,28 @@ const columns: ColumnDef<any>[] = [
                   <legend className="text-accent-foreground text-xs">
                     success
                   </legend>
-                </p>
+                </div>
               </div>
               <p className="text-sm flex items-center gap-1 justify-between">
-                <legend className="text-muted-foreground">total</legend>
+                <legend className="text-accent-foreground">total</legend>
                 <span className="font-medium">{total_calls}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
-                <legend className="text-muted-foreground">answered</legend>
+                <legend className="text-accent-foreground">answered</legend>
                 <span className="font-medium">{answered_calls}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
-                <legend className="text-muted-foreground">abandoned</legend>
+                <legend className="text-accent-foreground">abandoned</legend>
                 <span className="font-medium">{abandoned_calls}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
-                <legend className="text-muted-foreground">
+                <legend className="text-accent-foreground">
                   average wait time
                 </legend>
                 <span className="font-medium">{formatSeconds(avg_wait)}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
-                <legend className="text-muted-foreground">
+                <legend className="text-accent-foreground">
                   average talk time
                 </legend>
                 <span className="font-medium">{formatSeconds(avg_talk)}</span>

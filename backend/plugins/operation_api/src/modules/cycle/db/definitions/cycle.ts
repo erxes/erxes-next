@@ -11,7 +11,7 @@ export const cycleSchema = schemaWrapper(
       endDate: { type: Date },
       teamId: { type: String },
       isCompleted: { type: Boolean, default: false },
-      isActive: { type: Boolean, default: true },
+      isActive: { type: Boolean, default: false },
       statistics: { type: Object },
       donePercent: { type: Number, default: 0 },
       unFinishedTasks: { type: [String], default: [] },

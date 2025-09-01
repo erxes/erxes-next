@@ -101,7 +101,7 @@ export const TasksFilter = () => {
     <Filter id="Tasks-filter" sessionKey={TASKS_CURSOR_SESSION_KEY}>
       <Filter.Bar>
         {searchValue && (
-          <Filter.BarItem>
+          <Filter.BarItem queryKey="searchValue">
             <Filter.BarName>
               <IconSearch />
               Search
@@ -109,7 +109,6 @@ export const TasksFilter = () => {
             <Filter.BarButton filterKey="searchValue" inDialog>
               {searchValue}
             </Filter.BarButton>
-            <Filter.BarClose filterKey="searchValue" />
           </Filter.BarItem>
         )}
         {!teamId && (
@@ -119,7 +118,6 @@ export const TasksFilter = () => {
               Team
             </Filter.BarName>
             <SelectTeam.FilterBar />
-            <Filter.BarClose filterKey="team" />
           </Filter.BarItem>
         )}
         <Filter.BarItem queryKey="priority">
@@ -128,7 +126,6 @@ export const TasksFilter = () => {
             Priority
           </Filter.BarName>
           <SelectPriority.FilterBar />
-          <Filter.BarClose filterKey="priority" />
         </Filter.BarItem>
         <Filter.BarItem queryKey="status">
           <Filter.BarName>
@@ -139,7 +136,6 @@ export const TasksFilter = () => {
             teamId={teamId}
             scope={clsx(TaskHotKeyScope.TasksPage, 'filter', 'Status')}
           />
-          <Filter.BarClose filterKey="status" />
         </Filter.BarItem>
         <Filter.BarItem queryKey="assignee">
           <Filter.BarName>
@@ -147,7 +143,6 @@ export const TasksFilter = () => {
             Assignee
           </Filter.BarName>
           <SelectAssigneeTask.FilterBar />
-          <Filter.BarClose filterKey="assignee" />
         </Filter.BarItem>
         <TasksFilterPopover />
         <TasksTotalCount />

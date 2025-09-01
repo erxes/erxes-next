@@ -1,9 +1,14 @@
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { ICycleDocument } from '~/modules/cycle/types';
+import { ICycleDocument } from '@/cycle/types';
 import { STATUS_TYPES } from '@/status/constants/types';
-import { fillMissingDays } from '~/modules/project/utils/charUtils';
-import { differenceInCalendarDays } from 'date-fns';
+
+import {
+  getCycleProgressByMember,
+  getCycleProgressByProject,
+  getCycleProgressChart,
+  getCyclesProgress,
+} from '~/modules/cycle/utils';
 
 export const cycleQueries = {
   getCycle: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -14,7 +19,10 @@ export const cycleQueries = {
     const { list, totalCount, pageInfo } = await cursorPaginate<ICycleDocument>(
       {
         model: models.Cycle,
-        params,
+        params: {
+          ...params,
+          orderBy: { isActive: -1, isCompleted: 1, startDate: 1 },
+        },
         query: { teamId: params.teamId },
       },
     );
@@ -23,15 +31,35 @@ export const cycleQueries = {
   },
 
   getCyclesActive: async (_parent: undefined, params, { models }: IContext) => {
+    if (params.taskId) {
+      const task = await models.Task.findOne({
+        _id: params.taskId,
+        statusType: STATUS_TYPES.COMPLETED,
+        cycleId: { $ne: null },
+      });
+
+      params.cycleId = task?.cycleId;
+    }
+
     const { list, totalCount, pageInfo } = await cursorPaginate<ICycleDocument>(
       {
         model: models.Cycle,
-        params,
+        params: {
+          ...params,
+          orderBy: {
+            isActive: -1,
+            isCompleted: 1,
+            startDate: 1,
+          },
+        },
+
         query: {
           teamId: params.teamId,
+
           $or: [
             { isActive: true },
             { isCompleted: false },
+            { _id: params?.cycleId || null },
             {
               startDate: { $lte: new Date() },
             },
@@ -42,14 +70,12 @@ export const cycleQueries = {
 
     return { list, totalCount, pageInfo };
   },
-
   getCycleProgress: async (
     _parent: undefined,
     { _id },
     { models }: IContext,
   ) => {
-    const cycle = await models.Cycle.getCycle(_id);
-    return cycle;
+    return getCyclesProgress(_id, models);
   },
 
   getCycleProgressChart: async (
@@ -57,116 +83,7 @@ export const cycleQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const cycle = await models.Cycle.getCycle(_id);
-
-    if (!cycle) {
-      return [];
-    }
-
-    const [totalScopeResult] = await models.Task.aggregate([
-      {
-        $match: { cycleId: _id },
-      },
-      {
-        $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } },
-      },
-      {
-        $group: {
-          _id: null,
-          totalScope: {
-            $sum: {
-              $cond: [
-                {
-                  $or: [
-                    { $eq: ['$estimatePoint', null] },
-                    { $eq: ['$estimatePoint', 0] },
-                  ],
-                },
-                1,
-                '$estimatePoint',
-              ],
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          totalScope: { $ifNull: ['$totalScope', 0] },
-        },
-      },
-    ]);
-
-    const totalScope = totalScopeResult?.totalScope || 0;
-
-    const chartDataAggregation = await models.Task.aggregate([
-      {
-        $match: {
-          cycleId: _id,
-          statusType: { $in: [STATUS_TYPES.STARTED, STATUS_TYPES.COMPLETED] },
-          statusChangedDate: { $ne: null },
-        },
-      },
-      {
-        $addFields: {
-          dayDate: {
-            $dateFromParts: {
-              year: { $year: '$statusChangedDate' },
-              month: { $month: '$statusChangedDate' },
-              day: { $dayOfMonth: '$statusChangedDate' },
-            },
-          },
-          isStarted: { $eq: ['$statusType', STATUS_TYPES.STARTED] },
-          isCompleted: { $eq: ['$statusType', STATUS_TYPES.COMPLETED] },
-          estimateValue: {
-            $cond: [
-              {
-                $or: [
-                  { $eq: ['$estimatePoint', null] },
-                  { $eq: ['$estimatePoint', 0] },
-                ],
-              },
-              1,
-              '$estimatePoint',
-            ],
-          },
-        },
-      },
-      {
-        $group: {
-          _id: '$dayDate',
-          started: { $sum: { $cond: ['$isStarted', '$estimateValue', 0] } },
-          completed: { $sum: { $cond: ['$isCompleted', '$estimateValue', 0] } },
-        },
-      },
-      { $sort: { _id: 1 } },
-      {
-        $project: {
-          _id: 0,
-          date: {
-            $dateToString: { format: '%Y-%m-%d', date: '$_id' },
-          },
-          started: 1,
-          completed: 1,
-        },
-      },
-    ]);
-
-    const chartData: {
-      totalScope: number;
-      chartData: { date: Date; started: number; completed: number }[];
-    } = {
-      totalScope,
-      chartData: [],
-    };
-
-    chartData.chartData = fillMissingDays(
-      chartDataAggregation,
-      cycle.startDate,
-      differenceInCalendarDays(cycle.endDate, cycle.startDate),
-    );
-
-    return chartData;
+    return getCycleProgressChart(_id, models);
   },
 
   getCycleProgressByMember: async (
@@ -174,7 +91,14 @@ export const cycleQueries = {
     { _id },
     { models }: IContext,
   ) => {
-    const cycle = await models.Cycle.getCycle(_id);
-    return cycle;
+    return getCycleProgressByMember(_id, models);
+  },
+
+  getCycleProgressByProject: async (
+    _parent: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    return getCycleProgressByProject(_id, models);
   },
 };

@@ -53,7 +53,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
       const handleUpdate = () => {
         if (value !== name) {
           updateCycle({
-            variables: { input: { _id: cell.row.original._id, name: value } },
+            variables: { _id: cell.row.original._id, name: value },
           });
         }
       };
@@ -90,12 +90,12 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
               value={value || ''}
               onChange={(e) => setValue(e.target.value)}
               autoFocus
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleUpdate();
-                }
-              }}
+              // onKeyDown={(e) => {
+              //   if (e.key === 'Enter') {
+              //     e.preventDefault();
+              //     handleUpdate();
+              //   }
+              // }}
             />
           </RecordTableInlineCell.Content>
         </PopoverScoped>
@@ -104,47 +104,10 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     size: 240,
   },
   {
-    id: 'startDate',
-    accessorKey: 'startDate',
-    header: () => (
-      <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
-    ),
-    cell: ({ cell }) => {
-      const startDate = cell.getValue() as string;
-      return (
-        <DateSelect.InlineCell
-          type="start"
-          value={startDate ? new Date(startDate) : undefined}
-          id={cell.row.original._id}
-        />
-      );
-    },
-    size: 240,
-  },
-  {
-    id: 'endDate',
-    accessorKey: 'endDate',
-    header: () => (
-      <RecordTable.InlineHead label="End Date" icon={IconCalendarFilled} />
-    ),
-    cell: ({ cell }) => {
-      const { endDate, startDate } = cell.row.original;
-      return (
-        <DateSelect.InlineCell
-          startDate={startDate ? new Date(startDate) : undefined}
-          type="end"
-          value={endDate ? new Date(endDate) : undefined}
-          id={cell.row.original._id}
-        />
-      );
-    },
-    size: 240,
-  },
-  {
     id: 'donePercent',
     accessorKey: 'donePercent',
     header: () => (
-      <RecordTable.InlineHead label="Done Percent" icon={IconProgress} />
+      <RecordTable.InlineHead label="Progress" icon={IconProgress} />
     ),
     cell: ({ cell }) => {
       const { donePercent } = cell.row.original;
@@ -194,11 +157,48 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
       <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
     ),
     cell: ({ cell }) => {
-      const { isActive, isCompleted} = cell.row.original;
+      const { isActive, isCompleted } = cell.row.original;
       return (
         <RecordTableInlineCell>
           <CycleStatusDisplay isActive={isActive} isCompleted={isCompleted} />
         </RecordTableInlineCell>
+      );
+    },
+    size: 240,
+  },
+  {
+    id: 'startDate',
+    accessorKey: 'startDate',
+    header: () => (
+      <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
+    ),
+    cell: ({ cell }) => {
+      const startDate = cell.getValue() as string;
+      return (
+        <DateSelect.InlineCell
+          type="start"
+          value={startDate ? new Date(startDate) : undefined}
+          id={cell.row.original._id}
+        />
+      );
+    },
+    size: 240,
+  },
+  {
+    id: 'endDate',
+    accessorKey: 'endDate',
+    header: () => (
+      <RecordTable.InlineHead label="End Date" icon={IconCalendarFilled} />
+    ),
+    cell: ({ cell }) => {
+      const { endDate, startDate } = cell.row.original;
+      return (
+        <DateSelect.InlineCell
+          startDate={startDate ? new Date(startDate) : undefined}
+          type="end"
+          value={endDate ? new Date(endDate) : undefined}
+          id={cell.row.original._id}
+        />
       );
     },
     size: 240,
