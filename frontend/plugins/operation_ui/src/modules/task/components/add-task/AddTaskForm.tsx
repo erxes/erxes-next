@@ -135,6 +135,8 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   onValueChange={(value) => {
                     field.onChange(value);
                     form.resetField('projectId');
+                    form.resetField('status');
+                    form.resetField('cycleId');
                   }}
                   mode="single"
                 />

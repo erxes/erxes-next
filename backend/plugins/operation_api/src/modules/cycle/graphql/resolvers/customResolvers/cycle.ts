@@ -9,7 +9,13 @@ export const Cycle = {
     { models }: IContext,
   ) {
     if (cycle.isCompleted || !cycle.isActive) {
-      return cycle.donePercent;
+      const progress = (cycle.statistics as any)?.progress || {};
+
+      const totalScope = progress.totalScope || 0;
+      const totalCompletedScope = progress.totalCompletedScope || 0;
+      const donePercent = Math.round((totalCompletedScope / totalScope) * 100);
+
+      return donePercent || 0;
     }
 
     const result = await models.Task.aggregate([
