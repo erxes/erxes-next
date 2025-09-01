@@ -2,11 +2,7 @@ import { CallWidget } from '@/integrations/call/components/CallWidget';
 import { SipContainer } from '@/integrations/call/components/SipContainer';
 
 const FloatingWidget = () => {
-  return (
-    <SipContainer>
-      <CallWidget />
-    </SipContainer>
-  );
+  return <div>11</div>;
 };
 
 export default FloatingWidget;
