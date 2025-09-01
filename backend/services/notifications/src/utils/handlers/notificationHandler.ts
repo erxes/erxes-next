@@ -138,36 +138,29 @@ async function createInAppNotification(
 ) {
   let notification: INotificationDocument;
 
-  if (
-    data.kind === 'user' &&
-    (await models.Notifications.exists({
-      contentTypeId: data.contentTypeId,
-      contentType: data.contentType,
-      userId, // Added userId to ensure we're updating the correct user's notification
-    })) &&
-    !data.allowMultiple
-  ) {
+  const updateData = {
+    ...data,
+    userId,
+    isRead: false,
+    priorityLevel: PRIORITY_ORDER[data?.priority || 'medium'],
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+  };
+
+  if (data.kind === 'user' && !data.allowMultiple) {
     // Update existing notification
-    const updatedNotification = await models.Notifications.findOneAndUpdate(
+    notification = await models.Notifications.findOneAndUpdate(
       {
         contentTypeId: data.contentTypeId,
         contentType: data.contentType,
         userId,
       },
-      {
-        ...data,
-        isRead: false,
-        priorityLevel: PRIORITY_ORDER[data?.priority || 'medium'],
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
-      },
-      { new: true }, // Return the updated document
+      updateData,
+      { new: true, upsert: true }, // Return the updated document
     );
 
-    if (!updatedNotification) {
+    if (!notification) {
       throw new Error('Failed to update existing notification');
     }
-    notification = updatedNotification;
   } else {
     // Create new notification
     notification = await models.Notifications.create({
