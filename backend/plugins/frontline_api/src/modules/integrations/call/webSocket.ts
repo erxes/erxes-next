@@ -43,7 +43,7 @@ interface QueueState {
   extension: string;
   waiting: QueueCall[];
   talking: QueueCall[];
-  agents: Record<string, AgentInfo>;
+  agents: AgentInfo[];
   stats: any;
 }
 
@@ -57,6 +57,14 @@ interface PBXEvent {
   eventbody?: any[];
   extension?: string;
   action?: string;
+  queue_action?: string;
+  callerid?: string;
+  callernum?: string;
+  calleeid?: string;
+  callerchannel?: string;
+  calleechannel?: string;
+  member_extension?: string;
+  bridge_time?: string;
   [key: string]: any;
 }
 
@@ -70,9 +78,29 @@ class QueueStateManager {
         extension,
         waiting: [],
         talking: [],
-        agents: {},
+        agents: [],
         stats: {},
       };
+    }
+  }
+
+  private decodeUTF8Name(name: string): string {
+    try {
+      // Handle double-encoded UTF-8 strings (common in PBX systems)
+      // First try decodeURIComponent(escape()) for double-encoded UTF-8
+      let decoded = decodeURIComponent(escape(name));
+
+      // If that didn't change anything, try Buffer conversion for raw bytes
+      if (decoded === name) {
+        // Convert from Latin-1 to UTF-8
+        const buffer = Buffer.from(name, 'latin1');
+        decoded = buffer.toString('utf8');
+      }
+
+      return decoded;
+    } catch {
+      // If all decoding fails, return original
+      return name;
     }
   }
 
@@ -92,10 +120,32 @@ class QueueStateManager {
     this.initializeQueue(extension);
     const agentKey = agent.member_extension || agent.calleeid || agent.member;
     if (agentKey) {
-      this.queueStates[extension].agents[agentKey] = {
-        ...this.queueStates[extension].agents[agentKey],
+      // Decode names if they exist
+      const decodedAgent = {
         ...agent,
+        first_name: agent.first_name
+          ? this.decodeUTF8Name(agent.first_name)
+          : agent.first_name,
+        last_name: agent.last_name
+          ? this.decodeUTF8Name(agent.last_name)
+          : agent.last_name,
       };
+
+      // Find existing agent or add new one
+      const existingIndex = this.queueStates[extension].agents.findIndex(
+        (a) => a.member_extension === agentKey,
+      );
+
+      if (existingIndex >= 0) {
+        // Update existing agent
+        this.queueStates[extension].agents[existingIndex] = {
+          ...this.queueStates[extension].agents[existingIndex],
+          ...decodedAgent,
+        };
+      } else {
+        // Add new agent
+        this.queueStates[extension].agents.push(decodedAgent);
+      }
     }
   }
 
@@ -107,7 +157,7 @@ class QueueStateManager {
   ): void {
     this.initializeQueue(extension);
     const queue = this.queueStates[extension];
-    console.log('talking...', queue);
+
     // Remove from waiting
     queue.waiting = queue.waiting.filter((call) => call.callerid !== callerid);
 
@@ -118,31 +168,83 @@ class QueueStateManager {
       bridged: true,
       bridge_time: bridgeTime || new Date().toISOString(),
     });
+
+    console.log(
+      `Call answered: ${callerid} -> ${calleeid}, moved to talking list`,
+    );
+  }
+
+  handleCallHangup(extension: string, event: PBXEvent): void {
+    this.initializeQueue(extension);
+    const queue = this.queueStates[extension];
+
+    const callerid = event.callerid;
+    const calleeid = event.calleeid;
+    const callerchannel = event.callerchannel;
+    const calleechannel = event.calleechannel;
+
+    // Remove from both waiting and talking lists
+    const beforeWaiting = queue.waiting.length;
+    const beforeTalking = queue.talking.length;
+
+    // Filter out the call from waiting list
+    queue.waiting = queue.waiting.filter((call) => {
+      return call.callerid !== callerid && call.callerchannel !== callerchannel;
+    });
+
+    // Filter out the call from talking list
+    queue.talking = queue.talking.filter((call) => {
+      return (
+        call.callerid !== callerid &&
+        call.calleeid !== calleeid &&
+        call.callerchannel !== callerchannel
+      );
+    });
+
+    const afterWaiting = queue.waiting.length;
+    const afterTalking = queue.talking.length;
+
+    console.log(`Call hangup: ${callerid} -> ${calleeid}`);
+    console.log(
+      `Waiting: ${beforeWaiting} -> ${afterWaiting}, Talking: ${beforeTalking} -> ${afterTalking}`,
+    );
   }
 
   handleActiveCallEvent(extension: string, event: PBXEvent): void {
     this.initializeQueue(extension);
     const queue = this.queueStates[extension];
-    const callerId = event.callernum || event.callerid;
+    const callerId = event.callernum || event.callerid || '';
     const calleeid = event.calleeid;
 
     const action = (event.action || '').toLowerCase();
     const queueAction = event.queue_action || '';
-    console.log(queueAction, '111', callerId);
 
+    // Handle specific queue actions first
     if (queueAction === 'CallQueueWaiting') {
       this.addWaitingCall(queue, event, callerId);
+      return;
     }
-    console.log(queueAction, 'queueAction3');
 
     if (queueAction === 'CallQueueHangup') {
-      console.log(queueAction, 'queueAction', event);
-
-      this.removeCall(queue, event, callerId, calleeid);
+      this.handleCallHangup(extension, event);
+      return;
     }
 
-    if (!callerId) return;
-    console.log(action, 'action111');
+    if (queueAction === 'CallQueueAnswered') {
+      if (callerId && calleeid) {
+        this.handleCallAnswered(
+          extension,
+          callerId,
+          calleeid,
+          event.bridge_time,
+        );
+      }
+      return;
+    }
+
+    // Handle generic actions only if no specific queue action
+    if (!callerId || queueAction) return;
+
     switch (action) {
       case 'add':
         this.addWaitingCall(queue, event, callerId);
@@ -161,14 +263,21 @@ class QueueStateManager {
     event: PBXEvent,
     callerId: string,
   ): void {
-    console.log(queue, 'queue add waiting:', event);
-    const exists = queue.waiting.some((call) => call.callerid === callerId);
-    if (!exists) {
+    // Check if call already exists in waiting or talking
+    const existsInWaiting = queue.waiting.some(
+      (call) => call.callerid === callerId,
+    );
+    const existsInTalking = queue.talking.some(
+      (call) => call.callerid === callerId,
+    );
+
+    if (!existsInWaiting && !existsInTalking) {
       queue.waiting.push({
         callerid: callerId,
-        callerchannel: event.channel || undefined,
+        callerchannel: event.callerchannel || undefined,
         state: event.state || undefined,
       });
+      console.log(`Added call ${callerId} to waiting list`);
     }
   }
 
@@ -189,15 +298,15 @@ class QueueStateManager {
       );
       queue.talking.push({
         callerid: callerId,
-        callerchannel: event.channel || undefined,
+        callerchannel: event.callerchannel || undefined,
       });
+      console.log(`Moved call ${callerId} from waiting to talking`);
     } else {
       // Update waiting call metadata
       queue.waiting = queue.waiting.map((call) =>
         call.callerid === callerId ? { ...call, ...event } : call,
       );
     }
-    console.log(queue, 'queue1');
   }
 
   private removeCall(
@@ -206,14 +315,23 @@ class QueueStateManager {
     callerId?: string,
     calleeid?: string,
   ): void {
+    const beforeWaiting = queue.waiting.length;
+    const beforeTalking = queue.talking.length;
+
     const channelFilter = (call: QueueCall) =>
-      (call.callerid !== callerId &&
-        call.callerchannel !== event.callerchannel) ||
+      call.callerid !== callerId &&
+      call.callerchannel !== event.callerchannel &&
       call.calleeid !== calleeid;
 
     queue.waiting = queue.waiting.filter(channelFilter);
     queue.talking = queue.talking.filter(channelFilter);
-    console.log(queue, 'queue removed');
+
+    const afterWaiting = queue.waiting.length;
+    const afterTalking = queue.talking.length;
+
+    console.log(
+      `Removed call - Waiting: ${beforeWaiting} -> ${afterWaiting}, Talking: ${beforeTalking} -> ${afterTalking}`,
+    );
   }
 
   getAllQueues(): Record<string, QueueState> {
@@ -288,24 +406,21 @@ class EventProcessor {
     if (this.isQueueStatsEvent(event)) {
       this.stateManager.updateQueueStats(queueExtension, event);
     }
-    // console.log(event, 'vent.queue_action');
 
     // Handle agent updates
     if (event.member_extension && event.queue_action) {
       this.stateManager.updateAgent(queueExtension, event as AgentInfo);
-      // Handle call answered
-      if (event.queue_action === 'CallQueueAnswered' && event.callerid) {
-        this.stateManager.handleCallAnswered(
-          queueExtension,
-          event.callerid,
-          event.member_extension,
-          event.bridge_time,
-        );
-      }
     }
 
-    // Handle active call events for specific queue
-    if (event.action && (event.callernum || event.callerid || event.calleeid)) {
+    // Handle call lifecycle events
+    if (event.queue_action) {
+      this.stateManager.handleActiveCallEvent(queueExtension, event);
+    }
+    // Handle generic active call events only if no queue_action
+    else if (
+      event.action &&
+      (event.callernum || event.callerid || event.calleeid)
+    ) {
       this.stateManager.handleActiveCallEvent(queueExtension, event);
     }
   }
@@ -418,6 +533,24 @@ class PBXWebSocketClient {
       case 'subscribe':
         this.handleSubscribeResponse(payload);
         break;
+      case 'QueueStatus':
+      case 'QueueSummary':
+        await this.handleInitialQueueResponse(payload);
+        break;
+    }
+  }
+
+  private async handleInitialQueueResponse(payload: any): Promise<void> {
+    if (payload.status === 0 && payload.eventbody) {
+      // Process initial queue data the same way as events
+      const mockEvent = {
+        type: 'event',
+        message: payload,
+      };
+      await this.handleEvent(mockEvent);
+      console.log(
+        `Processed initial status for queue: ${payload.extension || 'unknown'}`,
+      );
     }
   }
 
@@ -446,6 +579,8 @@ class PBXWebSocketClient {
     if (payload.status === 0) {
       console.log('Successfully logged in to PBX');
       this.subscribeToEvents();
+      // Request initial queue status for all queues
+      this.requestInitialQueueStatus();
     } else {
       console.error('Login failed:', payload);
     }
@@ -479,6 +614,32 @@ class PBXWebSocketClient {
     });
   }
 
+  private requestInitialQueueStatus(): void {
+    // Request current status for all queues
+    this.queues.forEach((queueExtension) => {
+      this.sendMessage({
+        type: 'request',
+        message: {
+          transactionid: `initial_status_${Date.now()}_${queueExtension}`,
+          action: 'QueueStatus',
+          queue: queueExtension,
+        },
+      });
+
+      // Also request agent status for the queue
+      this.sendMessage({
+        type: 'request',
+        message: {
+          transactionid: `initial_agents_${Date.now()}_${queueExtension}`,
+          action: 'QueueSummary',
+          queue: queueExtension,
+        },
+      });
+    });
+
+    console.log(`Requested initial status for ${this.queues.length} queues`);
+  }
+
   private subscribeToEvents(): void {
     if (
       !this.ws ||
@@ -491,8 +652,8 @@ class PBXWebSocketClient {
     this.isSubscribing = true;
 
     const eventNames = [
-      'CallQueueStatus/6518', // TODO: Make this dynamic based on queues
-      'ActiveCallStatus/6518',
+      `CallQueueStatus/${this.queues.join('~')}`,
+      `ActiveCallStatus/${this.queues.join('~')}`,
     ];
 
     this.sendMessage({

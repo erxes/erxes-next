@@ -68,7 +68,6 @@ const SipProvider = ({
   // State
   const [sipState, setSipState] = useAtom(sipStateAtom);
   const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
-  const [calls, setCalls] = useState([]);
 
   // const { data, loading } = useSubscription(CALL_STATISTIC_SUB);
 
