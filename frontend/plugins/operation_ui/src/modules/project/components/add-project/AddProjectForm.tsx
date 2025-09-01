@@ -12,7 +12,7 @@ import { TAddProject, addProjectSchema } from '@/project/types';
 import { useCreateProject } from '@/project/hooks/useCreateProject';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Block } from '@blocknote/core';
 import {
   SelectStatus,
@@ -23,6 +23,8 @@ import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
 import { SelectTeam } from '@/team/components/SelectTeam';
 import { SelectPriority } from '@/operation/components/SelectPriority';
+import { ProjectStatus } from '@/operation/constants/statusConstants';
+import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
@@ -35,12 +37,25 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
       teamIds: teamId ? [teamId] : [],
       icon: 'IconBox',
       name: '',
-      status: 0,
+      status: ProjectStatus.BACKLOG,
       priority: 0,
       leadId: undefined,
       targetDate: undefined,
     },
   });
+  useEffect(() => {
+    form.setFocus('name');
+  }, []);
+
+  const { teams } = useGetCurrentUsersTeams({
+    skip: !!teamId,
+  });
+
+  useEffect(() => {
+    if (!teamId && teams && teams?.length > 0) {
+      form.setValue('teamIds', [teams[0]._id]);
+    }
+  }, [form, teams, teamId]);
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
@@ -73,6 +88,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               <Form.Item className="space-y-0">
                 <Form.Label className="sr-only">Team</Form.Label>
                 <SelectTeam.FormItem
+                  {...field}
                   value={field.value}
                   onValueChange={field.onChange}
                 />
@@ -110,7 +126,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Control>
                   <Input
                     {...field}
-                    className="shadow-none focus-visible:shadow-none h-8 text-xl"
+                    className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
                     placeholder="Project Name"
                   />
                 </Form.Control>
@@ -188,7 +204,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             />
           </div>
           <Separator className="my-4" />
-          <div className="h-[60vh] overflow-y-auto">
+          <div className="h-[60vh] overflow-y-auto read-only">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}

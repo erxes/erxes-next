@@ -3,7 +3,6 @@ import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useDebounce } from 'use-debounce';
 import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
-import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
 import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
@@ -13,7 +12,7 @@ import { DateSelectTask } from '@/task/components/select/DateSelectTask';
 import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
 import { SelectProject } from '@/task/components/select/SelectProjectTask';
 import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
-import { NotesField } from '@/task/components/NotesField';
+import { SelectCycle } from '@/task/components/select/SelectCycle';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -26,6 +25,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     targetDate,
     projectId,
     estimatePoint,
+    cycleId,
   } = task || {};
 
   const startDate = (task as any)?.startDate;
@@ -40,7 +40,6 @@ export const TaskFields = ({ task }: { task: ITask }) => {
   });
   const { updateTask } = useUpdateTask();
   const [name, setName] = useState(_name);
-  const { teams } = useGetCurrentUsersTeams();
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
@@ -114,7 +113,18 @@ export const TaskFields = ({ task }: { task: ITask }) => {
           variant="detail"
         />
         <SelectTeamTask taskId={taskId} value={teamId || ''} variant="detail" />
-        <SelectProject value={projectId} taskId={taskId} variant="detail" />
+        <SelectCycle
+          value={cycleId || ''}
+          taskId={taskId}
+          variant="detail"
+          teamId={teamId}
+        />
+        <SelectProject
+          value={projectId}
+          taskId={taskId}
+          variant="detail"
+          teamId={teamId}
+        />
         <SelectEstimatedPoint
           value={estimatePoint}
           taskId={taskId}

@@ -54,6 +54,11 @@ export const SelectEstimatedPointProvider = ({
     variables: { teamId },
     skip: !teamId,
   });
+
+  if (!estimateChoices || !estimateChoices?.length) {
+    return null;
+  }
+
   const handleValueChange = (estimate: number) => {
     if (isUndefinedOrNull(estimate)) return;
     onValueChange?.(estimate);

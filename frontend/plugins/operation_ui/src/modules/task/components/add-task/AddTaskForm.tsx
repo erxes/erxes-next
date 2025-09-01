@@ -73,9 +73,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     resolver: zodResolver(addTaskSchema),
     defaultValues,
   });
+
   useEffect(() => {
     form.setFocus('name');
-  }, []);
+  }, [form]);
 
   useEffect(() => {
     if (teams && teams.length > 0 && !form.getValues('teamId') && !teamId) {
@@ -134,6 +135,8 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   onValueChange={(value) => {
                     field.onChange(value);
                     form.resetField('projectId');
+                    form.resetField('status');
+                    form.resetField('cycleId');
                   }}
                   mode="single"
                 />
@@ -274,10 +277,12 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Cycle</Form.Label>
-                  <SelectCycle
-                    {...field}
-                    teamId={form.getValues('teamId') || _teamId}
-                    value={field.value}
+                  <SelectCycle.FormItem
+                    value={field.value || ''}
+                    onValueChange={(value: any) => {
+                      field.onChange(value);
+                    }}
+                    teamId={form.getValues('teamId') || undefined}
                   />
                 </Form.Item>
               )}
