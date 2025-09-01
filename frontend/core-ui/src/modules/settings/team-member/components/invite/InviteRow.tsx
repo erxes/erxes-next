@@ -19,7 +19,8 @@ export const InviteRow = ({
   user: IUserEntry & { id: string };
 }) => {
   const { selectedUsers, fields } = useUserInviteContext();
-  const { control } = useFormContext<TUserForm>();
+  const { control, formState } = useFormContext<TUserForm>();
+  const { errors } = formState;
   return (
     <InviteMemberRowContext.Provider
       value={{
@@ -60,7 +61,9 @@ export const InviteRow = ({
                     placeholder="Email"
                     type={'email'}
                     autoComplete="new-email"
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                    className={cn(
+                      'rounded-none focus-visible:relative focus-visible:z-10 shadow-none',
+                    )}
                   />
                 </Form.Control>
               </Form.Item>
@@ -70,27 +73,32 @@ export const InviteRow = ({
         <Table.Cell
           className={cn({
             'border-t': userIndex === 0,
+            'border-destructive border-l':
+              errors?.entries?.[userIndex]?.password?.message,
           })}
         >
           <Form.Field
             control={control}
             name={`entries.${userIndex}.password`}
             render={({ field }) => (
-              <Form.Item>
+              <Form.Item className="relative">
                 <Form.Control>
                   <Input
                     {...field}
                     placeholder="Password"
                     autoComplete={`new-password`}
                     type="password"
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                    className={cn(
+                      'rounded-none focus-visible:relative focus-visible:z-10 shadow-none',
+                    )}
                   />
                 </Form.Control>
+                <Form.Message className="text-destructive-foreground absolute top-full -left-px -right-px bg-destructive !m-0 px-2 py-1" />
               </Form.Item>
             )}
           />
         </Table.Cell>
-        <Table.Cell
+        {/* <Table.Cell
           className={cn({
             'border-t': userIndex === 0,
           })}
@@ -181,7 +189,7 @@ export const InviteRow = ({
               </Form.Item>
             )}
           />
-        </Table.Cell>
+        </Table.Cell> */}
       </Table.Row>
     </InviteMemberRowContext.Provider>
   );

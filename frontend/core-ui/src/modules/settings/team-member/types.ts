@@ -52,10 +52,10 @@ export interface IUserDetail extends IUser {
 export interface IUserEntry {
   email: string;
   password: string;
-  groupId: string;
-  unitId?: string;
-  branchId?: string;
-  departmentId?: string;
+  // groupId: string;
+  // unitId?: string;
+  // branchId?: string;
+  // departmentId?: string;
 }
 
 export type TUserInviteVars = {

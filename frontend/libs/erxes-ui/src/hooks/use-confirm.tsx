@@ -86,7 +86,7 @@ const ConfirmDialog = ({
         render={({ field }: { field: any }) => (
           <Form.Item>
             <Form.Label className="text-xs">
-              Type <strong>{confirmationValue}</strong> in the field below to
+              Type <strong className='text-muted-foreground'>{confirmationValue}</strong> in the field below to
               confirm.
             </Form.Label>
             <Form.Control>

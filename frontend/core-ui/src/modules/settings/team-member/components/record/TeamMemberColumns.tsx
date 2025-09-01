@@ -2,8 +2,10 @@ import {
   IconAlignLeft,
   IconChecks,
   IconLabelFilled,
+  IconLock,
   IconMail,
   IconMailCheck,
+  IconRefresh,
   IconUser,
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
@@ -21,10 +23,15 @@ import {
   readImage,
   RecordTableInlineCell,
   toast,
+  Button,
+  Spinner,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { useSetAtom } from 'jotai';
-import { renderingTeamMemberDetailAtom } from '../../states/teamMemberDetailStates';
+import {
+  renderingTeamMemberDetailAtom,
+  renderingTeamMemberResetPasswordAtom,
+} from '../../states/teamMemberDetailStates';
 import { SelectPositions } from 'ui-modules';
 import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
@@ -33,6 +40,74 @@ import { format } from 'date-fns';
 import { ApolloError } from '@apollo/client';
 import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
 import clsx from 'clsx';
+import { useResendInvite } from '@/settings/team-member/hooks/useResendInvite';
+
+const UserResetPassword = ({ cell }: { cell: Cell<IUser, unknown> }) => {
+  const [, setOpen] = useQueryState('reset_password_id');
+  const setRenderingTeamMemberResetPasswordAtom = useSetAtom(
+    renderingTeamMemberResetPasswordAtom,
+  );
+
+  const { _id } = cell.row.original;
+
+  return (
+    <Button
+      name="reset-password"
+      title="Open a password reset dialog"
+      variant={'outline'}
+      type="button"
+      className="size-6"
+      onClick={() => {
+        setOpen(_id);
+        setRenderingTeamMemberResetPasswordAtom(true);
+      }}
+    >
+      <IconLock />
+    </Button>
+  );
+};
+
+const InvitationResend = ({ cell }: { cell: Cell<IUser, unknown> }) => {
+  const { email } = cell.row.original;
+  const { resend, loading } = useResendInvite();
+  return (
+    <Button
+      name="resend-invite"
+      title="Resend invitation"
+      variant={'outline'}
+      type="button"
+      className="size-6"
+      disabled={loading}
+      onClick={() =>
+        resend({
+          variables: {
+            email,
+          },
+          onError: (error) =>
+            toast({ title: error.message, variant: 'destructive' }),
+          onCompleted: () => toast({ title: 'Invitation has been resent' }),
+        })
+      }
+    >
+      {loading ? <Spinner /> : <IconRefresh />}
+    </Button>
+  );
+};
+
+const UsersActionsCell = ({ cell }: { cell: Cell<IUser, unknown> }) => {
+  return (
+    <RecordTableInlineCell className="justify-center gap-2">
+      <InvitationResend cell={cell} />
+      <UserResetPassword cell={cell} />
+    </RecordTableInlineCell>
+  );
+};
+
+const teamMemberPasswordResetColumn = {
+  id: 'actions',
+  header: 'actions',
+  cell: UsersActionsCell,
+};
 
 export const teamMemberColumns: ColumnDef<IUser>[] = [
   {
@@ -111,27 +186,6 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     size: 240,
   },
   {
-    id: 'status',
-    accessorKey: 'status',
-    header: () => (
-      <RecordTable.InlineHead label="Invitation status	" icon={IconMailCheck} />
-    ),
-    cell: ({ cell }) => {
-      const { status } = cell.row.original;
-      return (
-        <RecordTableInlineCell>
-          <Badge
-            variant={
-              !status || status === 'Not verified' ? 'destructive' : 'success'
-            }
-          >
-            {status ? (cell.getValue() as string) : 'Not verified'}
-          </Badge>
-        </RecordTableInlineCell>
-      );
-    },
-  },
-  {
     id: 'email',
     accessorKey: 'email',
     header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
@@ -184,39 +238,39 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       );
     },
   })),
-  {
-    id: 'positionIds',
-    accessorKey: 'positionIds',
-    header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="Positions" />
-    ),
-    cell: ({ cell }) => {
-      const { _id } = cell.row.original;
-      const { usersEdit } = useUserEdit();
+  // {
+  //   id: 'positionIds',
+  //   accessorKey: 'positionIds',
+  //   header: () => (
+  //     <RecordTable.InlineHead icon={IconAlignLeft} label="Positions" />
+  //   ),
+  //   cell: ({ cell }) => {
+  //     const { _id } = cell.row.original;
+  //     const { usersEdit } = useUserEdit();
 
-      return (
-        <SelectPositions.InlineCell
-          scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Position')}
-          mode="multiple"
-          value={cell.getValue() as string[]}
-          onValueChange={(value) =>
-            usersEdit({
-              variables: {
-                _id,
-                positionIds: value,
-              },
-            })
-          }
-        />
-      );
-    },
-    size: 240,
-  },
+  //     return (
+  //       <SelectPositions.InlineCell
+  //         scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Position')}
+  //         mode="multiple"
+  //         value={cell.getValue() as string[]}
+  //         onValueChange={(value) =>
+  //           usersEdit({
+  //             variables: {
+  //               _id,
+  //               positionIds: value,
+  //             },
+  //           })
+  //         }
+  //       />
+  //     );
+  //   },
+  //   size: 240,
+  // },
   {
     id: 'workStartedDate',
     accessorKey: 'workStartedDate',
     header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="workStartedDate" />
+      <RecordTable.InlineHead icon={IconAlignLeft} label="Work started date" />
     ),
     cell: ({ cell }) => {
       const { details, _id } = cell.row.original;
@@ -270,6 +324,27 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     },
   },
   {
+    id: 'status',
+    accessorKey: 'status',
+    header: () => (
+      <RecordTable.InlineHead label="Invitation status	" icon={IconMailCheck} />
+    ),
+    cell: ({ cell }) => {
+      const { status } = cell.row.original;
+      return (
+        <RecordTableInlineCell>
+          <Badge
+            variant={
+              !status || status === 'Not verified' ? 'destructive' : 'success'
+            }
+          >
+            {status ? (cell.getValue() as string) : 'Not verified'}
+          </Badge>
+        </RecordTableInlineCell>
+      );
+    },
+  },
+  {
     id: 'isActive',
     accessorKey: 'isActive',
     header: () => <RecordTable.InlineHead icon={IconChecks} label="Status" />,
@@ -293,4 +368,5 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       );
     },
   },
+  teamMemberPasswordResetColumn,
 ];

@@ -31,7 +31,6 @@ export function UploadServiceRadioGroup({ form, selected }: Props) {
                   key={idx}
                   tabIndex={0}
                   whileTap={{ scale: 0.975 }}
-                  whileHover={{ scale: 1.0175 }}
                   className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border hover:bg-accent px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary/10 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
                 >
                   <RadioGroup.Item
@@ -42,15 +41,15 @@ export function UploadServiceRadioGroup({ form, selected }: Props) {
                   />
                   <config.icon
                     className={cn(
-                      selected === config.value
-                        ? 'stroke-primary'
-                        : 'stroke-primary/40',
-                      '',
+                      // selected === config.value
+                      //   ? 'stroke-primary'
+                      //   : 'stroke-primary/40',
+                      'stroke-primary',
                     )}
                   />
                   <span
                     className={cn(
-                      selected === config.value ? 'opacity-100' : 'opacity-40',
+                      // selected === config.value ? 'opacity-100' : 'opacity-40',
                       '',
                     )}
                   >
