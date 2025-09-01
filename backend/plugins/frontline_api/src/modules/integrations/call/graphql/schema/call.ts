@@ -175,6 +175,7 @@ export const subscriptions = `
   waitingCallReceived(extension: String): String
   talkingCallReceived(extension: String): String
   agentCallReceived(extension: String): String
+  queueRealtimeUpdate(extension: String): String
 
   callStatistic(extension: String): CallStatistic
   callAgent(extension: String): CallAgent

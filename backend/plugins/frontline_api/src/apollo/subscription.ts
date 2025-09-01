@@ -18,6 +18,7 @@ export default {
       callAgent(extension: String): CallAgent
       activeCallStatus(extension: String): ActiveCall
       queueStatus(extension: String!): QueueStatus
+      queueRealtimeUpdate(extension: String): String
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
@@ -196,6 +197,7 @@ export default {
           },
         ),
       },
+
       callStatistic: {
         subscribe: (parent, args, { pubsub }) => {
           const channel = args.extension
@@ -235,50 +237,14 @@ export default {
         },
       },
 
-      queueStatus: {
-        subscribe: (parent, args, { pubsub }) => {
-          if (!args.extension) {
-            throw new Error(
-              'Extension is required for queue status subscription',
-            );
-          }
-
-          return graphqlPubsub.asyncIterator([
-            `queueStatus_${args.extension}`,
-            `callStatistic_${args.extension}`,
-            `callAgent_${args.extension}`,
-          ]);
-        },
-        resolve: async (payload, args, { models }) => {
-          // Combine statistics and agent data
-          const { extension } = args;
-          const statistics = payload.callStatistic;
-
-          // Transform agent data
-          const agents = statistics?.member
-            ? statistics.member.map((member) => ({
-                extension: member.member_extension,
-                name: `${member.first_name} ${member.last_name}`,
-                status: member.status,
-                callsAnswered: member.answer,
-                callsAbandoned: member.abandon,
-                talkTime: member.talktime,
-                pauseTime: member.pausetime,
-                pauseReason: member.pause_reason,
-              }))
-            : [];
-
-          return {
-            extension,
-            queuename: statistics?.queuename,
-            totalCalls: statistics?.callstotal,
-            waitingCalls: statistics?.callswaiting,
-            completedCalls: statistics?.callscomplete,
-            abandonedCalls: statistics?.callsabandoned,
-            agents,
-            statistics,
-          };
-        },
+      queueRealtimeUpdate: {
+        subscribe: withFilter(
+          () => graphqlPubsub.asyncIterator(`queueRealtimeUpdate`),
+          (payload, variables) => {
+            const response = JSON.parse(payload.queueRealtimeUpdate);
+            return response.extension === variables.extension;
+          },
+        ),
       },
     };
   },

@@ -16,21 +16,9 @@ export const CALL_STATISTIC_SUB = gql`
   }
 `;
 
-export const QUEUE_STATS_SUBSCRIPTION = gql`
-  subscription QueueStatistics($extension: String) {
-    callStatistic(extension: $extension) {
-      extension
-      queuename
-      callstotal
-      callswaiting
-      callscomplete
-      callsabandoned
-      abandonedrate
-      avgwaittime
-      avgtalktime
-      availablecount
-      agentcount
-    }
+export const queueRealtimeUpdate = gql`
+  subscription queueRealtimeUpdate($extension: String) {
+    queueRealtimeUpdate(extension: $extension)
   }
 `;
 

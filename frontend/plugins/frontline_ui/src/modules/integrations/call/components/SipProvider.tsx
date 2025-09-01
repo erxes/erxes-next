@@ -33,14 +33,10 @@ import {
 import {
   ACTIVE_CALLS_SUBSCRIPTION,
   AGENT_STATUS_SUBSCRIPTION,
-  CALL_STATISTIC_SUB,
-  QUEUE_STATS_SUBSCRIPTION,
+  queueRealtimeUpdate,
 } from '@/integrations/call/graphql/subscriptions/subscriptions';
-import { useQuery, useSubscription } from '@apollo/client';
-import {
-  GET_ACTIVE_CALLS,
-  GET_QUEUE_STATUS,
-} from '@/integrations/call/graphql/queries/callDashboardQueries';
+import { useSubscription } from '@apollo/client';
+
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 
 // Context for SIP functionality
@@ -52,7 +48,7 @@ const SipProvider = ({
   pathname = '',
   user = null,
   password,
-  autoRegister = false,
+  autoRegister = true,
   autoAnswer = false,
   sessionTimersExpires = 3600,
   extraHeaders = { register: [], invite: [] },
@@ -71,15 +67,13 @@ const SipProvider = ({
 
   // const { data, loading } = useSubscription(CALL_STATISTIC_SUB);
 
-  const { data, loading, error } = useSubscription(QUEUE_STATS_SUBSCRIPTION, {
+  const { data, loading, error } = useSubscription(queueRealtimeUpdate, {
     variables: { extension: '6518' },
     onData: ({ data }) => {
-      console.log('New queue stats:', data.data?.callStatistic);
+      console.log('New callRealtimeUpdate data:', data.data);
       // Handle real-time updates
-      if (data.data?.callStatistic) {
-        // Update UI, show notifications, etc.
-        // showNotification(`Queue ${extension} updated`);
-      }
+      // Update UI, show notifications, etc.
+      // showNotification(`Queue ${extension} updated`);
     },
     onError: (error) => {
       console.error('Subscription error:', error);
@@ -731,12 +725,7 @@ const SipProvider = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    user,
-    callInfo?.isUnregistered,
-    callConfig?.isAvailable,
-    callConfig?.phone,
-  ]);
+  }, [user]);
 
   // Create context value
   const contextValue = useMemo(

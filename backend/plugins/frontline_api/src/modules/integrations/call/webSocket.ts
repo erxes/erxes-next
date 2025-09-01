@@ -4,11 +4,12 @@ import { generateModels } from '~/connectionResolvers';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
 import redis from './redlock';
 
+const { CALL_WS_API_USER, CALL_WS_API_PASSWORD, CALL_WS_SERVER } = process.env;
 // Configuration
 const CONFIG = {
-  PBX_IP: 'call.erxes.io',
-  API_USER: 'testApi',
-  API_PASSWORD: 'testApi13',
+  PBX_IP: CALL_WS_SERVER,
+  API_USER: CALL_WS_API_USER,
+  API_PASSWORD: CALL_WS_API_PASSWORD,
   WS_PORT: 8089,
   HEARTBEAT_INTERVAL: 30000,
   MAX_RECONNECT_DELAY: 30000,
@@ -86,20 +87,15 @@ class QueueStateManager {
 
   private decodeUTF8Name(name: string): string {
     try {
-      // Handle double-encoded UTF-8 strings (common in PBX systems)
-      // First try decodeURIComponent(escape()) for double-encoded UTF-8
       let decoded = decodeURIComponent(escape(name));
 
-      // If that didn't change anything, try Buffer conversion for raw bytes
       if (decoded === name) {
-        // Convert from Latin-1 to UTF-8
         const buffer = Buffer.from(name, 'latin1');
         decoded = buffer.toString('utf8');
       }
 
       return decoded;
     } catch {
-      // If all decoding fails, return original
       return name;
     }
   }
@@ -277,6 +273,7 @@ class QueueStateManager {
         callerchannel: event.callerchannel || undefined,
         state: event.state || undefined,
       });
+
       console.log(`Added call ${callerId} to waiting list`);
     }
   }
@@ -650,10 +647,9 @@ class PBXWebSocketClient {
     }
 
     this.isSubscribing = true;
-
     const eventNames = [
-      `CallQueueStatus/${this.queues.join('~')}`,
-      `ActiveCallStatus/${this.queues.join('~')}`,
+      `CallQueueStatus/${this.queues.join(',')}`,
+      `ActiveCallStatus/${this.queues.join(',')}`,
     ];
 
     this.sendMessage({
@@ -700,7 +696,7 @@ class PBXWebSocketClient {
     if (oldSnapshot !== newSnapshot) {
       await redis.set(key, newSnapshot);
       graphqlPubsub.publish('queueRealtimeUpdate', {
-        queueRealtimeUpdate: JSON.parse(newSnapshot),
+        queueRealtimeUpdate: newSnapshot,
       });
       console.log(`Published queue update for ${queueExtension}`);
     }

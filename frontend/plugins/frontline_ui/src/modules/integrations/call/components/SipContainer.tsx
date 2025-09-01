@@ -44,6 +44,7 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
     user: operator?.gsUsername,
     password: operator?.gsPassword,
     port: parseInt(port?.toString() || '8089', 10),
+    autoRegister: true,
     iceServers: [
       {
         urls: `turn:${callConfigs.TURN_SERVER_URL}`,
