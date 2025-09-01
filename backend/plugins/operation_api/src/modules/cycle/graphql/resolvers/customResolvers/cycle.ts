@@ -42,6 +42,6 @@ export const Cycle = {
       return 0;
     }
 
-    return (result[0].doneTasks / result[0].totalTasks) * 100;
+    return Math.round((result[0].doneTasks / result[0].totalTasks) * 100);
   },
 };
