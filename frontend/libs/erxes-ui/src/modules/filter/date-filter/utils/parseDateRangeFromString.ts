@@ -73,7 +73,7 @@ export const parseDateRangeFromString = (
   }
 
   // Year format: YYYY
-  if (/^\d{4}$/.test(date)) {
+  if (/^\d{4}-y$/.test(date)) {
     const year = parseInt(date);
     return {
       from: startOfDay(new Date(year, 0, 1)),

@@ -1,5 +1,3 @@
-'use client';
-
 import { useAtom } from 'jotai';
 import { slotDetailAtom } from '../states/slot';
 import { Button, Checkbox, Input, Label } from 'erxes-ui';

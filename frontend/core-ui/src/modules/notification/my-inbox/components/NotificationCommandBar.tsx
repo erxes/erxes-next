@@ -2,7 +2,7 @@ import { useArchiveNotifications } from '@/notification/my-inbox/hooks/useArchiv
 import { useMarkAsReadNotifications } from '@/notification/my-inbox/hooks/useMarkAsReadNotifications';
 import { INotification } from '@/notification/my-inbox/types/notifications';
 import { ApolloQueryResult, OperationVariables } from '@apollo/client';
-import { IconArchiveOff, IconEyeCheck, IconTrash } from '@tabler/icons-react';
+import { IconArchiveOff, IconEyeCheck } from '@tabler/icons-react';
 import {
   Button,
   CommandBar,

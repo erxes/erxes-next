@@ -28,97 +28,101 @@ export interface INotificationDocument extends Document {
   // Timestamps
   createdAt: Date;
   expiresAt?: Date; // Auto-cleanup old notifications
+  updatedAt?: Date;
   isArchived: boolean;
   kind: 'system' | 'user';
 }
 
-export const notificationSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-    maxlength: 200,
-  },
+export const notificationSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      maxlength: 200,
+    },
 
-  message: {
-    type: String,
-    required: true,
-    maxlength: 1000,
-  },
+    message: {
+      type: String,
+      required: true,
+      maxlength: 1000,
+    },
 
-  type: {
-    type: String,
-    enum: ['info', 'success', 'warning', 'error'],
-    required: true,
-  },
+    type: {
+      type: String,
+      enum: ['info', 'success', 'warning', 'error'],
+      required: true,
+    },
 
-  userId: {
-    type: String,
-    required: true,
-  },
+    userId: {
+      type: String,
+      required: true,
+    },
 
-  fromUserId: {
-    type: String,
-  },
+    fromUserId: {
+      type: String,
+    },
 
-  contentType: {
-    type: String,
-  },
+    contentType: {
+      type: String,
+    },
 
-  contentTypeId: {
-    type: String,
-  },
+    contentTypeId: {
+      type: String,
+    },
 
-  isRead: {
-    type: Boolean,
-    default: false,
-    index: true,
-  },
+    isRead: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
 
-  readAt: {
-    type: Date,
-  },
+    readAt: {
+      type: Date,
+    },
 
-  priority: {
-    type: String,
-    enum: ['low', 'medium', 'high', 'urgent'],
-    default: 'medium',
-  },
-  priorityLevel: {
-    type: String,
-    enum: [1, 2, 3, 4],
-    default: 2,
-    required: true,
-  },
+    priority: {
+      type: String,
+      enum: ['low', 'medium', 'high', 'urgent'],
+      default: 'medium',
+    },
+    priorityLevel: {
+      type: String,
+      enum: [1, 2, 3, 4],
+      default: 2,
+      required: true,
+    },
 
-  metadata: {
-    type: Schema.Types.Mixed,
-  },
+    metadata: {
+      type: Schema.Types.Mixed,
+    },
 
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    index: true,
-  },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      index: true,
+    },
 
-  expiresAt: {
-    type: Date,
+    expiresAt: {
+      type: Date,
+    },
+    isArchived: {
+      type: Boolean,
+      index: true,
+    },
+    action: {
+      type: String,
+      index: true,
+      optional: true,
+    },
+    kind: {
+      type: String,
+      enum: ['system', 'user'],
+      default: 'user',
+      index: true,
+    },
   },
-  isArchived: {
-    type: Boolean,
-    index: true,
-  },
-  action: {
-    type: String,
-    index: true,
-    optional: true,
-  },
-  kind: {
-    type: String,
-    enum: ['system', 'user'],
-    default: 'user',
-    index: true,
-  },
-});
+  { timestamps: true },
+);
 
 // Compound indexes for efficient queries
 notificationSchema.index({ userId: 1, createdAt: -1 });

@@ -1,7 +1,5 @@
 // components/common/SortableList.tsx
 
-'use client';
-
 import {
   DndContext,
   KeyboardSensor,

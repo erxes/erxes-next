@@ -9,6 +9,7 @@ export interface IUsersInlineContext {
   placeholder: string;
   size?: AvatarProps['size'];
   updateMembers?: (members: IUser[]) => void;
+  allowUnassigned?: boolean;
 }
 
 export const MembersInlineContext = createContext<IUsersInlineContext | null>(

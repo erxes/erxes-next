@@ -1,4 +1,3 @@
-'use client';
 import { Input, Label, Select, Switch, Form } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -8,7 +7,7 @@ import { options } from '@/constants';
 import { FinanceConfigFormValues } from '~/modules/create-pos/components/formSchema';
 
 interface FinanceConfigFormProps {
-  form: UseFormReturn<FinanceConfigFormValues>; 
+  form: UseFormReturn<FinanceConfigFormValues>;
   posDetail?: IPosDetail;
   isReadOnly?: boolean;
   onSubmit?: (data: FinanceConfigFormValues) => Promise<void>;
@@ -33,13 +32,14 @@ export default function FinanceConfigForm({
         checkErkhet: posDetail.erkhetConfig?.checkErkhet ?? false,
         checkInventories: posDetail.isCheckRemainder ?? false,
         userEmail: posDetail.erkhetConfig?.userEmail || '',
-        beginBillNumber: posDetail.beginNumber || posDetail.erkhetConfig?.beginNumber || '',
+        beginBillNumber:
+          posDetail.beginNumber || posDetail.erkhetConfig?.beginNumber || '',
         defaultPay: posDetail.erkhetConfig?.defaultPay || '',
         account: posDetail.erkhetConfig?.account || '',
         location: posDetail.erkhetConfig?.location || '',
         getRemainder: posDetail.erkhetConfig?.getRemainder ?? false,
       };
-      
+
       reset(financeData);
     }
   }, [posDetail, reset]);
@@ -76,7 +76,9 @@ export default function FinanceConfigForm({
                 render={({ field }) => (
                   <Form.Item>
                     <div className="flex flex-col gap-3">
-                      <Form.Label className="text-gray-600">IS SYNC ERKHET</Form.Label>
+                      <Form.Label className="text-gray-600">
+                        IS SYNC ERKHET
+                      </Form.Label>
                       <Form.Control>
                         <Switch
                           checked={field.value}
@@ -100,7 +102,9 @@ export default function FinanceConfigForm({
                 render={({ field }) => (
                   <Form.Item>
                     <div className="flex flex-col gap-3">
-                      <Form.Label className="text-gray-600">CHECK ERKHET</Form.Label>
+                      <Form.Label className="text-gray-600">
+                        CHECK ERKHET
+                      </Form.Label>
                       <Form.Control>
                         <Switch
                           checked={field.value}
@@ -120,7 +124,9 @@ export default function FinanceConfigForm({
                 render={({ field }) => (
                   <Form.Item>
                     <div className="flex flex-col gap-3">
-                      <Form.Label className="text-gray-600">CHECK INVENTORIES</Form.Label>
+                      <Form.Label className="text-gray-600">
+                        CHECK INVENTORIES
+                      </Form.Label>
                       <Form.Control>
                         <Switch
                           checked={field.value}
@@ -146,7 +152,9 @@ export default function FinanceConfigForm({
                     render={({ field }) => (
                       <Form.Item>
                         <div className="space-y-2">
-                          <Form.Label className="text-sm text-gray-500">USER EMAIL</Form.Label>
+                          <Form.Label className="text-sm text-gray-500">
+                            USER EMAIL
+                          </Form.Label>
                           <Form.Control>
                             <Input
                               type="email"
@@ -191,7 +199,9 @@ export default function FinanceConfigForm({
                     render={({ field }) => (
                       <Form.Item>
                         <div className="space-y-2">
-                          <Form.Label className="text-sm text-gray-500">DEFAULTPAY</Form.Label>
+                          <Form.Label className="text-sm text-gray-500">
+                            DEFAULTPAY
+                          </Form.Label>
                           <Form.Control>
                             <Select
                               value={field.value}
@@ -203,7 +213,10 @@ export default function FinanceConfigForm({
                               </Select.Trigger>
                               <Select.Content>
                                 {options.map((option) => (
-                                  <Select.Item key={option.value} value={option.value}>
+                                  <Select.Item
+                                    key={option.value}
+                                    value={option.value}
+                                  >
                                     {option.label}
                                   </Select.Item>
                                 ))}
@@ -224,7 +237,9 @@ export default function FinanceConfigForm({
                     render={({ field }) => (
                       <Form.Item>
                         <div className="space-y-2">
-                          <Form.Label className="text-sm text-gray-500">ACCOUNT</Form.Label>
+                          <Form.Label className="text-sm text-gray-500">
+                            ACCOUNT
+                          </Form.Label>
                           <Form.Control>
                             <Input
                               {...field}
@@ -245,7 +260,9 @@ export default function FinanceConfigForm({
                     render={({ field }) => (
                       <Form.Item>
                         <div className="space-y-2">
-                          <Form.Label className="text-sm text-gray-500">LOCATION</Form.Label>
+                          <Form.Label className="text-sm text-gray-500">
+                            LOCATION
+                          </Form.Label>
                           <Form.Control>
                             <Input
                               {...field}

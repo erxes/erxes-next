@@ -64,7 +64,7 @@ const NotificationSettingsContentWrapper = () => {
   }
 
   return (
-    <form className="flex flex-col flex-1">
+    <form className="flex flex-col flex-1 overflow-auto">
       <GeneralNotificationSettings />
       <div className="w-full mx-auto max-w-3xl">
         <div className="w-full flex justify-end mb-6">

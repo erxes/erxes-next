@@ -1,5 +1,3 @@
-'use client';
-
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';

@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { Popover } from 'erxes-ui/components/popover';
 import { Popover as PopoverPrimitive } from 'radix-ui';

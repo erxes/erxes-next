@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { MiniMap, PanelPosition } from '@xyflow/react';
 import { IconMap, IconX } from '@tabler/icons-react';

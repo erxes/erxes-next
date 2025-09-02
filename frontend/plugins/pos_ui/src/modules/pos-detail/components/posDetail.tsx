@@ -1,5 +1,3 @@
-'use client';
-
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { usePosDetail } from '../hooks/useDetail';

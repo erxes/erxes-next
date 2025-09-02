@@ -2,7 +2,7 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_CYCLE_PROGRESS_BY_PROJECT } from '@/cycle/graphql/queries/getCycleProgressByProject';
 import { ICycleProgressByProject } from '@/cycle/types';
 import { useEffect } from 'react';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 
 interface IGetCycleQueryResponse {
   getCycleProgressByProject: ICycleProgressByProject[];
@@ -16,7 +16,7 @@ export const useGetCycleProgressByProject = (options: QueryHookOptions) => {
 
   useEffect(() => {
     const unsubscribe = subscribeToMore({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: { cycleId: options.variables?._id } },
       updateQuery: () => {
         refetch();

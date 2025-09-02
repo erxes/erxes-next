@@ -1,7 +1,5 @@
-import { Label, toast } from 'erxes-ui';
-
+import { Label } from 'erxes-ui';
 import { SelectTags } from 'ui-modules';
-import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 
 export const CustomerDetailSelectTag = ({
@@ -33,12 +31,7 @@ export const CustomerDetailSelectTag = ({
                 _id: customerId,
               }),
               fields: { tagIds: () => newSelectedTagIds },
-            });
-          },
-          onError: (e: ApolloError) => {
-            toast({
-              title: 'Error',
-              description: e.message,
+              optimistic: true,
             });
           },
         })}

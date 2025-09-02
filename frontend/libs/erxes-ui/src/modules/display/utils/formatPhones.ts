@@ -4,7 +4,7 @@ import { ValidationStatus } from 'erxes-ui/types';
 export function formatPhones(
   primaryPhone: string,
   phones: string[],
-  phoneValidationStatus: ValidationStatus,
+  phoneValidationStatus?: ValidationStatus,
 ): TPhones {
   const formattedPhones = [
     ...(primaryPhone
