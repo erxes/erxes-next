@@ -52,13 +52,13 @@ export const ContactsBreadcrumb = () => {
             >
               <Link to="/contacts/leads">Leads</Link>
             </ToggleGroup.Item>
-            <ToggleGroup.Item
+            {/* <ToggleGroup.Item
               value="/contacts/clients"
               asChild
               onClick={() => setCursor('')}
             >
               <Link to="/contacts/clients">Clients</Link>
-            </ToggleGroup.Item>
+            </ToggleGroup.Item> */}
           </ToggleGroup>
         </Breadcrumb.List>
       </Breadcrumb>

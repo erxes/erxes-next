@@ -472,7 +472,7 @@ export interface PhoneFieldDetailProps {
 export interface IPhoneFieldProps {
   primaryPhone: string;
   phones: string[];
-  phoneValidationStatus: ValidationStatus;
+  phoneValidationStatus?: ValidationStatus;
 }
 
 export const PhoneField = Object.assign(PhoneListFieldRoot, {

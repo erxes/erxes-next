@@ -6,6 +6,8 @@ import {
 } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { Key } from 'erxes-ui/types';
 import { useState } from 'react';
+import { currentHotkeyScopeState } from 'erxes-ui/modules/hotkey/states/internal/currentHotkeyScopeState';
+import { useAtomValue } from 'jotai';
 
 export const PopoverScoped = ({
   scope,
@@ -28,6 +30,7 @@ export const PopoverScoped = ({
     setHotkeyScopeAndMemorizePreviousScope,
     goBackToPreviousHotkeyScope,
   } = usePreviousHotkeyScope();
+  const currentHotkeyScope = useAtomValue(currentHotkeyScopeState);
 
   useScopedHotkeys(
     Key.Enter,
@@ -41,7 +44,7 @@ export const PopoverScoped = ({
         goBackToPreviousHotkeyScope();
       }
     },
-    scope + '.Popover',
+    scope ? scope + '.Popover' : currentHotkeyScope.scope,
     dependencies,
     {
       preventDefault: false,

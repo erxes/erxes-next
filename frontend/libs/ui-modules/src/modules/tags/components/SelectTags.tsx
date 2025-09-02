@@ -183,9 +183,9 @@ export const SelectTagsItem = ({
   return (
     <SelectTree.Item
       key={tag._id}
-      id={tag._id}
+      _id={tag._id}
       name={tag.name}
-      order={tag.order}
+      order={tag.order || ''}
       hasChildren={tag.hasChildren}
       selected={isSelected}
       onSelect={() => onSelect(tag)}
@@ -336,7 +336,7 @@ export const SelectTagsDetail = React.forwardRef<
             <Button
               ref={ref}
               {...props}
-              className="w-min text-sm font-medium"
+              className="w-min text-sm font-medium shadow-xs"
               variant="outline"
             >
               Add Tags

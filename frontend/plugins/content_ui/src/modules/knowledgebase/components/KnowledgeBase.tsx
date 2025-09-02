@@ -1,5 +1,3 @@
-'use client';
-
 import { useMutation } from '@apollo/client';
 import { Button, Sidebar } from 'erxes-ui';
 import { useEffect, useState } from 'react';

@@ -1,6 +1,4 @@
-import { cn, TextField } from 'erxes-ui';
-import clsx from 'clsx';
-import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { TextField } from 'erxes-ui';
 import { useCustomerEdit } from 'ui-modules';
 
 interface TextFieldProps {
@@ -22,13 +20,5 @@ export const TextFieldCustomer = ({
     });
   };
 
-  return (
-    <TextField
-      {...props}
-      value={props.value}
-      scope={clsx(ContactsHotKeyScope.CustomersPage, field, _id)}
-      onSave={onSave}
-      className={cn('shadow-sm rounded-sm text-sm', props.className)}
-    />
-  );
+  return <TextField {...props} value={props.value} onSave={onSave} />;
 };

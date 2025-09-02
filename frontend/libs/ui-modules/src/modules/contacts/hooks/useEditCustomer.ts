@@ -30,7 +30,6 @@ export const useCustomerEdit = () => {
       onError: (error) => {
         if (onError) {
           onError(error);
-          return;
         }
         toast({
           title: 'Error',
