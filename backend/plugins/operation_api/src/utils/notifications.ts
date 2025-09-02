@@ -34,6 +34,7 @@ export const createNotifications = async ({
   subdomain,
   notificationType,
   userIds,
+  action,
 }: {
   contentType: string;
   contentTypeId: string;
@@ -41,8 +42,8 @@ export const createNotifications = async ({
   subdomain: string;
   notificationType: string;
   userIds: string[];
+  action: string;
 }) => {
-  console.log(userIds, fromUserId);
   sendNotification(subdomain, {
     title: getTitle(contentType),
     message: getMessage(contentType, notificationType),
@@ -54,6 +55,7 @@ export const createNotifications = async ({
     contentType: `operation:${contentType}`,
     contentTypeId,
     notificationType,
+    action,
     metadata: {
       contentTypeId,
     },

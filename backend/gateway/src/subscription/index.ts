@@ -20,6 +20,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { apolloRouterPort } from '../apollo-router';
 import { gql } from '@apollo/client/core';
 import { getSubdomain } from '../util/subdomain';
+import { generateModels } from '~/connectionResolver';
 
 let disposable: Disposable | undefined;
 

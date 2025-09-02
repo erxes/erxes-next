@@ -432,7 +432,7 @@ export const SelectBrandsFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={filterKey}>
       <Filter.BarName>
         <IconChessKnight />
         {label}
@@ -460,7 +460,6 @@ export const SelectBrandsFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectBrandsProvider>
-      <Filter.BarClose filterKey={filterKey} />
     </Filter.BarItem>
   );
 };

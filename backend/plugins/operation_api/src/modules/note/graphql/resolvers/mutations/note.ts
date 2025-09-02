@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { INoteDocument } from '~/modules/note/types';
+import { INoteDocument } from '@/note/types';
 
 export const noteMutations = {
   createNote: async (

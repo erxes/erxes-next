@@ -60,80 +60,69 @@ export const LogRecordTableFilterBars = () => {
 
   return (
     <Filter.Bar>
-      {!!status && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconProgressCheck />
-            Status
-          </Filter.BarName>
-          <LogRecordTableFilterBarOperator fieldName="status" />
-          <Popover>
-            <Popover.Trigger>
-              <Filter.BarButton filterKey="status">{status}</Filter.BarButton>
-            </Popover.Trigger>
-            <Popover.Content>
-              <LogStatusFilter />
-            </Popover.Content>
-          </Popover>
-          <Filter.BarClose filterKey="status" />
-        </Filter.BarItem>
-      )}
+      <Filter.BarItem queryKey="status">
+        <Filter.BarName>
+          <IconProgressCheck />
+          Status
+        </Filter.BarName>
+        <LogRecordTableFilterBarOperator fieldName="status" />
+        <Popover>
+          <Popover.Trigger>
+            <Filter.BarButton filterKey="status">{status}</Filter.BarButton>
+          </Popover.Trigger>
+          <Popover.Content>
+            <LogStatusFilter />
+          </Popover.Content>
+        </Popover>
+      </Filter.BarItem>
 
-      {!!source && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconSourceCode />
-            Source
-          </Filter.BarName>
-          <LogRecordTableFilterBarOperator fieldName="source" />
+      <Filter.BarItem queryKey="source">
+        <Filter.BarName>
+          <IconSourceCode />
+          Source
+        </Filter.BarName>
+        <LogRecordTableFilterBarOperator fieldName="source" />
 
-          <Popover>
-            <Popover.Trigger>
-              <Filter.BarButton filterKey="source">{source}</Filter.BarButton>
-            </Popover.Trigger>
-            <Popover.Content>
-              <LogSourceFilter />
-            </Popover.Content>
-          </Popover>
+        <Popover>
+          <Popover.Trigger>
+            <Filter.BarButton filterKey="source">{source}</Filter.BarButton>
+          </Popover.Trigger>
+          <Popover.Content>
+            <LogSourceFilter />
+          </Popover.Content>
+        </Popover>
+      </Filter.BarItem>
 
-          <Filter.BarClose filterKey="source" />
-        </Filter.BarItem>
-      )}
-      {!!createdAt && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconCalendarPlus />
-            Created At
-          </Filter.BarName>
-          <LogRecordTableFilterBarOperator fieldName="createdAt" />
-          <Filter.Date filterKey="createdAt" />
-          <Filter.BarClose filterKey="createdAt" />
-        </Filter.BarItem>
-      )}
+      <Filter.BarItem queryKey="createdAt">
+        <Filter.BarName>
+          <IconCalendarPlus />
+          Created At
+        </Filter.BarName>
+        <LogRecordTableFilterBarOperator fieldName="createdAt" />
+        <Filter.Date filterKey="createdAt" />
+      </Filter.BarItem>
 
-      {!!action && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconProgressCheck />
-            Action
-          </Filter.BarName>
-          <LogRecordTableFilterBarOperator fieldName="action" />
+      <Filter.BarItem queryKey="action">
+        <Filter.BarName>
+          <IconProgressCheck />
+          Action
+        </Filter.BarName>
+        <LogRecordTableFilterBarOperator fieldName="action" />
 
-          <Popover>
-            <Popover.Trigger>
-              <Filter.BarButton filterKey="action">{action}</Filter.BarButton>
-            </Popover.Trigger>
-            <Popover.Content>
-              <LogActionsFilter />
-            </Popover.Content>
-          </Popover>
-          <Filter.BarClose filterKey="action" />
-        </Filter.BarItem>
-      )}
-      {!!userIds?.length && <SelectMember.FilterBar queryKey="userIds" />}
+        <Popover>
+          <Popover.Trigger>
+            <Filter.BarButton filterKey="action">{action}</Filter.BarButton>
+          </Popover.Trigger>
+          <Popover.Content>
+            <LogActionsFilter />
+          </Popover.Content>
+        </Popover>
+      </Filter.BarItem>
+
+      <SelectMember.FilterBar queryKey="userIds" />
 
       {customFilters.map(({ name, value }) => (
-        <Filter.BarItem>
+        <Filter.BarItem queryKey={name}>
           <Filter.BarName
             onDoubleClick={() =>
               setFieldAsEdit({ ...editingFields, [name]: !editingFields[name] })
@@ -172,7 +161,6 @@ export const LogRecordTableFilterBars = () => {
               />
             </Popover.Content>
           </Popover>
-          <Filter.BarClose filterKey={name} />
         </Filter.BarItem>
       ))}
     </Filter.Bar>

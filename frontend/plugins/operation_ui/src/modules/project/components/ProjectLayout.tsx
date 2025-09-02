@@ -33,7 +33,6 @@ export const ProjectLayout = () => {
                 <ProjectBreadCrumb link={`/operation/projects`} />
               )}
               <Separator.Inline />
-
               <ProjectDetailBreadCrumb />
             </Breadcrumb.List>
           </Breadcrumb>
@@ -42,7 +41,7 @@ export const ProjectLayout = () => {
           <AddTaskSheet />
         </PageHeader.End>
       </PageHeader>
-      <div className="flex overflow-hidden w-full">
+      <div className="flex overflow-hidden w-full h-full">
         <Outlet />
         <ProjectsSideWidget projectId={projectId || ''} />
       </div>

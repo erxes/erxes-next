@@ -4,8 +4,8 @@ import { ITask } from '@/task/types';
 import { IProject } from '@/project/types';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
-import { PROJECT_STATUS_OPTIONS } from '@/project/constants';
 import { Badge } from 'erxes-ui';
+import { PROJECT_STATUS_OPTIONS } from '@/operation/constants/statusConstants';
 
 const isTask = (content: ITask | IProject): content is ITask => {
   return 'teamId' in content;
@@ -13,10 +13,8 @@ const isTask = (content: ITask | IProject): content is ITask => {
 
 export const ActivityStatus = ({
   metadata,
-  action,
 }: {
   metadata: IActivity['metadata'];
-  action: IActivity['action'];
 }) => {
   const { previousValue, newValue } = metadata;
   const contentDetail = useActivityListContext();
@@ -29,7 +27,7 @@ export const ActivityStatus = ({
   const getTaskStatus = (value?: string) => {
     return (
       statuses?.find((status) => status.value === value) || {
-        type: '',
+        type: 0,
         color: '',
         label: '',
       }
@@ -52,7 +50,10 @@ export const ActivityStatus = ({
       const status = getTaskStatus(value);
       return (
         <Badge variant="secondary" className="capitalize">
-          <StatusInlineIcon type={status?.type} color={status?.color} />
+          <StatusInlineIcon
+            type={status?.type as number}
+            color={status?.color}
+          />
           {status?.label}
         </Badge>
       );

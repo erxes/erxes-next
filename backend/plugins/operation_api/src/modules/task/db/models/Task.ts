@@ -8,7 +8,8 @@ import {
   ITaskUpdate,
 } from '@/task/@types/task';
 import { createActivity } from '@/activity/utils/createActivity';
-import { createTaskNotification } from '@/task/notificationUtils';
+import { STATUS_TYPES } from '@/status/constants/types';
+import { createNotifications } from '~/utils/notifications';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
@@ -31,7 +32,8 @@ export interface ITaskModel extends Model<ITaskDocument> {
     userId: string;
     subdomain: string;
   }): Promise<ITaskDocument>;
-  removeTask(TaskId: string): Promise<{ ok: number }>;
+  removeTask(taskId: string): Promise<{ ok: number }>;
+  moveCycle(cycleId: string, newCycleId: string): Promise<{ ok: number }>;
 }
 
 export const loadTaskClass = (models: IModels) => {
@@ -106,6 +108,10 @@ export const loadTaskClass = (models: IModels) => {
 
       const nextNumber = (result?.maxNumber || 0) + 1;
 
+      const status = await models.Status.getStatus(doc.status || '');
+
+      doc.statusType = status.type;
+
       if (doc.projectId && doc.teamId) {
         const project = await models.Project.findOne({ _id: doc.projectId });
 
@@ -121,12 +127,17 @@ export const loadTaskClass = (models: IModels) => {
         number: nextNumber,
       });
 
-      await createTaskNotification({
-        task,
-        doc,
-        userId,
-        subdomain,
-      });
+      if (doc.assigneeId && doc.assigneeId !== userId) {
+        await createNotifications({
+          contentType: 'task',
+          contentTypeId: task._id,
+          fromUserId: userId,
+          subdomain,
+          notificationType: 'taskAssignee',
+          userIds: [doc.assigneeId],
+          action: 'assignee',
+        });
+      }
 
       return task;
     }
@@ -150,6 +161,8 @@ export const loadTaskClass = (models: IModels) => {
 
       if (doc.status && doc.status !== task.status) {
         rest.statusChangedDate = new Date();
+        const status = await models.Status.getStatus(doc.status || '');
+        rest.statusType = status.type;
       }
 
       if (task.projectId && doc.teamId && doc.teamId !== task.teamId) {
@@ -195,6 +208,7 @@ export const loadTaskClass = (models: IModels) => {
 
         rest.number = nextNumber;
         rest.status = newStatus?._id;
+        rest.cycleId = '';
       }
 
       await createActivity({
@@ -206,12 +220,17 @@ export const loadTaskClass = (models: IModels) => {
         contentId: task._id,
       });
 
-      await createTaskNotification({
-        task,
-        doc,
-        userId,
-        subdomain,
-      });
+      if (doc.assigneeId && doc.assigneeId !== userId) {
+        await createNotifications({
+          contentType: 'task',
+          contentTypeId: task._id,
+          fromUserId: userId,
+          subdomain,
+          notificationType: 'note',
+          userIds: [doc.assigneeId],
+          action: 'assignee',
+        });
+      }
 
       return models.Task.findOneAndUpdate(
         { _id },
@@ -221,7 +240,34 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async removeTask(TaskId: string[]) {
-      return models.Task.deleteOne({ _id: { $in: TaskId } });
+      return models.Task.findOneAndDelete({ _id: { $in: TaskId } });
+    }
+
+    public static async moveCycle(cycleId: string, newCycleId: string) {
+      const taskIds = await models.Task.find({
+        cycleId,
+        statusType: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.COMPLETED] },
+      }).distinct('_id');
+
+      for (const taskId of taskIds) {
+        await models.Activity.createActivity({
+          action: 'CHANGED',
+          contentId: taskId,
+          module: 'CYCLE',
+          metadata: {
+            newValue: newCycleId,
+            previousValue: cycleId,
+          },
+          createdBy: 'system',
+        });
+      }
+
+      await models.Task.updateMany(
+        { _id: { $in: taskIds } },
+        { $set: { cycleId: newCycleId } },
+      );
+
+      return taskIds;
     }
   }
 

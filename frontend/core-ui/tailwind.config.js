@@ -80,7 +80,7 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       spacing: {
-        cell: '34px',
+        cell: '33px',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],

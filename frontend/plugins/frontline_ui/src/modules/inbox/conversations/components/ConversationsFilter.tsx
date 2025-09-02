@@ -1,4 +1,10 @@
-import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  Filter,
+  useMultiQueryState,
+  useNonNullMultiQueryState,
+} from 'erxes-ui';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import {
   IconCalendarPlus,
@@ -22,12 +28,13 @@ import { useAtomValue } from 'jotai';
 import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
 export const FilterConversationsPopover = () => {
-  const [status, setStatus] = useQueryState<ConversationStatus>('status');
-  const [unassigned, setUnassigned] = useQueryState<boolean>('unassigned');
-  const [awaitingResponse, setAwaitingResponse] =
-    useQueryState<boolean>('awaitingResponse');
-  const [participated, setParticipated] =
-    useQueryState<boolean>('participated');
+  const [queries, setQueries] = useMultiQueryState<{
+    status: ConversationStatus;
+    unassigned: boolean;
+    awaitingResponse: boolean;
+    participated: boolean;
+  }>(['status', 'unassigned', 'awaitingResponse', 'participated']);
+  const { status, unassigned, awaitingResponse, participated } = queries || {};
 
   return (
     <Filter.Popover scope={InboxHotkeyScope.MainPage}>
@@ -41,13 +48,15 @@ export const FilterConversationsPopover = () => {
               className="bg-background"
             />
             <Command.List className="max-h-none">
-              <Filter.CommandItem onSelect={() => setStatus(null)}>
+              <Filter.CommandItem onSelect={() => setQueries({ status: null })}>
                 <IconSquare />
                 Unresolved
                 {status === null && <IconCheck className="ml-auto" />}
               </Filter.CommandItem>
               <Filter.CommandItem
-                onSelect={() => setStatus(ConversationStatus.CLOSED)}
+                onSelect={() =>
+                  setQueries({ status: ConversationStatus.CLOSED })
+                }
               >
                 <IconCheckbox />
                 Resolved
@@ -56,31 +65,40 @@ export const FilterConversationsPopover = () => {
                 )}
               </Filter.CommandItem>
               <Command.Separator className="my-1" />
-              <SelectMember.FilterItem />
               <Filter.CommandItem
-                onSelect={() => setUnassigned(unassigned ? null : true)}
+                onSelect={() => {
+                  setQueries({
+                    unassigned: unassigned ? null : true,
+                  });
+                }}
               >
                 <IconUserX />
                 Unassigned
                 {unassigned && <IconCheck className="ml-auto" />}
               </Filter.CommandItem>
               <Filter.CommandItem
-                onSelect={() =>
-                  setAwaitingResponse(awaitingResponse ? null : true)
-                }
-              >
-                <IconLoader />
-                Awaiting response
-                {awaitingResponse && <IconCheck className="ml-auto" />}
-              </Filter.CommandItem>
-              <Filter.CommandItem
-                onSelect={() => setParticipated(participated ? null : true)}
+                onSelect={() => {
+                  setQueries({
+                    participated: participated ? null : true,
+                  });
+                }}
               >
                 <IconUsersGroup />
                 Participated
                 {participated && <IconCheck className="ml-auto" />}
               </Filter.CommandItem>
               <Command.Separator className="my-1" />
+              <Filter.CommandItem
+                onSelect={() =>
+                  setQueries({
+                    awaitingResponse: awaitingResponse ? null : true,
+                  })
+                }
+              >
+                <IconLoader />
+                Awaiting response
+                {awaitingResponse && <IconCheck className="ml-auto" />}
+              </Filter.CommandItem>
               <SelectChannel.FilterItem />
               <IntegrationTypeFilterItem />
               <Command.Separator className="my-1" />
@@ -91,7 +109,9 @@ export const FilterConversationsPopover = () => {
             </Command.List>
           </Command>
         </Filter.View>
-        <SelectMember.FilterView onValueChange={() => setUnassigned(null)} />
+        <SelectMember.FilterView
+          onValueChange={() => setQueries({ unassigned: null })}
+        />
         <SelectChannel.FilterView />
         <Filter.View filterKey="created">
           <Filter.DateView filterKey="created" />
@@ -108,84 +128,57 @@ export const ConversationFilterBar = ({
   children?: React.ReactNode;
 }) => {
   const [status] = useQueryState<ConversationStatus>('status');
-  const [unassigned, setUnassigned] = useQueryState<boolean>('unassigned');
-  const [awaitingResponse] = useQueryState<boolean>('awaitingResponse');
-  const [participated] = useQueryState<boolean>('participated');
-  const [created] = useQueryState<Date>('created');
   const inboxLayout = useAtomValue(inboxLayoutState);
-  const [filterStates] = useMultiQueryState<{
+  const filterStates = useNonNullMultiQueryState<{
     status: ConversationStatus;
     unassigned: boolean;
     awaitingResponse: boolean;
     participated: boolean;
     created: Date;
-    channelId: string;
-    integrationType: string;
-  }>([
-    'status',
-    'unassigned',
-    'awaitingResponse',
-    'participated',
-    'created',
-    'channelId',
-    'integrationType',
-  ]);
+  }>(['status', 'unassigned', 'awaitingResponse', 'participated', 'created']);
 
-  if (Object.values(filterStates).filter((qs: any) => !!qs).length === 0) {
+  if (Object.values(filterStates).length === 0) {
     return null;
   }
 
   return (
-    <Filter.Bar className={inboxLayout === 'list' ? 'pl-2' : 'pt-1'}>
-      <Filter.Dialog>
-        <Filter.DialogDateView filterKey="created" />
-      </Filter.Dialog>
-      <SelectMember.FilterBar
-        iconOnly
-        onValueChange={() => setUnassigned(null)}
-      />
+    <Filter.Bar
+      className={inboxLayout === 'list' ? 'pl-2' : 'pt-1'}
+      id="conversations-filter-bar"
+    >
       {status === ConversationStatus.CLOSED && (
-        <Filter.BarItem>
+        <Filter.BarItem queryKey="status">
           <Filter.BarName>
             <IconCheckbox />
             Resolved
           </Filter.BarName>
-          <Filter.BarClose filterKey="status" />
         </Filter.BarItem>
       )}
-      {created && (
-        <Filter.BarItem>
-          <Filter.Date filterKey="created" className="rounded-l" />
-          <Filter.BarClose filterKey="created" />
-        </Filter.BarItem>
-      )}
-      {unassigned && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconUserX />
-            Unassigned
-          </Filter.BarName>
-          <Filter.BarClose filterKey="unassigned" />
-        </Filter.BarItem>
-      )}
-      {awaitingResponse && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconLoader />
-            Awaiting response
-          </Filter.BarName>
-          <Filter.BarClose filterKey="awaitingResponse" />
-        </Filter.BarItem>
-      )}
-      {participated && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconUsersGroup />
-            Participated
-          </Filter.BarName>
-          <Filter.BarClose filterKey="participated" />
-        </Filter.BarItem>
-      )}
+
+      <Filter.BarItem queryKey="created">
+        <Filter.Date filterKey="created" className="rounded-l" />
+      </Filter.BarItem>
+
+      <Filter.BarItem queryKey="unassigned">
+        <Filter.BarName>
+          <IconUserX />
+          Unassigned
+        </Filter.BarName>
+      </Filter.BarItem>
+
+      <Filter.BarItem queryKey="awaitingResponse">
+        <Filter.BarName>
+          <IconLoader />
+          Awaiting response
+        </Filter.BarName>
+      </Filter.BarItem>
+
+      <Filter.BarItem queryKey="participated">
+        <Filter.BarName>
+          <IconUsersGroup />
+          Participated
+        </Filter.BarName>
+      </Filter.BarItem>
       <SelectChannel.FilterBar iconOnly />
       <IntegrationTypeFilterBar iconOnly />
       {children}

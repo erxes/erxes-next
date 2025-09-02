@@ -3,7 +3,6 @@ import { CREATE_TASK_MUTATION } from '@/task/graphql/mutations/createTask';
 import { useToast } from 'erxes-ui';
 import { useRecordTableCursor } from 'erxes-ui';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
-import { GET_TASKS } from '@/task/graphql/queries/getTasks';
 
 export const useCreateTask = () => {
   const { toast } = useToast();
@@ -13,7 +12,7 @@ export const useCreateTask = () => {
   const [createTaskMutation, { loading, error }] = useMutation(
     CREATE_TASK_MUTATION,
     {
-      refetchQueries: [GET_TASKS],
+      // refetchQueries: [GET_TASKS],
       onCompleted: () => {
         toast({
           title: 'Success',

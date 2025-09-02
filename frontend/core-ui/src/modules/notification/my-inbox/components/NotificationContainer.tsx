@@ -31,7 +31,7 @@ export const NotificationContainer = ({
     notification && setActiveNotification(notification);
     onNotificationSelect?.();
 
-    if (_id !== id) {
+    if (id && _id !== id) {
       markAsRead({ variables: { id } });
     }
     navigate(newPath);

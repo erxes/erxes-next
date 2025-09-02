@@ -152,12 +152,8 @@ export const SelectLeadFilterBar = ({
   const [lead, setLead] = useQueryState<string>(queryKey || 'lead');
   const [open, setOpen] = useState(false);
 
-  if (!lead) {
-    return null;
-  }
-
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'lead'}>
       <Filter.BarName>
         <IconUser />
         {!iconOnly && 'Lead'}
@@ -186,7 +182,6 @@ export const SelectLeadFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectLeadProvider>
-      <Filter.BarClose filterKey={queryKey || 'lead'} />
     </Filter.BarItem>
   );
 };

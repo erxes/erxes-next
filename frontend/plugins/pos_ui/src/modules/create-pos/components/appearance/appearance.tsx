@@ -1,5 +1,3 @@
-'use client';
-
 import { Button, Form, Upload, ColorPicker } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { IconUpload } from '@tabler/icons-react';

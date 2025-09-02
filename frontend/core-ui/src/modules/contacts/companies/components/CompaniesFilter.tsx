@@ -4,7 +4,13 @@ import {
   IconCalendarUp,
   IconSearch,
 } from '@tabler/icons-react';
-import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  Filter,
+  useFilterQueryState,
+  useMultiQueryState,
+} from 'erxes-ui';
 
 import { TagsFilter } from 'ui-modules';
 import { CompaniesTotalCount } from '@/contacts/companies/components/CompaniesTotalCount';
@@ -59,7 +65,7 @@ const CompaniesFilterPopover = () => {
             </Command>
           </Filter.View>
           <TagsFilter.View tagType="core:company" />
-          <Filter.View filterKey="created"> 
+          <Filter.View filterKey="created">
             <Filter.DateView filterKey="created" />
           </Filter.View>
           <Filter.View filterKey="updated">
@@ -89,61 +95,42 @@ const CompaniesFilterPopover = () => {
 };
 
 export const CompaniesFilter = () => {
-  const [queries] = useMultiQueryState<{
-    searchValue: string;
-    created: string;
-    updated: string;
-    lastSeen: string;
-    tags: string[];
-  }>(['searchValue', 'created', 'updated', 'lastSeen', 'tags']);
-  const { searchValue, created, updated, lastSeen } = queries || {};
-
+  const [searchValue] = useFilterQueryState<string>('searchValue');
   return (
     <Filter id="companies-filter" sessionKey={COMPANIES_CURSOR_SESSION_KEY}>
       <Filter.Bar>
-        {searchValue && (
-          <Filter.BarItem>
-            <Filter.BarName>
-              <IconSearch />
-              Search
-            </Filter.BarName>
-            <Filter.BarButton filterKey="searchValue" inDialog>
-              {searchValue}
-            </Filter.BarButton>
-            <Filter.BarClose filterKey="searchValue" />
-          </Filter.BarItem>
-        )}
+        <Filter.BarItem queryKey="searchValue">
+          <Filter.BarName>
+            <IconSearch />
+            Search
+          </Filter.BarName>
+          <Filter.BarButton filterKey="searchValue" inDialog>
+            {searchValue}
+          </Filter.BarButton>
+        </Filter.BarItem>
+
         <TagsFilter.Bar tagType="core:company" />
-        {created && (
-          <Filter.BarItem>
-            <Filter.BarName>
-              <IconCalendarPlus />
-              Created At
-            </Filter.BarName>
-            <Filter.Date filterKey="created" />
-            <Filter.BarClose filterKey="created" />
-          </Filter.BarItem>
-        )}
-        {updated && (
-          <Filter.BarItem>
-            <Filter.BarName>
-              <IconCalendarUp />
-              Updated At
-            </Filter.BarName>
-            <Filter.Date filterKey="updated" />
-            <Filter.BarClose filterKey="updated" />
-          </Filter.BarItem>
-        )}
-        {lastSeen && (
-          <Filter.BarItem>
-            <Filter.BarName>
-              <IconCalendarTime />
-              Last Seen At
-            </Filter.BarName>
-            <Filter.Date filterKey="lastSeen" />
-            <Filter.BarClose filterKey="lastSeen" />
-          </Filter.BarItem>
-        )}
+        <Filter.BarItem queryKey="created">
+          <Filter.BarName>
+            <IconCalendarPlus />
+            Created At
+          </Filter.BarName>
+          <Filter.Date filterKey="created" />
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="updated">
+          <Filter.BarName>
+            <IconCalendarUp />
+            Updated At
+          </Filter.BarName>
+          <Filter.Date filterKey="updated" />
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="lastSeen">
+          <Filter.BarName>
+            <IconCalendarTime />
+            Last Seen At
+          </Filter.BarName>
+          <Filter.Date filterKey="lastSeen" />
+        </Filter.BarItem>
         <CompaniesFilterPopover />
         <CompaniesTotalCount />
       </Filter.Bar>

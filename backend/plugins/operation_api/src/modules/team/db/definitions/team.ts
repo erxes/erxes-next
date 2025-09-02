@@ -11,6 +11,7 @@ export const teamSchema = schemaWrapper(
       name: { type: String, label: 'Name' },
       description: { type: String, label: 'Description' },
       estimateType: { type: Number, label: 'Estimate Type' },
+      cycleEnabled: { type: Boolean, label: 'Cycle Enabled', default: false },
     },
     {
       timestamps: true,

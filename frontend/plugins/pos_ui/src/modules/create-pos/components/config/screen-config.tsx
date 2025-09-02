@@ -1,4 +1,3 @@
-'use client';
 import { Button, Form, Input, Select, Switch } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -153,7 +152,10 @@ export default function ScreenConfigForm({
                             </Select.Trigger>
                             <Select.Content>
                               {SHOW_TYPE_OPTIONS.map((option) => (
-                                <Select.Item key={option.value} value={option.value}>
+                                <Select.Item
+                                  key={option.value}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </Select.Item>
                               ))}
@@ -184,7 +186,10 @@ export default function ScreenConfigForm({
                             </Select.Trigger>
                             <Select.Content>
                               {KITCHEN_TYPE_OPTIONS.map((option) => (
-                                <Select.Item key={option.value} value={option.value}>
+                                <Select.Item
+                                  key={option.value}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </Select.Item>
                               ))}
@@ -243,7 +248,10 @@ export default function ScreenConfigForm({
                             </Select.Trigger>
                             <Select.Content>
                               {WAITING_TYPE_OPTIONS.map((option) => (
-                                <Select.Item key={option.value} value={option.value}>
+                                <Select.Item
+                                  key={option.value}
+                                  value={option.value}
+                                >
                                   {option.label}
                                 </Select.Item>
                               ))}

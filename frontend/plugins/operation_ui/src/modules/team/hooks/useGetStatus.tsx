@@ -15,7 +15,7 @@ interface IUseGetStatusByTeamResponse {
   refetch: any;
 }
 
-export const useStatusesByType = ({ type }: { type: string }) => {
+export const useStatusesByType = ({ type }: { type: number }) => {
   const { id: teamId } = useParams();
 
   const { data, loading, refetch } = useQuery<IUseGetStatusByTypeResponse>(

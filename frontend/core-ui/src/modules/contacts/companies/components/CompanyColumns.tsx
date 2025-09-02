@@ -20,6 +20,7 @@ import { TCompany } from '@/contacts/types/companyType';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import {
   CompanyEmails,
+  CompanyName,
   CompanyPhones,
   SelectMember,
   SelectTags,
@@ -60,27 +61,26 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       <RecordTable.InlineHead icon={IconLabelFilled} label="Name" />
     ),
     cell: ({ cell }) => {
-      const { primaryName } = cell.row.original;
+      const { primaryName, _id } = cell.row.original;
       const setRenderingCompanyDetail = useSetAtom(renderingCompanyDetailAtom);
       const [, setCompanyDetail] = useQueryState('companyId');
       return (
-        <Popover>
+        <CompanyName
+          primaryName={primaryName}
+          _id={_id}
+          scope={clsx(ContactsHotKeyScope.CompaniesPage, _id, 'Name')}
+        >
           <RecordTableInlineCell.Trigger>
-            <Badge
-              variant="secondary"
-              onClick={(e) => {
-                e.stopPropagation();
+            <RecordTableInlineCell.Anchor
+              onClick={() => {
                 setRenderingCompanyDetail(true);
                 setCompanyDetail(cell.row.original._id);
               }}
             >
               {primaryName}
-            </Badge>
+            </RecordTableInlineCell.Anchor>
           </RecordTableInlineCell.Trigger>
-          <RecordTableInlineCell.Content className="min-w-72">
-            <Input value={primaryName || ''} />
-          </RecordTableInlineCell.Content>
-        </Popover>
+        </CompanyName>
       );
     },
     size: 250,
@@ -158,7 +158,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     header: () => <RecordTable.InlineHead label="Plan" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableInlineCell>
+        <RecordTableInlineCell className="text-xs font-medium text-muted-foreground">
           <TextOverflowTooltip value={cell.getValue() as string} />
         </RecordTableInlineCell>
       );
@@ -218,14 +218,4 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       </RecordTableInlineCell>
     ),
   },
-  ...['position', 'department', 'leadStatus'].map((field) => ({
-    id: field,
-    accessorKey: field,
-    header: () => <RecordTable.InlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: { getValue: () => unknown } }) => (
-      <RecordTableInlineCell>
-        <TextOverflowTooltip value={cell.getValue() as string} />
-      </RecordTableInlineCell>
-    ),
-  })),
 ];
