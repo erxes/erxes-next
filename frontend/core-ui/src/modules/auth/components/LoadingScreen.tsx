@@ -73,7 +73,7 @@ export const TextAnimation = () => {
           )}
 
           {currentIndex === 1 && (
-            <p className="relative w-0 mx-auto">
+            <div className="relative w-0 mx-auto">
               <p
                 className={cn(
                   'text-sm text-muted-foreground inline-flex gap-1 items-center text-nowrap transition-transform duration-1000 left-0 -translate-x-12',
@@ -87,7 +87,7 @@ export const TextAnimation = () => {
                   </TextEffect>
                 )}
               </p>
-            </p>
+            </div>
           )}
         </motion.div>
       </AnimatePresence>

@@ -1,10 +1,11 @@
-import { SVGProps } from 'react';
+import { SVGProps, useId } from 'react';
 
 type PolygonsProps = SVGProps<SVGSVGElement> & {
   variant?: 'light' | 'dark' | 'welcome';
 };
 
 export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
+  const id = useId();
   if (variant === 'welcome') {
     return (
       <svg
@@ -17,7 +18,7 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
       >
         <g opacity="0.5">
           <mask
-            id="mask0_52_81"
+            id={`mask0_52_81_${id}`}
             style={{ maskType: 'alpha' }}
             maskUnits="userSpaceOnUse"
             x="-12"
@@ -29,10 +30,10 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
               x="-12"
               width="1512"
               height="851"
-              fill="url(#paint0_radial_52_81)"
+              fill={`url(#paint0_radial_52_81_${id})`}
             />
           </mask>
-          <g mask="url(#mask0_52_81)">
+          <g mask={`url(#mask0_52_81_${id})`}>
             <path
               d="M1151.76 77.3727C1154.38 75.8588 1157.62 75.8588 1160.24 77.3727L1351.76 187.95C1354.38 189.464 1356 192.261 1356 195.289V416.443C1356 419.471 1354.38 422.269 1351.76 423.783L1160.24 534.36C1157.62 535.874 1154.38 535.874 1151.76 534.36L960.237 423.783C957.615 422.269 956 419.471 956 416.443V195.289C956 192.261 957.615 189.464 960.237 187.95L1151.76 77.3727Z"
               fill="white"
@@ -100,7 +101,7 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
         </g>
         <defs>
           <radialGradient
-            id="paint0_radial_52_81"
+            id={`paint0_radial_52_81_${id}`}
             cx="0"
             cy="0"
             r="1"
@@ -128,7 +129,7 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
         {...props}
       >
         <mask
-          id="mask0_100_2109"
+          id={`mask0_100_2109_${id}`}
           style={{ maskType: 'alpha' }}
           maskUnits="userSpaceOnUse"
           x="0"
@@ -136,9 +137,13 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
           width="756"
           height="875"
         >
-          <rect width="756" height="875" fill="url(#paint0_radial_100_2109)" />
+          <rect
+            width="756"
+            height="875"
+            fill={`url(#paint0_radial_100_2109_${id})`}
+          />
         </mask>
-        <g mask="url(#mask0_100_2109)">
+        <g mask={`url(#mask0_100_2109_${id})`}>
           <path
             d="M785.763 77.3727C788.385 75.8588 791.615 75.8588 794.237 77.3727L985.763 187.95C988.385 189.464 990 192.261 990 195.289V416.443C990 419.471 988.385 422.269 985.763 423.783L794.237 534.36C791.615 535.874 788.385 535.874 785.763 534.36L594.237 423.783C591.615 422.269 590 419.471 590 416.443V195.289C590 192.261 591.615 189.464 594.237 187.95L785.763 77.3727Z"
             fill="white"
@@ -178,7 +183,7 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
         </g>
         <defs>
           <radialGradient
-            id="paint0_radial_100_2109"
+            id={`paint0_radial_100_2109_${id}`}
             cx="0"
             cy="0"
             r="1"
@@ -209,16 +214,20 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
       className={`h-[875px] absolute left-1/2 -translate-x-1/3 ${props.className}`}
     >
       <mask
-        id="mask0_77_383"
+        id={`mask0_77_383_${id}`}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"
         width="756"
         height="875"
       >
-        <rect width="756" height="875" fill="url(#paint0_radial_77_383)" />
+        <rect
+          width="756"
+          height="875"
+          fill={`url(#paint0_radial_77_383_${id})`}
+        />
       </mask>
-      <g mask="url(#mask0_77_383)">
+      <g mask={`url(#mask0_77_383_${id})`}>
         <path
           d="M785.763 77.373C788.385 75.8591 791.615 75.8591 794.237 77.373L985.763 187.95C988.385 189.464 990 192.262 990 195.29V416.444C990 419.471 988.385 422.269 985.763 423.783L794.237 534.36C791.615 535.874 788.385 535.874 785.763 534.36L594.237 423.783C591.615 422.269 590 419.471 590 416.444V195.29C590 192.262 591.615 189.464 594.237 187.95L785.763 77.373Z"
           fill="white"
@@ -272,7 +281,7 @@ export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
       </g>
       <defs>
         <radialGradient
-          id="paint0_radial_77_383"
+          id={`paint0_radial_77_383_${id}`}
           cx="0"
           cy="0"
           r="1"

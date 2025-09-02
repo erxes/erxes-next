@@ -10,7 +10,7 @@ export const useCustomerEdit = () => {
     variables,
     onError,
     ...options
-  }: MutationHookOptions<{ customersEdit: { _id: string } }>) => {
+  }: MutationHookOptions<{ customersEdit: { _id: string } }, ICustomer>) => {
     mutate({
       ...options,
       variables,

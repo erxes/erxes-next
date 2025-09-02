@@ -33,11 +33,11 @@ export const MagicLinkLoginForm = () => {
           )}
         />
 
-        <Button type="submit" className={`h-8`}>
+        <Button type="submit" className="h-8">
           Continue
         </Button>
         <Label className="text-center">OR</Label>
-        <Button variant="secondary" onClick={onGoogleLogin}>
+        <Button variant="secondary" onClick={onGoogleLogin} type="button">
           <IconBrandGoogleFilled />
           Continue with Google
         </Button>
