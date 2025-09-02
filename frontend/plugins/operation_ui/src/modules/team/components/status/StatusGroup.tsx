@@ -44,6 +44,7 @@ import {
 import { useParams } from 'react-router';
 import { useDeleteStatus } from '@/team/hooks/useDeleteStatus';
 import { StatusInlineIcon } from '@/task/components/StatusInline';
+import { TeamStatusTypeLabel } from '@/team/constants';
 
 const StatusSkeleton = () => {
   return (
@@ -399,7 +400,9 @@ export const StatusGroup = ({ statusType }: { statusType: number }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 justify-between w-full bg-accent py-1 pr-2 pl-4 rounded-md">
           <div className="flex items-center gap-2 ">
-            <p className="text-base font-medium">{statusType}</p>
+            <p className="text-base font-medium">
+              {TeamStatusTypeLabel[statusType]}
+            </p>
           </div>
           <Button
             variant="ghost"
