@@ -9,11 +9,11 @@ import {
   IconProgressCheck,
   IconUser,
   IconUsersGroup,
-  IconCalendarRepeat,
+  IconRestore,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { DateSelectTask } from '@/task/components/select/DateSelectTask';
-import { SelectProject } from '@/task/components/select/SelectProjectTask';
+import { DateSelectTask } from '@/task/components/task-selects/DateSelectTask';
+import { SelectProject } from '@/task/components/task-selects/SelectProjectTask';
 import {
   Badge,
   Input,
@@ -25,15 +25,15 @@ import { ITask } from '@/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
-import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
+import { SelectEstimatedPoint } from '@/task/components/task-selects/SelectEstimatedPointTask';
 import clsx from 'clsx';
-import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
-import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
-import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
+import { SelectTaskPriority } from '@/task/components/task-selects/SelectTaskPriority';
+import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
+import { SelectTeamTask } from '@/task/components/task-selects/SelectTeamTask';
 import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
 import { useSetAtom } from 'jotai';
-import { SelectCycle } from '@/task/components/select/SelectCycle';
+import { SelectCycle } from '@/task/components/task-selects/SelectCycle';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
@@ -188,9 +188,7 @@ export const tasksColumns = (
     {
       id: 'cycleId',
       accessorKey: 'cycleId',
-      header: () => (
-        <RecordTable.InlineHead label="Cycle" icon={IconCalendarRepeat} />
-      ),
+      header: () => <RecordTable.InlineHead label="Cycle" icon={IconRestore} />,
       cell: ({ cell }) => {
         return (
           <SelectCycle

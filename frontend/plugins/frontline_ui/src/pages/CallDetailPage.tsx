@@ -16,12 +16,28 @@ import {
   RelativeDateDisplay,
   Separator,
   Input,
+  toast,
 } from 'erxes-ui';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { PageHeader } from 'ui-modules';
 import { useState } from 'react';
+import { useSubscription } from '@apollo/client';
+import { queueRealtimeUpdate } from '@/integrations/call/graphql/subscriptions/subscriptions';
 
 export const CallDetailPage = () => {
+  const { id } = useParams();
+
+  const { data, loading, error } = useSubscription(queueRealtimeUpdate, {
+    variables: { extension: id },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
   return (
     <PageContainer>
       <PageHeader>
@@ -68,7 +84,7 @@ export const CallDetailPage = () => {
             date="2025-08-29T10:00:00.000Z"
           />
         </div>
-        <div className="grid grid-cols-2 grid-rows-2 gap-2 flex-1 gap-5">
+        <div className="grid grid-cols-2 grid-rows-2 flex-1 gap-5">
           <CallDetailAgents />
           <CallDetailWaiting />
           <CallDetailTalking />

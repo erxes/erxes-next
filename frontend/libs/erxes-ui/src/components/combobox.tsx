@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from './button';
 import { cn } from '../lib/utils';
 import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
-import { TextOverflowTooltip } from './text-overflow';
 import { Popover } from './popover';
 import { Command } from './command';
 import { useInView } from 'react-intersection-observer';
@@ -73,9 +72,10 @@ export const ComboboxTriggerIcon = React.forwardRef<
 
 export const ComboboxValue = React.forwardRef<
   HTMLSpanElement,
-  React.ComponentPropsWithoutRef<typeof TextOverflowTooltip> & {
+  React.HTMLAttributes<HTMLSpanElement> & {
     placeholder?: string;
     loading?: boolean;
+    value?: string | JSX.Element;
   }
 >(({ value, className, placeholder, loading, ...props }, ref) => {
   if (loading) {
@@ -83,16 +83,9 @@ export const ComboboxValue = React.forwardRef<
   }
 
   return (
-    <TextOverflowTooltip
-      ref={ref}
-      {...props}
-      value={value || placeholder || ''}
-      className={cn(
-        'text-left',
-        !value && 'text-accent-foreground/70',
-        className,
-      )}
-    />
+    <span ref={ref} {...props} className={cn('truncate', className)}>
+      {value || placeholder || ''}
+    </span>
   );
 });
 

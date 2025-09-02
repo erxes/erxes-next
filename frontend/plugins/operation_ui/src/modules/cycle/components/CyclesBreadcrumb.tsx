@@ -1,6 +1,5 @@
-import React from 'react';
 import { Breadcrumb, Button } from 'erxes-ui';
-import { IconCalendarRepeat } from '@tabler/icons-react';
+import { IconRestore } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 export const CyclesBreadcrumb = ({ link }: { link: string }) => {
@@ -8,7 +7,7 @@ export const CyclesBreadcrumb = ({ link }: { link: string }) => {
     <Breadcrumb.Item>
       <Button variant="ghost" asChild>
         <Link to={link}>
-          <IconCalendarRepeat />
+          <IconRestore />
           Cycles
         </Link>
       </Button>
