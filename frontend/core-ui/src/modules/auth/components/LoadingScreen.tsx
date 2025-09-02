@@ -57,7 +57,7 @@ export const TextAnimation = () => {
 
   return (
     <div className="relative inline-block whitespace-nowrap text-center">
-      <p className="opacity-0 h-0">Welcome back!</p>
+      <p className="opacity-0 h-0">Welcome</p>
 
       <AnimatePresence mode="popLayout">
         <motion.div
@@ -69,7 +69,7 @@ export const TextAnimation = () => {
           key={currentIndex}
         >
           {currentIndex === 0 && (
-            <p className="text-primary text-sm">Welcome back!</p>
+            <p className="text-primary text-sm">Welcome</p>
           )}
 
           {currentIndex === 1 && (

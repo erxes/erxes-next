@@ -119,7 +119,11 @@ const SelectTeamMemberContent = ({
   );
 };
 
-const SelectAssigneeFilterView = () => {
+const SelectAssigneeFilterView = ({
+  teamIds,
+}: {
+  teamIds?: string[] | string;
+}) => {
   const [assignee, setAssignee] = useQueryState<string>('assignee');
   const { resetFilterState } = useFilterContext();
   return (
@@ -132,7 +136,7 @@ const SelectAssigneeFilterView = () => {
           resetFilterState();
         }}
       >
-        <SelectTeamMemberContent exclude={false} />
+        <SelectTeamMemberContent exclude={false} teamIds={teamIds} />
       </SelectAssigneeProvider>
     </Filter.View>
   );
