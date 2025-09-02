@@ -230,7 +230,7 @@ const SelectTeamFilterView = () => {
 const SelectTeamFormItem = ({
   value,
   onValueChange,
-  mode = 'single',
+  mode = 'multiple',
 }: {
   value: string | string[];
   onValueChange: (value: string | string[]) => void;

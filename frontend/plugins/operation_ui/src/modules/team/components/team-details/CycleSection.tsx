@@ -14,7 +14,7 @@ export const CycleSection = ({ team }: { team: ITeam }) => {
         cycleEnabled: value,
       },
       onCompleted: () => {
-        toast({ title: 'Succes!' });
+        toast({ title: 'Success!' });
       },
       onError: (error: ApolloError) =>
         toast({

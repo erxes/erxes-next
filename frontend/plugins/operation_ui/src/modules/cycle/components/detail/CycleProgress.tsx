@@ -27,11 +27,23 @@ export const ProgressDot = ({
   );
 };
 
-export const CycleProgress = ({ cycleId }: { cycleId: string }) => {
+export const CycleProgress = ({
+  cycleId,
+  isCompleted,
+  statistics,
+}: {
+  cycleId: string;
+  isCompleted: boolean;
+  statistics: any;
+}) => {
   const { cycleProgress } = useGetCycleProgress({
     variables: { _id: cycleId },
-    skip: !cycleId,
+    skip: !cycleId || isCompleted,
   });
+
+  console.log(statistics);
+
+  const progress = cycleProgress || statistics.progress;
 
   return (
     <div className="flex justify-between w-full my-4">
@@ -40,7 +52,7 @@ export const CycleProgress = ({ cycleId }: { cycleId: string }) => {
           <ProgressDot status="total" />
           <p className="text-xs font-medium text-muted-foreground">Total:</p>
         </span>
-        <p className="text-xs font-medium">{cycleProgress?.totalScope || 0}</p>
+        <p className="text-xs font-medium">{progress?.totalScope || 0}</p>
       </span>
       <span className="flex flex-col items-center gap-1">
         <span className="flex items-center gap-2">
@@ -48,7 +60,7 @@ export const CycleProgress = ({ cycleId }: { cycleId: string }) => {
           <p className="text-xs font-medium text-muted-foreground">Started:</p>
         </span>
         <p className="text-xs font-medium">
-          {cycleProgress?.totalStartedScope || 0}
+          {progress?.totalStartedScope || 0}
         </p>
       </span>
       <span className="flex flex-col items-center gap-1">
@@ -59,7 +71,7 @@ export const CycleProgress = ({ cycleId }: { cycleId: string }) => {
           </p>
         </span>
         <p className="text-xs font-medium">
-          {cycleProgress?.totalCompletedScope || 0}
+          {progress?.totalCompletedScope || 0}
         </p>
       </span>
     </div>

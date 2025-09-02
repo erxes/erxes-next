@@ -1,15 +1,21 @@
 import { STATUS_TYPES } from '@/status/constants/types';
 import { IContext } from '~/connectionResolvers';
-import { ICycleDocument } from '~/modules/cycle/types';
+import { ICycleDocument } from '@/cycle/types';
 
-export default {
+export const Cycle = {
   async donePercent(
     cycle: ICycleDocument,
     _args: undefined,
     { models }: IContext,
   ) {
     if (cycle.isCompleted || !cycle.isActive) {
-      return cycle.donePercent;
+      const progress = (cycle.statistics as any)?.progress || {};
+
+      const totalScope = progress.totalScope || 0;
+      const totalCompletedScope = progress.totalCompletedScope || 0;
+      const donePercent = Math.round((totalCompletedScope / totalScope) * 100);
+
+      return donePercent || 0;
     }
 
     const result = await models.Task.aggregate([
@@ -42,6 +48,6 @@ export default {
       return 0;
     }
 
-    return result[0].doneTasks / result[0].totalTasks;
+    return Math.round((result[0].doneTasks / result[0].totalTasks) * 100);
   },
 };

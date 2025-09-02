@@ -35,13 +35,17 @@ export const ActivityList = ({
                   </div>
                   <div className="inline-flex gap-1 text-sm leading-6 flex-wrap">
                     <div className="ml-1">
-                      <MembersInline.Provider
-                        memberIds={
-                          activity.createdBy ? [activity.createdBy] : []
-                        }
-                      >
-                        <MembersInline.Title />
-                      </MembersInline.Provider>
+                      {activity.createdBy && activity.createdBy === 'system' ? (
+                        <div className="text-accent-foreground">System</div>
+                      ) : (
+                        <MembersInline.Provider
+                          memberIds={
+                            activity.createdBy ? [activity.createdBy] : []
+                          }
+                        >
+                          <MembersInline.Title />
+                        </MembersInline.Provider>
+                      )}
                     </div>
                     <ActivityItem activity={activity} />
                     <RelativeDateDisplay
@@ -64,7 +68,7 @@ export const ActivityList = ({
                   />
                 )}
               </div>
-            )
+            ),
           )}
         </div>
       </ActivityListProvider>

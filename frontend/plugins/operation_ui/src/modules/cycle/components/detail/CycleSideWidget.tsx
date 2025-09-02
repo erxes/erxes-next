@@ -12,6 +12,7 @@ import { CycleProgress } from '@/cycle/components/detail/CycleProgress';
 import { CycleProgressByMember } from '@/cycle/components/detail/CycleProgressByMember';
 import { CycleProgressByProject } from '@/cycle/components/detail/CycleProgressByProject';
 import { useState } from 'react';
+import { useGetCycle } from '@/cycle/hooks/useGetCycle';
 
 export enum CycleSideWidgetTabsEnum {
   Assignees = 'assignees',
@@ -19,6 +20,11 @@ export enum CycleSideWidgetTabsEnum {
 }
 
 export const CycleSideWidget = ({ cycleId }: { cycleId: string }) => {
+  const { cycleDetail } = useGetCycle(cycleId);
+
+  const statistics = cycleDetail?.statistics || {};
+  const isCompleted = cycleDetail?.isCompleted || false;
+
   return (
     <SideMenu defaultValue="cycle">
       <SideMenu.Content value="cycle">
@@ -37,17 +43,33 @@ export const CycleSideWidget = ({ cycleId }: { cycleId: string }) => {
                 </Button>
               </Collapsible.Trigger>
               <Collapsible.Content>
-                <CycleProgress cycleId={cycleId} />
-                <CycleProgressChart cycleId={cycleId} />
+                <CycleProgress
+                  cycleId={cycleId}
+                  isCompleted={isCompleted}
+                  statistics={statistics}
+                />
+                <CycleProgressChart
+                  cycleId={cycleId}
+                  isCompleted={isCompleted}
+                  statistics={statistics}
+                />
               </Collapsible.Content>
             </Collapsible>
           </div>
           <CycleSideWidgetTabs>
             <Tabs.Content value={CycleSideWidgetTabsEnum.Assignees}>
-              <CycleProgressByMember cycleId={cycleId} />
+              <CycleProgressByMember
+                cycleId={cycleId}
+                isCompleted={isCompleted}
+                statistics={statistics}
+              />
             </Tabs.Content>
             <Tabs.Content value={CycleSideWidgetTabsEnum.Projects}>
-              <CycleProgressByProject cycleId={cycleId} />
+              <CycleProgressByProject
+                cycleId={cycleId}
+                isCompleted={isCompleted}
+                statistics={statistics}
+              />
             </Tabs.Content>
           </CycleSideWidgetTabs>
         </>

@@ -5,13 +5,25 @@ import { ProjectInline } from '@/project/components/ProjectInline';
 import { Button, ChartConfig, ChartContainer, HoverCard } from 'erxes-ui';
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
 
-export const CycleProgressByProject = ({ cycleId }: { cycleId: string }) => {
+export const CycleProgressByProject = ({
+  cycleId,
+  isCompleted,
+  statistics,
+}: {
+  cycleId: string;
+  isCompleted: boolean;
+  statistics: any;
+}) => {
   const { cycleProgressByProject } = useGetCycleProgressByProject({
     variables: { _id: cycleId },
-    skip: !cycleId,
+    skip: !cycleId || isCompleted,
   });
 
-  if (!cycleProgressByProject) {
+  const progress =
+    cycleProgressByProject ||
+    (statistics.progressByProject as ICycleProgressByProject[]);
+
+  if (!progress) {
     return null;
   }
 
@@ -25,7 +37,7 @@ export const CycleProgressByProject = ({ cycleId }: { cycleId: string }) => {
 
   return (
     <div>
-      {cycleProgressByProject?.map((item) => (
+      {progress?.map((item) => (
         <HoverCard openDelay={150} closeDelay={150} key={item.projectId}>
           <HoverCard.Trigger asChild>
             <Button

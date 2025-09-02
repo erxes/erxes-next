@@ -6,11 +6,22 @@ import { useGetCycleProgressByMember } from '@/cycle/hooks/useGetCycleProgressBy
 import { IProjectProgressByMember } from '@/project/types';
 import { ProgressDot } from '@/cycle/components/detail/CycleProgress';
 
-export const CycleProgressByMember = ({ cycleId }: { cycleId: string }) => {
+export const CycleProgressByMember = ({
+  cycleId,
+  isCompleted,
+  statistics,
+}: {
+  cycleId: string;
+  isCompleted: boolean;
+  statistics: any;
+}) => {
   const { cycleProgressByMember } = useGetCycleProgressByMember({
     variables: { _id: cycleId },
-    skip: !cycleId,
+    skip: !cycleId || isCompleted,
   });
+  const progress =
+    cycleProgressByMember ||
+    (statistics.progressByMember as IProjectProgressByMember[]);
 
   const getProgress = (item: IProjectProgressByMember) => {
     return Math.round(
@@ -22,7 +33,7 @@ export const CycleProgressByMember = ({ cycleId }: { cycleId: string }) => {
 
   return (
     <div className="space-y-1">
-      {cycleProgressByMember?.map((item) => (
+      {progress?.map((item) => (
         <HoverCard openDelay={150} closeDelay={150} key={item.assigneeId}>
           <HoverCard.Trigger asChild>
             <Button
