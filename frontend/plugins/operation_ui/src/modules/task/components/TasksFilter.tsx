@@ -70,7 +70,7 @@ const TasksFilterPopover = () => {
               </Command.List>
             </Command>
           </Filter.View>
-          <SelectAssigneeTask.FilterView />
+          <SelectAssigneeTask.FilterView teamIds={[teamId || '']} />
           {!teamId && <SelectTeam.FilterView />}
           <SelectPriority.FilterView />
           <SelectStatusTask.FilterView teamId={teamId} />
