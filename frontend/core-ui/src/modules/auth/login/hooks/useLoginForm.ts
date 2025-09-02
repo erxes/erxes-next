@@ -7,8 +7,8 @@ import { z } from 'zod';
 
 export const authValidationSchema = z
   .object({
-    email: z.string().max(320),
-    password: z.string(),
+    email: z.string().max(320).min(1, 'Email or username is required'),
+    password: z.string().min(1, 'Password is required'),
   })
   .required();
 
@@ -16,11 +16,6 @@ export type FormType = z.infer<typeof authValidationSchema>;
 
 export const useSignInUpForm = () => {
   const form = useForm<FormType>({
-    mode: 'onBlur',
-    defaultValues: {
-      email: '',
-      password: '',
-    },
     resolver: zodResolver(authValidationSchema),
   });
 
@@ -43,7 +38,6 @@ export type ResetPasswordFormType = z.infer<
 
 export const useResetPasswordForm = () => {
   const form = useForm<ResetPasswordFormType>({
-    mode: 'onBlur',
     defaultValues: {
       password: '',
       confirmPassword: '',

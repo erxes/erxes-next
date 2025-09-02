@@ -13,7 +13,7 @@ interface CompanyPhonesProps {
   primaryPhone: string;
   phones: string[];
   phoneValidationStatus?: ValidationStatus;
-  scope: string;
+  scope?: string;
   Trigger: React.ComponentType<{ children: React.ReactNode }>;
 }
 

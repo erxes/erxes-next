@@ -20,7 +20,7 @@ export const CompanyEmails = ({
   _id: string;
   emails: string[];
   emailValidationStatus?: ValidationStatus;
-  scope: string;
+  scope?: string;
   Trigger: React.ComponentType<{ children: React.ReactNode }>;
 }) => {
   const { companiesEdit } = useCompaniesEdit();

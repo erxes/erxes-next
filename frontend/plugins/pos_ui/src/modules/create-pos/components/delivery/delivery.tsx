@@ -1,4 +1,3 @@
-'use client';
 import { Form, Select } from 'erxes-ui';
 import { SelectMember, SelectProduct } from 'ui-modules';
 import { useForm, UseFormReturn } from 'react-hook-form';
@@ -240,9 +239,15 @@ const DeliveryConfigForm = forwardRef<
                           <Select.Value placeholder="Choose pipeline" />
                         </Select.Trigger>
                         <Select.Content>
-                          <Select.Item value="pipeline1">Pipeline 1</Select.Item>
-                          <Select.Item value="pipeline2">Pipeline 2</Select.Item>
-                          <Select.Item value="pipeline3">Pipeline 3</Select.Item>
+                          <Select.Item value="pipeline1">
+                            Pipeline 1
+                          </Select.Item>
+                          <Select.Item value="pipeline2">
+                            Pipeline 2
+                          </Select.Item>
+                          <Select.Item value="pipeline3">
+                            Pipeline 3
+                          </Select.Item>
                         </Select.Content>
                       </Select>
                     </Form.Control>

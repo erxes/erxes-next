@@ -2,7 +2,7 @@ import { REACT_APP_API_URL, REACT_APP_IMAGE_CDN_URL } from 'erxes-ui/utils';
 import { isValidURL } from 'erxes-ui/utils/urlParser';
 
 export const readImage = (
-  value: string,
+  value?: string,
   width?: number,
   inline?: boolean,
   format?: string,
@@ -14,7 +14,7 @@ export const readImage = (
     (typeof value === 'string' && value.includes('http')) ||
     (typeof value === 'string' && value.startsWith('/'))
   ) {
-    return value;
+    return value || '';
   }
 
   if (REACT_APP_IMAGE_CDN_URL) {

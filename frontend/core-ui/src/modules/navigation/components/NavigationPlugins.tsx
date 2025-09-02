@@ -31,6 +31,10 @@ export const NavigationPlugins = () => {
   const navigationGroups = usePluginsNavigationGroups();
   const [activePlugin, setActivePlugin] = useAtom(activePluginState);
 
+  if (Object.entries(navigationGroups).length === 0) {
+    return null;
+  }
+
   if (activePlugin && navigationGroups[activePlugin]) {
     return (
       <>

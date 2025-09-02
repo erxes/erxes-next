@@ -9,7 +9,12 @@ import {
   SetAtom,
 } from '@/notification/my-inbox/types/notifications';
 import { IconLoader, IconMailboxOff } from '@tabler/icons-react';
-import { Button, EnumCursorDirection, isUndefinedOrNull } from 'erxes-ui';
+import {
+  Button,
+  EnumCursorDirection,
+  isUndefinedOrNull,
+  Separator,
+} from 'erxes-ui';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   Dispatch,
@@ -63,7 +68,6 @@ export const Notifications = () => {
       });
       setNotificationsContainerScroll(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationsContainerScroll]);
 
   useEffect(() => {
@@ -81,6 +85,7 @@ export const Notifications = () => {
       <div className="flex flex-col h-full overflow-hidden w-full">
         <NotificationSidebarToolbar />
         <NotificationsCommandBar refetch={refetch} />
+        <Separator />
         <NotificationList
           inViewRef={ref}
           containerRef={containerRef}
@@ -125,11 +130,13 @@ const NotificationList = ({
 }) => {
   if (totalCount === 0) {
     return (
-      <div className="h-full w-full flex flex-col gap-4 justify-center items-center text-muted-foreground">
-        <div className="border border-dashed rounded p-6 bg-sidebar rounded-2xl">
-          <IconMailboxOff size={36} className="text-accent-foreground" />
+      <div className="h-full w-full flex flex-col gap-4 justify-center items-center text-accent-foreground">
+        <div className="border border-dashed p-6 bg-sidebar rounded-xl">
+          <IconMailboxOff />
         </div>
-        <span>No notifications to display at the moment.</span>
+        <span className="text-sm">
+          No notifications to display at the moment.
+        </span>
       </div>
     );
   }

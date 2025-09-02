@@ -1,17 +1,17 @@
 import { Combobox, Label, Switch, Textarea } from 'erxes-ui';
 import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
-import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
+import { TextFieldCustomer } from '@/contacts/customers/customer-detail/components/TextFieldCustomer';
 import {
   CustomerEmails,
   CustomerOwner,
   useCustomerEdit,
   CustomerPhones,
 } from 'ui-modules';
-import { useCustomerDetailWithParams } from '../hooks/useCustomerDetailWithParams';
-import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { useCustomerDetailWithQuery } from '../../hooks/useCustomerDetailWithQuery';
+import { DataListItem } from '@/contacts/components/ContactsDetail';
 
-export const CustomerGeneral = () => {
-  const { customerDetail } = useCustomerDetailWithParams();
+export const CustomerDetailFields = () => {
+  const { customerDetail } = useCustomerDetailWithQuery();
   const { customerEdit } = useCustomerEdit();
   if (!customerDetail) return;
 
@@ -36,8 +36,12 @@ export const CustomerGeneral = () => {
       <div className="py-8 space-y-6">
         <CustomerDetailSelectTag tagIds={tagIds || []} customerId={_id} />
         <div className="px-8 space-y-2">
-          <Label>Owner</Label>
-          <CustomerOwner _id={_id} ownerId={ownerId} />
+          <Label asChild>
+            <legend>Owner</legend>
+          </Label>
+          <div className="inline-flex">
+            <CustomerOwner _id={_id} ownerId={ownerId} />
+          </div>
         </div>
         <div className="px-8 font-medium flex gap-5 flex-col">
           <div className="grid grid-cols-2 gap-5 col-span-5">
@@ -56,7 +60,6 @@ export const CustomerGeneral = () => {
                 emails={emails || []}
                 emailValidationStatus={emailValidationStatus || 'valid'}
                 Trigger={(props) => <Combobox.TriggerBase {...props} />}
-                scope={ContactsHotKeyScope.CustomersPage}
               />
             </DataListItem>
             <DataListItem label="phones">
@@ -65,7 +68,6 @@ export const CustomerGeneral = () => {
                 primaryPhone={primaryPhone || ''}
                 phones={phones || []}
                 phoneValidationStatus={phoneValidationStatus || 'valid'}
-                scope={ContactsHotKeyScope.CustomersPage}
                 Trigger={Combobox.TriggerBase}
               />
             </DataListItem>
@@ -107,22 +109,5 @@ export const CustomerGeneral = () => {
         </div>
       </div>
     </>
-  );
-};
-
-const DataListItem = ({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <fieldset className="space-y-2">
-      <Label asChild>
-        <legend>{label}</legend>
-      </Label>
-      {children}
-    </fieldset>
   );
 };

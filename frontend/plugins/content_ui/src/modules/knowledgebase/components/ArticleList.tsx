@@ -1,5 +1,3 @@
-'use client';
-
 import { Button, DropdownMenu, Spinner } from 'erxes-ui';
 import { IconDotsVertical } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
