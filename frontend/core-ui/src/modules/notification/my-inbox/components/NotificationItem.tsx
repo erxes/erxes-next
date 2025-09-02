@@ -18,7 +18,6 @@ import {
   Badge,
   Checkbox,
   cn,
-  getPluginAssetsUrl,
   RelativeDateDisplay,
   Separator,
   Tooltip,
