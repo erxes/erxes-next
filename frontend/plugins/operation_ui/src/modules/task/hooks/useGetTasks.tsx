@@ -14,12 +14,12 @@ import { useParams } from 'react-router-dom';
 import { currentUserState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 
 const TASKS_PER_PAGE = 30;
 
 interface ITaskChanged {
-  operationTaskChanged: {
+  operationTaskListChanged: {
     type: string;
     task: ITask;
   };
@@ -88,12 +88,12 @@ export const useTasks = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<ITaskChanged>({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: variables },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, task } = subscriptionData.data.operationTaskChanged;
+        const { type, task } = subscriptionData.data.operationTaskListChanged;
         const currentList = prev.getTasks.list;
 
         let updatedList = currentList;

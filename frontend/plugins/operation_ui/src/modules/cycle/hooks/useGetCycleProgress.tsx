@@ -1,5 +1,5 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 import { IProjectProgress } from '@/project/types';
 import { GET_CYCLE_PROGRESS } from '@/cycle/graphql/queries/getCycleProgress';
 import { useEffect } from 'react';
@@ -22,7 +22,7 @@ export const useGetCycleProgress = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: { cycleId: options.variables?._id } },
       updateQuery: () => {
         refetch();

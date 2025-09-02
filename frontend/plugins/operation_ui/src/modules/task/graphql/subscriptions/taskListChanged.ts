@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const TASK_CHANGED = gql`
-  subscription operationTaskChanged($_id: String!) {
-    operationTaskChanged(_id: $_id) {
+export const TASK_LIST_CHANGED = gql`
+  subscription operationTaskListChanged($filter: ITaskFilter) {
+    operationTaskListChanged(filter: $filter) {
       type
       task {
         _id
