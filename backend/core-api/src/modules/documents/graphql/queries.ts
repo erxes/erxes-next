@@ -149,6 +149,22 @@ export const documentQueries = {
 
     return models.Documents.find(filter).countDocuments();
   },
+
+  documentsProcess: async (
+    _parent: undefined,
+    {
+      _id,
+      replacerIds,
+      config,
+    }: { _id: string; replacerIds: string[]; config },
+    { models }: IContext,
+  ) => {
+    return models.Documents.processDocument({
+      _id,
+      replacerIds,
+      config,
+    });
+  },
 };
 
 checkPermission(documentQueries, 'documents', 'showDocuments');

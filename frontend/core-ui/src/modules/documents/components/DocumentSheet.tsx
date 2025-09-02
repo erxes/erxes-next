@@ -8,11 +8,9 @@ export const DocumentSheet = () => {
   const [documentId, setDocumentId] = useQueryState('documentId');
   const [contentType] = useQueryState('contentType');
 
-  const { reset: resetForm } = useFormContext();
+  const { reset: resetForm, handleSubmit } = useFormContext<FormType>();
 
   const { documentSave } = useDocument();
-
-  const { handleSubmit } = useFormContext<FormType>();
 
   const submitHandler: SubmitHandler<FormType> = useCallback(async () => {
     documentSave();

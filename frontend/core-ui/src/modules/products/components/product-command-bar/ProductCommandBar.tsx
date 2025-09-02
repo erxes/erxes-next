@@ -1,6 +1,7 @@
 import { IconPlus } from '@tabler/icons-react';
 
-import { Button, CommandBar, RecordTable, Separator } from 'erxes-ui';  
+import { Button, CommandBar, RecordTable, Separator } from 'erxes-ui';
+import { PrintDocument } from 'ui-modules';
 import { ProductsDelete } from './delete/productDelete';
 
 export const ProductCommandBar = () => {
@@ -23,6 +24,13 @@ export const ProductCommandBar = () => {
           <IconPlus />
           Create
         </Button>
+
+        <PrintDocument
+          items={table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original)}
+          contentType="core:product"
+        />
       </CommandBar.Bar>
     </CommandBar>
   );

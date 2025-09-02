@@ -1,10 +1,14 @@
+import { FormType } from '@/documents/hooks/useDocumentForm';
 import { ScrollArea, Sidebar, useQueryState } from 'erxes-ui';
+import { useFormContext } from 'react-hook-form';
 import { DOCUMENTS_TYPES_SET } from '../constants';
 import { useDocumentsTypes } from '../hooks/useDocumentsTypes';
 import { IDocumentType } from '../types';
 
 export const DocumentsTypes = () => {
   const [contentType, setQuery] = useQueryState('contentType');
+
+  const { setValue } = useFormContext<FormType>();
 
   const { documentsTypes } = useDocumentsTypes();
 
@@ -24,6 +28,7 @@ export const DocumentsTypes = () => {
                       isActive={module === contentType}
                       onClick={() => {
                         setQuery(module);
+                        setValue('contentType', module);
                       }}
                     >
                       <Icon />
