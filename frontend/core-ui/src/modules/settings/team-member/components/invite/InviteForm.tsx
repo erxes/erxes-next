@@ -83,7 +83,7 @@ export function InviteForm({
         <div className="mt-3 w-full flex gap-3 justify-end">
           <Button type="submit" disabled={loading} className="text-sm">
             {(loading && (
-              <Spinner size={'small'} className="stroke-white" />
+              <Spinner size={'sm'} className="stroke-white" />
             )) || <IconSend size={16} />}
             Send invites
           </Button>
