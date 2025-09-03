@@ -288,7 +288,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
             />
           </div>
           <Separator className="my-4" />
-          <div className="h-[60vh] overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}

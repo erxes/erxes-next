@@ -56,7 +56,7 @@ export const SelectTriggerOperation = ({
   if (variant === SelectTriggerVariant.FORM) {
     return (
       <Form.Control>
-        <Combobox.TriggerBase className="w-fit h-7 font-medium">
+        <Combobox.TriggerBase className="w-fit h-7 font-medium max-w-64">
           {children}
         </Combobox.TriggerBase>
       </Form.Control>
