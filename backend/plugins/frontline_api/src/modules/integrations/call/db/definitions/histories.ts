@@ -10,7 +10,7 @@ export const callHistorySchema = new Schema({
   callType: field({
     type: String,
     label: 'call type',
-    enum: ['incoming', 'outgoing'],
+    // enum: ['incoming', 'outgoing'],
   }),
   callStatus: field({
     type: String,

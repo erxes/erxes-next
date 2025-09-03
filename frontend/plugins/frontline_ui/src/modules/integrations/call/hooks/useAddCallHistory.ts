@@ -11,7 +11,7 @@ import { callConfigAtom } from '@/integrations/call/states/sipStates';
 export const useAddCallHistory = () => {
   const [addHistoryMutation, { loading }] = useMutation(CALL_HISTORY_ADD);
 
-  const setHistoryId = useSetAtom(historyIdAtom);
+  const [hist, setHistoryId] = useAtom(historyIdAtom);
   const [config] = useAtom(callConfigAtom);
   const setCurrentCallConversationId = useSetAtom(
     currentCallConversationIdAtom,

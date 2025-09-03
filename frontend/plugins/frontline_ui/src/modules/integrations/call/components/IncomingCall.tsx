@@ -14,7 +14,7 @@ import { getPluginAssetsUrl } from 'erxes-ui';
 export const IncomingCallAudio = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const sip = useAtomValue(sipStateAtom);
-
+  console.log(sip, 'sip...');
   useEffect(() => {
     if (
       sip?.callStatus === CallStatusEnum.STARTING &&
