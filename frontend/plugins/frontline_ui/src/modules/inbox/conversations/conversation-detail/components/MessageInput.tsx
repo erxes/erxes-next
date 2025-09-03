@@ -24,11 +24,15 @@ import { Block } from '@blocknote/core';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import { useAtom, useAtomValue } from 'jotai';
 import { messageExtraInfoState } from '../states/messageExtraInfoState';
-import { isInternalState } from '@/inbox/conversations/conversation-detail/states/isInternalState';
+import {
+  isInternalState,
+  onlyInternalState,
+} from '@/inbox/conversations/conversation-detail/states/isInternalState';
 
 export const MessageInput = () => {
   const [conversationId] = useQueryState('conversationId');
   const [isInternalNote, setIsInternalNote] = useAtom(isInternalState);
+  const onlyInternal = useAtomValue(onlyInternalState);
   const [content, setContent] = useState<Block[]>();
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const messageExtraInfo = useAtomValue(messageExtraInfoState);
@@ -105,7 +109,12 @@ export const MessageInput = () => {
             pressed={isInternalNote}
             size="lg"
             variant="outline"
-            onPressedChange={() => setIsInternalNote(!isInternalNote)}
+            onPressedChange={() => {
+              if (onlyInternal) {
+                return;
+              }
+              setIsInternalNote(!isInternalNote);
+            }}
           >
             Internal Note
           </Toggle>
