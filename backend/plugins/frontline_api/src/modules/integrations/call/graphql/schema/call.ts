@@ -145,6 +145,7 @@ export const queries = `
   callQueueMemberList(integrationId: String!, queue: String!): JSON
   callTodayStatistics(queue: String!): JSON
   callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
+  callHistoryDetail(_id: String, conversationId: String): CallHistory
   `;
 
 //old mutations

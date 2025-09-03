@@ -430,5 +430,18 @@ const callQueries = {
       return messages.reverse();
     }
   },
+  async callHistoryDetail(
+    _root,
+    { _id, conversationId },
+    { models }: IContext,
+  ) {
+    if (_id) {
+      return await models.CallHistory.findOne({ _id });
+    } else if (conversationId) {
+      return await models.CallHistory.findOne({ conversationId });
+    } else {
+      throw new Error('Either _id or conversationId is required');
+    }
+  },
 };
 export default callQueries;
