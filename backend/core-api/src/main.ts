@@ -49,20 +49,20 @@ const allowedOrigins = [
   ...(process.env.ALLOWED_ORIGINS || '').split(',').map((c) => c && RegExp(c)),
 ];
 
-// const corsOptions = {
-//   credentials: true,
-//   origin: (origin, callback) => {
-//     if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
-//       callback(null, true);
-//     } else {
-//       console.error('Origin not allowed:', origin);
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+      callback(null, true);
+    } else {
+      console.error('Origin not allowed:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
-// app.use(cors(corsOptions));
-// app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(router);
 
 const fileLimiter = rateLimit({
