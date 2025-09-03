@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
     type Cycle {
         _id: String
@@ -13,6 +15,12 @@ export const types = `
         unFinishedTasks: [String]
     }
 
+    type CycleListResponse {
+        list: [Cycle],
+        pageInfo: PageInfo
+        totalCount: Int,
+    }
+
     input CycleInput {
         _id: String
         name: String
@@ -24,8 +32,12 @@ export const types = `
 `;
 export const queries = `
     getCycle(_id: String): Cycle
-    getCycles(teamId: String): [Cycle]
-    getCyclesActive(teamId: String): [Cycle]
+    getCycles(teamId: String, ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
+    getCyclesActive(teamId: String,taskId: String, ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
+    getCycleProgress(_id: String!): JSON
+    getCycleProgressChart(_id: String!): JSON
+    getCycleProgressByMember(_id: String!): JSON
+    getCycleProgressByProject(_id: String!): JSON
 `;
 
 export const mutations = `

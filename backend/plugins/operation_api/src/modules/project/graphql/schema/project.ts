@@ -34,6 +34,8 @@ input IProjectFilter {
     startDate: Date
     targetDate: Date
     userId: String
+    active: Boolean
+    taskId: String
     ${GQL_CURSOR_PARAM_DEFS}
 }
 

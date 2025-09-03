@@ -2,6 +2,13 @@ import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { ICycle, ICycleDocument } from '@/cycle/types';
 import { cycleSchema } from '@/cycle/db/definitions/cycle';
+import { isBefore, isSameDay, startOfDay } from 'date-fns';
+import {
+  getCycleProgressChart,
+  getCyclesProgress,
+  getCycleProgressByMember,
+  getCycleProgressByProject,
+} from '@/cycle/utils';
 
 export interface ICycleModel extends Model<ICycleDocument> {
   getCycle(_id: string): Promise<ICycleDocument>;
@@ -9,6 +16,7 @@ export interface ICycleModel extends Model<ICycleDocument> {
   createCycle({ doc }: { doc: ICycle }): Promise<ICycleDocument>;
   updateCycle(doc: ICycleDocument): Promise<ICycleDocument>;
   removeCycle({ _id }: { _id: string }): Promise<{ ok: number }>;
+  endCycle(_id: string): Promise<ICycleDocument>;
 }
 
 export const loadCycleClass = (models: IModels) => {
@@ -40,6 +48,7 @@ export const loadCycleClass = (models: IModels) => {
       if (startDate > endDate) {
         throw new Error('Start date must be before end date');
       }
+
       const overlappingCycle = await models.Cycle.findOne({
         teamId: doc.teamId,
         $or: [
@@ -51,13 +60,24 @@ export const loadCycleClass = (models: IModels) => {
       });
 
       if (overlappingCycle) {
-        throw new Error('New cycle overlaps with an existing cycle');
+        throw new Error('New cycle with an existing cycle');
+      }
+
+      const today = startOfDay(new Date());
+      const start = startOfDay(doc.startDate);
+
+      if (isBefore(start, today)) {
+        throw new Error('New cycle start date must be in the future');
       }
 
       const [result] = await models.Cycle.aggregate([
         { $match: { teamId: doc.teamId } },
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
       ]);
+
+      if (isSameDay(doc.startDate, new Date())) {
+        doc.isActive = true;
+      }
 
       const nextNumber = (result?.maxNumber || 0) + 1;
       doc.number = nextNumber;
@@ -74,12 +94,12 @@ export const loadCycleClass = (models: IModels) => {
       }
 
       const overlappingCycle = await models.Cycle.findOne({
-        teamId: doc.teamId,
-        _id: { $ne: doc._id },
+        teamId: cycle?.teamId,
+        _id: { $ne: cycle?._id },
         $or: [
           {
-            startDate: { $lte: doc.endDate },
-            endDate: { $gte: doc.startDate },
+            startDate: { $lte: doc.endDate || cycle?.endDate },
+            endDate: { $gte: doc.startDate || cycle?.startDate },
           },
         ],
       });
@@ -95,11 +115,22 @@ export const loadCycleClass = (models: IModels) => {
       );
     }
 
-    public static async endCycle(doc: ICycleDocument) {
-      const { _id, ...rest } = doc;
+    public static async endCycle(_id: string) {
+      const chartData = await getCycleProgressChart(_id, models);
+      const porgress = await getCyclesProgress(_id, models);
+      const progressByMember = await getCycleProgressByMember(_id, models);
+      const progressByProject = await getCycleProgressByProject(_id, models);
+
+      const statistics = {
+        chartData,
+        porgress,
+        progressByMember,
+        progressByProject,
+      };
+
       const endedCycle = await models.Cycle.findOneAndUpdate(
         { _id },
-        { $set: { isCompleted: true, isActive: false } },
+        { $set: { isCompleted: true, isActive: false, statistics } },
         { new: true },
       );
 
@@ -109,7 +140,7 @@ export const loadCycleClass = (models: IModels) => {
 
       let nextCycle = await models.Cycle.findOneAndUpdate(
         {
-          teamId: rest.teamId,
+          teamId: endedCycle.teamId,
           isCompleted: false,
           startDate: { $gte: new Date() },
         },
@@ -125,7 +156,7 @@ export const loadCycleClass = (models: IModels) => {
         const newEndDate = new Date(newStartDate.getTime() + duration);
 
         nextCycle = await models.Cycle.create({
-          teamId: rest.teamId,
+          teamId: endedCycle.teamId,
           startDate: newStartDate,
           endDate: newEndDate,
           isActive: true,

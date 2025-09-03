@@ -1,5 +1,3 @@
-'use client';
-
 import { motion } from 'framer-motion';
 import { Button, Card, PageContainer } from 'erxes-ui';
 import { IconSun, IconKeyboard } from '@tabler/icons-react';

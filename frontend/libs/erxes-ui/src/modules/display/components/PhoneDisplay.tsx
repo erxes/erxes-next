@@ -3,6 +3,7 @@ import { Badge } from 'erxes-ui/components';
 import { IconCircleDashed, IconCircleDashedCheck } from '@tabler/icons-react';
 import { ValidationStatus } from 'erxes-ui/types';
 import { formatPhones } from 'erxes-ui/modules/display/utils/formatPhones';
+import { formatPhoneNumber } from 'erxes-ui/utils/format';
 
 export const PhoneDisplay = ({
   primaryPhone,
@@ -27,7 +28,7 @@ export const PhoneDisplay = ({
                 ) : (
                   <IconCircleDashed className="text-muted-foreground size-4" />
                 ))}
-              {phone.phone}
+              {formatPhoneNumber({ value: phone.phone || '' })}
             </Badge>
           ),
       )}

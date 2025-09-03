@@ -27,7 +27,7 @@ export const IntegrationTypeTag = () => {
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="integrationType">
       <Popover>
         <Popover.Trigger asChild>
           <Filter.BarButton className="rounded-l">
@@ -54,7 +54,6 @@ export const IntegrationTypeTag = () => {
           </Command>
         </Combobox.Content>
       </Popover>
-      <Filter.BarClose filterKey="integrationType" />
     </Filter.BarItem>
   );
 };

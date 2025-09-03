@@ -1,4 +1,3 @@
-'use client';
 import { faker } from '@faker-js/faker';
 import type { DragEndEvent } from './Kanban';
 import {

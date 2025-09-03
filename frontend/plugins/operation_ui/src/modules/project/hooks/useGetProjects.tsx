@@ -1,5 +1,8 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_PROJECTS } from '@/project/graphql/queries/getProjects';
+import {
+  GET_PROJECTS,
+  GET_PROJECTS_INLINE,
+} from '@/project/graphql/queries/getProjects';
 import { IProject } from '@/project/types';
 import {
   useRecordTableCursor,
@@ -15,11 +18,11 @@ import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
-import { PROJECT_CHANGED } from '@/project/graphql/subscriptions/projectChanged';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
+import { PROJECT_LIST_CHANGED } from '@/project/graphql/subscriptions/projectListChanged';
 
 interface IProjectChanged {
-  operationProjectChanged: {
+  operationProjectListChanged: {
     type: string;
     project: IProject;
   };
@@ -87,12 +90,13 @@ export const useProjects = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<IProjectChanged>({
-      document: PROJECT_CHANGED,
+      document: PROJECT_LIST_CHANGED,
       variables: { filter: variables },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, project } = subscriptionData.data.operationProjectChanged;
+        const { type, project } =
+          subscriptionData.data.operationProjectListChanged;
         const currentList = prev.getProjects.list;
 
         let updatedList = currentList;
@@ -144,10 +148,70 @@ export const useProjects = (
   }, [totalCount, setProjectTotalCount]);
 
   const handleFetchMore = ({
-    direction,
+    direction = EnumCursorDirection.FORWARD,
   }: {
-    direction: EnumCursorDirection;
+    direction?: EnumCursorDirection;
   }) => {
+    if (!validateFetchMore({ direction, pageInfo })) {
+      return;
+    }
+    fetchMore({
+      variables: {
+        filter: {
+          ...variables,
+          cursor:
+            direction === EnumCursorDirection.FORWARD
+              ? pageInfo?.endCursor
+              : pageInfo?.startCursor,
+          limit: PROJECTS_PER_PAGE,
+          direction,
+        },
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+
+        return Object.assign({}, prev, {
+          getProjects: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.getProjects,
+            prevResult: prev.getProjects,
+          }),
+        });
+      },
+    });
+  };
+
+  return {
+    loading,
+    projects,
+    handleFetchMore,
+    pageInfo,
+    totalCount,
+  };
+};
+export const useProjectsInline = (
+  options?: QueryHookOptions<
+    ICursorListResponse<{
+      _id: string;
+      name: string;
+    }>
+  >,
+) => {
+  const variables = useProjectsVariables(options?.variables);
+  const { data, loading, fetchMore } = useQuery<
+    ICursorListResponse<{
+      _id: string;
+      name: string;
+    }>
+  >(GET_PROJECTS_INLINE, {
+    ...options,
+    variables: { filter: variables },
+    skip: options?.skip || isUndefinedOrNull(variables.cursor),
+  });
+
+  const handleFetchMore = (
+    direction: EnumCursorDirection = EnumCursorDirection.FORWARD,
+  ) => {
     if (!validateFetchMore({ direction, pageInfo })) {
       return;
     }
@@ -175,6 +239,8 @@ export const useProjects = (
       },
     });
   };
+
+  const { list: projects, pageInfo, totalCount } = data?.getProjects || {};
 
   return {
     loading,

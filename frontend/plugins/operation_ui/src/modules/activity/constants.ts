@@ -9,6 +9,7 @@ export const ACTIVITY_MODULES = {
   ASSIGNEE: 'ASSIGNEE',
   NOTE: 'NOTE',
   ESTIMATE_POINT: 'ESTIMATE_POINT',
+  CYCLE: 'CYCLE',
 };
 
 export const ACTIVITY_ACTIONS = {

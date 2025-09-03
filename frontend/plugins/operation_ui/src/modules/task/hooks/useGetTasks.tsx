@@ -2,27 +2,24 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_TASKS } from '@/task/graphql/queries/getTasks';
 import { ITask } from '@/task/types';
 import {
-  useRecordTableCursor,
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
   ICursorListResponse,
-  useMultiQueryState,
   useToast,
   isUndefinedOrNull,
+  useNonNullMultiQueryState,
 } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
-import { taskTotalCountAtom } from '@/task/states/tasksTotalCount';
 import { currentUserState } from 'ui-modules';
-import { useSetAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 
 const TASKS_PER_PAGE = 30;
 
 interface ITaskChanged {
-  operationTaskChanged: {
+  operationTaskListChanged: {
     type: string;
     task: ITask;
   };
@@ -32,32 +29,29 @@ export const useTasksVariables = (
   variables?: QueryHookOptions<ICursorListResponse<ITask>>['variables'],
 ) => {
   const { teamId } = useParams();
-  const [{ searchValue, assignee, team, priority, statusType, status }] =
-    useMultiQueryState<{
+  const { searchValue, assignee, team, priority, status } =
+    useNonNullMultiQueryState<{
       searchValue: string;
       assignee: string;
       team: string;
       priority: string;
       status: string;
-      statusType: string;
-    }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
+    }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
   const currentUser = useAtomValue(currentUserState);
-  const { cursor } = useRecordTableCursor({
-    sessionKey: TASKS_CURSOR_SESSION_KEY,
-  });
 
   return {
+    cursor: '',
     limit: TASKS_PER_PAGE,
     orderBy: {
-      createdAt: -1,
+      updatedAt: -1,
     },
-    cursor,
-    searchValue: searchValue || undefined,
-    assigneeId: assignee || undefined,
+    direction: 'forward',
+    name: searchValue,
+    assigneeId: assignee,
     teamId: teamId || team,
-    priority: priority || undefined,
-    status: status || undefined,
-    statusType: statusType || undefined,
+    priority: priority,
+    status: teamId ? status : undefined,
+    statusType: teamId ? undefined : status,
     ...variables,
     ...(!variables?.teamId &&
       !variables?.userId &&
@@ -71,7 +65,6 @@ export const useTasksVariables = (
 export const useTasks = (
   options?: QueryHookOptions<ICursorListResponse<ITask>>,
 ) => {
-  const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
   const variables = useTasksVariables(options?.variables);
   const { toast } = useToast();
   const { data, loading, fetchMore, subscribeToMore } = useQuery<
@@ -80,6 +73,7 @@ export const useTasks = (
     ...options,
     variables: { filter: variables },
     skip: options?.skip || isUndefinedOrNull(variables.cursor),
+    fetchPolicy: 'cache-and-network',
     onError: (e) => {
       toast({
         title: 'Error',
@@ -93,12 +87,12 @@ export const useTasks = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<ITaskChanged>({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: variables },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, task } = subscriptionData.data.operationTaskChanged;
+        const { type, task } = subscriptionData.data.operationTaskListChanged;
         const currentList = prev.getTasks.list;
 
         let updatedList = currentList;
@@ -141,13 +135,9 @@ export const useTasks = (
       },
     });
 
-    return () => unsubscribe();
-  }, [subscribeToMore, variables]);
-
-  useEffect(() => {
-    if (isUndefinedOrNull(totalCount)) return;
-    setTaskTotalCount(totalCount);
-  }, [totalCount, setTaskTotalCount]);
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variables]);
 
   const handleFetchMore = ({
     direction,
@@ -158,17 +148,17 @@ export const useTasks = (
       return;
     }
 
-    console.log(pageInfo);
-
     fetchMore({
       variables: {
         filter: {
+          ...variables,
           cursor:
             direction === EnumCursorDirection.FORWARD
               ? pageInfo?.endCursor
               : pageInfo?.startCursor,
           limit: TASKS_PER_PAGE,
-          direction,
+          direction:
+            direction === EnumCursorDirection.FORWARD ? 'forward' : 'backward',
         },
       },
       updateQuery: (prev, { fetchMoreResult }) => {

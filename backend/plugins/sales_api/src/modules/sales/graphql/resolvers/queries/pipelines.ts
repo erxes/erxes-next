@@ -71,9 +71,10 @@ export const pipelineQueries = {
         model: models.Pipelines,
         params: {
           ...params,
-          orderBy: { order: 1, createdAt: -1 },
+          orderBy: { createdAt: -1 },
+          limit: params.limit || 20,
         },
-        query,
+        query: query,
       });
 
     return { list, totalCount, pageInfo };

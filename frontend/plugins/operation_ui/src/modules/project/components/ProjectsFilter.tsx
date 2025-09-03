@@ -1,14 +1,19 @@
-import { IconSearch } from '@tabler/icons-react';
+import {
+  IconAlertSquareRounded,
+  IconProgressCheck,
+  IconSearch,
+  IconUsers,
+} from '@tabler/icons-react';
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
 import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ProjectsTotalCount } from '@/project/components/ProjectsTotalCount';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants';
 import { SelectLead } from '@/project/components/select/SelectLead';
-import { SelectTeam } from '@/project/components/select/SelectTeam';
-import { SelectStatus } from '@/project/components/select/SelectStatus';
+import { SelectStatus } from '@/operation/components/SelectStatus';
 import { useParams } from 'react-router-dom';
-import { SelectPriority } from '@/task/components';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
+import { SelectTeam } from '@/team/components/SelectTeam';
+import { SelectPriority } from '@/operation/components/SelectPriority';
 
 const ProjectsFilterPopover = () => {
   const { teamId } = useParams();
@@ -44,14 +49,25 @@ const ProjectsFilterPopover = () => {
                 </Filter.Item>
                 <Command.Separator className="my-1" />
                 <SelectLead.FilterItem />
-                {!teamId && <SelectTeam.FilterItem />}
-                <SelectPriority.FilterItem />
-                <SelectStatus.FilterItem />
+                {!teamId && (
+                  <Filter.Item value="team">
+                    <IconUsers />
+                    Team
+                  </Filter.Item>
+                )}
+                <Filter.Item value="priority">
+                  <IconAlertSquareRounded />
+                  Priority
+                </Filter.Item>
+                <Filter.Item value="status">
+                  <IconProgressCheck />
+                  Status
+                </Filter.Item>
               </Command.List>
             </Command>
           </Filter.View>
           <SelectLead.FilterView />
-          <SelectTeam.FilterView />
+          {!teamId && <SelectTeam.FilterView />}
           <SelectPriority.FilterView />
           <SelectStatus.FilterView />
         </Combobox.Content>
@@ -81,7 +97,7 @@ export const ProjectsFilter = () => {
     <Filter id="Projects-filter" sessionKey={PROJECTS_CURSOR_SESSION_KEY}>
       <Filter.Bar>
         {name && (
-          <Filter.BarItem>
+          <Filter.BarItem queryKey="name">
             <Filter.BarName>
               <IconSearch />
               Search
@@ -89,13 +105,32 @@ export const ProjectsFilter = () => {
             <Filter.BarButton filterKey="name" inDialog>
               {name}
             </Filter.BarButton>
-            <Filter.BarClose filterKey="name" />
           </Filter.BarItem>
         )}
         <SelectLead.FilterBar />
-        {!teamId && <SelectTeam.FilterBar />}
-        <SelectPriority.FilterBar />
-        <SelectStatus.FilterBar />
+        {!teamId && (
+          <Filter.BarItem queryKey="team">
+            <Filter.BarName>
+              <IconUsers />
+              Team
+            </Filter.BarName>
+            <SelectTeam.FilterBar />
+          </Filter.BarItem>
+        )}
+        <Filter.BarItem queryKey="priority">
+          <Filter.BarName>
+            <IconAlertSquareRounded />
+            Priority
+          </Filter.BarName>
+          <SelectPriority.FilterBar />
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="status">
+          <Filter.BarName>
+            <IconProgressCheck />
+            Status
+          </Filter.BarName>
+          <SelectStatus.FilterBar />
+        </Filter.BarItem>
         <ProjectsFilterPopover />
         <ProjectsTotalCount />
       </Filter.Bar>

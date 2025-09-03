@@ -10,7 +10,7 @@ export const taskSchema = schemaWrapper(
       description: { type: String, label: 'Description' },
       status: { type: String, label: 'Status', required: true },
       teamId: { type: String, label: 'Team ID', required: true },
-      priority: { type: String, label: 'Priority' },
+      priority: { type: Number, label: 'Priority', default: 0 },
       labelIds: { type: [String], label: 'Label IDs' },
       tagIds: { type: [String], label: 'Tag IDs' },
       assigneeId: { type: String, label: 'Assignee' },
@@ -26,6 +26,7 @@ export const taskSchema = schemaWrapper(
         default: new Date(),
       },
       number: { type: Number, label: 'Number', default: 0 },
+      statusType: { type: Number, label: 'Status Type', default: 0 },
     },
     {
       timestamps: true,

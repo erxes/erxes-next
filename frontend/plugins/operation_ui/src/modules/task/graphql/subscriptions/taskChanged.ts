@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const TASK_CHANGED = gql`
-  subscription operationTaskChanged($filter: ITaskFilter) {
-    operationTaskChanged(filter: $filter) {
+  subscription operationTaskChanged($_id: String!) {
+    operationTaskChanged(_id: $_id) {
       type
       task {
         _id
@@ -11,6 +11,7 @@ export const TASK_CHANGED = gql`
         status
         priority
         teamId
+        number
         assigneeId
         startDate
         targetDate

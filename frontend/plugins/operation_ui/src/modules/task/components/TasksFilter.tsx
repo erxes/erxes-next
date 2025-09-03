@@ -1,14 +1,21 @@
-import { IconSearch } from '@tabler/icons-react';
+import {
+  IconAlertSquareRounded,
+  IconProgressCheck,
+  IconSearch,
+  IconUser,
+  IconUsers,
+} from '@tabler/icons-react';
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
-
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { TasksTotalCount } from '@/task/components/TasksTotalCount';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
-import { SelectTeam } from '@/task/components/select/SelectTeam';
-import { SelectPriority } from '@/priority/components/SelectPriority';
-import { SelectStatus } from '@/task/components/select/SelectStatus';
-import { SelectAssignee } from '@/task/components/select/SelectAssignee';
+import { SelectPriority } from '@/operation/components/SelectPriority';
+import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
 import { useParams } from 'react-router-dom';
+import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
+import clsx from 'clsx';
+import { SelectTeam } from '@/team/components/SelectTeam';
+import { SelectStatus } from '@/operation/components/SelectStatus';
 
 const TasksFilterPopover = () => {
   const { teamId } = useParams();
@@ -18,8 +25,7 @@ const TasksFilterPopover = () => {
     team: string;
     priority: string;
     status: string;
-    statusType: string;
-  }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
+  }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,
@@ -43,20 +49,34 @@ const TasksFilterPopover = () => {
                   Search
                 </Filter.Item>
                 <Command.Separator className="my-1" />
-                <SelectAssignee.FilterItem />
-                {teamId && <SelectTeam.FilterItem />}
-                <SelectPriority.FilterItem />
-                <SelectStatus.FilterItem />
+                <Filter.Item value="assignee">
+                  <IconUser />
+                  Assignee
+                </Filter.Item>
+                {!teamId && (
+                  <Filter.Item value="team">
+                    <IconUsers />
+                    Team
+                  </Filter.Item>
+                )}
+                <Filter.Item value="priority">
+                  <IconAlertSquareRounded />
+                  Priority
+                </Filter.Item>
+                <Filter.Item value="status">
+                  <IconProgressCheck />
+                  Status
+                </Filter.Item>
               </Command.List>
             </Command>
           </Filter.View>
-          <SelectAssignee.FilterView />
-          <SelectTeam.FilterView />
+          <SelectAssigneeTask.FilterView teamIds={[teamId || '']} />
+          {!teamId && <SelectTeam.FilterView />}
           <SelectPriority.FilterView />
           {teamId ? (
-            <SelectStatus.FilterView teamId={teamId} />
+            <SelectStatusTask.FilterView teamId={teamId} />
           ) : (
-            <SelectStatus.TypeFilterView />
+            <SelectStatus.FilterView />
           )}
         </Combobox.Content>
       </Filter.Popover>
@@ -77,15 +97,14 @@ export const TasksFilter = () => {
     team: string;
     priority: string;
     status: string;
-    statusType: string;
-  }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
+  }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
   const { searchValue } = queries || {};
 
   return (
     <Filter id="Tasks-filter" sessionKey={TASKS_CURSOR_SESSION_KEY}>
       <Filter.Bar>
         {searchValue && (
-          <Filter.BarItem>
+          <Filter.BarItem queryKey="searchValue">
             <Filter.BarName>
               <IconSearch />
               Search
@@ -93,13 +112,45 @@ export const TasksFilter = () => {
             <Filter.BarButton filterKey="searchValue" inDialog>
               {searchValue}
             </Filter.BarButton>
-            <Filter.BarClose filterKey="searchValue" />
           </Filter.BarItem>
         )}
-        <SelectAssignee.FilterBar />
-        {teamId && <SelectTeam.FilterBar />}
-        <SelectPriority.FilterBar />
-        <SelectStatus.FilterBar />
+        {!teamId && (
+          <Filter.BarItem queryKey="team">
+            <Filter.BarName>
+              <IconUsers />
+              Team
+            </Filter.BarName>
+            <SelectTeam.FilterBar />
+          </Filter.BarItem>
+        )}
+        <Filter.BarItem queryKey="priority">
+          <Filter.BarName>
+            <IconAlertSquareRounded />
+            Priority
+          </Filter.BarName>
+          <SelectPriority.FilterBar />
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="status">
+          <Filter.BarName>
+            <IconProgressCheck />
+            Status
+          </Filter.BarName>
+          {teamId ? (
+            <SelectStatusTask.FilterBar
+              teamId={teamId}
+              scope={clsx(TaskHotKeyScope.TasksPage, 'filter', 'Status')}
+            />
+          ) : (
+            <SelectStatus.FilterBar />
+          )}
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="assignee">
+          <Filter.BarName>
+            <IconUser />
+            Assignee
+          </Filter.BarName>
+          <SelectAssigneeTask.FilterBar />
+        </Filter.BarItem>
         <TasksFilterPopover />
         <TasksTotalCount />
       </Filter.Bar>

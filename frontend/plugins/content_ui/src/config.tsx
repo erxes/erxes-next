@@ -1,4 +1,4 @@
-import { IconSandbox } from '@tabler/icons-react';
+import { IconLibraryPhoto } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui/types';
 import { IconBooks } from '@tabler/icons-react';
 import { lazy, Suspense } from 'react';
@@ -13,7 +13,7 @@ export const CONFIG: IUIConfig = {
   name: 'content',
   navigationGroup: {
     name: 'content',
-    icon: IconSandbox,
+    icon: IconLibraryPhoto,
     content: () => (
       <Suspense fallback={<div />}>
         <ContentNavigation />

@@ -20,6 +20,7 @@ const userNotificationSchema = baseNotificationSchema.extend({
   contentTypeId: z.string(),
   action: z.string(),
   notificationType: z.string(),
+  allowMultiple: z.boolean().default(false),
 });
 
 // Union for notification
@@ -34,11 +35,15 @@ export const sendNotification = async (
   subdomain: string,
   data: { userIds: string[] } & Partial<INotificationData>,
 ) => {
+  const { userIds, kind, ...notificationData } = data;
+
+  const parsedData = notificationZTypeSchema.parse({
+    ...notificationData,
+    kind: kind ?? 'user',
+  });
+
   sendWorkerQueue('notifications', 'notifications').add('notifications', {
     subdomain,
-    data: {
-      ...data,
-      kind: data.kind ?? 'user',
-    },
+    data: { ...parsedData, userIds },
   });
 };

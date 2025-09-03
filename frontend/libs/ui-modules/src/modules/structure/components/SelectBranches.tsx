@@ -184,7 +184,7 @@ export const SelectBranchesItem = ({
   return (
     <SelectTree.Item
       key={branch._id}
-      id={branch._id}
+      _id={branch._id}
       name={branch.title}
       order={branch.order}
       hasChildren={branch.hasChildren}
@@ -500,7 +500,7 @@ export const SelectBranchesFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={filterKey}>
       <Filter.BarName>
         <IconGitBranch />
         {label}
@@ -528,7 +528,6 @@ export const SelectBranchesFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectBranchesProvider>
-      <Filter.BarClose filterKey={filterKey} />
     </Filter.BarItem>
   );
 };

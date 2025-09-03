@@ -1,7 +1,7 @@
 import { MARS_AS_READ_NOTIFICATIONS } from '@/notification/my-inbox/graphql/notificationMutations';
 import { selectedNotificationsState } from '@/notification/my-inbox/states/notificationState';
 import { useMutation } from '@apollo/client';
-import { parseDateRangeFromString, toast, useMultiQueryState } from 'erxes-ui';
+import { toast, useMultiQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 
 export const useMarkAsReadNotifications = () => {

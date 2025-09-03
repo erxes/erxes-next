@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useMemo, useState } from 'react';
 import { Resizable, useQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';

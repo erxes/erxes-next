@@ -12,8 +12,8 @@ interface CustomerPhonesProps {
   _id: string;
   primaryPhone: string;
   phones: string[];
-  phoneValidationStatus?: ValidationStatus;
-  scope: string;
+  phoneValidationStatus?: `${ValidationStatus}`;
+  scope?: string;
   Trigger: React.ComponentType<{ children: React.ReactNode }>;
 }
 
@@ -30,7 +30,7 @@ export function CustomerPhones({
   const phoneProps = {
     primaryPhone,
     phones: _phones,
-    phoneValidationStatus,
+    phoneValidationStatus: phoneValidationStatus as ValidationStatus,
   };
 
   const handleValueChange = (values: IPhoneFieldProps) => {
