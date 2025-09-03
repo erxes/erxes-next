@@ -22,12 +22,13 @@ import { AssignMemberInEditor } from 'ui-modules';
 import { useConversationMessageAdd } from '../hooks/useConversationMessageAdd';
 import { Block } from '@blocknote/core';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { messageExtraInfoState } from '../states/messageExtraInfoState';
+import { isInternalState } from '@/inbox/conversations/conversation-detail/states/isInternalState';
 
 export const MessageInput = () => {
   const [conversationId] = useQueryState('conversationId');
-  const [isInternalNote, setIsInternalNote] = useState(false);
+  const [isInternalNote, setIsInternalNote] = useAtom(isInternalState);
   const [content, setContent] = useState<Block[]>();
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const messageExtraInfo = useAtomValue(messageExtraInfoState);
@@ -117,7 +118,7 @@ export const MessageInput = () => {
             disabled={loading || content?.length === 0}
             onClick={handleSubmit}
           >
-            {loading ? <Spinner size="small" /> : <IconArrowUp />}
+            {loading ? <Spinner size="sm" /> : <IconArrowUp />}
             Send
             <Kbd className="ml-1">
               <IconCommand size={12} />

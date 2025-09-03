@@ -57,7 +57,7 @@ export const InboxMessagesContainer = ({
         <div className="flex flex-col max-w-[648px] mx-auto p-6">
           {children}
         </div>
-        <InboxMessagesSkeleton isFetched={!loading && !!messagesLength} />
+        <InboxMessagesSkeleton isFetched={!loading} />
       </ScrollArea.Viewport>
       <ScrollArea.Bar orientation="vertical" />
       <ScrollArea.Bar orientation="horizontal" />
