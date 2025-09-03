@@ -1,5 +1,11 @@
 import { useAtomValue } from 'jotai';
-import { Button, IAttachment, RelativeDateDisplay, cn } from 'erxes-ui';
+import {
+  Button,
+  IAttachment,
+  RelativeDateDisplay,
+  cn,
+  readImage,
+} from 'erxes-ui';
 import { CustomersInline, MembersInline } from 'ui-modules';
 
 import { HAS_ATTACHMENT } from '@/inbox/constants/messengerConstants';
@@ -124,7 +130,7 @@ const Attachments = ({ attachments }: { attachments?: IAttachment[] }) => {
 const Attachment = ({ attachment }: { attachment: IAttachment }) => {
   return (
     <img
-      src={attachment.url}
+      src={readImage(attachment.url)}
       alt={attachment.name}
       className="w-full aspect-square object-cover rounded bg-accent"
     />

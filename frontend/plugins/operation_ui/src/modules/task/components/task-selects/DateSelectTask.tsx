@@ -173,7 +173,7 @@ export const DateSelectTaskRoot = ({
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <DateSelectTrigger>
-          <DateSelectValue placeholder="not specified" />
+          <DateSelectValue placeholder="Not specified" />
         </DateSelectTrigger>
         <Content className="w-fit" onClick={(e) => e.stopPropagation()}>
           <DateSelectContent />

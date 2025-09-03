@@ -43,8 +43,10 @@ import {
 } from '@tabler/icons-react';
 import { useParams } from 'react-router';
 import { useDeleteStatus } from '@/team/hooks/useDeleteStatus';
-import { StatusInlineIcon } from '@/task/components/StatusInline';
-import { TeamStatusTypeLabel } from '@/team/constants';
+import {
+  StatusInlineIcon,
+  StatusInlineLabel,
+} from '@/operation/components/StatusInline';
 
 const StatusSkeleton = () => {
   return (
@@ -120,7 +122,7 @@ export const Status = ({
             color: status.color || '#000000',
           }}
         >
-          <StatusInlineIcon type={status.type} color={status.color} />
+          <StatusInlineIcon statusType={status.type} color={status.color} />
         </Button>
         <div className="flex flex-col">
           <span className="capitalize">{status.name}</span>
@@ -230,7 +232,7 @@ export const StatusForm = ({
           _id: editingStatus._id,
           name,
           description,
-          color,
+          color: color?.length && color.length > 2 ? color : '',
         },
         onCompleted: () => {
           setEditingStatus(null);
@@ -294,10 +296,7 @@ export const StatusForm = ({
                               : undefined,
                           }}
                         >
-                          <StatusInlineIcon
-                            type={statusType}
-                            color={field.value}
-                          />
+                          <StatusInlineIcon statusType={statusType} />
                         </Button>
                       </ColorPicker.Trigger>
                       <ColorPicker.Content />
@@ -401,7 +400,7 @@ export const StatusGroup = ({ statusType }: { statusType: number }) => {
         <div className="flex items-center gap-2 justify-between w-full bg-accent py-1 pr-2 pl-4 rounded-md">
           <div className="flex items-center gap-2 ">
             <p className="text-base font-medium">
-              {TeamStatusTypeLabel[statusType]}
+              <StatusInlineLabel statusType={statusType} />
             </p>
           </div>
           <Button

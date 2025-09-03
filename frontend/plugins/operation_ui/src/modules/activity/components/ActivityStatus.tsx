@@ -3,9 +3,11 @@ import { IActivity } from '@/activity/types';
 import { ITask } from '@/task/types';
 import { IProject } from '@/project/types';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { StatusInlineIcon } from '@/task/components/StatusInline';
 import { Badge } from 'erxes-ui';
-import { PROJECT_STATUS_OPTIONS } from '@/operation/constants/statusConstants';
+import {
+  StatusInlineIcon,
+  StatusInlineLabel,
+} from '@/operation/components/StatusInline';
 
 const isTask = (content: ITask | IProject): content is ITask => {
   return 'teamId' in content;
@@ -25,24 +27,7 @@ export const ActivityStatus = ({
   });
 
   const getTaskStatus = (value?: string) => {
-    return (
-      statuses?.find((status) => status.value === value) || {
-        type: 0,
-        color: '',
-        label: '',
-      }
-    );
-  };
-
-  const getProjectStatus = (value?: string) => {
-    const statusValue = value ? parseInt(value, 10) : 0;
-    return (
-      PROJECT_STATUS_OPTIONS.find((status) => status.value === statusValue) || {
-        name: 'Unknown',
-        Icon: null,
-        IconColor: '#6B7280',
-      }
-    );
+    return statuses?.find((status) => status.value === value);
   };
 
   const renderStatusBadge = (value?: string) => {
@@ -51,25 +36,17 @@ export const ActivityStatus = ({
       return (
         <Badge variant="secondary" className="capitalize">
           <StatusInlineIcon
-            type={status?.type as number}
+            statusType={status?.type as number}
             color={status?.color}
           />
           {status?.label}
         </Badge>
       );
     } else {
-      const status = getProjectStatus(value);
-      const IconComponent = status.Icon;
       return (
         <Badge variant="secondary" className="capitalize">
-          {IconComponent && (
-            <IconComponent
-              size={12}
-              style={{ color: status.IconColor }}
-              className="mr-1"
-            />
-          )}
-          {status.name}
+          <StatusInlineIcon statusType={value} />
+          <StatusInlineLabel statusType={value} />
         </Badge>
       );
     }

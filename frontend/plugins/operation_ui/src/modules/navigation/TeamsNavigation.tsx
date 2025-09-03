@@ -15,7 +15,7 @@ import {
   useToast,
 } from 'erxes-ui';
 import {
-  IconCalendarRepeat,
+  IconRestore,
   IconCaretRightFilled,
   IconChecklist,
   IconClipboard,
@@ -96,7 +96,7 @@ function TeamItem({ team }: TeamItemProps) {
                   pathPrefix="operation/team"
                   path={`${team._id}/cycles`}
                   className="pl-6 font-medium"
-                  icon={IconCalendarRepeat}
+                  icon={IconRestore}
                 />
               )}
             </Sidebar.Menu>

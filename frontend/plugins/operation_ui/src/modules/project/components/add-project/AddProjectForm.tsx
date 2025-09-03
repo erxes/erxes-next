@@ -14,17 +14,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState, useEffect } from 'react';
 import { Block } from '@blocknote/core';
-import {
-  SelectStatus,
-  SelectLead,
-  DateSelect,
-} from '@/project/components/select';
+import { SelectLead, DateSelect } from '@/project/components/select';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
 import { SelectTeam } from '@/team/components/SelectTeam';
 import { SelectPriority } from '@/operation/components/SelectPriority';
-import { ProjectStatus } from '@/operation/constants/statusConstants';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
+import { SelectStatus } from '@/operation/components/SelectStatus';
 
 export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
@@ -37,7 +33,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
       teamIds: teamId ? [teamId] : [],
       icon: 'IconBox',
       name: '',
-      status: ProjectStatus.BACKLOG,
+      status: 1,
       priority: 0,
       leadId: undefined,
       targetDate: undefined,
@@ -140,7 +136,10 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item className="flex-shrink-0">
                   <Form.Label className="sr-only">Status</Form.Label>
-                  <SelectStatus.FormItem {...field} />
+                  <SelectStatus.FormItem
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  />
                 </Form.Item>
               )}
             />

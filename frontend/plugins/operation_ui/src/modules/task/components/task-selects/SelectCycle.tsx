@@ -1,7 +1,7 @@
 import React from 'react';
 import { PopoverScoped, Combobox, Command } from 'erxes-ui';
 import { useGetActiveCycles } from '@/cycle/hooks/useGetActiveCycles';
-import { IconCalendarRepeat } from '@tabler/icons-react';
+import { IconRestore } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useGetTeam } from '@/team/hooks/useGetTeam';
 import { ICycle } from '@/cycle/types';
@@ -73,7 +73,7 @@ const SelectCycleValue = ({ placeholder }: { placeholder?: string }) => {
   if (!value)
     return (
       <div className="flex items-center gap-2 text-accent-foreground">
-        <IconCalendarRepeat className="size-4" />
+        <IconRestore className="size-4" />
         <span className="truncate font-medium">
           {placeholder || 'Select cycle'}
         </span>
@@ -84,7 +84,7 @@ const SelectCycleValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <div className="flex items-center gap-2">
-      <IconCalendarRepeat className="size-4" />
+      <IconRestore className="size-4" />
       <span className="truncate font-medium">
         {selectedCycle?.name}&nbsp;
         <span className="text-xs text-muted-foreground">
@@ -105,7 +105,7 @@ const SelectCycleCommandItem = ({ cycle }: { cycle: ICycle }) => {
   return (
     <Command.Item value={cycle._id} onSelect={() => onValueChange(cycle._id)}>
       <div className="flex items-center gap-2">
-        <IconCalendarRepeat className="size-4" />
+        <IconRestore className="size-4" />
         <span className="truncate font-medium">
           {cycle.name}&nbsp;
           <span className="text-xs text-muted-foreground">

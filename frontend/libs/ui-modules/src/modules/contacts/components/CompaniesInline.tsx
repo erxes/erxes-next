@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from 'erxes-ui';
 import { ICompany } from '../types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCompaniesInline } from '../hooks/useCompanies';
 
 interface CompaniesInlineProviderProps {
@@ -30,15 +30,17 @@ const CompaniesInlineProvider = ({
   companies,
   updateCompanies,
 }: CompaniesInlineProviderProps) => {
+  const [_companies, _setCompanies] = useState<ICompany[]>(companies || []);
+
   return (
     <CompaniesInlineContext.Provider
       value={{
-        companies: companies || [],
+        companies: companies || _companies,
         loading: false,
         placeholder: isUndefinedOrNull(placeholder)
           ? 'Select Companies'
           : placeholder,
-        updateCompanies,
+        updateCompanies: updateCompanies || _setCompanies,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>

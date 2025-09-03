@@ -41,13 +41,14 @@ const SelectAssigneeValue = ({
       <MembersInline.Provider
         memberIds={memberIds}
         members={members}
+        allowUnassigned
         updateMembers={setMembers}
       >
         <MembersInline.Avatar />
       </MembersInline.Provider>
     );
   }
-  return <SelectMember.Value placeholder={placeholder} />;
+  return <SelectMember.Value placeholder={placeholder || 'Select assignee'} />;
 };
 
 const SelectTeamMemberContent = ({
@@ -209,6 +210,7 @@ const SelectAssigneeTaskRoot = ({
       value={value}
       onValueChange={handleValueChange}
       mode="single"
+      allowUnassigned
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant={variant === 'card' ? 'icon' : variant}>
@@ -242,6 +244,7 @@ export const SelectAssigneeTaskFormItem = ({
         setOpen(false);
       }}
       mode="single"
+      allowUnassigned
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant="form">

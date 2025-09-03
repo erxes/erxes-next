@@ -17,11 +17,11 @@ export const SelectTaskPriority = ({
     <SelectPriority
       variant={variant}
       value={value}
-      onValueChange={(value) =>
+      onValueChange={(value) => {
         updateTask({
           variables: { _id: taskId, priority: Number(value) },
-        })
-      }
+        });
+      }}
     />
   );
 };
