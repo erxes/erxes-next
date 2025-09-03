@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 export const FrontlineSubGroups = () => {
   const location = useLocation();
 
-  if (!location.pathname.startsWith('/inbox')) {
+  if (!location.pathname.startsWith('/frontline/inbox')) {
     return null;
   }
 
