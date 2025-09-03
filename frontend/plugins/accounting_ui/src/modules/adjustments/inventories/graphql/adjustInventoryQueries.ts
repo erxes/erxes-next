@@ -14,7 +14,7 @@ export const adjustInventoryFields = `
   warning
   beginDate
   successDate
-  checkedDate
+  checkedAt
 `;
 
 export const adjustInvDetailFields = `
@@ -74,8 +74,8 @@ const adjustInvFilterParamDefs = `
   $endBeginDate: Date
   $startSuccessDate: Date
   $endSuccessDate: Date
-  $startCheckedDate: Date
-  $endCheckedDate: Date
+  $startCheckedAt: Date
+  $endCheckedAt: Date
 `;
 
 const adjustInvFilterParams = `
@@ -89,8 +89,8 @@ const adjustInvFilterParams = `
   endBeginDate: $endBeginDate
   startSuccessDate: $startSuccessDate
   endSuccessDate: $endSuccessDate
-  startCheckedDate: $startCheckedDate
-  endCheckedDate: $endCheckedDate
+  startCheckedAt: $startCheckedAt
+  endCheckedAt: $endCheckedAt
 `;
 
 const commonParamDefs = `

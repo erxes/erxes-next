@@ -5,5 +5,5 @@ export const adjustInventorySchema = z.object({
   description: z.string(),
   beginDate: z.date().nullish(),
   successDate: z.date().nullish(),
-  checkedDate: z.date().nullish(),
+  checkedAt: z.date().nullish(),
 });

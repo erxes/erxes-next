@@ -83,6 +83,14 @@ export const commonUpdate = async (_subdomain: string, models: IModels, doc: ITr
 
       break;
     }
+    case 'invMove': {
+      const transaction =
+        await models.Transactions.updateTransaction(oldTr._id, { ...doc });
+
+      mainTr = transaction;
+
+      break;
+    }
   }
 
   if (!mainTr) {

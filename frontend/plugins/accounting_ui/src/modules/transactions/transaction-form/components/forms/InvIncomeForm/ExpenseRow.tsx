@@ -14,7 +14,6 @@ import {
   InputNumber,
   RecordTableInlineCell,
   RecordTableHotKeyControl,
-  Popover,
   Select,
   Table,
   PopoverScoped,
