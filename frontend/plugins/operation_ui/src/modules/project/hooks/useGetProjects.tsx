@@ -147,9 +147,11 @@ export const useProjects = (
     setProjectTotalCount(totalCount);
   }, [totalCount, setProjectTotalCount]);
 
-  const handleFetchMore = (
-    direction: EnumCursorDirection = EnumCursorDirection.FORWARD,
-  ) => {
+  const handleFetchMore = ({
+    direction = EnumCursorDirection.FORWARD,
+  }: {
+    direction?: EnumCursorDirection;
+  }) => {
     if (!validateFetchMore({ direction, pageInfo })) {
       return;
     }

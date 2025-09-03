@@ -227,7 +227,11 @@ export const MembersInlineTitle = ({ className }: { className?: string }) => {
   const getDisplayValue = () => {
     if (!members || members.length === 0) {
       if (allowUnassigned) {
-        return 'No assignee';
+        return (
+          <span className="capitalize text-muted-foreground/80">
+            No assignee
+          </span>
+        );
       }
       return undefined;
     }

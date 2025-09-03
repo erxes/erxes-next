@@ -45,7 +45,7 @@ export const SelectTriggerOperation = ({
   }
   if (variant === SelectTriggerVariant.FILTER) {
     return (
-      <Popover.Trigger>
+      <Popover.Trigger asChild>
         <Filter.BarButton>{children}</Filter.BarButton>
       </Popover.Trigger>
     );

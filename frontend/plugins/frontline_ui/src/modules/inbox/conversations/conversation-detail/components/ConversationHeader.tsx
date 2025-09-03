@@ -13,7 +13,6 @@ export const ConversationHeader = () => {
   const { customerId, loading, customer } = useConversationContext();
   const [, setConversationId] = useQueryState<string>('conversationId');
   const view = useAtomValue(inboxLayoutState);
-
   return (
     <ScrollArea className="flex-none">
       <div className="h-11 flex items-center px-5 text-xs font-medium text-accent-foreground flex-none gap-3 whitespace-nowrap">
