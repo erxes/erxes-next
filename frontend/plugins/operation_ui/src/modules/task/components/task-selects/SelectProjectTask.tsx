@@ -46,15 +46,11 @@ export const SelectProjectProvider = ({
     },
   });
 
-  const handleValueChange = (value: string) => {
-    onValueChange(value);
-  };
-
   return (
     <SelectProjectContext.Provider
       value={{
         value,
-        onValueChange: handleValueChange,
+        onValueChange,
         projects: projects || [],
         handleFetchMore,
         totalCount,
@@ -65,17 +61,8 @@ export const SelectProjectProvider = ({
   );
 };
 
-const SelectProjectValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectProjectValue = () => {
   const { projects, value } = useSelectProjectContext();
-  if (!value)
-    return (
-      <div className="flex items-center gap-2 text-accent-foreground">
-        <IconClipboard className="size-4" />
-        <span className="truncate font-medium">
-          {placeholder || 'Select project'}
-        </span>
-      </div>
-    );
 
   return (
     <div className="flex items-center gap-2">
