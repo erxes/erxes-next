@@ -16,7 +16,10 @@ export const AutomationHistoryName = ({
       </Button>
       {`\u00A0/\u00A0`}
       <Button asChild variant="link">
-        <Link target="_blank" to={`/inbox/index?_id=${target?.conversationId}`}>
+        <Link
+          target="_blank"
+          to={`/frontline/inbox/index?_id=${target?.conversationId}`}
+        >
           {'See Conversation'}
           <IconExternalLink />
         </Link>

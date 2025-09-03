@@ -5,11 +5,15 @@ import { NavigationMenuLinkItem } from 'erxes-ui';
 export const FrontlineNavigation = () => {
   return (
     <>
-      <NavigationMenuLinkItem name="Inbox" icon={IconMail} path="inbox" />
+      <NavigationMenuLinkItem
+        name="Inbox"
+        icon={IconMail}
+        path="frontline/inbox"
+      />
       <NavigationMenuLinkItem
         name="Ticket"
         icon={IconMessageReply}
-        path="ticket"
+        path="frontline/ticket"
       />
       <IntegrationNavigation />
     </>
