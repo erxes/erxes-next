@@ -178,8 +178,9 @@ const BoardProvider = <
     const overItem = data.find((item) => item.id === over.id);
     if (overItem) {
       setDragOverBoardColumnId(overItem.column as string);
+    } else {
+      setDragOverBoardColumnId(null);
     }
-    setDragOverBoardColumnId(null);
 
     onDragOver?.(event);
   };

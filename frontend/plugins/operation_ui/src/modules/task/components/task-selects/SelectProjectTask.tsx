@@ -5,6 +5,7 @@ import {
   useFilterContext,
   useQueryState,
   PopoverScoped,
+  cn,
 } from 'erxes-ui';
 import { useProjectsInline } from '@/project/hooks/useGetProjects';
 import React, { useState } from 'react';
@@ -97,7 +98,7 @@ const SelectProjectCommandItem = ({
     <Command.Item
       value={project.name}
       onSelect={() => onValueChange(project._id)}
-      className={!project._id ? 'text-muted-foreground' : ''}
+      className={cn(!project._id && 'text-muted-foreground')}
     >
       <div className="flex items-center gap-2">
         <IconClipboard className="h-4 w-4" />
