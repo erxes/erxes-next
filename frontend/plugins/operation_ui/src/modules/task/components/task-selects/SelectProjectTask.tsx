@@ -65,10 +65,15 @@ const SelectProjectValue = () => {
   const { projects, value } = useSelectProjectContext();
 
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className={cn(
+        'flex items-center gap-2',
+        !value && 'text-muted-foreground',
+      )}
+    >
       <IconClipboard className="size-4" />
       <span className="truncate font-medium">
-        {projects.find((p) => p._id === value)?.name}
+        {projects.find((p) => p._id === value)?.name || 'No project'}
       </span>
     </div>
   );
