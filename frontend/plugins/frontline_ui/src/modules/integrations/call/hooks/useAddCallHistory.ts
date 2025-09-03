@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { CALL_HISTORY_ADD } from '../graphql/mutations/callMutations';
-import { toast } from 'erxes-ui';
+//import { toast } from 'erxes-ui';
 import { useAtom, useSetAtom } from 'jotai';
 import {
   currentCallConversationIdAtom,
@@ -45,11 +45,11 @@ export const useAddCallHistory = () => {
         setHistoryId('');
 
         if (e.message !== 'You cannot edit') {
-          toast({
-            title: 'Uh oh! Something went wrong.',
-            description: e.message,
-            variant: 'destructive',
-          });
+          // toast({
+          //   title: 'Uh oh! Something went wrong.',
+          //   description: e.message,
+          //   variant: 'destructive',
+          // });
         }
       },
     });

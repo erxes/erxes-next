@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { callHistoryEdit } from '../graphql/mutations/callMutations';
-import { toast } from 'erxes-ui';
+//import { toast } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { historyIdAtom } from '@/integrations/call/states/callStates';
 import { callConfigAtom } from '@/integrations/call/states/sipStates';
@@ -58,11 +58,11 @@ export const useUpdateCallHistory = () => {
           setHistoryId('');
 
           if (e.message !== 'You cannot edit') {
-            toast({
-              title: 'Uh oh! Something went wrong updating history.',
-              description: e.message,
-              variant: 'destructive',
-            });
+            // toast({
+            //   title: 'Uh oh! Something went wrong updating history.',
+            //   description: e.message,
+            //   variant: 'destructive',
+            // });
           }
         });
     } else {
@@ -92,20 +92,20 @@ export const useUpdateCallHistory = () => {
             setHistoryId('');
 
             if (e.message !== 'You cannot edit') {
-              toast({
-                title: 'Uh oh! Something went wrong creating history.',
-                description: e.message,
-                variant: 'destructive',
-              });
+              //   toast({
+              //     title: 'Uh oh! Something went wrong creating history.',
+              //     description: e.message,
+              //     variant: 'destructive',
+              //   });
             }
           });
       } else {
         console.error('No historyId available for status:', callStatus);
-        toast({
-          title: 'Uh oh! Something went wrong.',
-          description: 'History id not found',
-          variant: 'destructive',
-        });
+        // toast({
+        //   title: 'Uh oh! Something went wrong.',
+        //   description: 'History id not found',
+        //   variant: 'destructive',
+        // });
       }
     }
   };
