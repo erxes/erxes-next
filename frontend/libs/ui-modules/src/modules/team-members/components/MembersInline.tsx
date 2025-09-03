@@ -25,7 +25,7 @@ export const MembersInlineRoot = ({
   placeholder,
   updateMembers,
   className,
-  size,
+  size = 'lg',
   allowUnassigned,
 }: {
   members?: IUser[];

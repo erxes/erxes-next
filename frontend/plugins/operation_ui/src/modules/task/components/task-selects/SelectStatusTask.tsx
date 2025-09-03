@@ -258,7 +258,7 @@ export const SelectStatusTaskFormItem = ({
 
   const [open, setOpen] = useState(false);
 
-  const fallBackStatus = statuses?.find((status) => status.type === 0)?.value;
+  const fallBackStatus = statuses?.find((status) => status.type === 1)?.value;
 
   useEffect(() => {
     if (fallBackStatus && !value) {

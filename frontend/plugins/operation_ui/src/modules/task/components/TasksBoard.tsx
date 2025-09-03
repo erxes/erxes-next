@@ -200,7 +200,7 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
           ))
         )}
         <TaskCardsFetchMore
-          totalCount={totalCount || 0}
+          totalCount={taskCountByBoard[column.id] || 0}
           currentLength={boardCards.length}
           handleFetchMore={() =>
             handleFetchMore({ direction: EnumCursorDirection.FORWARD })

@@ -22,6 +22,7 @@ export const useGetProject = (options: QueryHookOptions) => {
   const project = data?.getProject;
 
   useEffect(() => {
+    if (!project?._id) return;
     const unsubscribe = subscribeToMore<IProjectChanged>({
       document: PROJECT_CHANGED,
       variables: { _id: project?._id },

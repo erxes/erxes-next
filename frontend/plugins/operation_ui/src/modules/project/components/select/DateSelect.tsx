@@ -71,8 +71,6 @@ export const DateSelectProvider = ({
 
 const DateSelectValue = ({
   placeholder,
-  type,
-  status,
 }: {
   placeholder?: string;
   type?: 'start' | 'target';
@@ -82,7 +80,7 @@ const DateSelectValue = ({
 
   if (!value) {
     return (
-      <span className="text-accent-foreground/80">
+      <span className="text-accent-foreground/80 capitalize">
         {placeholder || 'Select date...'}
       </span>
     );
@@ -107,7 +105,7 @@ const DateSelectFormItemValue = ({
 
   if (!value) {
     return (
-      <span className="text-muted-foreground font-medium text-base flex items-center justify-center gap-2 ">
+      <span className="text-accent-foreground font-medium text-base flex items-center justify-center gap-2 ">
         {type === 'start' ? (
           <IconCalendarUp className="size-4" />
         ) : (
