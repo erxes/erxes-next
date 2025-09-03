@@ -60,6 +60,7 @@ export const FacebookGetPages = () => {
             <Command.List>
               {facebookGetPages.map((page) => (
                 <Command.Item
+                  disabled={page.isUsed}
                   key={page.id}
                   value={page.name}
                   onSelect={() =>
