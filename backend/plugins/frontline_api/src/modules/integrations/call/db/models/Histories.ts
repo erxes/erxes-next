@@ -308,7 +308,7 @@ export const loadCallHistoryClass = (models: IModels) => {
     ): FilterQuery<ICallHistoryDocument> {
       const filter: FilterQuery<ICallHistoryDocument> = {};
 
-      filter.extensionNumber = operator.gsUsername;
+      filter.extentionNumber = operator.gsUsername;
 
       if (
         filterOptions.callStatus ===
@@ -317,7 +317,7 @@ export const loadCallHistoryClass = (models: IModels) => {
         filter.callStatus = {
           $eq: CALL_HISTORY_CONSTANTS.CALL_STATUS.CANCELLED,
         };
-        delete filter.extensionNumber;
+        delete filter.extentionNumber;
         filter.operatorPhone = integration.phone;
       }
 
@@ -338,7 +338,7 @@ export const loadCallHistoryClass = (models: IModels) => {
     ): FilterQuery<ICallHistoryDocument> {
       const filter: FilterQuery<ICallHistoryDocument> = {};
 
-      filter.extensionNumber = operator.gsUsername;
+      filter.extentionNumber = operator.gsUsername;
 
       if (
         filterOptions.callStatus === CALL_HISTORY_CONSTANTS.CALL_STATUS.MISSED

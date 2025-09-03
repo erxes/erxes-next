@@ -11,6 +11,8 @@ import {
   calculateFirstCallResolution,
   calculateServiceLevel,
 } from '~/modules/integrations/call/statistics';
+import { INotesParams } from '~/modules/integrations/call/@types/conversationNotes';
+import { IMessageDocument } from '~/modules/inbox/@types/conversationMessages';
 
 const callQueries = {
   async callsIntegrationDetail(_root, { integrationId }, { models }: IContext) {
@@ -395,6 +397,38 @@ const callQueries = {
     const averageAnsweredTime = await calculateAverageHandlingTime(todyCdrs);
 
     return averageAnsweredTime;
+  },
+
+  async callConversationNotes(_root, args: INotesParams, { models }: IContext) {
+    const { conversationId, limit, skip, getFirst } = args;
+
+    const conversation = await models.Conversations.findOne({
+      _id: conversationId,
+    });
+    let messages: IMessageDocument[] = [];
+
+    if (conversation) {
+      if (limit) {
+        const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };
+
+        messages = await models.ConversationMessages.find({
+          conversationId: conversationId,
+        })
+          .sort(sort)
+          .skip(skip || 0)
+          .limit(limit);
+
+        return getFirst ? messages : messages.reverse();
+      }
+
+      messages = await models.ConversationMessages.find({
+        conversationId: conversationId,
+      })
+        .sort({ createdAt: -1 })
+        .limit(50);
+
+      return messages.reverse();
+    }
   },
 };
 export default callQueries;

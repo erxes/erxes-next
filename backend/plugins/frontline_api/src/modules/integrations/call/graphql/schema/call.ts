@@ -9,6 +9,12 @@ const integrationCommonFields = `
     srcTrunk: String
     dstTrunk: String
 `;
+const pageParams = `skip: Int, limit: Int`;
+
+const commonCommentAndMessageFields = `
+  content: String
+  conversationId: String
+`;
 
 export const types = `
 
@@ -72,6 +78,20 @@ export const types = `
     conversationId: String
     recordUrl: String
   }
+
+  type CallConversationNotes {
+    _id: String!
+    ${commonCommentAndMessageFields}
+    attachments: [Attachment]
+    customerId: String
+    userId: String
+    createdAt: Date
+    isCustomerRead: Boolean
+    mid: String
+    internal: Boolean
+    customer: Customer
+    user: User
+  }
 `;
 
 export const subscriptions = `
@@ -124,6 +144,7 @@ export const queries = `
   callProceedingList(queue: String!): String
   callQueueMemberList(integrationId: String!, queue: String!): JSON
   callTodayStatistics(queue: String!): JSON
+  callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
   `;
 
 //old mutations
