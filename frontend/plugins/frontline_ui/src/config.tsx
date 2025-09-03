@@ -38,6 +38,7 @@ export const CONFIG: IUIConfig = {
       hasSettings: true,
       hasRelationWidget: true,
       hasFloatingWidget: true,
+      settingsOnly: true,
     },
     {
       name: 'ticket',
@@ -45,6 +46,7 @@ export const CONFIG: IUIConfig = {
       path: 'ticket',
       hasSettings: true,
       hasRelationWidget: true,
+      settingsOnly: true,
     },
     {
       name: 'frontline',
