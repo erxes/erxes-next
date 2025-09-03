@@ -487,6 +487,8 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
       filename: sanitizedFileName,
     });
 
+    console.log(uploadUrl, 'uploadUrl');
+
     // Upload file to destination
     const uploadResponse = await fetch(uploadUrl, {
       method: 'POST',

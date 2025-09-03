@@ -418,12 +418,14 @@ const SipProvider = ({
           return;
         }
         let counterpart = '';
+        let callDirection = '';
 
         if (originator === 'local') {
           const foundUri = rtcRequest.to.toString();
           const toDelimiterPosition = foundUri.indexOf(';') || null;
 
           counterpart = rtcRequest.to.toString().split(';')[0];
+          callDirection = CallDirectionEnum.OUTGOING;
 
           setSipState((prev) => ({
             ...prev,
@@ -445,6 +447,7 @@ const SipProvider = ({
           const foundUri = rtcRequest.from.toString();
           const delimiterPosition = foundUri.indexOf(';') || null;
           counterpart = rtcRequest.from.toString().split(';')[0];
+          callDirection = CallDirectionEnum.INCOMING;
 
           const fromParameters = rtcRequest.from._parameters;
           const groupName = fromParameters['x-gs-group-name'] || '';
@@ -538,7 +541,7 @@ const SipProvider = ({
               rtcSession.start_time,
               rtcSession.end_time,
               'connected',
-              direction,
+              callDirection,
               customerPhone,
               diversionHeader || '',
               data.originator,
@@ -616,12 +619,11 @@ const SipProvider = ({
               direction = parseCallDirection(sipState.callDirection);
             }
             customerPhone = extractPhoneNumberFromCounterpart(counterpart);
-
             if (addHistory) {
               addHistory(
                 'active',
                 timeStamp,
-                direction,
+                callDirection,
                 customerPhone,
                 rtcSession.start_time,
                 sipState.groupName,
