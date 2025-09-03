@@ -94,7 +94,7 @@ export const receiveInboxMessage = async (
   }
 
   if (action === 'create-or-update-conversation') {
-    const { conversationId, content, owner, updatedAt } = doc;
+    const { conversationId, content, owner, updatedAt, integrationId } = doc;
     let user;
 
     if (owner) {
@@ -116,13 +116,14 @@ export const receiveInboxMessage = async (
     if (conversationId) {
       if (!assignedUserId) {
         const existingConversation = await Conversations.findOne({
-          _id: conversationId,
-        });
+          $and: [{ _id: conversationId }, { integrationId: integrationId }],
+        }).lean();
 
         assignedUserId = existingConversation?.assignedUserId || null;
       }
+
       const conversation = await Conversations.findOne({
-        _id: conversationId,
+        $and: [{ _id: conversationId }, { integrationId: integrationId }],
       }).lean();
 
       if (conversation) {
