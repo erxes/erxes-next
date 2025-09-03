@@ -1,3 +1,4 @@
+import { SelectBranches, SelectDepartments, } from 'ui-modules';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { IAccount, JournalEnum } from '@/settings/account/types/Account';
 import { Form } from 'erxes-ui';
@@ -9,28 +10,19 @@ import {
   DepartmentField,
   DescriptionField,
 } from '../../GeneralFormFields';
-import { CtaxForm } from '../../helpers/CtaxForm';
 import { CustomerFields } from '../../helpers/CustomerFields';
-import { VatForm } from '../../helpers/VatForm';
 import { InventoryForm } from './InventoryForm';
 
-export const InvSaleForm = ({
+export const InvMoveForm = ({
   form,
   index,
 }: {
   form: ITransactionGroupForm;
   index: number;
 }) => {
-  const onChangeOutAccount = (account: IAccount) => {
+  const onChangeInAccount = (account: IAccount) => {
     form.setValue(
-      `trDocs.${index}.followExtras.saleOutAccount`,
-      account as any,
-    );
-  };
-
-  const onChangeCostAccount = (account: IAccount) => {
-    form.setValue(
-      `trDocs.${index}.followExtras.saleCostAccount`,
+      `trDocs.${index}.followExtras.moveInAccount`,
       account as any,
     );
   };
@@ -41,9 +33,8 @@ export const InvSaleForm = ({
         <AccountField
           form={form}
           index={index}
-          filter={{ journals: [JournalEnum.MAIN] }}
+          filter={{ journals: [JournalEnum.INVENTORY] }}
           allDetails={true}
-          labelTxt='Sale Account'
         />
         <CustomerFields form={form} index={index} />
         <BranchField form={form} index={index} />
@@ -52,16 +43,16 @@ export const InvSaleForm = ({
         <DescriptionField form={form} index={index} />
         <Form.Field
           control={form.control}
-          name={`trDocs.${index}.followInfos.saleOutAccountId`}
+          name={`trDocs.${index}.followInfos.moveInAccountId`}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Inventory Account</Form.Label>
+              <Form.Label>Move incoming Account</Form.Label>
               <Form.Control>
                 <SelectAccount
                   value={field.value || ''}
                   onValueChange={field.onChange}
                   defaultFilter={{ journals: [JournalEnum.INVENTORY] }}
-                  onCallback={(account) => onChangeOutAccount(account)}
+                  onCallback={(account) => onChangeInAccount(account)}
                 />
               </Form.Control>
               <Form.Message />
@@ -69,25 +60,39 @@ export const InvSaleForm = ({
           )}
         />
         <Form.Field
-          control={form.control}
-          name={`trDocs.${index}.followInfos.saleCostAccountId`}
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>Cost Account</Form.Label>
-              <Form.Control>
-                <SelectAccount
-                  value={field.value || ''}
-                  onValueChange={field.onChange}
-                  defaultFilter={{ journals: [JournalEnum.MAIN] }}
-                  onCallback={(account) => onChangeCostAccount(account)}
-                />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-        <VatForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
-        <CtaxForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
+            control={form.control}
+            name={`trDocs.${index}.followInfos.moveInBranchId`}
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Move incoming Branch</Form.Label>
+                <Form.Control>
+                  <SelectBranches.FormItem
+                    mode="single"
+                    value={field.value ?? ''}
+                    onValueChange={(branch) => field.onChange(branch)}
+                  />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+        <Form.Field
+            control={form.control}
+            name={`trDocs.${index}.followInfos.moveInDepartmentId`}
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Move incoming Department</Form.Label>
+                <Form.Control>
+                  <SelectDepartments.FormItem
+                    mode="single"
+                    value={field.value ?? ''}
+                    onValueChange={(department) => field.onChange(department)}
+                  />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
       </div>
 
       <InventoryForm
@@ -97,4 +102,3 @@ export const InvSaleForm = ({
     </>
   );
 };
-
