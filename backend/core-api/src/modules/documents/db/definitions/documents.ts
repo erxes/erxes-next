@@ -8,7 +8,7 @@ export const documentSchema = new Schema(
     name: { type: String },
     content: { type: String },
     replacer: { type: String },
-    code: { type: String },
+    code: { type: String, optional: true },
   },
   {
     timestamps: true,
