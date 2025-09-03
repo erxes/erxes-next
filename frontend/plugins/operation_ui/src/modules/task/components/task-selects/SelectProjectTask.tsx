@@ -95,8 +95,9 @@ const SelectProjectCommandItem = ({
 
   return (
     <Command.Item
-      value={project._id}
+      value={project.name}
       onSelect={() => onValueChange(project._id)}
+      className={!project._id ? 'text-muted-foreground' : ''}
     >
       <div className="flex items-center gap-2">
         <IconClipboard className="h-4 w-4" />

@@ -30,10 +30,16 @@ export const TaskFields = ({ task }: { task: ITask }) => {
 
   const startDate = (task as any)?.startDate;
   const description = (task as any)?.description;
+  const parsedDescription = description ? JSON.parse(description) : undefined;
+  const initialDescriptionContent =
+    Array.isArray(parsedDescription) && parsedDescription.length > 0
+      ? parsedDescription
+      : undefined;
 
   const [descriptionContent, setDescriptionContent] = useState<
     Block[] | undefined
-  >(description ? JSON.parse(description) : undefined);
+  >(initialDescriptionContent);
+
   const editor = useBlockEditor({
     initialContent: descriptionContent,
     placeholder: 'Description...',

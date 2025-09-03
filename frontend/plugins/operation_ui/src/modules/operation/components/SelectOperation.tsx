@@ -26,7 +26,9 @@ export const SelectTriggerOperation = ({
 }) => {
   if (variant === SelectTriggerVariant.TABLE) {
     return (
-      <RecordTableInlineCell.Trigger>{children}</RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Trigger className="gap-1">
+        {children}
+      </RecordTableInlineCell.Trigger>
     );
   }
   if (variant === SelectTriggerVariant.CARD) {

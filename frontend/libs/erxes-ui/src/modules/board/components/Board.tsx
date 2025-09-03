@@ -14,7 +14,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ScrollArea } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
@@ -179,6 +179,7 @@ const BoardProvider = <
     if (overItem) {
       setDragOverBoardColumnId(overItem.column as string);
     }
+    setDragOverBoardColumnId(null);
 
     onDragOver?.(event);
   };
@@ -254,7 +255,7 @@ export const BoardRoot = ({
             transition={{ duration: 0.1 }}
             className="absolute inset-0 top-8 rounded-t-md bg-background/30 backdrop-blur-sm flex items-center justify-center"
           >
-            Board ordered by{' '}
+            Board ordered by
             <span className="font-medium capitalize ml-1">{sortBy}</span>
           </motion.div>
         )}
