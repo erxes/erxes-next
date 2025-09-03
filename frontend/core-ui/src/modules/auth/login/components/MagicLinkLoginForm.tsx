@@ -1,6 +1,6 @@
 import { useLoginMagicLink } from '@/auth/login/hooks/useLoginMagicLink';
 import { IconBrandGoogleFilled } from '@tabler/icons-react';
-import { Button, Card, Form, Input, Label } from 'erxes-ui';
+import { Button, Form, Input, Label } from 'erxes-ui';
 
 export const MagicLinkLoginForm = () => {
   const { form, onMagicLinkSubmit, onGoogleLogin } = useLoginMagicLink();
@@ -8,16 +8,18 @@ export const MagicLinkLoginForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={onMagicLinkSubmit} className="mx-auto grid gap-5">
-        <Card.Description className="text-center text-accent-foreground font-medium">
+        <div className="text-center text-sm text-accent-foreground">
           We use magic link so you don't have to remember or type in yet another
           long password
-        </Card.Description>
+        </div>
         <Form.Field
           name="email"
           control={form.control}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Email</Form.Label>
+              <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
+                Email
+              </Form.Label>
               <Form.Message />
               <Form.Control>
                 <Input
@@ -31,17 +33,14 @@ export const MagicLinkLoginForm = () => {
           )}
         />
 
-        <Button type="submit" className={`h-8`}>
+        <Button type="submit" className="h-8">
           Continue
         </Button>
         <Label className="text-center">OR</Label>
-        <Button variant="link" onClick={onGoogleLogin}>
+        <Button variant="secondary" onClick={onGoogleLogin} type="button">
           <IconBrandGoogleFilled />
           Continue with Google
         </Button>
-        {/* disabled until the backend is ready */}
-        {/* <Card.Description className="text-center">or</Card.Description>
-        <GoogleOAuthButton /> */}
       </form>
     </Form>
   );

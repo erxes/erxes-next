@@ -19,6 +19,7 @@ import {
   Popover,
   Input,
   FullNameField,
+  FullNameValue,
   DatePicker,
   readImage,
   RecordTableInlineCell,
@@ -170,17 +171,24 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       return (
         <FullNameField
-          withBadge
           scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Name')}
           firstName={firstName}
           lastName={lastName}
-          onSave={onSave}
-          onClick={(e) => {
-            e.stopPropagation();
-            setDetailOpen(_id);
-            setRenderingTeamMemberDetail(false);
-          }}
-        />
+          onValueChange={onSave}
+        >
+          <RecordTableInlineCell.Trigger>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDetailOpen(_id);
+                setRenderingTeamMemberDetail(false);
+              }}
+            >
+              <FullNameValue />
+            </Badge>
+          </RecordTableInlineCell.Trigger>
+        </FullNameField>
       );
     },
     size: 240,

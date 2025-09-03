@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const PROJECT_CHANGED = gql`
-  subscription operationProjectChanged($filter: IProjectFilter) {
-    operationProjectChanged(filter: $filter) {
+  subscription operationProjectChanged($_id: String!) {
+    operationProjectChanged(_id: $_id) {
       type
       project {
         _id

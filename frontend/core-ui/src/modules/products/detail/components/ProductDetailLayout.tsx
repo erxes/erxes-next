@@ -1,5 +1,3 @@
-'use client';
-
 import type React from 'react';
 import { Tabs, Resizable } from 'erxes-ui';
 import { ProductDetailSheet } from './ProductDetailSheet';

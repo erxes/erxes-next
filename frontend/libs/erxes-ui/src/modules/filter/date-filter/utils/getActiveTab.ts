@@ -10,7 +10,7 @@ export const getActiveTab = (date: string) => {
   if (MONTHS.some((month) => date.includes(month))) {
     return 'month';
   }
-  if (date.includes('year')) {
+  if (/^\d{4}-y$/.test(date)) {
     return 'year';
   }
   return 'day';

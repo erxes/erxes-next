@@ -1,8 +1,8 @@
 import { ApolloError } from '@apollo/client';
 import { CommandBar, RecordTable, Separator, toast } from 'erxes-ui';
 import { SelectTags } from 'ui-modules';
-import { CompaniesDelete } from './delete/CompaniesDelete';
-import { CompaniesMerge } from './merge/CompaniesMerge';
+import { CompaniesDelete } from './CompaniesDelete';
+
 export const CompaniesCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
   const intersection = (arrays: string[][]): string[] => {
@@ -45,11 +45,11 @@ export const CompaniesCommandBar = () => {
             },
           })}
         />
-        <Separator.Inline />
+        {/* <Separator.Inline />
         <CompaniesMerge
           companies={selectedRows.map((row) => row.original)}
           rows={selectedRows}
-        />
+        /> */}
         <Separator.Inline />
         <CompaniesDelete companyIds={companyIds} rows={selectedRows} />
       </CommandBar.Bar>

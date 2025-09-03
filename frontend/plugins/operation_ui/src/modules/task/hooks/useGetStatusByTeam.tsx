@@ -1,9 +1,9 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_STATUS_BY_TEAM } from '../graphql/queries/getStatusByTeam';
-import { IStatus } from '@/task/types';
+import { ITaskStatus } from '@/task/types';
 
 interface IUseGetStatusByTeamResponse {
-  getStatusesChoicesByTeam: IStatus[];
+  getStatusesChoicesByTeam: ITaskStatus[];
 }
 
 export const useGetStatusByTeam = (
@@ -14,8 +14,10 @@ export const useGetStatusByTeam = (
     options,
   );
 
+  const statuses = data?.getStatusesChoicesByTeam;
+
   return {
-    statuses: data?.getStatusesChoicesByTeam || [],
+    statuses: statuses || [],
     loading,
     error,
   };

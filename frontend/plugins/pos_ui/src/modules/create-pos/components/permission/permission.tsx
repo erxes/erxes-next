@@ -1,4 +1,3 @@
-'use client';
 import { Input, Switch, Form } from 'erxes-ui';
 import { SelectMember } from 'ui-modules';
 import { useForm, UseFormReturn } from 'react-hook-form';
@@ -178,11 +177,16 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
     return (
       <div className="p-3">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-8"
+          >
             <div className="space-y-4">
               <div className="flex flex-col gap-3">
                 <h2 className="text-[#4F46E5] text-lg font-semibold">ADMINS</h2>
-                <p className="text-[#A1A1AA] text-xs font-semibold">POS ADMIN</p>
+                <p className="text-[#A1A1AA] text-xs font-semibold">
+                  POS ADMIN
+                </p>
               </div>
 
               <Form.Field
@@ -274,7 +278,9 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
 
             <div className="space-y-4 pt-6 border-t">
               <div className="flex flex-col gap-3">
-                <h2 className="text-[#4F46E5] text-lg font-semibold">Cashiers</h2>
+                <h2 className="text-[#4F46E5] text-lg font-semibold">
+                  Cashiers
+                </h2>
                 <p className="text-[#A1A1AA] text-xs font-semibold">
                   Pos Cashier
                 </p>

@@ -9,12 +9,7 @@ import {
 } from 'erxes-ui';
 import { useConversationContext } from '../hooks/useConversationContext';
 import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
-import {
-  BrandsInline,
-  currentUserState,
-  CustomersInline,
-  TagBadge,
-} from 'ui-modules';
+import { BrandsInline, currentUserState, CustomersInline } from 'ui-modules';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { activeConversationState } from '../states/activeConversationState';
 import { ConversationIntegrationBadge } from '@/integrations/components/IntegrationBadge';

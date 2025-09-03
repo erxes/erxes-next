@@ -28,6 +28,7 @@ export const NOTIFICATION_FIELDS = `
       contentTypeId
       action
       kind
+      updatedAt
 `;
 
 const NOTIFICATIONS_LIST_PARAMS = `

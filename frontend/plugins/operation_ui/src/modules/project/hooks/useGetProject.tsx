@@ -24,7 +24,7 @@ export const useGetProject = (options: QueryHookOptions) => {
   useEffect(() => {
     const unsubscribe = subscribeToMore<IProjectChanged>({
       document: PROJECT_CHANGED,
-      variables: { filter: { _id: project?._id } },
+      variables: { _id: project?._id },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
 

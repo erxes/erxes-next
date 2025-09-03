@@ -37,8 +37,8 @@ export const getDisplayValue = (value: string) => {
     return `${year} H${halfNumber}`;
   }
 
-  if (/^\d{4}$/.test(value)) {
-    return value;
+  if (/^\d{4}-y$/.test(value)) {
+    return value.replace('-y', '');
   }
 
   if (value.includes(',')) {

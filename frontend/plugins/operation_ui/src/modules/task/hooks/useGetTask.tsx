@@ -25,7 +25,7 @@ export const useGetTask = (options: QueryHookOptions) => {
   useEffect(() => {
     const unsubscribe = subscribeToMore<ITaskChanged>({
       document: TASK_CHANGED,
-      variables: { filter: { _id: task?._id } },
+      variables: { _id: task?._id },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
 

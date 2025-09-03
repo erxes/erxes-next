@@ -14,7 +14,9 @@ export const CustomerOwner = ({
 }) => {
   const { customerEdit } = useCustomerEdit();
 
-  const SelectComponent = inTable ? SelectMember.InlineCell : SelectMember;
+  const SelectComponent = inTable
+    ? SelectMember.InlineCell
+    : SelectMember.Detail;
 
   return (
     <SelectComponent

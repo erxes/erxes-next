@@ -22,13 +22,13 @@ import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ITeam } from '@/team/types';
 import {
-  SelectStatus,
   SelectLead,
   DateSelect,
   SelectProjectTeam,
 } from '@/project/components/select';
 import clsx from 'clsx';
 import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
+import { SelectProjectStatus } from '@/project/components/select/SelectProjectStatus';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
@@ -127,9 +127,10 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectStatus.InlineCell
+          <SelectProjectStatus
+            inInlineCell
+            projectId={cell.row.original._id}
             value={cell.row.original.status || 0}
-            id={cell.row.original._id}
           />
         );
       },
