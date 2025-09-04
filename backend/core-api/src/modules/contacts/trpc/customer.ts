@@ -42,7 +42,7 @@ export const customerRouter = t.router({
       if (query?._id) {
         defaultFilter['_id'] = query._id;
       }
-
+      console.log(defaultFilter, 'defaultFilter');
       return models.Customers.findOne(defaultFilter).lean();
     }),
 
@@ -94,7 +94,7 @@ export const customerRouter = t.router({
       .mutation(async ({ ctx, input }) => {
         const { _id, doc } = input;
         const { models } = ctx;
-
+        console.log('updated customer:', _id, doc);
         return models.Customers.updateCustomer(_id, doc);
       }),
 

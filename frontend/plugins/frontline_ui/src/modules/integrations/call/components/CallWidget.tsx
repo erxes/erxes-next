@@ -4,7 +4,13 @@ import { Button, DropdownMenu } from 'erxes-ui';
 import { CallWidgetDraggableRoot } from '@/integrations/call/components/CallWidgetDraggable';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
-import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
+import {
+  CSSProperties,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   CallDirectionEnum,
   CallStatusEnum,
@@ -22,7 +28,6 @@ import { CallTriggerContent } from '@/integrations/call/components/CallTriggerCo
 
 export const CallWidgetContent = () => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
-
   if (sipState.callStatus === CallStatusEnum.IDLE) {
     return <CallTabs keypad={<Dialpad />} />;
   }
@@ -66,12 +71,26 @@ export const CallWidget = () => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number | undefined>();
   const open = useAtomValue(callWidgetOpenAtom);
+  const sipState = useAtomValue(sipStateAtom);
+  const setOpen = useSetAtom(callWidgetOpenAtom);
 
   useLayoutEffect(() => {
     if (popoverContentRef.current) {
       setContentHeight(popoverContentRef.current.offsetHeight);
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      sipState.callDirection === CallDirectionEnum.INCOMING &&
+      sipState.callStatus === CallStatusEnum.STARTING
+    ) {
+      setOpen(true);
+    }
+    if (sipState.callStatus === CallStatusEnum.IDLE) {
+      setOpen(false);
+    }
+  }, [sipState.callDirection, sipState.callStatus, setOpen]);
 
   return (
     <>
