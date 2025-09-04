@@ -11,6 +11,11 @@ export const INTEGRATIONS = {
     name: 'Facebook Messenger',
     description:
       'Connect and manage Facebook Messages right from your Team Inbox',
+    img: 'fb-messenger.svg',
+  },
+  [IntegrationType.FACEBOOK_POST]: {
+    name: 'Facebook Post',
+    description: 'Connect and manage Facebook Posts right from your Team Inbox',
     img: 'fb.svg',
   },
   [IntegrationType.CALL]: {

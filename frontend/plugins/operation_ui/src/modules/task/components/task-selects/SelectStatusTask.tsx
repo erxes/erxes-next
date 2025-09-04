@@ -7,11 +7,10 @@ import {
   PopoverScoped,
   useQueryState,
 } from 'erxes-ui';
-import { IStatus } from '@/task/types';
+import { ITaskStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { StatusInlineIcon } from '@/task/components/StatusInline';
-import { TeamStatusTypes } from '@/team/constants';
+import { StatusInlineIcon } from '@/operation/components/StatusInline';
 import {
   SelectOperationContent,
   SelectTriggerOperation,
@@ -23,7 +22,7 @@ interface SelectStatusContextType {
   onValueChange: (status: string) => void;
   loading?: boolean;
   error?: any;
-  statuses?: IStatus[];
+  statuses?: ITaskStatus[];
 }
 
 const SelectStatusContext = React.createContext<SelectStatusContextType | null>(
@@ -88,7 +87,7 @@ const SelectStatusValue = ({
   if (!selectedStatus) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Status'}
+        {placeholder || 'Select status'}
       </span>
     );
   }
@@ -96,17 +95,17 @@ const SelectStatusValue = ({
   return (
     <div className="flex items-center gap-2">
       <StatusInlineIcon
-        type={selectedStatus.type}
+        statusType={selectedStatus.type}
         color={selectedStatus.color}
       />
-      <p className={cn('font-medium text-sm', className)}>
+      <p className={cn('font-medium text-sm capitalize', className)}>
         {selectedStatus.label}
       </p>
     </div>
   );
 };
 
-const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
+const SelectStatusCommandItem = ({ status }: { status: ITaskStatus }) => {
   const { onValueChange, value } = useSelectStatusContext();
   const { label, value: statusValue, type, color } = status || {};
 
@@ -118,8 +117,8 @@ const SelectStatusCommandItem = ({ status }: { status: IStatus }) => {
       }}
     >
       <div className="flex items-center gap-2 flex-1">
-        <StatusInlineIcon type={type} color={color} />
-        <span className="font-medium">{label}</span>
+        <StatusInlineIcon statusType={type} color={color} />
+        <span className="font-medium capitalize">{label}</span>
       </div>
       <Combobox.Check checked={value === statusValue} />
     </Command.Item>
@@ -180,7 +179,7 @@ const SelectStatusTaskRoot = ({
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant={variant}>
-          <SelectStatusValue placeholder="Status" />
+          <SelectStatusValue />
         </SelectTriggerOperation>
         <SelectOperationContent variant={variant}>
           <SelectStatusContent />
@@ -259,9 +258,7 @@ export const SelectStatusTaskFormItem = ({
 
   const [open, setOpen] = useState(false);
 
-  const fallBackStatus = statuses?.find(
-    (status) => status.type === TeamStatusTypes.Backlog,
-  )?.value;
+  const fallBackStatus = statuses?.find((status) => status.type === 1)?.value;
 
   useEffect(() => {
     if (fallBackStatus && !value) {
@@ -280,7 +277,7 @@ export const SelectStatusTaskFormItem = ({
     >
       <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
         <SelectTriggerOperation variant="form">
-          <SelectStatusValue placeholder="Status" />
+          <SelectStatusValue />
         </SelectTriggerOperation>
         <Combobox.Content>
           <SelectStatusContent />

@@ -1,16 +1,17 @@
 import { Button, Form, Input } from 'erxes-ui';
 import {
-  FacebookMessengerAddSteps,
-  FacebookMessengerAddLayout,
-} from './FacebookMessengerAdd';
+  FacebookIntegrationFormSteps,
+  FacebookIntegrationFormLayout,
+} from './FacebookIntegrationForm';
 import { useSetAtom } from 'jotai';
 import {
-  activeFacebookMessengerAddStepAtom,
+  activeFacebookFormStepAtom,
+  resetFacebookAddStateAtom,
   selectedFacebookPageAtom,
 } from '../states/facebookStates';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { FACEBOOK_MESSENGER_SCHEMA } from '../constants/FbMessengerSchema';
+import { FACEBOOK_INTEGRATION_SCHEMA } from '../constants/FbMessengerSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SelectBrand } from 'ui-modules';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
@@ -18,14 +19,16 @@ import { useIntegrationAdd } from '@/integrations/hooks/useIntegrationAdd';
 import { useAtomValue } from 'jotai';
 import { selectedFacebookAccountAtom } from '../states/facebookStates';
 import { IntegrationType } from '@/types/Integration';
+import { useFbIntegrationContext } from '@/integrations/facebook/contexts/FbIntegrationContext';
 
 export const FacebookIntegrationSetup = () => {
-  const form = useForm<z.infer<typeof FACEBOOK_MESSENGER_SCHEMA>>({
-    resolver: zodResolver(FACEBOOK_MESSENGER_SCHEMA),
+  const { isPost } = useFbIntegrationContext();
+  const form = useForm<z.infer<typeof FACEBOOK_INTEGRATION_SCHEMA>>({
+    resolver: zodResolver(FACEBOOK_INTEGRATION_SCHEMA),
     defaultValues: {
       name: '',
       brandId: '',
-      channelId: '',
+      channelIds: [],
     },
   });
 
@@ -34,36 +37,26 @@ export const FacebookIntegrationSetup = () => {
 
   const { addIntegration, loading } = useIntegrationAdd();
 
-  const setActiveStep = useSetAtom(activeFacebookMessengerAddStepAtom);
+  const resetFacebookForm = useSetAtom(resetFacebookAddStateAtom);
+  const setActiveStep = useSetAtom(activeFacebookFormStepAtom);
 
-  // {
-  //   "name": "fff",
-  //   "brandId": "jgJSxH_1Jn5jD2-S393Mf",
-  //   "kind": "facebook-messenger",
-  //   "accountId": "6mtRo9sP3i2n4forn",
-  //   "channelIds": [
-  //     "djK6ZOKDjTsku8oYqZuJ8"
-  //   ],
-  //   "data": {
-  //     "pageIds": []
-  //   }
-  // }
-
-  const onNext = (data: z.infer<typeof FACEBOOK_MESSENGER_SCHEMA>) => {
+  const onNext = (data: z.infer<typeof FACEBOOK_INTEGRATION_SCHEMA>) => {
     addIntegration({
       variables: {
-        kind: IntegrationType.FACEBOOK_MESSENGER,
+        kind: isPost
+          ? IntegrationType.FACEBOOK_POST
+          : IntegrationType.FACEBOOK_MESSENGER,
         name: data.name,
         brandId: data.brandId,
         accountId,
-        channelIds: data.channelId,
+        channelIds: data.channelIds,
         data: {
           pageIds: [pageId],
         },
       },
       refetchQueries: ['integrations'],
     });
-    setActiveStep(4);
+    resetFacebookForm();
   };
 
   return (
@@ -72,7 +65,7 @@ export const FacebookIntegrationSetup = () => {
         className="flex flex-col flex-1"
         onSubmit={form.handleSubmit(onNext)}
       >
-        <FacebookMessengerAddLayout
+        <FacebookIntegrationFormLayout
           actions={
             <>
               <Button
@@ -88,7 +81,7 @@ export const FacebookIntegrationSetup = () => {
             </>
           }
         >
-          <FacebookMessengerAddSteps
+          <FacebookIntegrationFormSteps
             title="Integration Setup"
             step={3}
             description=""
@@ -128,15 +121,15 @@ export const FacebookIntegrationSetup = () => {
               )}
             />
             <Form.Field
-              name="channelId"
+              name="channelIds"
               render={({ field }) => (
                 <Form.Item>
-                  <Form.Label>Channel</Form.Label>
+                  <Form.Label>Channels</Form.Label>
                   <SelectChannel.FormItem
                     className="flex w-full"
-                    value={field.value}
+                    value={field.value || []}
                     onValueChange={field.onChange}
-                    mode="single"
+                    mode="multiple"
                   />
                   <Form.Description>
                     Which specific Channel does this integration belong to?
@@ -146,7 +139,7 @@ export const FacebookIntegrationSetup = () => {
               )}
             />
           </div>
-        </FacebookMessengerAddLayout>
+        </FacebookIntegrationFormLayout>
       </form>
     </Form>
   );

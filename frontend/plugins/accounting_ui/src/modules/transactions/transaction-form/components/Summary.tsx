@@ -3,7 +3,7 @@ import { IconGavel, IconTrashX } from '@tabler/icons-react';
 import { ITransaction } from '@/transactions/types/Transaction';
 import { ITransactionGroupForm, TTrDoc } from '../types/JournalForms';
 import { TR_SIDES } from '../../types/constants';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useTransactionsRemove } from '../hooks/useTransactionsRemove';
 import { useWatch } from 'react-hook-form';
 import {
@@ -37,7 +37,7 @@ export const sumDtAndCt = (trDocs: TTrDoc[], followTrDocs: ITransaction[]) => {
 
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { trDocs } = useWatch({ control: form.control });
-  const [followTrDocs] = useAtom(followTrDocsState);
+  const followTrDocs = useAtomValue(followTrDocsState);
   const [parentId] = useQueryState<string>('parentId');
 
   const { removeTransactions } = useTransactionsRemove();

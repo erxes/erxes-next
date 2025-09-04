@@ -4,8 +4,26 @@ import { useMutation, MutationFunctionOptions } from '@apollo/client';
 export const useIntegrationEdit = () => {
   const [editIntegration, { loading }] = useMutation(EDIT_INTEGRATION);
 
+  const mutate = (options: MutationFunctionOptions) => {
+    editIntegration({
+      ...options,
+      update: (cache, { data }) => {
+        cache.modify({
+          id: cache.identify(data.integrationsEditCommonFields),
+          fields: Object.keys(options.variables || {}).reduce(
+            (fields: any, field) => {
+              fields[field] = () => (options.variables || {})[field];
+              return fields;
+            },
+            {},
+          ),
+        });
+      },
+    });
+  };
+
   return {
-    editIntegration,
+    editIntegration: mutate,
     loading,
   };
 };

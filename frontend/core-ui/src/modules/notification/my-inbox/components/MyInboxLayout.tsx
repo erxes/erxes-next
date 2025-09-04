@@ -1,4 +1,4 @@
-import { Separator } from 'erxes-ui';
+import { Resizable } from 'erxes-ui';
 
 type Props = {
   Notifications: React.ComponentType;
@@ -9,13 +9,16 @@ export const MyInboxLayout = ({
   Notifications,
   NotificationContent,
 }: Props) => (
-  <div className="flex-auto flex">
-    <div className="flex-none w-72">
+  <Resizable.PanelGroup
+    direction="horizontal"
+    className="flex-1 overflow-hidden"
+  >
+    <Resizable.Panel minSize={20} defaultSize={30} className="hidden sm:flex">
       <Notifications />
-    </div>
-    <Separator orientation="vertical" />
-    <div className="flex-auto">
+    </Resizable.Panel>
+    <Resizable.Handle />
+    <Resizable.Panel minSize={20} defaultSize={70}>
       <NotificationContent />
-    </div>
-  </div>
+    </Resizable.Panel>
+  </Resizable.PanelGroup>
 );

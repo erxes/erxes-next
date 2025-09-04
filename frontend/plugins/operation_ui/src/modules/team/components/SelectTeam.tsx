@@ -57,7 +57,7 @@ const SelectTeamProvider = ({
   const { teams, loading } = useGetCurrentUsersTeams();
 
   const handleValueChange = (teamId: string) => {
-    if (!value) return;
+    if (!teamId) return;
     if (mode === 'single') {
       onValueChange(teamId);
       setOpen?.(false);

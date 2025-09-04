@@ -136,7 +136,11 @@ const SelectMemberNoAssigneeItem = () => {
   const { onSelect, memberIds } = useSelectMemberContext();
   return (
     <Command.Item value="no-assignee" onSelect={() => onSelect(null)}>
-      <MembersInline memberIds={[]} placeholder="Unnamed user" />
+      <MembersInline
+        memberIds={[]}
+        placeholder="Unnamed user"
+        allowUnassigned
+      />
       <Combobox.Check checked={!memberIds || memberIds.length === 0} />
     </Command.Item>
   );

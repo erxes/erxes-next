@@ -4,8 +4,10 @@ import { withFilter } from 'graphql-subscriptions';
 export default {
   name: 'operation',
   typeDefs: `
-      operationTaskChanged(filter: ITaskFilter): TaskSubscription
-      operationProjectChanged(filter: IProjectFilter): ProjectSubscription
+      operationTaskChanged(_id: String!): TaskSubscription
+      operationProjectChanged(_id: String!): ProjectSubscription
+      operationTaskListChanged(filter: ITaskFilter): TaskSubscription
+      operationProjectListChanged(filter: IProjectFilter): ProjectSubscription
       operationActivityChanged(contentId: String!): OperationActivitySubscription
 
 		`,
@@ -19,16 +21,26 @@ export default {
 
       operationTaskChanged: {
         resolve: (payload) => payload.operationTaskChanged,
+        subscribe: (_, { _id }) =>
+          graphqlPubsub.asyncIterator(`operationTaskChanged:${_id}`),
+      },
+      operationProjectChanged: {
+        resolve: (payload) => payload.operationProjectChanged,
+        subscribe: (_, { _id }) =>
+          graphqlPubsub.asyncIterator(`operationProjectChanged:${_id}`),
+      },
+
+      operationTaskListChanged: {
+        resolve: (payload) => payload.operationTaskListChanged,
         subscribe: withFilter(
-          () => graphqlPubsub.asyncIterator('operationTaskChanged'),
+          () => graphqlPubsub.asyncIterator('operationTaskListChanged'),
           async (payload, variables) => {
-            const task = payload.operationTaskChanged.task;
+            const task = payload.operationTaskListChanged.task;
             const filter = variables.filter || {};
 
             if (!filter) return true;
 
             if (filter._id && task._id === filter._id) {
-              console.log('sdas');
               return true;
             }
 
@@ -88,12 +100,12 @@ export default {
         ),
       },
 
-      operationProjectChanged: {
-        resolve: (payload) => payload.operationProjectChanged,
+      operationProjectListChanged: {
+        resolve: (payload) => payload.operationProjectListChanged,
         subscribe: withFilter(
-          () => graphqlPubsub.asyncIterator('operationProjectChanged'),
+          () => graphqlPubsub.asyncIterator('operationProjectListChanged'),
           async (payload, variables) => {
-            const project = payload.operationProjectChanged.project;
+            const project = payload.operationProjectListChanged.project;
             const filter = variables.filter || {};
 
             if (!filter) return true;

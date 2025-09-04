@@ -4,36 +4,49 @@ import { Button, Sheet } from 'erxes-ui';
 import { FacebookGetAccounts } from './FacebookGetAccounts';
 import { useAtomValue, useSetAtom } from 'jotai';
 import {
-  activeFacebookMessengerAddStepAtom,
+  activeFacebookFormStepAtom,
+  facebookFormSheetAtom,
   resetFacebookAddStateAtom,
 } from '../states/facebookStates';
 import { FacebookGetPages } from './FacebookGetPages';
 import { FacebookIntegrationSetup } from './FacebookIntegrationSetup';
 import { useAtom } from 'jotai';
-import { facebookAddSheetAtom } from '../states/facebookStates';
+import {
+  FbIntegrationProvider,
+  useFbIntegrationContext,
+} from '../contexts/FbIntegrationContext';
 
-export const FacebookMessengerAddSheet = () => {
-  const [facebookAddSheet, setFacebookAddSheet] = useAtom(facebookAddSheetAtom);
+export const FacebookIntegrationFormSheet = ({
+  isPost,
+}: {
+  isPost?: boolean;
+}) => {
+  const [facebookFormSheet, setFacebookFormSheet] = useAtom(
+    facebookFormSheetAtom,
+  );
 
   return (
-    <div>
-      <Sheet open={facebookAddSheet} onOpenChange={setFacebookAddSheet}>
-        <Sheet.Trigger asChild>
-          <Button>
-            <IconPlus />
-            Add Facebook Messenger
-          </Button>
-        </Sheet.Trigger>
-        <Sheet.View>
-          <FacebookMessengerAdd />
-        </Sheet.View>
-      </Sheet>
-    </div>
+    <FbIntegrationProvider isPost={isPost}>
+      <div>
+        <Sheet open={facebookFormSheet} onOpenChange={setFacebookFormSheet}>
+          <Sheet.Trigger asChild>
+            <Button>
+              <IconPlus />
+              Add Facebook{' '}
+              {isPost ? 'Post integration' : 'Messenger integration'}
+            </Button>
+          </Sheet.Trigger>
+          <Sheet.View>
+            <FacebookIntegrationForm />
+          </Sheet.View>
+        </Sheet>
+      </div>
+    </FbIntegrationProvider>
   );
 };
 
-export const FacebookMessengerAdd = () => {
-  const activeStep = useAtomValue(activeFacebookMessengerAddStepAtom);
+export const FacebookIntegrationForm = () => {
+  const activeStep = useAtomValue(activeFacebookFormStepAtom);
 
   return (
     <>
@@ -44,7 +57,7 @@ export const FacebookMessengerAdd = () => {
   );
 };
 
-export const FacebookMessengerAddLayout = ({
+export const FacebookIntegrationFormLayout = ({
   children,
   actions,
 }: {
@@ -52,11 +65,12 @@ export const FacebookMessengerAddLayout = ({
   actions: React.ReactNode;
 }) => {
   const resetForm = useSetAtom(resetFacebookAddStateAtom);
+  const { isPost } = useFbIntegrationContext();
 
   return (
     <>
       <Sheet.Header>
-        <Sheet.Title>Add Facebook Messenger</Sheet.Title>
+        <Sheet.Title>Add Facebook {isPost ? 'Post' : 'Messenger'}</Sheet.Title>
         <Sheet.Close />
       </Sheet.Header>
       <Sheet.Content className="flex flex-col overflow-hidden">
@@ -78,8 +92,7 @@ export const FacebookMessengerAddLayout = ({
   );
 };
 
-export const FacebookMessengerAddSteps = ({
-  title,
+export const FacebookIntegrationFormSteps = ({
   step,
   description,
 }: {

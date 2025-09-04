@@ -19,10 +19,10 @@ import { currentUserState } from 'ui-modules';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
-import { PROJECT_CHANGED } from '@/project/graphql/subscriptions/projectChanged';
+import { PROJECT_LIST_CHANGED } from '@/project/graphql/subscriptions/projectListChanged';
 
 interface IProjectChanged {
-  operationProjectChanged: {
+  operationProjectListChanged: {
     type: string;
     project: IProject;
   };
@@ -90,12 +90,13 @@ export const useProjects = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<IProjectChanged>({
-      document: PROJECT_CHANGED,
+      document: PROJECT_LIST_CHANGED,
       variables: { filter: variables },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, project } = subscriptionData.data.operationProjectChanged;
+        const { type, project } =
+          subscriptionData.data.operationProjectListChanged;
         const currentList = prev.getProjects.list;
 
         let updatedList = currentList;
@@ -146,9 +147,11 @@ export const useProjects = (
     setProjectTotalCount(totalCount);
   }, [totalCount, setProjectTotalCount]);
 
-  const handleFetchMore = (
-    direction: EnumCursorDirection = EnumCursorDirection.FORWARD,
-  ) => {
+  const handleFetchMore = ({
+    direction = EnumCursorDirection.FORWARD,
+  }: {
+    direction?: EnumCursorDirection;
+  }) => {
     if (!validateFetchMore({ direction, pageInfo })) {
       return;
     }

@@ -8,6 +8,8 @@ import {
   Separator,
   readImage,
   Spinner,
+  Popover,
+  FullNameValue,
 } from 'erxes-ui';
 import { CustomerName } from './CustomerName';
 import { useCustomerDetail } from '../hooks';
@@ -71,11 +73,21 @@ export const CustomerWidget = ({
                 <CustomerName
                   _id={customerId}
                   firstName={firstName || ''}
-                  lastName={lastName || ''}
-                  middleName={middleName || ''}
+                  lastName={`${middleName || ''}${middleName ? ' ' : ''}${
+                    lastName || ''
+                  }`}
                   scope={clsx(scope, 'Name')}
-                  className="rounded font-medium text-base"
-                />
+                >
+                  <Popover.Trigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      className="rounded font-medium text-base"
+                    >
+                      <FullNameValue />
+                    </Button>
+                  </Popover.Trigger>
+                </CustomerName>
               </div>
               <div className="space-y-2">
                 <Label>Owner</Label>

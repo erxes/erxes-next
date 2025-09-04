@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from './button';
 import { cn } from '../lib/utils';
 import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
-import { TextOverflowTooltip } from './text-overflow';
 import { Popover } from './popover';
 import { Command } from './command';
 import { useInView } from 'react-intersection-observer';
@@ -25,7 +24,7 @@ export const ComboboxTriggerBase = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'flex truncate h-8 rounded pl-3 transition-[color,box-shadow] focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-normal text-left w-full',
+          'flex truncate h-8 rounded pl-3 transition-[color,box-shadow] focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-normal text-left w-full gap-1',
           (!props.variant || props.variant === 'outline') && 'shadow-xs',
           props.size === 'lg' && 'gap-2',
           className,
@@ -73,9 +72,10 @@ export const ComboboxTriggerIcon = React.forwardRef<
 
 export const ComboboxValue = React.forwardRef<
   HTMLSpanElement,
-  React.ComponentPropsWithoutRef<typeof TextOverflowTooltip> & {
+  React.HTMLAttributes<HTMLSpanElement> & {
     placeholder?: string;
     loading?: boolean;
+    value?: string | JSX.Element;
   }
 >(({ value, className, placeholder, loading, ...props }, ref) => {
   if (loading) {
@@ -83,16 +83,13 @@ export const ComboboxValue = React.forwardRef<
   }
 
   return (
-    <TextOverflowTooltip
+    <span
       ref={ref}
       {...props}
-      value={value || placeholder || ''}
-      className={cn(
-        'text-left',
-        !value && 'text-accent-foreground/70',
-        className,
-      )}
-    />
+      className={cn('truncate', className, !value && 'text-accent-foreground')}
+    >
+      {value || placeholder || ''}
+    </span>
   );
 });
 

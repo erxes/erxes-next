@@ -83,7 +83,7 @@ export const JOURNALS = {
   TAX: 'tax',
   ALL: [
     'main', 'cash', 'bank', 'receivable', 'payable',
-    'inv_fb', 'invIncome', 'invOut', 'inv_move', 'inv_adjust', 'inv_convert',
+    'inv_fb', 'invIncome', 'invOut', 'invMove', 'inv_adjust', 'inv_convert',
     'inv_sale', 'inv_cost',
     'inv_in_return', 'inv_sale_return',
     'expense', 'tax'

@@ -3,7 +3,6 @@ import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
 import { Popover as PopoverPrimitive } from 'radix-ui';
 import { UseHotkeysOptionsWithoutBuggyOptions } from 'erxes-ui/modules/hotkey';
-import { IconArrowUpRight } from '@tabler/icons-react';
 
 export interface ReactTablePopoverProps
   extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> {
@@ -89,7 +88,7 @@ export const RecordTableInlineAnchor = React.forwardRef<
         onClick?.(e);
       }}
       variant="secondary"
-      className={cn('min-w-32 group', className)}
+      className={cn('min-w-32 group truncate', className)}
       {...props}
     >
       {children}
