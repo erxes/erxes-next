@@ -1,9 +1,8 @@
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { tagSchema } from '@/tags/db/definitions/tags';
+import { removeRelatedTagIds, setRelatedTagIds } from '@/tags/utils';
 import { ITag, ITagDocument } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { removeRelatedTagIds, setRelatedTagIds } from '@/tags/utils';
-import { tagSchema } from '@/tags/db/definitions/tags';
 export interface ITagModel extends Model<ITagDocument> {
   getTag(_id: string): Promise<ITagDocument>;
   createTag(doc: ITag): Promise<ITagDocument>;
@@ -13,9 +12,55 @@ export interface ITagModel extends Model<ITagDocument> {
 
 export const loadTagClass = (models: IModels) => {
   class Tag {
-    /*
-     * Get a tag
-     */
+    public static async validate(_id: string | null, doc: ITag) {
+      const { name, parentId, isGroup } = doc;
+
+      const tag = await models.Tags.findOne({
+        $or: [{ _id }, { name }],
+      }).lean();
+
+      if (tag?.name === name) {
+        throw new Error(`A tag named ${name} already exists`);
+      }
+
+      if (tag?.isGroup && isGroup) {
+        throw new Error('Nested group is not allowed 1');
+      }
+
+      if (String(_id) === String(parentId)) {
+        throw new Error('Group cannot be itself');
+      }
+
+      if (parentId) {
+        const parentTag = await models.Tags.findOne({ _id: parentId }).lean();
+
+        if (!parentTag) {
+          throw new Error('Group not found');
+        }
+
+        if (!parentTag.isGroup) {
+          throw new Error('Parent tag must be a group');
+        }
+
+        if ((isGroup || tag?.isGroup) && parentTag?.isGroup) {
+          throw new Error('Nested group is not allowed 2 ');
+        }
+      }
+
+      if (tag) {
+        const parentTag = await models.Tags.findOne({ _id: tag.parentId }).lean();
+        const childTags = await models.Tags.find({ parentId: tag._id }).lean();
+
+        if (parentTag?.isGroup && isGroup) {
+          throw new Error('Nested group is not allowed 3');
+        }
+
+        if (!isGroup && childTags.length) {
+          throw new Error('Group has tags');
+        }
+      }
+    }
+
     public static async getTag(_id: string) {
       const tag = await models.Tags.findOne({ _id });
 
@@ -26,94 +71,34 @@ export const loadTagClass = (models: IModels) => {
       return tag;
     }
 
-    /**
-     * Create a tag
-     */
     public static async createTag(doc: ITag) {
-      const isUnique = await this.validateUniqueness(null, doc.name, doc.type);
+      await this.validate(null, doc);
 
-      if (!isUnique) {
-        throw new Error('Tag duplicated');
-      }
-
-      const parentTag = await this.getParentTag(doc);
-
-      // Generatingg order
-      const order = await this.generateOrder(parentTag, doc);
-
-      const tag = await models.Tags.create({
-        ...doc,
-        order,
-        createdAt: new Date(),
-      });
+      const tag = await models.Tags.create(doc);
 
       await setRelatedTagIds(models, tag);
 
       return tag;
     }
 
-    /**
-     * Update Tag
-     */
     public static async updateTag(_id: string, doc: ITag) {
-      const isUnique = await this.validateUniqueness(
-        { _id },
-        doc.name,
-        doc.type,
-      );
-
-      if (!isUnique) {
-        throw new Error('Tag duplicated');
-      }
-
-      const parentTag = await this.getParentTag(doc);
-
-      if (parentTag && parentTag.parentId === _id) {
-        throw new Error('Cannot change tag');
-      }
+      await this.validate(_id, doc);
 
       const tag = await models.Tags.getTag(_id);
 
-      // Generatingg  order
-      const order = await this.generateOrder(parentTag, doc);
+      const childTags = await models.Tags.find({ parentId: tag._id });
 
-      const childTags = await models.Tags.find({
-        $and: [
-          { order: { $regex: new RegExp(escapeRegExp(tag.order || ''), 'i') } },
-          { _id: { $ne: _id } },
-        ],
-      });
-
-      if (childTags.length > 0) {
-        const bulkDoc: Array<{
-          updateOne: {
-            filter: { _id: string };
-            update: { $set: { order: string } };
-          };
-        }> = [];
-
-        // updating child tag order
-        childTags.forEach((childTag) => {
-          let childOrder = childTag.order || '';
-
-          childOrder = childOrder.replace(tag.order || '', order);
-
-          bulkDoc.push({
-            updateOne: {
-              filter: { _id: childTag._id },
-              update: { $set: { order: childOrder } },
-            },
-          });
-        });
-
-        await models.Tags.bulkWrite(bulkDoc);
-
+      if (childTags.length) {
         await removeRelatedTagIds(models, tag);
       }
 
-      await models.Tags.updateOne({ _id }, { $set: { ...doc, order } });
-
-      const updated = await models.Tags.findOne({ _id });
+      const updated = await models.Tags.findOneAndUpdate(
+        { _id: tag._id },
+        doc,
+        {
+          new: true,
+        },
+      );
 
       if (updated) {
         await setRelatedTagIds(models, updated);
@@ -122,81 +107,21 @@ export const loadTagClass = (models: IModels) => {
       return updated;
     }
 
-    /**
-     * Remove Tag
-     */
     public static async removeTag(_id: string) {
       const tag = await models.Tags.getTag(_id);
 
-      const childCount = await models.Tags.countDocuments({
-        parentId: _id,
-      });
+      const childTagIds = await models.Tags.find({ parentId: _id }).distinct(
+        '_id',
+      );
 
-      if (childCount > 0) {
-        throw new Error('Please remove child tags first');
-      }
+      await models.Tags.updateMany(
+        { _id: { $in: childTagIds } },
+        { $unset: { parentId: 1 } },
+      );
 
       await removeRelatedTagIds(models, tag);
 
       return models.Tags.deleteOne({ _id });
-    }
-
-    /*
-     * Validates tag uniquness
-     */
-    public static async validateUniqueness(
-      selector: any,
-      name: string,
-      type: string,
-    ): Promise<boolean> {
-      // required name and type
-      if (!name || !type) {
-        return true;
-      }
-
-      // can't update name & type same time more than one tags.
-      const count = await models.Tags.countDocuments(selector);
-
-      if (selector && count > 1) {
-        return false;
-      }
-
-      const obj = selector && (await models.Tags.findOne(selector));
-
-      const filter: any = { name, type };
-
-      if (obj) {
-        filter._id = { $ne: obj._id };
-      }
-
-      const existing = await models.Tags.findOne(filter);
-
-      if (existing) {
-        return false;
-      }
-
-      return true;
-    }
-
-    /*
-     * Get a parent tag
-     */
-    static async getParentTag(doc: ITag) {
-      return models.Tags.findOne({
-        _id: doc.parentId,
-      }).lean();
-    }
-
-    /**
-     * Generating order
-     */
-    public static async generateOrder(
-      parentTag: ITagDocument | null,
-      { name }: { name: string },
-    ) {
-      const order = parentTag ? `${parentTag.order}${name}/` : `${name}/`;
-
-      return order;
     }
   }
 
