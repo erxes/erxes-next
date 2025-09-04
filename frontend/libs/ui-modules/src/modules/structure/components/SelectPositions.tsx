@@ -317,7 +317,7 @@ const SelectPositionsBadgesView = () => {
         <PositionBadge
           key={positionId}
           positionId={positionId}
-          variant={'default'}
+          variant={'secondary'}
           onCompleted={(position) => {
             if (!position) return;
             if (positionIds.includes(position._id)) {

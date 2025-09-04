@@ -12,6 +12,7 @@ export type CurrentOrganization = {
     name: string;
     url: string;
   }[];
+  type?: string;
 };
 
 export const currentOrganizationState = atom<CurrentOrganization | null>(null);

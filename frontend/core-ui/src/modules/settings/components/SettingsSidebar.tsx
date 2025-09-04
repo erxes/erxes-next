@@ -6,15 +6,19 @@ import { Sidebar, IUIConfig, NavigationMenuLinkItem } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState } from 'ui-modules';
+import { pluginsConfigState, currentOrganizationState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { SETTINGS_PATH_DATA } from '../constants/data';
 
 import { useMemo } from 'react';
 import { usePageTrackerStore } from 'react-page-tracker';
+import { SettingsWorkspacePath } from '@/types/paths/SettingsPath';
 
 export function SettingsSidebar() {
   const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
+
+  const currentOrganization = useAtomValue(currentOrganizationState);
+  const isSaaS = currentOrganization?.type === 'saas';
 
   const pluginsWithSettingsModules: Map<string, IUIConfig['modules']> =
     useMemo(() => {
@@ -54,15 +58,24 @@ export function SettingsSidebar() {
           ))}
         </SettingsNavigationGroup>
         <SettingsNavigationGroup name="Workspace">
-          {SETTINGS_PATH_DATA.nav.map((item) => (
-            <Sidebar.MenuItem key={item.name}>
-              <NavigationMenuLinkItem
-                pathPrefix={AppPath.Settings}
-                path={item.path}
-                name={item.name}
-              />
-            </Sidebar.MenuItem>
-          ))}
+          {SETTINGS_PATH_DATA.nav
+            .filter(
+              (item) =>
+                !(
+                  isSaaS &&
+                  (item.path === SettingsWorkspacePath.FileUpload ||
+                    item.path === SettingsWorkspacePath.MailConfig)
+                ),
+            )
+            .map((item) => (
+              <Sidebar.MenuItem key={item.name}>
+                <NavigationMenuLinkItem
+                  pathPrefix={AppPath.Settings}
+                  path={item.path}
+                  name={item.name}
+                />
+              </Sidebar.MenuItem>
+            ))}
         </SettingsNavigationGroup>
 
         <SettingsNavigationGroup name="Core modules">
