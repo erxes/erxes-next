@@ -116,10 +116,10 @@ export function SettingsRoutes() {
           element={<Navigate to={`${SettingsPath.Profile}`} replace />}
         />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
-        <Route
+        {/* <Route
           path={SettingsPath.Notification}
           element={<NotificationSettingsRoutes />}
-        />
+        /> */}
         <Route
           path={SettingsPath.ChangePassword}
           element={<SettingsChangePassword />}
