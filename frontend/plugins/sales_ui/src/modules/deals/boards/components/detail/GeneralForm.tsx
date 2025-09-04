@@ -147,7 +147,7 @@ const GeneralForm = ({
         <>
           <Form.Field
             control={control}
-            name="departmentIds"
+            name="departmentId"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label>Departments</Form.Label>
@@ -162,7 +162,7 @@ const GeneralForm = ({
           />
           <Form.Field
             control={control}
-            name="branchIds"
+            name="branchId"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label>Branches</Form.Label>
