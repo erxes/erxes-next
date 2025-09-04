@@ -22,7 +22,7 @@ export const IntegrationList = () => {
           heading="Integrations"
           className="[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:mb-1.5 pb-8"
         >
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
             {Object.entries(INTEGRATIONS).map(
               ([integrationType, integration]) => (
                 <IntegrationCard
@@ -85,7 +85,7 @@ export const IntegrationIntro = ({
           <IntegrationCount kind={integrationType} />
         </div>
       </div>
-      <div className="text-sm text-muted-foreground font-medium">
+      <div className="text-sm text-muted-foreground line-clamp-3">
         {integration.description}
       </div>
     </>
