@@ -1,32 +1,27 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
-import {
-  IconGripHorizontal,
-  IconPhoneFilled,
-  IconX,
-} from '@tabler/icons-react';
+import { Popover as PopoverPrimitive, Portal } from 'radix-ui';
 import { Button } from 'erxes-ui';
-import { DndContext, useDraggable } from '@dnd-kit/core';
-import { createContext, useContext, useMemo, memo, useCallback } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { useMemo, memo, useCallback, useEffect } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
 import { callWidgetOpenAtom } from '@/integrations/call/states/callWidgetOpenAtom';
-
-// Memoize context to prevent recreating on every render
-const DragContext = createContext<{
-  listeners: any;
-  attributes: any;
-}>({
-  listeners: {},
-  attributes: {},
-});
 
 // Memoize draggable component
 export const CallWidgetDraggable = memo(
   ({
     children,
+    trigger,
     position,
   }: {
     children: React.ReactNode;
+    trigger: React.ReactNode;
     position: { x: number; y: number };
   }) => {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -44,73 +39,87 @@ export const CallWidgetDraggable = memo(
       [position.x, position.y, transform?.x, transform?.y],
     );
 
-    // Memoize context value to prevent child rerenders
-    const contextValue = useMemo(
-      () => ({
-        listeners,
-        attributes,
-      }),
-      [listeners, attributes],
-    );
-
     return (
-      <DragContext.Provider value={contextValue}>
+      <Portal.Root>
         <PopoverPrimitive.Trigger ref={setNodeRef} style={style} asChild>
           <Button
             variant="secondary"
             size="icon"
-            className="fixed bottom-10 right-10 z-50 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
+            className="fixed bottom-10 right-10 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
             onClick={() => setOpen(!open)}
+            {...listeners}
+            {...attributes}
           >
-            {open ? <IconX /> : <IconPhoneFilled className="text-primary" />}
+            {trigger}
           </Button>
         </PopoverPrimitive.Trigger>
 
         {children}
-      </DragContext.Provider>
+      </Portal.Root>
     );
   },
 );
 
 CallWidgetDraggable.displayName = 'CallWidgetDraggable';
 
-// Memoize drag handle
-export const DraggableHandle = memo(() => {
-  const { listeners, attributes } = useContext(DragContext);
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      {...listeners}
-      {...attributes}
-      className="cursor-move text-accent-foreground my-1 h-5"
-    >
-      <IconGripHorizontal />
-    </Button>
-  );
-});
-
-DraggableHandle.displayName = 'DraggableHandle';
-
 export const CallWidgetDraggableRoot = ({
   children,
+  trigger,
 }: {
   children: React.ReactNode;
+  trigger: React.ReactNode;
 }) => {
+  const setOpen = useSetAtom(callWidgetOpenAtom);
   const [position, setPosition] = useAtom(callWidgetPositionState);
 
-  // Memoize drag end handler to prevent recreating function
-  const handleDragEnd = useCallback((event: any) => {
-    const { delta } = event;
-    setPosition((prev) => ({
-      x: prev.x + delta.x,
-      y: prev.y + delta.y,
-    }));
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  const checkPosition = useCallback((x: number, y: number) => {
+    return {
+      x: Math.min(40, Math.max((window.innerWidth - 88) * -1, x)),
+      y: Math.min(40, Math.max((window.innerHeight - 88) * -1, y)),
+    };
   }, []);
+
+  // Memoize drag end handler to prevent recreating function
+  const handleDragEnd = useCallback(
+    (event: any) => {
+      const { delta } = event;
+      setPosition((prev) => checkPosition(prev.x + delta.x, prev.y + delta.y));
+    },
+    [setPosition, checkPosition],
+  );
+
+  //handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setPosition((prev) => checkPosition(prev.x, prev.y));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setPosition, checkPosition]);
+
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <CallWidgetDraggable position={position}>{children}</CallWidgetDraggable>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragStart={() => setOpen(false)}
+      sensors={sensors}
+    >
+      <CallWidgetDraggable position={position} trigger={trigger}>
+        {children}
+      </CallWidgetDraggable>
     </DndContext>
   );
 };

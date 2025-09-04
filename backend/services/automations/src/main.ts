@@ -2,9 +2,9 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import {
   closeMongooose,
+  createHealthRoute,
   isDev,
-  joinErxesGateway,
-  leaveErxesGateway,
+  keyForConfig,
   redis,
 } from 'erxes-api-shared/utils';
 import express from 'express';
@@ -12,9 +12,17 @@ import * as http from 'http';
 import { initMQWorkers } from './bullmq';
 import { debugError, debugInfo } from '@/debuuger';
 
-const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
+const {
+  DOMAIN,
+  CLIENT_PORTAL_DOMAINS,
+  ALLOWED_DOMAINS,
+  PORT,
+  LOAD_BALANCER_ADDRESS,
+  MONGO_URL,
+} = process.env;
 
 const port = PORT ? Number(PORT) : 3302;
+const serviceName = 'automations-service';
 
 const app = express();
 
@@ -34,7 +42,7 @@ const corsOptions = {
   origin: [
     ...(DOMAIN ? [DOMAIN] : []),
     ...(isDev ? ['http://localhost:3001'] : []),
-    ALLOWED_DOMAINS ||  'http://localhost:3200',
+    ALLOWED_DOMAINS || 'http://localhost:3200',
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')
       .split(',')
@@ -44,27 +52,26 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// app.use(
-//   '/trpc',
-//   trpcExpress.createExpressMiddleware({
-//     router: appRouter,
-//     createContext: createTRPCContext(async (subdomain, context) => {
-//       const models = await generateModels(subdomain);
-//       context.models = models;
-//       return context;
-//     }),
-//   }),
-// );
+app.get('/health', createHealthRoute(serviceName));
 
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {
-  await joinErxesGateway({
-    name: 'automations',
-    port,
-    hasSubscriptions: false,
-    meta: {},
-  });
+  await redis.set(
+    keyForConfig(serviceName),
+
+    JSON.stringify({
+      dbConnectionString: MONGO_URL,
+    }),
+  );
+
+  const address =
+    LOAD_BALANCER_ADDRESS ||
+    `http://${isDev ? 'localhost' : serviceName}:${port}`;
+
+  await redis.set(`service-logs`, address);
+
+  console.log(`service-logs joined with ${address}`);
   await initMQWorkers(redis);
 });
 
@@ -72,7 +79,7 @@ process.stdin.resume();
 
 async function leaveServiceDiscovery() {
   try {
-    await leaveErxesGateway('automations', port);
+    console.log(`$service-automations left ${port}`);
     debugInfo('Left from service discovery');
   } catch (e) {
     debugError(e);

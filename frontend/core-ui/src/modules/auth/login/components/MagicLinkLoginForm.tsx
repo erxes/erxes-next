@@ -1,45 +1,26 @@
-import { SubmitHandler, useForm } from 'react-hook-form';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-import { Button, Card, Form, Input } from 'erxes-ui';
-
-const emailValidationSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
-});
-
-type FormType = z.infer<typeof emailValidationSchema>;
+import { useLoginMagicLink } from '@/auth/login/hooks/useLoginMagicLink';
+import { IconBrandGoogleFilled } from '@tabler/icons-react';
+import { Button, Form, Input, Label } from 'erxes-ui';
 
 export const MagicLinkLoginForm = () => {
-  const form = useForm<FormType>({
-    resolver: zodResolver(emailValidationSchema),
-    defaultValues: {
-      email: '',
-    },
-    mode: 'onChange',
-  });
-
-  const submitHandler: SubmitHandler<FormType> = (data) => {
-    // console.log('Submitted email:', data.email);
-  };
+  const { form, onMagicLinkSubmit, onGoogleLogin } = useLoginMagicLink();
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(submitHandler)}
-        className="mx-auto grid gap-5"
-      >
-        <Card.Description className="text-center text-accent-foreground font-medium">
+      <form onSubmit={onMagicLinkSubmit} className="mx-auto grid gap-5">
+        <div className="text-center text-sm text-accent-foreground">
           We use magic link so you don't have to remember or type in yet another
           long password
-        </Card.Description>
+        </div>
         <Form.Field
           name="email"
           control={form.control}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Email</Form.Label>
+              <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
+                Email
+              </Form.Label>
+              <Form.Message />
               <Form.Control>
                 <Input
                   type="email"
@@ -52,12 +33,14 @@ export const MagicLinkLoginForm = () => {
           )}
         />
 
-        <Button type="submit" className={`h-8`}>
+        <Button type="submit" className="h-8">
           Continue
         </Button>
-        {/* disabled until the backend is ready */}
-        {/* <Card.Description className="text-center">or</Card.Description>
-        <GoogleOAuthButton /> */}
+        <Label className="text-center">OR</Label>
+        <Button variant="secondary" onClick={onGoogleLogin} type="button">
+          <IconBrandGoogleFilled />
+          Continue with Google
+        </Button>
       </form>
     </Form>
   );

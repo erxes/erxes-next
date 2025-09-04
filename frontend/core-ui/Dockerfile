@@ -14,7 +14,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && pnpm install
 COPY . .
-RUN pnpm nx build core-ui --configuration=production
+RUN pnpm nx build core-ui --configuration=production --verbose
 
 # Final stage
 FROM nginx:alpine

@@ -14,18 +14,18 @@ import {
   Switch,
   useQueryState,
   RecordTable,
-  RecordTablePopover,
-  RecordTableCellTrigger,
+  Popover,
   Input,
-  RecordTableCellContent,
   FullNameField,
+  FullNameValue,
   DatePicker,
   readImage,
-  RecordTableCellDisplay,
+  RecordTableInlineCell,
+  toast,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { useSetAtom } from 'jotai';
-import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
+import { renderingTeamMemberDetailAtom } from '../../states/teamMemberDetailStates';
 import { SelectPositions } from 'ui-modules';
 import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
@@ -33,34 +33,9 @@ import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { format } from 'date-fns';
 import { ApolloError } from '@apollo/client';
 import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
-
-export const UserMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<IUser, unknown>;
-}) => {
-  const [, setOpen] = useQueryState('user_id');
-  const setRenderingTeamMemberDetail = useSetAtom(
-    renderingTeamMemberDetailAtom,
-  );
-  const { _id } = cell.row.original;
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingTeamMemberDetail(false);
-      }}
-    />
-  );
-};
+import clsx from 'clsx';
 
 export const teamMemberColumns: ColumnDef<IUser>[] = [
-  {
-    id: 'more',
-    cell: UserMoreColumnCell,
-    size: 33,
-  },
   {
     id: 'avatar',
     accessorKey: 'avatar',
@@ -93,42 +68,52 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         renderingTeamMemberDetailAtom,
       );
       const { details, _id } = cell.row.original;
-      const { firstName, lastName } = details || {};
+      const { firstName, lastName, ...rest } = details || {};
 
       const { usersEdit } = useUserEdit();
 
       const onSave = (first: string, last: string) => {
         if (first !== firstName || last !== lastName) {
-          usersEdit(
-            {
-              variables: {
-                _id,
-                details: {
-                  firstName: first,
-                  lastName: last,
-                },
+          usersEdit({
+            variables: {
+              _id,
+              details: {
+                ...rest,
+                firstName: first,
+                lastName: last,
               },
-              onError: (error: ApolloError) =>
-                console.error('Failed to update user details:', error),
             },
-            ['details'],
-          );
+            onError: (error: ApolloError) => {
+              toast({
+                title: 'Failed to update user details',
+                description: error.message,
+                variant: 'destructive',
+              });
+            },
+          });
         }
       };
 
       return (
         <FullNameField
-          scope={SettingsHotKeyScope.UsersPage + '.' + _id + '.Name'}
+          scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Name')}
           firstName={firstName}
           lastName={lastName}
-          onClose={onSave}
-          closeOnEnter
-          onClick={(e) => {
-            e.stopPropagation();
-            setDetailOpen(_id);
-            setRenderingTeamMemberDetail(false);
-          }}
-        />
+          onValueChange={onSave}
+        >
+          <RecordTableInlineCell.Trigger>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDetailOpen(_id);
+                setRenderingTeamMemberDetail(false);
+              }}
+            >
+              <FullNameValue />
+            </Badge>
+          </RecordTableInlineCell.Trigger>
+        </FullNameField>
       );
     },
     size: 240,
@@ -142,7 +127,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     cell: ({ cell }) => {
       const { status } = cell.row.original;
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Badge
             variant={
               !status || status === 'Not verified' ? 'destructive' : 'success'
@@ -150,7 +135,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
           >
             {status ? (cell.getValue() as string) : 'Not verified'}
           </Badge>
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },
@@ -171,24 +156,21 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const [open, setOpen] = useState<boolean>(false);
       const [_employeeId, setEmployeeId] = useState<string>(employeeId);
       const onSave = () => {
-        usersEdit(
-          {
-            variables: {
-              _id,
-              employeeId: _employeeId,
-            },
+        if (_employeeId === employeeId) return;
+        usersEdit({
+          variables: {
+            _id,
+            employeeId: _employeeId,
           },
-          ['employeeId'],
-        );
+        });
       };
 
       const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.currentTarget || {};
-        if (value === employeeId) return;
         setEmployeeId(value);
       };
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -197,16 +179,16 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             {(employeeId && (
               <Badge variant={'secondary'}>{employeeId}</Badge>
             )) ||
               '-'}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <Input value={_employeeId} onChange={onChange} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
   })),
@@ -222,24 +204,16 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
 
       return (
         <SelectPositions.InlineCell
-          scope={
-            SettingsHotKeyScope.UsersPage +
-            '.' +
-            cell.row.original._id +
-            '.Position'
-          }
+          scope={clsx(SettingsHotKeyScope.UsersPage, _id, 'Position')}
           mode="multiple"
           value={cell.getValue() as string[]}
           onValueChange={(value) =>
-            usersEdit(
-              {
-                variables: {
-                  _id,
-                  positionIds: value,
-                },
+            usersEdit({
+              variables: {
+                _id,
+                positionIds: value,
               },
-              ['positionIds'],
-            )
+            })
           }
         />
       );
@@ -261,27 +235,24 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       );
       const { usersEdit } = useUserEdit();
       const onSave = () => {
-        usersEdit(
-          {
-            variables: {
-              _id,
-              details: {
-                ...rest,
-                workStartedDate: _workStartedDate,
-              },
+        if (_workStartedDate === workStartedDate) return;
+        usersEdit({
+          variables: {
+            _id,
+            details: {
+              ...rest,
+              workStartedDate: _workStartedDate,
             },
           },
-          ['details'],
-        );
+        });
       };
 
       const onChange = (date: Date) => {
-        if (date === workStartedDate) return;
         setWorkStartedDate(date);
       };
 
       return (
-        <RecordTablePopover
+        <Popover
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -290,18 +261,19 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             }
           }}
         >
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             {(_workStartedDate &&
               format(new Date(_workStartedDate), 'yyyy/MM/dd')) ||
               'YYYY/MM/DD'}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
+          </RecordTableInlineCell.Trigger>
+          <RecordTableInlineCell.Content>
             <DatePicker
+              defaultMonth={workStartedDate}
               value={_workStartedDate}
               onChange={(d) => onChange(d as Date)}
             />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+          </RecordTableInlineCell.Content>
+        </Popover>
       );
     },
   },
@@ -313,7 +285,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const { _id } = cell.row.original || {};
       const { editStatus } = useUsersStatusEdit();
       return (
-        <RecordTableCellDisplay>
+        <RecordTableInlineCell>
           <Switch
             className="mx-auto"
             checked={cell.getValue() as boolean}
@@ -325,7 +297,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
               });
             }}
           />
-        </RecordTableCellDisplay>
+        </RecordTableInlineCell>
       );
     },
   },

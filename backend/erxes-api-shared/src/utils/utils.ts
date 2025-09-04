@@ -1,7 +1,11 @@
-import { IOrderInput } from '../core-types';
 import dayjs from 'dayjs';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import fetch from 'node-fetch'; // or global fetch in Node 18+
+import { IOrderInput } from '../core-types';
 import { randomAlphanumeric } from './random';
+import { redis } from './redis';
+import { random } from './string';
 
 export const getEnv = ({
   name,
@@ -204,7 +208,7 @@ export const checkUserIds = (
 };
 
 const generateRandomEmail = () => {
-  return randomAlphanumeric(15) + '@gmail.com';
+  return random('Aa', 15) + '@gmail.com';
 };
 
 export const getUniqueValue = async (
@@ -385,4 +389,31 @@ export const isImage = (mimetypeOrName: string) => {
 
 export const isVideo = (mimeType: string) => {
   return mimeType.includes('video');
+};
+
+export function createHealthRoute(serviceName: string) {
+  return (req: Request, res: Response) => {
+    res.json({
+      status: 'ok',
+      service: serviceName,
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    });
+  };
+}
+
+export const checkServiceRunning = async (
+  serviceName: 'automations' | 'logs' | 'notifications',
+) => {
+  const address = await redis.get(`service-${serviceName}`);
+  if (!address) return false;
+
+  try {
+    const res = await fetch(`${address}/health`);
+    if (!res.ok) return false;
+    const data = await res.json();
+    return data.status === 'ok';
+  } catch (err) {
+    return false;
+  }
 };

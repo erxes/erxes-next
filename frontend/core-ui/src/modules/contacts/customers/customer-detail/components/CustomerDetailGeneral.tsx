@@ -1,14 +1,11 @@
-import { FullNameField, Label } from 'erxes-ui';
-import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
-import { IconDeviceMobileMessage, IconMessage } from '@tabler/icons-react';
-import { IconMail } from '@tabler/icons-react';
-import { IconPhone } from '@tabler/icons-react';
+import { FullNameValue, Label, Popover } from 'erxes-ui';
+import { useCustomerDetailWithQuery } from '@/contacts/customers/hooks/useCustomerDetailWithQuery';
 import { Avatar, Button, readImage } from 'erxes-ui';
-import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
-import { SelectCompany } from 'ui-modules';
+import { CustomerName, SelectCompany, useCustomerEdit } from 'ui-modules';
+
 export const CustomerDetailGeneral = () => {
-  const { customerDetail } = useCustomerDetail();
+  const { customerDetail } = useCustomerDetailWithQuery();
   const {
     _id,
     firstName,
@@ -21,62 +18,28 @@ export const CustomerDetailGeneral = () => {
   const { customerEdit } = useCustomerEdit();
   return (
     <div className="py-5 px-8 flex flex-col gap-6">
-      <div className="flex gap-3 items-center flex-col lg:flex-row ">
+      <div className="flex gap-2 items-center flex-col lg:flex-row ">
         <Avatar size="lg" className="h-12 w-12">
-          <Avatar.Image src={readImage(avatar || '')} />
+          <Avatar.Image src={readImage(avatar)} />
           <Avatar.Fallback>
             {(firstName || lastName || primaryEmail || primaryPhone)?.charAt(0)}
           </Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col items-start">
-          <FullNameField
+          <CustomerName
+            _id={_id}
+            firstName={firstName}
+            lastName={`${middleName || ''}${middleName ? ' ' : ''}${
+              lastName || ''
+            }`}
             scope={ContactsHotKeyScope.CustomerDetailPage + '.' + _id + '.Name'}
-            closeOnEnter
-            firstName={firstName || ''}
-            lastName={
-              middleName
-                ? `${middleName || ''} ${lastName || ''}`
-                : lastName || ''
-            }
-            onClose={(_firstName, _lastName) => {
-              if (_firstName !== firstName || _lastName !== lastName) {
-                customerEdit({
-                  variables: {
-                    _id,
-                    firstName: _firstName,
-                    lastName: _lastName,
-                  },
-                });
-              }
-            }}
-          />
-        </div>
-        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto "> 
-          <Button
-            variant="outline"
-            className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"
           >
-            <IconMail />
-            Email
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"
-          >
-            <IconMessage /> Message
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"
-          >
-            <IconDeviceMobileMessage /> SMS
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"
-          >
-            <IconPhone /> Call
-          </Button>
+            <Popover.Trigger asChild>
+              <Button variant="ghost" className="text-base font-semibold">
+                <FullNameValue />
+              </Button>
+            </Popover.Trigger>
+          </CustomerName>
         </div>
       </div>
       <fieldset className="space-y-2">
@@ -88,8 +51,8 @@ export const CustomerDetailGeneral = () => {
           onValueChange={(value) => {
             customerEdit({
               variables: {
-                _id,
-                companies: value,
+                _id: _id,
+                companyIds: value,
               },
             });
           }}

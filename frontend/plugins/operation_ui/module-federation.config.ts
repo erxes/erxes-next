@@ -15,11 +15,12 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'operation_ui',
   exposes: {
-    './config': './src/config.ts',
-    './task': './src/modules/task/Main.tsx',
-    './taskSettings': './src/modules/task/Settings.tsx',
+    './config': './src/config.tsx',
+    './operation': './src/modules/main/Main.tsx',
     './teamSettings': './src/modules/team/Settings.tsx',
-    './widgets': './src/widgets/Widgets.tsx',
+    './relationWidget': './src/widgets/relation/RelationWidgets.tsx',
+    './notificationWidget':
+      './src/widgets/notifications/NotificationsWidgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

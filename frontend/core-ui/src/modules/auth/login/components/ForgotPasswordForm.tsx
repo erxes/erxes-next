@@ -44,7 +44,9 @@ export const ForgotPasswordForm = () => {
           control={form.control}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Email</Form.Label>
+              <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
+                Email
+              </Form.Label>
               <Form.Control>
                 <Input
                   placeholder="Enter your work email"
@@ -56,6 +58,7 @@ export const ForgotPasswordForm = () => {
                   value={field.value || ''}
                 />
               </Form.Control>
+              <Form.Message />
             </Form.Item>
           )}
         />

@@ -12,19 +12,17 @@ export const NavigationPluginExitButton = () => {
 
   return (
     <>
-      <Sidebar.Group>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton onClick={() => setActivePlugin(null)}>
-              <IconChevronLeft className="text-accent-foreground" />
-              <span className="font-sans font-semibold text-accent-foreground">
-                Exit {activePlugin}
-              </span>
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.Group>
-      <Sidebar.Separator />
+      <Sidebar.Menu className="px-4 py-2">
+        <Sidebar.MenuItem>
+          <Sidebar.MenuButton onClick={() => setActivePlugin(null)}>
+            <IconChevronLeft className="text-accent-foreground" />
+            <span className="font-sans font-semibold text-accent-foreground">
+              Exit {activePlugin}
+            </span>
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+      </Sidebar.Menu>
+      <Sidebar.Separator className="mx-0" />
     </>
   );
 };
@@ -33,20 +31,29 @@ export const NavigationPlugins = () => {
   const navigationGroups = usePluginsNavigationGroups();
   const [activePlugin, setActivePlugin] = useAtom(activePluginState);
 
-  if (activePlugin) {
+  if (Object.entries(navigationGroups).length === 0) {
+    return null;
+  }
+
+  if (activePlugin && navigationGroups[activePlugin]) {
     return (
-      <NavigationMenuGroup
-        name={
-          activePlugin.charAt(0).toUpperCase() +
-          activePlugin.slice(1) +
-          ' modules'
-        }
-        separate
-      >
-        {navigationGroups[activePlugin].contents.map((Content) => (
-          <Content key={Content.name} />
+      <>
+        <NavigationMenuGroup
+          name={
+            activePlugin.charAt(0).toUpperCase() +
+            activePlugin.slice(1) +
+            ' modules'
+          }
+          separate
+        >
+          {navigationGroups[activePlugin].contents.map((Content, index) => (
+            <Content key={index} />
+          ))}
+        </NavigationMenuGroup>
+        {navigationGroups[activePlugin].subGroups.map((SubGroup, index) => (
+          <SubGroup key={index} />
         ))}
-      </NavigationMenuGroup>
+      </>
     );
   }
 
@@ -59,23 +66,6 @@ export const NavigationPlugins = () => {
             <span className="capitalize">{name}</span>
           </Sidebar.MenuButton>
         </Sidebar.MenuItem>
-      ))}
-    </NavigationMenuGroup>
-  );
-};
-
-export const NavigationPluginActions = () => {
-  const navigationGroups = usePluginsNavigationGroups();
-  const [activePlugin] = useAtom(activePluginState);
-
-  if (!activePlugin || !navigationGroups[activePlugin].actions.length) {
-    return null;
-  }
-
-  return (
-    <NavigationMenuGroup name="Actions">
-      {navigationGroups[activePlugin].actions.map((Action) => (
-        <Action key={Action.name} />
       ))}
     </NavigationMenuGroup>
   );

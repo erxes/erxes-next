@@ -6,7 +6,6 @@ import {
   removeIntegration,
 } from '@/integrations/facebook/helpers';
 import { handleFacebookMessage } from '@/integrations/facebook/handleFacebookMessage';
-import { date } from 'zod';
 export interface StatusRequest {
   integrationId: string;
 }
@@ -47,8 +46,7 @@ export async function handleFacebookIntegration({ subdomain, data }) {
 
 export async function facebookCreateIntegrations({ subdomain, data }) {
   try {
-    const models = await generateModels(subdomain);
-    return await facebookCreateIntegration(subdomain, models, data);
+    return await facebookCreateIntegration(subdomain, data);
   } catch (e) {
     return {
       status: 'error',
@@ -105,8 +103,7 @@ export async function facebookRemoveIntegrations({
   data: { integrationId },
 }) {
   try {
-    const models = await generateModels(subdomain);
-    return await removeIntegration(subdomain, models, integrationId);
+    return await removeIntegration(subdomain, integrationId);
   } catch (e) {
     return {
       status: 'error',
@@ -120,9 +117,7 @@ export async function facebookRemoveAccount({
   data: { integrationId },
 }) {
   try {
-    const models = await generateModels(subdomain);
-
-    const result = await removeAccount(subdomain, models, integrationId);
+    const result = await removeAccount(subdomain, integrationId);
     return {
       erxesApiId: result,
       status: 'success',
@@ -140,9 +135,7 @@ export async function facebookRepairIntegrations({
   data: { integrationId },
 }) {
   try {
-    const models = await generateModels(subdomain);
-
-    return await repairIntegrations(subdomain, models, integrationId);
+    return await repairIntegrations(subdomain, integrationId);
   } catch (e) {
     return {
       status: 'error',

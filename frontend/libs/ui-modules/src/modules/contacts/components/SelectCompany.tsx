@@ -6,13 +6,16 @@ import {
 import { useCompanies } from 'ui-modules/modules/contacts/hooks/useCompanies';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
-import { Button, cn, Combobox, Command, Popover } from 'erxes-ui';
-import { CompaniesInline } from './CompaniesInline';
 import {
-  RecordTablePopover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
+  Button,
+  cn,
+  Combobox,
+  Command,
+  Popover,
+  PopoverScoped,
+  RecordTableInlineCell,
 } from 'erxes-ui';
+import { CompaniesInline } from './CompaniesInline';
 import { IconPlus } from '@tabler/icons-react';
 
 interface SelectCompanyProviderProps {
@@ -155,14 +158,14 @@ const SelectCompanyInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectCompany.Value />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectCompany.Content />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectCompanyProvider>
   );
 };
@@ -256,10 +259,7 @@ const SelectCompanyDetail = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <Button
-            className={cn(
-              'w-min inline-flex text-sm font-medium',
-              className,
-            )}
+            className={cn('w-min inline-flex shadow-xs font-medium', className)}
             variant="outline"
           >
             Add Companies

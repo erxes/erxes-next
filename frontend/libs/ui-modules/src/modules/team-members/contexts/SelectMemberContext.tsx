@@ -4,10 +4,11 @@ import { IUser } from '../types/TeamMembers';
 
 export type ISelectMemberContext = {
   memberIds: string[];
-  onSelect: (member: IUser) => void;
+  onSelect: (member: IUser | null) => void;
   members: IUser[];
   setMembers: (members: IUser[]) => void;
   loading: boolean;
+  allowUnassigned: boolean;
 };
 
 export const SelectMemberContext = createContext<ISelectMemberContext | null>(

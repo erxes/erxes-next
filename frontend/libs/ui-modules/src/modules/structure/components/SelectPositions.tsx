@@ -13,9 +13,7 @@ import {
   Form,
   Popover,
   PopoverScoped,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
   SelectTree,
   TextOverflowTooltip,
   useFilterContext,
@@ -36,6 +34,7 @@ export const SelectPositionsProvider = ({
 }: ISelectPositionsProviderProps) => {
   const [newPositionName, setNewPositionName] = useState<string>('');
   const [selectedPositions, setSelectedPositions] = useState<IPosition[]>([]);
+  const positionIds = !value ? [] : Array.isArray(value) ? value : [value];
 
   const handleSelectCallback = (position: IPosition) => {
     if (!position) return;
@@ -70,6 +69,7 @@ export const SelectPositionsProvider = ({
         newPositionName,
         setNewPositionName,
         mode,
+        positionIds,
       }}
     >
       {children}
@@ -84,7 +84,7 @@ export const SelectPositionsCommand = ({
 }) => {
   const [search, setSearch] = useState<string>('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { selectedPositions } = useSelectPositionsContext();
+  const { selectedPositions, positionIds } = useSelectPositionsContext();
   const [noPositionsSearchValue, setNoPositionsSearchValue] =
     useState<string>('');
 
@@ -115,31 +115,35 @@ export const SelectPositionsCommand = ({
         placeholder="Search positions"
         focusOnMount
       />
-      {selectedPositions?.length > 0 && (
-        <>
-          <div className="flex flex-wrap justify-start p-2 gap-2">
-            <PositionsList />
-          </div>
-          <Command.Separator />
-        </>
-      )}
 
       <Command.List>
+        {selectedPositions?.length > 0 && (
+          <>
+            <div className="flex flex-wrap justify-start p-2 gap-2">
+              <PositionsList />
+            </div>
+            <Command.Separator />
+          </>
+        )}
         <SelectTree.Provider id={'select-positions'} ordered={!search}>
           <SelectPositionsCreate
             search={search}
             show={!disableCreateOption && !loading && !positions?.length}
           />
           <Combobox.Empty loading={loading} error={error} />
-          {positions?.map((position) => (
-            <SelectPositionsItem
-              key={position._id}
-              position={{
-                ...position,
-                hasChildren: positions.some((p) => p.parentId === position._id),
-              }}
-            />
-          ))}
+          {positions
+            ?.filter((p) => !positionIds?.find((id) => id === p._id))
+            .map((position) => (
+              <SelectPositionsItem
+                key={position._id}
+                position={{
+                  ...position,
+                  hasChildren: positions.some(
+                    (p) => p.parentId === position._id,
+                  ),
+                }}
+              />
+            ))}
           <Combobox.FetchMore
             fetchMore={handleFetchMore}
             currentLength={positions?.length || 0}
@@ -178,12 +182,12 @@ export const SelectPositionsItem = ({
 }: {
   position: IPosition & { hasChildren: boolean };
 }) => {
-  const { onSelect, selectedPositions } = useSelectPositionsContext();
-  const isSelected = selectedPositions.some((p) => p._id === position._id);
+  const { onSelect, positionIds } = useSelectPositionsContext();
+  const isSelected = positionIds?.some((p) => p === position._id);
   return (
     <SelectTree.Item
       key={position._id}
-      id={position._id}
+      _id={position._id}
       name={position.title}
       order={position.order}
       hasChildren={position.hasChildren}
@@ -243,12 +247,12 @@ export const PositionsList = ({
 };
 
 export const SelectPositionsValue = () => {
-  const { selectedPositions, mode } = useSelectPositionsContext();
+  const { mode, positionIds } = useSelectPositionsContext();
 
-  if (selectedPositions?.length > 1)
+  if (positionIds && positionIds?.length > 1)
     return (
       <span className="text-muted-foreground">
-        {selectedPositions.length} positions selected
+        {positionIds.length} positions selected
       </span>
     );
 
@@ -285,20 +289,49 @@ export const SelectPositionsInlineCell = ({
   return (
     <SelectPositionsProvider
       onValueChange={(value) => {
+        if (props.mode === 'single') {
+          setOpen(false);
+        }
         onValueChange?.(value);
-        setOpen(false);
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectPositionsValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectPositionsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectPositionsProvider>
+  );
+};
+const SelectPositionsBadgesView = () => {
+  const { positionIds, selectedPositions, setSelectedPositions, onSelect } =
+    useSelectPositionsContext();
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {positionIds?.map((positionId) => (
+        <PositionBadge
+          key={positionId}
+          positionId={positionId}
+          variant={'default'}
+          onCompleted={(position) => {
+            if (!position) return;
+            if (positionIds.includes(position._id)) {
+              setSelectedPositions([...selectedPositions, position]);
+            }
+          }}
+          onClose={() =>
+            onSelect?.(
+              selectedPositions.find((p) => p._id === positionId) as IPosition,
+            )
+          }
+        />
+      ))}
+    </div>
   );
 };
 
@@ -311,27 +344,46 @@ export const SelectPositionsDetail = React.forwardRef<
     > & {
       scope?: string;
     }
->(({ onValueChange, scope, value, mode, options, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectPositionsProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...{ value, mode, options }}
-    >
-      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-        <Combobox.Trigger ref={ref} {...props}>
-          <SelectPositionsValue />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectPositionsContent />
-        </Combobox.Content>
-      </PopoverScoped>
-    </SelectPositionsProvider>
-  );
-});
+>(
+  (
+    { onValueChange, scope, value, mode, options, className, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <SelectPositionsProvider
+        onValueChange={(value) => {
+          if (mode === 'single') {
+            setOpen(false);
+          }
+          onValueChange?.(value);
+        }}
+        value={value}
+        {...props}
+        mode={mode}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Button
+              className={cn(
+                'w-min inline-flex text-sm font-medium shadow-xs',
+                className,
+              )}
+              variant="outline"
+            >
+              Add Positions
+              <IconPlus className="text-lg" />
+            </Button>
+          </Popover.Trigger>
+          <Combobox.Content className="mt-2">
+            <SelectPositionsContent />
+          </Combobox.Content>
+        </Popover>
+        <SelectPositionsBadgesView />
+      </SelectPositionsProvider>
+    );
+  },
+);
 
 SelectPositionsDetail.displayName = 'SelectPositionsDetail';
 
@@ -349,17 +401,17 @@ export const SelectPositionsCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconBriefcase />
             Position
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectPositionsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectPositionsProvider>
   );
 };
@@ -455,7 +507,7 @@ export const SelectPositionsFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={filterKey}>
       <Filter.BarName>
         <IconBriefcase />
         {label}
@@ -483,7 +535,6 @@ export const SelectPositionsFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectPositionsProvider>
-      <Filter.BarClose filterKey={filterKey} />
     </Filter.BarItem>
   );
 };

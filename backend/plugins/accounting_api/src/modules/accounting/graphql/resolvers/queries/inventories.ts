@@ -32,7 +32,6 @@ const configQueries = {
       { $match: { accountId, branchId, departmentId, productId: { $in: productIds || [] } } },
     ]);
 
-    console.log(aggCosts)
     const result = {};
     for (const detail of aggCosts) {
       result[detail.productId] = { totalCost: detail.cost, unitCost: detail.unitCost, remainder: detail.remainder };

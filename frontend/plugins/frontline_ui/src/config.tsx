@@ -8,6 +8,12 @@ const FrontlineNavigation = lazy(() =>
   })),
 );
 
+const FrontlineSubGroups = lazy(() =>
+  import('./modules/FrontlineSubGroups').then((module) => ({
+    default: module.FrontlineSubGroups,
+  })),
+);
+
 export const CONFIG: IUIConfig = {
   name: 'frontline',
   navigationGroup: {
@@ -16,6 +22,11 @@ export const CONFIG: IUIConfig = {
     content: () => (
       <Suspense fallback={<div />}>
         <FrontlineNavigation />
+      </Suspense>
+    ),
+    subGroups: () => (
+      <Suspense fallback={<div />}>
+        <FrontlineSubGroups />
       </Suspense>
     ),
   },
@@ -27,6 +38,7 @@ export const CONFIG: IUIConfig = {
       hasSettings: true,
       hasRelationWidget: true,
       hasFloatingWidget: true,
+      settingsOnly: true,
     },
     {
       name: 'ticket',
@@ -34,6 +46,13 @@ export const CONFIG: IUIConfig = {
       path: 'ticket',
       hasSettings: true,
       hasRelationWidget: true,
+      settingsOnly: true,
+    },
+    {
+      name: 'frontline',
+      icon: IconMail,
+      path: 'frontline',
+      hasSettings: false,
     },
   ],
 };

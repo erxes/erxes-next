@@ -106,9 +106,8 @@ export const loadCallHistoryClass = (models: IModels) => {
           operator,
           integration,
         );
-
         return await models.CallHistory.find(historyFilter)
-          .sort({ modifiedAt: -1 })
+          .sort({ createdAt: -1 })
           .skip(filterOptions.skip || CALL_HISTORY_CONSTANTS.DEFAULT_SKIP)
           .limit(filterOptions.limit || CALL_HISTORY_CONSTANTS.DEFAULT_LIMIT)
           .lean();

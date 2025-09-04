@@ -5,6 +5,8 @@ export interface IUser {
   email?: string;
   username?: string;
   details?: {
+    firstName?: string;
+    lastName?: string;
     fullName?: string;
     avatar?: string;
   };

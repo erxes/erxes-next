@@ -18,6 +18,17 @@ export const ctaxSchema = z.object({
   ctaxAmount: z.number().optional().nullish(),
 });
 
+const accountSchema = z.object({
+  _id: z.string(),
+  code: z.string(),
+  name: z.string(),
+  currency: z.string(),
+  kind: z.string(),
+  branchId: z.string().optional(),
+  departmentId: z.string().optional(),
+  journal: z.string(),
+})
+
 export const baseTrDetailSchema = z.object({
   _id: z.string(),
   transactionId: z.string().nullish(),
@@ -32,7 +43,8 @@ export const baseTrDetailSchema = z.object({
     { message: 'wrong side aaaa' }
   ),
 
-  followInfos: z.object({}).nullish(),
+  followInfos: z.object({}).nullish(), // rel backend
+  followExtras: z.object({}).nullish(), // followInfos to object
 
   excludeVat: z.boolean().nullish(),
   excludeCtax: z.boolean().nullish(),
@@ -46,16 +58,7 @@ export const baseTrDetailSchema = z.object({
   unitPrice: z.number().nullish(),
 
   checked: z.boolean().default(false),
-  account: z.object({
-    _id: z.string(),
-    code: z.string(),
-    name: z.string(),
-    currency: z.string(),
-    kind: z.string(),
-    branchId: z.string().optional(),
-    departmentId: z.string().optional(),
-    journal: z.string(),
-  }).nullish()
+  account: z.object({ ...accountSchema.shape }).nullish()
 });
 
 export const currencyDetailSchema = z.object({
@@ -138,7 +141,7 @@ export const transactionPayableSchema = z.object({
 });
 
 export const transactionTaxSchema = z.object({
-  journal: z.literal('tax'),
+  journal: z.literal(TrJournalEnum.TAX),
   ...baseTransactionSchema.shape,
 });
 //#endregion Single trs
@@ -187,6 +190,27 @@ export const transactionInvOutSchema = z.object({
   })),
 });
 
+export const transactionInvMoveSchema = z.object({
+  journal: z.literal(TrJournalEnum.INV_MOVE),
+  ...baseTransactionSchema.shape,
+}).extend({
+  customerId: z.string().nullish(),
+  branchId: z.string(),
+  departmentId: z.string(),
+  followInfos: z.object({
+    moveInAccountId: z.string(),
+    moveInBranchId: z.string(),
+    moveInDepartmentId: z.string(),
+  }),
+  followExtras: z.object({
+    moveInAccount: z.object({ ...accountSchema.shape }).nullish(),
+
+  }),
+  details: z.array(z.object({
+    ...invDetailSchema.shape,
+  })),
+});
+
 export const transactionInvSaleSchema = z.object({
   journal: z.literal(TrJournalEnum.INV_SALE),
   ...baseTransactionSchema.shape,
@@ -194,8 +218,14 @@ export const transactionInvSaleSchema = z.object({
   customerId: z.string().nullish(),
   branchId: z.string(),
   departmentId: z.string(),
-  invAccountId: z.string(),
-  costAccountId: z.string(),
+  followInfos: z.object({
+    saleOutAccountId: z.string(),
+    saleCostAccountId: z.string(),
+  }),
+  followExtras: z.object({
+    saleOutAccount: z.object({ ...accountSchema.shape }).nullish(),
+    saleCostAccount: z.object({ ...accountSchema.shape }).nullish()
+  }),
   details: z.array(z.object({
     ...invDetailSchema.shape,
   })),
@@ -211,6 +241,7 @@ export const trDocSchema = z
     transactionPayableSchema,
     transactionInvIncomeSchema,
     transactionInvOutSchema,
+    transactionInvMoveSchema,
     transactionInvSaleSchema,
     // transactionInventorySchema,
     // transactionFixedAssetSchema,

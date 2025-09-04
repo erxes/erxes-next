@@ -1,9 +1,11 @@
-import { ButtonProps, Input, TextOverflowTooltip } from 'erxes-ui/components';
 import {
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-} from 'erxes-ui/modules/record-table';
+  ButtonProps,
+  Input,
+  TextOverflowTooltip,
+  Popover,
+} from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
+import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
 import React, { useState } from 'react';
 
 export interface ITextFieldContainerProps {
@@ -12,6 +14,7 @@ export interface ITextFieldContainerProps {
   field: string;
   fieldId?: string;
   _id: string;
+  scope?: string;
 }
 
 export const TextField = React.forwardRef<
@@ -19,7 +22,7 @@ export const TextField = React.forwardRef<
   ButtonProps & {
     placeholder?: string;
     value: string;
-    scope: string;
+    scope?: string;
     onValueChange?: (value: string) => void;
     onSave?: (value: string) => void;
   }
@@ -53,8 +56,7 @@ export const TextField = React.forwardRef<
     };
 
     return (
-      <RecordTablePopover
-        scope={scope}
+      <Popover
         open={isOpen}
         onOpenChange={(open: boolean) => {
           setIsOpen(open);
@@ -65,11 +67,15 @@ export const TextField = React.forwardRef<
           }
         }}
       >
-        <RecordTableCellTrigger {...props} ref={ref}>
+        <RecordTableInlineCell.Trigger
+          className={cn('shadow-xs rounded-sm', props.className)}
+          {...props}
+          ref={ref}
+        >
           {children}
           <TextOverflowTooltip value={editingValue ?? placeholder} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent asChild>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content asChild>
           <form onSubmit={handleAction}>
             <Input
               value={editingValue}
@@ -84,8 +90,8 @@ export const TextField = React.forwardRef<
               Save
             </button>
           </form>
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     );
   },
 );

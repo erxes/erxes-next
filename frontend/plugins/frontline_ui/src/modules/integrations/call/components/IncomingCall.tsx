@@ -14,7 +14,7 @@ import { getPluginAssetsUrl } from 'erxes-ui';
 export const IncomingCallAudio = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const sip = useAtomValue(sipStateAtom);
-
+  console.log(sip, 'sip...');
   useEffect(() => {
     if (
       sip?.callStatus === CallStatusEnum.STARTING &&
@@ -43,7 +43,7 @@ export const IncomingCallAudio = () => {
   return <audio ref={audioRef} loop autoPlay />;
 };
 
-export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
+export const IncomingCall = () => {
   const sipState = useAtomValue(sipStateAtom);
 
   const { answerCall, stopCall } = useSip();
@@ -62,8 +62,7 @@ export const IncomingCall = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div className="text-center">{children}</div>
-      <div className="mt-2 px-3 mb-1 space-y-2">
+      <div className="mt-2 px-3 pt-3 mb-1 space-y-2">
         <CallNumber />
         <div className="text-center text-accent-foreground">
           Incoming call to{' '}

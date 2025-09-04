@@ -179,7 +179,7 @@ const SelectActionsFilterBarItem = () => {
   if (!module) return null;
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="action">
       <Filter.BarName>
         <IconDirection />
         Action
@@ -203,7 +203,6 @@ const SelectActionsFilterBarItem = () => {
           </Combobox.Content>
         </Popover>
       </SelectActionsProvider>
-      <Filter.BarClose filterKey="action" />
     </Filter.BarItem>
   );
 };

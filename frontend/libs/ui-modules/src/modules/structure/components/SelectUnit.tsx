@@ -9,11 +9,9 @@ import {
   Command,
   Filter,
   Form,
-  Popover,
   PopoverScoped,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  RecordTableInlineCell,
+  Popover,
   TextOverflowTooltip,
   useFilterContext,
   useQueryState,
@@ -211,14 +209,14 @@ export const SelectUnitInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableInlineCell.Trigger>
           <SelectUnitValue placeholder="Select unit" />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content className="min-w-72">
           <SelectUnitContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </PopoverScoped>
     </SelectUnitProvider>
   );
 };
@@ -270,17 +268,17 @@ export const SelectUnitCommandbarItem = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
+          <RecordTableInlineCell.Trigger>
             <IconUsers />
             Unit
-          </RecordTableCellTrigger>
+          </RecordTableInlineCell.Trigger>
         </Button>
-        <RecordTableCellContent className="w-96">
+        <RecordTableInlineCell.Content className="w-96">
           <SelectUnitContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectUnitProvider>
   );
 };
@@ -353,7 +351,7 @@ export const SelectUnitFilterBar = () => {
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="unitId">
       <Filter.BarName>
         <IconUsers />
         Unit
@@ -380,7 +378,6 @@ export const SelectUnitFilterBar = () => {
           </Combobox.Content>
         </Popover>
       </SelectUnitProvider>
-      <Filter.BarClose filterKey={'unitId'} />
     </Filter.BarItem>
   );
 };

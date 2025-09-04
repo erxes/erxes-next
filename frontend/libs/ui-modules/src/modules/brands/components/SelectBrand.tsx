@@ -4,10 +4,8 @@ import {
   Command,
   Filter,
   Form,
+  RecordTableInlineCell,
   Popover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
@@ -210,12 +208,8 @@ export const SelectBrandFilterBar = ({
   );
   const [open, setOpen] = useState(false);
 
-  if (!brand) {
-    return null;
-  }
-
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={queryKey || 'brand'}>
       <Filter.BarName>
         <IconLabel />
         {!iconOnly && 'Brand'}
@@ -244,7 +238,6 @@ export const SelectBrandFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectBrandProvider>
-      <Filter.BarClose filterKey={queryKey || 'brand'} />
     </Filter.BarItem>
   );
 };
@@ -265,14 +258,14 @@ export const SelectBrandInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
+      <Popover open={open} onOpenChange={setOpen}>
+        <RecordTableInlineCell.Trigger>
           <SelectBrandValue placeholder={''} />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
           <SelectBrandContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        </RecordTableInlineCell.Content>
+      </Popover>
     </SelectBrandProvider>
   );
 };

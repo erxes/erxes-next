@@ -1,14 +1,14 @@
 import { IStatusDocument } from '@/status/@types/status';
 import { statusSchema } from '@/status/db/definitions/status';
-import { IStatus, IStatusFilter } from '@/status/@types/status';
+import { IStatus } from '@/status/@types/status';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { generateDefaultStatuses } from '~/modules/status/utils';
+import { generateDefaultStatuses } from '@/status/utils';
 
 export interface IStatusModel extends Model<IStatusDocument> {
   getStatus(_id: string): Promise<IStatusDocument>;
-  getStatuses(params: IStatusFilter): Promise<IStatusDocument[]>;
-  createStatus(doc: IStatus): Promise<IStatusDocument>;
+  getStatuses(teamId: string, type?: number): Promise<IStatusDocument[]>;
+  addStatus(doc: IStatus): Promise<IStatusDocument>;
   createDefaultStatuses(teamId: string): Promise<IStatusDocument[]>;
   updateStatus(_id: string, doc: IStatus): Promise<IStatusDocument>;
   removeStatus(_id: string): Promise<{ ok: number }>;
@@ -27,29 +27,33 @@ export const loadStatusClass = (models: IModels) => {
     }
 
     public static async getStatuses(
-      params: IStatusFilter,
+      teamId: string,
+      type: number,
     ): Promise<IStatusDocument[]> {
-      const query = {} as any;
+      const query = { teamId } as any;
 
-      if (params.teamId) {
-        query.teamId = params.teamId;
+      if (type) {
+        query.type = type;
       }
 
-      if (params.type) {
-        query.type = params.type;
-      }
-
-      return models.Status.find(query).lean();
+      return models.Status.find(query).sort({ order: 1 });
     }
 
-    public static async createStatus(doc: IStatus): Promise<IStatusDocument> {
+    public static async addStatus(doc: IStatus): Promise<IStatusDocument> {
+      const status = await models.Status.findOne({
+        teamId: doc.teamId,
+        type: doc.type,
+      }).sort({ order: -1 });
+
+      doc.order = status ? status.order + 1 : 1;
+
       return models.Status.insertOne(doc);
     }
 
     public static async createDefaultStatuses(
       teamId: string,
     ): Promise<IStatusDocument[]> {
-      const statuses = await generateDefaultStatuses(teamId);
+      const statuses = generateDefaultStatuses(teamId);
 
       return models.Status.insertMany(statuses);
     }

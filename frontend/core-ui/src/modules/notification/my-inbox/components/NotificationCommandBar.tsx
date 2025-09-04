@@ -1,7 +1,8 @@
 import { useArchiveNotifications } from '@/notification/my-inbox/hooks/useArchiveNotifications';
+import { useMarkAsReadNotifications } from '@/notification/my-inbox/hooks/useMarkAsReadNotifications';
 import { INotification } from '@/notification/my-inbox/types/notifications';
 import { ApolloQueryResult, OperationVariables } from '@apollo/client';
-import { IconArchiveOff, IconEyeCheck, IconTrash } from '@tabler/icons-react';
+import { IconArchiveOff, IconEyeCheck } from '@tabler/icons-react';
 import {
   Button,
   CommandBar,
@@ -24,7 +25,9 @@ export const NotificationsCommandBar = ({
     archiveNotifications,
     selectedNotifications,
     loading,
-  } = useArchiveNotifications({ callback: refetch });
+  } = useArchiveNotifications();
+
+  const { markAsNotifications } = useMarkAsReadNotifications();
   return (
     <CommandBar open={selectedNotificationsCount > 0}>
       {loading ? (
@@ -34,10 +37,10 @@ export const NotificationsCommandBar = ({
           <CommandBar.Value onClose={() => setSelectedNotifications([])}>
             {selectedNotificationsCount} selected
           </CommandBar.Value>
-          {(!status || status === 'unread') && (
+          {status !== 'read' && (
             <>
               <Separator.Inline />
-              <Button variant="ghost">
+              <Button variant="ghost" onClick={markAsNotifications}>
                 <IconEyeCheck />
                 Mark as read
               </Button>

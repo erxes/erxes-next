@@ -1,12 +1,12 @@
 import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
-  enum NotificationType {
+  enum CPNotificationType {
     system
     engage
   }
 
-  type NotificationConfig {
+  type CPNotificationConfig {
     notifType: String
     label: String
     isAllowed: Boolean
@@ -15,12 +15,12 @@ export const types = `
   type UserNotificationSettings {
     receiveByEmail: Boolean
     receiveBySms: Boolean
-    configs: [NotificationConfig]
+    configs: [CPNotificationConfig]
   }
 
   type ClientPortalNotification {
     _id: String!
-    notifType: NotificationType
+    notifType: CPNotificationType
     title: String
     link: String
     content: String
@@ -42,7 +42,7 @@ export const types = `
 const params = `
 ${GQL_CURSOR_PARAM_DEFS}
   requireRead: Boolean,
-  notifType: NotificationType
+  notifType: CPNotificationType
   search: String
   startDate: String
   endDate: String,

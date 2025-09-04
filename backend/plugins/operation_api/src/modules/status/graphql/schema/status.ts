@@ -4,8 +4,9 @@ export const types = `
         name: String!
         teamId: String!
         description: String
-        color: String
-        type: String
+        color: String,
+        order: Int
+        type: Int
         createdAt: Date
         updatedAt: Date
     }
@@ -16,18 +17,19 @@ export const types = `
         teamId: String!
         description: String
         color: String
-        type: String
+        type: Int
+        order: Int
     }
 `;
 
 export const queries = `
    getStatus(_id: String!): Status
-   getStatusesByTeam(teamId: String!): [Status]
-   getStatusesByType(type: String!, teamId: String!): [Status]
+   getStatusesChoicesByTeam(teamId: String!): JSON
+   getStatusesByType(type: Int!, teamId: String!): [Status]
 `;
 
 export const mutations = `
-    addStatus(input: StatusInput!): Status
-    updateStatus(_id: String!, input: StatusInput!): Status
-    deleteStatus(_id: String!): Status
+    addStatus(name: String!, teamId: String!, description: String, color: String, order: Int, type: Int): Status
+    updateStatus(_id: String!, name: String, description: String, color: String, order: Int, type: Int): Status
+    deleteStatus(_id: String!): JSON
 `;

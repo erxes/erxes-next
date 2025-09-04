@@ -15,7 +15,7 @@ export interface IAdjustInventory {
   warning?: string;
   beginDate?: Date;
   successDate?: Date;
-  checkedDate?: Date;
+  checkedAt?: Date;
 
 }
 
@@ -49,9 +49,8 @@ export interface IAdjustInvDetail {
 export const ADJ_INV_STATUSES = {
   DRAFT: 'draft',
   RUNNING: 'running',
-  PROGRESS: 'progress',
+  PROCESS: 'process',
   COMPLETE: 'complete',
-  CANCEL: 'cancel',
   PUBLISH: 'publish',
-  all: ['draft', 'cancel', 'publish', 'running', 'progress', 'complete'],
-}
+  all: ['draft', 'publish', 'running', 'process', 'complete'],
+};

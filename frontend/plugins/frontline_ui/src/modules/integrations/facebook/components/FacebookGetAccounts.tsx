@@ -10,28 +10,27 @@ import { useFacebookAccounts } from '../hooks/useFacebookAccounts';
 import { IconPlus } from '@tabler/icons-react';
 import { useAtom, useSetAtom } from 'jotai';
 import {
-  activeFacebookMessengerAddStepAtom,
+  activeFacebookFormStepAtom,
   selectedFacebookAccountAtom,
 } from '../states/facebookStates';
 import {
-  FacebookMessengerAddSteps,
-  FacebookMessengerAddLayout,
-} from './FacebookMessengerAdd';
-import { IntegrationType } from '@/types/Integration';
+  FacebookIntegrationFormLayout,
+  FacebookIntegrationFormSteps,
+} from './FacebookIntegrationForm';
 
 export const FacebookGetAccounts = () => {
   const { facebookGetAccounts } = useFacebookAccounts();
   const [selectedAccount, setSelectedAccount] = useAtom(
     selectedFacebookAccountAtom,
   );
-  const setActiveStep = useSetAtom(activeFacebookMessengerAddStepAtom);
+  const setActiveStep = useSetAtom(activeFacebookFormStepAtom);
 
   const onNext = () => {
     setActiveStep(2);
   };
 
   return (
-    <FacebookMessengerAddLayout
+    <FacebookIntegrationFormLayout
       actions={
         <>
           <Button variant="secondary" className="bg-border" disabled>
@@ -43,13 +42,13 @@ export const FacebookGetAccounts = () => {
         </>
       }
     >
-      <FacebookMessengerAddSteps
+      <FacebookIntegrationFormSteps
         title="Connect accounts"
         step={1}
         description="Select the accounts where you want to integrate its pages with."
       />
-      <div className="flex-1 overflow-hidden p-4 pt-0">
-        <Command>
+      <div className="flex-1 overflow-hidden p-4 pt-0 flex flex-col">
+        <Command className="flex-1">
           <div className="p-1">
             <Command.Primitive.Input asChild>
               <Input placeholder="Search for an account" />
@@ -61,7 +60,7 @@ export const FacebookGetAccounts = () => {
             </div>
             <Button variant="ghost" className="text-primary" asChild>
               <a
-                href={`${REACT_APP_API_URL}/pl:frontline/facebook/fblogin?kind=${IntegrationType.FACEBOOK_MESSENGER}`}
+                href={`${REACT_APP_API_URL}/pl:frontline/facebook/fblogin?kind=facebook`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -75,8 +74,9 @@ export const FacebookGetAccounts = () => {
             onValueChange={(value) =>
               setSelectedAccount(value === selectedAccount ? undefined : value)
             }
+            className="flex-1 overflow-hidden"
           >
-            <Command.List>
+            <Command.List className="max-h-none overflow-y-auto">
               {facebookGetAccounts.map((account) => (
                 <Command.Item
                   key={account._id}
@@ -102,6 +102,6 @@ export const FacebookGetAccounts = () => {
           </RadioGroup>
         </Command>
       </div>
-    </FacebookMessengerAddLayout>
+    </FacebookIntegrationFormLayout>
   );
 };

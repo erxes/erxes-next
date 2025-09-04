@@ -40,7 +40,7 @@ export const types = `
     warning: String
     beginDate: Date
     successDate: Date
-    checkedDate: Date
+    checkedAt: Date
   }
 `;
 
@@ -55,8 +55,8 @@ const AdjustInventoriesQueryParams = `
   endBeginDate: Date
   startSuccessDate: Date
   endSuccessDate: Date
-  startCheckedDate: Date
-  endCheckedDate: Date
+  startCheckedAt: Date
+  endCheckedAt: Date
 `;
 
 const adjustInvParams = `
@@ -64,7 +64,7 @@ const adjustInvParams = `
   description: String
   beginDate: Date
   successDate: Date
-  checkedDate: Date
+  checkedAt: Date
 `;
 
 export const queries = `
@@ -89,8 +89,9 @@ export const queries = `
 
 export const mutations = `
   adjustInventoryAdd(${adjustInvParams}): AdjustInventory
-  adjustInventoryPublish(_id: String!): AdjustInventory
-  adjustInventoryCancel(_id: String!): AdjustInventory
-  adjustInventoryRemove(_id: String!): String
+  adjustInventoryPublish(adjustId: String!): AdjustInventory
+  adjustInventoryCancel(adjustId: String!): AdjustInventory
+  adjustInventoryRemove(adjustId: String!): String
   adjustInventoryRun(adjustId: String!): AdjustInventory
+  adjustInventoryClear(adjustId: String!): AdjustInventory
 `;

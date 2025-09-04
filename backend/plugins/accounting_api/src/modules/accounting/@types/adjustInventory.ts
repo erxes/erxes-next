@@ -1,6 +1,18 @@
 import { Document } from 'mongoose';
 import { ICommonAdjusting } from './commonAdjusting';
 
+export interface ICommonAdjInvDetail {
+  remainder: number;
+  cost: number;
+  unitCost: number;
+  soonInCount?: number;
+  soonOutCount?: number;
+}
+export interface ICommonAdjInvDetailInfo extends ICommonAdjInvDetail {
+  _id?: string;
+  date: Date;
+}
+
 export interface IAdjustInvDetailParams {
   productId: string;
   accountId: string;
@@ -12,16 +24,10 @@ export interface IAdjustInvDetailParamsId extends IAdjustInvDetailParams {
   adjustId: string;
 }
 
-export interface IAdjustInvDetail extends IAdjustInvDetailParamsId {
-  remainder: number;
-  cost: number;
-  unitCost: number;
-  soonInCount?: number;
-  soonOutCount?: number;
-
+export interface IAdjustInvDetail extends IAdjustInvDetailParamsId, ICommonAdjInvDetail {
   error?: string;
   warning?: string;
-  byDate?: any;
+  infoPerDate?: ICommonAdjInvDetailInfo[];
 }
 
 export interface IAdjustInvDetailDocument extends IAdjustInvDetail, Document {
@@ -38,7 +44,7 @@ export interface IAdjustInventory extends ICommonAdjusting {
   warning?: string;
   beginDate?: Date;
   successDate?: Date;
-  checkedDate?: Date;
+  checkedAt?: Date;
 
   createdAt?: Date;
   createdBy?: string;
@@ -57,9 +63,8 @@ export interface IAdjustInventoryDocument extends IAdjustInventory, Document {
 export const ADJ_INV_STATUSES = {
   DRAFT: 'draft',
   RUNNING: 'running',
-  PROGRESS: 'progress',
+  PROCESS: 'process',
   COMPLETE: 'complete',
-  CANCEL: 'cancel',
   PUBLISH: 'publish',
-  all: ['draft', 'cancel', 'publish', 'running', 'progress', 'complete'],
+  all: ['draft', 'publish', 'running', 'process', 'complete'],
 };

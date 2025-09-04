@@ -22,17 +22,3 @@ export const GET_CUSTOMERS = gql`
     }
   }
 `;
-
-export const GET_ASSIGNED_CUSTOMERS = gql`
- query AssignedCustomers($ids: [String]) {
-  customers(ids: $ids) {
-    list {
-      _id
-      avatar
-      firstName
-      lastName
-    }
-  }
-}
-`;
-  

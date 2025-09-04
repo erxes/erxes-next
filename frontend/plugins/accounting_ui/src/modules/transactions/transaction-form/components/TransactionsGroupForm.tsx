@@ -91,12 +91,11 @@ export const TransactionsGroupForm = () => {
     // transactionGroup get
     const trDocs = data.trDocs.map(trD => ({
       ...trD,
+      followExtras: undefined,
       details: trD.details.map(det => ({
         ...det,
         account: undefined,
         checked: undefined,
-        invAccountId: undefined,
-        costAccountId: undefined,
       })),
       date: data.date,
       number: data.number,

@@ -28,15 +28,12 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { usePhoneFields } from '../hooks/usePhoneFields';
 import { PhoneFieldsContext } from '../contexts/PhoneFieldsContext';
-import {
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
-} from 'erxes-ui/modules';
+import { ValidationStatus } from 'erxes-ui/types';
+import { formatPhones } from 'erxes-ui/modules/display/utils/formatPhones';
 
 export interface IPhoneField {
   phone?: string;
-  status?: 'verified' | 'unverified';
+  status?: ValidationStatus;
   isPrimary?: boolean;
 }
 
@@ -56,7 +53,7 @@ const PhoneFieldsProvider = forwardRef<
     children: React.ReactNode;
     recordId: string;
     onValueChange: (phones: TPhones) => void;
-    onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+    onValidationStatusChange?: (status: ValidationStatus) => void;
   } & React.HTMLAttributes<HTMLDivElement>
 >(
   (
@@ -76,22 +73,17 @@ const PhoneFieldsProvider = forwardRef<
 );
 PhoneFieldsProvider.displayName = 'PhoneFieldsProvider';
 
-const PhoneList = forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+const PhoneList = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
   const { recordId } = usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
   const [animationParent] = useAutoAnimate();
-  const mounted = useRef(false);
-
-  useEffect(() => {
-    mounted.current = true;
-  }, []);
 
   return (
     <div
-      ref={mounted.current ? animationParent : ref}
+      ref={animationParent}
       className={cn('space-y-1', className)}
       {...props}
     >
@@ -109,8 +101,7 @@ const PhoneList = forwardRef<
       )}
     </div>
   );
-});
-PhoneList.displayName = 'PhoneList';
+};
 
 const PhoneItem = forwardRef<
   HTMLButtonElement,
@@ -128,12 +119,12 @@ const PhoneItem = forwardRef<
       size="lg"
       {...props}
     >
-      {status === 'verified' ? (
+      {status === ValidationStatus.Valid ? (
         <IconCircleDashedCheck className="text-success" />
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
       )}
-      <TextOverflowTooltip value={phone} />
+      <TextOverflowTooltip value={formatPhoneNumber({ value: phone || '' })} />
       {isPrimary && <IconBookmarkFilled className="text-primary" />}
     </Button>
   );
@@ -166,7 +157,7 @@ const PhoneOptions = forwardRef<
   };
 
   const handleVerificationChange = (value: string) => {
-    onValidationStatusChange?.(value as 'verified' | 'unverified');
+    onValidationStatusChange?.(value);
   };
 
   const handleDeleteClick = () => {
@@ -288,9 +279,11 @@ const PhoneForm = forwardRef<
 
   const onPhoneAdd = (phone: string) => {
     if (phones.length === 0) {
-      onValueChange?.([{ phone, status: 'unverified', isPrimary: true }]);
+      onValueChange?.([
+        { phone, status: ValidationStatus.Invalid, isPrimary: true },
+      ]);
     } else {
-      onValueChange?.([...phones, { phone, status: 'unverified' }]);
+      onValueChange?.([...phones, { phone, status: ValidationStatus.Invalid }]);
     }
     setNewPhone('');
   };
@@ -348,11 +341,10 @@ const PhoneForm = forwardRef<
 });
 PhoneForm.displayName = 'PhoneForm';
 
-interface PhoneListFieldProps {
+interface PhoneListFieldProps extends IPhoneFieldProps {
   recordId: string;
-  phones: TPhones;
-  onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValueChange: (values: IPhoneFieldProps) => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
 }
 
 const PhoneListFieldRoot = forwardRef<
@@ -362,30 +354,62 @@ const PhoneListFieldRoot = forwardRef<
   (
     {
       recordId,
-      phones,
       onValueChange,
       onValidationStatusChange,
       className,
+      primaryPhone,
+      phones,
+      phoneValidationStatus,
       ...props
     },
     ref,
   ) => {
     const setPhones = useSetAtom(phonesFamilyState(recordId));
     const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+    const formattedPhones = formatPhones(
+      primaryPhone,
+      phones,
+      phoneValidationStatus,
+    );
 
     useEffect(() => {
-      setPhones(phones);
+      setPhones(formattedPhones);
       return () => {
         setShowPhoneInput(false);
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [phones, setPhones]);
 
+    const handleValueChange = (values: TPhones) => {
+      if (onValueChange) {
+        const { primaryPhone, phones, phoneValidationStatus } = values.reduce(
+          (acc, phone) => {
+            if (phone.isPrimary) {
+              acc.primaryPhone = phone.phone || '';
+              acc.phoneValidationStatus =
+                phone.status || ValidationStatus.Invalid;
+            } else if (phone.phone) {
+              acc.phones.push(phone.phone);
+            }
+
+            return acc;
+          },
+          {} as IPhoneFieldProps,
+        );
+
+        onValueChange({
+          primaryPhone,
+          phones,
+          phoneValidationStatus,
+        });
+      }
+    };
+
     return (
       <PhoneField.Provider
         ref={ref}
         recordId={recordId}
-        onValueChange={onValueChange}
+        onValueChange={handleValueChange}
         onValidationStatusChange={onValidationStatusChange}
         className={className}
         {...props}
@@ -416,7 +440,7 @@ export const PhonesBadgeDisplay = ({
         phone.phone ? (
           <Badge key={phone.phone} variant="secondary">
             {phone.isPrimary &&
-              (phone.status === 'verified' ? (
+              (phone.status === ValidationStatus.Valid ? (
                 <IconCircleDashedCheck className="text-success size-4" />
               ) : (
                 <IconCircleDashed className="text-muted-foreground size-4" />
@@ -433,72 +457,25 @@ export interface PhoneListFieldInlineCellProps {
   recordId: string;
   phones: TPhones;
   onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
   scope?: string;
 }
-
-const PhoneListFieldInlineCell = forwardRef<
-  HTMLDivElement,
-  PhoneListFieldInlineCellProps & React.HTMLAttributes<HTMLDivElement>
->(
-  (
-    {
-      recordId,
-      phones,
-      onValueChange,
-      onValidationStatusChange,
-      className,
-      scope,
-      ...props
-    },
-    ref,
-  ) => {
-    const setPhones = useSetAtom(phonesFamilyState(recordId));
-    const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
-
-    useEffect(() => {
-      setPhones(phones);
-      return () => {
-        setShowPhoneInput(false);
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [phones, setPhones]);
-
-    return (
-      <PhoneFieldsProvider
-        ref={ref}
-        recordId={recordId}
-        onValueChange={onValueChange}
-        onValidationStatusChange={onValidationStatusChange}
-        className={className}
-        {...props}
-      >
-        <RecordTablePopover scope={scope}>
-          <RecordTableCellTrigger>
-            <PhonesBadgeDisplay phones={phones} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <PhoneListContainer>
-              <PhoneList />
-            </PhoneListContainer>
-            <PhoneForm />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      </PhoneFieldsProvider>
-    );
-  },
-);
-PhoneListFieldInlineCell.displayName = 'PhoneListFieldInlineCell';
 
 export interface PhoneFieldDetailProps {
   recordId: string;
   phones: TPhones;
   onValueChange: (phones: TPhones) => void;
-  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
+  onValidationStatusChange?: (status: ValidationStatus) => void;
   scope?: string;
 }
 
-const PhoneField = Object.assign(PhoneListFieldRoot, {
+export interface IPhoneFieldProps {
+  primaryPhone: string;
+  phones: string[];
+  phoneValidationStatus?: ValidationStatus;
+}
+
+export const PhoneField = Object.assign(PhoneListFieldRoot, {
   Provider: PhoneFieldsProvider,
   Container: PhoneListContainer,
   List: PhoneList,
@@ -506,7 +483,4 @@ const PhoneField = Object.assign(PhoneListFieldRoot, {
   Options: PhoneOptions,
   Form: PhoneForm,
   BadgeDisplay: PhonesBadgeDisplay,
-  InlineCell: PhoneListFieldInlineCell,
 });
-
-export { PhoneField };

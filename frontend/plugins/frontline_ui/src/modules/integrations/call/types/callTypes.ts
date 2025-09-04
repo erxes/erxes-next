@@ -1,3 +1,5 @@
+import { IAttachment } from 'erxes-ui';
+
 export interface ICallConfig {
   _id: string;
   inboxId: string;
@@ -9,4 +11,14 @@ export interface ICallConfig {
 }
 export interface ICallConfigDoc extends ICallConfig {
   isAvailable: boolean;
+}
+
+export interface ICallConversationNote {
+  _id: string;
+  content: string;
+  createdAt: string;
+  attachments: IAttachment[];
+  customerId?: string;
+  userId?: string;
+  internal?: boolean;
 }

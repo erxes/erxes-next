@@ -1,35 +1,26 @@
-import { useCallback } from 'react';
-import { SubmitHandler } from 'react-hook-form';
 import { Button, Form, Input } from 'erxes-ui';
 import { useLogin } from '@/auth/login/hooks/useLogin';
-import { FormType, useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
+import { useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
 import { Link } from 'react-router-dom';
-import { useQueryState } from 'erxes-ui';
 
 export const CredentialLoginForm = () => {
-  const [, setEmail] = useQueryState('email');
   const { form } = useSignInUpForm();
   const { handleCrendentialsLogin } = useLogin();
-
-  const submitHandler: SubmitHandler<FormType> = useCallback(
-    async (data) => {
-      handleCrendentialsLogin(data.email, data.password);
-    },
-    [handleCrendentialsLogin],
-  );
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(submitHandler)}
-        className="mx-auto grid gap-5"
+        onSubmit={form.handleSubmit((data) => handleCrendentialsLogin(data))}
+        className="mx-auto grid gap-6"
       >
         <Form.Field
           name="email"
           control={form.control}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Email or Username</Form.Label>
+              <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
+                Email or Username
+              </Form.Label>
               <Form.Control>
                 <Input
                   type="text"
@@ -37,6 +28,7 @@ export const CredentialLoginForm = () => {
                   {...field}
                 />
               </Form.Control>
+              <Form.Message />
             </Form.Item>
           )}
         />
@@ -44,7 +36,9 @@ export const CredentialLoginForm = () => {
           name="password"
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Password</Form.Label>
+              <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
+                Password
+              </Form.Label>
               <Form.Control>
                 <Input
                   type="password"
@@ -52,31 +46,31 @@ export const CredentialLoginForm = () => {
                   {...field}
                 />
               </Form.Control>
+              <Form.Message />
             </Form.Item>
           )}
         />
         <Button type="submit" className="h-8">
           Sign in
         </Button>
-        <div className="flex justify-center">
-          <Button
-            type="button"
-            variant="link"
-            className="hover:bg-transparent h-min w-min text-muted-foreground hover:underline text-center block hover:text-primary"
-            asChild
+
+        <Button
+          type="button"
+          variant="link"
+          asChild
+          className="flex text-foreground hover:bg-transparent"
+        >
+          <Link
+            to={(() => {
+              const email = form.getValues('email');
+              return `/forgot-password${
+                email ? `?email=${encodeURIComponent(email)}` : ''
+              }`;
+            })()}
           >
-            <Link
-              to={(() => {
-                const email = form.getValues('email');
-                return `/forgot-password${
-                  email ? `?email=${encodeURIComponent(email)}` : ''
-                }`;
-              })()}
-            >
-              Forgot password?
-            </Link>
-          </Button>
-        </div>
+            Forgot password?
+          </Link>
+        </Button>
       </form>
     </Form>
   );

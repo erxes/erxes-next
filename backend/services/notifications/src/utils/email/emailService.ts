@@ -10,6 +10,8 @@ import {
   getUserDetail,
 } from './emailUtils';
 import { IUserDocument } from 'erxes-api-shared/core-types';
+import { MailService } from '@sendgrid/mail';
+import { Transporter } from 'nodemailer';
 
 export class EmailService {
   private async readFile(filename: string) {
@@ -124,7 +126,6 @@ export class EmailService {
       const fromEmail = await this.getFromEmail();
 
       const DOMAIN = getEnv({ name: 'DOMAIN' });
-      console.log({ DOMAIN });
 
       const html = await this.applyTemplate(
         {
@@ -140,9 +141,13 @@ export class EmailService {
       );
 
       debugInfo(`Sending notification email to ${notificationData.toEmail}`);
+      const from = generateFromEmail('Notification Service', fromEmail);
+      if (!from) {
+        throw new Error('Cannot find from email');
+      }
 
       const mailOptions = {
-        from: generateFromEmail('Notification Service', fromEmail),
+        from,
         to: notificationData.toEmail,
         subject: 'Notification',
         html,
@@ -151,14 +156,9 @@ export class EmailService {
       let info;
 
       if (emailConfig.sendgrid) {
-        info = await transporter.send({
-          to: mailOptions.to,
-          from: mailOptions.from,
-          subject: mailOptions.subject,
-          html: mailOptions.html,
-        });
+        info = await (transporter as MailService).send(mailOptions);
       } else {
-        info = await transporter.sendMail(mailOptions);
+        info = await (transporter as Transporter).sendMail(mailOptions);
       }
 
       debugInfo(`Email sent successfully`, {

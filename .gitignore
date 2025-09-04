@@ -48,3 +48,4 @@ Thumbs.db
 .env
 
 storybook-static
+backend/plugins/payment_api/src/public/widget/

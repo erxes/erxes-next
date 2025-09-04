@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useMemo, useState } from 'react';
 import { Stepper, Resizable, Button, useMultiQueryState } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';

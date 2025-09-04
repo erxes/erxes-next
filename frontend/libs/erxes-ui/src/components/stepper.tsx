@@ -1,8 +1,6 @@
-'use client';
-
 import * as React from 'react';
 import { createContext, useContext } from 'react';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from 'radix-ui';
 import { cn } from 'erxes-ui/lib';
 import { IconCheck, IconLoader2 } from '@tabler/icons-react';
 
@@ -166,7 +164,7 @@ const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
     const { step, isDisabled } = useStepItem();
 
     if (asChild) {
-      const Comp = asChild ? Slot : 'span';
+      const Comp = asChild ? Slot.Root : 'span';
       return (
         <Comp data-slot="stepper-trigger" className={className}>
           {children}

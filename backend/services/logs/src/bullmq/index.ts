@@ -1,5 +1,6 @@
 import { ILogDocument } from 'erxes-api-shared/core-types';
 import {
+  checkServiceRunning,
   createMQWorkerWithListeners,
   sendWorkerQueue,
 } from 'erxes-api-shared/utils';
@@ -8,9 +9,10 @@ import { AFTER_PROCESS_CONSTANTS, LOG_STATUSES } from '~/constants';
 import { IJobData } from '~/types';
 import { handleAfterProcess } from './afterProcess';
 import { handleMongoChangeEvent } from './mongo';
+import { handleNotifications } from '~/bullmq/notifications';
 
 export const initMQWorkers = async (redis: any) => {
-  console.info('Starting worker ...');
+  console.info('Starting worker log ...');
 
   console.info('Initialized databases');
   return new Promise<void>((resolve, reject) => {
@@ -42,7 +44,7 @@ export const initMQWorkers = async (redis: any) => {
                 contentType,
               );
 
-              if (contentType) {
+              if (contentType && (await checkServiceRunning('automations'))) {
                 sendWorkerQueue('automations', 'trigger').add('trigger', {
                   subdomain,
                   data: { type: contentType, targets: [payload?.fullDocument] },
@@ -81,6 +83,7 @@ export const initMQWorkers = async (redis: any) => {
                   `Error occured during afterProcess job ${id}: ${err.message}`,
                 );
               });
+              handleNotifications({ subdomain, models, logDoc: result });
             }
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);

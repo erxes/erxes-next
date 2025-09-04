@@ -8,7 +8,10 @@ import {
   selectedNotificationsState,
   setSelectNotificationsState,
 } from '@/notification/my-inbox/states/notificationState';
-import { INotification } from '@/notification/my-inbox/types/notifications';
+import {
+  INotification,
+  INotificationKind,
+} from '@/notification/my-inbox/types/notifications';
 import { IconSquareRounded } from '@tabler/icons-react';
 import {
   Avatar,
@@ -44,7 +47,7 @@ export const NotificationItem = ({
 }) => {
   const { id: selectedNotificationId } = useParams();
 
-  const { _id, contentType, isRead, createdAt } = notification;
+  const { _id, contentType, isRead, createdAt, updatedAt, kind } = notification;
   const moduleName = (contentType || '').replace(':', '.').split('.')[1];
   const isSelected = _id === selectedNotificationId;
 
@@ -68,12 +71,16 @@ export const NotificationItem = ({
               'text-accent-foreground': isRead && !isSelected,
             })}
           >
-            <NotificationAvatar />
+            <NotificationItemRow />
 
             <div className="w-full flex flex-row justify-between items-center">
-              {createdAt && <RelativeDateDisplay.Value value={createdAt} />}
+              {createdAt && (
+                <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+              )}
               <Badge variant="secondary" className="capitalize">
-                {moduleName || '-'}
+                {kind === INotificationKind.SYSTEM
+                  ? 'System'
+                  : moduleName || '-'}
               </Badge>
             </div>
           </div>
@@ -84,13 +91,12 @@ export const NotificationItem = ({
   );
 };
 
-const NotificationAvatar = () => {
+const NotificationItemRow = () => {
   const { id: selectedNotificationId } = useParams();
 
   const { loading, ...notification } = useNotificationContext();
 
-  const { _id, fromUser, title, isRead, priority, message, type } =
-    notification || {};
+  const { _id, title, isRead, priority, message, type } = notification || {};
 
   const NotificationTypeIcon = NOTIFICATION_TYPE_ICONS[type];
   const notificationtypeColor = NOTIFICATION_TYPE_COLORS[type];
@@ -114,24 +120,7 @@ const NotificationAvatar = () => {
           },
         )}
       >
-        <Avatar size="lg" className="hover:shadow">
-          {/* <Link to={`/settings/team-member?user_id=${fromUserId}`}> */}
-          <Avatar.Image src={fromUser.details?.avatar} />
-          <Avatar.Fallback
-            className={cn({
-              'text-primary': isSelected,
-            })}
-          >
-            {
-              `${
-                fromUser?.username ||
-                fromUser?.details?.fullName ||
-                fromUser?.email
-              }`.split('')[0]
-            }
-          </Avatar.Fallback>
-          {/* </Link> */}
-        </Avatar>
+        <NotificationAvatar isSelected={isSelected} />
 
         <div>
           <p className="w-full text-left truncate text-semibold flex flex-row gap-2 items-center">
@@ -165,6 +154,38 @@ const NotificationAvatar = () => {
         <IconSquareRounded />
       )}
     </div>
+  );
+};
+
+const NotificationAvatar = ({ isSelected }: { isSelected: boolean }) => {
+  const { loading, ...notification } = useNotificationContext();
+  const { fromUser, kind } = notification;
+
+  if (kind === INotificationKind.SYSTEM) {
+    return (
+      <Avatar size="lg" className="hover:shadow">
+        <Avatar.Image src="/assets/erxes-bot.webp" />
+      </Avatar>
+    );
+  }
+
+  return (
+    <Avatar size="lg" className="hover:shadow">
+      {/* <Link to={`/settings/team-member?user_id=${fromUserId}`}> */}
+      <Avatar.Image src={fromUser?.details?.avatar} />
+      <Avatar.Fallback
+        className={cn({
+          'text-primary': isSelected,
+        })}
+      >
+        {
+          `${
+            fromUser?.username || fromUser?.details?.fullName || fromUser?.email
+          }`.split('')[0]
+        }
+      </Avatar.Fallback>
+      {/* </Link> */}
+    </Avatar>
   );
 };
 

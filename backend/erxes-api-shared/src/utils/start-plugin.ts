@@ -1,23 +1,25 @@
-import * as dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
+import * as dotenv from 'dotenv';
+
 import cookieParser from 'cookie-parser';
 
 import cors from 'cors';
 import express, {
-  Router,
   Request as ApiRequest,
   Response as ApiResponse,
   Application,
+  Router,
 } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import * as http from 'http';
 import * as path from 'path';
 
+import { AnyRouter } from '@trpc/server/unstable-core-do-not-import';
+import rateLimit from 'express-rate-limit';
 import {
   SegmentConfigs,
   startAutomations,
@@ -36,7 +38,7 @@ import {
 } from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
-import rateLimit from 'express-rate-limit';
+import { startPayments } from '../common-modules/payment/worker';
 
 dotenv.config();
 
@@ -44,6 +46,7 @@ type IMeta = {
   automations?: AutomationConfigs;
   segments?: SegmentConfigs;
   afterProcess?: AfterProcessConfigs;
+  payments?: any;
   notificationModules?: any[];
 };
 
@@ -112,7 +115,7 @@ export async function startPlugin(
   });
 
   if (configs.expressRouter) {
-    app.use(`/pl:${configs.name}`, configs.expressRouter);
+    app.use(configs.expressRouter);
   }
 
   if (configs.middlewares) {
@@ -161,11 +164,6 @@ export async function startPlugin(
   }
 
   if (configs.hasSubscriptions) {
-    const fileLimiter = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
-      message: 'Too many requests from this IP, please try again later.',
-    });
     app.get('/subscriptionPlugin.js', async (_req, res) => {
       res.sendFile(path.join(configs.subscriptionPluginPath));
     });
@@ -283,8 +281,13 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments, afterProcess, notificationModules } =
-      configs.meta || {};
+    const {
+      automations,
+      segments,
+      afterProcess,
+      notificationModules,
+      payments,
+    } = configs.meta || {};
 
     if (automations) {
       await startAutomations(configs.name, automations);
@@ -304,6 +307,10 @@ export async function startPlugin(
         'notificationModules',
         notificationModules,
       );
+    }
+
+    if (payments) {
+      await startPayments(configs.name, payments);
     }
   } // end configs.meta if
 

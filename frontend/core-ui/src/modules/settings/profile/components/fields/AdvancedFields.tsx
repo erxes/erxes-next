@@ -1,4 +1,5 @@
 import FormField from '@/settings/profile/components/fields/FormField';
+import { PositionField } from '@/settings/profile/components/fields/PositionField';
 import { PROFILE_ADVANCED_FIELDS } from '@/settings/profile/constants/profileFields';
 import { FormType } from '@/settings/profile/hooks/useProfileForm';
 import { Accordion, Form } from 'erxes-ui';
@@ -18,6 +19,7 @@ const AdvancedFields = () => {
         </Accordion.Trigger>
         <Accordion.Content className="py-3 gap-3">
           <div className="grid grid-cols-2 gap-6">
+            <PositionField />
             {PROFILE_ADVANCED_FIELDS.map((advancedField, index) => {
               const {
                 fieldLabel,
