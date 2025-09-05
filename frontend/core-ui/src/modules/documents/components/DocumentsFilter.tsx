@@ -1,11 +1,9 @@
 import {
   IconCalendarPlus,
-  IconFileFilled,
   IconSearch,
 } from '@tabler/icons-react';
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 import { SelectMember } from 'ui-modules';
-import { DOCUMENTS_TYPES_SET } from '../constants';
 import { DocumentFilterState } from '../types';
 
 // TODO: Change assignedTo to createdBy
@@ -14,7 +12,6 @@ export const DocumentsFilter = () => {
   const [queries] = useMultiQueryState<DocumentFilterState>([
     'createdAt',
     'assignedTo',
-    'contentType',
     'searchValue',
   ]);
 
@@ -48,19 +45,10 @@ export const DocumentsFilter = () => {
 };
 
 const DocumentFilterBar = ({ queries }: { queries: DocumentFilterState }) => {
-  const { searchValue, contentType, assignedTo } = queries || {};
+  const { searchValue, assignedTo } = queries || {};
 
   return (
     <>
-      <Filter.BarItem queryKey="contentType">
-        <Filter.BarName>
-          <IconFileFilled />
-          Document Type
-        </Filter.BarName>
-        <Filter.BarButton filterKey="contentType">
-          {DOCUMENTS_TYPES_SET[contentType || '']?.label || contentType}
-        </Filter.BarButton>
-      </Filter.BarItem>
 
       <Filter.BarItem queryKey="searchValue">
         <Filter.BarName>

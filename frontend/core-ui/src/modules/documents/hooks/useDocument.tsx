@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { toast, useQueryState } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { SAVE_DOCUMENT } from '../graphql/mutations';
+import { SAVE_DOCUMENT } from '../graphql/documentMutations';
 import { GET_DOCUMENT_DETAIL } from '../graphql/queries';
 
 export const useDocument = () => {
@@ -40,6 +40,10 @@ export const useDocument = () => {
       content: getValues('content'),
       contentType,
     };
+
+    if (!cleanDocumentId) {
+      document.code = `${Math.floor(1000 + Math.random() * 9000)}`;
+    }
 
     if (cleanDocumentId) {
       document._id = cleanDocumentId;

@@ -1,12 +1,12 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { isDev } from 'erxes-api-shared/utils';
 import express from 'express';
 import * as http from 'http';
 import { appRouter } from '~/init-trpc';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
-import { isDev } from 'erxes-api-shared/utils';
 
 import {
   closeMongooose,
@@ -15,14 +15,12 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
-import './meta/automations';
-import { generateModels } from './connectionResolvers';
-import { documents } from './meta/documents';
-import { moduleObjects } from './meta/permission';
-import { tags } from './meta/tags';
-import './segments';
-import * as path from 'path';
 import rateLimit from 'express-rate-limit';
+import * as path from 'path';
+import { generateModels } from './connectionResolvers';
+import meta from './meta';
+import './meta/automations';
+import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -113,11 +111,7 @@ httpServer.listen(port, async () => {
     name: 'core',
     port,
     hasSubscriptions: true,
-    meta: {
-      permissions: moduleObjects,
-      tags,
-      documents,
-    },
+    meta,
   });
 });
 

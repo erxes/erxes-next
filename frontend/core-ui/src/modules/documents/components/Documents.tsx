@@ -23,15 +23,15 @@ export const Documents = ({ viewType, showFilter = true }: Props) => {
   const Component = DOCUMENTS_VIEW_TYPES[viewType] ?? DocumentsList;
 
   return (
-    <>
+    <div className="flex flex-col h-full border-r">
       {showFilter && (
         <PageSubHeader>
           <DocumentsFilter />
         </PageSubHeader>
       )}
-      <ScrollArea className="h-full pb-12" viewportClassName="[&>div]:block">
+      <ScrollArea className="flex-1" viewportClassName="[&>div]:block">
         <Component documents={documents} />
       </ScrollArea>
-    </>
+    </div>
   );
 };

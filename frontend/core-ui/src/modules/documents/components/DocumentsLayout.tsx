@@ -16,21 +16,15 @@ export const DocumentsLayout = ({
   const contentType = searchParams.get('contentType');
 
   return (
-    <Resizable.PanelGroup
-      direction="horizontal"
-      className="flex-1 overflow-hidden"
-    >
-      <Resizable.Panel minSize={20} maxSize={25} defaultSize={20}>
-        {contentType && documentId !== null ? (
-          <Documents viewType={'list'} showFilter={false} />
-        ) : (
-          <DocumentsTypes />
-        )}
-      </Resizable.Panel>
-      <Resizable.Handle />
-      <Resizable.Panel defaultSize={75}>
+    <div className="flex flex-auto overflow-hidden">
+      {contentType && documentId !== null ? (
+        <Documents viewType={'list'} showFilter={false} />
+      ) : (
+        <DocumentsTypes />
+      )}
+      <div className="flex-1">
         {documentId !== null ? <Editor /> : <Documents viewType={'grid'} />}
-      </Resizable.Panel>
-    </Resizable.PanelGroup>
+      </div>
+    </div>
   );
 };
