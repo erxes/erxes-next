@@ -16,7 +16,7 @@ const generateOrderByNotifications = (orderBy?: any) => {
   }
 
   if (orderBy?.readAt) {
-    sort.readAt == orderBy?.readAt;
+    sort.readAt = orderBy?.readAt;
   }
 
   return sort;
