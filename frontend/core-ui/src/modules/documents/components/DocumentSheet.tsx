@@ -8,13 +8,19 @@ export const DocumentSheet = () => {
   const [documentId, setDocumentId] = useQueryState('documentId');
   const [contentType] = useQueryState('contentType');
 
-  const { reset: resetForm, handleSubmit } = useFormContext<FormType>();
+  const {
+    reset: resetForm,
+    handleSubmit,
+    formState,
+  } = useFormContext<FormType>();
 
   const { documentSave } = useDocument();
 
   const submitHandler: SubmitHandler<FormType> = useCallback(async () => {
     documentSave();
   }, [documentSave]);
+
+  const hasChanges = formState.isDirty;
 
   if (!contentType) {
     return null;
@@ -33,5 +39,13 @@ export const DocumentSheet = () => {
     );
   }
 
-  return <Button onClick={handleSubmit(submitHandler)}>Save Document</Button>;
+  return (
+    <Button
+      onClick={handleSubmit(submitHandler)}
+      disabled={!hasChanges}
+      variant={hasChanges ? 'default' : 'secondary'}
+    >
+      Save Document
+    </Button>
+  );
 };
