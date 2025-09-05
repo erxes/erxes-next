@@ -12,8 +12,6 @@ export const channelSchema = schemaWrapper(
       optional: true,
       label: 'Description',
     },
-    integrationIds: { type: [String], label: 'Integrations' },
-    memberIds: { type: [String], label: 'Members' },
     userId: { type: String, label: 'Created by' },
     conversationCount: {
       type: Number,
@@ -29,4 +27,21 @@ export const channelSchema = schemaWrapper(
   {
     contentType: 'frontline:inbox.channel',
   },
+);
+
+const channelMemberRole = {
+  ADMIN: 'admin',
+  MEMBER: 'member',
+  LEAD: 'lead',
+  ALL: ['admin', 'member', 'lead'],
+};
+
+export const channelMembers = schemaWrapper(
+  new Schema({
+    memberId: { type: String, label: 'Member ID' },
+    channelId: { type: String, label: 'Channel ID' },
+    role: { type: String, label: 'Role', enum: channelMemberRole.ALL },
+    createdAt: { type: Date, label: 'Created at' },
+    createdBy: { type: Date, label: 'Created by' },
+  }),
 );

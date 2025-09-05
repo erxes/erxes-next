@@ -17,7 +17,14 @@ export const channelQueries = {
     { memberIds }: { memberIds: string[] },
     { models }: IContext,
   ) {
-    return models.Channels.find({ memberIds: { $in: memberIds } });
+    const channelMembers = await models.ChannelMembers.find(
+      { memberId: { $in: memberIds } },
+      { channelId: 1 },
+    ).lean();
+
+    const channelIds = channelMembers.map((cm) => cm.channelId);
+
+    return models.Channels.find({ _id: { $in: channelIds } });
   },
 
   /**

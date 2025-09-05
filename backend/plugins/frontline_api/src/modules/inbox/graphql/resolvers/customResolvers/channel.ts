@@ -1,4 +1,4 @@
-import { IChannelDocument } from '@/inbox/@types/channels';
+import { IChannelDocument } from '~/modules/inbox/@types/channels';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 

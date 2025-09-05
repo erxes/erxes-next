@@ -30,6 +30,7 @@ export const IntegrationsRecordTable = ({
   const { integrations, loading, handleFetchMore } = useIntegrations({
     variables: {
       kind: params?.integrationType,
+      channelId: params?.channelId,
     },
     skip: !params?.integrationType,
     errorPolicy: 'all',
