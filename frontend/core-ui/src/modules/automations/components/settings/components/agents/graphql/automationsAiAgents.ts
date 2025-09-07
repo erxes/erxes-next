@@ -43,3 +43,36 @@ export const AUTOMATIONS_AI_AGENTS = gql`
     automationsAiAgents(kind: $kind)
   }
 `;
+export const START_AI_TRAINING = gql`
+  mutation StartAiTraining($agentId: String!) {
+    startAiTraining(agentId: $agentId) {
+      agentId
+      totalFiles
+      processedFiles
+      status
+      error
+    }
+  }
+`;
+
+export const GET_TRAINING_STATUS = gql`
+  query GetTrainingStatus($agentId: String!) {
+    getTrainingStatus(agentId: $agentId) {
+      agentId
+      totalFiles
+      processedFiles
+      status
+      error
+    }
+  }
+`;
+
+export const GENERATE_AGENT_MESSAGE = gql`
+  mutation GenerateAgentMessage($agentId: String!, $question: String!) {
+    generateAgentMessage(agentId: $agentId, question: $question) {
+      message
+      relevantFile
+      similarity
+    }
+  }
+`;

@@ -1,9 +1,7 @@
 import {
+  AUTOMATION_STATUSES,
   IAutomation,
   IAutomationDoc,
-  AUTOMATION_STATUSES,
-  embedTextCF,
-  FileEmbeddingService,
 } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 import { detectConversationType } from '~/modules/automations/graphql/resolvers/utils';

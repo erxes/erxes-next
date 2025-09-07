@@ -7,6 +7,7 @@ import PrimaryEdge from './edges/PrimaryEdge';
 import ActionNode from './nodes/ActionNode';
 import TriggerNode from './nodes/TriggerNode';
 import WorkflowNode from '@/automations/components/builder/nodes/WorkflowNode';
+import { AutomationBuilderSidebar } from '@/automations/components/builder/sidebar/components/AutomationBuilderSidebar';
 
 const nodeTypes = {
   trigger: TriggerNode,
@@ -37,7 +38,7 @@ export const AutomationBuilderCanvas = () => {
   } = useReactFlowEditor();
 
   return (
-    <div className="h-full" ref={reactFlowWrapper}>
+    <div className="h-full flex-1" ref={reactFlowWrapper}>
       <AutomationBuilderEffect />
       <ReactFlow
         ref={editorWrapper}
@@ -63,6 +64,7 @@ export const AutomationBuilderCanvas = () => {
         <Background />
         <MiniMap pannable position="top-left" zoomable />
       </ReactFlow>
+      <AutomationBuilderSidebar />
     </div>
   );
 };

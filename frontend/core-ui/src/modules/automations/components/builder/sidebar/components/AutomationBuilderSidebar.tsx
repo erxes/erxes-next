@@ -54,14 +54,10 @@ export const AutomationBuilderSidebar = () => {
   return (
     <AnimatePresence>
       {isOpenSideBar && (
-        <motion.div
+        <div
           key="sidebar"
-          initial={{ x: '100%' }}
-          animate={{ x: 0 }}
-          exit={{ x: '100%' }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
           className="
-          absolute right-0 top-0 min-w-80 max-w-2xl w-fit h-full bg-sidebar rounded-none flex flex-col z-50 shadow-lg"
+          absolute right-16 top-0 min-w-80 max-w-2xl w-fit h-full bg-sidebar rounded-none flex flex-col z-50 border-l"
         >
           {activeNode && (
             <>
@@ -90,7 +86,7 @@ export const AutomationBuilderSidebar = () => {
           <Card.Content className="min-w-80 max-w-2xl w-full flex-1 overflow-auto p-0">
             <AutomationBuilderSidebarContent activeNode={activeNode} />
           </Card.Content>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

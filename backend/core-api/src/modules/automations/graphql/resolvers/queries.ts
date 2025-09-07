@@ -2,7 +2,6 @@ import { cursorPaginate, getPlugin, getPlugins } from 'erxes-api-shared/utils';
 
 import {
   AUTOMATION_STATUSES,
-  embedTextCF,
   IAutomationDocument,
   IAutomationExecutionDocument,
   IAutomationsActionConfig,
@@ -11,8 +10,8 @@ import {
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 
 import { IContext } from '~/connectionResolvers';
-import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
 import { AiTrainingService } from '~/modules/automations/services/aiTraining';
+import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;

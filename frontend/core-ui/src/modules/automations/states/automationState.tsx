@@ -20,3 +20,5 @@ export const toggleAutomationBuilderOpenPanel = atom(false, (get, set) => {
 
   set(automationBuilderPanelOpenState, !isOpen);
 });
+
+export const automationAiAgentIsStartedTrainingState = atom<boolean>(true);

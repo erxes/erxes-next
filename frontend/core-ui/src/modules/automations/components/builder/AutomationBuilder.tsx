@@ -9,7 +9,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Tabs, useMultiQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from '../../context/AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
-import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
 import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
 import { AutomationProvider } from '@/automations/context/AutomationProvider';
@@ -68,7 +67,6 @@ export const AutomationBuilder = ({ detail }: AutomationBuilderProps) => {
                   className="flex-1 h-full relative"
                 >
                   <InspectorPanel />
-                  <AutomationBuilderSidebar />
                 </Tabs.Content>
               )}
               {activeTab === 'history' && (

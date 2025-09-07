@@ -1,6 +1,7 @@
 import { getEnv } from '../../../utils';
 import {
   embedTextCF,
+  embedTextCFChunks,
   generateTextCF,
   getFileAsStringFromCF,
 } from './cloudflare/utils';
@@ -56,10 +57,8 @@ export class FileEmbeddingService {
       // Get file content from Cloudflare R2
       const fileContent = await getFileAsStringFromCF('erxes-saas', key);
 
-      console.log({ fileContent });
-
       // Generate embedding for the file content
-      const embedding = await embedTextCF(fileContent);
+      const embedding = await embedTextCFChunks(fileContent);
 
       return {
         fileId: key,

@@ -32,7 +32,7 @@ export const AutomationBuilderHeaderActions = () => {
 
   return (
     <div className="flex flex-row justify-between items-center gap-4">
-      <ToggleButton
+      {/* <ToggleButton
         isOpen={isPanelOpen}
         onToggle={togglePanelOpen}
         openLabel="Hide Inspect"
@@ -46,7 +46,7 @@ export const AutomationBuilderHeaderActions = () => {
         openLabel="Hide Menu"
         closedLabel="Show Menu"
         shortcut={`${isMac ? '⌘' : 'Ctrl'}G`}
-      />
+      /> */}
 
       <Form.Field
         control={control}

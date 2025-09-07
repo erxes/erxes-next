@@ -40,7 +40,7 @@ export function useAiAgentDetail(id?: string) {
       : 'automationsAiAgentAdd';
 
     const res = await mutation({
-      variables: input,
+      variables: id ? { ...input, id } : input,
       onError: ({ message }) => {
         toast({ title: 'Something went wrong', description: message });
       },
