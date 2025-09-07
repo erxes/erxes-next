@@ -11,9 +11,8 @@ import {
   Tooltip,
 } from 'erxes-ui';
 import { ICustomer } from '../types';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCustomerInline } from '../hooks';
-import React from 'react';
 
 interface CustomersInlineProviderProps {
   children: React.ReactNode;
@@ -30,6 +29,8 @@ const CustomersInlineProvider = ({
   customers,
   updateCustomers,
 }: CustomersInlineProviderProps) => {
+  const [_customers, _setCustomers] = useState<ICustomer[]>(customers || []);
+
   const getCustomerTitle = (customer?: ICustomer) => {
     const { firstName, lastName, primaryEmail, primaryPhone } = customer || {};
     const fullName =
@@ -42,12 +43,12 @@ const CustomersInlineProvider = ({
   return (
     <CustomersInlineContext.Provider
       value={{
-        customers: customers || [],
+        customers: customers || _customers,
         loading: false,
         placeholder: isUndefinedOrNull(placeholder)
           ? 'Select Customers'
           : placeholder,
-        updateCustomers,
+        updateCustomers: updateCustomers || _setCustomers,
         getCustomerTitle,
       }}
     >
@@ -75,16 +76,16 @@ const CustomerInlineEffectComponent = ({
   });
 
   useEffect(() => {
-    const newCustomers = [...(customers || [])].filter(
-      (c) => c._id !== customerId,
-    );
-
-    if (newCustomers.some((c) => c._id === customerId)) {
-      updateCustomers?.(newCustomers);
-      return;
-    }
     if (customer) {
-      updateCustomers?.([...newCustomers, { ...customer, _id: customerId }]);
+      const newCustomers = (customers || []).filter(
+        (c) => c._id !== customerId,
+      );
+
+      if (newCustomers.some((c) => c._id === customerId)) {
+        updateCustomers?.(newCustomers);
+        return;
+      }
+      updateCustomers?.([...newCustomers, { ...customer }]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,6 +186,7 @@ const CustomersInlineTitle = ({ className }: { className?: string }) => {
 
     return `${customers.length} customers`;
   };
+
   return (
     <Combobox.Value
       value={getDisplayValue()}

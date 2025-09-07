@@ -1,51 +1,63 @@
 import { useActivityListContext } from '@/activity/context/ActivityListContext';
 import { IActivity } from '@/activity/types';
+import { ITask } from '@/task/types';
+import { IProject } from '@/project/types';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { StatusInlineIcon } from '@/task/components/StatusInline';
 import { Badge } from 'erxes-ui';
+import {
+  StatusInlineIcon,
+  StatusInlineLabel,
+} from '@/operation/components/StatusInline';
+
+const isTask = (content: ITask | IProject): content is ITask => {
+  return 'teamId' in content;
+};
 
 export const ActivityStatus = ({
   metadata,
-  action,
 }: {
   metadata: IActivity['metadata'];
-  action: IActivity['action'];
 }) => {
   const { previousValue, newValue } = metadata;
-  const { teamId } = useActivityListContext();
+  const contentDetail = useActivityListContext();
+
   const { statuses } = useGetStatusByTeam({
-    variables: { teamId },
-    skip: !teamId,
+    variables: { teamId: isTask(contentDetail) ? contentDetail.teamId : '' },
+    skip: !isTask(contentDetail),
   });
 
-  const getStatus = (value?: string) => {
-    return (
-      statuses?.find((status) => status.value === value) || {
-        type: '',
-        color: '',
-        label: '',
-      }
-    );
+  const getTaskStatus = (value?: string) => {
+    return statuses?.find((status) => status.value === value);
+  };
+
+  const renderStatusBadge = (value?: string) => {
+    if (isTask(contentDetail)) {
+      const status = getTaskStatus(value);
+      return (
+        <Badge variant="secondary" className="capitalize">
+          <StatusInlineIcon
+            statusType={status?.type as number}
+            color={status?.color}
+          />
+          {status?.label}
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge variant="secondary" className="capitalize">
+          <StatusInlineIcon statusType={value} />
+          <StatusInlineLabel statusType={value} />
+        </Badge>
+      );
+    }
   };
 
   return (
     <div className="flex items-center gap-1">
       changed status
-      <Badge variant="secondary" className="capitalize">
-        <StatusInlineIcon
-          type={getStatus(previousValue)?.type}
-          color={getStatus(previousValue)?.color}
-        />
-        {getStatus(previousValue)?.label}
-      </Badge>
+      {renderStatusBadge(previousValue)}
       to
-      <Badge variant="secondary" className="capitalize">
-        <StatusInlineIcon
-          type={getStatus(newValue)?.type}
-          color={getStatus(newValue)?.color}
-        />
-        {getStatus(newValue)?.label}
-      </Badge>
+      {renderStatusBadge(newValue)}
     </div>
   );
 };

@@ -124,7 +124,7 @@ const PhoneItem = forwardRef<
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
       )}
-      <TextOverflowTooltip value={phone} />
+      <TextOverflowTooltip value={formatPhoneNumber({ value: phone || '' })} />
       {isPrimary && <IconBookmarkFilled className="text-primary" />}
     </Button>
   );
@@ -472,7 +472,7 @@ export interface PhoneFieldDetailProps {
 export interface IPhoneFieldProps {
   primaryPhone: string;
   phones: string[];
-  phoneValidationStatus: ValidationStatus;
+  phoneValidationStatus?: ValidationStatus;
 }
 
 export const PhoneField = Object.assign(PhoneListFieldRoot, {

@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router';
 
 import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
-import { RocketIcon, isDefined } from 'erxes-ui';
+import { isDefined } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { useAtomValue } from 'jotai';
@@ -13,14 +13,7 @@ export const UserProvider = () => {
   const currentUser = useAtomValue(currentUserState);
 
   if (!isCurrentUserLoaded) {
-    return (
-      <div className="flex flex-col h-screen w-screen items-center justify-center">
-        <RocketIcon />
-        <p className="text-sm text-muted-foreground">
-          Hang in there! We'll be right back with you
-        </p>
-      </div>
-    );
+    return <div />;
   }
 
   if (!isDefined(currentUser)) {

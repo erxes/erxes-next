@@ -6,5 +6,5 @@ export const SexDisplay = ({
 }: {
   value: SexCode;
 }) => {
-  return SexCodes[value]?.label ?? '';
+  return value === SexCode.NOT_KNOWN ? '' : SexCodes[value]?.label ?? '';
 };

@@ -29,7 +29,13 @@ import {
 import {
   queries as ActivityQueries,
   types as ActivityTypes,
-} from '@/activity/graphql/schema/activity';
+} from '@/activity/graphql/schemas/activity';
+
+import {
+  queries as CycleQueries,
+  types as CycleTypes,
+  mutations as CycleMutations,
+} from '@/cycle/graphql/schemas/cycle';
 
 export const types = `
   ${TaskTypes}
@@ -38,6 +44,7 @@ export const types = `
   ${StatusTypes}
   ${NoteTypes}
   ${ActivityTypes}
+  ${CycleTypes}
 `;
 
 export const queries = `
@@ -47,6 +54,7 @@ export const queries = `
   ${StatusQueries}
   ${NoteQueries}
   ${ActivityQueries}
+  ${CycleQueries}
 `;
 
 export const mutations = `
@@ -55,6 +63,7 @@ export const mutations = `
   ${TeamMutations}
   ${StatusMutations}
   ${NoteMutations}
+  ${CycleMutations}
 `;
 
 export default { types, queries, mutations };

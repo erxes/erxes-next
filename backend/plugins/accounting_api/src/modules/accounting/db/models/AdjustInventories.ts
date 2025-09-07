@@ -29,13 +29,21 @@ export const loadAdjustInventoriesClass = (models: IModels, subdomain: string) =
     }
 
     public static async updateAdjustInventory(_id: string, doc: IAdjustInventory) {
-      const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
+      await models.AdjustInventories.getAdjustInventory(_id);
       await models.AdjustInventories.updateOne({ _id }, { $set: { ...doc, updatedAt: new Date() } });
       return await models.AdjustInventories.getAdjustInventory(_id);
     }
 
     public static async removeAdjustInventory(_id: string) {
-      return await models.AdjustInventories.deleteOne({ _id });
+      const adjusting = await models.AdjustInventories.getAdjustInventory(_id);
+      if (![ADJ_INV_STATUSES.DRAFT, ADJ_INV_STATUSES.PROCESS].includes(adjusting.status)) {
+        throw new Error('this adjusting cannot be delete yet, it has not been draft or cancel.');
+      }
+
+      await models.AdjustInvDetails.deleteMany({ adjustId: _id });
+
+      await models.AdjustInventories.deleteOne({ _id });
+      return 'success delete'
     }
   }
 
@@ -93,12 +101,17 @@ export const loadAdjustInvDetailsClass = (models: IModels, subdomain: string) =>
       while (step * per <= preAdjustDetailsCount) {
         const skip = step * per;
         const sourceDetails = await models.AdjustInvDetails.find({
-          adjustId: sourceAdjustId
+          adjustId: sourceAdjustId,
+          $or: [
+            { remainder: { $eq: 0 } },
+            { cost: { $eq: 0 } }
+          ]
         }).skip(skip).limit(per).lean();
 
         await models.AdjustInvDetails.insertMany(sourceDetails?.map(sd => ({
           ...sd,
-          _id: nanoid()
+          _id: nanoid(),
+          infoPerDate: {}
         })));
 
         step++
@@ -106,6 +119,10 @@ export const loadAdjustInvDetailsClass = (models: IModels, subdomain: string) =>
     }
 
     public static async cleanAdjustInvDetails({ adjustId }: { adjustId: string }) {
+      await models.AdjustInvDetails.deleteMany({ adjustId, remainder: { $eq: 0 }, cost: { $eq: 0 } });
+    }
+
+    public static async cacheAdjustInvDetails({ adjustId }: { adjustId: string }) {
       await models.AdjustInvDetails.deleteMany({ adjustId, remainder: { $eq: 0 }, cost: { $eq: 0 } });
     }
 
@@ -117,12 +134,14 @@ export const loadAdjustInvDetailsClass = (models: IModels, subdomain: string) =>
         if (hasResp) {
           return await models.AdjustInvDetails.findOne({ _id: oldDetail._id });
         }
+        return;
       }
 
       const newDetail = await models.AdjustInvDetails.create({ ...args });
       if (hasResp) {
         return newDetail;
       }
+      return;
     }
 
     public static async increaseAdjustInvDetail({

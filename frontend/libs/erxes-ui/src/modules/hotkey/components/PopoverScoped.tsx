@@ -1,4 +1,4 @@
-import { Popover } from 'erxes-ui/components';
+import { Popover, type PopoverProps } from 'erxes-ui/components';
 import { usePreviousHotkeyScope } from '../hooks/usePreviousHotkeyScope';
 import {
   UseHotkeysOptionsWithoutBuggyOptions,
@@ -6,7 +6,8 @@ import {
 } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { Key } from 'erxes-ui/types';
 import { useState } from 'react';
-import { PopoverProps } from '@radix-ui/react-popover';
+import { currentHotkeyScopeState } from 'erxes-ui/modules/hotkey/states/internal/currentHotkeyScopeState';
+import { useAtomValue } from 'jotai';
 
 export const PopoverScoped = ({
   scope,
@@ -29,20 +30,21 @@ export const PopoverScoped = ({
     setHotkeyScopeAndMemorizePreviousScope,
     goBackToPreviousHotkeyScope,
   } = usePreviousHotkeyScope();
+  const currentHotkeyScope = useAtomValue(currentHotkeyScopeState);
 
   useScopedHotkeys(
     Key.Enter,
     () => {
-      if (onEnter) {
-        onEnter?.();
-        if (closeOnEnter) {
-          _setOpen(false);
-          onOpenChange?.(false);
-        }
+      onEnter?.();
+      if (closeOnEnter) {
+        _setOpen(false);
+        onOpenChange?.(false);
+      }
+      if (scope) {
         goBackToPreviousHotkeyScope();
       }
     },
-    scope + '.Popover',
+    scope ? scope + '.Popover' : currentHotkeyScope.scope,
     dependencies,
     {
       preventDefault: false,
@@ -52,13 +54,14 @@ export const PopoverScoped = ({
 
   return (
     <Popover
+      modal
       {...props}
       open={open ?? _open}
-      onOpenChange={(open) => {
-        _setOpen(open);
-        onOpenChange?.(open);
+      onOpenChange={(op) => {
+        _setOpen(op);
+        onOpenChange?.(op);
         if (scope) {
-          open
+          op
             ? setHotkeyScopeAndMemorizePreviousScope(scope + '.Popover')
             : goBackToPreviousHotkeyScope();
         }

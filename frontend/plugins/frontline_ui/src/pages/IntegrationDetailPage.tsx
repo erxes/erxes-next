@@ -90,6 +90,9 @@ export const IntegrationDetailPage = () => {
         {integrationType === IntegrationType.FACEBOOK_MESSENGER && (
           <FacebookIntegrationDetail />
         )}
+        {integrationType === IntegrationType.FACEBOOK_POST && (
+          <FacebookIntegrationDetail isPost />
+        )}
         {integrationType === IntegrationType.CALL && <CallIntegrationDetail />}
       </Suspense>
       <IntegrationsRecordTable
@@ -98,7 +101,8 @@ export const IntegrationDetailPage = () => {
             {integrationType === IntegrationType.ERXES_MESSENGER && (
               <ErxesMessengerActions cell={cell} />
             )}
-            {integrationType === IntegrationType.FACEBOOK_MESSENGER && (
+            {(integrationType === IntegrationType.FACEBOOK_MESSENGER ||
+              integrationType === IntegrationType.FACEBOOK_POST) && (
               <FacebookIntegrationActions cell={cell} />
             )}
             {integrationType === IntegrationType.CALL && (

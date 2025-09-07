@@ -77,6 +77,7 @@ export interface SipProviderProps {
   autoRegister?: boolean;
   autoAnswer?: boolean;
   iceRestart?: boolean;
+  historyId?: string | null;
   sessionTimersExpires?: number;
   extraHeaders?: ExtraHeaders;
   iceServers?: IceServers;
@@ -91,6 +92,17 @@ export interface SipProviderProps {
     callStartTime: Date,
     queueName: string | null,
   ) => void;
+  updateHistory: (
+    timeStamp: number,
+    callStartTime: Date,
+    callEndTime: Date,
+    callStatus: string,
+    direction: string,
+    customerPhone: string,
+    diversionHeader?: string,
+    endedBy?: string,
+    historyId?: string,
+  ) => void;
 }
 export interface SipContextValue {
   sip: {
@@ -103,6 +115,16 @@ export interface SipContextValue {
       customerPhone: string,
       callStartTime: Date,
       queueName: string | null,
+    ) => void;
+    updateHistory: (
+      timeStamp: number,
+      callStartTime: Date,
+      callEndTime: Date,
+      callStatus: string,
+      direction: string,
+      customerPhone: string,
+      diversionHeader?: string,
+      endedBy?: string,
     ) => void;
   };
   registerSip: () => void;

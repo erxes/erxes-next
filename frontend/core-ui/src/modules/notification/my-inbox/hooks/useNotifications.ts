@@ -17,7 +17,6 @@ import {
 } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { useParams } from 'react-router';
 import strip from 'strip-ansi';
 import { currentUserState, IUser } from 'ui-modules';
 type NotificationInsertedData = {
@@ -61,7 +60,6 @@ const generateOrderBy = (
 
 export const useNotifications = () => {
   const currentUser = useAtomValue(currentUserState) as IUser;
-  const { id: currentNotificationId } = useParams();
 
   const [{ status, priority, type, createdAt, orderBy, fromUserId }] =
     useMultiQueryState<{

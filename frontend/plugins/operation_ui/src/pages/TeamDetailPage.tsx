@@ -18,7 +18,7 @@ export const TeamDetailPage = () => {
                 <Button
                   variant="ghost"
                   className="text-foreground font-semibold"
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/settings/operation/team')}
                 >
                   <IconArrowLeft size={16} className="stroke-foreground" />
                   Teams

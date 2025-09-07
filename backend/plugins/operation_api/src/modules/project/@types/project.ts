@@ -25,6 +25,12 @@ export interface IProjectFilter extends ICursorPaginateParams, IListParams {
   leadId?: string;
   status?: number;
   userId?: string;
+  active?: boolean;
+  taskId?: string;
+}
+
+export interface IProjectUpdate extends IProject {
+  _id: string;
 }
 
 export interface IProjectDocument extends IProject, Document {

@@ -12,7 +12,7 @@ export const useTeamUpdate = () => {
   const [updateTeam, { loading, error }] =
     useMutation<UpdateTeamMutationResponse>(UPDATE_TEAM);
 
-  const handleUpdateTeam = (  
+  const handleUpdateTeam = (
     options: MutationFunctionOptions<UpdateTeamMutationResponse, any>,
   ) => {
     updateTeam({

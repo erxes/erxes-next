@@ -172,7 +172,7 @@ const SelectModuleFilterBarItem = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey="module">
       <Filter.BarName>
         <IconBlocks />
         Module
@@ -196,7 +196,6 @@ const SelectModuleFilterBarItem = () => {
           </Combobox.Content>
         </Popover>
       </SelectModulesProvider>
-      <Filter.BarClose filterKey="module" />
     </Filter.BarItem>
   );
 };

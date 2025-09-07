@@ -187,7 +187,7 @@ export const SelectPositionsItem = ({
   return (
     <SelectTree.Item
       key={position._id}
-      id={position._id}
+      _id={position._id}
       name={position.title}
       order={position.order}
       hasChildren={position.hasChildren}
@@ -507,7 +507,7 @@ export const SelectPositionsFilterBar = ({
   }
 
   return (
-    <Filter.BarItem>
+    <Filter.BarItem queryKey={filterKey}>
       <Filter.BarName>
         <IconBriefcase />
         {label}
@@ -535,7 +535,6 @@ export const SelectPositionsFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectPositionsProvider>
-      <Filter.BarClose filterKey={filterKey} />
     </Filter.BarItem>
   );
 };

@@ -7,7 +7,7 @@ import { generateDefaultStatuses } from '@/status/utils';
 
 export interface IStatusModel extends Model<IStatusDocument> {
   getStatus(_id: string): Promise<IStatusDocument>;
-  getStatuses(teamId: string, type?: string): Promise<IStatusDocument[]>;
+  getStatuses(teamId: string, type?: number): Promise<IStatusDocument[]>;
   addStatus(doc: IStatus): Promise<IStatusDocument>;
   createDefaultStatuses(teamId: string): Promise<IStatusDocument[]>;
   updateStatus(_id: string, doc: IStatus): Promise<IStatusDocument>;
@@ -28,7 +28,7 @@ export const loadStatusClass = (models: IModels) => {
 
     public static async getStatuses(
       teamId: string,
-      type: string,
+      type: number,
     ): Promise<IStatusDocument[]> {
       const query = { teamId } as any;
 

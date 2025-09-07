@@ -1,9 +1,8 @@
-import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { Tabs as TabsPrimitive } from 'radix-ui';
 import React from 'react';
 import {
   Button,
   cn,
-  Form,
   Resizable,
   Sheet,
   Sidebar,
@@ -12,9 +11,6 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { MemberDetailSheet } from './MemberDetailSheet';
-import { useSearchParams } from 'react-router';
-import { useUsersForm } from '@/settings/team-member/hooks/useUserForm';
-import { useUserDetail } from '@/settings/team-member/hooks/useUserDetail';
 import { IconMoodAnnoyed } from '@tabler/icons-react';
 
 export const MemberDetailLayout = ({
@@ -33,7 +29,7 @@ export const MemberDetailLayout = ({
       <Sheet.Content>
         {otherState === 'loading' && (
           <div className="flex items-center justify-center h-full">
-            <Spinner size="large" />
+            <Spinner size={'lg'} />
           </div>
         )}
         {otherState === 'not-found' && (

@@ -15,7 +15,7 @@ export interface IAdjustInventory {
   warning?: string;
   beginDate?: Date;
   successDate?: Date;
-  checkedDate?: Date;
+  checkedAt?: Date;
 
 }
 

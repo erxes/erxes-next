@@ -36,6 +36,7 @@ export type INotification = {
     error?: string;
     sentAt: string;
   };
+  updatedAt?: string;
 };
 
 export type SetAtom<Args extends unknown[], Result> = (...args: Args) => Result;

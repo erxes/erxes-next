@@ -1,4 +1,4 @@
-import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
+import { cursorPaginate, getPlugin, getPlugins } from 'erxes-api-shared/utils';
 
 import {
   AUTOMATION_STATUSES,
@@ -8,17 +8,8 @@ import {
   IAutomationsActionConfig,
   IAutomationsTriggerConfig,
 } from 'erxes-api-shared/core-modules';
-import {
-  ICursorPaginateParams,
-  ICursorPaginateResult,
-} from 'erxes-api-shared/core-types';
-import {
-  computeOperator,
-  encodeCursor,
-  getCursor,
-  getPaginationInfo,
-} from 'erxes-api-shared/utils';
-import { Document, FilterQuery, Model, SortOrder, Types } from 'mongoose';
+import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
+
 import { IContext } from '~/connectionResolvers';
 import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
 import { AiTrainingService } from '~/modules/automations/services/aiTraining';
@@ -46,174 +37,6 @@ export interface IHistoriesParams {
   beginDate?: Date;
   endDate?: Date;
 }
-
-function castValue(value: any, type?: 'objectId' | 'date' | 'number') {
-  if (type === 'objectId') {
-    return new Types.ObjectId(value as string);
-  }
-
-  if (type === 'date') {
-    return new Date(value);
-  }
-
-  if (type === 'number') {
-    return Number(value);
-  }
-
-  return value;
-}
-
-export const cursorPaginate = async <T extends Document>({
-  model,
-  params,
-  query,
-}: {
-  model: Model<T>;
-  params: {
-    fieldTypes?: { [key: string]: 'objectId' | 'date' | 'number' };
-  } & ICursorPaginateParams;
-  query: FilterQuery<T>;
-}): Promise<ICursorPaginateResult<T>> => {
-  const {
-    limit = 20,
-    direction = 'forward',
-    orderBy = {},
-    cursorMode = 'exclusive',
-    fieldTypes = {},
-  } = params;
-
-  if (limit < 1) {
-    throw new Error('Limit must be greater than 0');
-  }
-
-  if (!('_id' in orderBy)) {
-    orderBy['_id'] = 1;
-  }
-
-  const baseQuery: FilterQuery<T> = { ...query };
-
-  const baseSort: Record<string, SortOrder> = { ...orderBy };
-
-  if (direction === 'backward') {
-    for (const key in baseSort) {
-      baseSort[key] = baseSort[key] === 1 ? -1 : 1;
-    }
-  }
-
-  const cursor = getCursor(params);
-
-  if (cursor) {
-    const conditions: Record<string, any> = {};
-
-    const sortKeys = Object.keys(baseSort);
-
-    const orConditions: Record<string, any>[] = [];
-
-    for (let i = 0; i < sortKeys.length; i++) {
-      const field = sortKeys[i];
-
-      const andCondition: Record<string, any> = {};
-
-      for (let j = 0; j < i; j++) {
-        const prevField = sortKeys[j];
-        if (!cursor[prevField]) {
-          continue;
-        }
-        andCondition[prevField] = castValue(
-          cursor[prevField],
-          fieldTypes[prevField],
-        );
-      }
-
-      const fieldOperator = computeOperator(
-        orderBy[field] === 1,
-        direction === 'forward',
-        cursorMode,
-      );
-
-      if (!cursor[field]) {
-        continue;
-      }
-
-      andCondition[field] = {
-        [fieldOperator]: castValue(cursor[field], fieldTypes[field]),
-      };
-
-      orConditions.push(andCondition);
-    }
-
-    conditions['$or'] = orConditions;
-
-    Object.assign(baseQuery, conditions);
-  }
-
-  const _limit = Math.min(Number(limit), 50);
-
-  try {
-    const [documents, totalCount] = await Promise.all([
-      model
-        .find(baseQuery)
-        .sort(baseSort)
-        .limit(_limit + 1)
-        .lean<T[]>(),
-      model.countDocuments(query),
-    ]);
-
-    const hasMore = documents.length > _limit;
-
-    if (hasMore) {
-      documents.pop();
-    }
-
-    if (direction === 'backward') {
-      documents.reverse();
-    }
-
-    if (documents.length === 0) {
-      return {
-        list: [],
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: Boolean(cursor),
-          startCursor: null,
-          endCursor: null,
-        },
-        totalCount,
-      };
-    }
-
-    const startCursor = encodeCursor<T>(documents[0], orderBy);
-    const endCursor = encodeCursor<T>(documents[documents.length - 1], orderBy);
-
-    const { hasNextPage, hasPreviousPage } = getPaginationInfo(
-      direction,
-      Boolean(cursor),
-      hasMore,
-    );
-
-    const pageInfo = {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
-    };
-
-    return {
-      list: documents.map((document) => ({
-        ...document,
-        cursor: encodeCursor(document, orderBy),
-      })),
-      pageInfo,
-      totalCount,
-    };
-  } catch (error) {
-    throw new Error(
-      `Cursor pagination failed: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`,
-    );
-  }
-};
 
 const generateFilter = (params: IListArgs) => {
   const {
@@ -323,9 +146,6 @@ export const automationQueries = {
           orderBy: {
             createdAt: -1,
           },
-          fieldTypes: {
-            createdAt: 'date',
-          },
         },
         query: filter,
       });
@@ -356,8 +176,6 @@ export const automationQueries = {
     params: IHistoriesParams,
     { models }: IContext,
   ) {
-    const { page, perPage } = params;
-
     const filter: any = generateHistoriesFilter(params);
 
     const { list, totalCount, pageInfo } =
@@ -366,10 +184,6 @@ export const automationQueries = {
         params: {
           ...params,
           orderBy: { createdAt: -1 },
-          fieldTypes: {
-            _id: 'objectId',
-            createdAt: 'date',
-          },
         },
         query: filter,
       });
@@ -379,13 +193,6 @@ export const automationQueries = {
       totalCount,
       pageInfo,
     };
-    // return await paginate(
-    //   models.Executions.find(filter).sort({ createdAt: -1 }),
-    //   {
-    //     page,
-    //     perPage,
-    //   },
-    // );
   },
 
   async automationHistoriesTotalCount(
@@ -452,7 +259,7 @@ export const automationQueries = {
     return models.Automations.find(filter).countDocuments();
   },
 
-  async automationConstants(_root, {}) {
+  async automationConstants(_root, _args) {
     const plugins = await getPlugins();
 
     const constants: {

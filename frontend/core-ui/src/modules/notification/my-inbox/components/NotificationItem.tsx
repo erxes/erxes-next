@@ -18,7 +18,6 @@ import {
   Badge,
   Checkbox,
   cn,
-  getPluginAssetsUrl,
   RelativeDateDisplay,
   Separator,
   Tooltip,
@@ -48,7 +47,7 @@ export const NotificationItem = ({
 }) => {
   const { id: selectedNotificationId } = useParams();
 
-  const { _id, contentType, isRead, createdAt, kind } = notification;
+  const { _id, contentType, isRead, createdAt, updatedAt, kind } = notification;
   const moduleName = (contentType || '').replace(':', '.').split('.')[1];
   const isSelected = _id === selectedNotificationId;
 
@@ -75,7 +74,9 @@ export const NotificationItem = ({
             <NotificationItemRow />
 
             <div className="w-full flex flex-row justify-between items-center">
-              {createdAt && <RelativeDateDisplay.Value value={createdAt} />}
+              {createdAt && (
+                <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+              )}
               <Badge variant="secondary" className="capitalize">
                 {kind === INotificationKind.SYSTEM
                   ? 'System'

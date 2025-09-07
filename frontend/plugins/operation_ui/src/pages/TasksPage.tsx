@@ -1,4 +1,4 @@
-import { Breadcrumb } from 'erxes-ui';
+import { Breadcrumb, PageSubHeader } from 'erxes-ui';
 import { useParams } from 'react-router-dom';
 
 import { PageHeader } from 'ui-modules';
@@ -6,7 +6,8 @@ import { AddTaskSheet } from '@/task/components/add-task/AddTaskSheet';
 import { Separator } from 'erxes-ui';
 import { TaskBreadCrump } from '@/task/components/breadcrump/TaskBreadCrump';
 import { TeamBreadCrumb } from '@/team/components/breadcrumb/TeamBreadCrumb';
-import { TasksRecordTable } from '@/task/components/TasksRecordTable';
+import { TasksFilter } from '@/task/components/TasksFilter';
+import { TasksView, TasksViewControl } from '@/task/components/TasksView';
 
 export const TasksPage = () => {
   const { teamId } = useParams();
@@ -15,6 +16,7 @@ export const TasksPage = () => {
   const basePath = teamId
     ? `/operation/team/${teamId}/tasks`
     : `/operation/tasks`;
+
   return (
     <>
       <PageHeader>
@@ -33,7 +35,11 @@ export const TasksPage = () => {
         </PageHeader.Start>
         <AddTaskSheet />
       </PageHeader>
-      <TasksRecordTable />
+      <PageSubHeader>
+        <TasksFilter />
+        <TasksViewControl />
+      </PageSubHeader>
+      <TasksView />
     </>
   );
 };

@@ -7,6 +7,7 @@ export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
   const { sessionKey } = useIsCustomerLeadSessionKey();
+
   return (
     <RecordTable.Provider
       columns={customersColumns}
@@ -26,8 +27,12 @@ export const CustomersRecordTable = () => {
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
             />
-            {loading && <RecordTable.RowSkeleton rows={40} />}
-            <RecordTable.RowList />
+            {loading ? (
+              <RecordTable.RowSkeleton rows={32} />
+            ) : (
+              <RecordTable.RowList />
+            )}
+
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
             />

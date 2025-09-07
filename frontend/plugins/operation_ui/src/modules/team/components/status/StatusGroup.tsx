@@ -22,7 +22,7 @@ import { useState, useEffect } from 'react';
 import { useStatusesByType } from '@/team/hooks/useGetStatus';
 import { useUpdateStatus } from '@/team/hooks/useUpdateStatus';
 import { useSortable } from '@dnd-kit/sortable';
-import { ITeamStatus, TeamStatusTypes } from '@/team/types';
+import { ITeamStatus } from '@/team/types';
 import { TEAM_STATUS_FORM_SCHEMA } from '@/team/schemas';
 import {
   Button,
@@ -41,10 +41,12 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
-import { TeamStatusIcons } from '@/team/constants';
 import { useParams } from 'react-router';
 import { useDeleteStatus } from '@/team/hooks/useDeleteStatus';
-import { StatusInlineIcon } from '@/task/components/StatusInline';
+import {
+  StatusInlineIcon,
+  StatusInlineLabel,
+} from '@/operation/components/StatusInline';
 
 const StatusSkeleton = () => {
   return (
@@ -120,7 +122,7 @@ export const Status = ({
             color: status.color || '#000000',
           }}
         >
-          <StatusInlineIcon type={status.type} color={status.color} />
+          <StatusInlineIcon statusType={status.type} color={status.color} />
         </Button>
         <div className="flex flex-col">
           <span className="capitalize">{status.name}</span>
@@ -196,7 +198,7 @@ export const StatusForm = ({
   statusType,
   editingStatus,
 }: {
-  statusType: TeamStatusTypes;
+  statusType: number;
   editingStatus?: ITeamStatus;
 }) => {
   const { addStatus } = useAddStatus();
@@ -230,7 +232,7 @@ export const StatusForm = ({
           _id: editingStatus._id,
           name,
           description,
-          color,
+          color: color?.length && color.length > 2 ? color : '',
         },
         onCompleted: () => {
           setEditingStatus(null);
@@ -294,10 +296,7 @@ export const StatusForm = ({
                               : undefined,
                           }}
                         >
-                          <StatusInlineIcon
-                            type={statusType}
-                            color={field.value}
-                          />
+                          <StatusInlineIcon statusType={statusType} />
                         </Button>
                       </ColorPicker.Trigger>
                       <ColorPicker.Content />
@@ -346,11 +345,7 @@ export const StatusForm = ({
   );
 };
 
-export const StatusGroup = ({
-  statusType,
-}: {
-  statusType: TeamStatusTypes;
-}) => {
+export const StatusGroup = ({ statusType }: { statusType: number }) => {
   const { statuses = [], loading } = useStatusesByType({ type: statusType });
   const { updateStatus } = useUpdateStatus();
   const { toast } = useToast();
@@ -405,7 +400,7 @@ export const StatusGroup = ({
         <div className="flex items-center gap-2 justify-between w-full bg-accent py-1 pr-2 pl-4 rounded-md">
           <div className="flex items-center gap-2 ">
             <p className="text-base font-medium">
-              {statusType.charAt(0).toUpperCase() + statusType.slice(1)}
+              <StatusInlineLabel statusType={statusType} />
             </p>
           </div>
           <Button

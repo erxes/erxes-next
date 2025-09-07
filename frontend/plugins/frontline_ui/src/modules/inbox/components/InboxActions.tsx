@@ -1,5 +1,5 @@
-import { IconRefresh, IconUserFilled, IconUserUp } from '@tabler/icons-react';
-import { Button, cn, useQueryState } from 'erxes-ui';
+import { IconRefresh, IconUserUp } from '@tabler/icons-react';
+import { Button, cn, NavigationMenuGroup, useQueryState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { Link, useSearchParams } from 'react-router';
 import { currentUserState } from 'ui-modules';
@@ -12,7 +12,7 @@ export const InboxActions = () => {
   const hasNoSearchParams = [...searchParams].length === 0;
 
   return (
-    <>
+    <NavigationMenuGroup name="Actions">
       <Button
         variant="ghost"
         className={cn(
@@ -21,7 +21,7 @@ export const InboxActions = () => {
         )}
         asChild
       >
-        <Link to="/inbox">
+        <Link to="/frontline/inbox">
           <IconRefresh className="text-accent-foreground" />
           Reset filters
         </Link>
@@ -39,6 +39,6 @@ export const InboxActions = () => {
         <IconUserUp className="text-accent-foreground" />
         Assigned to me
       </Button>
-    </>
+    </NavigationMenuGroup>
   );
 };

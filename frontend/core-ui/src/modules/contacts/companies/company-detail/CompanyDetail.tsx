@@ -1,24 +1,27 @@
-import { Separator, Sheet } from 'erxes-ui';
-import {
-  CompanyDetailLayout,
-  CompanyDetailTabContent,
-} from '@/contacts/companies/company-detail/CompanyDetailLayout';
+import { Separator } from 'erxes-ui';
+import { CompanyDetailGeneral } from '@/contacts/companies/company-detail/CompanyDetailGeneral';
+import { ContactsDetailLayout } from '@/contacts/components/ContactsDetail';
+import { useCompanyDetailWithQuery } from '@/contacts/companies/hooks/useCompanyDetailWithQuery';
+import { CompanyDetailFields } from '@/contacts/companies/company-detail/CompanyDetailFields';
 
 export const CompanyDetail = () => {
+  const { companyDetail, loading } = useCompanyDetailWithQuery();
   return (
-    <CompanyDetailLayout>
-      <div className="flex flex-auto">
-        <Sheet.Content className="border-b-0 rounded-b-none">
-          {/* <CompanyDetailGeneral />
-          <Separator />
-          <CompanyDetailTabContent value="overview">
-            <CompanyDetailGeneral />
-          </CompanyDetailTabContent>
-          <CompanyDetailTabContent value="properties">
-            <CompanyProperties />
-          </CompanyDetailTabContent> */}
-        </Sheet.Content>
+    <ContactsDetailLayout
+      loading={loading}
+      notFound={!companyDetail}
+      title="Company Details"
+      actions={<CompanyDetailActions />}
+    >
+      <div className="flex flex-col flex-auto">
+        <CompanyDetailGeneral />
+        <Separator />
+        <CompanyDetailFields />
       </div>
-    </CompanyDetailLayout>
+    </ContactsDetailLayout>
   );
+};
+
+export const CompanyDetailActions = () => {
+  return <div></div>;
 };

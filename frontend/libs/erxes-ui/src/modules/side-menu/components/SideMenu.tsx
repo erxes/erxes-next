@@ -42,7 +42,7 @@ export const SideMenuContent = forwardRef<
     <Tabs.Content
       ref={ref}
       className={cn(
-        'data-[state=active]:border-l data-[state=active]:w-80 w-full transition-all',
+        'data-[state=active]:border-l data-[state=active]:w-80 w-full transition-all flex flex-col overflow-hidden',
         className,
       )}
       {...props}
@@ -65,7 +65,7 @@ export const SideMenuContentHeader = forwardRef<
       <div
         ref={ref}
         className={cn(
-          'h-11 px-5 flex items-center gap-2 bg-sidebar',
+          'h-11 px-5 flex items-center gap-2 bg-sidebar flex-none',
           className,
         )}
         {...props}
