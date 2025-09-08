@@ -5,6 +5,7 @@ import React, {
   createContext,
   useContext,
   useMemo,
+  useState,
 } from 'react';
 import * as JsSIP from 'jssip';
 import {
@@ -29,6 +30,13 @@ import {
   logger,
   parseCallDirection,
 } from '@/integrations/call/utils/callUtils';
+import {
+  ACTIVE_CALLS_SUBSCRIPTION,
+  AGENT_STATUS_SUBSCRIPTION,
+  queueRealtimeUpdate,
+} from '@/integrations/call/graphql/subscriptions/subscriptions';
+import { useSubscription } from '@apollo/client';
+
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 import { historyIdAtom } from '@/integrations/call/states/callStates';
 

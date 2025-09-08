@@ -79,6 +79,54 @@ export const types = `
     recordUrl: String
   }
 
+  type CallStatistic {
+    extension: String
+    queuename: String
+    strategy: String
+    callstotal: Int
+    callswaiting: Int
+    callscomplete: Int
+    callsabandoned: Int
+    servicelevel: String
+    urgemsg: Int
+    newmsg: Int
+    oldmsg: Int
+    queuechairman: String
+    enable_agent_login: String
+    abandonedrate: String
+    avgwaittime: Int
+    avgtalktime: Int
+    availablecount: Int
+    agentcount: Int
+    transferoutcalls: Int
+    transferoutrate: String
+  }
+
+  type CallAgent {
+    extension: String
+    member: [AgentMember]
+    idlecount: Int
+  }
+
+  type AgentMember {
+    member_extension: String
+    status: String # InUse, Idle, Paused
+    membership: String
+    answer: Int
+    abandon: Int
+    logintime: String
+    talktime: Int
+    pausetime: String
+    first_name: String
+    last_name: String
+    queue_action: String
+    pause_reason: String
+    # For hangup events
+    callerchannel: String
+    calleechannel: String
+    calleeid: String
+  }
+
   type CallConversationNotes {
     _id: String!
     ${commonCommentAndMessageFields}
@@ -99,6 +147,9 @@ export const subscriptions = `
   waitingCallReceived(extension: String): String
   talkingCallReceived(extension: String): String
   agentCallReceived(extension: String): String
+  queueRealtimeUpdate(extension: String): String
+
+  callStatistic(extension: String): CallStatistic
   `;
 
 const commonHistoryFields = `
@@ -144,17 +195,10 @@ export const queries = `
   callProceedingList(queue: String!): String
   callQueueMemberList(integrationId: String!, queue: String!): JSON
   callTodayStatistics(queue: String!): JSON
+
   callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
   callHistoryDetail(_id: String, conversationId: String): CallHistory
   `;
-
-//old mutations
-
-//callTerminateSession: JSON
-//callDisconnect: String
-//callHistoryAdd(${commonHistoryFields}, queueName: String): CallHistory
-//callHistoryEdit(_id: String,${commonHistoryFields}): String
-//callHistoryEditStatus(callStatus: String, timeStamp: Float): String
 
 export const mutations = `
   callsIntegrationUpdate(configs: CallIntegrationConfigs): JSON

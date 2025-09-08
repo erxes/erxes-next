@@ -13,6 +13,12 @@ export default {
       waitingCallReceived(extension: String): String
       talkingCallReceived(extension: String): String
       agentCallReceived(extension: String): String
+
+      callStatistic(extension: String): CallStatistic
+      callAgent(extension: String): CallAgent
+      activeCallStatus(extension: String): ActiveCall
+      queueStatus(extension: String!): QueueStatus
+      queueRealtimeUpdate(extension: String): String
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
@@ -187,6 +193,55 @@ export default {
           () => graphqlPubsub.asyncIterator(`agentCallReceived`),
           (payload, variables) => {
             const response = JSON.parse(payload.agentCallReceived);
+            return response.extension === variables.extension;
+          },
+        ),
+      },
+
+      callStatistic: {
+        subscribe: (parent, args, { pubsub }) => {
+          const channel = args.extension
+            ? `callStatistic_${args.extension}`
+            : 'callStatistic';
+
+          return graphqlPubsub.asyncIterator([channel]);
+        },
+        resolve: (payload) => {
+          return payload.callStatistic;
+        },
+      },
+
+      callAgent: {
+        subscribe: (parent, args, { pubsub }) => {
+          const channel = args.extension
+            ? `callAgent_${args.extension}`
+            : 'callAgent';
+
+          return graphqlPubsub.asyncIterator([channel]);
+        },
+        resolve: (payload) => {
+          return payload.callStatistic; // Your current logic uses same payload
+        },
+      },
+
+      activeCallStatus: {
+        subscribe: (parent, args, { pubsub }) => {
+          const channel = args.extension
+            ? `activeCallStatus_${args.extension}`
+            : 'activeCallStatus';
+
+          return graphqlPubsub.asyncIterator([channel]);
+        },
+        resolve: (payload) => {
+          return payload.activeCallStatus;
+        },
+      },
+
+      queueRealtimeUpdate: {
+        subscribe: withFilter(
+          () => graphqlPubsub.asyncIterator(`queueRealtimeUpdate`),
+          (payload, variables) => {
+            const response = JSON.parse(payload.queueRealtimeUpdate);
             return response.extension === variables.extension;
           },
         ),
