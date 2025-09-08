@@ -3,7 +3,10 @@ import redis from '../../redlock';
 import { XMLParser } from 'fast-xml-parser';
 import { ICallHistoryFilterOptions } from '@/integrations/call/@types/histories';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import { sendToGrandStream } from '~/modules/integrations/call/utils';
+import {
+  mapCdrToCallHistory,
+  sendToGrandStream,
+} from '~/modules/integrations/call/utils';
 import {
   calculateAbandonmentRate,
   calculateAverageHandlingTime,
@@ -13,6 +16,7 @@ import {
 } from '~/modules/integrations/call/statistics';
 import { INotesParams } from '~/modules/integrations/call/@types/conversationNotes';
 import { IMessageDocument } from '~/modules/inbox/@types/conversationMessages';
+import { ICallHistory } from '~/modules/integrations/call/@types/histories';
 
 const callQueries = {
   async callsIntegrationDetail(_root, { integrationId }, { models }: IContext) {
@@ -44,9 +48,7 @@ const callQueries = {
     params: ICallHistoryFilterOptions,
     { models, user }: IContext,
   ) {
-    const activeSession = models.CallHistory.getCallHistories(params, user);
-
-    return activeSession;
+    return models.CallHistory.getCallHistories(params, user);
   },
   async callHistoriesTotalCount(
     _root,
@@ -430,17 +432,52 @@ const callQueries = {
       return messages.reverse();
     }
   },
+
   async callHistoryDetail(
-    _root,
-    { _id, conversationId },
+    _root: any,
+    { _id, conversationId }: { _id?: string; conversationId?: string },
     { models }: IContext,
-  ) {
-    if (_id) {
-      return await models.CallHistory.findOne({ _id });
-    } else if (conversationId) {
-      return await models.CallHistory.findOne({ conversationId });
-    } else {
+  ): Promise<ICallHistory | null> {
+    if (!_id && !conversationId) {
       throw new Error('Either _id or conversationId is required');
+    }
+
+    try {
+      let result: ICallHistory | null = null;
+
+      if (_id) {
+        const cdr = await models.CallCdrs.findOne({ _id });
+        if (cdr) {
+          return mapCdrToCallHistory(cdr);
+        }
+
+        result = await models.CallHistory.findOne({ _id });
+        if (result) {
+          return result;
+        }
+      }
+
+      if (conversationId) {
+        const cdr = await models.CallCdrs.findOne({
+          $or: [
+            { conversationId: conversationId },
+            { userfield: conversationId },
+          ],
+        });
+
+        if (cdr) {
+          return mapCdrToCallHistory(cdr);
+        }
+
+        result = await models.CallHistory.findOne({ conversationId });
+        if (result) {
+          return result;
+        }
+      }
+
+      return null;
+    } catch (error) {
+      throw new Error('Failed to retrieve call history details');
     }
   },
 };
