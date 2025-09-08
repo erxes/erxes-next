@@ -4,7 +4,6 @@ import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 import { CoreTRPCContext } from '~/init-trpc';
 import { PRIORITY_ORDER } from '~/modules/notifications/constants';
-import { shouldSendNotification } from '~/modules/notifications/utils';
 
 const t = initTRPC.context<CoreTRPCContext>().create();
 
@@ -16,42 +15,29 @@ export const notificationTrpcRouter = t.router({
 
       const { kind, allowMultiple, contentType, contentTypeId, priority } = data || {};
 
-      const defaultConfig = await models.NotificationConfigs.findOne({});
-
       for (const userId of userIds) {
         let notification: INotificationDocument | null = null;
 
-        const userSettings = await models.UserNotificationSettings.findOne({
+        const notificationDoc = {
+          ...data,
           userId,
-        }).lean();
-
-        const NOTIFICATION_SETTINGS = {
-          inApp: shouldSendNotification('inApp', defaultConfig, userSettings, data),
-          email: shouldSendNotification('email', defaultConfig, userSettings, data),
+          isRead: false,
+          priorityLevel: PRIORITY_ORDER[priority || 'medium'],
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         };
 
-        if (NOTIFICATION_SETTINGS.inApp) {
-          const notificationDoc = {
-            ...data,
-            userId,
-            isRead: false,
-            priorityLevel: PRIORITY_ORDER[priority || 'medium'],
-            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-          };
+        if (kind === 'user' && !allowMultiple) { // avoiding duplicate notifications for the same user and content.
+          // Update existing notification
+          notification = await models.Notifications.findOneAndUpdate(
+            { contentTypeId, contentType, userId }, // lookup key
+            notificationDoc,                        // new values
+            { new: true, upsert: true },            // update if exists, insert if not
+          );
+        }
 
-          if (kind === 'user' && !allowMultiple) {
-            // Update existing notification
-            notification = await models.Notifications.findOneAndUpdate(
-              { contentTypeId, contentType, userId },
-              notificationDoc,
-              { new: true, upsert: true }, // Return the updated document
-            );
-          }
-
-          if (!notification) {
-            // Create new notification
-            notification = await models.Notifications.create(notificationDoc);
-          }
+        if (!notification) {
+          // Create new notification
+          notification = await models.Notifications.create(notificationDoc);
         }
 
         if (notification) {
