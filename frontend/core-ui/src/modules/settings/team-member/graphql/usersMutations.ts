@@ -85,12 +85,21 @@ const USERS_INLINE_EDIT = gql`
   }
 `;
 
+const USERS_RESET_PASSWORD = gql`
+  mutation usersResetMemberPassword($_id: String!, $newPassword: String!) {
+    usersResetMemberPassword(_id: $_id, newPassword: $newPassword) {
+      _id
+    }
+  }
+`;
+
 const mutations = {
   USERS_CONFIRM_INVITATION,
   USERS_INVITE,
   USERS_RESEND_INVITATION,
   USERS_SET_ACTIVE_STATUS,
   USERS_INLINE_EDIT,
+  USERS_RESET_PASSWORD,
 };
 
 export default mutations;

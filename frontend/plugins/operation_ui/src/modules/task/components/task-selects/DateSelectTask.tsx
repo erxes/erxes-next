@@ -76,7 +76,7 @@ const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <>
-      <IconCalendarTime className={`size-4`} />
+      <IconCalendarTime className="size-4 text-muted-foreground" />
       {format(
         value,
         value.getFullYear() === new Date().getFullYear()
