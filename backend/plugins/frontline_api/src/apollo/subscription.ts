@@ -14,10 +14,6 @@ export default {
       talkingCallReceived(extension: String): String
       agentCallReceived(extension: String): String
 
-      callStatistic(extension: String): CallStatistic
-      callAgent(extension: String): CallAgent
-      activeCallStatus(extension: String): ActiveCall
-      queueStatus(extension: String!): QueueStatus
       queueRealtimeUpdate(extension: String): String
 		`,
   generateResolvers: (graphqlPubsub) => {
@@ -196,45 +192,6 @@ export default {
             return response.extension === variables.extension;
           },
         ),
-      },
-
-      callStatistic: {
-        subscribe: (parent, args, { pubsub }) => {
-          const channel = args.extension
-            ? `callStatistic_${args.extension}`
-            : 'callStatistic';
-
-          return graphqlPubsub.asyncIterator([channel]);
-        },
-        resolve: (payload) => {
-          return payload.callStatistic;
-        },
-      },
-
-      callAgent: {
-        subscribe: (parent, args, { pubsub }) => {
-          const channel = args.extension
-            ? `callAgent_${args.extension}`
-            : 'callAgent';
-
-          return graphqlPubsub.asyncIterator([channel]);
-        },
-        resolve: (payload) => {
-          return payload.callStatistic; // Your current logic uses same payload
-        },
-      },
-
-      activeCallStatus: {
-        subscribe: (parent, args, { pubsub }) => {
-          const channel = args.extension
-            ? `activeCallStatus_${args.extension}`
-            : 'activeCallStatus';
-
-          return graphqlPubsub.asyncIterator([channel]);
-        },
-        resolve: (payload) => {
-          return payload.activeCallStatus;
-        },
       },
 
       queueRealtimeUpdate: {
