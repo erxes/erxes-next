@@ -96,6 +96,17 @@ export const ConversationItem = ({
 export const ConversationItemContent = () => {
   const { content } = useConversationContext();
   if (!content) return null;
+
+  if (content.includes('callDirection/')) {
+    const callDirection = content.split('callDirection/')[1];
+
+    return (
+      <div className="font-medium">
+        {callDirection === 'INCOMING' ? 'Incoming Call' : 'Outgoing Call'}
+      </div>
+    );
+  }
+
   return (
     <div className="truncate w-full h-4 [&_*]:text-sm [&_*]:leading-tight [&_*]:font-medium">
       <BlockEditorReadOnly content={content} />

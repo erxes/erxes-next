@@ -5,14 +5,20 @@ import { useEffect, useState } from 'react';
 
 export const useCallDuration = () => {
   const startDate = useAtomValue(callDurationAtom);
+  const time = useCallDurationFromDate(startDate);
+
+  return time;
+};
+
+export const useCallDurationFromDate = (date: Date | null) => {
   const [time, setTime] = useState('00:00');
 
   useEffect(() => {
-    if (!startDate) return;
+    if (!date) return;
     const interval = setInterval(() => {
       const now = new Date();
-      if (!startDate) return;
-      const duration = intervalToDuration({ start: startDate, end: now });
+      if (!date) return;
+      const duration = intervalToDuration({ start: date, end: now });
       const minutes = String(duration.minutes ?? 0).padStart(2, '0');
       const seconds = String(duration.seconds ?? 0).padStart(2, '0');
 
@@ -20,7 +26,7 @@ export const useCallDuration = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [startDate]);
+  }, [date]);
 
   return time;
 };

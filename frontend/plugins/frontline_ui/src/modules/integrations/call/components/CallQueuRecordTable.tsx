@@ -8,7 +8,6 @@ import {
   Badge,
   ChartContainer,
   HoverCard,
-  Separator,
 } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
@@ -259,20 +258,3 @@ export const ProgressChart = ({
     </ChartContainer>
   );
 };
-
-// {
-//   "queuechairman": "admin",0
-//   "queue": 6501,0
-//   "total_calls": 18,0
-//   "answered_calls": 10,0
-//   "answered_rate": 55.560001,0
-//   "abandoned_calls": 8,0
-//   "avg_wait": 10,0
-//   "avg_talk": 16,0
-//   "vq_total_calls": 0,
-//   "sla_rate": 0,
-//   "vq_sla_rate": 0,
-//   "transfer_out_calls": 0,
-//   "transfer_out_rate": 0,
-//   "abandoned_rate": 44.439999
-// }

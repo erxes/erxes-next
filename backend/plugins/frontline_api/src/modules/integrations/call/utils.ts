@@ -990,7 +990,7 @@ export function enhancedHandleCallEvent(json, graphqlPubsub) {
       : [json.message];
 
     for (const message of messages) {
-      const { eventname, eventbody, transactionid } = message;
+      const { eventname, eventbody } = message;
 
       console.log(`📞 ${eventname} EVENT:`, eventbody);
 
