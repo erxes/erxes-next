@@ -14,12 +14,13 @@ const CONFIG = {
   HEARTBEAT_INTERVAL: 30000,
   MAX_RECONNECT_DELAY: 30000,
   RECONNECT_BASE_DELAY: 1000,
+  ALLOW_INSECURE_TLS: process.env.CALL_WS_INSECURE === 'true',
 } as const;
 
 const WS_URL = `wss://${CONFIG.PBX_IP}:${CONFIG.WS_PORT}/websockify`;
 
 // Set up TLS for development
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // Types
 interface AgentInfo {
@@ -472,7 +473,11 @@ class PBXWebSocketClient {
   }
 
   private connect(): void {
-    this.ws = new WebSocket(WS_URL);
+    this.ws = new WebSocket(
+      WS_URL,
+      undefined,
+      CONFIG.ALLOW_INSECURE_TLS ? { rejectUnauthorized: false } : undefined,
+    );
     this.setupEventHandlers();
   }
 
