@@ -23,7 +23,7 @@ export const NotificationFilterMenu = () => {
         <Command.List>
           <ToggleGroup
             type="single"
-            value={status || 'unread'}
+            value={status || 'all'}
             onValueChange={(value) => setStatus(value)}
           >
             <ToggleGroup.Item

@@ -75,7 +75,7 @@ export const useNotifications = () => {
     useQuery<NotificationsQueryResponse>(NOTIFICATIONS, {
       variables: {
         limit: NOTIFICATIONS_LIMIT,
-        status: status?.toUpperCase() || 'UNREAD',
+        status: status?.toUpperCase() || 'ALL',
         priority: priority?.toUpperCase(),
         type: type?.toUpperCase(),
         fromDate: parseDateRangeFromString(createdAt)?.from,

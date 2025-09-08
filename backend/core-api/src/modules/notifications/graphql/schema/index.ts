@@ -138,8 +138,6 @@ export const queries = `
 `;
 
 export const mutations = `
-    archiveNotification(_id:String!):String
-    archiveNotifications(ids:[String],archiveAll:Boolean,filters:JSON):String
     editUserNotificationSettings(userSettings:JSON): JSON
     editOrganizationNotificationConfigs(configs: JSON!): JSON
     markNotificationAsRead(_id:String!):JSON
