@@ -6,6 +6,7 @@ import {
   IconColorSwatch,
   IconFile,
   IconMail,
+  IconPassword,
   IconShieldCog,
   IconTag,
   IconTools,
@@ -114,9 +115,19 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsPath.Profile,
     },
     {
-      name: 'Experience',
-      icon: IconColorSwatch,
-      path: SettingsPath.Experience,
+      name: 'Change password',
+      icon: IconPassword,
+      path: SettingsPath.ChangePassword,
+    },
+    // {
+    //   name: 'Experience',
+    //   icon: IconColorSwatch,
+    //   path: SettingsPath.Experience,
+    // },
+    {
+      name: 'Notification',
+      icon: IconBellRinging,
+      path: SettingsPath.Notification,
     },
   ],
   nav: [
@@ -130,11 +141,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       icon: IconUserCog,
       path: SettingsWorkspacePath.Permissions,
     },
-    {
-      name: 'General',
-      icon: IconAdjustmentsAlt,
-      path: SettingsWorkspacePath.General,
-    },
+    // {
+    //   name: 'General',
+    //   icon: IconAdjustmentsAlt,
+    //   path: SettingsWorkspacePath.General,
+    // },
     {
       name: 'File upload',
       icon: IconFile,
@@ -146,11 +157,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsWorkspacePath.MailConfig,
     },
 
-    {
-      name: 'Structure',
-      icon: IconChartPie2,
-      path: SettingsWorkspacePath.Structure,
-    },
+    // {
+    //   name: 'Structure',
+    //   icon: IconChartPie2,
+    //   path: SettingsWorkspacePath.Structure,
+    // },
     {
       name: 'Tags',
       icon: IconTag,
@@ -160,11 +171,6 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Brands',
       icon: IconChessKnight,
       path: SettingsWorkspacePath.Brands,
-    },
-    {
-      name: 'Notification',
-      icon: IconBellRinging,
-      path: SettingsWorkspacePath.Notification,
     },
   ],
 };

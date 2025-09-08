@@ -1,7 +1,7 @@
 export const STATUS_TYPE_LABELS = [
-  'Backlog',
-  'Todo',
   'In Progress',
+  'Todo',
+  'Backlog',
   'Done',
   'Cancelled',
 ];

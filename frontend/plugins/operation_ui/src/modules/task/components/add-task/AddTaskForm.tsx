@@ -172,8 +172,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   <SelectStatusTask.FormItem
                     value={field.value || ''}
                     onValueChange={(value) => field.onChange(value)}
-                    teamId={form.getValues('teamId') || _teamId}
-                    scope={clsx(TaskHotKeyScope.TasksPage, 'form', 'Status')}
+                    form={form}
                   />
                 </Form.Item>
               )}
