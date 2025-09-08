@@ -1,8 +1,118 @@
+import { IUserDocument } from "erxes-api-shared/core-types";
+import { fixNum, getPureDate, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
+import { now } from "mongoose";
 import { IModels } from "~/connectionResolvers";
-import { ADJ_INV_STATUSES, IAdjustInvDetailParams } from "../@types/adjustInventory";
+import { ADJ_INV_STATUSES, IAdjustInvDetailParams, IAdjustInventory, IAdjustInventoryDocument, ICommonAdjInvDetailInfo } from "../@types/adjustInventory";
 import { JOURNALS, TR_STATUSES } from "../@types/constants";
 import { ITransactionDocument, ITrDetail } from "../@types/transaction";
-import { fixNum, getTomorrow, graphqlPubsub } from "erxes-api-shared/utils";
+
+export const modifierWrapper = async (models: IModels, adjustInventory: IAdjustInventoryDocument, modifier: any, hasObj = false) => {
+  const adjustId = adjustInventory._id;
+
+  await models.AdjustInventories.updateAdjustInventory(adjustId, modifier);
+
+  graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
+    accountingAdjustInventoryChanged: {
+      ...adjustInventory,
+      ...modifier
+    },
+  });
+
+  if (hasObj) {
+    return await models.AdjustInventories.getAdjustInventory(adjustId);
+  }
+
+  return;
+}
+
+export const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {
+  const date = getPureDate(adjustInventory.date);
+  const afterAdjInvs = await models.AdjustInventories.find({ date: { $gte: date }, status: ADJ_INV_STATUSES.PUBLISH }).lean();
+
+  if (afterAdjInvs.length) {
+    throw new Error('Үүнээс хойш батлагдсан тохируулга байгаа учир энэ огноонд тохируулга үүсгэх шаардлагагүй.');
+  }
+
+  const lowBeforeAdjInvs = await models.AdjustInventories.find({ date: { $lt: date }, status: { $ne: ADJ_INV_STATUSES.PUBLISH } }).lean();
+  if (lowBeforeAdjInvs.length) {
+    throw new Error('Энэнээс урагш дутуу гүйцэтгэлтэй тохируулга байна. Түүнийг устгах эсвэл гүйцээж байж энэ огноонд тохируулга үүсгэнэ үү.');
+  }
+
+  const beforeAdjInv = await models.AdjustInventories.findOne({ date: { $lt: date }, status: ADJ_INV_STATUSES.PUBLISH }).sort({ date: -1 }).lean();
+
+  let beginDate = beforeAdjInv?.date;
+  if (!beginDate) {
+    const firstTr = await models.Transactions.findOne({ date: { $lte: date }, 'details.productId': { $exists: true, $ne: '' }, status: { $in: TR_STATUSES.ACTIVE } }).sort({ date: 1 }).lean();
+    beginDate = firstTr?.date;
+  }
+
+  if (!beginDate) {
+    throw new Error('Үүнээс урагш гүйлгээ ч алга, тохируулга ч алга. Тиймээс тохируулах шаардлагагүй.');
+  }
+
+  return { beginDate, beforeAdjInv };
+}
+
+export const detailsClear = async (models: IModels, user: IUserDocument, adjustInventory: IAdjustInventoryDocument, date?: Date) => {
+  const adjustId = adjustInventory._id;
+  if (!date || !adjustInventory.beginDate || !adjustInventory.successDate) {
+    const { beforeAdjInv } = await checkValidDate(models, adjustInventory);
+    if (beforeAdjInv) {
+      await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId });
+    }
+
+    return await modifierWrapper(models, adjustInventory, { successDate: null, modifiedBy: user._id }, true);
+  }
+
+  if (!(date && ((adjustInventory.beginDate && adjustInventory.beginDate < date) || (adjustInventory.successDate && adjustInventory.successDate > date)))) {
+    throw new Error('wrong date')
+  }
+
+  const details = await models.AdjustInvDetails.find({ adjustId }).lean();
+  for (const detail of details) {
+    const newInfos: ICommonAdjInvDetailInfo[] = (detail.infoPerDate || [])
+      .filter(ip => ip.date < date)
+      .sort((a, b) => a.date > b.date ? 1 : -1) || [];
+
+    const lastInfo: ICommonAdjInvDetailInfo | undefined = newInfos[newInfos.length - 1];
+
+    // update from lastInfoDate
+    await models.AdjustInvDetails.updateOne({ _id: detail._id }, {
+      $set: {
+        ...detail,
+        infoPerDate: newInfos,
+        remainder: lastInfo?.remainder ?? 0,
+        cost: lastInfo?.cost ?? 0,
+        unitCost: lastInfo?.unitCost ?? 0,
+        soonInCount: lastInfo?.soonInCount ?? 0,
+        soonOutCount: lastInfo?.soonOutCount ?? 0,
+      }
+    });
+  }
+  return await modifierWrapper(models, adjustInventory, { successDate: date, modifiedBy: user._id }, true);
+}
+
+const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => {
+  if (!adjustInventory?.successDate) {
+    return beginDate;
+  }
+
+  // yavaandaa logoos delete iig mun shalgah yum baina
+  const betweenModifiedFirstTr = await models.Transactions.findOne({
+    date: { $gte: beginDate, $lte: adjustInventory.successDate },
+    'details.productId': { $exists: true, $ne: '' },
+    $or: [
+      { updatedAt: { $exists: false }, createdAt: { $gte: adjustInventory.checkedAt } },
+      { updatedAt: { $gte: adjustInventory.checkedAt } },
+    ]
+  }).sort({ date: 1 }).lean();
+
+  if (betweenModifiedFirstTr) {
+    return betweenModifiedFirstTr.date;
+  }
+
+  return adjustInventory.successDate;
+}
 
 const calcTrs = async (models: IModels, {
   adjustId, aggregateTrs, multiplier = 1
@@ -96,7 +206,7 @@ const fixOutTrs = async (models: IModels, {
     const { _id, records } = outTrs;
     const { accountId, branchId, departmentId, productId } = _id;
 
-    if (!branchId || !departmentId || productId || accountId) {
+    if (!branchId || !departmentId || !productId || !accountId) {
       continue
     }
 
@@ -124,6 +234,7 @@ const fixOutTrs = async (models: IModels, {
       const { details } = rec;
       const { count, amount } = details;
       const newCost = fixNum((count ?? 0) * unitCost);
+
       if (newCost !== amount) {
         remainder -= fixNum(count ?? 0);
         cost -= newCost;
@@ -134,7 +245,9 @@ const fixOutTrs = async (models: IModels, {
           {
             $set: {
               'details.$[d].unitPrice': unitCost,
-              'details.$[d].amount': newCost
+              'details.$[d].amount': newCost,
+              sumDt: 0,
+              sumCt: fixNum(rec.sumCt - amount + newCost),
             }
           },
           { arrayFilters: [{ 'd._id': { $eq: details._id } }] }
@@ -167,7 +280,7 @@ const fixMoveTrs = async (models: IModels, {
     const { _id, records } = outcomeTrs;
     const { accountId, branchId, departmentId, productId } = _id;
 
-    if (!branchId || !departmentId || productId || accountId) {
+    if (!branchId || !departmentId || !productId || !accountId) {
       continue
     }
 
@@ -180,8 +293,8 @@ const fixMoveTrs = async (models: IModels, {
 
     const adjustDetail = await models.AdjustInvDetails.getAdjustInvDetail({ ...detailFilter, adjustId });
 
-    let remainder = fixNum((adjustDetail.remainder ?? 0));
-    let cost = fixNum((adjustDetail.cost ?? 0));
+    let remainder = fixNum((adjustDetail?.remainder ?? 0));
+    let cost = fixNum((adjustDetail?.cost ?? 0));
     const unitCost = fixNum(cost / (remainder ?? 1));
 
     if (remainder < sumCount) {
@@ -313,101 +426,101 @@ const fixInvTrs = async (models: IModels, {
   const outAggrs = await models.Transactions.aggregate([
     { $match: { ...commonMatch, journal: JOURNALS.INV_OUT } },
     ...commonAggregates
-  ])
-  await fixOutTrs(models, { adjustId, outAggrs })
+  ]);
+  await fixOutTrs(models, { adjustId, outAggrs });
 }
 
-const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => {
-  if (!adjustInventory?.successDate) {
-    return beginDate;
-  }
+export const adjustRunning = async (models: IModels, user: IUserDocument, { adjustInventory, beginDate, beforeAdjInv }: { adjustInventory: IAdjustInventoryDocument, beginDate: Date, beforeAdjInv?: IAdjustInventoryDocument | null }) => {
+  try {
+    let currentDate = await recheckValidDate(models, adjustInventory, beginDate);
+    const date = adjustInventory.date;
+    const adjustId = adjustInventory._id;
 
-  // yavaandaa logoos delete iig mun shalgah yum baina
-  const betweenModifiedFirstTr = await models.Transactions.findOne({
-    date: { $gte: beginDate, $lte: adjustInventory.successDate },
-    'details.productId': { $exists: true, $ne: '' },
-    $or: [
-      { createdAt: { $gte: adjustInventory.checkedDate } },
-      { updatedAt: { $gte: adjustInventory.checkedDate } },
-    ]
-  }).sort({ date: 1 }).lean();
+    await detailsClear(models, user, adjustInventory, currentDate);
 
-  if (betweenModifiedFirstTr) {
-    return betweenModifiedFirstTr.date;
-  }
-
-  return adjustInventory.successDate;
-}
-
-export const adjustRunning = async (models, adjustInventory, beginDate, beforeAdjInv) => {
-  let currentDate = await recheckValidDate(models, adjustInventory, beginDate);
-  const date = adjustInventory.date;
-  const adjustId = adjustInventory._id;
-
-  await models.AdjustInvDetails.cleanAdjustInvDetails({ adjustId });
-  if (beforeAdjInv) {
-    await models.AdjustInvDetails.copyAdjustInvDetails({ sourceAdjustId: beforeAdjInv._id, adjustId });
-  }
-
-  const trFilter = {
-    'details.productId': { $exists: true, $ne: '' },
-    'details.accountId': { $exists: true, $ne: '' },
-    'branchId': { $exists: true, $ne: '' },
-    'departmentId': { $exists: true, $ne: '' },
-    status: { $in: TR_STATUSES.ACTIVE },
-  }
-
-  if (currentDate < beginDate) {
-    await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
-  }
-
-  // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
-  while (currentDate < date) {
-    const nextDate = getTomorrow(currentDate);
-
-    try {
-      await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
-      graphqlPubsub.publish(`accountingAdjustInventoryChanged:${adjustId}`, {
-        accountingAdjustInventoryChanged: {
-          ...adjustInventory,
-          checkedDate: currentDate,
-        },
-      });
-    } catch (e) {
-      const now = new Date();
-      await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message, checkedDate: now } });
-      // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { error: e.message } });
-      // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
-      //   accountingsAdjustInventoriesRunner: {
-      //     userId: user._id,
-      //     adjustId,
-      //     data: {
-      //       ...adjustInventory,
-      //       checkedDate: now,
-      //       error: e.message,
-      //     }
-      //   }
-      // });
-      break;
+    const trFilter = {
+      'details.productId': { $exists: true, $ne: '' },
+      'details.accountId': { $exists: true, $ne: '' },
+      'branchId': { $exists: true, $ne: '' },
+      'departmentId': { $exists: true, $ne: '' },
+      status: { $in: TR_STATUSES.ACTIVE },
     }
 
-    const now = new Date();
-    await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate, checkedDate: now } });
-    // await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { successDate: nextDate } });
+    // cachees bolson uchir ene barag hereggui baih yostoi
+    // if (currentDate < beginDate) {
+    // await calcInvTrs(models, { adjustId, beginDate: beginDate, endDate: currentDate, trFilter }) // энэ хооронд бичилтийн өөрлөлт орохгүй тул бөөнд нь details ээ цэнэглэх зорилготой
+    // }
 
-    // await graphqlPubsub.publish(`accountingsAdjustInventoriesRunner:${user._id}`, {
-    //   accountingsAdjustInventoriesRunner: {
-    //     userId: user._id,
-    //     adjustId,
-    //     data: {
-    //       ...adjustInventory,
-    //       successDate: currentDate,
-    //       lastDate: now,
-    //     }
-    //   }
-    // });
-    currentDate = nextDate;
+    // өдөр бүрээр гүйлгээнүүдийг журналаар багцалж тооцож өртгийг зүгшрүүлж шаардлагатай бол гүйлгээг засч эндээсээ цэнэглэнэ
+    while (currentDate < date) {
+      const nextDate = getTomorrow(currentDate);
+
+      try {
+        await fixInvTrs(models, { adjustId, beginDate: currentDate, endDate: nextDate, trFilter });
+
+        let bulkOps: Array<{
+          updateOne: {
+            filter: { _id: string };
+            update: { $push: { infoPerDate: ICommonAdjInvDetailInfo } };
+          };
+        }> = [];
+
+        // toCache
+        let step = 0;
+        const per = 1000;
+        const summary = await models.AdjustInvDetails.find({ adjustId }).countDocuments();
+
+        while (step * per <= summary) {
+          bulkOps = [];
+          const details = await models.AdjustInvDetails.find({ adjustId })
+            .sort({ accountId: 1, branchId: 1, departmentId: 1, productId: 1 })
+            .skip(step * per)
+            .limit(step).lean();
+          for (const detail of details) {
+            bulkOps.push({
+              updateOne: {
+                filter: { _id: detail._id },
+                update: {
+                  $push: {
+                    infoPerDate: {
+                      date: currentDate,
+                      remainder: detail.remainder,
+                      cost: detail.cost,
+                      unitCost: detail.unitCost,
+                      soonInCount: detail.soonInCount,
+                      soonOutCount: detail.soonOutCount,
+                    }
+                  }
+                },
+              },
+            });
+          }
+          if (bulkOps.length) {
+            await models.AdjustInvDetails.bulkWrite(bulkOps);
+          }
+          step++;
+        }
+        // end toCache
+
+        await modifierWrapper(models, adjustInventory, {
+          checkedAt: new Date(), successDate: nextDate
+        })
+      } catch (e) {
+        const now = new Date();
+        await modifierWrapper(models, adjustInventory, {
+          error: e.message,
+          checkedAt: now
+        })
+        break;
+      }
+
+      currentDate = nextDate;
+    }
+
+    await modifierWrapper(models, adjustInventory, {
+      checkedAt: new Date(), status: ADJ_INV_STATUSES.COMPLETE, error: ''
+    })
+  } catch (e) {
+    modifierWrapper(models, adjustInventory, { checkedDate: now, error: e.message, status: ADJ_INV_STATUSES.PROCESS })
   }
-
-  await models.AdjustInventories.updateOne({ _id: adjustId }, { $set: { status: ADJ_INV_STATUSES.COMPLETE } });
 }

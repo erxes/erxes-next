@@ -30,7 +30,6 @@ import { SelectEstimatedPoint } from '@/task/components/task-selects/SelectEstim
 import { SelectTeam } from '@/team/components/SelectTeam';
 import { taskCreateDefaultValuesState } from '@/task/states/taskCreateSheetState';
 import { SelectCycle } from '@/task/components/task-selects/SelectCycle';
-import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId, projectId, cycleId } = useParams<{
@@ -47,10 +46,6 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const [defaultValuesState, setDefaultValues] = useAtom(
     taskCreateDefaultValuesState,
   );
-  const { statuses } = useGetStatusByTeam({
-    variables: { teamId: teamId || '' },
-    skip: !teamId,
-  });
 
   const { project } = useGetProject({
     variables: { _id: projectId || '' },
@@ -96,12 +91,6 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValuesState, form, setDefaultValues]);
-
-  useEffect(() => {
-    if (statuses?.length > 0 && !defaultValuesState?.status) {
-      form.setValue('status', statuses[0].value || '');
-    }
-  }, [statuses, form, defaultValuesState]);
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
@@ -183,8 +172,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   <SelectStatusTask.FormItem
                     value={field.value || ''}
                     onValueChange={(value) => field.onChange(value)}
-                    teamId={form.getValues('teamId') || _teamId}
-                    scope={clsx(TaskHotKeyScope.TasksPage, 'form', 'Status')}
+                    form={form}
                   />
                 </Form.Item>
               )}
@@ -299,7 +287,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
             />
           </div>
           <Separator className="my-4" />
-          <div className="h-[60vh] overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}

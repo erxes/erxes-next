@@ -1,4 +1,4 @@
 export enum InboxPath {
-  MainPage = '/inbox',
+  MainPage = '/frontline/inbox',
   IntegrationSettingsPage = '/settings/inbox/integrations/:integrationId',
 }

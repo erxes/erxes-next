@@ -13,6 +13,11 @@ const FbPostConversationDetail = lazy(() =>
     (module) => ({ default: module.FbPostConversationDetail }),
   ),
 );
+const CallConversationDetail = lazy(() =>
+  import('@/integrations/call/components/CallConversationDetail').then(
+    (module) => ({ default: module.CallConversationDetail }),
+  ),
+);
 
 const FbMessengerConversationDetail = lazy(() =>
   import(
@@ -26,6 +31,7 @@ export const ConversationIntegrationDetail = () => {
   return (
     <Suspense fallback={<div />}>
       {integration?.kind === IntegrationType.IMAP && <IMapConversationDetail />}
+      {integration?.kind === IntegrationType.CALL && <CallConversationDetail />}
       {integration?.kind === IntegrationType.FACEBOOK_POST && (
         <FbPostConversationDetail />
       )}

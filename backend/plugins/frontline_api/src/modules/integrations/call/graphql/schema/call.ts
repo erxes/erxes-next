@@ -9,6 +9,12 @@ const integrationCommonFields = `
     srcTrunk: String
     dstTrunk: String
 `;
+const pageParams = `skip: Int, limit: Int`;
+
+const commonCommentAndMessageFields = `
+  content: String
+  conversationId: String
+`;
 
 export const types = `
 
@@ -167,6 +173,18 @@ export const types = `
     talkTime: Int
     pauseTime: String
     pauseReason: String
+  type CallConversationNotes {
+    _id: String!
+    ${commonCommentAndMessageFields}
+    attachments: [Attachment]
+    customerId: String
+    userId: String
+    createdAt: Date
+    isCustomerRead: Boolean
+    mid: String
+    internal: Boolean
+    customer: Customer
+    user: User
   }
 `;
 
@@ -230,6 +248,8 @@ export const queries = `
   getQueueStatus(extension: String!): QueueStatus
   getActiveCalls(extension: String): [ActiveCall]
   getAgentStats(extension: String!, agentExtension: String): [QueueAgent]
+  callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
+  callHistoryDetail(_id: String, conversationId: String): CallHistory
   `;
 
 //old mutations
@@ -245,6 +265,7 @@ export const mutations = `
   callAddCustomer(inboxIntegrationId: String, primaryPhone: String, queueName: String): CallConversationDetail
   callUpdateActiveSession: JSON
   callHistoryAdd(${commonHistoryFields}, queueName: String): CallHistory
+  callHistoryEdit(_id: String,${commonHistoryFields}): String
   callHistoryRemove(_id: String!): JSON
   callsUpdateConfigs(configsMap: JSON!): JSON
   callsPauseAgent(status: String!, integrationId: String!): String

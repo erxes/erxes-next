@@ -90,14 +90,14 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
       }
       if (action.endsWith('All')) {
         return (
-          <RecordTableInlineCell className="justify-center">
-            <Badge>All</Badge>
+          <RecordTableInlineCell>
+            <Badge variant={'secondary'}>All</Badge>
           </RecordTableInlineCell>
         );
       }
       return (
-        <RecordTableInlineCell className="justify-center">
-          <Badge>{cell.getValue() as string}</Badge>
+        <RecordTableInlineCell>
+          <Badge variant={'secondary'}>{cell.getValue() as string}</Badge>
         </RecordTableInlineCell>
       );
     },
