@@ -127,52 +127,6 @@ export const types = `
     calleeid: String
   }
 
-  type ActiveCall {
-    uniqueid: String
-    linkedid: String
-    channel: String
-    state: String # Ring, Up, Down
-    service: String
-    callername: String
-    callernum: String
-    connectedname: String
-    connectednum: String
-    alloc_time: String
-    callid: String
-    inbound_trunk_name: String
-    outbound_trunk_name: String
-    dial_service: String
-    feature_num: String
-    feature_name: String
-    feature_calleenum: String
-    feature_calleename: String
-    meeting_number: String
-    alloc_timestamp: String
-    chantype: String
-    action: String # add, update, delete
-    channel2: String # for bridge events
-  }
-
-  type QueueStatus {
-    extension: String!
-    queuename: String
-    totalCalls: Int
-    waitingCalls: Int
-    completedCalls: Int
-    abandonedCalls: Int
-    agents: [QueueAgent]
-    statistics: CallStatistic
-  }
-
-  type QueueAgent {
-    extension: String
-    name: String
-    status: String
-    callsAnswered: Int
-    callsAbandoned: Int
-    talkTime: Int
-    pauseTime: String
-    pauseReason: String
   type CallConversationNotes {
     _id: String!
     ${commonCommentAndMessageFields}
@@ -196,9 +150,6 @@ export const subscriptions = `
   queueRealtimeUpdate(extension: String): String
 
   callStatistic(extension: String): CallStatistic
-  callAgent(extension: String): CallAgent
-  activeCallStatus(extension: String): ActiveCall
-  queueStatus(extension: String!): QueueStatus
   `;
 
 const commonHistoryFields = `
@@ -245,20 +196,9 @@ export const queries = `
   callQueueMemberList(integrationId: String!, queue: String!): JSON
   callTodayStatistics(queue: String!): JSON
 
-  getQueueStatus(extension: String!): QueueStatus
-  getActiveCalls(extension: String): [ActiveCall]
-  getAgentStats(extension: String!, agentExtension: String): [QueueAgent]
   callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
   callHistoryDetail(_id: String, conversationId: String): CallHistory
   `;
-
-//old mutations
-
-//callTerminateSession: JSON
-//callDisconnect: String
-//callHistoryAdd(${commonHistoryFields}, queueName: String): CallHistory
-//callHistoryEdit(_id: String,${commonHistoryFields}): String
-//callHistoryEditStatus(callStatus: String, timeStamp: Float): String
 
 export const mutations = `
   callsIntegrationUpdate(configs: CallIntegrationConfigs): JSON

@@ -401,42 +401,6 @@ const callQueries = {
     return averageAnsweredTime;
   },
 
-  getQueueStatus: async (parent, { extension }, { models }) => {
-    try {
-      const integration = await models.CallIntegrations.findOne({
-        queues: extension,
-      }).lean();
-
-      if (!integration) {
-        throw new Error(`Queue ${extension} not found`);
-      }
-
-      // Return cached or default data
-      return {
-        extension,
-        queuename: integration.name,
-        totalCalls: 0,
-        waitingCalls: 0,
-        completedCalls: 0,
-        abandonedCalls: 0,
-        agents: [],
-        statistics: null,
-      };
-    } catch (error) {
-      console.error('Error fetching queue status:', error);
-      throw error;
-    }
-  },
-
-  getActiveCalls: async (parent, { extension }, { models }) => {
-    // Implement logic to fetch active calls from cache/database
-    return [];
-  },
-
-  getAgentStats: async (parent, { extension, agentExtension }, { models }) => {
-    // Implement logic to fetch agent statistics
-    return [];
-  },
   async callConversationNotes(_root, args: INotesParams, { models }: IContext) {
     const { conversationId, limit, skip, getFirst } = args;
 
