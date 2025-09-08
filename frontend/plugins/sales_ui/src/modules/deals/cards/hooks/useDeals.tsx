@@ -115,6 +115,9 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
       ...options?.variables,
       _id,
     },
+    optimisticResponse: ({ _id, name }) => ({
+      editDeals: { __typename: 'Deal', _id, name },
+    }),
     refetchQueries: [
       {
         query: GET_DEAL_DETAIL,

@@ -1,4 +1,4 @@
-import { Button, DropdownMenu, Sheet } from 'erxes-ui';
+import { Button, DropdownMenu, Input, Sheet } from 'erxes-ui';
 import {
   IconArchive,
   IconCopy,
@@ -9,15 +9,39 @@ import {
 } from '@tabler/icons-react';
 
 import { IDeal } from '@/deals/types/deals';
+import { useDealsContext } from '@/deals/context/DealContext';
+import { useState } from 'react';
 
 export const SalesItemDetailHeader = ({ deal }: { deal: IDeal }) => {
+  const { editDeals } = useDealsContext();
+  const [name, setName] = useState(deal?.name || 'Untitled deal');
+
+  const handleName = () => {
+    if (!name) return;
+
+    editDeals({
+      variables: {
+        _id: deal._id,
+        name,
+      },
+    });
+  };
+
   return (
     <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
       <Button variant="ghost" size="icon">
         <IconLayoutSidebarLeftCollapse />
       </Button>
       <Sheet.Title className="shrink-0">
-        {deal?.name || 'Untitled deal'}
+        <Input
+          className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
+          placeholder="Task Name"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          onBlur={handleName}
+        />
       </Sheet.Title>
       <div className="flex items-center w-full justify-end">
         <DropdownMenu>

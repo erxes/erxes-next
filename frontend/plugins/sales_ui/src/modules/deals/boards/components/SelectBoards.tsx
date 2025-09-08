@@ -1,14 +1,10 @@
 import {
-  Button,
   Combobox,
   Command,
   Filter,
   Form,
   Popover,
   PopoverScoped,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
   SelectTree,
   TextOverflowTooltip,
   cn,
@@ -107,6 +103,7 @@ export const SelectBoardsCommand = ({
       setNoBoardsSearchValue('');
     },
   });
+
   return (
     <Command shouldFilter={false}>
       <Command.Input
@@ -115,15 +112,7 @@ export const SelectBoardsCommand = ({
         placeholder="Search Boards"
         focusOnMount
       />
-      {selectedBoards?.length > 0 && (
-        <>
-          <div className="flex flex-wrap justify-start p-2 gap-2">
-            <BoardsList />
-          </div>
-          <Command.Separator />
-        </>
-      )}
-
+      <Command.Empty>No boards found</Command.Empty>
       <Command.List>
         <SelectTree.Provider id={'select-Boards'} ordered={!search}>
           <SelectBoardsCreate
@@ -272,34 +261,34 @@ export const SelectBoardsContent = () => {
   return <SelectBoardsCommand />;
 };
 
-export const SelectBoardsInlineCell = ({
-  onValueChange,
-  scope,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectBoardsProvider>, 'children'> & {
-  scope?: string;
-}) => {
-  const [open, setOpen] = useState<boolean>(false);
+// export const SelectBoardsInlineCell = ({
+//   onValueChange,
+//   scope,
+//   ...props
+// }: Omit<React.ComponentProps<typeof SelectBoardsProvider>, 'children'> & {
+//   scope?: string;
+// }) => {
+//   const [open, setOpen] = useState<boolean>(false);
 
-  return (
-    <SelectBoardsProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...props}
-    >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
-          <SelectBoardsValue />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent className="min-w-72">
-          <SelectBoardsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
-    </SelectBoardsProvider>
-  );
-};
+//   return (
+//     <SelectBoardsProvider
+//       onValueChange={(value) => {
+//         onValueChange?.(value);
+//         setOpen(false);
+//       }}
+//       {...props}
+//     >
+//       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
+//         <RecordTableCellTrigger>
+//           <SelectBoardsValue />
+//         </RecordTableCellTrigger>
+//         <RecordTableCellContent className="min-w-72">
+//           <SelectBoardsContent />
+//         </RecordTableCellContent>
+//       </RecordTablePopover>
+//     </SelectBoardsProvider>
+//   );
+// };
 
 export const SelectBoardsDetail = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -334,34 +323,34 @@ export const SelectBoardsDetail = React.forwardRef<
 
 SelectBoardsDetail.displayName = 'SelectBoardsDetail';
 
-export const SelectBoardsCommandbarItem = ({
-  onValueChange,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectBoardsProvider>, 'children'>) => {
-  const [open, setOpen] = useState(false);
+// export const SelectBoardsCommandbarItem = ({
+//   onValueChange,
+//   ...props
+// }: Omit<React.ComponentProps<typeof SelectBoardsProvider>, 'children'>) => {
+//   const [open, setOpen] = useState(false);
 
-  return (
-    <SelectBoardsProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...props}
-    >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
-        <Button variant={'secondary'} asChild>
-          <RecordTableCellTrigger>
-            <IconFolder />
-            Department
-          </RecordTableCellTrigger>
-        </Button>
-        <RecordTableCellContent className="w-96">
-          <SelectBoardsContent />
-        </RecordTableCellContent>
-      </RecordTablePopover>
-    </SelectBoardsProvider>
-  );
-};
+//   return (
+//     <SelectBoardsProvider
+//       onValueChange={(value) => {
+//         onValueChange?.(value);
+//         setOpen(false);
+//       }}
+//       {...props}
+//     >
+//       <RecordTablePopover open={open} onOpenChange={setOpen}>
+//         <Button variant={'secondary'} asChild>
+//           <RecordTableCellTrigger>
+//             <IconFolder />
+//             Department
+//           </RecordTableCellTrigger>
+//         </Button>
+//         <RecordTableCellContent className="w-96">
+//           <SelectBoardsContent />
+//         </RecordTableCellContent>
+//       </RecordTablePopover>
+//     </SelectBoardsProvider>
+//   );
+// };
 
 export const SelectBoardsFormItem = ({
   onValueChange,
@@ -488,13 +477,13 @@ export const SelectBoardsFilterBar = ({
 };
 
 export const SelectBoards = Object.assign(SelectBoardsProvider, {
-  CommandBarItem: SelectBoardsCommandbarItem,
+  // CommandBarItem: SelectBoardsCommandbarItem,
   Content: SelectBoardsContent,
   Command: SelectBoardsCommand,
   Item: SelectBoardsItem,
   Value: SelectBoardsValue,
   List: BoardsList,
-  InlineCell: SelectBoardsInlineCell,
+  // InlineCell: SelectBoardsInlineCell,
   FormItem: SelectBoardsFormItem,
   FilterItem: SelectBoardsFilterItem,
   FilterView: SelectBoardsFilterView,
