@@ -10,11 +10,11 @@ export const documentSchema = new Schema(
     name: { type: String },
     content: { type: String },
     replacer: { type: String },
-    code: { type: String },
+    code: { type: String, optional: true },
   },
   {
     timestamps: true,
   },
 );
 
-documentSchema.index({ code: 1 }, { unique: true });
+documentSchema.index({ contentType: 1 });

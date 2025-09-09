@@ -41,10 +41,6 @@ export const useDocument = () => {
       contentType,
     };
 
-    if (!cleanDocumentId) {
-      document.code = `${Math.floor(1000 + Math.random() * 9000)}`;
-    }
-
     if (cleanDocumentId) {
       document._id = cleanDocumentId;
     }
