@@ -18,7 +18,7 @@ export function SettingsSidebar() {
   const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
 
   const currentOrganization = useAtomValue(currentOrganizationState);
-  const isSaaS = currentOrganization?.type === 'saas';
+  const isOs = currentOrganization?.type === 'os';
 
   const pluginsWithSettingsModules: Map<string, IUIConfig['modules']> =
     useMemo(() => {
@@ -59,14 +59,12 @@ export function SettingsSidebar() {
         </SettingsNavigationGroup>
         <SettingsNavigationGroup name="Workspace">
           {SETTINGS_PATH_DATA.nav
-            .filter(
-              (item) =>
-                !(
-                  isSaaS &&
-                  (item.path === SettingsWorkspacePath.FileUpload ||
-                    item.path === SettingsWorkspacePath.MailConfig)
-                ),
-            )
+            .filter((item) => {
+              const isRestricted =
+                item.path === SettingsWorkspacePath.FileUpload ||
+                item.path === SettingsWorkspacePath.MailConfig;
+              return isOs || !isRestricted;
+            })
             .map((item) => (
               <Sidebar.MenuItem key={item.name}>
                 <NavigationMenuLinkItem

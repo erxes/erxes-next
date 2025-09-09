@@ -11,7 +11,6 @@ const GET_APPS = gql`
       isEnabled
       name
       noExpire
-      refreshToken
       userGroupId
     }
   }

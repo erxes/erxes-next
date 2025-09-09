@@ -3,7 +3,7 @@ import { AppsSettings } from '@/settings/apps/components/AppsSettings';
 import { CreateToken } from '@/settings/apps/components/CreateToken';
 import { PageContainer, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 export function AppSettingsPage() {
   return (
@@ -17,8 +17,8 @@ export function AppSettingsPage() {
         }
       >
         <Routes>
-          <Route path="/" element={<AppsSettings />} />
-          <Route path="/create-new-app" element={<CreateToken />} />
+          <Route index element={<AppsSettings />} />
+          <Route path="create-new-app" element={<CreateToken />} />
         </Routes>
       </Suspense>
     </PageContainer>

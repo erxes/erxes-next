@@ -2,7 +2,7 @@ import useRemoveToken from '@/settings/apps/hooks/useRemoveToken';
 import { IApp } from '@/settings/apps/types';
 import { IconCopy, IconTrash } from '@tabler/icons-react';
 import { Cell, ColumnDef } from '@tanstack/table-core';
-import { formatDate } from 'date-fns';
+import { format } from 'date-fns';
 import { Button, RecordTableInlineCell, toast, useConfirm } from 'erxes-ui';
 
 const RemoveButton = ({ cell }: { cell: Cell<IApp, unknown> }) => {
@@ -39,15 +39,23 @@ const RemoveButton = ({ cell }: { cell: Cell<IApp, unknown> }) => {
 
 const CopyTokenButton = ({ cell }: { cell: Cell<IApp, unknown> }) => {
   const { accessToken } = cell.row.original;
-  const copy = () => {
-    navigator.clipboard.writeText(accessToken);
-    toast({
-      title: 'Token copied to clipboard',
-      variant: 'default',
-    });
-  };
+  async function copy() {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(accessToken);
+        toast({
+          title: 'Token copied to clipboard',
+        });
+      } catch {
+        toast({
+          title: 'Failed to copy token',
+          variant: 'destructive',
+        });
+      }
+    }
+  }
   return (
-    <Button variant="outline" size={'icon'} onClick={() => copy()}>
+    <Button variant="outline" size="icon" onClick={copy}>
       <IconCopy />
     </Button>
   );
@@ -72,7 +80,7 @@ export const appsSettingsColumns: ColumnDef<IApp>[] = [
       const { expireDate } = cell.row.original;
       return (
         <RecordTableInlineCell>
-          {formatDate(expireDate, 'yyyy-MM-dd')}
+          {format(expireDate, 'yyyy-MM-dd')}
         </RecordTableInlineCell>
       );
     },

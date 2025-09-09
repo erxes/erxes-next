@@ -5,8 +5,6 @@ import { SettingsWorkspacePath } from '@/types/paths/SettingsPath';
 import { IconChevronLeft, IconPlus } from '@tabler/icons-react';
 import {
   Button,
-  Checkbox,
-  cn,
   DatePicker,
   Form,
   Input,
@@ -89,7 +87,7 @@ export const CreateToken = () => {
                 </Form.Item>
               )}
             />
-            {!allowAllPermission && (
+            {(allowAllPermission && null) || (
               <Form.Field
                 control={control}
                 name="userGroupId"
@@ -126,7 +124,7 @@ export const CreateToken = () => {
                 </Form.Item>
               )}
             />
-            {!noExpire && (
+            {(noExpire && null) || (
               <Form.Field
                 control={control}
                 name="expireDate"

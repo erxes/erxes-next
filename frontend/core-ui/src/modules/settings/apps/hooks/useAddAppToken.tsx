@@ -8,17 +8,8 @@ interface IResult {
 
 export const useAddAppToken = () => {
   const [mutate, { loading, error }] = useMutation<IResult>(ADD_TOKEN);
-  const handleAdd = (options?: MutationFunctionOptions<IResult, any>) => {
-    mutate({
-      ...options,
-      onCompleted: (data) => {
-        options?.onCompleted?.(data);
-      },
-      refetchQueries: ['Apps'],
-    });
-  };
   return {
-    appsAdd: handleAdd,
+    appsAdd: mutate,
     loading,
     error,
   };
