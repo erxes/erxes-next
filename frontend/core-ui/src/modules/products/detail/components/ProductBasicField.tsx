@@ -1,10 +1,11 @@
-import type React from 'react';
-import { Form, Input, Select, CurrencyField, Label, Button } from 'erxes-ui';
-import { PRODUCT_TYPE_OPTIONS } from '@/products/constants/ProductConstants';
-import { SelectBrand, SelectCompany, SelectCategory } from 'ui-modules';
+import { Button, CurrencyField, Form, Input, Label, Select } from 'erxes-ui';
+import { SelectBrand, SelectCategory, SelectCompany } from 'ui-modules';
+
 import { Control } from 'react-hook-form';
 import { IconUpload } from '@tabler/icons-react';
+import { PRODUCT_TYPE_OPTIONS } from '@/products/constants/ProductConstants';
 import { ProductFormValues } from '@/products/constants/ProductFormSchema';
+import type React from 'react';
 
 interface UnitOfMeasurement {
   _id: string;
@@ -36,8 +37,8 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
     const barcodes = value
       .split(',')
       .map((barcode) => barcode.trim())
-      .filter((barcode) => barcode !== ''); 
-    
+      .filter((barcode) => barcode !== '');
+
     onChange(barcodes);
   };
 
@@ -53,15 +54,20 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
       <Form.Field
         control={control}
         name="name"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label className={formLabelClassName}>PRODUCT NAME</Form.Label>
-            <Form.Control>
-              <Input {...field} placeholder="Enter product name" />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-        )}
+        render={({ field }) => {
+          console.log('ff', field);
+          return (
+            <Form.Item>
+              <Form.Label className={formLabelClassName}>
+                PRODUCT NAME
+              </Form.Label>
+              <Form.Control>
+                <Input {...field} placeholder="Enter product name" />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
+          );
+        }}
       />
 
       <Form.Field

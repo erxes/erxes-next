@@ -18,13 +18,14 @@ export const BoardBadge = React.forwardRef<
     { board, boardId, renderClose, onCompleted, renderAsPlainText, ...props },
     ref,
   ) => {
+    console.log('BoardBadge:', board);
     const { boardDetail, loading } = useBoardDetail({
       variables: {
-        id: boardId,
+        _id: boardId,
       },
       skip: !boardId,
       onCompleted: (data) => {
-        // onCompleted?.(data?.boardDetail);
+        onCompleted?.(data?.salesBoardDetail);
       },
       onError: (error) => {
         console.log('error', error);

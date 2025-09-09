@@ -50,21 +50,24 @@ const GeneralForm = ({
 
   const { name, boardId, tagId, departmentIds, branchIds, memberIds } =
     pipeline;
-
+  console.log('kkkk', pipeline);
   return (
     <div className="space-y-3">
       <Form.Field
         control={control}
         name="name"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>{field.name}</Form.Label>
-            <Form.Control>
-              <Input {...field} placeholder="Name" value={name} />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-        )}
+        render={({ field }) => {
+          console.log('nnn', field);
+          return (
+            <Form.Item>
+              <Form.Label>{field.name}</Form.Label>
+              <Form.Control>
+                <Input {...field} placeholder="Enter pipeline name" />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
+          );
+        }}
       />
       <Form.Field
         control={control}
@@ -147,7 +150,7 @@ const GeneralForm = ({
         <>
           <Form.Field
             control={control}
-            name="departmentId"
+            name="departmentIds"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label>Departments</Form.Label>
@@ -162,7 +165,7 @@ const GeneralForm = ({
           />
           <Form.Field
             control={control}
-            name="branchId"
+            name="branchIds"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label>Branches</Form.Label>

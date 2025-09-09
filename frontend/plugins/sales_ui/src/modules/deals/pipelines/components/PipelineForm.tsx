@@ -1,13 +1,12 @@
 import { Button, Spinner, Tabs } from 'erxes-ui';
 
-import GeneralForm from './detail/GeneralForm';
+import GeneralForm from '@/deals/boards/components/detail/GeneralForm';
 import { IPipeline } from '@/deals/types/pipelines';
 import { usePipelineDetail } from '@/deals/boards/hooks/usePipelines';
 
 export const PipelineForm = ({ form }: { form: any }) => {
   const { pipelineDetail = {} as IPipeline, loading: pipelineDetailLoading } =
     usePipelineDetail();
-  console.log('pipelineDetail', pipelineDetail);
 
   if (pipelineDetailLoading) {
     return (

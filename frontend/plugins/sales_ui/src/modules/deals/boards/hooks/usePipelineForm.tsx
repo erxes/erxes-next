@@ -8,9 +8,15 @@ export const usePipelineForm = () => {
     mode: 'onBlur',
     defaultValues: {
       name: '',
+      boardId: '',
+      tagId: '',
+      departmentIds: [],
+      branchIds: [],
+      memberIds: [],
     },
     resolver: zodResolver(PIPELINE_CREATE_SCHEMA),
   });
+
   return {
     methods,
   };

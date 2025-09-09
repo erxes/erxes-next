@@ -2,9 +2,9 @@ import { Button, PageContainer, PageSubHeader } from 'erxes-ui';
 
 import { BoardsList } from '@/deals/boards/components/BoardsList';
 import { IconSandbox } from '@tabler/icons-react';
-import { PipelineFormBar } from '@/deals/boards/components/PipelineFormBar';
-import PipelineRecordTable from '@/deals/boards/components/PipelineRecordTable';
-import { PipelineSettingsFilter } from '@/deals/boards/components/PipelineSettingsFilter';
+import { PipelineFormBar } from '~/modules/deals/pipelines/components/PipelineFormBar';
+import PipelineRecordTable from '~/modules/deals/pipelines/components/PipelineRecordTable';
+import { PipelineSettingsFilter } from '~/modules/deals/pipelines/components/PipelineSettingsFilter';
 import { SettingsHeader } from 'ui-modules';
 
 const Settings = () => {
