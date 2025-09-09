@@ -35,7 +35,9 @@ export const NotificationContainer = ({
 
     onNotificationSelect?.();
 
-    markAsRead({ variables: { id: _id } });
+    if (!isRead) {
+      markAsRead({ variables: { id: _id } });
+    }
 
     navigate(newPath);
   };

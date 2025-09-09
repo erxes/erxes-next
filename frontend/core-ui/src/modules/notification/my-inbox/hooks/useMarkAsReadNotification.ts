@@ -7,17 +7,11 @@ export const useMarkAsReadNotification = () => {
 
   const [markAsRead] = useMutation(MARK_AS_READ_NOTIFICATION, {
     update: (cache) => {
+      if (!_id) return;
       cache.modify({
+        id: cache.identify({ __typename: 'Notification', _id }),
         fields: {
-          notifications(existingDocs) {
-            const { list = [] } = existingDocs || {};
-
-            return list.map((notification: any) =>
-              notification._id === _id
-                ? { ...notification, isRead: true }
-                : notification,
-            );
-          },
+          isRead: () => true,
         },
       });
     },
