@@ -13,6 +13,8 @@ export default {
       waitingCallReceived(extension: String): String
       talkingCallReceived(extension: String): String
       agentCallReceived(extension: String): String
+
+      queueRealtimeUpdate(extension: String): String
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
@@ -187,6 +189,16 @@ export default {
           () => graphqlPubsub.asyncIterator(`agentCallReceived`),
           (payload, variables) => {
             const response = JSON.parse(payload.agentCallReceived);
+            return response.extension === variables.extension;
+          },
+        ),
+      },
+
+      queueRealtimeUpdate: {
+        subscribe: withFilter(
+          () => graphqlPubsub.asyncIterator(`queueRealtimeUpdate`),
+          (payload, variables) => {
+            const response = JSON.parse(payload.queueRealtimeUpdate);
             return response.extension === variables.extension;
           },
         ),

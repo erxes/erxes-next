@@ -25,8 +25,10 @@ export const receiveInboxMessage = async (
   const { action, metaInfo, payload } = data;
   const { Integrations, ConversationMessages, Conversations } =
     await generateModels(subdomain);
-
-  const doc = JSON.parse(payload || '{}');
+  let doc = JSON.parse(JSON.stringify(payload) || '{}');
+  if (typeof doc === 'string') {
+    doc = JSON.parse(doc);
+  }
 
   if (action === 'get-create-update-customer') {
     const integration = await Integrations.findOne({
@@ -79,7 +81,6 @@ export const receiveInboxMessage = async (
     if (customer) {
       return sendSuccess({ _id: customer._id });
     } else {
-      console.log('create customer...', ...doc);
       customer = await sendTRPCMessage({
         pluginName: 'core',
         method: 'mutation',

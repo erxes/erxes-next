@@ -90,33 +90,6 @@ export const loadCallHistoryClass = (models: IModels) => {
       }
     }
 
-    public static async getCallHistories(
-      filterOptions: ICallHistoryFilterOptions,
-      user: IUserDocument,
-    ): Promise<ICallHistoryDocument[]> {
-      try {
-        const { integration, operator } = await this.validateUserIntegration(
-          models,
-          user,
-          filterOptions.integrationId,
-        );
-
-        const historyFilter = this.buildHistoryFilter(
-          filterOptions,
-          operator,
-          integration,
-        );
-        return await models.CallHistory.find(historyFilter)
-          .sort({ createdAt: -1 })
-          .skip(filterOptions.skip || CALL_HISTORY_CONSTANTS.DEFAULT_SKIP)
-          .limit(filterOptions.limit || CALL_HISTORY_CONSTANTS.DEFAULT_LIMIT)
-          .lean();
-      } catch (error) {
-        console.error('Error retrieving call histories:', error);
-        throw error;
-      }
-    }
-
     public static async getHistoriesCount(
       filterOptions: ICallHistoryFilterOptions,
       user: IUserDocument,
@@ -129,8 +102,14 @@ export const loadCallHistoryClass = (models: IModels) => {
         );
 
         const historyFilter = this.buildCountFilter(filterOptions, operator);
+        const cdrFilter = this.buildCdrFilter(historyFilter, filterOptions);
 
-        return await models.CallHistory.countDocuments(historyFilter);
+        const [cdrCount, historyCount] = await Promise.all([
+          models.CallCdrs.countDocuments(cdrFilter),
+          models.CallHistory.countDocuments(historyFilter),
+        ]);
+
+        return cdrCount + historyCount;
       } catch (error) {
         console.error('Error counting call histories:', error);
         throw error;
@@ -356,6 +335,93 @@ export const loadCallHistoryClass = (models: IModels) => {
       filter.isDeleted = { $ne: true };
 
       return filter;
+    }
+
+    public static async getCallHistories(
+      filterOptions: ICallHistoryFilterOptions,
+      user: IUserDocument,
+    ): Promise<CallHistory[]> {
+      try {
+        const { integration, operator } = await this.validateUserIntegration(
+          models,
+          user,
+          filterOptions.integrationId,
+        );
+        const historyFilter = this.buildHistoryFilter(
+          filterOptions,
+          operator,
+          integration,
+        );
+
+        const cdrFilter = this.buildCdrFilter(historyFilter, filterOptions);
+
+        const cdrs = await models.CallCdrs.find(cdrFilter)
+          .sort({ createdAt: -1 })
+          .skip(filterOptions.skip || CALL_HISTORY_CONSTANTS.DEFAULT_SKIP)
+          .limit(filterOptions.limit || CALL_HISTORY_CONSTANTS.DEFAULT_LIMIT)
+          .lean();
+
+        if (cdrs && cdrs.length > 0) {
+          return cdrs;
+        }
+
+        return await models.CallHistory.find(historyFilter)
+          .sort({ createdAt: -1 })
+          .skip(filterOptions.skip || CALL_HISTORY_CONSTANTS.DEFAULT_SKIP)
+          .limit(filterOptions.limit || CALL_HISTORY_CONSTANTS.DEFAULT_LIMIT)
+          .lean();
+      } catch (error) {
+        console.error('Error retrieving call histories:', error);
+        throw error;
+      }
+    }
+
+    private static buildCdrFilter(
+      historyFilter: any,
+      filterOptions: ICallHistoryFilterOptions,
+    ): any {
+      const cdrFilter: any = {};
+
+      if (historyFilter.createdAt) {
+        cdrFilter.createdAt = historyFilter.createdAt;
+      }
+
+      if (historyFilter.modifiedAt) {
+        cdrFilter.modifiedAt = historyFilter.modifiedAt;
+      }
+
+      if (historyFilter.createdBy) {
+        cdrFilter.createdBy = historyFilter.createdBy;
+      }
+
+      if (historyFilter.operatorPhone) {
+        cdrFilter.src = historyFilter.operatorPhone;
+      }
+
+      if (historyFilter.customerPhone) {
+        cdrFilter.dst = historyFilter.customerPhone;
+      }
+
+      if (historyFilter.callStatus) {
+        cdrFilter.disposition = historyFilter.callStatus;
+      }
+
+      if (historyFilter.callType) {
+        cdrFilter.actionType = historyFilter.callType;
+      }
+
+      if (historyFilter.conversationId) {
+        cdrFilter.$or = [
+          { conversationId: historyFilter.conversationId },
+          { userfield: historyFilter.conversationId },
+        ];
+      }
+
+      if (filterOptions.integrationId) {
+        cdrFilter.acctId = filterOptions.integrationId;
+      }
+
+      return cdrFilter;
     }
   }
 

@@ -103,4 +103,6 @@ export interface ICallCdr {
   oldRecordUrl: string;
 }
 
-export interface ICallCdrDocument extends ICallCdr, Document {}
+export interface ICallCdrDocument extends ICallCdr, Document {
+  _id: string;
+}
