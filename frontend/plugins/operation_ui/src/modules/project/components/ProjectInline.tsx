@@ -9,9 +9,6 @@ export const ProjectInline = forwardRef<
   const { projects } = useProjects();
 
   const project = projects?.find((project) => project._id === projectId);
-  if (!project) {
-    return null;
-  }
 
   return (
     <div
@@ -19,7 +16,7 @@ export const ProjectInline = forwardRef<
       className={cn('inline-flex gap-1 items-center font-medium', className)}
       {...props}
     >
-      {project?.name}
+      {project?.name || 'No Project'}
     </div>
   );
 });

@@ -3,11 +3,23 @@ import { fillMissingDays } from '@/project/utils/charUtils';
 import { differenceInCalendarDays } from 'date-fns';
 import { IModels } from '~/connectionResolvers';
 
-export const getCyclesProgress = async (cycleId: string, models: IModels) => {
+export const getCyclesProgress = async (
+  cycleId: string,
+  assigneeId: string | undefined,
+  models: IModels,
+) => {
+  const filter: { cycleId: string; assigneeId?: string } = {
+    cycleId,
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   const result = await models.Task.aggregate([
     {
       $match: {
-        cycleId,
+        ...filter,
       },
     },
     {
@@ -100,8 +112,17 @@ export const getCyclesProgress = async (cycleId: string, models: IModels) => {
 
 export const getCycleProgressChart = async (
   cycleId: string,
+  assigneeId: string | undefined,
   models: IModels,
 ) => {
+  const filter: { cycleId: string; assigneeId?: string } = {
+    cycleId,
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   const cycle = await models.Cycle.getCycle(cycleId);
 
   if (!cycle) {
@@ -110,7 +131,7 @@ export const getCycleProgressChart = async (
 
   const [totalScopeResult] = await models.Task.aggregate([
     {
-      $match: { cycleId },
+      $match: { ...filter },
     },
     {
       $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } },
@@ -215,13 +236,21 @@ export const getCycleProgressChart = async (
 };
 export const getCycleProgressByProject = async (
   cycleId: string,
+  assigneeId: string | undefined,
   models: IModels,
 ) => {
+  const filter: { cycleId: string; assigneeId?: string } = {
+    cycleId,
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   return models.Task.aggregate([
     {
       $match: {
-        cycleId,
-        projectId: { $exists: true },
+        ...filter,
       },
     },
     {
@@ -354,12 +383,21 @@ export const getCycleProgressByProject = async (
 
 export const getCycleProgressByMember = async (
   cycleId: string,
+  assigneeId: string | undefined,
   models: IModels,
 ) => {
+  const filter: { cycleId: string; assigneeId?: string } = {
+    cycleId,
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   return models.Task.aggregate([
     {
       $match: {
-        cycleId,
+        ...filter,
       },
     },
     {
