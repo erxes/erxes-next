@@ -84,5 +84,3 @@ export const userNotificationSettingsSchema = new Schema({
     default: Date.now,
   },
 });
-
-userNotificationSettingsSchema.index({ userId: 1 }, { unique: true });

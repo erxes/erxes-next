@@ -15,7 +15,7 @@ export const profileValidationSchema = z
       avatar: z.string().optional().nullable(),
       firstName: z.string(),
       lastName: z.string(),
-      middleName: z.string().optional(),
+      middleName: z.string().optional().nullable(),
       shortName: z.string().optional(),
       operatorPhone: z.string().optional(),
       birthDate: z.date().or(z.string()).optional(),

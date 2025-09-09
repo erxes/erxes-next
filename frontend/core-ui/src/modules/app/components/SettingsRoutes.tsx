@@ -16,6 +16,12 @@ const SettingsProfile = lazy(() =>
   })),
 );
 
+const SettingsChangePassword = lazy(() =>
+  import('~/pages/settings/account/ChangePasswordPage').then((module) => ({
+    default: module.ChangePasswordPage,
+  })),
+);
+
 const SettingsFileUpload = lazy(() =>
   import('~/pages/settings/workspace/FilePage').then((module) => ({
     default: module.FilePage,
@@ -26,11 +32,11 @@ const SettingsMailConfig = lazy(() =>
     default: module.MailConfigPage,
   })),
 );
-const GeneralSettings = lazy(() =>
-  import('~/pages/settings/workspace/GeneralSettingsPage').then((module) => ({
-    default: module.GeneralSettingsPage,
-  })),
-);
+// const GeneralSettings = lazy(() =>
+//   import('~/pages/settings/workspace/GeneralSettingsPage').then((module) => ({
+//     default: module.GeneralSettingsPage,
+//   })),
+// );
 const TeamMemberSettings = lazy(() =>
   import('~/pages/settings/workspace/TeamMemberPage').then((module) => ({
     default: module.TeamMemberPage,
@@ -41,13 +47,13 @@ const PermissionsSettings = lazy(() =>
     default: module.PermissionPage,
   })),
 );
-const StructureSettings = lazy(() =>
-  import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
-    (module) => ({
-      default: module.StructureSettingsPage,
-    }),
-  ),
-);
+// const StructureSettings = lazy(() =>
+//   import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
+//     (module) => ({
+//       default: module.StructureSettingsPage,
+//     }),
+//   ),
+// );
 
 const TagsSettings = lazy(() =>
   import('~/pages/settings/workspace/tags/TagsSettingPage').then((module) => ({
@@ -107,9 +113,17 @@ export function SettingsRoutes() {
         />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
+          path={SettingsPath.Notification}
+          element={<NotificationSettingsRoutes />}
+        />
+        <Route
+          path={SettingsPath.ChangePassword}
+          element={<SettingsChangePassword />}
+        />
+        {/* <Route
           path={SettingsPath.Experience}
           element={<SettingsExperiencePage />}
-        />
+        /> */}
         <Route
           path={SettingsWorkspacePath.FileUpload}
           element={<SettingsFileUpload />}
@@ -118,10 +132,10 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.MailConfig}
           element={<SettingsMailConfig />}
         />
-        <Route
+        {/* <Route
           path={SettingsWorkspacePath.General}
           element={<GeneralSettings />}
-        />
+        /> */}
         <Route
           path={SettingsWorkspacePath.TeamMember}
           element={<TeamMemberSettings />}
@@ -130,10 +144,10 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.Permissions}
           element={<PermissionsSettings />}
         />
-        <Route
+        {/* <Route
           path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
-        />
+        /> */}
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
         <Route
           path={SettingsWorkspacePath.Brands}
@@ -146,10 +160,6 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.AutomationsCatchAll}
           element={<AutomationSettingsRoutes />}
-        />
-        <Route
-          path={SettingsWorkspacePath.NotificationCatchAll}
-          element={<NotificationSettingsRoutes />}
         />
         <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
         <Route

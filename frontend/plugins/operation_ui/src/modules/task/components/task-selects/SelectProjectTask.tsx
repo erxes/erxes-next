@@ -5,6 +5,7 @@ import {
   useFilterContext,
   useQueryState,
   PopoverScoped,
+  cn,
 } from 'erxes-ui';
 import { useProjectsInline } from '@/project/hooks/useGetProjects';
 import React, { useState } from 'react';
@@ -45,15 +46,11 @@ export const SelectProjectProvider = ({
     },
   });
 
-  const handleValueChange = (value: string) => {
-    onValueChange(value);
-  };
-
   return (
     <SelectProjectContext.Provider
       value={{
         value,
-        onValueChange: handleValueChange,
+        onValueChange,
         projects: projects || [],
         handleFetchMore,
         totalCount,
@@ -64,23 +61,19 @@ export const SelectProjectProvider = ({
   );
 };
 
-const SelectProjectValue = ({ placeholder }: { placeholder?: string }) => {
+const SelectProjectValue = () => {
   const { projects, value } = useSelectProjectContext();
-  if (!value)
-    return (
-      <div className="flex items-center gap-2 text-accent-foreground">
-        <IconClipboard className="size-4" />
-        <span className="truncate font-medium">
-          {placeholder || 'Select project'}
-        </span>
-      </div>
-    );
 
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className={cn(
+        'flex items-center gap-2',
+        !value && 'text-muted-foreground',
+      )}
+    >
       <IconClipboard className="size-4" />
       <span className="truncate font-medium">
-        {projects.find((p) => p._id === value)?.name}
+        {projects.find((p) => p._id === value)?.name || 'No project'}
       </span>
     </div>
   );
@@ -95,8 +88,9 @@ const SelectProjectCommandItem = ({
 
   return (
     <Command.Item
-      value={project._id}
+      value={project.name}
       onSelect={() => onValueChange(project._id)}
+      className={cn(!project._id && 'text-muted-foreground')}
     >
       <div className="flex items-center gap-2">
         <IconClipboard className="h-4 w-4" />

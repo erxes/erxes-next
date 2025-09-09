@@ -102,6 +102,17 @@ export const AddTransaction = ({
         >
           Хангамжийн зарлага
         </AddTransactionItem>
+        {
+          !inForm && (
+            <AddTransactionItem
+              journal={TrJournalEnum.INV_MOVE}
+              onClick={onClick}
+              inForm={inForm}
+            >
+              Дотоод хөдөлгөөн
+            </AddTransactionItem>
+          )
+        }
         <AddTransactionItem
           journal={TrJournalEnum.INV_SALE}
           onClick={onClick}
@@ -112,7 +123,6 @@ export const AddTransaction = ({
         <AddTransactionItem disabled>
           Борлуулалт (ажил үйлчилгээ)
         </AddTransactionItem>
-        <AddTransactionItem disabled>Дотоод хөдөлгөөн</AddTransactionItem>
         <DropdownMenu.Label>Үндсэн хөрөнгө</DropdownMenu.Label>
         <AddTransactionItem disabled>Орлого</AddTransactionItem>
         <AddTransactionItem disabled>Акт</AddTransactionItem>

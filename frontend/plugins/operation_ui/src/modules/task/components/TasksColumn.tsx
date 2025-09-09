@@ -78,15 +78,11 @@ export const tasksColumns = (
             )}
           >
             <RecordTableInlineCell.Trigger>
-              <Badge
-                variant="secondary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTask(cell.row.original._id);
-                }}
+              <RecordTableInlineCell.Anchor
+                onClick={() => setActiveTask(cell.row.original._id)}
               >
                 {name}
-              </Badge>
+              </RecordTableInlineCell.Anchor>
             </RecordTableInlineCell.Trigger>
             <RecordTableInlineCell.Content className="min-w-72">
               <Input

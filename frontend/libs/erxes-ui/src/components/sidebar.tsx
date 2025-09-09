@@ -198,7 +198,7 @@ const SidebarRoot = React.forwardRef<
           <Sheet.View
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-foreground [&>button]:hidden"
+            className="w-[--sidebar-width] bg-sidebar p-0 text-foreground [&>button]:hidden border-r-0"
             style={
               {
                 '--sidebar-width': SIDEBAR_WIDTH_MOBILE,

@@ -12,6 +12,8 @@ import { IModels, generateModels } from '~/connectionResolvers';
 import { getEnv } from 'erxes-api-shared/utils';
 import { ICallIntegrationDocument } from '~/modules/integrations/call/@types/integrations';
 import { receiveInboxMessage } from '~/modules/inbox/receiveMessage';
+import { ICallHistory } from '~/modules/integrations/call/@types/histories';
+import { ICallCdrDocument } from '~/modules/integrations/call/@types/cdrs';
 
 const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET || 'secret';
 const MAX_RETRY_COUNT = 3;
@@ -143,9 +145,9 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
   } = process.env;
   // disable on production !!!
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // }
 
   // Validate credentials
   if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
@@ -486,6 +488,8 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     formData.append('file', Buffer.from(fileBuffer), {
       filename: sanitizedFileName,
     });
+
+    console.log(uploadUrl, 'uploadUrl');
 
     // Upload file to destination
     const uploadResponse = await fetch(uploadUrl, {
@@ -974,4 +978,28 @@ const updateErxesConversation = async (subdomain, payload) => {
   };
 
   return await receiveInboxMessage(subdomain, data);
+};
+
+export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
+  return {
+    operatorPhone: cdr.src || '',
+    customerPhone: cdr.dst || '',
+    callDuration: cdr.billsec || 0,
+    callStartTime: cdr.start,
+    callEndTime: cdr.end,
+    callType: cdr.actionType || '',
+    callStatus: cdr.disposition || '',
+    timeStamp: cdr.start ? cdr.start.getTime() / 1000 : 0,
+    modifiedAt: cdr.updatedAt,
+    createdAt: cdr.createdAt,
+    createdBy: cdr.createdBy || '',
+    modifiedBy: cdr.updatedBy || '',
+    extensionNumber: '',
+    conversationId: cdr.userfield || '',
+    recordUrl: cdr.recordUrl || '',
+    endedBy: '',
+    acceptedUserId: '',
+    queueName: '',
+    inboxIntegrationId: cdr.inboxIntegrationId,
+  };
 };

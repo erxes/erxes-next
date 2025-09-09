@@ -6,7 +6,7 @@ const adjInvInputParamDefs = `
   $description: String
   $beginDate: Date
   $successDate: Date
-  $checkedDate: Date
+  $checkedAt: Date
 `;
 
 const adjInvInputParams = `
@@ -14,7 +14,7 @@ const adjInvInputParams = `
   description: $description
   beginDate: $beginDate
   successDate: $successDate
-  checkedDate: $checkedDate
+  checkedAt: $checkedAt
 `;
 
 export const ADJUST_INVENTORY_ADD = gql`

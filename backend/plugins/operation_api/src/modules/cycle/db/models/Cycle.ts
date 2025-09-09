@@ -116,10 +116,18 @@ export const loadCycleClass = (models: IModels) => {
     }
 
     public static async endCycle(_id: string) {
-      const chartData = await getCycleProgressChart(_id, models);
-      const porgress = await getCyclesProgress(_id, models);
-      const progressByMember = await getCycleProgressByMember(_id, models);
-      const progressByProject = await getCycleProgressByProject(_id, models);
+      const chartData = await getCycleProgressChart(_id, undefined, models);
+      const porgress = await getCyclesProgress(_id, undefined, models);
+      const progressByMember = await getCycleProgressByMember(
+        _id,
+        undefined,
+        models,
+      );
+      const progressByProject = await getCycleProgressByProject(
+        _id,
+        undefined,
+        models,
+      );
 
       const statistics = {
         chartData,

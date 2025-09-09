@@ -84,7 +84,6 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
               <Form.Item className="space-y-0">
                 <Form.Label className="sr-only">Team</Form.Label>
                 <SelectTeam.FormItem
-                  {...field}
                   value={field.value}
                   onValueChange={field.onChange}
                 />
@@ -203,7 +202,7 @@ export const AddProjectForm = ({ onClose }: { onClose: () => void }) => {
             />
           </div>
           <Separator className="my-4" />
-          <div className="h-[60vh] overflow-y-auto read-only">
+          <div className="flex-1 overflow-y-auto read-only">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}

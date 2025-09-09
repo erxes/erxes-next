@@ -71,15 +71,11 @@ export const projectsColumns = (
             }}
           >
             <RecordTableInlineCell.Trigger>
-              <Badge
-                variant="secondary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`${cell.row.original._id}/overview`);
-                }}
+              <RecordTableInlineCell.Anchor
+                onClick={() => navigate(`${cell.row.original._id}/overview`)}
               >
                 {name}
-              </Badge>
+              </RecordTableInlineCell.Anchor>
             </RecordTableInlineCell.Trigger>
             <RecordTableInlineCell.Content className="min-w-72">
               <Input

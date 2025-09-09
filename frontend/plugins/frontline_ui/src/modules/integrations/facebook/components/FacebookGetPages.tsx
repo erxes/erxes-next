@@ -1,10 +1,11 @@
 import { Button, cn, Command, Input, RadioGroup } from 'erxes-ui';
-import { FacebookMessengerAddSteps } from './FacebookMessengerAdd';
-
-import { FacebookMessengerAddLayout } from './FacebookMessengerAdd';
+import {
+  FacebookIntegrationFormLayout,
+  FacebookIntegrationFormSteps,
+} from './FacebookIntegrationForm';
 import { useAtom, useSetAtom } from 'jotai';
 import {
-  activeFacebookMessengerAddStepAtom,
+  activeFacebookFormStepAtom,
   selectedFacebookPageAtom,
 } from '../states/facebookStates';
 import { useFacebookPages } from '../hooks/useFacebookPages';
@@ -12,10 +13,10 @@ import { useFacebookPages } from '../hooks/useFacebookPages';
 export const FacebookGetPages = () => {
   const [selectedPage, setSelectedPage] = useAtom(selectedFacebookPageAtom);
   const { facebookGetPages } = useFacebookPages();
-  const setActiveStep = useSetAtom(activeFacebookMessengerAddStepAtom);
+  const setActiveStep = useSetAtom(activeFacebookFormStepAtom);
 
   return (
-    <FacebookMessengerAddLayout
+    <FacebookIntegrationFormLayout
       actions={
         <>
           <Button
@@ -34,7 +35,7 @@ export const FacebookGetPages = () => {
         </>
       }
     >
-      <FacebookMessengerAddSteps
+      <FacebookIntegrationFormSteps
         title="Connect pages"
         step={2}
         description="Select the pages where you want to integrate its pages with."
@@ -81,6 +82,6 @@ export const FacebookGetPages = () => {
           </RadioGroup>
         </Command>
       </div>
-    </FacebookMessengerAddLayout>
+    </FacebookIntegrationFormLayout>
   );
 };

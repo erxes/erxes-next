@@ -24,7 +24,7 @@ export const ComboboxTriggerBase = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'flex truncate h-8 rounded pl-3 transition-[color,box-shadow] focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-normal text-left w-full',
+          'flex truncate h-8 rounded pl-3 transition-[color,box-shadow] focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-normal text-left w-full gap-1',
           (!props.variant || props.variant === 'outline') && 'shadow-xs',
           props.size === 'lg' && 'gap-2',
           className,
@@ -83,7 +83,11 @@ export const ComboboxValue = React.forwardRef<
   }
 
   return (
-    <span ref={ref} {...props} className={cn('truncate', className)}>
+    <span
+      ref={ref}
+      {...props}
+      className={cn('truncate', className, !value && 'text-accent-foreground')}
+    >
       {value || placeholder || ''}
     </span>
   );
