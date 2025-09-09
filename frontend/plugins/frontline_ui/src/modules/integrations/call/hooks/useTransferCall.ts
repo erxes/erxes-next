@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { CALL_EXTENSION_LIST } from '../graphql/queries/callExtensionList';
 import { useAtomValue } from 'jotai';
 import { callConfigAtom } from '@/integrations/call/states/sipStates';
 import { QueryHookOptions } from '@apollo/client';
 import { CALL_TRANSFER } from '@/integrations/call/graphql/mutations/callMutations';
+import { CALL_EXTENSION_LIST } from '@/integrations/call/graphql/queries/callExtensionList';
 
 export const useExtentionList = (options?: QueryHookOptions) => {
   const config = useAtomValue(callConfigAtom);
