@@ -27,7 +27,7 @@ export const ConversationItem = ({
 }) => {
   const inboxLayout = useAtomValue(inboxLayoutState);
 
-  const { createdAt, updatedAt, customer, integrationId, tagIds } =
+  const { createdAt, updatedAt, customer, integrationId } =
     useConversationContext();
 
   const { integration } = useIntegrationInline({
@@ -46,8 +46,15 @@ export const ConversationItem = ({
         <CustomersInline.Provider customers={customer ? [customer] : []}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />
-            <div className="flex-1 space-y-1 truncate">
-              <CustomersInline.Title className="truncate" />
+            <div className="flex-1 space-y-1">
+              <div className="flex gap-1 items-center">
+                <CustomersInline.Title className="truncate" />
+                <div className="ml-auto text-accent-foreground">
+                  {createdAt && (
+                    <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+                  )}
+                </div>
+              </div>
               <div className="font-normal text-accent-foreground text-xs">
                 <BrandsInline
                   brandIds={[brandId || '']}
@@ -55,18 +62,8 @@ export const ConversationItem = ({
                 />
               </div>
             </div>
-            <div className="ml-auto text-accent-foreground font-medium">
-              {createdAt && (
-                <RelativeDateDisplay.Value value={updatedAt || createdAt} />
-              )}
-            </div>
           </div>
           <ConversationItemContent />
-          {/* {tagIds &&
-            tagIds.length > 0 &&
-            tagIds.map((tagId) => (
-              <TagBadge key={tagId} tagId={tagId} variant="secondary" />
-            ))} */}
         </CustomersInline.Provider>
       </ConversationContainer>
     );

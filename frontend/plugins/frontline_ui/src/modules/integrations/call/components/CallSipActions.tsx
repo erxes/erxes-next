@@ -27,15 +27,11 @@ export const TurnOffButton = () => {
   const sipState = useAtomValue(sipStateAtom);
   const setCallInfo = useSetAtom(callInfoAtom);
   const { unregisterSip, registerSip } = useSip();
-  console.log(sipState, 'changed sipState');
+
   const isConnected = sipState?.sipStatus === SipStatusEnum.REGISTERED;
 
   const handleConnection = () => {
-    if (isConnected) {
-      unregisterSip();
-    } else {
-      registerSip();
-    }
+    isConnected ? unregisterSip() : registerSip();
     setCallInfo((prev) => ({
       ...prev,
       isUnregistered: isConnected ? false : true,

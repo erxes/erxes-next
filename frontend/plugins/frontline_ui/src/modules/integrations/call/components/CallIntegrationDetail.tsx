@@ -65,7 +65,7 @@ export const CallIntegrationConnect = ({
   return (
     <Tooltip.Provider>
       <Tooltip>
-        <Tooltip.Trigger>
+        <Tooltip.Trigger asChild>
           <Switch
             checked={
               callConfig?.inboxId === integrationId && callConfig.isAvailable

@@ -1,7 +1,7 @@
 import { useGetTeams } from '@/team/hooks/useGetTeams';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Collapsible,

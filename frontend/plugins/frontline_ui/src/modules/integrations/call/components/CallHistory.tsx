@@ -19,7 +19,7 @@ import {
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 export const CallHistory = () => {
   const [totalCalls, setTotalCalls] = useState(0);

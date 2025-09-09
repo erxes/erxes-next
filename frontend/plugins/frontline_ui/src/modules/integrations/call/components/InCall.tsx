@@ -16,7 +16,7 @@ import {
   Transfer,
   TransferTrigger,
 } from '@/integrations/call/components/CallTransfer';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import {
   callDurationAtom,
   currentCallConversationIdAtom,

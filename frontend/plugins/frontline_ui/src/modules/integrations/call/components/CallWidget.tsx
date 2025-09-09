@@ -39,8 +39,8 @@ export const CallWidgetContent = () => {
 
   useEffect(() => {
     if (sipState.callStatus === CallStatusEnum.ENDED) {
-      setHistoryId('');
-      setCurrentCallConversationId('');
+      setHistoryId(null);
+      setCurrentCallConversationId(null);
     }
   }, [sipState.callStatus, setHistoryId, setCurrentCallConversationId]);
 

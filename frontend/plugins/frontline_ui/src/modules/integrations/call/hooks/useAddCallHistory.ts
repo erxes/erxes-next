@@ -41,8 +41,8 @@ export const useAddCallHistory = () => {
         setCurrentCallConversationId(callConversationId);
       },
       onError: (e) => {
-        setHistoryId('');
-        setCurrentCallConversationId('');
+        setHistoryId(null);
+        setCurrentCallConversationId(null);
 
         if (e.message !== 'You cannot edit') {
           // toast({

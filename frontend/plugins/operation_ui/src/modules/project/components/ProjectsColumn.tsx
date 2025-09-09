@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import {
   IconAlertSquareRounded,
@@ -11,7 +11,6 @@ import {
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
-  Badge,
   Input,
   RecordTable,
   RecordTableInlineCell,
