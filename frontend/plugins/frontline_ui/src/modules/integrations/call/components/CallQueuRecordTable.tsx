@@ -57,14 +57,14 @@ const columns: ColumnDef<any>[] = [
     cell: ({ row, cell }) => {
       const {
         queue,
-        queuechairman,
-        total_calls,
-        answered_calls,
-        abandoned_calls,
-        abandoned_rate,
-        avg_wait,
-        avg_talk,
-        answered_rate,
+        queueChairman,
+        totalCalls,
+        answeredCalls,
+        abandonedCalls,
+        abandonedRate,
+        avgWait,
+        avgTalk,
+        answeredRate,
       } = row.original;
       console.log(row.original);
       return (
@@ -86,17 +86,17 @@ const columns: ColumnDef<any>[] = [
             className="w-64 bg-accent p-1 rounded-xl"
           >
             <h4 className="text-xs uppercase font-mono font-semibold px-2 leading-8">
-              {queue} - {queuechairman}
+              {queue} - {queueChairman}
             </h4>
             <div className="p-3 flex flex-col text-sm bg-background shadow-sm rounded-lg">
               <div className="grid grid-cols-2 gap-1 pb-3">
                 <div className="flex-auto space-y-1 text-center">
                   <span className="text-foreground ml-auto font-semibold flex items-center gap-1">
                     <ProgressChart
-                      value={Math.round(abandoned_rate)}
+                      value={Math.round(abandonedRate)}
                       variant="destructive"
                     />
-                    {Math.round(abandoned_rate)}% of {total_calls}
+                    {Math.round(abandonedRate)}% of {totalCalls}
                   </span>
                   <legend className="text-accent-foreground text-xs">
                     abandoned
@@ -105,10 +105,10 @@ const columns: ColumnDef<any>[] = [
                 <div className="flex-auto space-y-1 text-center">
                   <span className="text-foreground ml-auto font-semibold flex items-center gap-1">
                     <ProgressChart
-                      value={Math.round(answered_rate)}
+                      value={Math.round(answeredRate)}
                       variant="success"
                     />
-                    {Math.round(answered_rate)}% of {total_calls}
+                    {Math.round(answeredRate)}% of {totalCalls}
                   </span>
                   <legend className="text-accent-foreground text-xs">
                     success
@@ -117,27 +117,27 @@ const columns: ColumnDef<any>[] = [
               </div>
               <p className="text-sm flex items-center gap-1 justify-between">
                 <legend className="text-accent-foreground">total</legend>
-                <span className="font-medium">{total_calls}</span>
+                <span className="font-medium">{totalCalls}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
                 <legend className="text-accent-foreground">answered</legend>
-                <span className="font-medium">{answered_calls}</span>
+                <span className="font-medium">{answeredCalls}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
                 <legend className="text-accent-foreground">abandoned</legend>
-                <span className="font-medium">{abandoned_calls}</span>
+                <span className="font-medium">{abandonedCalls}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
                 <legend className="text-accent-foreground">
                   average wait time
                 </legend>
-                <span className="font-medium">{formatSeconds(avg_wait)}</span>
+                <span className="font-medium">{formatSeconds(avgWait)}</span>
               </p>
               <p className="text-sm flex items-center gap-1 justify-between">
                 <legend className="text-accent-foreground">
                   average talk time
                 </legend>
-                <span className="font-medium">{formatSeconds(avg_talk)}</span>
+                <span className="font-medium">{formatSeconds(avgTalk)}</span>
               </p>
             </div>
           </HoverCard.Content>
@@ -147,7 +147,7 @@ const columns: ColumnDef<any>[] = [
   },
   {
     header: 'Abandoned rate',
-    accessorKey: 'abandoned_rate',
+    accessorKey: 'abandonedRate',
     cell: ({ cell }) => (
       <RecordTableInlineCell className="font-medium">
         <ProgressChart
@@ -155,24 +155,24 @@ const columns: ColumnDef<any>[] = [
           variant="destructive"
         />
         {Math.round(cell.getValue() as number)}% of{' '}
-        {cell.row.original.total_calls}
+        {cell.row.original.totalCalls}
       </RecordTableInlineCell>
     ),
   },
 
   {
     header: 'Answered rate',
-    accessorKey: 'answered_rate',
+    accessorKey: 'answeredRate',
     cell: ({ cell, row }) => (
       <RecordTableInlineCell className="font-medium">
         <ProgressChart value={cell.getValue() as number} variant="success" />
-        {Math.round(cell.getValue() as number)}% of {row.original.total_calls}
+        {Math.round(cell.getValue() as number)}% of {row.original.totalCalls}
       </RecordTableInlineCell>
     ),
   },
   {
     header: 'Answered calls',
-    accessorKey: 'answered_calls',
+    accessorKey: 'answeredCalls',
     cell: ({ cell }) => (
       <RecordTableInlineCell className="font-medium">
         {cell.getValue() as string}
@@ -181,7 +181,7 @@ const columns: ColumnDef<any>[] = [
   },
   {
     header: 'Abandoned calls',
-    accessorKey: 'abandoned_calls',
+    accessorKey: 'abandonedCalls',
     cell: ({ cell }) => (
       <RecordTableInlineCell className="font-medium">
         {cell.getValue() as string}
@@ -190,7 +190,7 @@ const columns: ColumnDef<any>[] = [
   },
   {
     header: 'Total calls',
-    accessorKey: 'total_calls',
+    accessorKey: 'totalCalls',
     cell: ({ cell }) => (
       <RecordTableInlineCell className="font-medium">
         {cell.getValue() as string}
@@ -199,7 +199,7 @@ const columns: ColumnDef<any>[] = [
   },
   {
     header: 'Average wait time',
-    accessorKey: 'avg_wait',
+    accessorKey: 'avgWait',
     cell: ({ cell }) => (
       <RecordTableInlineCell className="font-medium">
         {formatSeconds(cell.getValue() as number)}
@@ -208,7 +208,7 @@ const columns: ColumnDef<any>[] = [
   },
   {
     header: 'Average talk time',
-    accessorKey: 'avg_talk',
+    accessorKey: 'avgTalk',
     cell: ({ cell }) => (
       <RecordTableInlineCell className="font-medium">
         {formatSeconds(cell.getValue() as number)}

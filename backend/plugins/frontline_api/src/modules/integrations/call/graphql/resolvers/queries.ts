@@ -171,6 +171,12 @@ const callQueries = {
       if (parsedData.status === -6) {
         console.log('Status -6 detected. Clearing redis callCookie.');
         await redis.del('callCookie');
+        const statistics = await models.CallQueueStatistics.find({
+          integrationId,
+        });
+        if (statistics) {
+          return statistics;
+        }
         return [];
       }
     } catch (error) {
@@ -182,17 +188,53 @@ const callQueries = {
       const jsonObject = parser.parse(xmlData);
 
       const rootStatistics = jsonObject.root_statistics || {};
-      const queues = rootStatistics.queue || [];
-      if (integration.queues) {
-        const matchedQueues = queues.filter((queue) =>
-          integration.queues.includes(queue.queue.toString()),
-        );
+      const queues = (rootStatistics.queue as any) || [];
 
-        return matchedQueues;
+      if (queues && queues.length > 0) {
+        const normalizedQueues = queues?.map((q) => ({
+          queueChairman: q.queuechairman,
+          queue: q.queue,
+          totalCalls: q.total_calls,
+          answeredCalls: q.answered_calls,
+          answeredRate: q.answered_rate,
+          abandonedCalls: q.abandoned_calls,
+          avgWait: q.avg_wait,
+          avgTalk: q.avg_talk,
+          vqTotalCalls: q.vq_total_calls,
+          slaRate: q.sla_rate,
+          vqSlaRate: q.vq_sla_rate,
+          transferOutCalls: q.transfer_out_calls,
+          transferOutRate: q.transfer_out_rate,
+          abandonedRate: q.abandoned_rate,
+          integrationId,
+        }));
+
+        if (integration.queues && normalizedQueues.length > 0) {
+          const filteredQueues = normalizedQueues.filter((q) =>
+            integration.queues.includes(q.queue.toString()),
+          );
+
+          for (const queue of filteredQueues) {
+            await models.CallQueueStatistics.findOneAndUpdate(
+              { integrationId, queue: queue.queue },
+              { $set: queue },
+              { upsert: true, new: true },
+            );
+          }
+
+          return filteredQueues;
+        }
+        const stats = await models.CallQueueStatistics.find({ integrationId });
+        if (stats) {
+          return stats;
+        }
+        return [];
       }
-      return [];
     } catch (error) {
-      console.error('Error parsing response as XML:', error.message);
+      const stats = await models.CallQueueStatistics.find({ integrationId });
+      if (stats) {
+        return stats;
+      }
       return [];
     }
   },

@@ -102,6 +102,25 @@ export const types = `
     transferoutrate: String
   }
 
+  type CallQueueStatistics {
+    queuechairman: String
+    queue: Int
+    totalCalls: Int
+    answeredCalls: Int
+    answeredRate: Float
+    abandonedCalls: Int
+    avgWait: Float
+    avgTalk: Float
+    vqTotalCalls: Int
+    slaRate: Float
+    vqSlaRate: Float
+    transferOutCalls: Int
+    transferOutRate: Float
+    abandonedRate: Float
+    createdAt: String
+    updatedAt: String
+  }
+
   type CallAgent {
     extension: String
     member: [AgentMember]

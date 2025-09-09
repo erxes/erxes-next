@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 
 export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId } = useParams();
-  const { createCycle } = useCreateCycle();
+  const { createCycle, loading } = useCreateCycle();
   const form = useForm<ICycleInputType>({
     resolver: zodResolver(addCycleSchema),
     defaultValues: {
@@ -107,6 +107,7 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
           </Button>
           <Button
             type="submit"
+            disabled={loading}
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Save

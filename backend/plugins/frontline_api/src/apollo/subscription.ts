@@ -13,8 +13,6 @@ export default {
       waitingCallReceived(extension: String): String
       talkingCallReceived(extension: String): String
       agentCallReceived(extension: String): String
-
-      callStatistic(extension: String): CallStatistic
       queueRealtimeUpdate(extension: String): String
 		`,
   generateResolvers: (graphqlPubsub) => {
