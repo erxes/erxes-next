@@ -1,27 +1,28 @@
 import {
-  Combobox,
-  Command,
-  Filter,
-  useFilterContext,
-  useQueryState,
-  PopoverScoped,
-  cn,
-} from 'erxes-ui';
-import { useProjectsInline } from '@/project/hooks/useGetProjects';
-import React, { useState } from 'react';
-import {
-  SelectProjectContext,
-  useSelectProjectContext,
-} from '@/project/contexts/SelectProjectContext';
-import { IconClipboard } from '@tabler/icons-react';
-import { useParams } from 'react-router-dom';
-import {
   SelectOperationContent,
   SelectTriggerOperation,
   SelectTriggerVariant,
 } from '@/operation/components/SelectOperation';
-import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import {
+  SelectProjectContext,
+  useSelectProjectContext,
+} from '@/project/contexts/SelectProjectContext';
+import { useProjectsInline } from '@/project/hooks/useGetProjects';
 import { IProject } from '@/project/types';
+import { useUpdateTask } from '@/task/hooks/useUpdateTask';
+import { IconClipboard } from '@tabler/icons-react';
+import {
+  Combobox,
+  Command,
+  Filter,
+  PopoverScoped,
+  cn,
+  useFilterContext,
+  useQueryState,
+} from 'erxes-ui';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDebounce } from 'use-debounce';
 
 export const SelectProjectProvider = ({
   children,
@@ -38,11 +39,16 @@ export const SelectProjectProvider = ({
 }) => {
   const { teamId: _teamId } = useParams();
 
+  const [search, setSearch] = useState('');
+
+  const [debouncedSearch] = useDebounce(search, 500);
+
   const { projects, handleFetchMore, totalCount } = useProjectsInline({
     variables: {
       teamIds: [teamId || _teamId],
       active: true,
       taskId: taskId,
+      name: debouncedSearch,
     },
   });
 
@@ -54,6 +60,8 @@ export const SelectProjectProvider = ({
         projects: projects || [],
         handleFetchMore,
         totalCount,
+        search,
+        setSearch,
       }}
     >
       {children}
@@ -102,11 +110,16 @@ const SelectProjectCommandItem = ({
 };
 
 const SelectProjectContent = () => {
-  const { projects, handleFetchMore, totalCount } = useSelectProjectContext();
+  const { projects, handleFetchMore, totalCount, search, setSearch } =
+    useSelectProjectContext();
 
   return (
     <Command id="project-command-menu">
-      <Command.Input placeholder="Search project" />
+      <Command.Input
+        placeholder="Search project"
+        value={search}
+        onValueChange={setSearch}
+      />
       <Command.Empty>No project found</Command.Empty>
       <Command.List>
         <SelectProjectCommandItem
