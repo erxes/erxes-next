@@ -1,5 +1,5 @@
 import { FormType } from '@/documents/hooks/useDocumentForm';
-import { ScrollArea, Sidebar, useQueryState } from 'erxes-ui';
+import { Sidebar, useQueryState } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 import { DOCUMENTS_TYPES_SET } from '../constants';
 import { useDocumentsTypes } from '../hooks/useDocumentsTypes';
@@ -13,9 +13,9 @@ export const DocumentsTypes = () => {
   const { documentsTypes } = useDocumentsTypes();
 
   return (
-    <ScrollArea className="h-full" viewportClassName="[&>div]:block">
+    <Sidebar collapsible="none" className="border-r">
       <Sidebar.Group>
-        <Sidebar.GroupLabel>Document types</Sidebar.GroupLabel>
+        <Sidebar.GroupLabel className="py-5">Document types</Sidebar.GroupLabel>
         <Sidebar.GroupContent>
           <Sidebar.Menu>
             {documentsTypes.map(
@@ -41,6 +41,6 @@ export const DocumentsTypes = () => {
           </Sidebar.Menu>
         </Sidebar.GroupContent>
       </Sidebar.Group>
-    </ScrollArea>
+    </Sidebar>
   );
 };
