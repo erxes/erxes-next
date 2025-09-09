@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { toast, useQueryState } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { SAVE_DOCUMENT } from '../graphql/mutations';
+import { SAVE_DOCUMENT } from '../graphql/documentMutations';
 import { GET_DOCUMENT_DETAIL } from '../graphql/queries';
 
 export const useDocument = () => {

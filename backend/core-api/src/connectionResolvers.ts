@@ -337,7 +337,7 @@ export const loadClasses = (
 
   models.Documents = db.model<IDocumentDocument, IDocumentModel>(
     'documents',
-    loadDocumentClass(models),
+    loadDocumentClass(models, subdomain),
   );
 
   models.Automations = db.model<IAutomationDocument, IAutomationModel>(
