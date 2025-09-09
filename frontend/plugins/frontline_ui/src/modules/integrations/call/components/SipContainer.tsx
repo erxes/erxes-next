@@ -34,6 +34,10 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
     return <CallSelectConfig callUserIntegrations={callUserIntegrations} />;
   }
 
+  if (!callConfig.isAvailable) {
+    return null;
+  }
+
   const { wsServer, operators } = callConfig;
 
   const [host = 'call.erxes.io', port = '8089'] =

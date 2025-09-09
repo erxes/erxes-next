@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import {
   IconCalendarFilled,
   IconProgressCheck,

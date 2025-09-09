@@ -8,7 +8,6 @@ import {
   Badge,
   ChartContainer,
   HoverCard,
-  Separator,
 } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
