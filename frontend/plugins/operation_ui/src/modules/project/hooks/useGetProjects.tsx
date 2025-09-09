@@ -1,25 +1,25 @@
-import { QueryHookOptions, useQuery } from '@apollo/client';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 import {
   GET_PROJECTS,
   GET_PROJECTS_INLINE,
 } from '@/project/graphql/queries/getProjects';
+import { PROJECT_LIST_CHANGED } from '@/project/graphql/subscriptions/projectListChanged';
+import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { IProject } from '@/project/types';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
-  useRecordTableCursor,
-  mergeCursorData,
-  validateFetchMore,
   EnumCursorDirection,
   ICursorListResponse,
-  useMultiQueryState,
-  useToast,
   isUndefinedOrNull,
+  mergeCursorData,
+  useMultiQueryState,
+  useRecordTableCursor,
+  useToast,
+  validateFetchMore,
 } from 'erxes-ui';
-import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
-import { currentUserState } from 'ui-modules';
-import { useSetAtom, useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
-import { PROJECT_LIST_CHANGED } from '@/project/graphql/subscriptions/projectListChanged';
+import { currentUserState } from 'ui-modules';
 
 interface IProjectChanged {
   operationProjectListChanged: {
@@ -198,6 +198,7 @@ export const useProjectsInline = (
   >,
 ) => {
   const variables = useProjectsVariables(options?.variables);
+
   const { data, loading, fetchMore } = useQuery<
     ICursorListResponse<{
       _id: string;
@@ -218,6 +219,7 @@ export const useProjectsInline = (
     fetchMore({
       variables: {
         filter: {
+          ...variables,
           cursor:
             direction === EnumCursorDirection.FORWARD
               ? pageInfo?.endCursor
