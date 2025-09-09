@@ -1,22 +1,16 @@
-import { Model, Connection } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 
-import { IMainContext } from 'erxes-api-shared/core-types';
-import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
   emailDeliverySchema,
   IEmailDeliveryDocument,
-  INotificationConfigDocument,
   INotificationDocument,
-  IUserNotificationSettingsDocument,
-  notificationConfigSchema,
   notificationSchema,
-  userNotificationSettingsSchema,
 } from 'erxes-api-shared/core-modules';
+import { IMainContext } from 'erxes-api-shared/core-types';
+import { createGenerateModels } from 'erxes-api-shared/utils';
 
 export interface IModels {
   Notifications: Model<INotificationDocument>;
-  NotificationConfigs: Model<INotificationConfigDocument>;
-  UserNotificationSettings: Model<IUserNotificationSettingsDocument>;
   EmailDeliveries: Model<IEmailDeliveryDocument>;
 }
 
@@ -32,16 +26,6 @@ export const loadClasses = (db: Connection, subdomain: string): IModels => {
     INotificationDocument,
     Model<INotificationDocument>
   >('notifications', notificationSchema);
-
-  models.NotificationConfigs = db.model<
-    INotificationConfigDocument,
-    Model<INotificationConfigDocument>
-  >('notification_configs', notificationConfigSchema);
-
-  models.UserNotificationSettings = db.model<
-    IUserNotificationSettingsDocument,
-    Model<IUserNotificationSettingsDocument>
-  >('user_notification_settings', userNotificationSettingsSchema);
 
   models.EmailDeliveries = db.model<
     IEmailDeliveryDocument,

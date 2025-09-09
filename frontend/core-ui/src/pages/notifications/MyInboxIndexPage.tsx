@@ -1,11 +1,7 @@
 import { MyInboxLayout } from '@/notification/my-inbox/components/MyInboxLayout';
 import { NotificationContent } from '@/notification/my-inbox/components/NotificationContent';
 import { Notifications } from '@/notification/my-inbox/components/Notifications';
-import {
-  IconMailbox,
-  IconNotification,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconMailbox, IconNotification } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator, Sheet } from 'erxes-ui';
 import { useState } from 'react';
 import { Link } from 'react-router';
@@ -48,12 +44,6 @@ export const MyInboxIndexPage = () => {
               )}
             </Sheet.View>
           </Sheet>
-          <Button variant="outline" asChild>
-            <Link to="/settings/notification">
-              <IconSettings />
-              Go to settings
-            </Link>
-          </Button>
         </PageHeader.End>
       </PageHeader>
       <MyInboxLayout

@@ -30,6 +30,7 @@ export const useUnreadNotificationCount = () => {
         refetch();
       },
     });
+
     const notificationRead = subscribeToMore({
       document: gql(NOTIFICATION_READ),
       variables: { userId: currentUser ? currentUser._id : null },

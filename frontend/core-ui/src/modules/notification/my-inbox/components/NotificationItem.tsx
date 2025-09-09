@@ -94,7 +94,7 @@ export const NotificationItem = ({
 const NotificationItemRow = () => {
   const { id: selectedNotificationId } = useParams();
 
-  const { loading, ...notification } = useNotificationContext();
+  const { ...notification } = useNotificationContext();
 
   const { _id, title, isRead, priority, message, type } = notification || {};
 
@@ -158,7 +158,7 @@ const NotificationItemRow = () => {
 };
 
 const NotificationAvatar = ({ isSelected }: { isSelected: boolean }) => {
-  const { loading, ...notification } = useNotificationContext();
+  const { ...notification } = useNotificationContext();
   const { fromUser, kind } = notification;
 
   if (kind === INotificationKind.SYSTEM) {
@@ -231,7 +231,6 @@ const NotificationCheckedEffect = ({
     if (isChecked !== selectedNotifications.includes(_id || '')) {
       setIsChecked(selectedNotifications.includes(_id || ''));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNotifications]);
 
   return null;

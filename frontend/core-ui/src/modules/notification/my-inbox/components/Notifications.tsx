@@ -93,7 +93,6 @@ export const Notifications = () => {
           setNotificationsContainerScroll={setNotificationsContainerScroll}
           notifications={notifications}
           loading={loading}
-          totalCount={totalCount}
           pageInfo={pageInfo}
         />
       </div>
@@ -108,7 +107,6 @@ const NotificationList = ({
   setRerendered,
   notifications,
   loading,
-  totalCount,
   pageInfo,
 }: {
   inViewRef: (node?: Element | null) => void;
@@ -120,7 +118,6 @@ const NotificationList = ({
   >;
   notifications: INotification[];
   loading: boolean;
-  totalCount: number;
   pageInfo?: {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
@@ -128,7 +125,7 @@ const NotificationList = ({
     endCursor: string;
   };
 }) => {
-  if (totalCount === 0) {
+  if (!loading && notifications.length === 0) {
     return (
       <div className="h-full w-full flex flex-col gap-4 justify-center items-center text-accent-foreground">
         <div className="border border-dashed p-6 bg-sidebar rounded-xl">

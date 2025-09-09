@@ -13,9 +13,3 @@ export const NOTIFICATION_READ = `
 		notificationRead(userId: $userId)
   }
 `;
-
-export const NOTIFICATION_ARCHIVED = `
-	subscription notificationArchived($userId: String) {
-		notificationArchived(userId: $userId)
-  }
-`;

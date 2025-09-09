@@ -1,6 +1,5 @@
 import { NOTIFICATIONS } from '@/notification/my-inbox/graphql/notificationsQueries';
 import {
-  NOTIFICATION_ARCHIVED,
   NOTIFICATION_READ,
   NOTIFICATION_SUBSCRIPTION,
 } from '@/notification/my-inbox/graphql/notificationSubscriptions';
@@ -25,14 +24,6 @@ type NotificationInsertedData = {
 
 type NotificationRead = {
   notificationRead: {
-    userId: string;
-    notificationId?: string;
-    notificationIds?: string[];
-  };
-};
-
-type NotificationArchived = {
-  notificationArchived: {
     userId: string;
     notificationId?: string;
     notificationIds?: string[];
@@ -210,48 +201,11 @@ export const useNotifications = () => {
       },
     });
 
-    const notificationArchived = subscribeToMore<NotificationArchived>({
-      document: gql(NOTIFICATION_ARCHIVED),
-      variables: { userId: currentUser ? currentUser._id : null },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const { notificationId, notificationIds = [] } =
-          data?.notificationArchived || {};
-        const removedIds = notificationIds.length
-          ? notificationIds
-          : notificationId
-          ? [notificationId]
-          : [];
-        const updatedList = (prev?.notifications?.list || []).filter(
-          (notification) => !removedIds.includes(notification._id),
-        );
-        const updatedTotalCount = Math.max(
-          (prev?.notifications?.totalCount || 0) - removedIds.length,
-          0,
-        );
-
-        if (
-          updatedList.length === 0 &&
-          prev.notifications?.pageInfo?.endCursor
-        ) {
-          handleFetchMore({ direction: EnumCursorDirection.FORWARD });
-        }
-        return {
-          ...prev,
-          notifications: {
-            ...prev.notifications,
-            list: updatedList,
-            totalCount: updatedTotalCount,
-          },
-        };
-      },
-    });
-
     return () => {
-      notificationArchived();
       notificationRead();
       unsubscribe();
     };
-  }, []);
+  }, [status]);
 
   return {
     notifications: list,

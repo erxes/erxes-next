@@ -3,18 +3,13 @@ import { SystemNotificationContents } from '@/notification/my-inbox/components/c
 import { UnknownSystemNotificationContent } from '@/notification/my-inbox/components/contents/system/UnknownSystemNotificationContent';
 import { NoNotificationSelected } from '@/notification/my-inbox/components/NoNotificationSelected';
 import { NotificationContentSkeleton } from '@/notification/my-inbox/components/NotificationContentSkeleton';
-import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
 import { useNotification } from '@/notification/my-inbox/hooks/useNotification';
 import {
   INotification,
   INotificationKind,
 } from '@/notification/my-inbox/types/notifications';
-import {
-  IconMailCheck,
-  IconMailX,
-  IconNotificationOff,
-} from '@tabler/icons-react';
-import { Button, cn, Label, Tooltip } from 'erxes-ui';
+import { IconMailCheck, IconMailX } from '@tabler/icons-react';
+import { Tooltip } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PageHeader } from 'ui-modules';
@@ -22,15 +17,15 @@ import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsCompon
 
 export const NotificationContent = () => {
   const { notification, loading } = useNotification();
-  const { loading: archiveLoading, archiveNotification } =
-    useArchiveNotification();
 
   if (loading) {
     return <NotificationContentSkeleton />;
   }
+
   if (!notification) {
     return <NoNotificationSelected />;
   }
+
   const { emailDelivery } = notification || {};
 
   return (
@@ -58,14 +53,6 @@ export const NotificationContent = () => {
           </div>
         )}
         <PageHeader.End>
-          <Button
-            variant="outline"
-            disabled={archiveLoading}
-            onClick={() => archiveNotification(notification._id)}
-            className={cn({ 'animate-pulse': archiveLoading })}
-          >
-            <IconNotificationOff /> Archive
-          </Button>
           <ErrorBoundary
             FallbackComponent={({ error }) => (
               <p className="text-destructive font-semibold">{error?.message}</p>

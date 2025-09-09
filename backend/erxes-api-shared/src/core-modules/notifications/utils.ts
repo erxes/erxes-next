@@ -42,11 +42,6 @@ export const sendNotification = async (
     kind: kind ?? 'user',
   });
 
-  // sendWorkerQueue('notifications', 'notifications').add('notifications', {
-  //   subdomain,
-  //   data: { ...parsedData, userIds },
-  // });
-
   sendTRPCMessage({
     pluginName: 'core',
     method: 'mutation',

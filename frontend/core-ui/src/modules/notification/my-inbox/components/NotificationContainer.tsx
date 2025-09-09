@@ -20,7 +20,7 @@ export const NotificationContainer = ({
   const navigate = useNavigate();
 
   const setActiveNotification = useSetAtom(activeNotificationState);
-  const { loading, ...notification } = useNotificationContext();
+  const { ...notification } = useNotificationContext();
   const { _id, isRead } = notification || {};
 
   const handleClick = () => {
@@ -28,12 +28,15 @@ export const NotificationContainer = ({
     const newPath = `/my-inbox/${notification._id}${
       queryString ? `?${queryString}` : ''
     }`;
-    notification && setActiveNotification(notification);
+
+    if (notification) {
+      setActiveNotification(notification);
+    }
+
     onNotificationSelect?.();
 
-    if (id && _id !== id) {
-      markAsRead({ variables: { id } });
-    }
+    markAsRead({ variables: { id: _id } });
+
     navigate(newPath);
   };
 

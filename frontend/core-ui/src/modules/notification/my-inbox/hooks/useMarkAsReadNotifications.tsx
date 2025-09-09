@@ -5,14 +5,10 @@ import { toast, useMultiQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 
 export const useMarkAsReadNotifications = () => {
-  const [{ status, priority, type, createdAt, fromUserId }] =
-    useMultiQueryState<{
-      status: 'read' | 'unread' | 'all';
-      priority: 'low' | 'medium' | 'high' | 'urgent';
-      type: 'info' | 'success' | 'warning' | 'error';
-      createdAt: string;
-      fromUserId: string;
-    }>(['status', 'priority', 'type', 'createdAt', 'fromUserId']);
+  const [{ status }] = useMultiQueryState<{
+    status: 'read' | 'unread' | 'all';
+  }>(['status']);
+
   const [selectedNotifications, setSelectedNotifications] = useAtom(
     selectedNotificationsState,
   );
@@ -20,7 +16,8 @@ export const useMarkAsReadNotifications = () => {
   const [archive, { loading }] = useMutation(MARS_AS_READ_NOTIFICATIONS);
 
   const markAsNotifications = () => {
-    let variables: any = { ids: selectedNotifications };
+    const variables: any = { ids: selectedNotifications };
+
     archive({
       variables,
       onError: (error) => {
