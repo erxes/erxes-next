@@ -2,6 +2,7 @@ import {
   mutations as CallMutations,
   queries as CallQueries,
   types as CallTypes,
+  subscriptions as CallSubscriptions,
 } from './call';
 
 export const types = `
@@ -14,4 +15,8 @@ export const queries = `
 
 export const mutations = `
     ${CallMutations}
+  `;
+
+export const subscriptions = `
+    ${CallSubscriptions}
   `;

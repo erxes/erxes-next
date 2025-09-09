@@ -40,7 +40,7 @@ export const TurnOffButton = () => {
     }));
     setCallInfo((prev) => ({
       ...prev,
-      isUnregistered: isConnected ? true : false,
+      isUnregistered: isConnected ? false : true,
     }));
   };
 
