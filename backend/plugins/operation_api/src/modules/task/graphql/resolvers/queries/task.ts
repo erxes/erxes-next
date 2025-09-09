@@ -23,6 +23,9 @@ export const taskQueries = {
     if (filter.status) {
       filterQuery.status = filter.status;
     }
+    if (filter.statusType) {
+      filterQuery.statusType = filter.statusType;
+    }
 
     if (filter.priority) {
       filterQuery.priority = filter.priority;
