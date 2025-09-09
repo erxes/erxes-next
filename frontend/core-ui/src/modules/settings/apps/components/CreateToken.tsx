@@ -13,7 +13,7 @@ import {
   toast,
 } from 'erxes-ui';
 import React from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { SelectUsersGroup } from 'ui-modules';
 
 export const CreateToken = () => {
@@ -87,7 +87,7 @@ export const CreateToken = () => {
                 </Form.Item>
               )}
             />
-            {(allowAllPermission && null) || (
+            {(!allowAllPermission && (
               <Form.Field
                 control={control}
                 name="userGroupId"
@@ -105,7 +105,8 @@ export const CreateToken = () => {
                   </Form.Item>
                 )}
               />
-            )}
+            )) ||
+              null}
           </span>
           <span className="grid grid-cols-2 col-span-2">
             <Form.Field
@@ -124,7 +125,7 @@ export const CreateToken = () => {
                 </Form.Item>
               )}
             />
-            {(noExpire && null) || (
+            {(!noExpire && (
               <Form.Field
                 control={control}
                 name="expireDate"
@@ -142,7 +143,8 @@ export const CreateToken = () => {
                   </Form.Item>
                 )}
               />
-            )}
+            )) ||
+              null}
           </span>
         </fieldset>
         <div role="group" className="w-full flex items-center pt-6">

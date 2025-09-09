@@ -14,9 +14,11 @@ const RemoveButton = ({ cell }: { cell: Cell<IApp, unknown> }) => {
   return (
     <Button
       variant="outline"
-      size={'icon'}
+      size="icon"
+      aria-label={`Remove ${name}`}
+      title="Remove app"
       onClick={() =>
-        confirm({
+        void confirm({
           message: `Are you sure you want to remove the app '${name}'`,
           options: confirmOptions,
         }).then(() =>
@@ -25,7 +27,13 @@ const RemoveButton = ({ cell }: { cell: Cell<IApp, unknown> }) => {
             onCompleted: () => {
               toast({
                 title: `App '${name}' removed`,
-                variant: 'default',
+              });
+            },
+            onError: (e) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+                variant: 'destructive',
               });
             },
           }),
