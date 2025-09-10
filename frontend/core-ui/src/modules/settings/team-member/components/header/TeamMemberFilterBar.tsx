@@ -33,21 +33,6 @@ export const TeamMemberFilterBar = () => {
             </Filter.View>
           </Filter.Dialog>
           <Filter.SearchValueBarItem />
-          {!!branchIds && (
-            <SelectBranches.FilterBar
-              mode={'multiple'}
-              filterKey="branchIds"
-              label="Branches"
-            />
-          )}
-          {!!departmentIds && (
-            <SelectDepartments.FilterBar
-              mode={'multiple'}
-              filterKey="departmentIds"
-              label="Departments"
-            />
-          )}
-          {!!unitId && <SelectUnit.FilterBar />}
           {!!brandIds && (
             <SelectBrands.FilterBar
               mode="multiple"

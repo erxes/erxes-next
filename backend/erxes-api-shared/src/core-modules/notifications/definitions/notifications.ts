@@ -29,7 +29,7 @@ export interface INotificationDocument extends Document {
   createdAt: Date;
   expiresAt?: Date; // Auto-cleanup old notifications
   updatedAt?: Date;
-  isArchived: Boolean;
+  isArchived: boolean;
   kind: 'system' | 'user';
 }
 

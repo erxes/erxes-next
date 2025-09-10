@@ -21,7 +21,7 @@ export const InboxActions = () => {
         )}
         asChild
       >
-        <Link to="/inbox">
+        <Link to="/frontline/inbox">
           <IconRefresh className="text-accent-foreground" />
           Reset filters
         </Link>

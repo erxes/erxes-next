@@ -14,8 +14,15 @@ export const taskMutations = {
       subdomain,
     });
 
-    graphqlPubsub.publish('operationTaskChanged', {
+    graphqlPubsub.publish(`operationTaskChanged:${task._id}`, {
       operationTaskChanged: {
+        type: 'create',
+        task,
+      },
+    });
+
+    graphqlPubsub.publish('operationTaskListChanged', {
+      operationTaskListChanged: {
         type: 'create',
         task,
       },
@@ -34,9 +41,15 @@ export const taskMutations = {
       userId: user._id,
       subdomain,
     });
-
-    graphqlPubsub.publish('operationTaskChanged', {
+    graphqlPubsub.publish(`operationTaskChanged:${updatedTask._id}`, {
       operationTaskChanged: {
+        type: 'update',
+        task: updatedTask,
+      },
+    });
+
+    graphqlPubsub.publish('operationTaskListChanged', {
+      operationTaskListChanged: {
         type: 'update',
         task: updatedTask,
       },
@@ -48,8 +61,15 @@ export const taskMutations = {
   removeTask: async (_parent: undefined, { _id }, { models }: IContext) => {
     const deletedTask = await models.Task.removeTask(_id);
 
-    graphqlPubsub.publish('operationTaskChanged', {
+    graphqlPubsub.publish(`operationTaskChanged:${_id}`, {
       operationTaskChanged: {
+        type: 'delete',
+        task: deletedTask,
+      },
+    });
+
+    graphqlPubsub.publish('operationTaskListChanged', {
+      operationTaskListChanged: {
         type: 'delete',
         task: deletedTask,
       },

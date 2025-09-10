@@ -29,7 +29,7 @@ export const MemberDetailLayout = ({
       <Sheet.Content>
         {otherState === 'loading' && (
           <div className="flex items-center justify-center h-full">
-            <Spinner size="large" />
+            <Spinner size={'lg'} />
           </div>
         )}
         {otherState === 'not-found' && (

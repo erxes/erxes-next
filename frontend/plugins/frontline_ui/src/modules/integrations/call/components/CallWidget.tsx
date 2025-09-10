@@ -4,7 +4,13 @@ import { Button, DropdownMenu } from 'erxes-ui';
 import { CallWidgetDraggableRoot } from '@/integrations/call/components/CallWidgetDraggable';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
-import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
+import {
+  CSSProperties,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   CallDirectionEnum,
   CallStatusEnum,
@@ -19,9 +25,24 @@ import {
   IncomingCall,
 } from '@/integrations/call/components/IncomingCall';
 import { CallTriggerContent } from '@/integrations/call/components/CallTriggerContent';
+import {
+  currentCallConversationIdAtom,
+  historyIdAtom,
+} from '@/integrations/call/states/callStates';
 
 export const CallWidgetContent = () => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
+  const setHistoryId = useSetAtom(historyIdAtom);
+  const setCurrentCallConversationId = useSetAtom(
+    currentCallConversationIdAtom,
+  );
+
+  useEffect(() => {
+    if (sipState.callStatus === CallStatusEnum.ENDED) {
+      setHistoryId(null);
+      setCurrentCallConversationId(null);
+    }
+  }, [sipState.callStatus, setHistoryId, setCurrentCallConversationId]);
 
   if (sipState.callStatus === CallStatusEnum.IDLE) {
     return <CallTabs keypad={<Dialpad />} />;
@@ -66,12 +87,26 @@ export const CallWidget = () => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number | undefined>();
   const open = useAtomValue(callWidgetOpenAtom);
+  const sipState = useAtomValue(sipStateAtom);
+  const setOpen = useSetAtom(callWidgetOpenAtom);
 
   useLayoutEffect(() => {
     if (popoverContentRef.current) {
       setContentHeight(popoverContentRef.current.offsetHeight);
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      sipState.callDirection === CallDirectionEnum.INCOMING &&
+      sipState.callStatus === CallStatusEnum.STARTING
+    ) {
+      setOpen(true);
+    }
+    if (sipState.callStatus === CallStatusEnum.IDLE) {
+      setOpen(false);
+    }
+  }, [sipState.callDirection, sipState.callStatus, setOpen]);
 
   return (
     <>
@@ -90,7 +125,7 @@ export const CallWidget = () => {
                   '--radix-popper-content-height': contentHeight,
                 } as CSSProperties
               }
-              className="z-[100] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
+              className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
             >
               <CallWidgetContent />
             </PopoverPrimitive.Content>

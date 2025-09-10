@@ -76,8 +76,6 @@ export const taskCursorPaginationWithAggregation = async ({
   const hasMore = items.length > limit;
   let list = hasMore ? items.slice(0, limit) : items;
 
-  //   console.log(items);
-
   if (direction === 'backward') {
     list = list.reverse();
   }

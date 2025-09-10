@@ -124,7 +124,7 @@ const PhoneItem = forwardRef<
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
       )}
-      <TextOverflowTooltip value={phone} />
+      <TextOverflowTooltip value={formatPhoneNumber({ value: phone || '' })} />
       {isPrimary && <IconBookmarkFilled className="text-primary" />}
     </Button>
   );

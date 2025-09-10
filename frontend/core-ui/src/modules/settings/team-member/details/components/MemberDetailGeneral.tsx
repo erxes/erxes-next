@@ -54,7 +54,7 @@ export const MemberDetailGeneral = () => {
             </Button>
           </FullNameField>
         </div>
-        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto ">
+        {/* <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto ">
           <Button
             variant="outline"
             className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"
@@ -80,9 +80,9 @@ export const MemberDetailGeneral = () => {
           >
             <IconPhone /> Call
           </Button>
-        </div>
+        </div> */}
       </div>
-      <fieldset className="space-y-2">
+      {/* <fieldset className="space-y-2">
         <Label asChild>
           <legend>Branches</legend>
         </Label>
@@ -128,7 +128,7 @@ export const MemberDetailGeneral = () => {
             });
           }}
         />
-      </fieldset>
+      </fieldset> */}
     </div>
   );
 };

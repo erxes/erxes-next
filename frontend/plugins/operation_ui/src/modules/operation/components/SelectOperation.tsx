@@ -26,7 +26,9 @@ export const SelectTriggerOperation = ({
 }) => {
   if (variant === SelectTriggerVariant.TABLE) {
     return (
-      <RecordTableInlineCell.Trigger>{children}</RecordTableInlineCell.Trigger>
+      <RecordTableInlineCell.Trigger className="gap-1">
+        {children}
+      </RecordTableInlineCell.Trigger>
     );
   }
   if (variant === SelectTriggerVariant.CARD) {
@@ -45,7 +47,7 @@ export const SelectTriggerOperation = ({
   }
   if (variant === SelectTriggerVariant.FILTER) {
     return (
-      <Popover.Trigger>
+      <Popover.Trigger asChild>
         <Filter.BarButton>{children}</Filter.BarButton>
       </Popover.Trigger>
     );
@@ -54,7 +56,7 @@ export const SelectTriggerOperation = ({
   if (variant === SelectTriggerVariant.FORM) {
     return (
       <Form.Control>
-        <Combobox.TriggerBase className="w-fit h-7 font-medium">
+        <Combobox.TriggerBase className="w-fit h-7 font-medium max-w-64">
           {children}
         </Combobox.TriggerBase>
       </Form.Control>

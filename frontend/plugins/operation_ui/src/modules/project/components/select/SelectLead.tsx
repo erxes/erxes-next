@@ -246,6 +246,7 @@ const SelectLeadFormValue = () => {
       members={members}
       updateMembers={setMembers}
       className="font-medium text-base text-foreground"
+      placeholder="Select lead"
     />
   );
 };
@@ -270,12 +271,9 @@ export const SelectLeadFormItem = React.forwardRef<
         <Form.Control>
           <Combobox.TriggerBase
             ref={ref}
-            className={cn('w-full shadow-xs', className)}
-            asChild
+            className={cn('w-full h-7', className)}
           >
-            <Button variant="secondary" className="h-7">
-              <SelectLeadFormValue />
-            </Button>
+            <SelectLeadFormValue />
           </Combobox.TriggerBase>
         </Form.Control>
         <Combobox.Content>

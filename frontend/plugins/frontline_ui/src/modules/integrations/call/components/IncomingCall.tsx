@@ -14,7 +14,6 @@ import { getPluginAssetsUrl } from 'erxes-ui';
 export const IncomingCallAudio = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const sip = useAtomValue(sipStateAtom);
-
   useEffect(() => {
     if (
       sip?.callStatus === CallStatusEnum.STARTING &&
@@ -23,7 +22,7 @@ export const IncomingCallAudio = () => {
       if (audioRef.current) {
         audioRef.current.src = getPluginAssetsUrl(
           'frontline',
-          '/sound/incomingRingtone.mp3',
+          'sound/incoming.mp3',
         );
         audioRef.current.loop = true;
         audioRef.current.play().catch(() => {

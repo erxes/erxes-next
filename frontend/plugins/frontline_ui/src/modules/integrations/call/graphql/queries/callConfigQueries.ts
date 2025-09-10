@@ -100,7 +100,7 @@ export const CALL_HISTORIES = gql`
       createdAt
       createdBy
       modifiedBy
-      extentionNumber
+      extensionNumber
       conversationId
       customerId
       customer {

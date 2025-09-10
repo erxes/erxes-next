@@ -1,10 +1,9 @@
+import { useSip } from '@/integrations/call/components/SipProvider';
 import { usePauseAgent } from '@/integrations/call/hooks/usePauseAgent';
 import {
-  callConfigAtom,
   callInfoAtom,
   sipStateAtom,
 } from '@/integrations/call/states/sipStates';
-import { ICallConfigDoc } from '@/integrations/call/types/callTypes';
 import { SipStatusEnum } from '@/integrations/call/types/sipTypes';
 import {
   IconPlayerPause,
@@ -26,21 +25,16 @@ export const CallSipActions = () => {
 
 export const TurnOffButton = () => {
   const sipState = useAtomValue(sipStateAtom);
-  const setConfig = useSetAtom(callConfigAtom);
   const setCallInfo = useSetAtom(callInfoAtom);
+  const { unregisterSip, registerSip } = useSip();
 
-  const isConnected =
-    sipState?.sipStatus === SipStatusEnum.CONNECTED ||
-    sipState?.sipStatus === SipStatusEnum.REGISTERED;
+  const isConnected = sipState?.sipStatus === SipStatusEnum.REGISTERED;
 
   const handleConnection = () => {
-    setConfig((prev) => ({
-      ...(prev || ({} as ICallConfigDoc)),
-      isAvailable: isConnected ? false : true,
-    }));
+    isConnected ? unregisterSip() : registerSip();
     setCallInfo((prev) => ({
       ...prev,
-      isUnregistered: isConnected ? true : false,
+      isUnregistered: isConnected ? false : true,
     }));
   };
 
@@ -70,26 +64,11 @@ export const SipPauseButton = () => {
 
 export const SipStatusBadge = () => {
   const sipState = useAtomValue(sipStateAtom);
-  const setCallInfo = useSetAtom(callInfoAtom);
-  const setCallConfig = useSetAtom(callConfigAtom);
 
-  const isConnected =
-    sipState?.sipStatus === SipStatusEnum.CONNECTED ||
-    sipState?.sipStatus === SipStatusEnum.REGISTERED;
-
-  const handleConnection = () => {
-    setCallInfo((prev) => ({ ...prev, isUnregistered: !isConnected }));
-    setCallConfig((prev) => ({
-      ...(prev || ({} as ICallConfigDoc)),
-      isAvailable: isConnected,
-    }));
-  };
+  const isConnected = sipState?.sipStatus === SipStatusEnum.REGISTERED;
 
   return (
-    <Badge
-      variant={isConnected ? 'success' : 'destructive'}
-      onClick={handleConnection}
-    >
+    <Badge variant={isConnected ? 'success' : 'destructive'}>
       {isConnected ? 'Online' : 'Offline'}
     </Badge>
   );

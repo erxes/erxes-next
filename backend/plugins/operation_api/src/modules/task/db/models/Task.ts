@@ -8,8 +8,8 @@ import {
   ITaskUpdate,
 } from '@/task/@types/task';
 import { createActivity } from '@/activity/utils/createActivity';
-import { createTaskNotification } from '@/task/notificationUtils';
 import { STATUS_TYPES } from '@/status/constants/types';
+import { createNotifications } from '~/utils/notifications';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
@@ -127,12 +127,17 @@ export const loadTaskClass = (models: IModels) => {
         number: nextNumber,
       });
 
-      await createTaskNotification({
-        task,
-        doc,
-        userId,
-        subdomain,
-      });
+      if (doc.assigneeId && doc.assigneeId !== userId) {
+        await createNotifications({
+          contentType: 'task',
+          contentTypeId: task._id,
+          fromUserId: userId,
+          subdomain,
+          notificationType: 'taskAssignee',
+          userIds: [doc.assigneeId],
+          action: 'assignee',
+        });
+      }
 
       return task;
     }
@@ -215,12 +220,17 @@ export const loadTaskClass = (models: IModels) => {
         contentId: task._id,
       });
 
-      await createTaskNotification({
-        task,
-        doc,
-        userId,
-        subdomain,
-      });
+      if (doc.assigneeId && doc.assigneeId !== userId) {
+        await createNotifications({
+          contentType: 'task',
+          contentTypeId: task._id,
+          fromUserId: userId,
+          subdomain,
+          notificationType: 'note',
+          userIds: [doc.assigneeId],
+          action: 'assignee',
+        });
+      }
 
       return models.Task.findOneAndUpdate(
         { _id },

@@ -29,8 +29,8 @@ export const ConversationHeader = () => {
         )}
         {!loading ? (
           <CustomersInline
-            customers={customer ? [customer] : []}
-            customerIds={customerId ? [customerId] : []}
+            customers={customer ? [customer] : undefined}
+            customerIds={customerId ? [customerId] : undefined}
             className="text-sm text-foreground flex-none"
             placeholder="anonymous customer"
           />

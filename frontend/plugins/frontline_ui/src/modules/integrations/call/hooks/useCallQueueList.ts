@@ -14,7 +14,7 @@ export const useCallQueueList = (
     }
   >,
 ) => {
-  const { data, loading, error } = useQuery(CALL_QUEUE_LIST, {
+  const { data, loading, error, subscribeToMore } = useQuery(CALL_QUEUE_LIST, {
     ...options,
   });
 
@@ -24,5 +24,6 @@ export const useCallQueueList = (
     callQueueList,
     loading,
     error,
+    subscribeToMore,
   };
 };

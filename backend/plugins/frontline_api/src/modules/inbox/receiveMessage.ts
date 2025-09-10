@@ -25,8 +25,10 @@ export const receiveInboxMessage = async (
   const { action, metaInfo, payload } = data;
   const { Integrations, ConversationMessages, Conversations } =
     await generateModels(subdomain);
-
-  const doc = JSON.parse(payload || '{}');
+  let doc = JSON.parse(JSON.stringify(payload) || '{}');
+  if (typeof doc === 'string') {
+    doc = JSON.parse(doc);
+  }
 
   if (action === 'get-create-update-customer') {
     const integration = await Integrations.findOne({
@@ -38,7 +40,7 @@ export const receiveInboxMessage = async (
     }
 
     const { primaryEmail, primaryPhone } = doc;
-
+    console.log('doc:', doc);
     let customer;
 
     const getCustomer = async (selector) => {
@@ -52,7 +54,9 @@ export const receiveInboxMessage = async (
     };
     if (primaryPhone) {
       customer = await getCustomer({ customerPrimaryPhone: primaryPhone });
+      console.log('+++:', customer, 'customer 3');
       if (customer) {
+        console.log('custoemr 4:', customer);
         await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation', // this is a mutation, not a query
@@ -65,7 +69,7 @@ export const receiveInboxMessage = async (
             },
           },
         });
-
+        console.log('customer._id:', customer._id);
         return sendSuccess({ _id: customer._id });
       }
     }
@@ -94,7 +98,7 @@ export const receiveInboxMessage = async (
   }
 
   if (action === 'create-or-update-conversation') {
-    const { conversationId, content, owner, updatedAt } = doc;
+    const { conversationId, content, owner, updatedAt, integrationId } = doc;
     let user;
 
     if (owner) {
@@ -116,13 +120,14 @@ export const receiveInboxMessage = async (
     if (conversationId) {
       if (!assignedUserId) {
         const existingConversation = await Conversations.findOne({
-          _id: conversationId,
-        });
+          $and: [{ _id: conversationId }, { integrationId: integrationId }],
+        }).lean();
 
         assignedUserId = existingConversation?.assignedUserId || null;
       }
+
       const conversation = await Conversations.findOne({
-        _id: conversationId,
+        $and: [{ _id: conversationId }, { integrationId: integrationId }],
       }).lean();
 
       if (conversation) {

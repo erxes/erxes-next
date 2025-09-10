@@ -9,6 +9,8 @@ interface SelectProjectContextType {
   }[];
   handleFetchMore: () => void;
   totalCount?: number;
+  search?: string;
+  setSearch?: (search: string) => void;
 }
 
 export const SelectProjectContext = createContext<

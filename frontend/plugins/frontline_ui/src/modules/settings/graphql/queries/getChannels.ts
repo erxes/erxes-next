@@ -10,7 +10,6 @@ const GET_CHANNELS = gql`
       memberIds
       name
       openConversationCount
-      userId
     }
     channelsTotalCount
   }
@@ -26,7 +25,6 @@ const GET_CHANNEL_DETAIL_BY_ID = gql`
       memberIds
       name
       openConversationCount
-      userId
     }
   }
 `;

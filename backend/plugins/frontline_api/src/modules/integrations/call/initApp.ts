@@ -1,7 +1,7 @@
 import * as bodyParser from 'body-parser';
 import crypto from 'crypto';
 
-import { getSubdomain, graphqlPubsub } from 'erxes-api-shared/utils';
+import { getEnv, getSubdomain, graphqlPubsub } from 'erxes-api-shared/utils';
 import { generateModels } from '~/connectionResolvers';
 import { debugError } from '~/modules/inbox/utils';
 import { receiveCdr } from '~/modules/integrations/call/services/cdrServices';
@@ -65,45 +65,20 @@ const initCallApp = async (app) => {
     next();
   });
 
-  // init bots
-  app.post('/call/receiveWaitingCall', authenticateApi, async (req, res) => {
+  app.post('/call/queueRealtimeUpdate', authenticateApi, async (req, res) => {
     try {
-      const data = req.body;
-      const history = data.history;
+      const VERSION = getEnv({ name: 'VERSION' });
+      if (!VERSION || (VERSION && VERSION === 'saas')) {
+        const data = req.body;
+        const history = data.history;
 
-      graphqlPubsub.publish(`waitingCallReceived`, {
-        waitingCallReceived: history,
-      });
-      res.status(200).json({ message: 'Call received successfully' });
-    } catch (error) {
-      console.error('Error receiving waiting call:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
-  app.post('/call/receiveTalkingCall', authenticateApi, async (req, res) => {
-    try {
-      const data = req.body;
-      const history = data.history;
-      graphqlPubsub.publish(`talkingCallReceived`, {
-        talkingCallReceived: history,
-      });
-      res.status(200).json({ message: 'Call received successfully' });
-    } catch (error) {
-      console.error('Error receiving talking call:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
-  app.post('/call/receiveAgents', authenticateApi, async (req, res) => {
-    try {
-      const data = req.body;
-      const history = data.history;
-
-      graphqlPubsub.publish(`agentCallReceived`, {
-        agentCallReceived: history,
-      });
-      res.status(200).json({ message: 'Call Agents received successfully' });
+        graphqlPubsub.publish(`queueRealtimeUpdate`, {
+          queueRealtimeUpdate: history,
+        });
+        res
+          .status(200)
+          .json({ message: 'Call dashboard data received successfully' });
+      }
     } catch (error) {
       console.error('Error receiving agent call:', error);
       res.status(500).json({ error: 'Internal Server Error' });

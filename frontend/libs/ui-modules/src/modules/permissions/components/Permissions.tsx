@@ -577,7 +577,7 @@ export const PermissionsFix = () => {
         });
       }}
     >
-      {loading ? <Spinner size={'small'} /> : <IconTool />}
+      {loading ? <Spinner size={'sm'} /> : <IconTool />}
       Fix Permission
     </Button>
   );

@@ -35,7 +35,7 @@ const NotificationActionsSlot = () => {
 
     return createPortal(
       <Button variant="outline" asChild>
-        <Link to={`/inbox?conversationId=${conversationId}`}>
+        <Link to={`/frontline/inbox?conversationId=${conversationId}`}>
           Go to Conversation
           <IconExternalLink />
         </Link>

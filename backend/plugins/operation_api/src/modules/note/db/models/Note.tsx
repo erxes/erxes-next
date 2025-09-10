@@ -82,6 +82,7 @@ export const loadNoteClass = (models: IModels) => {
           subdomain,
           notificationType: 'note',
           userIds,
+          action: 'note',
         });
       }
 

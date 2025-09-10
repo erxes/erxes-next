@@ -43,7 +43,7 @@ export const TasksRecordTable = () => {
     <div className="flex flex-col overflow-hidden h-full">
       <RecordTable.Provider
         columns={tasksColumns(teams, team)}
-        data={tasks || [{}]}
+        data={tasks || (loading ? [{}] : [])}
         className="m-3 h-full"
         stickyColumns={['checkbox', 'name']}
       >

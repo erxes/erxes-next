@@ -82,7 +82,7 @@ const DateSelectValue = ({ placeholder }: { placeholder?: string }) => {
 
   return (
     <span className="flex items-center justify-center gap-2">
-      <IconCalendarTime className={`size-4`} />
+      <IconCalendarTime className="size-4 text-muted-foreground" />
       {format(value, 'MMM d, yyyy')}
     </span>
   );
@@ -112,7 +112,7 @@ const DateSelectFormItemValue = ({
 
   return (
     <span className="flex items-center justify-center gap-2">
-      <IconCalendarTime className={`size-4`} />
+      <IconCalendarTime className="size-4 text-muted-foreground" />
       <p className="font-medium text-base text-foreground">
         {format(value, 'MMM d, yyyy')}
       </p>
