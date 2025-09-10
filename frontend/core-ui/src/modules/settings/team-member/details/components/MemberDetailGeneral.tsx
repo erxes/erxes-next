@@ -1,17 +1,12 @@
 import { IconDeviceMobileMessage, IconMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
-import { Avatar, Button, Label, readImage } from 'erxes-ui';
+import { Avatar, Button, FullNameValue, Label, readImage } from 'erxes-ui';
 import { FullNameField } from 'erxes-ui';
 import { useUserEdit } from '../../hooks/useUserEdit';
 import { useUserDetail } from '@/settings/team-member/hooks/useUserDetail';
 import { UsersHotKeyScope } from '@/settings/team-member/types';
-import {
-  SelectBranches,
-  SelectCompany,
-  SelectDepartments,
-  SelectPositions,
-} from 'ui-modules';
+import { SelectBranches, SelectDepartments, SelectPositions } from 'ui-modules';
 
 export const MemberDetailGeneral = () => {
   const { userDetail } = useUserDetail();
@@ -38,7 +33,7 @@ export const MemberDetailGeneral = () => {
                 ? `${middleName || ''} ${lastName || ''}`
                 : lastName || ''
             }
-            onSave={(_firstName, _lastName) => {
+            onValueChange={(_firstName, _lastName) => {
               if (_firstName !== firstName || _lastName !== lastName) {
                 const { __typename, ...rest } = details || {};
                 usersEdit({
@@ -53,9 +48,13 @@ export const MemberDetailGeneral = () => {
                 });
               }
             }}
-          />
+          >
+            <Button variant="ghost" className="text-base font-semibold">
+              <FullNameValue />
+            </Button>
+          </FullNameField>
         </div>
-        <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto ">
+        {/* <div className="inline-flex rounded-lg bg-muted -space-x-px lg:ml-auto ">
           <Button
             variant="outline"
             className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 border font-semibold text-sm"
@@ -81,9 +80,9 @@ export const MemberDetailGeneral = () => {
           >
             <IconPhone /> Call
           </Button>
-        </div>
+        </div> */}
       </div>
-      <fieldset className="space-y-2">
+      {/* <fieldset className="space-y-2">
         <Label asChild>
           <legend>Branches</legend>
         </Label>
@@ -129,7 +128,7 @@ export const MemberDetailGeneral = () => {
             });
           }}
         />
-      </fieldset>
+      </fieldset> */}
     </div>
   );
 };

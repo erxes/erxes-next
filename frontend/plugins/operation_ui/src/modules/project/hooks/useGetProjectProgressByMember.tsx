@@ -2,7 +2,7 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECT_PROGRESS_BY_MEMBER } from '@/project/graphql/queries/getProjectProgressByMember';
 import { IProjectProgressByMember } from '@/project/types';
 import { useEffect } from 'react';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 
 interface IGetProjectQueryResponse {
   getProjectProgressByMember: IProjectProgressByMember[];
@@ -17,7 +17,7 @@ export const useGetProjectProgressByMember = (options: QueryHookOptions) => {
 
   useEffect(() => {
     const unsubscribe = subscribeToMore({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: { projectId: options.variables?._id } },
       updateQuery: () => {
         refetch();

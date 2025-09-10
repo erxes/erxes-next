@@ -45,7 +45,7 @@ export const CallWidgetDraggable = memo(
           <Button
             variant="secondary"
             size="icon"
-            className="fixed bottom-10 z-50 right-10 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
+            className="fixed bottom-10 right-10 size-12 [&>svg]:size-6 rounded-full bg-background shadow-lg hover:bg-background"
             onClick={() => setOpen(!open)}
             {...listeners}
             {...attributes}

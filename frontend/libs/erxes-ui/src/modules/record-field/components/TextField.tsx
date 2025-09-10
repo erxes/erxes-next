@@ -4,6 +4,7 @@ import {
   TextOverflowTooltip,
   Popover,
 } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table';
 import React, { useState } from 'react';
 
@@ -66,7 +67,11 @@ export const TextField = React.forwardRef<
           }
         }}
       >
-        <RecordTableInlineCell.Trigger {...props} ref={ref}>
+        <RecordTableInlineCell.Trigger
+          className={cn('shadow-xs rounded-sm', props.className)}
+          {...props}
+          ref={ref}
+        >
           {children}
           <TextOverflowTooltip value={editingValue ?? placeholder} />
         </RecordTableInlineCell.Trigger>

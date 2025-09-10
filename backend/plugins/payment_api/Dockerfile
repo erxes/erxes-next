@@ -27,11 +27,6 @@ ENV NX_DAEMON=false
 RUN npx nx build:packageJson payment_api
 RUN npx nx build payment_api
 
-# --- Add widget build ---
-WORKDIR /app/backend/plugins/payment_api/src/widget
-RUN pnpm install
-RUN pnpm run build
-
 # Final stage: Run the application
 FROM --platform=linux/amd64 node:22-alpine as payment_api
 

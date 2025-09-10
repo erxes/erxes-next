@@ -12,6 +12,8 @@ import { IModels, generateModels } from '~/connectionResolvers';
 import { getEnv } from 'erxes-api-shared/utils';
 import { ICallIntegrationDocument } from '~/modules/integrations/call/@types/integrations';
 import { receiveInboxMessage } from '~/modules/inbox/receiveMessage';
+import { ICallHistory } from '~/modules/integrations/call/@types/histories';
+import { ICallCdrDocument } from '~/modules/integrations/call/@types/cdrs';
 
 const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET || 'secret';
 const MAX_RETRY_COUNT = 3;
@@ -143,9 +145,9 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
   } = process.env;
   // disable on production !!!
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // }
 
   // Validate credentials
   if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
@@ -486,6 +488,8 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     formData.append('file', Buffer.from(fileBuffer), {
       filename: sanitizedFileName,
     });
+
+    console.log(uploadUrl, 'uploadUrl');
 
     // Upload file to destination
     const uploadResponse = await fetch(uploadUrl, {
@@ -974,4 +978,151 @@ const updateErxesConversation = async (subdomain, payload) => {
   };
 
   return await receiveInboxMessage(subdomain, data);
+};
+
+// Enhanced WebSocket Handler with improved publishing
+export function enhancedHandleCallEvent(json, graphqlPubsub) {
+  try {
+    if (json.type !== 'request') return;
+
+    const messages = Array.isArray(json.message)
+      ? json.message
+      : [json.message];
+
+    for (const message of messages) {
+      const { eventname, eventbody } = message;
+
+      console.log(`📞 ${eventname} EVENT:`, eventbody);
+
+      switch (eventname) {
+        case 'CallQueueStatus':
+          handleCallQueueStatus(eventbody, graphqlPubsub);
+          break;
+
+        case 'ActiveCallStatus':
+          handleActiveCallStatus(eventbody, graphqlPubsub);
+          break;
+
+        default:
+          console.log(`⚠️ Unhandled event: ${eventname}`);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error handling call event:', error);
+  }
+}
+
+function handleCallQueueStatus(eventBody, graphqlPubsub) {
+  const events = Array.isArray(eventBody) ? eventBody : [eventBody];
+
+  events.forEach((item) => {
+    const { extension } = item;
+
+    if (item.member) {
+      // Agent-specific events
+      console.log('📱 Agent event:', item);
+
+      // Publish to specific extension channel
+      if (extension) {
+        graphqlPubsub.publish(`callAgent_${extension}`, {
+          callStatistic: item,
+        });
+      }
+
+      // Publish to general channel
+      graphqlPubsub.publish('callAgent', {
+        callStatistic: item,
+      });
+
+      // Publish combined queue status
+      if (extension) {
+        graphqlPubsub.publish(`queueStatus_${extension}`, {
+          callStatistic: item,
+        });
+      }
+    } else {
+      // Queue statistics events
+      console.log('📊 Statistics event:', item);
+
+      // Publish to specific extension channel
+      if (extension) {
+        graphqlPubsub.publish(`callStatistic_${extension}`, {
+          callStatistic: item,
+        });
+      }
+
+      // Publish to general channel
+      graphqlPubsub.publish('callStatistic', {
+        callStatistic: item,
+      });
+
+      // Publish combined queue status
+      if (extension) {
+        graphqlPubsub.publish(`queueStatus_${extension}`, {
+          callStatistic: item,
+        });
+      }
+    }
+  });
+}
+
+function handleActiveCallStatus(eventBody, graphqlPubsub) {
+  const events = Array.isArray(eventBody) ? eventBody : [eventBody];
+
+  events.forEach((callEvent) => {
+    console.log('☎️ Active call event:', callEvent);
+
+    const { feature_calleenum, action, state, callernum, connectednum } =
+      callEvent;
+
+    // Publish to specific extension if available
+    if (feature_calleenum) {
+      graphqlPubsub.publish(`activeCallStatus_${feature_calleenum}`, {
+        activeCallStatus: callEvent,
+      });
+    }
+
+    // Publish to general channel
+    graphqlPubsub.publish('activeCallStatus', {
+      activeCallStatus: callEvent,
+    });
+
+    // Log call flow for debugging
+    switch (action) {
+      case 'add':
+        console.log(`📞 NEW CALL: ${callernum} → ${connectednum} (${state})`);
+        break;
+      case 'update':
+        console.log(
+          `📞 CALL UPDATE: ${callernum} → ${connectednum} (${state})`,
+        );
+        break;
+      case 'delete':
+        console.log(`📞 CALL ENDED: ${callEvent.channel}`);
+        break;
+    }
+  });
+}
+export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
+  return {
+    operatorPhone: cdr.src || '',
+    customerPhone: cdr.dst || '',
+    callDuration: cdr.billsec || 0,
+    callStartTime: cdr.start,
+    callEndTime: cdr.end,
+    callType: cdr.actionType || '',
+    callStatus: cdr.disposition || '',
+    timeStamp: cdr.start ? cdr.start.getTime() / 1000 : 0,
+    modifiedAt: cdr.updatedAt,
+    createdAt: cdr.createdAt,
+    createdBy: cdr.createdBy || '',
+    modifiedBy: cdr.updatedBy || '',
+    extensionNumber: '',
+    conversationId: cdr.userfield || '',
+    recordUrl: cdr.recordUrl || '',
+    endedBy: '',
+    acceptedUserId: '',
+    queueName: '',
+    inboxIntegrationId: cdr.inboxIntegrationId,
+  };
 };

@@ -34,7 +34,7 @@ export interface ITask {
   cycleId?: string;
 }
 
-export interface IStatus {
+export interface ITaskStatus {
   value: string;
   label: string;
   color: string;

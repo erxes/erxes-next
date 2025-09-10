@@ -41,8 +41,6 @@ export const CycleProgress = ({
     skip: !cycleId || isCompleted,
   });
 
-  console.log(statistics);
-
   const progress = cycleProgress || statistics.progress;
 
   return (

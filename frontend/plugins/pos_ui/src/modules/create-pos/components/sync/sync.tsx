@@ -1,4 +1,3 @@
-'use client';
 import { Button, Input, Label, Select } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';

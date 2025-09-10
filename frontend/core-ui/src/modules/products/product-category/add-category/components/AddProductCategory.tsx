@@ -1,4 +1,3 @@
-'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
@@ -15,7 +14,7 @@ export function AddCategoryForm({
 }: {
   onOpenChange: (open: boolean) => void;
 }) {
-  const { productCategoriesAdd , loading: editLoading } = useAddCategory();
+  const { productCategoriesAdd, loading: editLoading } = useAddCategory();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {

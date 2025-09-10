@@ -11,7 +11,7 @@ import { useCustomerEdit } from 'ui-modules/modules/contacts/hooks';
 interface CustomerEmailsProps {
   primaryEmail: string;
   _id: string;
-  emailValidationStatus?: ValidationStatus;
+  emailValidationStatus?: `${ValidationStatus}`;
   emails: string[];
   scope?: string;
   Trigger: React.ComponentType<{ children: React.ReactNode }>;
@@ -30,7 +30,7 @@ export function CustomerEmails({
   const emailProps = {
     primaryEmail,
     emails,
-    emailValidationStatus,
+    emailValidationStatus: emailValidationStatus as ValidationStatus,
   };
 
   const handleValidationStatusChange = (status: ValidationStatus) => {

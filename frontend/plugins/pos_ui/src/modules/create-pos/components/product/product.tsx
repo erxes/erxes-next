@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
@@ -107,10 +105,7 @@ export default function ProductForm({
             {showProductGroups && (
               <div className="space-y-4">
                 {form.watch('productDetails')?.map((_, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-2 gap-4"
-                  >
+                  <div key={index} className="grid grid-cols-2 gap-4">
                     <Form.Field
                       control={form.control}
                       name={`productDetails.${index}.productId`}

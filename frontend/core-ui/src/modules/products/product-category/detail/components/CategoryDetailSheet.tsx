@@ -1,15 +1,25 @@
-'use client';
-
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, cn, Sheet, ScrollArea, Form, useToast, useSetHotkeyScope, useQueryState } from 'erxes-ui';
+import {
+  Button,
+  cn,
+  Sheet,
+  ScrollArea,
+  Form,
+  useToast,
+  useSetHotkeyScope,
+  useQueryState,
+} from 'erxes-ui';
 import { renderingCategoryDetailAtom } from '../../states/ProductCategory';
 import { CategoryHotKeyScope } from '../../types/CategoryHotKeyScope';
 import { CategoriesUpdateCoreFields } from './CategoryUpdateCoreFields';
 import { useProductCategoriesEdit } from '../hooks/useUpdateCategory';
-import { productFormSchema, ProductFormValues } from '../../add-category/components/formSchema';
+import {
+  productFormSchema,
+  ProductFormValues,
+} from '../../add-category/components/formSchema';
 import { CategoryUpdateMoreFields } from './CategoryUpdateMoreFields';
 import { ProductAddCollapsible } from '@/products/add-products/components/ProductAddCollapsible';
 
@@ -19,7 +29,8 @@ export const CategoryDetailSheet = () => {
   const [categoryId, setCategoryId] = useQueryState<string>('category_id');
 
   const { toast } = useToast();
-  const { productCategoriesEdit, loading: editLoading } = useProductCategoriesEdit();
+  const { productCategoriesEdit, loading: editLoading } =
+    useProductCategoriesEdit();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -44,7 +55,7 @@ export const CategoryDetailSheet = () => {
 
   const setOpen = (newCategoryId: string | null) => {
     setCategoryId(newCategoryId);
-    
+
     if (!newCategoryId) {
       setHotkeyScope(CategoryHotKeyScope.CategoriesPage);
     }
@@ -58,11 +69,11 @@ export const CategoryDetailSheet = () => {
     const fieldsToUpdate = ['name', 'code', 'categoryId'];
     productCategoriesEdit(
       {
-        variables: { 
+        variables: {
           _id: categoryId,
-          ...cleanData 
+          ...cleanData,
         },
-        onError: (e: { message: any; }) => {
+        onError: (e: { message: any }) => {
           toast({
             title: 'Error',
             description: e.message,
@@ -77,7 +88,7 @@ export const CategoryDetailSheet = () => {
           setOpen(null);
         },
       },
-      fieldsToUpdate
+      fieldsToUpdate,
     );
   }
 
@@ -94,7 +105,7 @@ export const CategoryDetailSheet = () => {
       <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-[520px] flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
-          !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]'
+          !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
         )}
       >
         <Form {...form}>
@@ -113,7 +124,7 @@ export const CategoryDetailSheet = () => {
             <Sheet.Content className="flex-auto overflow-hidden">
               <ScrollArea className="h-full">
                 <div className="p-5">
-                  <CategoriesUpdateCoreFields form={form}/>
+                  <CategoriesUpdateCoreFields form={form} />
                   <ProductAddCollapsible>
                     <CategoryUpdateMoreFields form={form} />
                   </ProductAddCollapsible>

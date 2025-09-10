@@ -14,7 +14,7 @@ const accountingAdjustInventoryChanged = `
       warning
       beginDate
       successDate
-      checkedDate
+      checkedAt
     }
   }
 `;

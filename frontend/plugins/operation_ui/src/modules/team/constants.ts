@@ -57,3 +57,11 @@ export const DEFAULT_TEAM_STATUSES = [
     Icon: IconCircleX,
   },
 ];
+
+export const TeamStatusTypeLabel = {
+  [TeamStatusTypes.Backlog]: 'Backlog',
+  [TeamStatusTypes.Unstarted]: 'Unstarted',
+  [TeamStatusTypes.Started]: 'Started',
+  [TeamStatusTypes.Completed]: 'Completed',
+  [TeamStatusTypes.Cancelled]: 'Cancelled',
+};

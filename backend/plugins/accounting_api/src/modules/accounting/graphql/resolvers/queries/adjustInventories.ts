@@ -14,8 +14,8 @@ interface IQueryParams {
   endBeginDate: Date
   startSuccessDate: Date
   endSuccessDate: Date
-  startCheckedDate: Date
-  endCheckedDate: Date
+  startCheckedAt: Date
+  endCheckedAt: Date
   page?: number;
   perPage?: number;
   sortField?: string;
@@ -46,8 +46,8 @@ export const generateFilter = async (
     endBeginDate,
     startSuccessDate,
     endSuccessDate,
-    startCheckedDate,
-    endCheckedDate,
+    startCheckedAt,
+    endCheckedAt,
     page,
     perPage,
     sortField,

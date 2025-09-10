@@ -22,6 +22,8 @@ import {
   readImage,
   useQueryState,
   PopoverScoped,
+  Badge,
+  FullNameValue,
 } from 'erxes-ui';
 import { useState } from 'react';
 import {
@@ -71,6 +73,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       const setRenderingCustomerDetail = useSetAtom(
         renderingCustomerDetailAtom,
       );
+
       const {
         firstName = '',
         lastName = '',
@@ -80,18 +83,24 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
 
       return (
         <CustomerName
-          onClick={(e) => {
-            e.stopPropagation();
-            setDetailOpen(_id);
-            setRenderingCustomerDetail(false);
-          }}
-          withBadge
           _id={_id}
           firstName={firstName}
-          lastName={lastName}
-          middleName={middleName}
+          lastName={`${middleName || ''}${middleName ? ' ' : ''}${
+            lastName || ''
+          }`}
           scope={clsx(ContactsHotKeyScope.CustomersPage, _id, 'Name')}
-        />
+        >
+          <RecordTableInlineCell.Trigger>
+            <RecordTableInlineCell.Anchor
+              onClick={() => {
+                setDetailOpen(_id);
+                setRenderingCustomerDetail(false);
+              }}
+            >
+              <FullNameValue />
+            </RecordTableInlineCell.Anchor>
+          </RecordTableInlineCell.Trigger>
+        </CustomerName>
       );
     },
     size: 240,
@@ -212,6 +221,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         />
       );
     },
+    size: 250,
   },
   {
     id: 'lastSeenAt',
@@ -220,7 +230,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableInlineCell>
+          <RecordTableInlineCell className="text-xs font-medium text-muted-foreground">
             <RelativeDateDisplay.Value value={cell.getValue() as string} />
           </RecordTableInlineCell>
         </RelativeDateDisplay>
@@ -250,7 +260,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
-          <RecordTableInlineCell>
+          <RecordTableInlineCell className="text-xs font-medium text-muted-foreground">
             <RelativeDateDisplay.Value value={cell.getValue() as string} />
           </RecordTableInlineCell>
         </RelativeDateDisplay>

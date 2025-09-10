@@ -19,7 +19,8 @@ export const InviteRow = ({
   user: IUserEntry & { id: string };
 }) => {
   const { selectedUsers, fields } = useUserInviteContext();
-  const { control } = useFormContext<TUserForm>();
+  const { control, formState } = useFormContext<TUserForm>();
+  const { errors } = formState;
   return (
     <InviteMemberRowContext.Provider
       value={{
@@ -60,7 +61,9 @@ export const InviteRow = ({
                     placeholder="Email"
                     type={'email'}
                     autoComplete="new-email"
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                    className={cn(
+                      'rounded-none focus-visible:relative focus-visible:z-10 shadow-none',
+                    )}
                   />
                 </Form.Control>
               </Form.Item>
@@ -70,114 +73,27 @@ export const InviteRow = ({
         <Table.Cell
           className={cn({
             'border-t': userIndex === 0,
+            'border-destructive border-l':
+              errors?.entries?.[userIndex]?.password?.message,
           })}
         >
           <Form.Field
             control={control}
             name={`entries.${userIndex}.password`}
             render={({ field }) => (
-              <Form.Item>
+              <Form.Item className="relative">
                 <Form.Control>
                   <Input
                     {...field}
                     placeholder="Password"
                     autoComplete={`new-password`}
                     type="password"
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                    className={cn(
+                      'rounded-none focus-visible:relative focus-visible:z-10 shadow-none',
+                    )}
                   />
                 </Form.Control>
-              </Form.Item>
-            )}
-          />
-        </Table.Cell>
-        <Table.Cell
-          className={cn({
-            'border-t': userIndex === 0,
-          })}
-        >
-          <Form.Field
-            control={control}
-            name={`entries.${userIndex}.groupId`}
-            render={({ field }) => {
-              console.log('field', field)
-              return (
-                <Form.Item>
-                  <Form.Control>
-                    <SelectUsersGroup.FormItem
-                      mode="single"
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                    />
-                  </Form.Control>
-                </Form.Item>
-              );
-            }}
-          />
-        </Table.Cell>
-        <Table.Cell
-          className={cn({
-            'border-t': userIndex === 0,
-          })}
-        >
-          <Form.Field
-            control={control}
-            name={`entries.${userIndex}.unitId`}
-            render={({ field }) => {
-              return (
-                <Form.Item>
-                  <Form.Control>
-                    <SelectUnit.FormItem
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                    />
-                  </Form.Control>
-                </Form.Item>
-              );
-            }}
-          />
-        </Table.Cell>
-        <Table.Cell
-          className={cn({
-            'border-t': userIndex === 0,
-          })}
-        >
-          <Form.Field
-            control={control}
-            name={`entries.${userIndex}.departmentId`}
-            render={({ field }) => (
-              <Form.Item>
-                <SelectDepartments.FormItem
-                  mode="single"
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                />
-              </Form.Item>
-            )}
-          />
-        </Table.Cell>
-        <Table.Cell
-          className={cn(
-            {
-              'rounded-tr-lg border-t': userIndex === 0,
-              'rounded-br-lg': userIndex === fields?.length - 1,
-            },
-            'overflow-hidden',
-          )}
-        >
-          <Form.Field
-            control={control}
-            name={`entries.${userIndex}.branchId`}
-            render={({ field }) => (
-              <Form.Item>
-                <SelectBranches.FormItem
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  mode="single"
-                  className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                />
+                <Form.Message className="text-destructive-foreground absolute top-full -left-px -right-px bg-destructive !m-0 px-2 py-1" />
               </Form.Item>
             )}
           />

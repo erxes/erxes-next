@@ -5,7 +5,6 @@ import {
   IconCalendarPlus,
   IconEyeUp,
   IconNotification,
-  IconPuzzle,
 } from '@tabler/icons-react';
 import { Filter, PageSubHeader, Popover, useMultiQueryState } from 'erxes-ui';
 

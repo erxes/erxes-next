@@ -13,7 +13,7 @@ export function InviteTeamMember() {
           Invite team members
         </Button>
       </Dialog.Trigger>
-      <Dialog.Content className="max-w-3xl xl:max-w-7xl p-0">
+      <Dialog.Content className="max-w-md xl:max-w-lg p-0">
         <Dialog.Header className="px-3 py-[13px] border-b border-muted">
           <Dialog.Title className="flex items-center gap-2 text-sm">
             <IconUsersGroup size={14} />

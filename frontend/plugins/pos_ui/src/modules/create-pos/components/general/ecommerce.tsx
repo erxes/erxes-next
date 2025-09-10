@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Form, Input, Select } from 'erxes-ui';

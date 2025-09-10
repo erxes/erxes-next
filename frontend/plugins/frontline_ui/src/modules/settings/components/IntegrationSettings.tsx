@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'erxes-ui';
 import { IconChevronLeft } from '@tabler/icons-react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { IntegrationHeader } from './IntegrationHeader';
 import { IntegrationsList } from './IntegrationsList';
 

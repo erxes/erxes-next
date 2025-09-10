@@ -1,5 +1,6 @@
 import {
   IconAlertSquareRounded,
+  IconProgressCheck,
   IconSearch,
   IconUsers,
 } from '@tabler/icons-react';
@@ -8,7 +9,7 @@ import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ProjectsTotalCount } from '@/project/components/ProjectsTotalCount';
 import { SelectLead } from '@/project/components/select/SelectLead';
-import { SelectStatus } from '@/project/components/select/SelectStatus';
+import { SelectStatus } from '@/operation/components/SelectStatus';
 import { useParams } from 'react-router-dom';
 import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 import { SelectTeam } from '@/team/components/SelectTeam';
@@ -58,7 +59,10 @@ const ProjectsFilterPopover = () => {
                   <IconAlertSquareRounded />
                   Priority
                 </Filter.Item>
-                <SelectStatus.FilterItem />
+                <Filter.Item value="status">
+                  <IconProgressCheck />
+                  Status
+                </Filter.Item>
               </Command.List>
             </Command>
           </Filter.View>
@@ -119,6 +123,13 @@ export const ProjectsFilter = () => {
             Priority
           </Filter.BarName>
           <SelectPriority.FilterBar />
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="status">
+          <Filter.BarName>
+            <IconProgressCheck />
+            Status
+          </Filter.BarName>
+          <SelectStatus.FilterBar />
         </Filter.BarItem>
         <ProjectsFilterPopover />
         <ProjectsTotalCount />

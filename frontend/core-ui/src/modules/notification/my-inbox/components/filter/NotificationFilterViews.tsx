@@ -1,7 +1,7 @@
 import { NotificationPriorityCommandBar } from '@/notification/my-inbox/components/filter/NotificationPriorityCommandBar';
 import { NotificationTypeCommandBar } from '@/notification/my-inbox/components/filter/NotificationTypeCommandBar';
-import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
-import { MembersInline, SelectMember } from 'ui-modules';
+import { Command, Filter, useMultiQueryState } from 'erxes-ui';
+import { SelectMember } from 'ui-modules';
 
 export const NotificationFilterViews = () => {
   const [queries, setQueries] = useMultiQueryState<{

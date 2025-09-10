@@ -1,5 +1,3 @@
-'use client';
-
 import { useMutation } from '@apollo/client';
 import { IconUpload } from '@tabler/icons-react';
 import { Button, Form, Input, Select, Sheet, Textarea, Upload } from 'erxes-ui';

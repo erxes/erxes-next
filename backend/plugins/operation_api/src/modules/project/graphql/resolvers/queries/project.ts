@@ -608,6 +608,8 @@ export const projectQueries = {
             baseDate,
             7,
           );
+
+          return chartData;
         }
 
         chartData.chartData = chartDataAggregation;

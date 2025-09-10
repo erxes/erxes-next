@@ -1,4 +1,3 @@
-'use client';
 import { Input, Select, Checkbox, Label, Collapsible } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';

@@ -5,14 +5,14 @@ import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
-import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
-import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
-import { DateSelectTask } from '@/task/components/select/DateSelectTask';
-import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
-import { SelectProject } from '@/task/components/select/SelectProjectTask';
-import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
-import { SelectCycle } from '@/task/components/select/SelectCycle';
+import { SelectTaskPriority } from '@/task/components/task-selects/SelectTaskPriority';
+import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
+import { DateSelectTask } from '@/task/components/task-selects/DateSelectTask';
+import { SelectTeamTask } from '@/task/components/task-selects/SelectTeamTask';
+import { SelectProject } from '@/task/components/task-selects/SelectProjectTask';
+import { SelectEstimatedPoint } from '@/task/components/task-selects/SelectEstimatedPointTask';
+import { SelectCycle } from '@/task/components/task-selects/SelectCycle';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -30,10 +30,16 @@ export const TaskFields = ({ task }: { task: ITask }) => {
 
   const startDate = (task as any)?.startDate;
   const description = (task as any)?.description;
+  const parsedDescription = description ? JSON.parse(description) : undefined;
+  const initialDescriptionContent =
+    Array.isArray(parsedDescription) && parsedDescription.length > 0
+      ? parsedDescription
+      : undefined;
 
   const [descriptionContent, setDescriptionContent] = useState<
     Block[] | undefined
-  >(description ? JSON.parse(description) : undefined);
+  >(initialDescriptionContent);
+
   const editor = useBlockEditor({
     initialContent: descriptionContent,
     placeholder: 'Description...',

@@ -29,9 +29,15 @@ export const projectMutations = {
       description,
       leadId,
     });
-
-    graphqlPubsub.publish('operationProjectChanged', {
+    graphqlPubsub.publish(`operationProjectChanged:${createdProject._id}`, {
       operationProjectChanged: {
+        type: 'create',
+        project: createdProject,
+      },
+    });
+
+    graphqlPubsub.publish('operationProjectListChanged', {
+      operationProjectListChanged: {
         type: 'create',
         project: createdProject,
       },
@@ -58,8 +64,15 @@ export const projectMutations = {
       subdomain,
     });
 
-    graphqlPubsub.publish('operationProjectChanged', {
+    graphqlPubsub.publish(`operationProjectChanged:${updatedProject._id}`, {
       operationProjectChanged: {
+        type: 'update',
+        project: updatedProject,
+      },
+    });
+
+    graphqlPubsub.publish('operationProjectListChanged', {
+      operationProjectListChanged: {
         type: 'update',
         project: updatedProject,
       },
@@ -70,8 +83,15 @@ export const projectMutations = {
   removeProject: async (_parent: undefined, { _id }, { models }: IContext) => {
     const deletedProject = await models.Project.removeProject(_id);
 
-    graphqlPubsub.publish('operationProjectChanged', {
+    graphqlPubsub.publish(`operationProjectChanged:${_id}`, {
       operationProjectChanged: {
+        type: 'delete',
+        project: deletedProject,
+      },
+    });
+
+    graphqlPubsub.publish('operationProjectListChanged', {
+      operationProjectListChanged: {
         type: 'delete',
         project: deletedProject,
       },
