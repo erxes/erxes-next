@@ -5,30 +5,31 @@ export enum INotificationKind {
   USER = 'user',
 }
 
+export type NotificationStatusT = 'read' | 'unread' | 'all';
+
+export type NotificationTypeT = 'info' | 'success' | 'warning' | 'error';
+export type NotificationPriorityT = 'low' | 'medium' | 'high' | 'urgent';
+
+export type NotificationOrderByT = 'new' | 'old' | 'priority';
+
 export type INotification = {
   _id: string;
   title: string;
   message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-
+  type: NotificationTypeT;
   fromUserId?: string;
   fromUser?: IUser;
-
   contentType?: string; // 'frontline:conversation', 'sales:deal', etc.
   contentTypeId?: string; // target object ID
-
   // Status
   isRead: boolean;
   readAt?: string;
-
   // Additional data
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  metadata?: any; // plugin-specific data
+  priority: NotificationPriorityT;
+  metadata?: unknown; // plugin-specific data
   action?: string;
 
   // Timestamps
-  createdAt: string;
-  expiresAt?: string; // Auto-cleanup old notifications
   kind: INotificationKind;
   emailDelivery?: {
     _id: string;
@@ -36,6 +37,7 @@ export type INotification = {
     error?: string;
     sentAt: string;
   };
+  createdAt: string;
   updatedAt?: string;
 };
 

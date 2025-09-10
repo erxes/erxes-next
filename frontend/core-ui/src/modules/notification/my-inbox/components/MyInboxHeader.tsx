@@ -1,5 +1,5 @@
 import { NotificationsFilters } from '@/notification/my-inbox/components/filter/NotificationsFilters';
-import { NotificationAdjustments } from '@/notification/my-inbox/components/NotificationAdjustments';
+import { NotificationSort } from '@/notification/my-inbox/components/NotificationSort';
 import { IconInbox } from '@tabler/icons-react';
 import { Button, Separator, Sidebar } from 'erxes-ui';
 import { Link } from 'react-router-dom';
@@ -18,7 +18,7 @@ export const MyInboxHeader = () => {
           </Button>
           <div className="flex gap-2 items-center ml-auto">
             <NotificationsFilters />
-            <NotificationAdjustments />
+            <NotificationSort />
           </div>
         </div>
       </div>

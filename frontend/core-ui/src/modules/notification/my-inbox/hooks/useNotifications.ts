@@ -1,218 +1,90 @@
 import { NOTIFICATIONS } from '@/notification/my-inbox/graphql/notificationsQueries';
-import {
-  NOTIFICATION_READ,
-  NOTIFICATION_SUBSCRIPTION,
-} from '@/notification/my-inbox/graphql/notificationSubscriptions';
+import { NOTIFICATION_SUBSCRIPTION } from '@/notification/my-inbox/graphql/notificationSubscriptions';
+import { useNotificationFilters } from '@/notification/my-inbox/hooks/useNotificationFilters';
+import { refetchNewNotificationsState } from '@/notification/my-inbox/states/notificationState';
 import { INotification } from '@/notification/my-inbox/types/notifications';
-import { gql, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
   EnumCursorDirection,
   ICursorListResponse,
   mergeCursorData,
-  parseDateRangeFromString,
-  sendDesktopNotification,
-  useMultiQueryState,
   validateFetchMore,
 } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import strip from 'strip-ansi';
-import { currentUserState, IUser } from 'ui-modules';
-type NotificationInsertedData = {
-  notificationInserted: INotification;
-};
+import { currentUserState } from 'ui-modules';
 
-type NotificationRead = {
-  notificationRead: {
-    userId: string;
-    notificationId?: string;
-    notificationIds?: string[];
-  };
-};
+const NOTIFICATIONS_LIMIT = 24;
 
-type NotificationsQueryResponse = ICursorListResponse<INotification>;
-
-const NOTIFICATIONS_LIMIT = 15;
-
-const generateOrderBy = (
-  orderBy: 'new' | 'old' | 'priority' | 'readAt' | null,
+export const useNotifications = (
+  options?: QueryHookOptions<ICursorListResponse<INotification>>,
 ) => {
-  const orderByObject: any = {};
-  if (orderBy === 'old') {
-    orderByObject.orderBy = { createdAt: 1 };
-  } else if (orderBy === 'priority') {
-    orderByObject.orderBy = { priority: -1 };
-  } else if (orderBy === 'readAt') {
-    orderByObject.orderBy = { readAt: -1 };
-  }
+  const filters = useNotificationFilters();
+  const currentUser = useAtomValue(currentUserState);
+  const [refetchNewNotifications, setRefetchNewNotifications] = useAtom(
+    refetchNewNotificationsState,
+  );
 
-  return orderByObject;
-};
-
-export const useNotifications = () => {
-  const currentUser = useAtomValue(currentUserState) as IUser;
-
-  const [{ status, priority, type, createdAt, orderBy, fromUserId }] =
-    useMultiQueryState<{
-      status: 'read' | 'unread' | 'all';
-      priority: 'low' | 'medium' | 'high' | 'urgent';
-      type: 'info' | 'success' | 'warning' | 'error';
-      createdAt: string;
-      orderBy: 'new' | 'old' | 'priority';
-      fromUserId: string;
-    }>(['status', 'priority', 'type', 'createdAt', 'orderBy', 'fromUserId']);
-
-  const { data, loading, subscribeToMore, refetch, fetchMore } =
-    useQuery<NotificationsQueryResponse>(NOTIFICATIONS, {
-      variables: {
-        limit: NOTIFICATIONS_LIMIT,
-        status: status?.toUpperCase() || 'ALL',
-        priority: priority?.toUpperCase(),
-        type: type?.toUpperCase(),
-        fromDate: parseDateRangeFromString(createdAt)?.from,
-        endDate: parseDateRangeFromString(createdAt)?.to,
-        fromUserId: fromUserId ?? undefined,
-        ...generateOrderBy(orderBy),
-      },
-    });
+  const { data, loading, fetchMore, subscribeToMore, refetch } = useQuery<
+    ICursorListResponse<INotification>
+  >(NOTIFICATIONS, {
+    fetchPolicy: 'cache-and-network',
+    ...options,
+    variables: {
+      limit: NOTIFICATIONS_LIMIT,
+      ...filters,
+      ...options?.variables,
+    },
+  });
 
   const { list = [], pageInfo, totalCount = 0 } = data?.notifications || {};
 
-  const handleFetchMore = ({
-    direction,
-  }: {
-    direction: EnumCursorDirection;
-  }) => {
-    if (!validateFetchMore({ direction, pageInfo })) {
-      return;
+  const handleFetchMore = () => {
+    if (
+      validateFetchMore({ direction: EnumCursorDirection.FORWARD, pageInfo })
+    ) {
+      fetchMore({
+        variables: {
+          cursor: pageInfo?.endCursor,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return Object.assign({}, prev, {
+            notifications: mergeCursorData({
+              direction: EnumCursorDirection.FORWARD,
+              fetchMoreResult: fetchMoreResult.notifications,
+              prevResult: prev.notifications,
+            }),
+          });
+        },
+      });
     }
-
-    fetchMore({
-      variables: {
-        cursor:
-          direction === EnumCursorDirection.FORWARD
-            ? pageInfo?.endCursor
-            : pageInfo?.startCursor,
-        limit: NOTIFICATIONS_LIMIT,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return Object.assign({}, prev, {
-          notifications: mergeCursorData({
-            direction,
-            fetchMoreResult: fetchMoreResult.notifications,
-            prevResult: prev.notifications,
-          }),
-        });
-      },
-    });
   };
-  // useEffect is used for GraphQL pubsub subscription
+
   useEffect(() => {
-    const unsubscribe = subscribeToMore<NotificationInsertedData>({
-      document: gql(NOTIFICATION_SUBSCRIPTION),
+    if (refetchNewNotifications) {
+      if (!loading) {
+        refetch();
+      }
+      setRefetchNewNotifications(false);
+    }
+  }, [refetchNewNotifications, loading]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToMore({
+      document: NOTIFICATION_SUBSCRIPTION,
       variables: {
         userId: currentUser ? currentUser._id : null,
       },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const { notificationInserted } = data;
-        const { title, message } = notificationInserted;
-
-        sendDesktopNotification({ title, content: strip(message || '') });
-
-        const prevList = prev.notifications?.list || [];
-
-        if (status !== 'read') {
-          const existsIndex = prevList.findIndex(
-            (item: any) => item._id === notificationInserted._id,
-          );
-
-          let updatedList;
-
-          if (existsIndex !== -1) {
-            updatedList = [
-              notificationInserted,
-              ...prevList.filter((_, idx) => idx !== existsIndex),
-            ];
-          } else {
-            updatedList = [notificationInserted, ...prevList];
-          }
-
-          return {
-            ...prev,
-            notifications: {
-              ...prev.notifications,
-              totalCount: prev?.notifications?.totalCount + 1,
-              list: updatedList,
-            },
-          };
-        }
-        return prev;
-      },
     });
-    const notificationRead = subscribeToMore<NotificationRead>({
-      document: gql(NOTIFICATION_READ),
-      variables: { userId: currentUser ? currentUser._id : null },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        const { notificationId, notificationIds = [] } =
-          data?.notificationRead || {};
-
-        const removedIds = notificationIds.length
-          ? notificationIds
-          : notificationId
-          ? [notificationId]
-          : [];
-        if (!status || status === 'unread') {
-          const updatedTotalCount = Math.max(
-            (prev?.notifications?.totalCount || 0) - removedIds.length,
-            0,
-          );
-          const updatedList = (prev?.notifications?.list || []).filter(
-            (notification) => !removedIds.includes(notification._id),
-          );
-
-          if (
-            updatedList.length === 0 &&
-            prev.notifications?.pageInfo?.endCursor
-          ) {
-            handleFetchMore({ direction: EnumCursorDirection.FORWARD });
-          }
-          return {
-            ...prev,
-            notifications: {
-              ...prev.notifications,
-              list: updatedList,
-              totalCount: updatedTotalCount,
-            },
-          };
-        }
-
-        return {
-          ...prev,
-          notifications: {
-            ...prev.notifications,
-            list: (prev?.notifications?.list || []).map((notification) =>
-              removedIds.includes(notification._id)
-                ? { ...notification, isRead: true }
-                : notification,
-            ),
-          },
-        };
-      },
-    });
-
-    return () => {
-      notificationRead();
-      unsubscribe();
-    };
-  }, [status]);
+    return unsubscribe;
+  }, []);
 
   return {
     notifications: list,
+    pageInfo,
+    totalCount,
     loading,
     handleFetchMore,
-    totalCount,
-    pageInfo,
-    refetch,
   };
 };

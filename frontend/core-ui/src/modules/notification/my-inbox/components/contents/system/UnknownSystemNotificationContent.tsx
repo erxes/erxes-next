@@ -2,10 +2,10 @@ import { IconInfoCircle } from '@tabler/icons-react';
 
 export const UnknownSystemNotificationContent = () => {
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
-      <div className="size-36 bg-sidebar rounded-2xl border-2 border-dashed flex items-center justify-center">
+    <div className="h-dvh w-full flex flex-col items-center justify-center">
+      <div className="size-28 bg-sidebar rounded-2xl border border-dashed flex items-center justify-center">
         <IconInfoCircle
-          size={64}
+          size={32}
           className="text-accent-foreground"
           stroke={1}
         />
