@@ -3,6 +3,7 @@ import {
   SelectTriggerOperation,
   SelectTriggerVariant,
 } from '@/operation/components/SelectOperation';
+import { StatusInlineIcon } from '@/operation/components/StatusInline';
 import {
   SelectProjectContext,
   useSelectProjectContext,
@@ -46,7 +47,7 @@ export const SelectProjectProvider = ({
   const { projects, handleFetchMore, totalCount } = useProjectsInline({
     variables: {
       teamIds: [teamId || _teamId],
-      active: true,
+      active: false,
       taskId: taskId,
       name: debouncedSearch,
     },
@@ -90,21 +91,27 @@ const SelectProjectValue = () => {
 const SelectProjectCommandItem = ({
   project,
 }: {
-  project: { _id: string; name: string };
+  project: { _id: string; name: string, status: number };
 }) => {
   const { onValueChange, value } = useSelectProjectContext();
 
+  const {_id, name, status} = project || {};
+
   return (
     <Command.Item
-      value={project.name}
-      onSelect={() => onValueChange(project._id)}
+      value={name}
+      onSelect={() => onValueChange(_id)}
       className={cn(!project._id && 'text-muted-foreground')}
     >
       <div className="flex items-center gap-2">
-        <IconClipboard className="h-4 w-4" />
-        <span className="truncate font-medium">{project.name}</span>
+         <StatusInlineIcon
+                statusType={status}
+                className="w-4 h-4"
+                stroke={1.8}
+              />
+        <span className="truncate font-medium">{name}</span>
       </div>
-      <Combobox.Check checked={value === project._id} />
+      <Combobox.Check checked={value === _id} />
     </Command.Item>
   );
 };
