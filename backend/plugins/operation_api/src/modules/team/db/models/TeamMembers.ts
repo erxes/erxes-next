@@ -1,10 +1,10 @@
-import { Model } from 'mongoose';
 import {
   ITeamMember,
   ITeamMemberDocument,
   TeamMemberRoles,
 } from '@/team/@types/team';
 import { teamMembers } from '@/team/db/definitions/team';
+import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
 export interface ITeamMemberModel extends Model<ITeamMemberDocument> {
@@ -16,7 +16,7 @@ export interface ITeamMemberModel extends Model<ITeamMemberDocument> {
   ): Promise<ITeamMemberDocument>;
 
   createTeamMembers(members: ITeamMember[]): Promise<ITeamMemberDocument[]>;
-  removeTeamMember(_id: string): Promise<ITeamMemberDocument>;
+  removeTeamMember(_id: string, memberId: string): Promise<ITeamMemberDocument>;
 }
 
 export const loadTeamMemberClass = (models: IModels) => {
@@ -54,8 +54,8 @@ export const loadTeamMemberClass = (models: IModels) => {
       return models.TeamMember.insertMany(members);
     }
 
-    public static async removeTeamMember(_id: string) {
-      const teamMember = await models.TeamMember.findOne({ _id });
+    public static async removeTeamMember(teamId: string, memberId: string) {
+      const teamMember = await models.TeamMember.findOne({ teamId, memberId });
 
       if (!teamMember) {
         throw new Error('Team member not found');
@@ -65,7 +65,7 @@ export const loadTeamMemberClass = (models: IModels) => {
         throw new Error('Admin cannot be removed');
       }
 
-      return models.TeamMember.deleteOne({ _id });
+      return models.TeamMember.deleteOne({ teamId, memberId });
     }
   }
 
