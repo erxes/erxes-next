@@ -168,7 +168,7 @@ export const getCycleProgressChart = async (
   const chartDataAggregation = await models.Task.aggregate([
     {
       $match: {
-        cycleId,
+        ...filter,
         statusType: { $in: [STATUS_TYPES.STARTED, STATUS_TYPES.COMPLETED] },
         statusChangedDate: { $ne: null },
       },
