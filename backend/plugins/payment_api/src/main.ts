@@ -57,6 +57,13 @@ startPlugin({
   ]),
 
   onServerInit: async (app) => {
+    app.get('/widget/config.js', (req, res) => {
+      res.type('application/javascript');
+      res.send(`window.WIDGET_CONFIG = {
+        API_URL: "${process.env.REACT_APP_API_URL}"
+      };`);
+    });
+
     app.use('/static', express.static(path.join(__dirname, '/public')));
     app.use('/widget', express.static(path.join(__dirname, '/public/widget')));
     app.get('/widget/*', (req, res) => {
