@@ -54,10 +54,9 @@ jobs:
       - name: Build and push Docker image
         run: |
           export NX_DAEMON=false
-          pnpm nx docker-build payment_api
-          docker tag erxes/erxes-next-payment_api erxes/erxes-next-payment_api:latest
-          docker tag erxes/erxes-next-payment_api erxes/erxes-next-payment_api:${{ github.sha }}
-          if [ "${{ github.event_name }}" != "pull_request" ]; then
-            docker push erxes/erxes-next-payment_api:latest
-            docker push erxes/erxes-next-payment_api:${{ github.sha }}
-          fi
+          pnpm nx docker-build sales_api
+          docker tag erxes/erxes-next-sales_api erxes/erxes-next-sales_api:latest
+          docker tag erxes/erxes-next-sales_api erxes/erxes-next-sales_api:${{ github.sha }}
+          docker push erxes/erxes-next-sales_api:latest
+          docker push erxes/erxes-next-sales_api:${{ github.sha }}
+        if: github.event_name != 'pull_request'
