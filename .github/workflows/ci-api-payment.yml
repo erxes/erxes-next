@@ -39,6 +39,12 @@ jobs:
           export NX_DAEMON=false
           pnpm nx build erxes-api-shared
 
+      - name: Build React widget
+        run: |
+          cd backend/plugins/payment_api/src/widget
+          pnpm install --frozen-lockfile
+          pnpm build
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -51,6 +57,7 @@ jobs:
           pnpm nx docker-build payment_api
           docker tag erxes/erxes-next-payment_api erxes/erxes-next-payment_api:latest
           docker tag erxes/erxes-next-payment_api erxes/erxes-next-payment_api:${{ github.sha }}
-          docker push erxes/erxes-next-payment_api:latest
-          docker push erxes/erxes-next-payment_api:${{ github.sha }}
-        if: github.event_name != 'pull_request'
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            docker push erxes/erxes-next-payment_api:latest
+            docker push erxes/erxes-next-payment_api:${{ github.sha }}
+          fi
