@@ -30,6 +30,28 @@ import {
 } from './modules/sales/db/models/Pipelines';
 import { IStageModel, loadStageClass } from './modules/sales/db/models/Stages';
 
+// pos section
+import { ICoverDocument } from './modules/pos/@types/covers';
+import {
+  IPosOrderDocument,
+  IPosSlotDocument,
+  IProductGroupDocument,
+} from './modules/pos/@types/orders';
+import { IPosDocument } from './modules/pos/@types/pos';
+import { ICoverModel, loadCoverClass } from './modules/pos/db/models/Covers';
+import {
+  IPosOrderModel,
+  loadPosOrderClass,
+} from './modules/pos/db/models/Orders';
+import {
+  IPosModel,
+  IPosSlotModel,
+  IProductGroupModel,
+  loadPosClass,
+  loadPosSlotClass,
+  loadProductGroupClass,
+} from './modules/pos/db/models/Pos';
+
 export interface IModels {
   Boards: IBoardModel;
   Pipelines: IPipelineModel;
@@ -38,13 +60,24 @@ export interface IModels {
   Checklists: IChecklistModel;
   ChecklistItems: IChecklistItemModel;
   PipelineLabels: IPipelineLabelModel;
+
+  // pos section
+
+  Pos: IPosModel;
+  ProductGroups: IProductGroupModel;
+  PosOrders: IPosOrderModel;
+  PosSlots: IPosSlotModel;
+  Covers: ICoverModel;
 }
 
 export interface IContext extends IMainContext {
   models: IModels;
 }
 
-export const loadClasses = (db: mongoose.Connection): IModels => {
+export const loadClasses = (
+  db: mongoose.Connection,
+  subdomain: string,
+): IModels => {
   const models = {} as IModels;
 
   models.Boards = db.model<IBoardDocument, IBoardModel>(
@@ -80,6 +113,29 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.PipelineLabels = db.model<IPipelineLabelDocument, IPipelineLabelModel>(
     'sales_pipeline_labels',
     loadPipelineLabelClass(models),
+  );
+
+  // pos section
+  models.Pos = db.model<IPosDocument, IPosModel>(
+    'pos',
+    loadPosClass(models, subdomain),
+  );
+  models.ProductGroups = db.model<IProductGroupDocument, IProductGroupModel>(
+    'product_groups',
+    loadProductGroupClass(models, subdomain),
+  );
+
+  models.PosOrders = db.model<IPosOrderDocument, IPosOrderModel>(
+    'pos_orders',
+    loadPosOrderClass(models, subdomain),
+  );
+  models.PosSlots = db.model<IPosSlotDocument, IPosSlotModel>(
+    'pos_slots',
+    loadPosSlotClass(models, subdomain),
+  );
+  models.Covers = db.model<ICoverDocument, ICoverModel>(
+    'pos_covers',
+    loadCoverClass(models),
   );
 
   return models;

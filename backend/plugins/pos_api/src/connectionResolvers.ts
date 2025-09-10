@@ -2,11 +2,25 @@ import { IMainContext } from 'erxes-api-shared/core-types';
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import * as mongoose from 'mongoose';
 import { ICoverDocument } from './modules/pos/@types/covers';
-import { IPosOrderDocument, IPosSlotDocument, IProductGroupDocument } from './modules/pos/@types/orders';
+import {
+  IPosOrderDocument,
+  IPosSlotDocument,
+  IProductGroupDocument,
+} from './modules/pos/@types/orders';
 import { IPosDocument } from './modules/pos/@types/pos';
 import { ICoverModel, loadCoverClass } from './modules/pos/db/models/Covers';
-import { IPosOrderModel, loadPosOrderClass } from './modules/pos/db/models/Orders';
-import { IPosModel, IPosSlotModel, IProductGroupModel, loadPosClass, loadPosSlotClass, loadProductGroupClass } from './modules/pos/db/models/Pos';
+import {
+  IPosOrderModel,
+  loadPosOrderClass,
+} from './modules/pos/db/models/Orders';
+import {
+  IPosModel,
+  IPosSlotModel,
+  IProductGroupModel,
+  loadPosClass,
+  loadPosSlotClass,
+  loadProductGroupClass,
+} from './modules/pos/db/models/Pos';
 
 export interface IModels {
   Pos: IPosModel;
