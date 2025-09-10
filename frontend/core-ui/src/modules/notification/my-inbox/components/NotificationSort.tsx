@@ -1,10 +1,8 @@
-import { useNotificationsListContext } from '@/notification/my-inbox/context/NotificationsListContext';
 import { IconSortDescending } from '@tabler/icons-react';
 import { Button, cn, Select, useMultiQueryState } from 'erxes-ui';
 import { Select as SelectPrimitive } from 'radix-ui';
 
 export const NotificationSort = () => {
-  const { loading } = useNotificationsListContext();
   const [{ orderBy, status }, setQueries] = useMultiQueryState<{
     orderBy: string;
     status: 'read' | 'unread' | 'all';
@@ -13,7 +11,6 @@ export const NotificationSort = () => {
   return (
     <Select
       defaultValue={orderBy || 'new'}
-      disabled={loading}
       onValueChange={(value) =>
         setQueries({ orderBy: value === orderBy ? null : value })
       }
