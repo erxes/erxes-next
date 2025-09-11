@@ -23,6 +23,10 @@ export const projectQueries = {
   ) => {
     const filterQuery: FilterQuery<IProjectDocument> = {};
 
+    if (filter._ids) {
+      filterQuery._id = { $in: filter._ids };
+    }
+
     if (filter.name) {
       filterQuery.name = { $regex: filter.name, $options: 'i' };
     }
