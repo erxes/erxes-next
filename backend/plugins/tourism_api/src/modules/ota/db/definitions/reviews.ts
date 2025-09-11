@@ -1,10 +1,8 @@
-import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { IReviewDocument } from '@/ota/@types/reviews';
+import { Schema } from 'mongoose';
 
 export const reviewSchema = new Schema<IReviewDocument>(
   {
-    _id: mongooseStringRandomId,
     customerId: { type: String, required: true },
     rating: { type: Number, required: true },
     comment: { type: String, required: false },

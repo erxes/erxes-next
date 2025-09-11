@@ -1,12 +1,10 @@
-import mongoose, { Schema, Document, FilterQuery } from 'mongoose';
-import { nanoid } from 'nanoid';
+import mongoose, { Document, FilterQuery } from 'mongoose';
 
-import { mongooseStringRandomId } from './mongoose-types';
 import {
+  buildCursorQuery,
   CursorPaginateParams,
   CursorResult,
   encodeCursor,
-  buildCursorQuery,
   PageInfo,
 } from './cursor-util';
 
@@ -14,21 +12,6 @@ export interface IOrderInput {
   _id: string;
   order: number;
 }
-
-export const mongooseField = (options: any) => {
-  const { pkey, type, optional } = options;
-
-  if (type === String && !pkey && !optional) {
-    options.validate = /\S+/;
-  }
-
-  if (pkey) {
-    options.type = String;
-    options.default = () => nanoid();
-  }
-
-  return options;
-};
 
 export const updateMongoDocumentOrder = async (
   collection: any,
@@ -168,19 +151,4 @@ export const checkCollectionCodeDuplication = async (
   if (category) {
     throw new Error('Code must be unique');
   }
-};
-
-export const schemaWrapper = (
-  schema: Schema,
-  options?: { contentType?: string },
-) => {
-  schema.add({ _id: mongooseStringRandomId });
-  schema.add({ processId: { type: String, optional: true } });
-  // schema.add({ createdAt: { type: Date, default: new Date() } });
-
-  if (options?.contentType) {
-    (schema.statics as any)._contentType = options.contentType;
-  }
-
-  return schema;
 };

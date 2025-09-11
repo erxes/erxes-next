@@ -1,4 +1,3 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const brandEmailConfigSchema = new Schema(
@@ -20,7 +19,6 @@ export const brandEmailConfigSchema = new Schema(
 
 export const brandSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     code: { type: String, label: 'Code' },
     name: { type: String, label: 'Name' },
     description: {

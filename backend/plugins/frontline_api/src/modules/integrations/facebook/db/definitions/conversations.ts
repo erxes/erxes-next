@@ -1,9 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-
 export const conversationSchema = new Schema({
-  _id: mongooseStringRandomId,
   erxesApiId: String,
   timestamp: Date,
   senderId: { type: String, index: true },

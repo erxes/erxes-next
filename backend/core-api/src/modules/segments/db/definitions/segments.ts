@@ -1,4 +1,3 @@
-import { schemaWrapper } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IAttributeFilter {
@@ -110,34 +109,32 @@ export const conditionSchema = new Schema(
   { _id: false },
 );
 
-export const segmentSchema = schemaWrapper(
-  new Schema({
-    contentType: {
-      type: String,
-      label: 'Content type',
-      index: true,
-    },
-    name: { type: String, optional: true },
-    description: { type: String, optional: true },
-    subOf: { type: String, optional: true, index: true },
-    color: { type: String },
-    shouldWriteActivityLog: {
-      type: Boolean,
-      optional: true,
-    },
+export const segmentSchema = new Schema({
+  contentType: {
+    type: String,
+    label: 'Content type',
+    index: true,
+  },
+  name: { type: String, optional: true },
+  description: { type: String, optional: true },
+  subOf: { type: String, optional: true, index: true },
+  color: { type: String },
+  shouldWriteActivityLog: {
+    type: Boolean,
+    optional: true,
+  },
 
-    conditionsConjunction: {
-      type: String,
-      enum: ['and', 'or'],
-      default: 'and',
-      label: 'Conjunction',
-    },
+  conditionsConjunction: {
+    type: String,
+    enum: ['and', 'or'],
+    default: 'and',
+    label: 'Conjunction',
+  },
 
-    conditions: { type: [conditionSchema] },
+  conditions: { type: [conditionSchema] },
 
-    config: {
-      type: Object,
-      optional: true,
-    },
-  }),
-);
+  config: {
+    type: Object,
+    optional: true,
+  },
+});

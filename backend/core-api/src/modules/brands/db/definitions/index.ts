@@ -1,4 +1,3 @@
-import { schemaWrapper } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IBrandEmailConfig {
@@ -39,20 +38,18 @@ export const brandEmailConfigSchema = new Schema(
   { _id: false },
 );
 
-export const brandSchema = schemaWrapper(
-  new Schema({
-    code: { type: String, label: 'Code' },
-    name: { type: String, label: 'Name' },
-    description: {
-      type: String,
-      optional: true,
-      label: 'Description',
-    },
-    userId: { type: String, label: 'Created by' },
-    createdAt: { type: Date, label: 'Created at' },
-    emailConfig: {
-      type: brandEmailConfigSchema,
-      label: 'Email config',
-    },
-  }),
-);
+export const brandSchema = new Schema({
+  code: { type: String, label: 'Code' },
+  name: { type: String, label: 'Name' },
+  description: {
+    type: String,
+    optional: true,
+    label: 'Description',
+  },
+  userId: { type: String, label: 'Created by' },
+  createdAt: { type: Date, label: 'Created at' },
+  emailConfig: {
+    type: brandEmailConfigSchema,
+    label: 'Email config',
+  },
+});

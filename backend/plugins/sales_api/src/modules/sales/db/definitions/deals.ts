@@ -2,7 +2,6 @@ import {
   attachmentSchema,
   customFieldSchema,
 } from 'erxes-api-shared/core-modules';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 import { SALES_STATUSES, TIME_TRACK_TYPES } from '../../constants';
 
@@ -60,7 +59,6 @@ const relationSchema = new Schema(
 
 export const dealSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     parentId: { type: String, optional: true, label: 'Parent Id' },
     userId: { type: String, optional: true, esType: 'keyword' },
     order: { type: Number, index: true },

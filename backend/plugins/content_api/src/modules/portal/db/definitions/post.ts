@@ -1,18 +1,16 @@
 import {
-  attachmentSchema,
-  customFieldSchema,
-} from 'erxes-api-shared/core-modules';
-import { Schema } from 'mongoose';
-import {
   IPostCategoryDocument,
   IPostDocument,
   IPostTagDocument,
 } from '@/portal/@types/post';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import {
+  attachmentSchema,
+  customFieldSchema,
+} from 'erxes-api-shared/core-modules';
+import { Schema } from 'mongoose';
 
 export const postSchema = new Schema<IPostDocument>(
   {
-    _id: mongooseStringRandomId,
     clientPortalId: { type: String, required: true },
     title: { type: String, required: true },
     type: { type: String, required: true, default: 'post' },
@@ -64,7 +62,6 @@ postSchema.index(
 
 export const postCategorySchema = new Schema<IPostCategoryDocument>(
   {
-    _id: mongooseStringRandomId,
     clientPortalId: { type: String, required: true },
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
@@ -80,7 +77,6 @@ postCategorySchema.index({ slug: 1, clientPortalId: 1 }, { sparse: true });
 
 export const postTagSchema = new Schema<IPostTagDocument>(
   {
-    _id: mongooseStringRandomId,
     clientPortalId: { type: String, required: true },
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },

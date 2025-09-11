@@ -1,10 +1,9 @@
-import { Document, Schema, HydratedDocument } from 'mongoose';
+import { Document, HydratedDocument, Schema } from 'mongoose';
 // import { IRule, ruleSchema } from '@erxes/api-utils/src/definitions/common';
-import { IAttachment } from '../../types';
-import { LEAD_LOAD_TYPES, LEAD_SUCCESS_ACTIONS } from '../../constants';
-import { IRule } from 'erxes-api-shared/core-types';
 import { ruleSchema } from 'erxes-api-shared/core-modules';
-import { schemaWrapper } from 'erxes-api-shared/utils';
+import { IRule } from 'erxes-api-shared/core-types';
+import { LEAD_LOAD_TYPES, LEAD_SUCCESS_ACTIONS } from '../../constants';
+import { IAttachment } from '../../types';
 
 export interface IForm {
   _id: string;
@@ -95,19 +94,17 @@ export interface IFormSubmissionDocument extends IFormSubmission, Document {
 }
 
 // schema for form submission document
-export const formSubmissionSchema = schemaWrapper(
-  new Schema({
-    customerId: { type: String, optional: true },
-    userId: { type: String, optional: true },
-    contentType: { type: String, optional: true },
-    contentTypeId: { type: String, optional: true },
-    value: { type: Object, optional: true },
-    submittedAt: { type: Date, default: Date.now },
-    formId: { type: String, optional: true },
-    formFieldId: { type: String, optional: true },
-    groupId: { type: String, optional: true },
-  }),
-);
+export const formSubmissionSchema = new Schema({
+  customerId: { type: String, optional: true },
+  userId: { type: String, optional: true },
+  contentType: { type: String, optional: true },
+  contentTypeId: { type: String, optional: true },
+  value: { type: Object, optional: true },
+  submittedAt: { type: Date, default: Date.now },
+  formId: { type: String, optional: true },
+  formFieldId: { type: String, optional: true },
+  groupId: { type: String, optional: true },
+});
 
 export const calloutSchema = new Schema(
   {
@@ -260,51 +257,49 @@ export const leadDataSchema = new Schema(
 );
 
 // schema for form document
-export const formSchema = schemaWrapper(
-  new Schema({
-    name: { type: String, required: true },
-    title: { type: String, optional: true },
-    type: { type: String, required: true },
-    description: {
-      type: String,
-      optional: true,
-    },
-    buttonText: { type: String, optional: true },
-    code: { type: String },
-    createdUserId: { type: String },
-    createdDate: {
-      type: Date,
-      default: Date.now,
-    },
+export const formSchema = new Schema({
+  name: { type: String, required: true },
+  title: { type: String, optional: true },
+  type: { type: String, required: true },
+  description: {
+    type: String,
+    optional: true,
+  },
+  buttonText: { type: String, optional: true },
+  code: { type: String },
+  createdUserId: { type: String },
+  createdDate: {
+    type: Date,
+    default: Date.now,
+  },
 
-    numberOfPages: {
-      type: Number,
-      optional: true,
-      min: 1,
-    },
+  numberOfPages: {
+    type: Number,
+    optional: true,
+    min: 1,
+  },
 
-    brandId: { type: String, optional: true, label: 'Brand' },
+  brandId: { type: String, optional: true, label: 'Brand' },
 
-    leadData: { type: leadDataSchema, label: 'Lead data' },
-    departmentIds: {
-      type: [String],
-      optional: true,
-      label: 'Departments',
-    },
-    languageCode: { type: String, optional: true, label: 'Language' },
-    visibility: { type: String, optional: true, label: 'Visibility' },
-    tagIds: { type: [String], optional: true, label: 'Tags' },
-    status: {
-      type: String,
-      optional: true,
-      label: 'Status',
-      enum: ['active', 'archived'],
-      default: 'active',
-    },
-    integrationId: {
-      type: String,
-      optional: true,
-      label: 'Integration',
-    },
-  }),
-);
+  leadData: { type: leadDataSchema, label: 'Lead data' },
+  departmentIds: {
+    type: [String],
+    optional: true,
+    label: 'Departments',
+  },
+  languageCode: { type: String, optional: true, label: 'Language' },
+  visibility: { type: String, optional: true, label: 'Visibility' },
+  tagIds: { type: [String], optional: true, label: 'Tags' },
+  status: {
+    type: String,
+    optional: true,
+    label: 'Status',
+    enum: ['active', 'archived'],
+    default: 'active',
+  },
+  integrationId: {
+    type: String,
+    optional: true,
+    label: 'Integration',
+  },
+});

@@ -1,10 +1,8 @@
-import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { IOTATourAvailabilityDocument } from '@/ota/@types/tourAvailabilities';
+import { Schema } from 'mongoose';
 
 export const otaTourAvailabilitySchema =
   new Schema<IOTATourAvailabilityDocument>({
-    _id: mongooseStringRandomId,
     tourId: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },

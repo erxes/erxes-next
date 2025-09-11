@@ -1,8 +1,6 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 export const customerSchema = new Schema({
-  _id: mongooseStringRandomId,
   userId: { type: String, unique: true, label: 'Facebook user id' },
   erxesApiId: { type: String, label: 'Customer id at contacts-api' },
   firstName: String,

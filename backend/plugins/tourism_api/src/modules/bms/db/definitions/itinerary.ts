@@ -1,7 +1,6 @@
-import { Schema } from 'mongoose';
 import { PAYMENT_STATUS_TYPES } from '@/bms/constants';
 import { getEnum } from '@/bms/utils';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { Schema } from 'mongoose';
 
 export const locationSchema = new Schema(
   {
@@ -36,7 +35,6 @@ const groupDay = new Schema(
 );
 
 export const itinerarySchema = new Schema({
-  _id: mongooseStringRandomId,
   createdAt: { type: Date, label: 'Created at' },
   modifiedAt: { type: Date, label: 'Modified at' },
 

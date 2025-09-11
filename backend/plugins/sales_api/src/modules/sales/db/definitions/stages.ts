@@ -1,10 +1,8 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 import { PROBABILITY, SALES_STATUSES, VISIBILITIES } from '../../constants';
 
 export const stageSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     probability: {
       type: String,

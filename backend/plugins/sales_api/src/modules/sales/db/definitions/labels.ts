@@ -1,9 +1,7 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const pipelineLabelSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     colorCode: { type: String, label: 'Color code' },
     pipelineId: { type: String, label: 'Pipeline' },

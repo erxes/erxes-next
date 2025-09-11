@@ -1,9 +1,7 @@
 import { IOTATourDocument } from '@/ota/@types/tours';
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 export const otaTourSchema = new Schema<IOTATourDocument>({
-  _id: mongooseStringRandomId,
   title: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },

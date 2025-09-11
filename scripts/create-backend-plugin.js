@@ -466,19 +466,14 @@ export interface I${capitalizedModuleName}Document extends I${capitalizedModuleN
 
   const modelsDefinitionContent = `import { Schema } from 'mongoose';
 
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
-
-export const ${moduleName}Schema = schemaWrapper(
-  new Schema(
+export const ${moduleName}Schema = new Schema(
     {
-      _id: mongooseStringRandomId,
       name: { type: String, label: 'Name' },
     },
     {
       timestamps: true,
     },
-  ),
-);
+  );
 `;
 
   fs.writeFileSync(

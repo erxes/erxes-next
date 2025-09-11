@@ -1,33 +1,29 @@
 import { Model, Schema } from 'mongoose';
 import { CURRENCIES, PAYMENT_STATUS } from '~/constants';
 import { IInvoiceDocument } from '~/modules/payment/@types/invoices';
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
-export const invoiceSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseStringRandomId,
-    invoiceNumber: { type: String },
-    amount: { type: Number },
-    currency: { type: String, enum: CURRENCIES, default: 'MNT' },
-    phone: { type: String },
-    email: { type: String },
-    paymentIds: { type: [String] },
-    redirectUri: { type: String },
+export const invoiceSchema = new Schema({
+  invoiceNumber: { type: String },
+  amount: { type: Number },
+  currency: { type: String, enum: CURRENCIES, default: 'MNT' },
+  phone: { type: String },
+  email: { type: String },
+  paymentIds: { type: [String] },
+  redirectUri: { type: String },
 
-    description: { type: String },
-    status: { type: String, default: PAYMENT_STATUS.PENDING },
-    customerType: { type: String },
-    customerId: { type: String },
-    contentType: { type: String },
-    contentTypeId: { type: String },
-    createdAt: { type: Date, default: Date.now },
-    resolvedAt: { type: Date },
-    data: { type: Schema.Types.Mixed },
-    apiResponse: { type: Schema.Types.Mixed },
-    callback: { type: String },
-    warningText: { type: String },
-  }),
-);
+  description: { type: String },
+  status: { type: String, default: PAYMENT_STATUS.PENDING },
+  customerType: { type: String },
+  customerId: { type: String },
+  contentType: { type: String },
+  contentTypeId: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  resolvedAt: { type: Date },
+  data: { type: Schema.Types.Mixed },
+  apiResponse: { type: Schema.Types.Mixed },
+  callback: { type: String },
+  warningText: { type: String },
+});
 
 invoiceSchema.index({ invoiceNumber: 1 });
 

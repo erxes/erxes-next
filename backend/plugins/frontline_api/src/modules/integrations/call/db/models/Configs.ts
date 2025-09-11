@@ -1,7 +1,5 @@
 import { Model, Schema } from 'mongoose';
 
-import { field } from '../utils';
-
 import { IModels } from '~/connectionResolvers';
 import {
   ICallConfig,
@@ -9,9 +7,8 @@ import {
 } from '~/modules/integrations/call/@types/config';
 
 export const configSchema = new Schema({
-  _id: field({ pkey: true }),
-  code: field({ type: String, unique: true }),
-  value: field({ type: Object }),
+  code: { type: String, unique: true },
+  value: { type: Object },
 });
 
 export interface ICallConfigModel extends Model<ICallConfigDocument> {

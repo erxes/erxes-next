@@ -1,36 +1,29 @@
 import { Schema } from 'mongoose';
-import { mongooseField, schemaWrapper } from '../../../../utils';
 
-export const userGroupSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseField({ pkey: true }),
-    name: mongooseField({ type: String, unique: true, label: 'Name' }),
-    description: mongooseField({ type: String, label: 'Description' }),
-    branchIds: mongooseField({
-      type: [String],
-      label: 'Branches',
-      optional: true,
-    }),
-    departmentIds: mongooseField({
-      type: [String],
-      label: 'Departments',
-      optional: true,
-    }),
-  }),
-);
+export const userGroupSchema = new Schema({
+  name: { type: String, unique: true, label: 'Name' },
+  description: { type: String, label: 'Description' },
+  branchIds: {
+    type: [String],
+    label: 'Branches',
+    optional: true,
+  },
+  departmentIds: {
+    type: [String],
+    label: 'Departments',
+    optional: true,
+  },
+});
 
-export const permissionSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseField({ pkey: true }),
-    module: mongooseField({ type: String, label: 'Module' }),
-    action: mongooseField({ type: String, label: 'Action' }),
-    userId: mongooseField({ type: String, label: 'User' }),
-    groupId: mongooseField({ type: String, label: 'User group' }),
-    requiredActions: mongooseField({
-      type: [String],
-      default: [],
-      label: 'Required actions',
-    }),
-    allowed: mongooseField({ type: Boolean, default: false, label: 'Allowed' }),
-  }),
-);
+export const permissionSchema = new Schema({
+  module: { type: String, label: 'Module' },
+  action: { type: String, label: 'Action' },
+  userId: { type: String, label: 'User' },
+  groupId: { type: String, label: 'User group' },
+  requiredActions: {
+    type: [String],
+    default: [],
+    label: 'Required actions',
+  },
+  allowed: { type: Boolean, default: false, label: 'Allowed' },
+});

@@ -1,35 +1,31 @@
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
-export const tagSchema = schemaWrapper(
-  new Schema(
-    {
-      _id: mongooseStringRandomId,
-      name: { type: String, label: 'Name' },
-      type: {
-        type: String,
-        label: 'Type',
-        index: true,
-      },
-      colorCode: { type: String, label: 'Color code' },
-      objectCount: { type: Number, label: 'Object count' },
-      order: { type: String, label: 'Order', index: true },
-      parentId: {
-        type: String,
-        optional: true,
-        index: true,
-        label: 'Parent',
-      },
-      relatedIds: {
-        type: [String],
-        optional: true,
-        label: 'Children tag ids',
-      },
+export const tagSchema = new Schema(
+  {
+    name: { type: String, label: 'Name' },
+    type: {
+      type: String,
+      label: 'Type',
+      index: true,
     },
-    {
-      timestamps: true,
+    colorCode: { type: String, label: 'Color code' },
+    objectCount: { type: Number, label: 'Object count' },
+    order: { type: String, label: 'Order', index: true },
+    parentId: {
+      type: String,
+      optional: true,
+      index: true,
+      label: 'Parent',
     },
-  ),
+    relatedIds: {
+      type: [String],
+      optional: true,
+      label: 'Children tag ids',
+    },
+  },
+  {
+    timestamps: true,
+  },
 );
 
 // for tags query. increases search speed, avoids in-memory sorting

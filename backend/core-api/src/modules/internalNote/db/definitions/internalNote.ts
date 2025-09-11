@@ -1,9 +1,7 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const internalNoteSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     contentType: {
       type: String,
       label: 'Content type',

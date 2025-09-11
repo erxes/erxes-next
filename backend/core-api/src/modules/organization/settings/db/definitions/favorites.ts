@@ -1,4 +1,3 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IFavorites {
@@ -15,7 +14,6 @@ export interface IFavoritesDocument extends IFavorites, Document {
 
 export const favoritesSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     type: {
       type: String,
       enum: ['module', 'submenu'],

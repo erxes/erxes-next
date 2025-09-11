@@ -1,18 +1,17 @@
 import { Schema } from 'mongoose';
-import { field } from '../utils';
 
 export const callHistorySchema = new Schema({
-  operatorPhone: field({ type: String, label: 'operator number' }),
-  customerPhone: field({ type: String, label: 'customer number' }),
-  callDuration: field({ type: Number, label: 'duration' }),
-  callStartTime: field({ type: Date, label: 'call start time' }),
-  callEndTime: field({ type: Date, label: 'call end time' }),
-  callType: field({
+  operatorPhone: { type: String, label: 'operator number' },
+  customerPhone: { type: String, label: 'customer number' },
+  callDuration: { type: Number, label: 'duration' },
+  callStartTime: { type: Date, label: 'call start time' },
+  callEndTime: { type: Date, label: 'call end time' },
+  callType: {
     type: String,
     label: 'call type',
     // enum: ['incoming', 'outgoing'],
-  }),
-  callStatus: field({
+  },
+  callStatus: {
     type: String,
     label: 'status',
     enum: [
@@ -25,26 +24,26 @@ export const callHistorySchema = new Schema({
       'cancelledToAnswered',
     ],
     default: 'missed',
-  }),
-  acceptedUserId: field({
+  },
+  acceptedUserId: {
     type: String,
     label: 'call accepted operator id',
-  }),
-  timeStamp: field({
+  },
+  timeStamp: {
     type: Number,
     label: 'call timestamp',
-  }),
-  modifiedAt: field({ type: Date, label: 'modified date' }),
-  createdAt: field({ type: Date, label: 'created date', default: new Date() }),
-  createdBy: field({ type: String, label: 'created By' }),
-  modifiedBy: field({ type: String, label: 'updated By' }),
-  extensionNumber: field({ type: String, label: 'extention number' }),
-  conversationId: field({ type: String, label: 'erxes conversation id' }),
-  inboxIntegrationId: field({ type: String, label: 'erxes integration id' }),
-  recordUrl: field({ type: String, label: 'record url' }),
-  endedBy: field({
+  },
+  modifiedAt: { type: Date, label: 'modified date' },
+  createdAt: { type: Date, label: 'created date', default: new Date() },
+  createdBy: { type: String, label: 'created By' },
+  modifiedBy: { type: String, label: 'updated By' },
+  extensionNumber: { type: String, label: 'extention number' },
+  conversationId: { type: String, label: 'erxes conversation id' },
+  inboxIntegrationId: { type: String, label: 'erxes integration id' },
+  recordUrl: { type: String, label: 'record url' },
+  endedBy: {
     type: String,
     label: `'Local' indicates the call was ended by Erxes, while 'remote' indicates the call was ended by the customer`,
-  }),
-  queueName: field({ type: String, label: 'queue name' }),
+  },
+  queueName: { type: String, label: 'queue name' },
 });

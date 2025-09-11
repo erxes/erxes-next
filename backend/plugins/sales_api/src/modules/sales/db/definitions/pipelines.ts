@@ -1,4 +1,3 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 import {
   HACK_SCORING_TYPES,
@@ -8,7 +7,6 @@ import {
 
 export const pipelineSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     boardId: { type: String, label: 'Board' },
     tagId: {

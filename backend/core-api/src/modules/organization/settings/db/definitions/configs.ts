@@ -1,4 +1,3 @@
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IConfig {
@@ -12,17 +11,14 @@ export interface IConfigDocument extends IConfig, Document {
 
 // Mongoose schemas ===========
 
-export const configSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseStringRandomId,
-    code: {
-      type: String,
-      unique: true,
-      label: 'Code',
-    },
-    value: {
-      type: Object,
-      label: 'Value',
-    },
-  }),
-);
+export const configSchema = new Schema({
+  code: {
+    type: String,
+    unique: true,
+    label: 'Code',
+  },
+  value: {
+    type: Object,
+    label: 'Value',
+  },
+});

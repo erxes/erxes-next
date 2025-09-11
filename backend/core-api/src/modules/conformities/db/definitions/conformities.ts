@@ -1,5 +1,4 @@
 import { Document, Schema } from 'mongoose';
-import { mongooseField } from 'erxes-api-shared/utils';
 
 export interface IConformity {
   mainType: string;
@@ -67,11 +66,10 @@ export interface IConformityDocument extends IConformity, Document {
 }
 
 export const conformitySchema = new Schema({
-  _id: mongooseField({ pkey: true }),
-  mainType: mongooseField({ type: String }),
-  mainTypeId: mongooseField({ type: String, index: true }),
-  relType: mongooseField({ type: String }),
-  relTypeId: mongooseField({ type: String, index: true }),
+  mainType: { type: String },
+  mainTypeId: { type: String, index: true },
+  relType: { type: String },
+  relTypeId: { type: String, index: true },
 });
 
 conformitySchema.index({
@@ -80,6 +78,7 @@ conformitySchema.index({
   relType: 1,
   relTypeId: 1,
 });
+
 conformitySchema.index({ relType: 1, relTypeId: 1, mainType: 1 });
 conformitySchema.index({ mainType: 1, relTypeId: 1 });
 conformitySchema.index({ relType: 1, mainTypeId: 1 });

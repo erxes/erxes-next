@@ -1,6 +1,5 @@
-import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { attachmentSchema } from 'erxes-api-shared/core-modules';
+import { Schema } from 'mongoose';
 import { PUBLISH_STATUSES } from '~/modules/knowledgebase/constants';
 
 const commonFields = {
@@ -25,7 +24,6 @@ const formcodesSchema = new Schema(
 );
 
 export const articleSchema = new Schema({
-  _id: mongooseStringRandomId,
   summary: { type: String, optional: true, label: 'Summary' },
   content: { type: String, label: 'Content' },
   status: {
@@ -77,7 +75,6 @@ export const articleSchema = new Schema({
 });
 
 export const categorySchema = new Schema({
-  _id: mongooseStringRandomId,
   description: { type: String, optional: true, label: 'Description' },
   articleIds: { type: [String], label: 'Articles' },
   icon: { type: String, optional: true, label: 'Icon' },
@@ -91,7 +88,6 @@ export const categorySchema = new Schema({
 });
 
 export const topicSchema = new Schema({
-  _id: mongooseStringRandomId,
   description: { type: String, optional: true, label: 'Description' },
   brandId: { type: String, optional: true, label: 'Brand' },
 

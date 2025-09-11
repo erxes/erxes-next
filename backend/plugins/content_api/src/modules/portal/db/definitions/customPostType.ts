@@ -1,10 +1,8 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-import { Schema } from 'mongoose';
 import { ICustomPostTypeDocument } from '@/portal/@types/customPostType';
+import { Schema } from 'mongoose';
 
 export const customPostTypeSchema = new Schema<ICustomPostTypeDocument>(
   {
-    _id: mongooseStringRandomId,
     clientPortalId: { type: String, required: true },
 
     label: { type: String, required: true },

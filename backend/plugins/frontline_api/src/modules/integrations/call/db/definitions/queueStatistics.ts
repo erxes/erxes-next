@@ -1,31 +1,30 @@
 import { Schema } from 'mongoose';
-import { field } from '../utils';
 
 export const operatorSchema = new Schema({
-  userId: field({ type: String, label: 'user id', unique: true }),
-  extension: field({ type: String, label: 'Operator extension' }),
-  status: field({
+  userId: { type: String, label: 'user id', unique: true },
+  extension: { type: String, label: 'Operator extension' },
+  status: {
     type: String,
     label: 'Operator extension',
     enum: ['unAvailable', 'idle', 'pause', 'unpause'],
     default: 'unAvailable',
-  }),
+  },
 });
 
 export const queueStatisticsSchema = new Schema({
-  queuechairman: field({ type: String, required: true }),
-  integrationId: field({ type: String, required: true }),
-  queue: field({ type: Number, required: true }),
-  totalCalls: field({ type: Number, default: 0 }),
-  answeredCalls: field({ type: Number, default: 0 }),
-  answeredRate: field({ type: Number, default: 0 }),
-  abandonedCalls: field({ type: Number, default: 0 }),
-  avgWait: field({ type: Number, default: 0 }),
-  avgTalk: field({ type: Number, default: 0 }),
-  vqTotalCalls: field({ type: Number, default: 0 }),
-  slaRate: field({ type: Number, default: 0 }),
-  vqSlaRate: field({ type: Number, default: 0 }),
-  transferOutCalls: field({ type: Number, default: 0 }),
-  transferOutRate: field({ type: Number, default: 0 }),
-  abandonedRate: field({ type: Number, default: 0 }),
+  queuechairman: { type: String, required: true },
+  integrationId: { type: String, required: true },
+  queue: { type: Number, required: true },
+  totalCalls: { type: Number, default: 0 },
+  answeredCalls: { type: Number, default: 0 },
+  answeredRate: { type: Number, default: 0 },
+  abandonedCalls: { type: Number, default: 0 },
+  avgWait: { type: Number, default: 0 },
+  avgTalk: { type: Number, default: 0 },
+  vqTotalCalls: { type: Number, default: 0 },
+  slaRate: { type: Number, default: 0 },
+  vqSlaRate: { type: Number, default: 0 },
+  transferOutCalls: { type: Number, default: 0 },
+  transferOutRate: { type: Number, default: 0 },
+  abandonedRate: { type: Number, default: 0 },
 });

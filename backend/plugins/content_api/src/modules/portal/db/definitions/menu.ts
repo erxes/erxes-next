@@ -1,10 +1,8 @@
 import { IMenuItemDocument } from '@/portal/@types/menu';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const menuItemSchema = new Schema<IMenuItemDocument>(
   {
-    _id: mongooseStringRandomId,
     clientPortalId: { type: String, required: true },
     label: { type: String, required: true },
     contentType: { type: String },

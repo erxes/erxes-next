@@ -1,14 +1,12 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const checklistSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     contentType: {
       type: String,
       label: 'Content type',
       index: true,
-      default: 'deal'
+      default: 'deal',
     },
     order: { type: Number },
     contentTypeId: {
@@ -26,7 +24,6 @@ export const checklistSchema = new Schema(
 
 export const checklistItemSchema = new Schema(
   {
-    _id: mongooseStringRandomId,
     checklistId: { type: String, label: 'Check list', index: true },
     content: { type: String, label: 'Content' },
     isChecked: { type: Boolean, label: 'Is checked' },

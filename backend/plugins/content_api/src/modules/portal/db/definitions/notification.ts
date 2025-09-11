@@ -1,9 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-
 export const notificationSchema = new Schema({
-  _id: mongooseStringRandomId,
   title: { type: String },
   link: { type: String, optional: true },
   content: { type: String },

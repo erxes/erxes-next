@@ -1,6 +1,5 @@
-import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { IOTAHotelDocument, IOTALocation } from '@/ota/@types/hotels';
+import { Schema } from 'mongoose';
 
 const locationSchema = new Schema<IOTALocation>(
   {
@@ -15,7 +14,6 @@ const locationSchema = new Schema<IOTALocation>(
 
 export const otaHotelSchema = new Schema<IOTAHotelDocument>(
   {
-    _id: mongooseStringRandomId,
     saasOrgId: { type: String, required: true },
     externalHotelId: String,
     name: { type: String, required: true },

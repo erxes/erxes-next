@@ -1,7 +1,6 @@
-import { Document, Schema } from 'mongoose';
 import { PAYMENT_STATUS_TYPES } from '@/bms/constants';
 import { getEnum } from '@/bms/utils';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { Document, Schema } from 'mongoose';
 
 export interface IOrder {
   _id: string;
@@ -24,7 +23,6 @@ export interface IOrderDocument extends IOrder, Document {
 }
 
 export const orderSchema = new Schema({
-  _id: mongooseStringRandomId,
   createdAt: { type: Date, label: 'Created at' },
   modifiedAt: { type: Date, label: 'Modified at' },
   customerId: { type: String, optional: true, label: 'customerId' },
