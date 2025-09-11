@@ -32,6 +32,7 @@ import { formatSeconds } from '@/integrations/call/utils/callUtils';
 import { QUEUE_REALTIME_UPDATE } from '@/integrations/call/graphql/subscriptions/subscriptions';
 import { useSubscription } from '@apollo/client';
 import { useCallDurationFromDate } from '@/integrations/call/hooks/useCallDuration';
+import { useCallQueueInitialList } from '@/integrations/call/hooks/useCallQueueInitialList';
 
 export const CallDetailPage = () => {
   const { id } = useParams();
@@ -46,6 +47,13 @@ export const CallDetailPage = () => {
 
   const { callQueueMemberList, loading: loadingQueueMemberList } =
     useCallQueueMemberList({
+      integrationId: inboxId || '',
+      queue: id || '',
+      setUpdatedAt,
+    });
+
+  const { callQueueInitialList, loading: loadingQueueInitialCallList } =
+    useCallQueueInitialList({
       integrationId: inboxId || '',
       queue: id || '',
       setUpdatedAt,
@@ -81,7 +89,16 @@ export const CallDetailPage = () => {
     };
   });
 
-  if (loadingUserIntegrations || loadingQueueMemberList) {
+  const waitingCallList =
+    callRealtimeUpdate.waiting || callQueueInitialList?.waiting || [];
+  const talkingCallList =
+    callRealtimeUpdate.talking || callQueueInitialList?.talking || [];
+
+  if (
+    loadingUserIntegrations ||
+    loadingQueueMemberList ||
+    loadingQueueInitialCallList
+  ) {
     return <Spinner size="md" />;
   }
 
@@ -164,8 +181,8 @@ export const CallDetailPage = () => {
         </div>
         <div className="grid grid-cols-2 grid-rows-2 flex-1 gap-5">
           <CallDetailAgents membersList={membersList || []} />
-          <CallDetailWaiting waitingList={callRealtimeUpdate.waiting || []} />
-          <CallDetailTalking talkingList={callRealtimeUpdate.talking || []} />
+          <CallDetailWaiting waitingList={waitingCallList || []} />
+          <CallDetailTalking talkingList={talkingCallList || []} />
         </div>
       </div>
     </PageContainer>

@@ -240,14 +240,14 @@ const callQueries = {
     }
   },
 
-  async callWaitingList(_root, { queue }) {
-    const redisKey = `callRealtimeHistory:${queue}:waiting`;
-    return await redis.get(redisKey);
-  },
-
-  async callProceedingList(_root, { queue }) {
-    const redisKey = `callRealtimeHistory:${queue}:talking`;
-    return await redis.get(redisKey);
+  async callQueueInitialList(_root, { queue }) {
+    try {
+      const redisKey = `callRealtimeHistory:${queue}:aggregate`;
+      return (await redis.get(redisKey)) || `{}`;
+    } catch (error) {
+      console.error(`Failed to fetch queue data for ${queue}:`, error);
+      return '{}';
+    }
   },
 
   async callQueueMemberList(
