@@ -1,6 +1,6 @@
 export const types = `
     type Status {
-        _id: String!
+        _id: ID!
         name: String!
         teamId: String!
         description: String
@@ -12,7 +12,7 @@ export const types = `
     }
 
     input StatusInput {
-        _id: String
+        _id: ID
         name: String!
         teamId: String!
         description: String
@@ -23,13 +23,13 @@ export const types = `
 `;
 
 export const queries = `
-   getStatus(_id: String!): Status
+   getStatus(_id: ID!): Status
    getStatusesChoicesByTeam(teamId: String!): JSON
    getStatusesByType(type: Int!, teamId: String!): [Status]
 `;
 
 export const mutations = `
     addStatus(name: String!, teamId: String!, description: String, color: String, order: Int, type: Int): Status
-    updateStatus(_id: String!, name: String, description: String, color: String, order: Int, type: Int): Status
-    deleteStatus(_id: String!): JSON
+    updateStatus(_id: ID!, name: String, description: String, color: String, order: Int, type: Int): Status
+    deleteStatus(_id: ID!): JSON
 `;

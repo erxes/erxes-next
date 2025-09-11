@@ -84,7 +84,7 @@ const queryParams = `
 
 export const queries = `
   companies(${queryParams}): CompaniesListResponse
-  companyDetail(_id: String!): Company
+  companyDetail(_id: ID!): Company
 `;
 
 const mutationParams = `
@@ -122,7 +122,7 @@ const mutationParams = `
 
 export const mutations = `
   companiesAdd(${mutationParams}): Company
-  companiesEdit(_id: String!, ${mutationParams}): Company
+  companiesEdit(_id: ID!, ${mutationParams}): Company
   companiesRemove(companyIds: [String]): [String]
   companiesMerge(companyIds: [String], companyFields: JSON) : Company
 `;

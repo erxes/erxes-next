@@ -10,7 +10,7 @@ export const ADD_TOPIC = gql`
 
 export const EDIT_TOPIC = gql`
   mutation knowledgeBaseTopicsEdit(
-    $_id: String!
+    $_id: ID!
     $input: KnowledgeBaseTopicInput!
   ) {
     knowledgeBaseTopicsEdit(_id: $_id, input: $input) {
@@ -20,7 +20,7 @@ export const EDIT_TOPIC = gql`
 `;
 
 export const REMOVE_TOPIC = gql`
-  mutation knowledgeBaseTopicsRemove($_id: String!) {
+  mutation knowledgeBaseTopicsRemove($_id: ID!) {
     knowledgeBaseTopicsRemove(_id: $_id)
   }
 `;
@@ -35,7 +35,7 @@ export const ADD_CATEGORY = gql`
 
 export const EDIT_CATEGORY = gql`
   mutation knowledgeBaseCategoriesEdit(
-    $_id: String!
+    $_id: ID!
     $input: KnowledgeBaseCategoryInput!
   ) {
     knowledgeBaseCategoriesEdit(_id: $_id, input: $input) {
@@ -45,7 +45,7 @@ export const EDIT_CATEGORY = gql`
 `;
 
 export const REMOVE_CATEGORY = gql`
-  mutation knowledgeBaseCategoriesRemove($_id: String!) {
+  mutation knowledgeBaseCategoriesRemove($_id: ID!) {
     knowledgeBaseCategoriesRemove(_id: $_id)
   }
 `;
@@ -60,7 +60,7 @@ export const ADD_ARTICLE = gql`
 
 export const EDIT_ARTICLE = gql`
   mutation knowledgeBaseArticlesEdit(
-    $_id: String!
+    $_id: ID!
     $input: KnowledgeBaseArticleInput!
   ) {
     knowledgeBaseArticlesEdit(_id: $_id, input: $input) {
@@ -70,7 +70,7 @@ export const EDIT_ARTICLE = gql`
 `;
 
 export const REMOVE_ARTICLE = gql`
-  mutation knowledgeBaseArticlesRemove($_id: String!) {
+  mutation knowledgeBaseArticlesRemove($_id: ID!) {
     knowledgeBaseArticlesRemove(_id: $_id) {
       _id
     }

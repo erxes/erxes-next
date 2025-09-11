@@ -34,7 +34,7 @@ enum UserCardEnum {
   }
 
   type ClientPortalParticipant {
-    _id: String!
+    _id: ID!
     contentType: UserCardEnum
     contentTypeId: String
     cpUserId: String
@@ -106,7 +106,7 @@ enum UserCardEnum {
 
 
 type ClientPortal {
-    _id: String!
+    _id: ID!
     name: String!
     slug: String
     kind: BusinessPortalKind!
@@ -274,7 +274,7 @@ input OTPConfigInput {
   }
 
   input ClientPortalConfigInput {
-    _id: String
+    _id: ID
     name: String!
     slug: String
     kind: BusinessPortalKind!
@@ -359,19 +359,19 @@ input OTPConfigInput {
 
 export const queries = `
   clientPortalGetConfigs(kind:BusinessPortalKind, search: String, ${GQL_CURSOR_PARAM_DEFS}): ClientPortalListResponse
-  clientPortalGetConfig(_id: String!): ClientPortal
+  clientPortalGetConfig(_id: ID!): ClientPortal
   clientPortalGetConfigByDomain(clientPortalName: String): ClientPortal
   clientPortalGetLast(kind: BusinessPortalKind): ClientPortal
   clientPortalConfigsTotalCount: Int
-  clientPortalGetAllowedFields(_id: String!): JSON
+  clientPortalGetAllowedFields(_id: ID!): JSON
 
 
-  clientPortalParticipantDetail(_id: String, contentType:String, contentTypeId:String, cpUserId:String): ClientPortalParticipant
+  clientPortalParticipantDetail(_id: ID, contentType:String, contentTypeId:String, cpUserId:String): ClientPortalParticipant
   clientPortalParticipants(contentType: String!, contentTypeId: String!, userKind: BusinessPortalKind): [ClientPortalParticipant]
   clientPortalCardUsers(contentType: String!, contentTypeId: String!, userKind: BusinessPortalKind): [ClientPortalUser]
 
 
-   clientPortalKnowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
+   clientPortalKnowledgeBaseTopicDetail(_id: ID!): KnowledgeBaseTopic
    clientPortalKnowledgeBaseArticles(searchValue: String, categoryIds: [String], topicId: String, isPrivate: Boolean, ${GQL_CURSOR_PARAM_DEFS}): KnowledgeBaseArticlesListResponse
 `;
 
@@ -380,7 +380,7 @@ export const mutations = `
     config: ClientPortalConfigInput!
   ): ClientPortal
 
-  clientPortalRemove (_id: String!): JSON
+  clientPortalRemove (_id: ID!): JSON
   clientPortalCreateCard(
         type: String!
         stageId: String!
@@ -402,8 +402,8 @@ export const mutations = `
         cpUserIds: [String]
       ): JSON
       clientPortalCommentsAdd(type: String!, typeId: String!, content: String! userType: String!): ClientPortalComment
-      clientPortalCommentsRemove(_id: String!): String
-      clientPortalParticipantEdit(_id: String!,
+      clientPortalCommentsRemove(_id: ID!): String
+      clientPortalParticipantEdit(_id: ID!,
         contentType: UserCardEnum,
         contentTypeId: String,
         cpUserId: String,

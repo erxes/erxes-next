@@ -12,7 +12,7 @@ export const types = `
   }
 
   type Invoice @key(fields: "_id") {
-    _id: String
+    _id: ID
     invoiceNumber: String
 
     amount: Float
@@ -48,7 +48,6 @@ export const types = `
   }
 `;
 
-
 export const inputs = `
   input InvoiceInput {
     amount: Float!
@@ -66,12 +65,12 @@ export const inputs = `
     callback: String
     currency: String
   }
-`
+`;
 
 export const mutations = `
   generateInvoiceUrl(input: InvoiceInput!): String
   invoiceCreate(input: InvoiceInput!): Invoice
-  invoiceUpdate(_id: String!, input: InvoiceInput!): Invoice
+  invoiceUpdate(_id: ID!, input: InvoiceInput!): Invoice
   invoicesCheck(_id:String!): String
   invoicesRemove(_ids: [String]!): String
 `;
@@ -81,7 +80,6 @@ const cursorParams = `
   cursor: String
   direction: CURSOR_DIRECTION
 `;
-
 
 const queryParams = `
   searchValue: String
@@ -96,6 +94,6 @@ const queryParams = `
 export const queries = `
   invoices(${queryParams}): InvoicesListResponse
   invoicesTotalCount(${queryParams}): invoicesTotalCount
-  invoiceDetail(_id: String!): Invoice
+  invoiceDetail(_id: ID!): Invoice
   invoiceDetailByContent(contentType: String!, contentTypeId: String!): [Invoice]
 `;

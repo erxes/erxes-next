@@ -114,9 +114,9 @@ export const ADJUST_INVENTORIES_QUERY = gql`
     }
     adjustInventoriesCount(${adjustInvFilterParams})
   }
-`
+`;
 export const ADJUST_INVENTORY_DETAIL_QUERY = gql`
-  query AdjustInventoryDetail($_id: String!) {
+  query AdjustInventoryDetail($_id: ID!) {
     adjustInventoryDetail(_id: $_id) {
       ${adjustInventoryFields}
     }
@@ -124,7 +124,7 @@ export const ADJUST_INVENTORY_DETAIL_QUERY = gql`
 `;
 
 export const ADJUST_INVENTORY_DETAILS_QUERY = gql`
-  query AdjustInventoryDetails($_id: String!) {
+  query AdjustInventoryDetails($_id: ID!) {
     adjustInventoryDetails(_id: $_id) {
       ${adjustInvDetailFields}
     }

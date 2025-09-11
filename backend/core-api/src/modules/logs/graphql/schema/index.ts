@@ -1,6 +1,6 @@
 export const types = `
     type Log {
-      _id: String
+      _id: ID
       createdAt: Date
       payload:JSON,
       source:String,

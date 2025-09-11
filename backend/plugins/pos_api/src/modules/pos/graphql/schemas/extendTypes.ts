@@ -1,10 +1,10 @@
 const extendTypes = `
   extend type User @key(fields: "_id") {
-    _id: String @external
+    _id: ID @external
   }
 
   extend type ProductCategory @key(fields: "_id") {
-    _id: String @external
+    _id: ID @external
   }
 `;
 

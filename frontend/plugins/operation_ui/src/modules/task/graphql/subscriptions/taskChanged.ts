@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const TASK_CHANGED = gql`
-  subscription operationTaskChanged($_id: String!) {
+  subscription operationTaskChanged($_id: ID!) {
     operationTaskChanged(_id: $_id) {
       type
       task {

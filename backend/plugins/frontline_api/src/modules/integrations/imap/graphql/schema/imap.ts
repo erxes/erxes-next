@@ -1,6 +1,6 @@
 export const types = `
   type IMap {
-    _id: String!
+    _id: ID!
     title: String
     mailData: JSON
     createdAt: Date

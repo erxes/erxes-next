@@ -33,7 +33,7 @@ const types = `
   }
 
   type Automation {
-    _id: String!
+    _id: ID!
     name: String
     status: String
     createdAt: Date
@@ -50,7 +50,7 @@ const types = `
   }
 
   type AutomationNote {
-    _id: String
+    _id: ID
     description: String
     triggerId: String
     actionId: String
@@ -70,7 +70,7 @@ const types = `
   }
 
   type AutomationHistory {
-    _id: String
+    _id: ID
     createdAt: Date
     modifiedAt: Date
     automationId: String

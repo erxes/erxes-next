@@ -1,9 +1,8 @@
 import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
-
 export const types = `
   type ClientPortalComment @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     type: String,
     typeId: String,
     userId: String,

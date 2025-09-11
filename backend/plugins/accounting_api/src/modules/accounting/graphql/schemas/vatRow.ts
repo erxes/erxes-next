@@ -1,6 +1,6 @@
 export const types = () => `
   type VatRow @key(fields: "_id") @cacheControl(maxAge: 3){
-    _id: String!
+    _id: ID!
     name: String
     number: String
     kind: String
@@ -43,11 +43,11 @@ export const queries = `
     sortDirection: Int    
   ): [VatRow]
   vatRowsCount(${vatRowsQueryParams}): Int
-  vatRowDetail(_id: String): VatRow
+  vatRowDetail(_id: ID): VatRow
 `;
 
 export const mutations = `
   vatRowsAdd(${vatRowParams}): VatRow
-  vatRowsEdit(_id: String!, ${vatRowParams}): VatRow
+  vatRowsEdit(_id: ID!, ${vatRowParams}): VatRow
   vatRowsRemove(vatRowIds: [String!]): String
 `;

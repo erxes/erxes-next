@@ -1,6 +1,6 @@
 export const types = `
   type AdjustInvDetail @key(fields: "_id") @cacheControl(maxAge: 3){
-    _id: String
+    _id: ID
     adjustId: String
     createdAt: Date
     updatedAt: Date
@@ -27,7 +27,7 @@ export const types = `
   }
 
   type AdjustInventory @key(fields: "_id") @cacheControl(maxAge: 3){
-    _id: String
+    _id: ID
     createdAt: Date
     createdBy: String
     updatedAt: Date
@@ -76,15 +76,15 @@ export const queries = `
     sortDirection: Int
   ): [AdjustInventory]
   adjustInventoriesCount(${AdjustInventoriesQueryParams}): Int
-  adjustInventoryDetail(_id: String): AdjustInventory
+  adjustInventoryDetail(_id: ID): AdjustInventory
   adjustInventoryDetails(
-    _id: String!,
+    _id: ID!,
     page: Int,
     perPage: Int,
     sortField: String
     sortDirection: Int
   ): [AdjustInvDetail]
-  adjustInventoryDetailsCount(_id: String!): Int
+  adjustInventoryDetailsCount(_id: ID!): Int
 `;
 
 export const mutations = `

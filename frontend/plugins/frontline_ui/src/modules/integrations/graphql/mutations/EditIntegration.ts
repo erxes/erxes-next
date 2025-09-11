@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const EDIT_INTEGRATION = gql`
   mutation IntegrationsEditCommonFields(
-    $_id: String!
+    $_id: ID!
     $name: String!
     $brandId: String!
     $channelIds: [String]

@@ -29,19 +29,19 @@ const ADD_FACEBOOK_BOT = gql`
 `;
 
 const UPDATE_FACEBOOK_BOT = gql`
-    mutation FacebookMessengerUpdateBot($_id: String,${FACEBOOK_BOT_PARAMS}) {
+    mutation FacebookMessengerUpdateBot($_id: ID,${FACEBOOK_BOT_PARAMS}) {
       facebookMessengerUpdateBot(_id: $_id,${FACEBOOK_BOT_PARAMS_DEF})
     }
 `;
 
 const REMOVE_FACEBOOK_BOT = gql`
-  mutation FacebookMessengerRemoveBot($_id: String) {
+  mutation FacebookMessengerRemoveBot($_id: ID) {
     facebookMessengerRemoveBot(_id: $_id)
   }
 `;
 
 const REPAIR_FACEBOOK_BOT = gql`
-  mutation FacebookMessengerRepairBot($_id: String) {
+  mutation FacebookMessengerRepairBot($_id: ID) {
     facebookMessengerRepairBot(_id: $_id)
   }
 `;

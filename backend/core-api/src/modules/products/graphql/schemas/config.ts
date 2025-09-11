@@ -1,6 +1,6 @@
 export const types = `
   type ProductsConfig @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: ID!
     code: String!
     value: JSON
   }

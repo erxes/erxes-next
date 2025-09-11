@@ -2,7 +2,7 @@ import { commonParams } from './commonTypeDefs';
 
 export const BranchTypes = ` 
     type Branch @key(fields: "_id") @cacheControl(maxAge: 3){
-        _id: String
+        _id: ID
         title: String
         parentId: String
         supervisorId: String
@@ -56,12 +56,12 @@ const commonBranchParams = `
 
 export const mutations = `
     branchesAdd(${commonBranchParams}): Branch
-    branchesEdit(_id: String!, ${commonBranchParams}): Branch
+    branchesEdit(_id: ID!, ${commonBranchParams}): Branch
     branchesRemove(ids:[String!]): JSON
 `;
 
 export const queries = `
     branches(${commonParams},withoutUserFilter:Boolean): [Branch]
     branchesMain(${commonParams},withoutUserFilter:Boolean): BranchesListResponse
-    branchDetail(_id: String!): Branch
+    branchDetail(_id: ID!): Branch
 `;

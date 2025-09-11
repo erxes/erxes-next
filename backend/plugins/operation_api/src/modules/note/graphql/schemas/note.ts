@@ -1,6 +1,6 @@
 export const types = `
     type Note {
-        _id: String
+        _id: ID
         content: String
         itemId: String
         createdBy: String
@@ -18,18 +18,18 @@ const createNoteParams = `
 `;
 
 const updateNoteParams = `
-    _id: String!
+    _id: ID!
     content: String
     itemId: String
     mentions: [String]
 `;
 
 export const queries = `
-    getNote(_id: String!): Note
+    getNote(_id: ID!): Note
 `;
 
 export const mutations = `
     createNote(${createNoteParams}): Note
     updateNote(${updateNoteParams}): Note
-    deleteNote(_id: String!): JSON
+    deleteNote(_id: ID!): JSON
 `;

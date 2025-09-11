@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 export const commonVariables = `
   $contentTypeId: String,
@@ -21,7 +21,6 @@ const commonItemParams = `
   isChecked: $isChecked,
   content: $content,
 `;
-
 
 export const checklistFields = `
   _id
@@ -53,7 +52,7 @@ export const ADD_CHECKLISTS = gql`
 
 export const EDIT_CHECKLISTS = gql`
   mutation salesChecklistsEdit(
-    $_id: String!,
+    $_id: ID!,
     ${commonVariables}
   ) {
     salesChecklistsEdit(
@@ -66,7 +65,7 @@ export const EDIT_CHECKLISTS = gql`
 `;
 
 export const REMOVE_CHECKLISTS = gql`
-  mutation salesChecklistsRemove($_id: String!) {
+  mutation salesChecklistsRemove($_id: ID!) {
     salesChecklistsRemove(_id: $_id) {
       _id
     }
@@ -89,7 +88,7 @@ export const CHECKLIST_ITEMS_ADD = gql`
 
 export const CHECKLIST_ITEMS_EDIT = gql`
   mutation salesChecklistItemsEdit(
-    $_id: String!,
+    $_id: ID!,
     ${commonItemVariables}
   ) {
     salesChecklistItemsEdit(
@@ -104,7 +103,7 @@ export const CHECKLIST_ITEMS_EDIT = gql`
 `;
 
 export const CHECKLIST_ITEMS_REMOVE = gql`
-  mutation salesChecklistItemsRemove($_id: String!) {
+  mutation salesChecklistItemsRemove($_id: ID!) {
     salesChecklistItemsRemove(_id: $_id) {
       _id
     }
@@ -112,8 +111,8 @@ export const CHECKLIST_ITEMS_REMOVE = gql`
 `;
 
 export const CHECKLIST_ITEMS_ORDER = gql`
-  mutation salesChecklistItemsOrder($_id: String!, $destinationIndex: Int) {
-    salesChecklistItemsOrder(_id: $_id destinationIndex: $destinationIndex) {
+  mutation salesChecklistItemsOrder($_id: ID!, $destinationIndex: Int) {
+    salesChecklistItemsOrder(_id: $_id, destinationIndex: $destinationIndex) {
       _id
     }
   }

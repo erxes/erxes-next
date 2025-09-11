@@ -1,6 +1,6 @@
 export const types = `
   type SavingContractType {
-    _id: String!
+    _id: ID!
     code: String
     name: String
     description: String
@@ -39,7 +39,7 @@ const queryParams = `
 export const queries = `
   savingsContractTypesMain(${queryParams}): SavingContractTypesListResponse
   savingsContractTypes(${queryParams}): [SavingContractType]
-  savingsContractTypeDetail(_id: String!): SavingContractType
+  savingsContractTypeDetail(_id: ID!): SavingContractType
 `;
 
 const mutationParams = `
@@ -66,6 +66,6 @@ const mutationParams = `
 
 export const mutations = `
   savingsContractTypesAdd(${mutationParams}): SavingContractType
-  savingsContractTypesEdit(_id: String!, ${mutationParams}): SavingContractType
+  savingsContractTypesEdit(_id: ID!, ${mutationParams}): SavingContractType
   savingsContractTypesRemove(contractTypeIds: [String]): JSON
 `;

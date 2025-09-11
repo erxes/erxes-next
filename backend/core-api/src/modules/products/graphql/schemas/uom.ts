@@ -7,7 +7,7 @@ export const types = `
   }
 
   type Uom {
-    _id: String!
+    _id: ID!
     name: String
     code: String
     createdAt: Date
@@ -32,6 +32,6 @@ const mutationParams = `
 
 export const mutations = `
   uomsAdd(${mutationParams}): Uom
-  uomsEdit(_id: String!, ${mutationParams}): Uom
+  uomsEdit(_id: ID!, ${mutationParams}): Uom
   uomsRemove(uomIds: [String!]): String
 `;

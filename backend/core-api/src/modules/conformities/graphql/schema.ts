@@ -1,6 +1,6 @@
 export const types = `
   type Conformity {
-    _id: String!
+    _id: ID!
     mainType: String
     mainTypeId: String
     relType: String

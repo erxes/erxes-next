@@ -31,7 +31,7 @@ export const types = `
   ${inputDeps}
 
   type Deal @key(fields: "_id") {
-    _id: String!
+    _id: ID!
 
     name: String!
     order: Float
@@ -89,7 +89,7 @@ export const types = `
   }
 
   type SalesTotalForType {
-    _id: String
+    _id: ID
     name: String
     currencies: [DealTotalCurrency]
   }
@@ -163,10 +163,10 @@ const archivedDealsParams = `
  `;
 
 export const queries = `
-  checkDiscount(_id: String!,products:[SalesProductField], couponCode: String, voucherId: String):JSON
+  checkDiscount(_id: ID!,products:[SalesProductField], couponCode: String, voucherId: String):JSON
   
   deals(stageId: String, initialStageId: String, ${queryParams}): DealsListResponse
-  dealDetail(_id: String!, clientPortalCard: Boolean): Deal
+  dealDetail(_id: ID!, clientPortalCard: Boolean): Deal
   dealsTotalCount(stageId: String, initialStageId: String, ${queryParams}): Int
   dealsTotalAmounts(${queryParams}): [SalesTotalForType]
   
@@ -202,11 +202,11 @@ const mutationParams = `
 
 export const mutations = `
   dealsAdd(name: String, companyIds: [String], customerIds: [String], labelIds: [String], ${mutationParams}): Deal
-  dealsEdit(_id: String!, name: String, ${mutationParams}): Deal
+  dealsEdit(_id: ID!, name: String, ${mutationParams}): Deal
   dealsChange(itemId: String!, aboveItemId: String, destinationStageId: String!, sourceStageId: String, proccessId: String): Deal
-  dealsRemove(_id: String!): Deal
-  dealsWatch(_id: String, isAdd: Boolean): Deal
-  dealsCopy(_id: String!, proccessId: String): Deal
+  dealsRemove(_id: ID!): Deal
+  dealsWatch(_id: ID, isAdd: Boolean): Deal
+  dealsCopy(_id: ID!, proccessId: String): Deal
   dealsArchive(stageId: String!, proccessId: String): String
   dealsCreateProductsData(proccessId: String, dealId: String, docs: JSON): JSON
   dealsEditProductData(proccessId: String, dealId: String, dataId: String, doc: JSON): JSON

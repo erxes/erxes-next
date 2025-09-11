@@ -7,7 +7,7 @@ const commonContactInfoTypes = `
 `;
 export const StructureTypes = `
   type Structure {
-        _id: String!
+        _id: ID!
         title: String
         supervisor: User
         description: String
@@ -37,8 +37,8 @@ const commonStructureParams = `
 
 export const mutations = `
     structuresAdd(${commonStructureParams}): Structure
-    structuresEdit(_id: String!,${commonStructureParams}): Structure
-    structuresRemove(_id: String!): JSON
+    structuresEdit(_id: ID!,${commonStructureParams}): Structure
+    structuresRemove(_id: ID!): JSON
 `;
 
 export const queries = `

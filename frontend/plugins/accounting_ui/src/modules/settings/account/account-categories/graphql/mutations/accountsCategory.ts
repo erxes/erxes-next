@@ -31,7 +31,7 @@ export const ACCOUNT_CATEGORIES_ADD = gql`
 `;
 
 export const ACCOUNT_CATEGORIES_EDIT = gql`
-  mutation accountCategoriesEdit($_id: String!, ${categoryInputParamDefs}) {
+  mutation accountCategoriesEdit($_id: ID!, ${categoryInputParamDefs}) {
     accountCategoriesEdit(_id: $_id, ${categoryInputParams}) {
       _id
     }
@@ -39,7 +39,7 @@ export const ACCOUNT_CATEGORIES_EDIT = gql`
 `;
 
 export const ACCOUNT_CATEGORIES_REMOVE = gql`
-  mutation accountCategoriesRemove($_id: String!) {
+  mutation accountCategoriesRemove($_id: ID!) {
     accountCategoriesRemove(_id: $_id)
   }
 `;

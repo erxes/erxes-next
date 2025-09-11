@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const pipelineLabelFields = `
   _id
@@ -10,7 +10,7 @@ export const pipelineLabelFields = `
 `;
 
 export const GET_PIPELINE_DETAIL = gql`
-  query SalesPipelineDetail($_id: String!) {
+  query SalesPipelineDetail($_id: ID!) {
     salesPipelineDetail(_id: $_id) {
       _id
       name
@@ -37,7 +37,7 @@ export const GET_PIPELINE_LABELS = gql`
 `;
 
 export const GET_PIPELINE_ASSIGNED_USERS = gql`
-  query SalesPipelineAssignedUsers($_id: String!) {
+  query SalesPipelineAssignedUsers($_id: ID!) {
     salesPipelineAssignedUsers(_id: $_id) {
       _id
       details {
@@ -49,7 +49,7 @@ export const GET_PIPELINE_ASSIGNED_USERS = gql`
 `;
 
 export const GET_PIPELINE_LABEL_DETAIL = gql`
-  query SalesPipelineLabelDetail($_id: String!) {
+  query SalesPipelineLabelDetail($_id: ID!) {
     salesPipelineLabelDetail(_id: $_id) {
       ${pipelineLabelFields}
     }
@@ -76,4 +76,3 @@ export const GET_PIPELINES = gql`
     }
   }
 `;
-    

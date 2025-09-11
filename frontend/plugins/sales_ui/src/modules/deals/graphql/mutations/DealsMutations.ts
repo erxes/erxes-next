@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 const dealMutationVariables = `
   $productsData: JSON,
@@ -191,7 +191,6 @@ export const commonMutationParams = `
   departmentIds: $departmentIds
 `;
 
-
 export const ADD_DEALS = gql`
   mutation dealsAdd($name: String, ${copyVariables}, ${dealMutationVariables} ${commonMutationVariables}) {
     dealsAdd(name: $name, ${copyParams}, ${dealMutationParams}, ${commonMutationParams}) {
@@ -202,7 +201,7 @@ export const ADD_DEALS = gql`
 `;
 
 export const EDIT_DEALS = gql`
-  mutation dealsEdit($_id: String!, $name: String, ${dealMutationVariables}, ${commonMutationVariables}) {
+  mutation dealsEdit($_id: ID!, $name: String, ${dealMutationVariables}, ${commonMutationVariables}) {
     dealsEdit(_id: $_id, name: $name, ${dealMutationParams}, ${commonMutationParams}) {
       _id
       name
@@ -211,7 +210,7 @@ export const EDIT_DEALS = gql`
 `;
 
 export const REMOVE_DEALS = gql`
-  mutation dealsRemove($_id: String!) {
+  mutation dealsRemove($_id: ID!) {
     dealsRemove(_id: $_id) {
       _id
     }
@@ -227,7 +226,7 @@ export const DEALS_CHANGE = gql`
 `;
 
 export const DEALS_WATCH = gql`
-  mutation dealsWatch($_id: String!, $isAdd: Boolean!) {
+  mutation dealsWatch($_id: ID!, $isAdd: Boolean!) {
     dealsWatch(_id: $_id, isAdd: $isAdd) {
       _id
       isWatched
@@ -242,7 +241,7 @@ export const DEALS_ARCHIVE = gql`
 `;
 
 export const DEALS_COPY = gql`
-  mutation dealsCopy($_id: String!, $proccessId: String) {
+  mutation dealsCopy($_id: ID!, $proccessId: String) {
     dealsCopy(_id: $_id, proccessId: $proccessId) {
       ${commonFields}
       ${dealFields}

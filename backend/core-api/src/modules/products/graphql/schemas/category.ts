@@ -1,6 +1,6 @@
 export const types = `
   type ProductCategory @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: ID!
     name: String
     description: String
     meta: String
@@ -32,7 +32,7 @@ const queryParams = `
 export const queries = `
   productCategories(${queryParams}): [ProductCategory]
   productCategoriesTotalCount(${queryParams}): Int
-  productCategoryDetail(_id: String): ProductCategory
+  productCategoryDetail(_id: ID): ProductCategory
 `;
 
 const mutationParams = `
@@ -52,6 +52,6 @@ const mutationParams = `
 
 export const mutations = `
   productCategoriesAdd(${mutationParams}): ProductCategory
-  productCategoriesEdit(_id: String!, ${mutationParams}): ProductCategory
-  productCategoriesRemove(_id: String!): JSON
+  productCategoriesEdit(_id: ID!, ${mutationParams}): ProductCategory
+  productCategoriesRemove(_id: ID!): JSON
 `;

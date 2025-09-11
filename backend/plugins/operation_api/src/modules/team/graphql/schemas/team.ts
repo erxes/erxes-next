@@ -1,10 +1,10 @@
 export const types = `
     extend type User @key(fields: "_id") {
-       _id: String @external
+       _id: ID @external
     }
 
     type Team {
-        _id: String
+        _id: ID
         icon: String
         name: String
         description: String
@@ -18,7 +18,7 @@ export const types = `
     }
 
     type TeamMember {
-        _id: String
+        _id: ID
         memberId: String
         teamId: String
 
@@ -28,7 +28,7 @@ export const types = `
 `;
 
 export const queries = `
-    getTeam(_id: String!): Team
+    getTeam(_id: ID!): Team
     getTeams(name: String, userId: String, teamIds: [String], projectId: String): [Team]
     getTeamMembers(teamId: String, teamIds: [String]): [TeamMember]
     getTeamEstimateChoises(teamId: String): JSON
@@ -36,9 +36,9 @@ export const queries = `
 
 export const mutations = `
     teamAdd(name: String!, description: String, icon: String!, memberIds: [String]): Team
-    teamUpdate(_id: String!, name: String, description: String, icon: String, memberIds: [String], estimateType: Int, cycleEnabled: Boolean): Team
-    teamRemove(_id: String!): Team
-    teamAddMembers(_id: String!, memberIds: [String]): [TeamMember]
-    teamRemoveMember(_id: String!): TeamMember
-    teamUpdateMember(_id: String!, role: String): TeamMember
+    teamUpdate(_id: ID!, name: String, description: String, icon: String, memberIds: [String], estimateType: Int, cycleEnabled: Boolean): Team
+    teamRemove(_id: ID!): Team
+    teamAddMembers(_id: ID!, memberIds: [String]): [TeamMember]
+    teamRemoveMember(_id: ID!): TeamMember
+    teamUpdateMember(_id: ID!, role: String): TeamMember
 `;

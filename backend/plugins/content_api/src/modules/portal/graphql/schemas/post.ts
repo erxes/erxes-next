@@ -21,7 +21,7 @@ export const types = `
     union Author = User | ClientPortalUser
 
     type Post @key(fields: "_id") @cacheControl(maxAge: 3){
-        _id: String!
+        _id: ID!
         type: String
         customPostType: CustomPostType
         authorKind: PostAuthorKind
@@ -68,7 +68,7 @@ export const types = `
     }
 
     type PostTranslation {
-        _id: String!
+        _id: ID!
         postId: String
         language: String
         title: String
@@ -117,7 +117,7 @@ export const inputs = `
 `;
 
 export const queries = `
-    cmsPost(_id: String, slug: String, language: String): Post
+    cmsPost(_id: ID, slug: String, language: String): Post
     cmsPosts(clientPortalId: String, featured: Boolean,type: String, categoryId: String, searchValue: String, status: PostStatus, tagIds: [String], sortField: String, sortDirection: String, language: String, language: String, ${GQL_CURSOR_PARAM_DEFS}): [Post]
     cmsPostList(clientPortalId: String, featured: Boolean, type: String, categoryId: String, searchValue: String, status: PostStatus, tagIds: [String], sortField: String, sortDirection: String, language: String, language: String, ${GQL_CURSOR_PARAM_DEFS}): PostList
     cmsPostTranslations(postId: String): [PostTranslation]
@@ -126,11 +126,11 @@ export const queries = `
 export const mutations = `
     cmsPostsAdd(input: PostInput!): Post
     cmsPostsAddTranslation(input: PostTranslationInput!): PostTranslation
-    cmsPostsEdit(_id: String!, input: PostInput!): Post
+    cmsPostsEdit(_id: ID!, input: PostInput!): Post
     cmsPostsEditTranslation(input: PostTranslationInput!): PostTranslation
-    cmsPostsRemove(_id: String!): JSON
-    cmsPostsChangeStatus(_id: String!, status: PostStatus!): Post
-    cmsPostsToggleFeatured(_id: String!): Post
+    cmsPostsRemove(_id: ID!): JSON
+    cmsPostsChangeStatus(_id: ID!, status: PostStatus!): Post
+    cmsPostsToggleFeatured(_id: ID!): Post
 
-    cmsPostsIncrementViewCount(_id: String!): Post
+    cmsPostsIncrementViewCount(_id: ID!): Post
 `;

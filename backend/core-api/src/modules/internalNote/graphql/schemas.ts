@@ -1,5 +1,5 @@
 const commonFields = `
-  _id: String!
+  _id: ID!
   contentType: String!
   createdAt: Date
 `;
@@ -31,7 +31,7 @@ export const types = `
 `;
 
 export const queries = `
-  internalNoteDetail(_id: String!): InternalNote
+  internalNoteDetail(_id: ID!): InternalNote
   internalNotes(contentType: String!, contentTypeId: String): [InternalNote]
   internalNotesByAction(contentType: String, pipelineId: String, page: Int, perPage: Int): InternalNotesByAction
   internalNotesAsLogs(contentTypeId: String!): [JSON]
@@ -39,6 +39,6 @@ export const queries = `
 
 export const mutations = `
   internalNotesAdd(contentType: String!, contentTypeId: String, content: String, mentionedUserIds: [String]): InternalNote
-  internalNotesEdit(_id: String!, content: String, mentionedUserIds: [String]): InternalNote
-  internalNotesRemove(_id: String!): InternalNote
+  internalNotesEdit(_id: ID!, content: String, mentionedUserIds: [String]): InternalNote
+  internalNotesRemove(_id: ID!): InternalNote
 `;

@@ -34,7 +34,7 @@ export const VAT_ROWS_ADD = gql`
 `;
 
 export const VAT_ROWS_EDIT = gql`
-  mutation vatRowsEdit($_id: String!${vatRowInputParamsDefs}) {
+  mutation vatRowsEdit($_id: ID!${vatRowInputParamsDefs}) {
     vatRowsEdit(_id: $_id, ${vatRowInputParams}) {
       ${vatRowFields}
     }

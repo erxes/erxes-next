@@ -182,7 +182,7 @@ export const GET_DEALS = gql`
 `;
 
 export const GET_DEAL_DETAIL = gql`
-  query DealDetail($_id: String!) {
+  query DealDetail($_id: ID!) {
     dealDetail(_id: $_id) {
       ${commonListFields}
       description
@@ -221,14 +221,29 @@ export const GET_DEAL_DETAIL = gql`
 `;
 
 export const GET_ITEMS_COUNT_BY_SEGMENTS = gql`
-  query SalesItemsCountBySegments($type: String!, $boardId: String, $pipelineId: String) {
-    salesItemsCountBySegments(type: $type, boardId: $boardId, pipelineId: $pipelineId)
+  query SalesItemsCountBySegments(
+    $type: String!
+    $boardId: String
+    $pipelineId: String
+  ) {
+    salesItemsCountBySegments(
+      type: $type
+      boardId: $boardId
+      pipelineId: $pipelineId
+    )
   }
 `;
 
 export const GET_ITEMS_COUNT_BY_ASSIGNED_USER = gql`
-  query SalesItemsCountByAssignedUser($pipelineId: String!, $type: String!, $stackBy: String) {
-    salesItemsCountByAssignedUser(pipelineId: $pipelineId, type: $type, stackBy: $stackBy)
+  query SalesItemsCountByAssignedUser(
+    $pipelineId: String!
+    $type: String!
+    $stackBy: String
+  ) {
+    salesItemsCountByAssignedUser(
+      pipelineId: $pipelineId
+      type: $type
+      stackBy: $stackBy
+    )
   }
 `;
-  

@@ -20,7 +20,7 @@ type NotificationPluginType {
 }
 
 type NotificationConfig {
-    _id: String!
+    _id: ID!
     contentType: String!
     action: String!
     enabled: Boolean!
@@ -40,7 +40,7 @@ type NotificationConfigListResponse {
 }
 
 type EmailDelivery {
-  _id: String
+  _id: ID
   notificationId: String
   userId: String
   email: String
@@ -63,7 +63,7 @@ type EmailDelivery {
 }
 
 type Notification {
-    _id: String,
+    _id: ID,
     title: String,
     message: String,
     type: String,

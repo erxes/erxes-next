@@ -23,7 +23,7 @@ type TwoFactorDevice {
 }
 
   type ClientPortalUser @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     createdAt: Date
     modifiedAt: Date
     fullName: String
@@ -67,7 +67,7 @@ type TwoFactorDevice {
   }
 
     type ClientPortalCompany {
-    _id: String!
+    _id: ID!
     erxesCompanyId: String
 
     productCategoryIds: [String]
@@ -176,7 +176,7 @@ ${GQL_CURSOR_PARAM_DEFS}
 
 export const queries = `
   clientPortalCurrentUser: ClientPortalUser
-  clientPortalUserDetail(_id: String!): ClientPortalUser
+  clientPortalUserDetail(_id: ID!): ClientPortalUser
   clientPortalUsers(${queryParams}): ClientPortalUsersListResponse
   clientPortalUsersMain(${queryParams}): ClientPortalUsersListResponse
   clientPortalUserCounts(type: String): Int
@@ -212,7 +212,7 @@ const userParams = `
 
 export const mutations = `
   clientPortalUsersInvite(${userParams}, disableVerificationMail: Boolean): ClientPortalUser
-  clientPortalUsersEdit(_id: String!, ${userParams}): ClientPortalUser
+  clientPortalUsersEdit(_id: ID!, ${userParams}): ClientPortalUser
   clientPortalUsersRemove(clientPortalUserIds: [String!]): JSON
   clientPortalRegister(${userParams}): String
   clientPortalVerifyOTP(userId: String!, phoneOtp: String, emailOtp: String, password: String): JSON
@@ -243,13 +243,13 @@ export const mutations = `
   clientPortalUserChangePassword(currentPassword: String!, newPassword: String!): ClientPortalUser
   clientPortalUsersSendVerificationRequest(login: String!, password: String!, clientPortalId: String!,  attachments: [AttachmentInput]!, description: String): String
   clientPortalUsersChangeVerificationStatus(userId: String!, status: ClientPortalUserVerificationStatus!): String
-  clientPortalUpdateUser(_id: String!, doc: ClientPortalUserUpdate!): JSON
+  clientPortalUpdateUser(_id: ID!, doc: ClientPortalUserUpdate!): JSON
 
   clientPortalUserSetSecondaryPassword(newPassword: String!, oldPassword:String): String
 
   clientPortalUserAddPost(input: PostDocumentInput!): Post
-  clientPortalUserEditPost(_id: String!, input: PostDocumentInput!): Post
-  clientPortalUserRemovePost(_id: String!): JSON
-  clientPortalUserChangeStatus(_id: String!, status: String!): Post
-  clientPortalUserToggleFeatured(_id: String!): Post
+  clientPortalUserEditPost(_id: ID!, input: PostDocumentInput!): Post
+  clientPortalUserRemovePost(_id: ID!): JSON
+  clientPortalUserChangeStatus(_id: ID!, status: String!): Post
+  clientPortalUserToggleFeatured(_id: ID!): Post
 `;

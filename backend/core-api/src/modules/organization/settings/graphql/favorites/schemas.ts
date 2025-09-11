@@ -1,6 +1,6 @@
 export const types = `
   type Favorite {
-    _id: String!
+    _id: ID!
     type: String!
     path: String!
   }

@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type UsersGroup {
-    _id: String!
+    _id: ID!
     name: String!
     description: String
     memberIds: [String]
@@ -41,7 +41,7 @@ const mutationParams = `
 
 export const mutations = `
   usersGroupsAdd(${mutationParams}): UsersGroup
-  usersGroupsEdit(_id: String!, ${mutationParams}): UsersGroup
-  usersGroupsRemove(_id: String!): JSON
-  usersGroupsCopy(_id: String!, memberIds: [String]): UsersGroup
+  usersGroupsEdit(_id: ID!, ${mutationParams}): UsersGroup
+  usersGroupsRemove(_id: ID!): JSON
+  usersGroupsCopy(_id: ID!, memberIds: [String]): UsersGroup
 `;

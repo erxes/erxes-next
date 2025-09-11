@@ -1,6 +1,6 @@
 export const types = () => `
   type AccountCategory @key(fields: "_id") @cacheControl(maxAge: 3){
-    _id: String!
+    _id: ID!
     name: String
     description: String
     parentId: String
@@ -17,7 +17,7 @@ export const types = () => `
   }
 
   type Account @key(fields: "_id") @cacheControl(maxAge: 3){
-    _id: String!
+    _id: ID!
     code: String
     name: String
     status: String
@@ -86,7 +86,7 @@ const accountsQueryParams = `
 export const queries = `
   accountCategories(parentId: String, withChild: Boolean, searchValue: String, status: String, meta: String, brand: String): [AccountCategory]
   accountCategoriesTotalCount(parentId: String, withChild: Boolean, searchValue: String, status: String, meta: String): Int
-  accountCategoryDetail(_id: String!): AccountCategory
+  accountCategoryDetail(_id: ID!): AccountCategory
   accounts(
     ${accountsQueryParams},
     page: Int,
@@ -95,15 +95,15 @@ export const queries = `
     sortDirection: Int    
   ): [Account]
   accountsCount(${accountsQueryParams}): Int
-  accountDetail(_id: String): Account
+  accountDetail(_id: ID): Account
 `;
 
 export const mutations = `
   accountsAdd(${accountParams}): Account
-  accountsEdit(_id: String!, ${accountParams}): Account
+  accountsEdit(_id: ID!, ${accountParams}): Account
   accountsRemove(accountIds: [String!]): String
   accountsMerge(accountIds: [String], accountFields: JSON): Account
   accountCategoriesAdd(${accountCategoryParams}): AccountCategory
-  accountCategoriesEdit(_id: String!, ${accountCategoryParams}): AccountCategory
-  accountCategoriesRemove(_id: String!): JSON
+  accountCategoriesEdit(_id: ID!, ${accountCategoryParams}): AccountCategory
+  accountCategoriesRemove(_id: ID!): JSON
 `;

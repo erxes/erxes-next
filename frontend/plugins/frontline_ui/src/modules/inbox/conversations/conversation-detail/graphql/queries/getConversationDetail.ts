@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_CONVERSATION_DETAIL = gql`
-  query ConversationDetail($_id: String!) {
+  query ConversationDetail($_id: ID!) {
     conversationDetail(_id: $_id) {
       _id
       createdAt

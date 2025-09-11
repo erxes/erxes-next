@@ -9,7 +9,7 @@ export const types = `
   }
 
   type CloudflareCallDataDepartment {
-    _id: String
+    _id: ID
     name: String
     operators: JSON
   }
@@ -22,12 +22,12 @@ export const types = `
     isReceiveWebCall: Boolean
   }
     type Form {
-      _id: String
+      _id: ID
       title: String
       code: String
     }
   type Integration @key(fields: "_id") {
-   _id: String!
+   _id: ID!
     kind: String!
     name: String!
     brandId: String!
@@ -76,19 +76,19 @@ export const types = `
   }
 
   type integrationsGetUsedTypes {
-    _id: String
+    _id: ID
     name: String
   }
 
   input BotPersistentMenuTypeMessenger {
-    _id: String
+    _id: ID
     type: String
     text: String
     link: String
     isEditing: Boolean
   }
   input MessengerOnlineHoursSchema {
-    _id: String
+    _id: ID
     day: String
     from: String
     to: String
@@ -106,7 +106,7 @@ export const types = `
   }
 
   input IntegrationMessengerData {
-    _id: String
+    _id: ID
     notifyCustomer: Boolean
     botEndpointUrl: String
     skillData: JSON
@@ -142,13 +142,13 @@ export const types = `
   }
 
   input OperatorInput {
-    _id: String
+    _id: ID
     userId: String
     name: String
   }
 
   input DepartmentInput {
-    _id: String
+    _id: ID
     name: String
     operators: [OperatorInput]
   }
@@ -181,8 +181,8 @@ export const queries = `
 
   allLeadIntegrations: [Integration]
   integrationsGetUsedTypes: [integrationsGetUsedTypes]
-  integrationGetLineWebhookUrl(_id: String!): String
-  integrationDetail(_id: String!): Integration
+  integrationGetLineWebhookUrl(_id: ID!): String
+  integrationDetail(_id: ID!): Integration
   integrationsTotalCount(kind: String, brandId: String, tag: String, channelId: String, status: String, formLoadType: String): integrationsTotalCount
 `;
 
@@ -196,7 +196,7 @@ export const mutations = `
 
 
   integrationsEditMessengerOnboarding(
-    _id: String!,
+    _id: ID!,
     brandId: String!,
     brandName: String!,
     languageCode: String
@@ -212,7 +212,7 @@ export const mutations = `
     ): Integration
 
   integrationsEditMessengerIntegration(
-    _id: String!,
+    _id: ID!,
     name: String!,
     brandId: String!,
     languageCode: String
@@ -220,11 +220,11 @@ export const mutations = `
   ): Integration
 
   integrationsSaveMessengerAppearanceData(
-    _id: String!,
+    _id: ID!,
     uiOptions: MessengerUiOptions): Integration
 
   integrationsSaveMessengerConfigs(
-    _id: String!,
+    _id: ID!,
     messengerData: IntegrationMessengerData,
     callData: IntegrationCallData
     ): Integration
@@ -237,13 +237,13 @@ export const mutations = `
     channelIds: [String]
     data: JSON): Integration
 
-  integrationsEditCommonFields(_id: String!, name: String!, brandId: String!, channelIds: [String], details: JSON): Integration
+  integrationsEditCommonFields(_id: ID!, name: String!, brandId: String!, channelIds: [String], details: JSON): Integration
 
-  integrationsRemove(_id: String!): JSON
-  integrationsRemoveAccount(_id: String!, kind: String): JSON
-  integrationsRepair(_id: String!, kind: String!): JSON
+  integrationsRemove(_id: ID!): JSON
+  integrationsRemoveAccount(_id: ID!, kind: String): JSON
+  integrationsRepair(_id: ID!, kind: String!): JSON
 
-  integrationsArchive(_id: String!, status: Boolean!): Integration
+  integrationsArchive(_id: ID!, status: Boolean!): Integration
 
   integrationsSendSms(integrationId: String!, content: String!, to: String!): JSON
 
@@ -254,10 +254,10 @@ export const mutations = `
     ): Integration
 
   integrationsEditLeadIntegration(
-    _id: String!
+    _id: ID!
     name: String!,
     brandId: String!,
     channelIds: [String]
   ): Integration
-  integrationsCopyLeadIntegration(_id: String!): Integration
+  integrationsCopyLeadIntegration(_id: ID!): Integration
 `;

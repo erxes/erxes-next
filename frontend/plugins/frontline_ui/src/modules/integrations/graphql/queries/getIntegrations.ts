@@ -16,7 +16,7 @@ export const getIntegrations = gql`
 `;
 
 export const INTEGRATION_INLINE = gql`
-  query IntegrationInline($_id: String!) {
+  query IntegrationInline($_id: ID!) {
     integrationDetail(_id: $_id) {
       _id
       kind

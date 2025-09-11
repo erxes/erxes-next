@@ -2,7 +2,7 @@ import { commonParams } from './commonTypeDefs';
 
 export const PositionTypes = `
     type Position @key(fields: "_id") @cacheControl(maxAge: 3){
-        _id: String!
+        _id: ID!
         title: String
         code: String
         order: String
@@ -31,12 +31,12 @@ const commonPositionParams = `
 
 export const mutations = `
     positionsAdd(${commonPositionParams}):Position
-    positionsEdit(_id: String!, ${commonPositionParams}):Position
+    positionsEdit(_id: ID!, ${commonPositionParams}):Position
     positionsRemove(ids:[String!]): JSON
 `;
 
 export const queries = `
     positions(${commonParams},withoutUserFilter:Boolean): [Position]
     positionsMain(${commonParams}): PositionListQueryResponse
-    positionDetail(_id: String): Position
+    positionDetail(_id: ID): Position
 `;

@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
  type Tag @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String
+    _id: ID
     name: String
     type: String
     colorCode: String
@@ -39,7 +39,7 @@ const queryParams = `
 export const queries = `
   tagsGetTypes: [JSON]
   tags(${queryParams}): TagsListResponse
-  tagDetail(_id: String!): Tag
+  tagDetail(_id: ID!): Tag
   tagsQueryCount(type: String, searchValue: String): Int
 `;
 
@@ -52,8 +52,8 @@ const mutationParams = `
 
 export const mutations = `
   tagsAdd(${mutationParams}): Tag
-  tagsEdit(_id: String!, ${mutationParams}): Tag
-  tagsRemove(_id: String!): JSON
+  tagsEdit(_id: ID!, ${mutationParams}): Tag
+  tagsRemove(_id: ID!): JSON
   tagsTag(type: String!, targetIds: [String!]!, tagIds: [String!]!): JSON
   tagsMerge(sourceId: String!, destId: String!): Tag
 `;

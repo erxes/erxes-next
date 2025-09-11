@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type MenuItem {
-    _id: String!
+    _id: ID!
     parentId: String
     parent: MenuItem
     clientPortalId: String!
@@ -40,11 +40,11 @@ export const inputs = `
 
 export const queries = `
     cmsMenuList(clientPortalId: String, kind: String, ${GQL_CURSOR_PARAM_DEFS}): MenuItemResponse
-    cmsMenu(_id: String!): MenuItem
+    cmsMenu(_id: ID!): MenuItem
 `;
 
 export const mutations = `
     cmsAddMenu(input: MenuItemInput!): MenuItem
-    cmsEditMenu(_id: String!, input: MenuItemInput!): MenuItem
-    cmsRemoveMenu(_id: String!): JSON
+    cmsEditMenu(_id: ID!, input: MenuItemInput!): MenuItem
+    cmsRemoveMenu(_id: ID!): JSON
 `;

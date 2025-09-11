@@ -2,23 +2,23 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   extend type User @key(fields: "_id") {
-    _id: String @external
+    _id: ID @external
   }
 
   extend type Customer @key(fields: "_id") {
-    _id: String @external
+    _id: ID @external
     conversations: [Conversation]
   }
   extend type Brand @key(fields: "_id") {
-    _id: String @external
+    _id: ID @external
   }
 
   extend type Tag @key(fields: "_id") {
-    _id: String @external
+    _id: ID @external
   }
 
   type Conversation {
-    _id: String!
+    _id: ID!
     content: String
     integrationId: String
     customerId: String
@@ -64,7 +64,7 @@ export const types = `
   }
 
   type ConversationMessage {
-    _id: String!
+    _id: ID!
     content: String
     attachments: [Attachment]
     mentionedUserIds: [String]
@@ -178,7 +178,7 @@ const mutationFilterParams = `
 `;
 
 const convertParams = `
-  _id: String!
+  _id: ID!
   type: String!
   itemId: String
   itemName: String
@@ -208,7 +208,7 @@ const filterParams = `
 `;
 
 export const queries = `
-  conversationMessage(_id: String!): ConversationMessage
+  conversationMessage(_id: ID!): ConversationMessage
 
   conversations(${filterParams}, skip: Int): ConversationListResponse
   conversationMessages(
@@ -221,10 +221,10 @@ export const queries = `
   conversationMessagesTotalCount(conversationId: String!): Int
   conversationCounts(${filterParams}, only: String): JSON
   conversationsTotalCount(${filterParams}): Int
-  conversationDetail(_id: String!): Conversation
+  conversationDetail(_id: ID!): Conversation
   conversationsGetLast(${filterParams}): Conversation
   conversationsTotalUnreadCount: Int
-  userConversations(_id: String, ${GQL_CURSOR_PARAM_DEFS}, perPage: Int): UserConversationListResponse
+  userConversations(_id: ID, ${GQL_CURSOR_PARAM_DEFS}, perPage: Int): UserConversationListResponse
 `;
 
 export const mutations = `
@@ -238,7 +238,7 @@ export const mutations = `
     extraInfo: JSON
   ): ConversationMessage
   conversationMessageEdit(
-    _id: String!,
+    _id: ID!,
     content: String,
     mentionedUserIds: [String],
     internal: Boolean,
@@ -249,9 +249,9 @@ export const mutations = `
   conversationsAssign(conversationIds: [String]!, assignedUserId: String): [Conversation]
   conversationsUnassign(_ids: [String]!): [Conversation]
   conversationsChangeStatus(_ids: [String]!, status: String!): [Conversation]
-  conversationMarkAsRead(_id: String): Conversation
-  changeConversationOperator(_id: String!, operatorStatus: String!): JSON
+  conversationMarkAsRead(_id: ID): Conversation
+  changeConversationOperator(_id: ID!, operatorStatus: String!): JSON
   conversationResolveAll(${mutationFilterParams}): Int
   conversationConvertToCard(${convertParams}): String
-  conversationEditCustomFields(_id: String!, customFieldsData: JSON): Conversation
+  conversationEditCustomFields(_id: ID!, customFieldsData: JSON): Conversation
 `;

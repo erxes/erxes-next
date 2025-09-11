@@ -15,7 +15,7 @@ export const types = `
   }
 
   type Element {
-    _id: String!
+    _id: ID!
     name: String
     quick: Boolean
     icon: String
@@ -35,7 +35,7 @@ export const types = `
   }
 
   type ElementCategory {
-    _id: String!
+    _id: ID!
     name: String
     parentId: String
   }
@@ -75,6 +75,6 @@ export const mutations = `
   bmsElementRemove(ids: [String]): JSON
   bmsElementEdit(_id:String!, ${params}): Element
   bmsElementCategoryAdd(name:String,parentId:String):ElementCategory
-  bmsElementCategoryRemove(_id: String!):JSON
-  bmsElementCategoryEdit(_id: String!, name:String,parentId:String): ElementCategory
+  bmsElementCategoryRemove(_id: ID!):JSON
+  bmsElementCategoryEdit(_id: ID!, name:String,parentId:String): ElementCategory
 `;

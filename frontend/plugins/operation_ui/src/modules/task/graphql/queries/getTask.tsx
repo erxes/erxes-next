@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_TASK = gql`
-  query getTask($_id: String!) {
+  query getTask($_id: ID!) {
     getTask(_id: $_id) {
       _id
       name

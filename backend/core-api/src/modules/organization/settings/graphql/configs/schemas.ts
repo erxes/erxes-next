@@ -1,6 +1,6 @@
 export const ConfigTypes = `
   type Config {
-    _id: String!
+    _id: ID!
     code: String!
     value: JSON
   }

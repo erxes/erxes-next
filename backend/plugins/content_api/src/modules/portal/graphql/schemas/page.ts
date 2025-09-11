@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
     type PageItem {
-        _id: String!
+        _id: ID!
         name: String
         type: String
         content: String
@@ -13,7 +13,7 @@ export const types = `
     }
 
     type Page {
-        _id: String!
+        _id: ID!
         clientPortalId: String!
         name: String
         description: String
@@ -68,13 +68,13 @@ export const inputs = `
 `;
 
 export const queries = `
-    cmsPage(_id: String, slug: String): Page
+    cmsPage(_id: ID, slug: String): Page
     cmsPages(clientPortalId: String, searchValue: String, ${GQL_CURSOR_PARAM_DEFS}): [Page]
     cmsPageList(clientPortalId: String, searchValue: String, ${GQL_CURSOR_PARAM_DEFS}): PageList
 `;
 
 export const mutations = `
     cmsPagesAdd(input: PageInput!): Page
-    cmsPagesEdit(_id: String!, input: PageInput!): Page
-    cmsPagesRemove(_id: String!): JSON
+    cmsPagesEdit(_id: ID!, input: PageInput!): Page
+    cmsPagesRemove(_id: ID!): JSON
 `;

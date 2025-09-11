@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Product @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: ID!
     name: String
     shortName: String
     status: String
@@ -91,8 +91,8 @@ export const queries = `
     sortDirection: Int,
   ): [Product]
   productsTotalCount(${queryParams}): Int
-  productDetail(_id: String): Product
-  productSimilarities(_id: String!, groupedSimilarity: String): ProductSimilarity
+  productDetail(_id: ID): Product
+  productSimilarities(_id: ID!, groupedSimilarity: String): ProductSimilarity
   productCountByTags: JSON
 `;
 
@@ -120,8 +120,8 @@ export const mutationParams = `
 
 export const mutations = `
   productsAdd(${mutationParams}): Product
-  productsEdit(_id: String!, ${mutationParams}): Product
+  productsEdit(_id: ID!, ${mutationParams}): Product
   productsRemove(productIds: [String!]): String
   productsMerge(productIds: [String], productFields: JSON): Product
-  productsDuplicate(_id: String!): Product
+  productsDuplicate(_id: ID!): Product
 `;

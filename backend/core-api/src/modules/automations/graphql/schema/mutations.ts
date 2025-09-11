@@ -14,16 +14,16 @@ const commonNoteFields = `
 
 const mutations = `
   automationsAdd(${commonFields}): Automation
-  automationsEdit(_id: String, ${commonFields}): Automation
+  automationsEdit(_id: ID, ${commonFields}): Automation
   automationsRemove(automationIds: [String]): [String]
   archiveAutomations(automationIds: [String],isRestore:Boolean): [String]
 
-  automationsSaveAsTemplate(_id: String!, name: String, duplicate: Boolean): Automation
-  automationsCreateFromTemplate(_id: String): Automation
+  automationsSaveAsTemplate(_id: ID!, name: String, duplicate: Boolean): Automation
+  automationsCreateFromTemplate(_id: ID): Automation
 
   automationsAddNote(${commonNoteFields}): AutomationNote
-  automationsEditNote(_id: String!, ${commonNoteFields}): AutomationNote
-  automationsRemoveNote(_id: String!): AutomationNote
+  automationsEditNote(_id: ID!, ${commonNoteFields}): AutomationNote
+  automationsRemoveNote(_id: ID!): AutomationNote
 `;
 
 export default mutations;

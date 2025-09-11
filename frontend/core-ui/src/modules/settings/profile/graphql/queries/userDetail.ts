@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_USER_DETAIL = gql`
-  query GET_USER_DETAIL($_id: String) {
+  query GET_USER_DETAIL($_id: ID) {
     userDetail(_id: $_id) {
       _id
       username

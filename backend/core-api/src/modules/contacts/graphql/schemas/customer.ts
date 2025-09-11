@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String
+    _id: ID
     state: String
     createdAt: Date
     updatedAt: Date
@@ -109,7 +109,7 @@ const queryParams = `
 
 export const queries = `
   customers(${queryParams}): CustomersListResponse
-  customerDetail(_id: String!): Customer
+  customerDetail(_id: ID!): Customer
   contactsLogs(action: String, content:JSON, contentType: String): JSON
 `;
 
@@ -142,13 +142,13 @@ const fields = `
 
 export const mutations = `
   customersAdd(state: String, ${fields}): Customer
-  customersEdit(_id: String!, ${fields}): Customer
+  customersEdit(_id: ID!, ${fields}): Customer
   customersRemove(customerIds: [String]): [String]
 
   customersMerge(customerIds: [String], customerFields: JSON): Customer
   customersVerify(verificationType:String!): String
 
-  customersChangeState(_id: String!, value: String!): Customer
+  customersChangeState(_id: ID!, value: String!): Customer
   customersChangeVerificationStatus(customerIds: [String], type: String!, status: String!): [Customer]
   customersChangeStateBulk(_ids: [String]!, value: String!): JSON
 `;

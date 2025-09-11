@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Document {
-    _id: String!
+    _id: ID!
     code: String
 
     createdAt: Date
@@ -51,14 +51,14 @@ const queryParams = `
 
 export const queries = `
   documents(${queryParams}): DocumentListResponse
-  documentsDetail(_id: String!): Document
+  documentsDetail(_id: ID!): Document
   documentsGetEditorAttributes(contentType: String!): [DocumentEditorAttribute]
   documentsTypes:[DocumentsTypes]
   documentsTotalCount(searchValue: String, contentType: String): Int
 `;
 
 const mutationParams = `
-  _id: String,
+  _id: ID,
   contentType: String, 
   subType: String, 
   name: String!, 
@@ -69,5 +69,5 @@ const mutationParams = `
 
 export const mutations = `
   documentsSave(${mutationParams}): Document
-  documentsRemove(_id: String!): JSON
+  documentsRemove(_id: ID!): JSON
 `;

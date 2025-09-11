@@ -42,7 +42,7 @@ export const ACCOUNTS_ADD = gql`
 `;
 
 export const ACCOUNTS_EDIT = gql`
-  mutation accountsEdit($_id: String!${accountInputParamsDefs}) {
+  mutation accountsEdit($_id: ID!${accountInputParamsDefs}) {
     accountsEdit(_id: $_id, ${accountInputParams}) {
       ${ACCOUNT_FIELDS}
     }

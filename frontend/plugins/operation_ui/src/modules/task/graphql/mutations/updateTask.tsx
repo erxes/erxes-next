@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const UPDATE_TASK_MUTATION = gql`
   mutation UpdateTask(
-    $_id: String!
+    $_id: ID!
     $name: String
     $description: String
     $teamId: String

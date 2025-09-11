@@ -52,7 +52,7 @@ export const GET_USERS_GROUP = gql`
 `;
 
 export const GET_USER_INLINE_DETAIL = gql`
-  query userDetail($_id: String) {
+  query userDetail($_id: ID) {
     userDetail(_id: $_id) {
       _id
       username
@@ -74,7 +74,7 @@ export const GET_USER_INLINE_DETAIL = gql`
 `;
 
 export const GET_ASSIGNED_MEMBER = gql`
-  query AssignedMember($_id: String) {
+  query AssignedMember($_id: ID) {
     userDetail(_id: $_id) {
       _id
       details {

@@ -2,7 +2,7 @@ import { commonParams } from './commonTypeDefs';
 
 export const DepartmentTypes = `
     type Department @key(fields: "_id") @cacheControl(maxAge: 3) {
-        _id: String
+        _id: ID
         title: String
         description: String
         parentId: String
@@ -38,12 +38,12 @@ const commonDepartmentParams = `
 
 export const mutations = `
     departmentsAdd(${commonDepartmentParams}): Department
-    departmentsEdit(_id: String!,${commonDepartmentParams}): Department
+    departmentsEdit(_id: ID!,${commonDepartmentParams}): Department
     departmentsRemove(ids: [String!]): JSON
 `;
 
 export const queries = `
     departments(${commonParams},withoutUserFilter:Boolean): [Department]
     departmentsMain(${commonParams},withoutUserFilter:Boolean): DepartmentsListResponse
-    departmentDetail(_id: String!): Department
+    departmentDetail(_id: ID!): Department
 `;

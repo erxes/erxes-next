@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const UPDATE_TEAM_STATUS = gql`
   mutation updateStatus(
-    $_id: String!
+    $_id: ID!
     $name: String
     $description: String
     $color: String

@@ -1,7 +1,7 @@
 export const types = `
 
   type SalesBoard @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     name: String!
     order: Int
     createdAt: Date
@@ -14,7 +14,7 @@ export const types = `
   }
 
   type SalesBoardCount {
-    _id: String
+    _id: ID
     name: String
     count: Int
   }
@@ -29,7 +29,7 @@ export const queries = `
   salesBoards: [SalesBoard]
   salesBoardCounts: [SalesBoardCount]
   salesBoardGetLast: SalesBoard
-  salesBoardDetail(_id: String!): SalesBoard
+  salesBoardDetail(_id: ID!): SalesBoard
   salesConvertToInfo(conversationId: String!): SalesConvertTo
   salesItemsCountByAssignedUser(pipelineId: String!, stackBy: String): JSON
   salesCardsFields: JSON
@@ -44,8 +44,8 @@ const mutationParams = `
 
 export const mutations = `
   salesBoardsAdd(${mutationParams}): SalesBoard
-  salesBoardsEdit(_id: String!, ${mutationParams}): SalesBoard
-  salesBoardsRemove(_id: String!): JSON
-  salesBoardItemUpdateTimeTracking(_id: String!, status: String!, timeSpent: Int!, startDate: String): JSON
+  salesBoardsEdit(_id: ID!, ${mutationParams}): SalesBoard
+  salesBoardsRemove(_id: ID!): JSON
+  salesBoardItemUpdateTimeTracking(_id: ID!, status: String!, timeSpent: Int!, startDate: String): JSON
   salesBoardItemsSaveForGanttTimeline(items: JSON, links: JSON): String
 `;

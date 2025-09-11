@@ -1,5 +1,5 @@
 const rateFields = `
-  _id: String!
+  _id: ID!
   date: Date
   mainCurrency: String
   rateCurrency: String
@@ -33,6 +33,6 @@ export const queries = `
 
 export const mutations = `
   exchangeRateAdd(${rateParams}): ExchangeRate
-  exchangeRateEdit(_id: String!, ${rateParams}): ExchangeRate
+  exchangeRateEdit(_id: ID!, ${rateParams}): ExchangeRate
   exchangeRatesRemove(rateIds: [String!]): String
 `;

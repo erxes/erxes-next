@@ -1,5 +1,5 @@
 const posOrderFields = () => `
-  _id: String,
+  _id: ID,
   createdAt: Date,
   status: String,
   paidDate: Date,
@@ -41,7 +41,7 @@ const posOrderFields = () => `
 
 export const types = () => `
   type CustomerPos {
-    _id: String!
+    _id: ID!
     code: String
     primaryPhone: String
     firstName: String
@@ -67,7 +67,7 @@ export const types = () => `
   }
 
   type PosOrdersByCustomer {
-    _id: String,
+    _id: ID,
     customerType: String,
     customerDetail:JSON,
     orders:[PosOrder]
@@ -76,7 +76,7 @@ export const types = () => `
   }
 
   type PosOrdersBySubs {
-    _id: String,
+    _id: ID,
     customerType: String,
     customerId:String,
     customer:JSON,
@@ -85,7 +85,7 @@ export const types = () => `
   }
 
   type PosProduct {
-    _id: String!
+    _id: ID!
     name: String
     code: String
     type: String
@@ -148,7 +148,7 @@ const commonSubsQueryParams = `
 
 export const queries = `
   posOrders(${queryParams}): [PosOrder]
-  posOrderDetail(_id: String): PosOrderDetail
+  posOrderDetail(_id: ID): PosOrderDetail
   posProducts(${queryParams} categoryId: String, searchValue: String): PosProducts
   posOrdersSummary(${queryParams}): JSON
   posOrdersGroupSummary(${queryParams}, ${groupParams}): JSON
@@ -163,6 +163,6 @@ export const queries = `
 `;
 
 export const mutations = `
-  posOrderReturnBill(_id: String!): PosOrder
-  posOrderChangePayments(_id: String!, cashAmount: Float, mobileAmount: Float, paidAmounts: JSON, description: String): PosOrder
+  posOrderReturnBill(_id: ID!): PosOrder
+  posOrderChangePayments(_id: ID!, cashAmount: Float, mobileAmount: Float, paidAmounts: JSON, description: String): PosOrder
 `;

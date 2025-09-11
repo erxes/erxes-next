@@ -15,7 +15,7 @@ export const types = `
     elementsQuick: [ElementItem]
   }
   type Itinerary {
-    _id: String!
+    _id: ID!
     branchId: String
     name: String
     content: String

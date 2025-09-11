@@ -1,6 +1,6 @@
 export const types = `
   type PosCoverSummary {
-    _id: String
+    _id: ID
     kind: String
     kindOfVal: Float
     value: Float
@@ -8,7 +8,7 @@ export const types = `
   }
 
   type PosCoverDetail {
-    _id: String
+    _id: ID
     paidType: String
     
     paidSummary: [PosCoverSummary]
@@ -16,7 +16,7 @@ export const types = `
   }
 
   type PosCover {
-    _id: String
+    _id: ID
     posToken: String
     beginDate: Date
     endDate: Date
@@ -50,12 +50,12 @@ const queryParams = `
 `;
 
 export const mutations = `
-  posCoversEdit(_id: String!, note: String): PosCover
-  posCoversRemove(_id: String!): JSON
+  posCoversEdit(_id: ID!, note: String): PosCover
+  posCoversRemove(_id: ID!): JSON
 `;
 
 export const queries = `
   posCovers(${queryParams}): [PosCover]
   posCoversCount(${queryParams}): Int
-  posCoverDetail(_id: String!): PosCover
+  posCoverDetail(_id: ID!): PosCover
 `;

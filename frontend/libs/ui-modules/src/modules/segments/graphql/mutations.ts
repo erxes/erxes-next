@@ -34,7 +34,7 @@ export const SEGMENT_ADD = gql`
 `;
 
 export const SEGMENT_EDIT = gql`
-  mutation segmentsEdit($_id: String!, ${PARAMS_DEFS}) {
+  mutation segmentsEdit($_id: ID!, ${PARAMS_DEFS}) {
     segmentsEdit(_id: $_id, ${PARAMS}) {
       _id
       count

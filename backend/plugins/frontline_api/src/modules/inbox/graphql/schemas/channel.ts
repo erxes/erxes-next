@@ -1,6 +1,6 @@
 export const types = `
   type  Channel {
-    _id: String!
+    _id: ID!
     name: String!
     description: String
     integrationIds: [String]
@@ -14,7 +14,7 @@ export const types = `
 export const queries = `
   channels(page: Int, perPage: Int, memberIds: [String]): [Channel]
   channelsByMembers(memberIds: [String]): [Channel]
-  channelDetail(_id: String!): Channel
+  channelDetail(_id: ID!): Channel
   channelsTotalCount: Int
   channelsGetLast: Channel
 `;
@@ -28,6 +28,6 @@ const commonMutationParams = `
 
 export const mutations = `
   channelsAdd(${commonMutationParams}): Channel
-  channelsEdit(_id: String!, ${commonMutationParams}): Channel
-  channelsRemove(_id: String!): JSON
+  channelsEdit(_id: ID!, ${commonMutationParams}): Channel
+  channelsRemove(_id: ID!): JSON
 `;

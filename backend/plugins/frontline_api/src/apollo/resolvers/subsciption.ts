@@ -1,5 +1,5 @@
 const conversationChanged = `
-  subscription conversationChanged($_id: String!) {
+  subscription conversationChanged($_id: ID!) {
     conversationChanged(_id: $_id) {
       type
     }
@@ -7,7 +7,7 @@ const conversationChanged = `
 `;
 
 const conversationMessageInserted = `
-  subscription conversationMessageInserted($_id: String!) {
+  subscription conversationMessageInserted($_id: ID!) {
     conversationMessageInserted(_id: $_id) {
       _id
     }
@@ -24,7 +24,7 @@ const conversationClientMessageInserted = `
 `;
 
 const conversationClientTypingStatusChanged = `
-  subscription conversationClientTypingStatusChanged($_id: String!) {
+  subscription conversationClientTypingStatusChanged($_id: ID!) {
     conversationClientTypingStatusChanged(_id: $_id) {
       text
     }
@@ -38,7 +38,7 @@ const conversationExternalIntegrationMessageInserted = `
 `;
 
 const customerConnectionChanged = `
-  subscription customerConnectionChanged ($_id: String!) {
+  subscription customerConnectionChanged ($_id: ID!) {
     customerConnectionChanged (_id: $_id) {
       _id
       status

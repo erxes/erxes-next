@@ -21,7 +21,7 @@ export const types = `
 
 
   type FacebookCustomer {
-    _id: String
+    _id: ID
     userId: String
     erxesApiId: String
     firstName: String
@@ -48,7 +48,7 @@ export const types = `
   }
 
   type FacebookConversationMessage {
-    _id: String!
+    _id: ID!
     ${commonCommentAndMessageFields}
     attachments: [Attachment]
     fromBot: Boolean
@@ -66,7 +66,7 @@ export const types = `
   }
 
   type FacebookPostMessage {
-    _id: String!
+    _id: ID!
     ${commonCommentAndMessageFields}
     attachments: [Attachment]
     customerId: String
@@ -80,7 +80,7 @@ export const types = `
 
 
   type FacebookPost @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     ${commonPostAndCommentFields}
     content:String
   }
@@ -100,7 +100,7 @@ export const types = `
   }
 
   type FacebookMessengerBot {
-    _id: String
+    _id: ID
     name:String
     accountId: String
     account:JSON
@@ -124,7 +124,7 @@ export const queries = `
   facebookGetComments(conversationId: String!, getFirst: Boolean, ${pageParams}): [FacebookPostMessage]
   facebookGetCommentCount(${commentQueryParamDefs}): JSON
   facebookGetPages(accountId: String! kind: String!): JSON
-  facebookConversationDetail(_id: String!): JSON
+  facebookConversationDetail(_id: ID!): JSON
   facebookConversationMessages(conversationId: String! getFirst: Boolean, ${pageParams}): [FacebookConversationMessage]
   facebookConversationMessagesCount(conversationId: String!): Int
   facebookGetPost(erxesApiId: String): FacebookPost
@@ -140,6 +140,6 @@ export const queries = `
 
 export const mutations = `
   facebookUpdateConfigs(configsMap: JSON!): JSON
-  facebookRepair(_id: String!): JSON
+  facebookRepair(_id: ID!): JSON
   facebookReplyToComment(conversationId: String, commentId: String, content: String): FacebookComment
 `;

@@ -112,7 +112,7 @@ const posSlots = gql`
 `;
 
 const posDetail = gql`
-  query posDetail($_id: String!) {
+  query posDetail($_id: ID!) {
     posDetail(_id: $_id) {
       ${posCommonFields}
       productDetails

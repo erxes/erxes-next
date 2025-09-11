@@ -1,6 +1,6 @@
 export const BrandTypes = ` 
     type Brand @key(fields: "_id") @cacheControl(maxAge: 3) {
-        _id: String!
+        _id: ID!
         name: String
         description: String
         code: String

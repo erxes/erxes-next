@@ -75,7 +75,7 @@ export const types = `
 
 
   type User @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String
+    _id: ID
     createdAt: Date
     username: String
     email: String
@@ -118,7 +118,7 @@ export const types = `
   }
 
   type UserMovement {
-    _id: String
+    _id: ID
     createdAt: Date
     createdBy: String
     createdByDetail:JSON
@@ -171,13 +171,13 @@ const commonSelector = `
 export const queries = `
   users(sortField: String, status: String, excludeIds: Boolean, ${commonSelector} ${GQL_CURSOR_PARAM_DEFS}): UsersListResponse
   allUsers(isActive: Boolean,ids:[String],assignedToMe:String,searchValue:String): [User]
-  userDetail(_id: String): User
+  userDetail(_id: ID): User
   usersTotalCount(${commonSelector}): Int
   userMovements(userId: String!,contentType: String):[UserMovement]
 `;
 
 export const mutations = `
-  usersResetMemberPassword(_id: String!, newPassword: String!): User
+  usersResetMemberPassword(_id: ID!, newPassword: String!): User
   usersEditProfile(
     username: String!,
     email: String!,
@@ -186,15 +186,15 @@ export const mutations = `
     employeeId: String
     positionIds: [String]
   ): User
-  usersEdit(_id: String!, ${commonParams}): User
+  usersEdit(_id: ID!, ${commonParams}): User
   usersChangePassword(currentPassword: String!, newPassword: String!): User
-  usersSetActiveStatus(_id: String!): User
+  usersSetActiveStatus(_id: ID!): User
   usersInvite(entries: [InvitationEntry]): Boolean
   usersResendInvitation(email: String!): String
   usersConfirmInvitation(token: String, password: String, passwordConfirmation: String, fullName: String, username: String): User
   usersConfigEmailSignatures(signatures: [EmailSignature]): User
   usersConfigGetNotificationByEmail(isAllowed: Boolean): User
-  usersSetChatStatus(_id: String!, status: UserChatStatus): User
+  usersSetChatStatus(_id: ID!, status: UserChatStatus): User
   editOrganizationInfo(icon: String, logo: String, link: String, name: String, iconColor: String, backgroundColor: String, description: String, domain: String, favicon: String, textColor: String): Organization
   editOrganizationDomain(type: String, domain: String): Organization
   usersCreateOwner(email: String!, password: String!, firstName: String!, lastName: String, purpose: String, subscribeEmail: Boolean): String

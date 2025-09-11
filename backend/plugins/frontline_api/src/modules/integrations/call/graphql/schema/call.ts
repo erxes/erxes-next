@@ -1,5 +1,5 @@
 const integrationCommonFields = `
-    _id: String
+    _id: ID
     inboxId: String
     phone: String
     wsServer: String
@@ -27,7 +27,7 @@ export const types = `
   }
 
   type CallChannel {
-    _id: String!
+    _id: ID!
     name: String!
     description: String
     integrationIds: [String]
@@ -41,7 +41,7 @@ export const types = `
   }
 
   type CallConversation {
-    _id: String 
+    _id: ID 
     erxesApiId: String
     integrationId: String
     customerPhone: String
@@ -55,12 +55,12 @@ export const types = `
     channels: [CallChannel]
   }
   type CallActiveSession {
-    _id: String
+    _id: ID
     userId: String
     lastLoginDeviceId: String
   }
    type CallHistory{
-    _id: String
+    _id: ID
     operatorPhone: String
     customerPhone: String
     callDuration: Int
@@ -147,7 +147,7 @@ export const types = `
   }
 
   type CallConversationNotes {
-    _id: String!
+    _id: ID!
     ${commonCommentAndMessageFields}
     attachments: [Attachment]
     customerId: String
@@ -216,7 +216,7 @@ export const queries = `
   callTodayStatistics(queue: String!): JSON
 
   callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
-  callHistoryDetail(_id: String, conversationId: String): CallHistory
+  callHistoryDetail(_id: ID, conversationId: String): CallHistory
   `;
 
 export const mutations = `
@@ -224,8 +224,8 @@ export const mutations = `
   callAddCustomer(inboxIntegrationId: String, primaryPhone: String, queueName: String): CallConversationDetail
   callUpdateActiveSession: JSON
   callHistoryAdd(${commonHistoryFields}, queueName: String): CallHistory
-  callHistoryEdit(_id: String,${commonHistoryFields}): String
-  callHistoryRemove(_id: String!): JSON
+  callHistoryEdit(_id: ID,${commonHistoryFields}): String
+  callHistoryRemove(_id: ID!): JSON
   callsUpdateConfigs(configsMap: JSON!): JSON
   callsPauseAgent(status: String!, integrationId: String!): String
   callTransfer(extensionNumber: String!, integrationId: String!, direction: String): String

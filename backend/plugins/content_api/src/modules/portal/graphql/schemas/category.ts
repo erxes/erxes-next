@@ -7,7 +7,7 @@ export const types = `
     }
 
     type PostCategory {
-        _id: String!
+        _id: ID!
         clientPortalId: String!
         name: String
         slug: String
@@ -46,12 +46,12 @@ export const inputs = `
 
 export const queries = `
     cmsCategories(clientPortalId: String, searchValue: String, status: CategoryStatus, ${GQL_CURSOR_PARAM_DEFS}, sortField: String, sortDirection: String): PostCategoryListResponse
-    cmsCategory(_id: String, slug: String): PostCategory
+    cmsCategory(_id: ID, slug: String): PostCategory
 `;
 
 export const mutations = `
     cmsCategoriesAdd(input: PostCategoryInput!): PostCategory
-    cmsCategoriesEdit(_id: String!, input: PostCategoryInput!): PostCategory
-    cmsCategoriesRemove(_id: String!): JSON
-    cmsCategoriesToggleStatus(_id: String!): PostCategory
+    cmsCategoriesEdit(_id: ID!, input: PostCategoryInput!): PostCategory
+    cmsCategoriesRemove(_id: ID!): JSON
+    cmsCategoriesToggleStatus(_id: ID!): PostCategory
 `;

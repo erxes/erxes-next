@@ -11,7 +11,7 @@ export const ADD_PAYMENT = gql`
 `;
 
 export const EDIT_PAYMENT = gql`
-  mutation paymentEdit($_id: String!, $input: PaymentInput!) {
+  mutation paymentEdit($_id: ID!, $input: PaymentInput!) {
     paymentEdit(_id: $_id, input: $input) {
       _id
       name
@@ -21,9 +21,7 @@ export const EDIT_PAYMENT = gql`
 `;
 
 export const REMOVE_PAYMENT = gql`
-  mutation paymentRemove($_id: String!) {
-    paymentRemove(_id: $_id) 
+  mutation paymentRemove($_id: ID!) {
+    paymentRemove(_id: $_id)
   }
 `;
-
-

@@ -6,7 +6,7 @@ import {
 } from 'erxes-ui';
 
 export const BRAND_INLINE_QUERY = gql`
-  query BrandInline($_id: String!) {
+  query BrandInline($_id: ID!) {
     brandDetail(_id: $_id) {
       _id
       code

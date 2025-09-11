@@ -5,7 +5,7 @@ export const types = `
   }
 
 type KnowledgeBaseArticle @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     code: String
     title: String
     summary: String
@@ -35,7 +35,7 @@ type KnowledgeBaseArticle @key(fields: "_id") {
 
 
 type KnowledgeBaseCategory {
-    _id: String!
+    _id: ID!
     code: String
     title: String
     description: String
@@ -54,7 +54,7 @@ type KnowledgeBaseCategory {
   }
 
 type KnowledgeBaseParentCategory {
-    _id: String!
+    _id: ID!
     code: String
     title: String
     description: String
@@ -74,7 +74,7 @@ type KnowledgeBaseParentCategory {
   }
 
 type KnowledgeBaseTopic @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     code: String
     title: String
     description: String
@@ -171,31 +171,31 @@ const cursorParams = `
 
 export const queries = `
   knowledgeBaseTopics(${cursorParams}, brandId: String, codes: [String]): KnowledgeBaseTopicsListResponse
-  knowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
+  knowledgeBaseTopicDetail(_id: ID!): KnowledgeBaseTopic
   knowledgeBaseTopicsTotalCount: Int
 
   knowledgeBaseCategories(${cursorParams},ids:[String] topicIds: [String], codes: [String],icon:String): [KnowledgeBaseCategory]
-  knowledgeBaseCategoryDetail(_id: String!): KnowledgeBaseCategory
+  knowledgeBaseCategoryDetail(_id: ID!): KnowledgeBaseCategory
   knowledgeBaseCategoriesTotalCount(topicIds: [String], codes: [String]): Int
   knowledgeBaseCategoriesGetLast: KnowledgeBaseCategory
 
   knowledgeBaseArticles(searchValue: String, ${cursorParams}, categoryIds: [String],articleIds:[String], codes: [String], topicIds: [String], sortField:String, sortDirection: Int, status: String): KnowledgeBaseArticlesListResponse
-  knowledgeBaseArticleDetail(_id: String!): KnowledgeBaseArticle
-  knowledgeBaseArticleDetailAndIncViewCount(_id: String!): KnowledgeBaseArticle
+  knowledgeBaseArticleDetail(_id: ID!): KnowledgeBaseArticle
+  knowledgeBaseArticleDetailAndIncViewCount(_id: ID!): KnowledgeBaseArticle
   knowledgeBaseArticlesTotalCount(categoryIds: [String], codes: [String], articleIds:[String], topicIds: [String], status: String): Int
 `;
 
 export const mutations = `
   knowledgeBaseTopicsAdd(input: KnowledgeBaseTopicInput!): KnowledgeBaseTopic
-  knowledgeBaseTopicsEdit(_id: String!, input: KnowledgeBaseTopicInput!): KnowledgeBaseTopic
-  knowledgeBaseTopicsRemove(_id: String!): JSON
+  knowledgeBaseTopicsEdit(_id: ID!, input: KnowledgeBaseTopicInput!): KnowledgeBaseTopic
+  knowledgeBaseTopicsRemove(_id: ID!): JSON
 
   knowledgeBaseCategoriesAdd(input: KnowledgeBaseCategoryInput!): KnowledgeBaseCategory
-  knowledgeBaseCategoriesEdit(_id: String!, input: KnowledgeBaseCategoryInput!): KnowledgeBaseCategory
-  knowledgeBaseCategoriesRemove(_id: String!): JSON
+  knowledgeBaseCategoriesEdit(_id: ID!, input: KnowledgeBaseCategoryInput!): KnowledgeBaseCategory
+  knowledgeBaseCategoriesRemove(_id: ID!): JSON
 
   knowledgeBaseArticlesAdd(input: KnowledgeBaseArticleInput!): KnowledgeBaseArticle
-  knowledgeBaseArticlesEdit(_id: String!, input: KnowledgeBaseArticleInput!): KnowledgeBaseArticle
-  knowledgeBaseArticlesRemove(_id: String!): JSON
-  knowledgeBaseArticlesIncrementViewCount(_id: String!): JSON
+  knowledgeBaseArticlesEdit(_id: ID!, input: KnowledgeBaseArticleInput!): KnowledgeBaseArticle
+  knowledgeBaseArticlesRemove(_id: ID!): JSON
+  knowledgeBaseArticlesIncrementViewCount(_id: ID!): JSON
 `;

@@ -3,7 +3,7 @@ import { ATTACHMENT_GQL } from 'erxes-ui';
 import messageFields from './messageFields';
 
 export const conversationChanged = gql`
-  subscription conversationChanged($_id: String!) {
+  subscription conversationChanged($_id: ID!) {
     conversationChanged(_id: $_id) {
       type
     }
@@ -11,14 +11,14 @@ export const conversationChanged = gql`
 `;
 
 export const conversationMessageInserted = gql`
-  subscription conversationMessageInserted($_id: String!) {
+  subscription conversationMessageInserted($_id: ID!) {
     conversationMessageInserted(_id: $_id) {
       ${messageFields}
     }
   }
 `;
 export const CONVERSATION_CHANGED = gql`
-  subscription conversationChanged($_id: String!) {
+  subscription conversationChanged($_id: ID!) {
     conversationChanged(_id: $_id) {
       type
     }
@@ -26,7 +26,7 @@ export const CONVERSATION_CHANGED = gql`
 `;
 
 export const CONVERSATION_MESSAGE_INSERTED = gql`
-  subscription conversationMessageInserted($_id: String!) {
+  subscription conversationMessageInserted($_id: ID!) {
     conversationMessageInserted(_id: $_id) {
       _id
       content
@@ -51,7 +51,7 @@ export const CONVERSATION_CLIENT_MESSAGE_INSERTED = gql`
 `;
 
 const conversationClientTypingStatusChanged = `
-  subscription conversationClientTypingStatusChanged($_id: String!) {
+  subscription conversationClientTypingStatusChanged($_id: ID!) {
     conversationClientTypingStatusChanged(_id: $_id) {
       text
     }
@@ -65,7 +65,7 @@ export const CONVERSATION_EXTERNAL_INTEGRATION_MESSAGE_INSERTED = gql`
 `;
 
 const customerConnectionChanged = `
-  subscription customerConnectionChanged ($_id: String!) {
+  subscription customerConnectionChanged ($_id: ID!) {
     customerConnectionChanged (_id: $_id) {
       _id
       status

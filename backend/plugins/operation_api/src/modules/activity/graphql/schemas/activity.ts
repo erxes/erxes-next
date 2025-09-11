@@ -7,7 +7,7 @@ export const types = `
     }
     
     type OperationActivity {
-        _id: String
+        _id: ID
         action: String  
         contentId: String
         module: String

@@ -49,7 +49,7 @@ export const GIVE_TAGS = gql`
 `;
 
 export const REMOVE_TAG = gql`
-  mutation removeTag($_id: String!) {
+  mutation removeTag($_id: ID!) {
     tagsRemove(_id: $_id)
   }
 `;

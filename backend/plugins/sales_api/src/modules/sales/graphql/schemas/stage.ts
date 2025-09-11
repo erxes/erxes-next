@@ -1,7 +1,7 @@
 export const types = `
 
   type SalesStage @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     name: String!
     pipelineId: String!
     visibility: String
@@ -61,14 +61,14 @@ export const queries = `
     pipelineIds: [String],
     ${queryParams}
   ): [SalesStage]
-  salesStageDetail(_id: String!, ${queryParams}): SalesStage
+  salesStageDetail(_id: ID!, ${queryParams}): SalesStage
   salesArchivedStages(pipelineId: String!, search: String): [SalesStage]
   salesArchivedStagesCount(pipelineId: String!, search: String): Int
 `;
 
 export const mutations = `
   salesStagesUpdateOrder(orders: [SalesOrderItem]): [SalesStage]
-  salesStagesRemove(_id: String!): JSON
-  salesStagesEdit(_id: String!, name: String, status: String): SalesStage
+  salesStagesRemove(_id: ID!): JSON
+  salesStagesEdit(_id: ID!, name: String, status: String): SalesStage
   salesStagesSortItems(stageId: String!, proccessId: String, sortType: String): String
 `;

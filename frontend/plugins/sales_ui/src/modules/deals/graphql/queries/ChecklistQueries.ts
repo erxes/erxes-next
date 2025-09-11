@@ -1,5 +1,5 @@
-import { checklistFields } from "../mutations/ChecklistMutations";
-import gql from "graphql-tag";
+import { checklistFields } from '../mutations/ChecklistMutations';
+import gql from 'graphql-tag';
 
 const commonParams = `
   $contentTypeId: String
@@ -22,7 +22,7 @@ export const GET_CHECKLISTS = gql`
 `;
 
 export const GET_CHECKLIST_DETAIL = gql`
-  query salesChecklistDetail($_id: String!) {
+  query salesChecklistDetail($_id: ID!) {
     salesChecklistDetail(_id: $_id) {
       ${checklistFields}
     }

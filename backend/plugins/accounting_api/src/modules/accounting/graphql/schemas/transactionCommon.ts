@@ -1,5 +1,5 @@
 const trDetailFields = `
-  _id: String
+  _id: ID
   accountId: String
   transactionId: String
   originId: String
@@ -65,7 +65,7 @@ export const types = () => `
   }
 
   type AccCommonTransaction {
-    _id: String
+    _id: ID
 
     ${transactionFields}
 
@@ -99,7 +99,7 @@ export const types = () => `
   }
 
   type AccCommonTrRecord {
-    _id: String
+    _id: ID
     trId: String
     detailInd: Int
 
@@ -137,7 +137,7 @@ export const types = () => `
   }
 
   input TransactionInput {
-    _id: String
+    _id: ID
     ${transactionFields}
 
     details: [CommonTrDetailInput]
@@ -191,7 +191,7 @@ export const queries = `
     sortField: String
     sortDirection: Int
   ): [AccCommonTransaction]
-  accTransactionDetail(_id: String!): [AccCommonTransaction]
+  accTransactionDetail(_id: ID!): [AccCommonTransaction]
   accTransactionsCount(${trsQueryParams}): Int
   accTrRecords(
     ${trRecsQueryParams},

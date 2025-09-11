@@ -26,7 +26,7 @@ export const GET_UNITS_MAIN = gql`
 `;
 
 export const GET_UNIT_BT_ID = gql`
-  query unitDetail($_id: String!) {
+  query unitDetail($_id: ID!) {
     unitDetail(_id: $_id) {
       _id
       title

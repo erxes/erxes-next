@@ -6,7 +6,7 @@ import {
 } from 'erxes-ui';
 
 const GET_USER = gql`
-  query UserDetail($_id: String) {
+  query UserDetail($_id: ID) {
     userDetail(_id: $_id) {
       _id
       username

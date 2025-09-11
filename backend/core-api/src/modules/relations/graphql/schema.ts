@@ -5,7 +5,7 @@ export const types = `
     }   
 
     type Relation {
-        _id: String!
+        _id: ID!
         entities: [Entity!]!
         createdAt: Date!
         updatedAt: Date!

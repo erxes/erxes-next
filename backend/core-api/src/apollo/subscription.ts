@@ -22,7 +22,7 @@ export default {
             info,
             queryVariables: { _id: payload.notificationInserted._id },
             buildQueryUsingSelections: (selections) => `
-                query Subscription_GetNotification($_id: String!) {
+                query Subscription_GetNotification($_id: ID!) {
                   notificationDetail(_id: $_id) {
                     ${selections}
                   }

@@ -8,7 +8,7 @@ export const types = `
   }
 
   type Tour {
-    _id: String!
+    _id: ID!
     branchId: String
     name: String
     refNumber: String
@@ -38,7 +38,7 @@ export const types = `
   }
 
   type BmsOrder {
-    _id: String!
+    _id: ID!
     branchId: String
     customerId: String
     tourId: String
@@ -111,7 +111,7 @@ const params = `
 export const mutations = `
   bmsTourAdd(${params}): Tour
   bmsTourRemove(ids: [String]): JSON
-  bmsTourViewCount(_id: String): JSON
+  bmsTourViewCount(_id: ID): JSON
   bmsTourEdit(_id:String!, ${params}): Tour
   bmsOrderAdd(order:BmsOrderInput): BmsOrder
   bmsOrderEdit(_id:String!,order:BmsOrderInput): BmsOrder

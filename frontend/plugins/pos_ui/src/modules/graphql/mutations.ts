@@ -88,7 +88,7 @@ const posAdd = gql`
 `;
 
 const posEdit = gql`
-  mutation posEdit($_id: String!, ${commonFields}) {
+  mutation posEdit($_id: ID!, ${commonFields}) {
     posEdit(_id: $_id, ${commonVariables}){
       ${posCommonFields}
     }
@@ -96,20 +96,24 @@ const posEdit = gql`
 `;
 
 const posRemove = gql`
-  mutation posRemove($_id: String!) {
+  mutation posRemove($_id: ID!) {
     posRemove(_id: $_id)
   }
 `;
 
 const updateConfigs = gql`
-  mutation posConfigsUpdate($posId:String!, $configsMap: JSON!) {
+  mutation posConfigsUpdate($posId: String!, $configsMap: JSON!) {
     posConfigsUpdate(posId: $posId, configsMap: $configsMap)
   }
 `;
 
 const brandAdd = gql`
   mutation brandsAdd($name: String!, $description: String, $emailConfig: JSON) {
-    brandsAdd(name: $name, description: $description, emailConfig: $emailConfig,) {
+    brandsAdd(
+      name: $name
+      description: $description
+      emailConfig: $emailConfig
+    ) {
       _id
     }
   }

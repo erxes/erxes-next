@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const UPDATE_PROJECT_MUTATION = gql`
   mutation UpdateProject(
-    $_id: String!
+    $_id: ID!
     $name: String
     $icon: String
     $description: String

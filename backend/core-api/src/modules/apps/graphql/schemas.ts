@@ -8,7 +8,7 @@ const commonFields = `
 
 export const types = `
   type App {
-    _id: String
+    _id: ID
     isEnabled: Boolean
     createdAt: Date
     ${commonFields}
@@ -21,12 +21,12 @@ export const types = `
 
 export const mutations = `
   appsAdd(${commonFields}): App
-  appsEdit(_id: String!, ${commonFields}): App
-  appsRemove(_id: String!): JSON
+  appsEdit(_id: ID!, ${commonFields}): App
+  appsRemove(_id: ID!): JSON
 `;
 
 export const queries = `
   apps: [App]
   appsTotalCount: Int
-  appDetail(_id: String): App
+  appDetail(_id: ID): App
 `;

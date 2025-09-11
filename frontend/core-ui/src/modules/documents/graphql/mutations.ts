@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const SAVE_DOCUMENT = gql(`
   mutation documentsSave(
-    $_id: String
+    $_id: ID
     $contentType: String
     $subType: String
     $name: String!

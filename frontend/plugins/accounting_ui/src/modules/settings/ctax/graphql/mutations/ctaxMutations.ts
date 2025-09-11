@@ -30,7 +30,7 @@ export const CTAX_ROWS_ADD = gql`
 `;
 
 export const CTAX_ROWS_EDIT = gql`
-  mutation ctaxRowsEdit($_id: String!${ctaxRowInputParamsDefs}) {
+  mutation ctaxRowsEdit($_id: ID!${ctaxRowInputParamsDefs}) {
     ctaxRowsEdit(_id: $_id, ${ctaxRowInputParams}) {
       ${ctaxRowFields}
     }

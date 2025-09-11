@@ -571,21 +571,21 @@ export const load${capitalizedModuleName}Class = (models: IModels) => {
   // Create modules/${moduleName}/graphql/schemas/extensions.ts
   const apolloSchemaContent = `export const types = \`
   type ${capitalizedModuleName} {
-    _id: String
+    _id: ID
     name: String
     description: String
   }
 \`;
 
 export const queries = \`
-  get${capitalizedModuleName}(_id: String!): ${capitalizedModuleName}
+  get${capitalizedModuleName}(_id: ID!): ${capitalizedModuleName}
   get${capitalizedModuleName}s: [${capitalizedModuleName}]
 \`;
 
 export const mutations = \`
   create${capitalizedModuleName}(name: String!): ${capitalizedModuleName}
-  update${capitalizedModuleName}(_id: String!, name: String!): ${capitalizedModuleName}
-  remove${capitalizedModuleName}(_id: String!): ${capitalizedModuleName}
+  update${capitalizedModuleName}(_id: ID!, name: String!): ${capitalizedModuleName}
+  remove${capitalizedModuleName}(_id: ID!): ${capitalizedModuleName}
 \`;
 `;
 

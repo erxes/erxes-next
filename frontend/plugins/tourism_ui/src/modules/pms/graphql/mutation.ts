@@ -84,7 +84,7 @@ export const PmsBranchAdd = gql`
 
 export const PmsBranchEdit = gql`
   mutation pmsBranchEdit(
-    $_id: String!
+    $_id: ID!
     $name: String
     $description: String
     $erxesAppToken: String
@@ -167,7 +167,7 @@ export const PmsBranchEdit = gql`
 `;
 
 export const PmsBranchRemove = gql`
-  mutation tmsBranchRemove($_id: String!) {
+  mutation tmsBranchRemove($_id: ID!) {
     tmsBranchRemove(_id: $_id)
   }
 `;

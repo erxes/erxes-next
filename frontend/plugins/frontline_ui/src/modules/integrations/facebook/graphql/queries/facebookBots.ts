@@ -41,7 +41,7 @@ export const FACEBOOK_BOT_DETAIL = gql`
 `;
 
 export const GET_FACEBOOK_BOT_PROFILE = gql`
-  query FacebootMessengerBot($_id: String) {
+  query FacebootMessengerBot($_id: ID) {
     facebookMessengerBot(_id: $_id) {
       _id
       name

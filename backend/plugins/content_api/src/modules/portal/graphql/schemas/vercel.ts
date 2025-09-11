@@ -1,11 +1,11 @@
 export const queries = `
-    clientPortalGetVercelDomains(_id: String!): JSON
+    clientPortalGetVercelDomains(_id: ID!): JSON
     clientPortalGetVercelDomainConfig(domain: String!): JSON
-    clientPortalGetVercelDeploymentStatus(_id: String!): JSON
+    clientPortalGetVercelDeploymentStatus(_id: ID!): JSON
 `;
 
 export const mutations = `
-    clientPortalDeployVercel(_id: String!): JSON
-    clientPortalRemoveVercel(_id: String!): Boolean
-    clientPortalAddDomainToVercel(_id: String!, domain: String): JSON
+    clientPortalDeployVercel(_id: ID!): JSON
+    clientPortalRemoveVercel(_id: ID!): Boolean
+    clientPortalAddDomainToVercel(_id: ID!, domain: String): JSON
 `;

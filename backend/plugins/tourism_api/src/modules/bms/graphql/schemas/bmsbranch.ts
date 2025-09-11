@@ -17,10 +17,10 @@ const commonFields = `
 export const types = `
 
   extend type Customer @key(fields: "_id") {
-    _id: String! @external
+    _id: ID! @external
   }
   type BmsBranch {
-    _id: String!
+    _id: ID!
     createdAt: Date
     userId: String
     user: User
@@ -37,11 +37,11 @@ export const types = `
 export const queries = `
   bmsBranches(page: Int, perPage: Int, sortField: String, sortDirection: Int): [BmsBranch]
   bmsBranchList(${GQL_CURSOR_PARAM_DEFS}): BmsBranchListResponse
-  bmsBranchDetail(_id: String!): BmsBranch
+  bmsBranchDetail(_id: ID!): BmsBranch
 `;
 
 export const mutations = `
   bmsBranchAdd(${commonFields}): BmsBranch
-  bmsBranchEdit(_id: String, ${commonFields}): BmsBranch
-  bmsBranchRemove(_id: String!): JSON
+  bmsBranchEdit(_id: ID, ${commonFields}): BmsBranch
+  bmsBranchRemove(_id: ID!): JSON
 `;

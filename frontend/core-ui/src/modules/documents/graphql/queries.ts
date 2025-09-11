@@ -59,7 +59,7 @@ export const GET_DOCUMENTS = gql(`
 
 export const GET_DOCUMENT_DETAIL = gql(`
   query Document(
-    $_id: String!
+    $_id: ID!
   ) {
     documentsDetail(
       _id: $_id

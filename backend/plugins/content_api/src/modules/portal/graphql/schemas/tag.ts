@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
     type PostTag {
-        _id: String!
+        _id: ID!
         clientPortalId: String!
         name: String
         slug: String
@@ -31,11 +31,11 @@ export const inputs = `
 
 export const queries = `
     cmsTags(clientPortalId: String, searchValue: String, sortField: String, sortDirection: String, ${GQL_CURSOR_PARAM_DEFS}): PostTagList
-    cmsTag(_id: String, slug: String): PostTag
+    cmsTag(_id: ID, slug: String): PostTag
 `;
 
 export const mutations = `
     cmsTagsAdd(input: PostTagInput!): PostTag
-    cmsTagsEdit(_id: String!, input: PostTagInput!): PostTag
-    cmsTagsRemove(_id: String!): JSON
+    cmsTagsEdit(_id: ID!, input: PostTagInput!): PostTag
+    cmsTagsRemove(_id: ID!): JSON
 `;

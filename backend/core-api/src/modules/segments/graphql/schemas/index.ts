@@ -6,7 +6,7 @@ export const types = `
   }
 
   input SubSegment {
-    _id: String
+    _id: ID
     contentType: String
     conditions: JSON
     conditionsConjunction: String
@@ -33,7 +33,7 @@ export const types = `
   }
 
   type Segment @key(fields: "_id") {
-    _id: String!
+    _id: ID!
     contentType: String!
     name: String
     description: String
@@ -56,7 +56,7 @@ export const queries = `
   segmentsGetTypes: [JSON]
   segmentsGetAssociationTypes(contentType: String!): [JSON]
   segments(contentTypes: [String]!, config: JSON, ids: [String],excludeIds:[String],searchValue:String): [Segment]
-  segmentDetail(_id: String): Segment
+  segmentDetail(_id: ID): Segment
   segmentsGetHeads(contentType:String): [Segment]
   segmentsEvents(contentType: String!): [JSON]
   segmentsPreviewCount(contentType: String!, conditions: JSON, subOf: String, config: JSON, conditionsConjunction: String): JSON
@@ -76,6 +76,6 @@ const commonFields = `
 
 export const mutations = `
   segmentsAdd(contentType: String!, ${commonFields}): Segment
-  segmentsEdit(_id: String!, ${commonFields}): Segment
-  segmentsRemove(_id: String,ids:[String]): JSON
+  segmentsEdit(_id: ID!, ${commonFields}): Segment
+  segmentsRemove(_id: ID,ids:[String]): JSON
 `;

@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
     type Cycle {
-        _id: String
+        _id: ID
         name: String
         description: String
         startDate: Date
@@ -22,7 +22,7 @@ export const types = `
     }
 
     input CycleInput {
-        _id: String
+        _id: ID
         name: String
         description: String
         startDate: Date
@@ -31,17 +31,17 @@ export const types = `
     }
 `;
 export const queries = `
-    getCycle(_id: String): Cycle
+    getCycle(_id: ID): Cycle
     getCycles(teamId: String, ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
     getCyclesActive(teamId: String,taskId: String, ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
-    getCycleProgress(_id: String!, assigneeId: String): JSON
-    getCycleProgressChart(_id: String!, assigneeId: String): JSON
-    getCycleProgressByMember(_id: String!, assigneeId: String): JSON
-    getCycleProgressByProject(_id: String!, assigneeId: String): JSON
+    getCycleProgress(_id: ID!, assigneeId: String): JSON
+    getCycleProgressChart(_id: ID!, assigneeId: String): JSON
+    getCycleProgressByMember(_id: ID!, assigneeId: String): JSON
+    getCycleProgressByProject(_id: ID!, assigneeId: String): JSON
 `;
 
 export const mutations = `
     createCycle(input: CycleInput): Cycle
     updateCycle(input: CycleInput): Cycle
-    removeCycle(_id: String): JSON
+    removeCycle(_id: ID): JSON
 `;

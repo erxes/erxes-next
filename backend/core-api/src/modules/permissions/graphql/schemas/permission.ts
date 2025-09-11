@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Permission {
-    _id: String!
+    _id: ID!
     module: String
     action: String
     userId: String

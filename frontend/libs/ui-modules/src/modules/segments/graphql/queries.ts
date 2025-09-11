@@ -56,7 +56,7 @@ export const PROPERTIES_WITH_FIELDS = gql(`
 `);
 
 export const SEGMENT_DETAIL = gql`
-  query segmentDetail($_id: String) {
+  query segmentDetail($_id: ID) {
     segmentDetail(_id: $_id) {
       ${SEGMENT_FIELDS}
       getSubSegments {

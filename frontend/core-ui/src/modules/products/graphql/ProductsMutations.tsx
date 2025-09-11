@@ -65,12 +65,27 @@ const productsAdd = gql`
 `;
 
 const categoryRemove = gql`
-  mutation productCategoriesRemove($_id: String!) {
+  mutation productCategoriesRemove($_id: ID!) {
     productCategoriesRemove(_id: $_id)
-}`
+  }
+`;
 
 const categoryEdit = gql`
-  mutation productCategoriesEdit($_id: String!, $name: String!, $code: String!, $parentId: String, $scopeBrandIds: [String], $description: String, $attachment: AttachmentInput, $status: String, $meta: String, $maskType: String, $mask: JSON, $isSimilarity: Boolean, $similarities: JSON) {
+  mutation productCategoriesEdit(
+    $_id: ID!
+    $name: String!
+    $code: String!
+    $parentId: String
+    $scopeBrandIds: [String]
+    $description: String
+    $attachment: AttachmentInput
+    $status: String
+    $meta: String
+    $maskType: String
+    $mask: JSON
+    $isSimilarity: Boolean
+    $similarities: JSON
+  ) {
     productCategoriesEdit(
       _id: $_id
       name: $name
@@ -87,12 +102,12 @@ const categoryEdit = gql`
       similarities: $similarities
     ) {
       _id
+    }
   }
-}
-`
+`;
 const productsEdit = gql`
   mutation ProductsEdit(
-    $_id: String!
+    $_id: ID!
     $name: String
     $shortName: String
     $categoryId: String
@@ -117,7 +132,7 @@ const productsEdit = gql`
       code: $code
       customFieldsData: $customFieldsData
       vendorId: $vendorId
-      barcodes: $barcodes 
+      barcodes: $barcodes
       uom: $uom
       barcodeDescription: $barcodeDescription
     ) {
@@ -126,4 +141,9 @@ const productsEdit = gql`
   }
 `;
 
-export const productsMutations = { productsEdit, productsAdd , categoryEdit , categoryRemove };
+export const productsMutations = {
+  productsEdit,
+  productsAdd,
+  categoryEdit,
+  categoryRemove,
+};

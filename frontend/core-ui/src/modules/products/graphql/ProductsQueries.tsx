@@ -90,7 +90,7 @@ const productTags = gql`
 `;
 
 const productCategoryDetail = gql`
-  query productCategoryDetail($_id: String) {
+  query productCategoryDetail($_id: ID) {
     productCategoryDetail(_id: $_id) {
       _id
       code

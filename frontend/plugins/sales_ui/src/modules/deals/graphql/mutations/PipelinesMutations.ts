@@ -1,23 +1,41 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const ADD_PIPELINE_LABEL = gql`
-  mutation SalesPipelineLabelsAdd($name: String!, $colorCode: String!, $pipelineId: String!) {
-    salesPipelineLabelsAdd(name: $name, colorCode: $colorCode, pipelineId: $pipelineId) {
+  mutation SalesPipelineLabelsAdd(
+    $name: String!
+    $colorCode: String!
+    $pipelineId: String!
+  ) {
+    salesPipelineLabelsAdd(
+      name: $name
+      colorCode: $colorCode
+      pipelineId: $pipelineId
+    ) {
       _id
     }
   }
 `;
 
 export const EDIT_PIPELINE_LABEL = gql`
-  mutation SalesPipelineLabelsEdit($_id: String!, $name: String!, $colorCode: String!, $pipelineId: String!) {
-    salesPipelineLabelsEdit(_id: $_id, name: $name, colorCode: $colorCode, pipelineId: $pipelineId) {
+  mutation SalesPipelineLabelsEdit(
+    $_id: ID!
+    $name: String!
+    $colorCode: String!
+    $pipelineId: String!
+  ) {
+    salesPipelineLabelsEdit(
+      _id: $_id
+      name: $name
+      colorCode: $colorCode
+      pipelineId: $pipelineId
+    ) {
       _id
     }
   }
 `;
 
 export const REMOVE_PIPELINE_LABEL = gql`
-  mutation SalesPipelineLabelsRemove($_id: String!) {
+  mutation SalesPipelineLabelsRemove($_id: ID!) {
     salesPipelineLabelsRemove(_id: $_id)
   }
 `;
@@ -98,7 +116,7 @@ export const ADD_PIPELINE = gql`
 `;
 
 export const EDIT_PIPELINE = gql`
-  mutation salesPipelinesEdit($_id: String!, ${commonPipelineParamsDef}) {
+  mutation salesPipelinesEdit($_id: ID!, ${commonPipelineParamsDef}) {
     salesPipelinesEdit(_id: $_id, ${commonPipelineParams}) {
       _id
     }
@@ -106,18 +124,18 @@ export const EDIT_PIPELINE = gql`
 `;
 
 export const REMOVE_PIPELINE = gql`
-  mutation salesPipelinesRemove($_id: String!) {
+  mutation salesPipelinesRemove($_id: ID!) {
     salesPipelinesRemove(_id: $_id)
   }
 `;
 export const ARCHIVE_PIPELINE = gql`
-  mutation salesPipelinesArchive($_id: String!) {
+  mutation salesPipelinesArchive($_id: ID!) {
     salesPipelinesArchive(_id: $_id)
   }
 `;
 
 export const COPY_PIPELINE = gql`
-  mutation salesPipelinesCopied($_id: String!) {
+  mutation salesPipelinesCopied($_id: ID!) {
     salesPipelinesCopied(_id: $_id)
   }
 `;

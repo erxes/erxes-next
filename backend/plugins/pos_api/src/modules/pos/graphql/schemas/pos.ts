@@ -47,7 +47,7 @@ const posCommonFields = `
 `;
 
 const catProd = `
-  _id: String
+  _id: ID
   categoryId: String
   code: String
   name: String
@@ -60,7 +60,7 @@ export const types = () => `
   }
 
   type Pos {
-    _id: String
+    _id: ID
     createdAt: Date
     userId: String
     user: User
@@ -72,7 +72,7 @@ export const types = () => `
   }
 
   type PosSlot {
-    _id: String
+    _id: ID
     posId: String
     code: String
     name: String
@@ -80,7 +80,7 @@ export const types = () => `
   }
 
   type ProductGroups {
-    _id: String
+    _id: ID
     name: String
     description: String
     posId: String
@@ -90,7 +90,7 @@ export const types = () => `
   }
 
   input GroupInput {
-    _id: String
+    _id: ID
     description: String
     name: String
     categoryIds: [String]
@@ -99,7 +99,7 @@ export const types = () => `
   }
 
   input SlotInput {
-    _id: String
+    _id: ID
     posId: String!
     code: String
     name: String
@@ -113,7 +113,7 @@ export const types = () => `
 
 export const queries = `
   posList(page: Int, perPage: Int, isOnline: String, sortField: String, sortDirection: Int): [Pos]
-  posDetail(_id: String!): Pos
+  posDetail(_id: ID!): Pos
   posEnv: JSON
   productGroups(posId: String!): [ProductGroups]
   posSlots(posId: String!): [PosSlot]
@@ -122,8 +122,8 @@ export const queries = `
 
 export const mutations = `
   posAdd(${posCommonFields}, catProdMappings: [CatProdInput]): Pos
-  posEdit(_id: String, ${posCommonFields}, catProdMappings: [CatProdInput]): Pos
-  posRemove(_id: String!): JSON
+  posEdit(_id: ID, ${posCommonFields}, catProdMappings: [CatProdInput]): Pos
+  posRemove(_id: ID!): JSON
   productGroupsAdd(${groupCommonFields}): ProductGroups
   productGroupsBulkInsert(posId: String, groups:[GroupInput]): [ProductGroups]
   posSlotBulkUpdate(posId: String, slots: [SlotInput]): [PosSlot]

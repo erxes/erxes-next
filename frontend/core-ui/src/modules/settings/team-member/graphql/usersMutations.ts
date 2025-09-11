@@ -13,7 +13,7 @@ const USERS_RESEND_INVITATION = gql`
 `;
 
 const USERS_SET_ACTIVE_STATUS = gql`
-  mutation usersSetActiveStatus($_id: String!) {
+  mutation usersSetActiveStatus($_id: ID!) {
     usersSetActiveStatus(_id: $_id) {
       _id
     }
@@ -42,7 +42,7 @@ const USERS_CONFIRM_INVITATION = gql`
 
 const USERS_INLINE_EDIT = gql`
   mutation usersEdit(
-    $_id: String!
+    $_id: ID!
     $username: String
     $email: String
     $details: UserDetails
@@ -86,7 +86,7 @@ const USERS_INLINE_EDIT = gql`
 `;
 
 const USERS_RESET_PASSWORD = gql`
-  mutation usersResetMemberPassword($_id: String!, $newPassword: String!) {
+  mutation usersResetMemberPassword($_id: ID!, $newPassword: String!) {
     usersResetMemberPassword(_id: $_id, newPassword: $newPassword) {
       _id
     }

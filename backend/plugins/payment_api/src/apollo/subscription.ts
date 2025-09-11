@@ -2,7 +2,7 @@
 export default {
   name: 'payment',
   typeDefs: `
-        invoiceUpdated(_id: String!): JSON
+        invoiceUpdated(_id: ID!): JSON
         transactionUpdated(invoiceId: String!): JSON
 	`,
   generateResolvers: (graphqlPubsub) => {

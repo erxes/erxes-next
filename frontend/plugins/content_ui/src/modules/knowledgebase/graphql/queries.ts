@@ -172,7 +172,7 @@ export const CATEGORIES = gql`
 
 export const CATEGORY_DETAIL = gql`
   ${CATEGORY_FRAGMENT}
-  query knowledgeBaseCategory($_id: String!) {
+  query knowledgeBaseCategory($_id: ID!) {
     knowledgeBaseCategory(_id: $_id) {
       ...CategoryFragment
       articles {
@@ -247,7 +247,7 @@ export const ARTICLE_DETAIL = gql`
   ${USER_FRAGMENT}
   ${ATTACHMENT_FRAGMENT}
 
-  query knowledgeBaseArticleDetail($_id: String!) {
+  query knowledgeBaseArticleDetail($_id: ID!) {
     knowledgeBaseArticleDetail(_id: $_id) {
       _id
       code

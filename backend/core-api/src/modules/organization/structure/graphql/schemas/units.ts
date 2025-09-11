@@ -10,7 +10,7 @@ const commonUnitParams = `
 `;
 export const UnitTypes = `
     type Unit @key(fields: "_id") @cacheControl(maxAge: 3) {
-        _id: String!
+        _id: ID!
         title: String
         departmentId: String
         supervisorId: String
@@ -32,12 +32,12 @@ export const UnitTypes = `
 `;
 export const mutations = `
     unitsAdd(${commonUnitParams}): Unit
-    unitsEdit(_id: String!, ${commonUnitParams}): Unit
+    unitsEdit(_id: ID!, ${commonUnitParams}): Unit
     unitsRemove(ids:[String!]): JSON
 `;
 
 export const queries = `
     units(searchValue: String): [Unit]
     unitsMain(${commonParams}): UnitListQueryResponse
-    unitDetail(_id: String!): Unit
+    unitDetail(_id: ID!): Unit
 `;

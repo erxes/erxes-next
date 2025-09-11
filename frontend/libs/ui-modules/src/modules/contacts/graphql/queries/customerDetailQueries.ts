@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const CUSTOMER_DETAIL = gql`
-  query CustomerDetail($_id: String!) {
+  query CustomerDetail($_id: ID!) {
     customerDetail(_id: $_id) {
       _id
       avatar
@@ -37,7 +37,7 @@ export const CUSTOMER_DETAIL = gql`
 `;
 
 export const CUSTOMER_INLINE = gql`
-  query CustomerInline($_id: String!) {
+  query CustomerInline($_id: ID!) {
     customerDetail(_id: $_id) {
       _id
       firstName

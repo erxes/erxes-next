@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
 type Project {
-    _id: String
+    _id: ID
     name: String
     icon: String
     description: String
@@ -24,7 +24,7 @@ type ProjectListResponse {
 }
 
 input IProjectFilter {
-    _id: String
+    _id: ID
     name: String
     description: String
     status: Int
@@ -58,7 +58,7 @@ const createProjectParams = `
 `;
 
 const updateProjectParams = `
-  _id: String!
+  _id: ID!
   name: String
   leadId: String
   icon: String
@@ -71,16 +71,16 @@ const updateProjectParams = `
 `;
 
 export const queries = `
-    getProject(_id: String!): Project
+    getProject(_id: ID!): Project
     getProjects(filter: IProjectFilter): ProjectListResponse
-    getProjectProgress(_id: String!): JSON
-    getProjectProgressByMember(_id: String!): JSON
-    getProjectProgressByTeam(_id: String!): JSON
-    getProjectProgressChart(_id: String!): JSON
+    getProjectProgress(_id: ID!): JSON
+    getProjectProgressByMember(_id: ID!): JSON
+    getProjectProgressByTeam(_id: ID!): JSON
+    getProjectProgressChart(_id: ID!): JSON
 `;
 
 export const mutations = `
   createProject(${createProjectParams}): Project
   updateProject(${updateProjectParams}): Project
-  removeProject(_id: String!): JSON
+  removeProject(_id: ID!): JSON
 `;

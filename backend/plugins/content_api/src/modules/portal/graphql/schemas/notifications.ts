@@ -19,7 +19,7 @@ export const types = `
   }
 
   type ClientPortalNotification {
-    _id: String!
+    _id: ID!
     notifType: CPNotificationType
     title: String
     link: String
@@ -70,7 +70,7 @@ input MobileFireBaseConfig {
 export const queries = `
   clientPortalNotifications(${params}): ClientPortalNotificationListResponse
   clientPortalNotificationCount(all: Boolean): Int
-  clientPortalNotificationDetail(_id: String!): ClientPortalNotification
+  clientPortalNotificationDetail(_id: ID!): ClientPortalNotification
 `;
 
 export const mutations = `

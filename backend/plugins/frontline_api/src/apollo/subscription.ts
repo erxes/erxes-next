@@ -3,13 +3,13 @@ import { withFilter } from 'graphql-subscriptions';
 export default {
   name: 'frontline',
   typeDefs: `
-			conversationChanged(_id: String!): ConversationChangedResponse
-			conversationMessageInserted(_id: String!): ConversationMessage
+			conversationChanged(_id: ID!): ConversationChangedResponse
+			conversationMessageInserted(_id: ID!): ConversationMessage
 			conversationClientMessageInserted(userId: String!): ConversationMessage
-			conversationClientTypingStatusChanged(_id: String!): ConversationClientTypingStatusChangedResponse
+			conversationClientTypingStatusChanged(_id: ID!): ConversationClientTypingStatusChangedResponse
 			conversationAdminMessageInserted(customerId: String): ConversationAdminMessageInsertedResponse
 			conversationExternalIntegrationMessageInserted: JSON
-			conversationBotTypingStatus(_id: String!): JSON
+			conversationBotTypingStatus(_id: ID!): JSON
       waitingCallReceived(extension: String): String
       talkingCallReceived(extension: String): String
       agentCallReceived(extension: String): String
@@ -53,7 +53,7 @@ export default {
             info,
             queryVariables: { _id: payload.conversationMessageInserted._id },
             buildQueryUsingSelections: (selections) => `
-                  query Subscription_GetMessage($_id: String!) {
+                  query Subscription_GetMessage($_id: ID!) {
                     conversationMessage(_id: $_id) {
                       ${selections}
                     }
@@ -113,7 +113,7 @@ export default {
               _id: payload.conversationClientMessageInserted._id,
             },
             buildQueryUsingSelections: (selections) => `
-                  query Subscription_GetMessage($_id: String!) {
+                  query Subscription_GetMessage($_id: ID!) {
                     conversationMessage(_id: $_id) {
                       ${selections}
                     }

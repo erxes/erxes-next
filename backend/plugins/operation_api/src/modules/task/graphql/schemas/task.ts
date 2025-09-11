@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Task {
-    _id: String
+    _id: ID
     name: String
     description: String
     status: String
@@ -30,7 +30,7 @@ export const types = `
   }
 
   input ITaskFilter {
-    _id: String
+    _id: ID
     status: String
     priority: Int
     assigneeId: String
@@ -74,7 +74,7 @@ const createTaskParams = `
 `;
 
 const updateTaskParams = `
-  _id: String!
+  _id: ID!
   name: String
   description: String
   teamId: String
@@ -92,12 +92,12 @@ const updateTaskParams = `
 `;
 
 export const queries = `
-  getTask(_id: String!): Task
+  getTask(_id: ID!): Task
   getTasks(filter: ITaskFilter): TaskListResponse
 `;
 
 export const mutations = `
   createTask(${createTaskParams}): Task
   updateTask(${updateTaskParams}): Task
-  removeTask(_id: String!): Task
+  removeTask(_id: ID!): Task
 `;

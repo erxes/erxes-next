@@ -25,7 +25,7 @@ export const CREATE_EM_MESSENGER_MUTATION = gql`
 
 export const SAVE_EM_CONFIGS_MUTATION = gql`
   mutation integrationsSaveMessengerConfigs(
-    $_id: String!
+    $_id: ID!
     $messengerData: IntegrationMessengerData
     $callData: IntegrationCallData
   ) {
@@ -41,7 +41,7 @@ export const SAVE_EM_CONFIGS_MUTATION = gql`
 
 export const SAVE_EM_APPEARANCE_MUTATION = gql`
   mutation integrationsSaveMessengerAppearanceData(
-    $_id: String!
+    $_id: ID!
     $uiOptions: MessengerUiOptions
   ) {
     integrationsSaveMessengerAppearanceData(_id: $_id, uiOptions: $uiOptions) {

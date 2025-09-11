@@ -4,8 +4,8 @@ import { withFilter } from 'graphql-subscriptions';
 export default {
   name: 'operation',
   typeDefs: `
-      operationTaskChanged(_id: String!): TaskSubscription
-      operationProjectChanged(_id: String!): ProjectSubscription
+      operationTaskChanged(_id: ID!): TaskSubscription
+      operationProjectChanged(_id: ID!): ProjectSubscription
       operationTaskListChanged(filter: ITaskFilter): TaskSubscription
       operationProjectListChanged(filter: IProjectFilter): ProjectSubscription
       operationActivityChanged(contentId: String!): OperationActivitySubscription

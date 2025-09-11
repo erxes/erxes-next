@@ -2,7 +2,7 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Brand @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String
+    _id: ID
     name: String
     description: String
     code: String
@@ -29,7 +29,7 @@ const queryParams = `
 export const queries = `
   allBrands: [Brand]
   brands(${queryParams}): BrandListResponse
-  brandDetail(_id: String!): Brand
+  brandDetail(_id: ID!): Brand
   brandsTotalCount: Int
   brandsGetLast: Brand
 `;
@@ -42,6 +42,6 @@ const mutationParams = `
 
 export const mutations = `
   brandsAdd(${mutationParams}): Brand
-  brandsEdit(_id: String!, ${mutationParams}): Brand
+  brandsEdit(_id: ID!, ${mutationParams}): Brand
   brandsRemove(_ids: [String!]): JSON
 `;

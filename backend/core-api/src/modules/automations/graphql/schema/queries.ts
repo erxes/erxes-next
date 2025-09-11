@@ -30,7 +30,7 @@ const historiesParams = `
 const queries = `
   automationsMain(${queryParams}): AutomationsListResponse
   automations(${queryParams}): [Automation]
-  automationDetail(_id: String!): Automation
+  automationDetail(_id: ID!): Automation
   automationNotes(automationId: String!, triggerId: String, actionId: String): [AutomationNote]
   automationHistories(${GQL_CURSOR_PARAM_DEFS},${historiesParams}): AutomationHistories
   automationHistoriesTotalCount(${historiesParams}):Int

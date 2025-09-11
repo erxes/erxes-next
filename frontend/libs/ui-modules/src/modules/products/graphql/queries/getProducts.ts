@@ -38,7 +38,7 @@ export const GET_ASSIGNED_PRODUCTS = gql`
 `;
 
 export const GET_PRODUCT_INLINE = gql`
-  query ProductInline($_id: String) {
+  query ProductInline($_id: ID) {
     productDetail(_id: $_id) {
       _id
       name
