@@ -1,6 +1,7 @@
-import { STATUS_TYPES } from '@/status/constants/types';
-import { IContext } from '~/connectionResolvers';
 import { ICycleDocument } from '@/cycle/types';
+import { STATUS_TYPES } from '@/status/constants/types';
+import { Types } from 'mongoose';
+import { IContext } from '~/connectionResolvers';
 
 export const Cycle = {
   async donePercent(
@@ -21,7 +22,7 @@ export const Cycle = {
     const result = await models.Task.aggregate([
       {
         $match: {
-          cycleId: cycle._id,
+          cycleId: new Types.ObjectId(cycle._id),
           statusType: { $ne: STATUS_TYPES.CANCELLED },
         },
       },

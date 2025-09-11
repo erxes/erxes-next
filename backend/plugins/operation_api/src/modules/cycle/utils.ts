@@ -1,6 +1,7 @@
-import { STATUS_TYPES } from '@/status/constants/types';
 import { fillMissingDays } from '@/project/utils/charUtils';
+import { STATUS_TYPES } from '@/status/constants/types';
 import { differenceInCalendarDays } from 'date-fns';
+import { Types } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
 export const getCyclesProgress = async (
@@ -8,8 +9,8 @@ export const getCyclesProgress = async (
   assigneeId: string | undefined,
   models: IModels,
 ) => {
-  const filter: { cycleId: string; assigneeId?: string } = {
-    cycleId,
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
   };
 
   if (assigneeId) {
@@ -115,8 +116,8 @@ export const getCycleProgressChart = async (
   assigneeId: string | undefined,
   models: IModels,
 ) => {
-  const filter: { cycleId: string; assigneeId?: string } = {
-    cycleId,
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
   };
 
   if (assigneeId) {
@@ -239,8 +240,8 @@ export const getCycleProgressByProject = async (
   assigneeId: string | undefined,
   models: IModels,
 ) => {
-  const filter: { cycleId: string; assigneeId?: string } = {
-    cycleId,
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
   };
 
   if (assigneeId) {
@@ -386,8 +387,8 @@ export const getCycleProgressByMember = async (
   assigneeId: string | undefined,
   models: IModels,
 ) => {
-  const filter: { cycleId: string; assigneeId?: string } = {
-    cycleId,
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
   };
 
   if (assigneeId) {

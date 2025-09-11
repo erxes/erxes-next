@@ -1,8 +1,7 @@
-import { IContext } from '~/connectionResolvers';
-import { ITaskFilter } from '@/task/@types/task';
-import { ITaskDocument } from '@/task/@types/task';
-import { FilterQuery } from 'mongoose';
+import { ITaskDocument, ITaskFilter } from '@/task/@types/task';
 import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FilterQuery, Types } from 'mongoose';
+import { IContext } from '~/connectionResolvers';
 
 export const taskQueries = {
   getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -44,7 +43,7 @@ export const taskQueries = {
     }
 
     if (filter.teamId) {
-      filterQuery.teamId = filter.teamId;
+      filterQuery.teamId = new Types.ObjectId(filter.teamId);
     }
 
     if (filter.createdBy) {
@@ -56,11 +55,11 @@ export const taskQueries = {
     }
 
     if (filter.cycleId) {
-      filterQuery.cycleId = filter.cycleId;
+      filterQuery.cycleId = new Types.ObjectId(filter.cycleId);
     }
 
     if (filter.projectId) {
-      filterQuery.projectId = filter.projectId;
+      filterQuery.projectId = new Types.ObjectId(filter.projectId);
     }
 
     if (filter.estimatePoint) {
@@ -79,6 +78,8 @@ export const taskQueries = {
     ) {
       filterQuery.assigneeId = filter.userId;
     }
+
+    console.log('filterQuery', filterQuery);
 
     const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
       model: models.Task,

@@ -1,15 +1,14 @@
-import { IContext } from '~/connectionResolvers';
-import { IProjectFilter } from '@/project/@types/project';
-import { cursorPaginate } from 'erxes-api-shared/utils';
-import { IProjectDocument } from '@/project/@types/project';
-import { FilterQuery } from 'mongoose';
-import { STATUS_TYPES } from '@/status/constants/types';
+import { IProjectDocument, IProjectFilter } from '@/project/@types/project';
 import {
+  fillFromLastDate,
   fillMissingDays,
   fillUntilTargetDate,
-  fillFromLastDate,
 } from '@/project/utils/charUtils';
+import { STATUS_TYPES } from '@/status/constants/types';
 import { differenceInCalendarDays } from 'date-fns';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FilterQuery, Types } from 'mongoose';
+import { IContext } from '~/connectionResolvers';
 
 export const projectQueries = {
   getProject: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -48,7 +47,9 @@ export const projectQueries = {
     }
 
     if (filter.teamIds && filter.teamIds.length > 0) {
-      filterQuery.teamIds = { $in: filter.teamIds };
+      filterQuery.teamIds = {
+        $in: filter.teamIds.map((id) => new Types.ObjectId(id)),
+      };
     }
 
     if (
@@ -68,11 +69,16 @@ export const projectQueries = {
       };
 
       if (filter.taskId) {
-        const task = await models.Task.findOne({ _id: filter.taskId });
+        const task = await models.Task.findOne({
+          _id: new Types.ObjectId(filter.taskId),
+        });
 
         if (task?.projectId) {
           // status нь active эсвэл тухайн task-ийн project байж болно
-          filterQuery.$or = [{ status: statusFilter }, { _id: task.projectId }];
+          filterQuery.$or = [
+            { status: statusFilter },
+            { _id: new Types.ObjectId(task.projectId) },
+          ];
         } else {
           filterQuery.status = statusFilter;
         }

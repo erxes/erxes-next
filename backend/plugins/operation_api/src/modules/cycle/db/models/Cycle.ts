@@ -1,14 +1,14 @@
-import { FilterQuery, Model } from 'mongoose';
-import { IModels } from '~/connectionResolvers';
-import { ICycle, ICycleDocument } from '@/cycle/types';
 import { cycleSchema } from '@/cycle/db/definitions/cycle';
-import { isBefore, isSameDay, startOfDay } from 'date-fns';
+import { ICycle, ICycleDocument } from '@/cycle/types';
 import {
-  getCycleProgressChart,
-  getCyclesProgress,
   getCycleProgressByMember,
   getCycleProgressByProject,
+  getCycleProgressChart,
+  getCyclesProgress,
 } from '@/cycle/utils';
+import { isBefore, isSameDay, startOfDay } from 'date-fns';
+import { FilterQuery, Model } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
 
 export interface ICycleModel extends Model<ICycleDocument> {
   getCycle(_id: string): Promise<ICycleDocument>;
@@ -22,7 +22,10 @@ export interface ICycleModel extends Model<ICycleDocument> {
 export const loadCycleClass = (models: IModels) => {
   class Cycle {
     public static async getCycle(_id: string) {
-      const cycle = await models.Cycle.findOne({ _id });
+      const cycle = await models.Cycle.findOne({
+        _id,
+      });
+
       if (!cycle) {
         throw new Error('Cycle not found');
       }
