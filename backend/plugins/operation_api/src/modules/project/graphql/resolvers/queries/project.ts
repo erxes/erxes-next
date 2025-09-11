@@ -23,7 +23,7 @@ export const projectQueries = {
   ) => {
     const filterQuery: FilterQuery<IProjectDocument> = {};
 
-    if (filter._ids) {
+    if (filter?._ids && filter?._ids?.length) {
       filterQuery._id = { $in: filter._ids };
     }
 
