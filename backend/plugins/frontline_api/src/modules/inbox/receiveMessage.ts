@@ -40,7 +40,6 @@ export const receiveInboxMessage = async (
     }
 
     const { primaryEmail, primaryPhone } = doc;
-    console.log('doc:', doc);
     let customer;
 
     const getCustomer = async (selector) => {
@@ -54,9 +53,7 @@ export const receiveInboxMessage = async (
     };
     if (primaryPhone) {
       customer = await getCustomer({ customerPrimaryPhone: primaryPhone });
-      console.log('+++:', customer, 'customer 3');
       if (customer) {
-        console.log('custoemr 4:', customer);
         await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation', // this is a mutation, not a query
@@ -69,7 +66,6 @@ export const receiveInboxMessage = async (
             },
           },
         });
-        console.log('customer._id:', customer._id);
         return sendSuccess({ _id: customer._id });
       }
     }
@@ -108,7 +104,7 @@ export const receiveInboxMessage = async (
         module: 'users',
         action: 'findOne',
         input: {
-          doc: {
+          query: {
             'details.operatorPhone': owner,
           },
         },
@@ -150,7 +146,6 @@ export const receiveInboxMessage = async (
           conversationId: doc.conversationId,
           updatedAt: doc.updatedAt,
         };
-
         await Conversations.createConversation(formattedDoc);
       }
 
@@ -158,7 +153,6 @@ export const receiveInboxMessage = async (
     }
 
     doc.assignedUserId = assignedUserId;
-
     const conversation = await Conversations.createConversation(doc);
 
     return sendSuccess({ _id: conversation._id });

@@ -1,9 +1,5 @@
-import * as bodyParser from 'body-parser';
-import crypto from 'crypto';
-
 import { getEnv, getSubdomain, graphqlPubsub } from 'erxes-api-shared/utils';
 import { generateModels } from '~/connectionResolvers';
-import { debugError } from '~/modules/inbox/utils';
 import { receiveCdr } from '~/modules/integrations/call/services/cdrServices';
 
 import express from 'express';
@@ -17,7 +13,9 @@ const authenticateApi = async (req, res, next) => {
   const data = req.body;
 
   const subdomain = getSubdomain(req);
-
+  if (data.history) {
+    next();
+  }
   const isAuthorized = await validateCompanyAccess(subdomain, erxesApiId, data);
   if (!isAuthorized) {
     console.warn(
@@ -35,12 +33,10 @@ async function validateCompanyAccess(subdomain, erxesApiId, cdrData) {
     const integration = await models.CallIntegrations.findOne({
       inboxId: erxesApiId,
     });
-
     if (!integration) {
       return false;
     }
 
-    // Verify trunk permissions
     const { src_trunk_name, dst_trunk_name } = cdrData;
 
     const hasTrunkAccess =
@@ -84,12 +80,12 @@ const initCallApp = async (app) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  // Error handling middleware
+
   app.use((error, _req, res, _next) => {
     console.error('Error in middleware:', error);
     res.status(500).send(error.message);
   });
-  // init bots
+
   app.post('/call/cdrReceive', authenticateApi, async (req, res) => {
     try {
       const data = req.body;
@@ -104,7 +100,7 @@ const initCallApp = async (app) => {
         .json({ message: 'Call cdr received successfully' });
     } catch (error) {
       console.error('Error receiving cdr:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error sda' });
     }
   });
 };

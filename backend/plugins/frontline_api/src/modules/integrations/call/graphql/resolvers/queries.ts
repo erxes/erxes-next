@@ -17,6 +17,7 @@ import {
 import { INotesParams } from '~/modules/integrations/call/@types/conversationNotes';
 import { IMessageDocument } from '~/modules/inbox/@types/conversationMessages';
 import { ICallHistory } from '~/modules/integrations/call/@types/histories';
+import { selectRelevantCdr } from '~/modules/integrations/call/services/cdrUtils';
 
 const callQueries = {
   async callsIntegrationDetail(_root, { integrationId }, { models }: IContext) {
@@ -500,15 +501,14 @@ const callQueries = {
       }
 
       if (conversationId) {
-        const cdr = await models.CallCdrs.findOne({
-          $or: [
-            { conversationId: conversationId },
-            { userfield: conversationId },
-          ],
+        const histories = await models.CallCdrs.find({
+          conversationId: conversationId,
         });
 
-        if (cdr) {
-          return mapCdrToCallHistory(cdr);
+        const selected = selectRelevantCdr(histories);
+
+        if (selected) {
+          return mapCdrToCallHistory(selected);
         }
 
         result = await models.CallHistory.findOne({ conversationId });

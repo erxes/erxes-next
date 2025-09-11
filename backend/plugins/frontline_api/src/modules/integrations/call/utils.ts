@@ -436,6 +436,12 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
   return fetchRecordUrl(MAX_RETRY_COUNT);
 };
 
+function sanitizeFileName(rawFileName: string): string {
+  return rawFileName
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
 export const cfRecordUrl = async (params, user, models, subdomain) => {
   try {
     const { fileDir, recordfiles, inboxIntegrationId, retryCount } = params;
@@ -482,7 +488,7 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     }
     // Prepare file upload
     const uploadUrl = getUrl(subdomain);
-    const sanitizedFileName = rawFileName.replace(/\+/g, '_');
+    const sanitizedFileName = sanitizeFileName(rawFileName);
 
     const formData = new FormData();
     formData.append('file', Buffer.from(fileBuffer), {
@@ -491,12 +497,10 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
 
     console.log(uploadUrl, 'uploadUrl');
 
-    // Upload file to destination
     const uploadResponse = await fetch(uploadUrl, {
       method: 'POST',
       body: formData,
     });
-
     if (!uploadResponse.ok) {
       throw new Error(`Upload failed: ${uploadResponse.statusText}`);
     }
@@ -505,7 +509,7 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     return responseText;
   } catch (error) {
     console.error('Error in cfRecordUrl:', error);
-    throw error; // Re-throw after logging to maintain error propagation
+    throw error;
   }
 };
 
@@ -697,7 +701,6 @@ const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
   }
 };
 const isValidSubdomain = (subdomain) => {
-  // Зөвхөн үсэг, тоо, зураас, 1-63 тэмдэгт
   const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
   return subdomainRegex.test(subdomain);
 };
@@ -720,7 +723,7 @@ export const getUrl = (subdomain) => {
   }
 
   if (NODE_ENV !== 'production') {
-    return `${domain}/pl:core/upload-file`;
+    return `${domain}/upload-file`;
   }
 
   if (VERSION === 'saas') {
@@ -992,8 +995,6 @@ export function enhancedHandleCallEvent(json, graphqlPubsub) {
     for (const message of messages) {
       const { eventname, eventbody } = message;
 
-      console.log(`📞 ${eventname} EVENT:`, eventbody);
-
       switch (eventname) {
         case 'CallQueueStatus':
           handleCallQueueStatus(eventbody, graphqlPubsub);
@@ -1019,44 +1020,34 @@ function handleCallQueueStatus(eventBody, graphqlPubsub) {
     const { extension } = item;
 
     if (item.member) {
-      // Agent-specific events
-      console.log('📱 Agent event:', item);
-
-      // Publish to specific extension channel
       if (extension) {
         graphqlPubsub.publish(`callAgent_${extension}`, {
           callStatistic: item,
         });
       }
 
-      // Publish to general channel
       graphqlPubsub.publish('callAgent', {
         callStatistic: item,
       });
 
-      // Publish combined queue status
       if (extension) {
         graphqlPubsub.publish(`queueStatus_${extension}`, {
           callStatistic: item,
         });
       }
     } else {
-      // Queue statistics events
       console.log('📊 Statistics event:', item);
 
-      // Publish to specific extension channel
       if (extension) {
         graphqlPubsub.publish(`callStatistic_${extension}`, {
           callStatistic: item,
         });
       }
 
-      // Publish to general channel
       graphqlPubsub.publish('callStatistic', {
         callStatistic: item,
       });
 
-      // Publish combined queue status
       if (extension) {
         graphqlPubsub.publish(`queueStatus_${extension}`, {
           callStatistic: item,
@@ -1070,24 +1061,19 @@ function handleActiveCallStatus(eventBody, graphqlPubsub) {
   const events = Array.isArray(eventBody) ? eventBody : [eventBody];
 
   events.forEach((callEvent) => {
-    console.log('☎️ Active call event:', callEvent);
-
     const { feature_calleenum, action, state, callernum, connectednum } =
       callEvent;
 
-    // Publish to specific extension if available
     if (feature_calleenum) {
       graphqlPubsub.publish(`activeCallStatus_${feature_calleenum}`, {
         activeCallStatus: callEvent,
       });
     }
 
-    // Publish to general channel
     graphqlPubsub.publish('activeCallStatus', {
       activeCallStatus: callEvent,
     });
 
-    // Log call flow for debugging
     switch (action) {
       case 'add':
         console.log(`📞 NEW CALL: ${callernum} → ${connectednum} (${state})`);
