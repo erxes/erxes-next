@@ -55,25 +55,23 @@ export function SettingsSidebar() {
         </SettingsNavigationGroup>
         <SettingsNavigationGroup name="Workspace">
           {SETTINGS_PATH_DATA.nav.map((item) => (
-            <Sidebar.MenuItem key={item.name}>
-              <NavigationMenuLinkItem
-                pathPrefix={AppPath.Settings}
-                path={item.path}
-                name={item.name}
-              />
-            </Sidebar.MenuItem>
+            <NavigationMenuLinkItem
+              pathPrefix={AppPath.Settings}
+              path={item.path}
+              name={item.name}
+              key={item.name}
+            />
           ))}
         </SettingsNavigationGroup>
 
         <SettingsNavigationGroup name="Core modules">
           {CORE_MODULES.filter((item) => item.hasSettings).map((item) => (
-            <Sidebar.MenuItem key={item.name}>
-              <NavigationMenuLinkItem
-                pathPrefix={AppPath.Settings}
-                path={item.path}
-                name={item.name}
-              />
-            </Sidebar.MenuItem>
+            <NavigationMenuLinkItem
+              key={item.name}
+              pathPrefix={AppPath.Settings}
+              path={item.path}
+              name={item.name}
+            />
           ))}
         </SettingsNavigationGroup>
 
@@ -84,13 +82,12 @@ export function SettingsSidebar() {
               name={pluginName.charAt(0).toUpperCase() + pluginName.slice(1)}
             >
               {modules.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <NavigationMenuLinkItem
-                    pathPrefix={AppPath.Settings}
-                    path={item.path}
-                    name={item.name}
-                  />
-                </Sidebar.MenuItem>
+                <NavigationMenuLinkItem
+                  key={item.name}
+                  pathPrefix={AppPath.Settings}
+                  path={item.path}
+                  name={item.name}
+                />
               ))}
             </SettingsNavigationGroup>
           ),

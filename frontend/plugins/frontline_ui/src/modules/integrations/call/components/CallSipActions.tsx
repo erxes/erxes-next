@@ -34,7 +34,7 @@ export const TurnOffButton = () => {
     isConnected ? unregisterSip() : registerSip();
     setCallInfo((prev) => ({
       ...prev,
-      isUnregistered: isConnected ? false : true,
+      isUnregistered: isConnected,
     }));
   };
 

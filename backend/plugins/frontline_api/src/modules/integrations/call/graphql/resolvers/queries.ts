@@ -17,6 +17,7 @@ import {
 import { INotesParams } from '~/modules/integrations/call/@types/conversationNotes';
 import { IMessageDocument } from '~/modules/inbox/@types/conversationMessages';
 import { ICallHistory } from '~/modules/integrations/call/@types/histories';
+import { selectRelevantCdr } from '~/modules/integrations/call/services/cdrUtils';
 
 const callQueries = {
   async callsIntegrationDetail(_root, { integrationId }, { models }: IContext) {
@@ -239,14 +240,14 @@ const callQueries = {
     }
   },
 
-  async callWaitingList(_root, { queue }) {
-    const redisKey = `callRealtimeHistory:${queue}:waiting`;
-    return await redis.get(redisKey);
-  },
-
-  async callProceedingList(_root, { queue }) {
-    const redisKey = `callRealtimeHistory:${queue}:talking`;
-    return await redis.get(redisKey);
+  async callQueueInitialList(_root, { queue }) {
+    try {
+      const redisKey = `callRealtimeHistory:${queue}:aggregate`;
+      return (await redis.get(redisKey)) || `{}`;
+    } catch (error) {
+      console.error(`Failed to fetch queue data for ${queue}:`, error);
+      return '{}';
+    }
   },
 
   async callQueueMemberList(
@@ -500,15 +501,14 @@ const callQueries = {
       }
 
       if (conversationId) {
-        const cdr = await models.CallCdrs.findOne({
-          $or: [
-            { conversationId: conversationId },
-            { userfield: conversationId },
-          ],
+        const histories = await models.CallCdrs.find({
+          conversationId: conversationId,
         });
 
-        if (cdr) {
-          return mapCdrToCallHistory(cdr);
+        const selected = selectRelevantCdr(histories);
+
+        if (selected) {
+          return mapCdrToCallHistory(selected);
         }
 
         result = await models.CallHistory.findOne({ conversationId });

@@ -14,7 +14,7 @@ import {
   ICallHistory,
   ICallHistoryEdit,
 } from '~/modules/integrations/call/@types/histories';
-import { graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { getEnv, graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export interface ISession {
   sessionCode: string;
@@ -69,6 +69,10 @@ const callsMutations = {
     { ...doc }: ICallHistoryEdit & { inboxIntegrationId: string },
     { user, models, subdomain }: IContext,
   ) {
+    const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
+    if (ENDPOINT_URL) {
+      return;
+    }
     const { _id } = doc;
     const history = await models.CallHistory.findOne({
       _id,
