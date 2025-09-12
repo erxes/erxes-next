@@ -576,7 +576,7 @@ export const projectQueries = {
 
     const chartData: {
       totalScope: number;
-      chartData: { date: Date; started: number; completed: number }[];
+      chartData: { date: string; started: number; completed: number }[];
     } = {
       totalScope,
       chartData: [],

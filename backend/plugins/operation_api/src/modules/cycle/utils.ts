@@ -208,11 +208,24 @@ export const getCycleProgressChart = async (
     },
     { $sort: { _id: 1 } },
     {
+      $setWindowFields: {
+        sortBy: { _id: 1 },
+        output: {
+          started: {
+            $sum: '$started',
+            window: { documents: ['unbounded', 'current'] },
+          },
+          completed: {
+            $sum: '$completed',
+            window: { documents: ['unbounded', 'current'] },
+          },
+        },
+      },
+    },
+    {
       $project: {
         _id: 0,
-        date: {
-          $dateToString: { format: '%Y-%m-%d', date: '$_id' },
-        },
+        date: { $dateToString: { format: '%Y-%m-%d', date: '$_id' } },
         started: 1,
         completed: 1,
       },
@@ -221,7 +234,7 @@ export const getCycleProgressChart = async (
 
   const chartData: {
     totalScope: number;
-    chartData: { date: Date; started: number; completed: number }[];
+    chartData: { date: string; started: number; completed: number }[];
   } = {
     totalScope,
     chartData: [],
