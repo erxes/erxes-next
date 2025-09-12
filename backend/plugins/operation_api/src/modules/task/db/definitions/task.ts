@@ -19,7 +19,7 @@ export const taskSchema = new Schema(
     statusChangedDate: {
       type: Date,
       label: 'Complated Date',
-      default: new Date(),
+      default: Date.now,
     },
     number: { type: Number, label: 'Number', default: 0 },
     statusType: { type: Number, label: 'Status Type', default: 0 },

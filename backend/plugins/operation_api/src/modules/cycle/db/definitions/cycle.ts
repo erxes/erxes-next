@@ -11,7 +11,7 @@ export const cycleSchema = new Schema(
     isActive: { type: Boolean, default: false },
     statistics: { type: Object },
     donePercent: { type: Number, default: 0 },
-    unFinishedTasks: { type: [String], default: [] },
+    unFinishedTasks: { type: [Schema.Types.ObjectId], default: [] },
     number: { type: Number, default: 0 },
   },
   {

@@ -42,8 +42,6 @@ export const teamQueries = {
         memberId: params.userId,
       }).distinct('teamId');
 
-      console.log('teamIds', teamIds)
-
       return models.Team.find({ _id: { $in: teamIds } });
     }
 
@@ -71,9 +69,6 @@ export const teamQueries = {
     if (teamId) {
       filter.teamId = new Types.ObjectId(teamId);
     }
-
-    console.log('teamId', teamId, typeof teamId);
-    console.log('casted', new Types.ObjectId(teamId));
 
     return models.TeamMember.find(filter);
   },
