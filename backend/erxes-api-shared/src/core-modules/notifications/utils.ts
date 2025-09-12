@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { sendWorkerQueue } from '../../utils';
 import { z } from 'zod';
 const baseNotificationSchema = z.object({
@@ -17,7 +18,7 @@ const userNotificationSchema = baseNotificationSchema.extend({
   kind: z.literal('user').default('user'),
   fromUserId: z.string(),
   contentType: z.string(),
-  contentTypeId: z.string(),
+  contentTypeId: z.union([z.string(), z.instanceof(Types.ObjectId)]),
   action: z.string(),
   notificationType: z.string(),
   allowMultiple: z.boolean().default(false),

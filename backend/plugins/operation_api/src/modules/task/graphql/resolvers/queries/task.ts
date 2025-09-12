@@ -79,8 +79,6 @@ export const taskQueries = {
       filterQuery.assigneeId = filter.userId;
     }
 
-    console.log('filterQuery', filterQuery);
-
     const { list, totalCount, pageInfo } = await cursorPaginate<ITaskDocument>({
       model: models.Task,
       params: {
