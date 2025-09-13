@@ -29,7 +29,6 @@ export interface INotificationDocument extends Document {
   createdAt: Date;
   expiresAt?: Date; // Auto-cleanup old notifications
   updatedAt?: Date;
-  isArchived: boolean;
   kind: 'system' | 'user';
 }
 
@@ -85,6 +84,7 @@ export const notificationSchema = new Schema(
       enum: ['low', 'medium', 'high', 'urgent'],
       default: 'medium',
     },
+
     priorityLevel: {
       type: String,
       enum: [1, 2, 3, 4],
@@ -105,15 +105,13 @@ export const notificationSchema = new Schema(
     expiresAt: {
       type: Date,
     },
-    isArchived: {
-      type: Boolean,
-      index: true,
-    },
+
     action: {
       type: String,
       index: true,
       optional: true,
     },
+
     kind: {
       type: String,
       enum: ['system', 'user'],

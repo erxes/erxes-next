@@ -1,5 +1,3 @@
-import { IUserNotificationSettingsDocument } from 'erxes-api-shared/core-modules';
-
 export const generateNotificationsFilter = (params: {
   status: 'unread' | 'read' | 'all';
   priority: 'low' | 'medium' | 'high' | 'urgent';

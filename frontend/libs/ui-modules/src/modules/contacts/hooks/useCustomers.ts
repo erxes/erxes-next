@@ -2,7 +2,12 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
 import { CUSTOMER_INLINE } from '../graphql/queries/customerDetailQueries';
 import { ICustomer } from '../types';
-import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
+import {
+  EnumCursorDirection,
+  ICursorListResponse,
+  mergeCursorData,
+  validateFetchMore,
+} from 'erxes-ui';
 
 const CUSTOMERS_LIMIT = 30;
 export const useCustomers = (
@@ -20,7 +25,17 @@ export const useCustomers = (
   const { list = [], totalCount = 0, pageInfo } = data?.customers || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= list.length) return;
+    if (
+      !validateFetchMore({ direction: EnumCursorDirection.FORWARD, pageInfo })
+    ) {
+      fetchMore({
+        variables: {
+          ...options?.variables,
+          cursor: pageInfo?.endCursor,
+          direction: EnumCursorDirection.FORWARD,
+        },
+      });
+    }
     fetchMore({
       variables: {
         ...options?.variables,
@@ -30,16 +45,11 @@ export const useCustomers = (
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          ...prev,
-          customers: {
-            ...prev.customers,
-            list: [
-              ...(prev.customers.list || []),
-              ...fetchMoreResult.customers.list,
-            ],
-            totalCount: fetchMoreResult.customers.totalCount,
-            pageInfo: fetchMoreResult.customers.pageInfo,
-          },
+          customers: mergeCursorData({
+            direction: EnumCursorDirection.FORWARD,
+            fetchMoreResult: fetchMoreResult.customers,
+            prevResult: prev.customers,
+          }),
         });
       },
     });

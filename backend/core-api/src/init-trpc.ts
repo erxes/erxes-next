@@ -17,6 +17,7 @@ import { permissionTrpcRouter } from './modules/permissions/trpc';
 import { segmentsTRPCRouter } from './modules/segments/trpc';
 import { automationsRouter } from './modules/automations/trpc/automations';
 import { IModels } from './connectionResolvers';
+import { notificationTrpcRouter } from '~/modules/notifications/trpc';
 
 export type CoreTRPCContext = ITRPCContext<{ models: IModels }>;
 
@@ -37,6 +38,7 @@ export const appRouter = t.mergeRouters(
   permissionTrpcRouter,
   segmentsTRPCRouter,
   automationsRouter,
+  notificationTrpcRouter
 );
 
 export type AppRouter = typeof appRouter;

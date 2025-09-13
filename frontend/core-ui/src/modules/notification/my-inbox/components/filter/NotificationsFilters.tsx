@@ -2,6 +2,7 @@ import { NotificationFilterMenu } from '@/notification/my-inbox/components/filte
 import { NotificationFilterViews } from '@/notification/my-inbox/components/filter/NotificationFilterViews';
 import { MyInboxHotkeyScope } from '@/notification/my-inbox/types/notifications';
 import { Combobox, Filter } from 'erxes-ui';
+
 export const NotificationsFilters = () => {
   return (
     <Filter id={MyInboxHotkeyScope.MainPage}>

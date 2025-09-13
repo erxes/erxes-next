@@ -128,20 +128,12 @@ const NOTIFICATIONS_QUERIES_PARAMS = `
 `;
 
 export const queries = `
-    pluginsNotifications:[NotificationPluginType]
     notifications(${GQL_CURSOR_PARAM_DEFS},${NOTIFICATIONS_QUERIES_PARAMS}):NotificationsList
     notificationDetail(_id:String!):Notification
     unreadNotificationsCount:Int
-    userNotificationSettings: JSON
-    organizationNotificationConfigs: JSON
-    organizationNotificationConfig(contentType: String!, action: String!): JSON
 `;
 
 export const mutations = `
-    archiveNotification(_id:String!):String
-    archiveNotifications(ids:[String],archiveAll:Boolean,filters:JSON):String
-    editUserNotificationSettings(userSettings:JSON): JSON
-    editOrganizationNotificationConfigs(configs: JSON!): JSON
     markNotificationAsRead(_id:String!):JSON
     markAsReadNotifications(${NOTIFICATIONS_QUERIES_PARAMS}):JSON
 `;

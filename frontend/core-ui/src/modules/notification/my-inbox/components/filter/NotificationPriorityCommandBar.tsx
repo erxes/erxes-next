@@ -13,14 +13,14 @@ export const NotificationPriorityCommandBar = ({
   ) => void;
 }) => {
   return (
-    <Command shouldFilter={false}>
+    <Command>
+      <Command.Input placeholder="Search" />
       <Command.List>
         <Command.Empty />
         {['low', 'medium', 'high', 'urgent'].map((value) => (
           <Command.Item
             key={value}
             value={value}
-            className={`cursor-pointer`}
             onSelect={() =>
               setQueries({ priority: priority === value ? null : value })
             }
