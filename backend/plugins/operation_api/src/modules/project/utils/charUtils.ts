@@ -29,9 +29,7 @@ export const fillMissingDays = (
 ) => {
   const filledData: { date: string; started: number; completed: number }[] = [];
 
-  const mapDateToData = new Map(
-    data.map((item) => [format(item.date, 'yyyy-MM-dd'), item]),
-  );
+  const mapDateToData = new Map(data.map((item) => [item.date, item]));
 
   for (let i = 0; i < totalDays; i++) {
     const date = addDays(baseDate, i);
@@ -39,11 +37,7 @@ export const fillMissingDays = (
     const item = mapDateToData.get(key);
 
     if (item) {
-      filledData.push({
-        date: format(item.date, 'yyyy-MM-dd'),
-        started: item.started,
-        completed: item.completed,
-      });
+      filledData.push(item);
     } else {
       const last = filledData[filledData.length - 1] || {
         started: 0,
@@ -51,7 +45,7 @@ export const fillMissingDays = (
       };
 
       filledData.push({
-        date: format(key, 'yyyy-MM-dd'),
+        date: key,
         started: last.started,
         completed: last.completed,
       });
@@ -89,22 +83,18 @@ export const fillMissingDaysWithStartDate = (
 ) => {
   const filledData: { date: string; started: number; completed: number }[] = [];
 
-  const mapDateToData = new Map(
-    data.map((item) => [new Date(item.date).toDateString(), item]),
-  );
+  const mapDateToData = new Map(data.map((item) => [item.date, item]));
 
   for (let i = 0; i < totalDays; i++) {
     const date = addDays(startDate, i);
-    const item = mapDateToData.get(date.toDateString());
+    const key = format(date, 'yyyy-MM-dd');
+    const item = mapDateToData.get(key);
+
     if (item) {
-      filledData.push({
-        date: format(item.date, 'yyyy-MM-dd'),
-        started: item.started,
-        completed: item.completed,
-      });
+      filledData.push(item);
     } else {
       filledData.push({
-        date: format(date, 'yyyy-MM-dd'),
+        date: key,
         started: 0,
         completed: 0,
       });

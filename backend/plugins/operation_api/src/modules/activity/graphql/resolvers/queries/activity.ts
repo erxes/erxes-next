@@ -1,6 +1,5 @@
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { Types } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 export const activityQueries = {
@@ -12,7 +11,7 @@ export const activityQueries = {
     return cursorPaginate({
       model: models.Activity,
       params: { ...params, orderBy: { createdAt: 1 } },
-      query: { contentId: new Types.ObjectId(params.contentId) },
+      query: { contentId: params.contentId },
     });
   },
 };

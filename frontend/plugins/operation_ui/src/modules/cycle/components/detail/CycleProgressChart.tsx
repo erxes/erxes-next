@@ -1,3 +1,4 @@
+import { CHART_CONFIG, STATUS_COLORS } from '@/cycle/constants';
 import {
   IGetCycleProgressChart,
   useGetCycleProgressChart,
@@ -15,23 +16,6 @@ export const CycleProgressChart = ({
   isCompleted: boolean;
   statistics: any;
 }) => {
-  const statusColors = {
-    started: 'hsl(var(--warning))', // in progress
-    completed: 'hsl(var(--success))', // done
-    totalScope: 'hsl(var(--primary))', // backlog буюу жишээ өнгө
-  };
-
-  const chartConfig = {
-    started: {
-      label: 'Started',
-      color: statusColors.started,
-    },
-    completed: {
-      label: 'Completed',
-      color: statusColors.completed,
-    },
-  };
-
   const { getCycleProgressChart } = useGetCycleProgressChart({
     variables: { _id: cycleId },
     skip: !cycleId || isCompleted,
@@ -47,8 +31,9 @@ export const CycleProgressChart = ({
 
   const chartData = rawData.map((item, index) => {
     if (isAfter(parseISO(item.date), todayEnd)) {
-      const { started, completed } = index > 0 ? rawData[index - 1] : { started: 0, completed: 0 };
-      
+      const { started, completed } =
+        index > 0 ? rawData[index - 1] : { started: 0, completed: 0 };
+
       return {
         ...item,
         totalScope: totalScopeValue,
@@ -86,78 +71,9 @@ export const CycleProgressChart = ({
 
   return (
     <div>
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={CHART_CONFIG}>
         <AreaChart accessibilityLayer data={chartData} margin={{ top: 10 }}>
-          <defs>
-            <linearGradient id="startedGradient" x1="0" y1="0" x2="1" y2="0">
-              {chartData.map((item, index) => {
-                const percent = (index / (chartData.length - 1)) * 100;
-                const opacity = item.future ? 0.4 : 1;
-                return (
-                  <stop
-                    key={index}
-                    offset={`${percent}%`}
-                    stopColor={statusColors.started}
-                    stopOpacity={opacity}
-                  />
-                );
-              })}
-            </linearGradient>
-            <linearGradient id="completedGradient" x1="0" y1="0" x2="1" y2="0">
-              {chartData.map((item, index) => {
-                const percent = (index / (chartData.length - 1)) * 100;
-                const opacity = item.future ? 0.4 : 1;
-                return (
-                  <stop
-                    key={index}
-                    offset={`${percent}%`}
-                    stopColor={statusColors.completed}
-                    stopOpacity={opacity}
-                  />
-                );
-              })}
-            </linearGradient>
-            <linearGradient
-              id="startedFillGradient"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="0"
-            >
-              {chartData.map((item, index) => {
-                const percent = (index / (chartData.length - 1)) * 100;
-                const opacity = item.future ? 0.05 : 0.2;
-                return (
-                  <stop
-                    key={index}
-                    offset={`${percent}%`}
-                    stopColor={statusColors.started}
-                    stopOpacity={opacity}
-                  />
-                );
-              })}
-            </linearGradient>
-            <linearGradient
-              id="completedFillGradient"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="0"
-            >
-              {chartData.map((item, index) => {
-                const percent = (index / (chartData.length - 1)) * 100;
-                const opacity = item.future ? 0.05 : 0.2;
-                return (
-                  <stop
-                    key={index}
-                    offset={`${percent}%`}
-                    stopColor={statusColors.completed}
-                    stopOpacity={opacity}
-                  />
-                );
-              })}
-            </linearGradient>
-          </defs>
+          <ProgressChartGradients data={chartData} />
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
@@ -174,7 +90,7 @@ export const CycleProgressChart = ({
           <Area
             dataKey="totalScope"
             type="monotone"
-            stroke={statusColors.totalScope}
+            stroke={STATUS_COLORS.totalScope}
             fill={`hsla(var(--primary) / 0.2)`}
             strokeWidth={2}
             connectNulls={true}
@@ -205,5 +121,53 @@ export const CycleProgressChart = ({
         </AreaChart>
       </ChartContainer>
     </div>
+  );
+};
+
+export const ProgressChartGradients = ({
+  data = [],
+}: {
+  data: { date: string; started: number; completed: number; future: boolean }[];
+}) => {
+  const lines: ('started' | 'completed')[] = ['started', 'completed'];
+
+  return (
+    <defs>
+      {lines.map((line) => (
+        <linearGradient id={`${line}Gradient`} x1="0" y1="0" x2="1" y2="0">
+          {data.map((item, index) => {
+            const denom = Math.max(data.length - 1, 1);
+            const percent = (index / denom) * 100;
+            const opacity = item.future ? 0.4 : 1;
+            return (
+              <stop
+                key={index}
+                offset={`${percent}%`}
+                stopColor={STATUS_COLORS[line]}
+                stopOpacity={opacity}
+              />
+            );
+          })}
+        </linearGradient>
+      ))}
+
+      {lines.map((line) => (
+        <linearGradient id={`${line}FillGradient`} x1="0" y1="0" x2="1" y2="0">
+          {data.map((item, index) => {
+            const denom = Math.max(data.length - 1, 1);
+            const percent = (index / denom) * 100;
+            const opacity = item.future ? 0.5 : 0.2;
+            return (
+              <stop
+                key={index}
+                offset={`${percent}%`}
+                stopColor={STATUS_COLORS[line]}
+                stopOpacity={opacity}
+              />
+            );
+          })}
+        </linearGradient>
+      ))}
+    </defs>
   );
 };

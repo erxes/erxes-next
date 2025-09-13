@@ -7,7 +7,7 @@ import {
   getCyclesProgress,
 } from '@/cycle/utils';
 import { isBefore, isSameDay, startOfDay } from 'date-fns';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
 export interface ICycleModel extends Model<ICycleDocument> {
@@ -91,7 +91,7 @@ export const loadCycleClass = (models: IModels) => {
     public static async updateCycle(doc: ICycleDocument) {
       const { _id, ...rest } = doc;
       const cycle = await models.Cycle.findOne({
-        _id: new Types.ObjectId(_id),
+        _id,
       });
 
       if (cycle && cycle.isCompleted) {

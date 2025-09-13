@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 export const noteQueries = {
@@ -7,6 +6,6 @@ export const noteQueries = {
     { _id }: { _id: string },
     { models }: IContext,
   ) => {
-    return models.Note.findOne({ _id: new Types.ObjectId(_id) });
+    return models.Note.findOne({ _id });
   },
 };

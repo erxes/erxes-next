@@ -1,6 +1,6 @@
 import { noteSchema } from '@/note/db/definitions/note';
 import { INote, INoteDocument } from '@/note/types';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { createNotifications } from '~/utils/notifications';
 
@@ -27,9 +27,7 @@ export interface INoteModel extends Model<INoteDocument> {
 export const loadNoteClass = (models: IModels) => {
   class Note {
     public static async getNote(_id: string) {
-      const Note = await models.Note.findOne({
-        _id,
-      }).lean();
+      const Note = await models.Note.findOne({ _id }).lean();
 
       if (!Note) {
         throw new Error('Note not found');
@@ -72,7 +70,7 @@ export const loadNoteClass = (models: IModels) => {
         let contentType = 'task';
 
         const project = await models.Project.exists({
-          _id: new Types.ObjectId(doc.contentId),
+          _id: doc.contentId,
         });
 
         if (project) {
@@ -96,10 +94,7 @@ export const loadNoteClass = (models: IModels) => {
     public static async updateNote(doc: INoteDocument) {
       const { _id, ...rest } = doc;
 
-      return await models.Note.findOneAndUpdate(
-        { _id: new Types.ObjectId(_id) },
-        { $set: { ...rest } },
-      );
+      return await models.Note.findOneAndUpdate({ _id }, { $set: { ...rest } });
     }
 
     public static async removeNote({
@@ -109,7 +104,7 @@ export const loadNoteClass = (models: IModels) => {
       _id: string;
       userId: string;
     }) {
-      const note = await models.Note.findOne({ _id: new Types.ObjectId(_id) });
+      const note = await models.Note.findOne({ _id });
 
       if (!note) {
         throw new Error('Note not found');
@@ -119,7 +114,7 @@ export const loadNoteClass = (models: IModels) => {
         throw new Error('You are not authorized to remove this note');
       }
 
-      return models.Note.deleteOne({ _id: new Types.ObjectId(_id) });
+      return models.Note.deleteOne({ _id });
     }
   }
 

@@ -1,6 +1,6 @@
 import { ITaskDocument, ITaskFilter } from '@/task/@types/task';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 export const taskQueries = {
@@ -43,7 +43,7 @@ export const taskQueries = {
     }
 
     if (filter.teamId) {
-      filterQuery.teamId = new Types.ObjectId(filter.teamId);
+      filterQuery.teamId = filter.teamId;
     }
 
     if (filter.createdBy) {
@@ -55,11 +55,11 @@ export const taskQueries = {
     }
 
     if (filter.cycleId) {
-      filterQuery.cycleId = new Types.ObjectId(filter.cycleId);
+      filterQuery.cycleId = filter.cycleId;
     }
 
     if (filter.projectId) {
-      filterQuery.projectId = new Types.ObjectId(filter.projectId);
+      filterQuery.projectId = filter.projectId;
     }
 
     if (filter.estimatePoint) {

@@ -1,6 +1,5 @@
 import { ITeamFilter } from '@/team/@types/team';
 import { getTeamEstimateChoises } from '@/team/utils';
-import { Types } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 export const teamQueries = {
@@ -56,7 +55,7 @@ export const teamQueries = {
     const filter: any = {};
 
     if (teamIds && teamIds?.length) {
-      filter.teamId = { $in: teamIds.map((id) => new Types.ObjectId(id)) };
+      filter.teamId = { $in: teamIds };
 
       return models.TeamMember.aggregate([
         { $match: filter },
@@ -67,7 +66,7 @@ export const teamQueries = {
     }
 
     if (teamId) {
-      filter.teamId = new Types.ObjectId(teamId);
+      filter.teamId = teamId;
     }
 
     return models.TeamMember.find(filter);

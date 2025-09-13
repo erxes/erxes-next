@@ -7,7 +7,7 @@ import {
 import { STATUS_TYPES } from '@/status/constants/types';
 import { differenceInCalendarDays } from 'date-fns';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 export const projectQueries = {
@@ -48,7 +48,7 @@ export const projectQueries = {
 
     if (filter.teamIds && filter.teamIds.length > 0) {
       filterQuery.teamIds = {
-        $in: filter.teamIds.map((id) => new Types.ObjectId(id)),
+        $in: filter.teamIds,
       };
     }
 
@@ -70,15 +70,12 @@ export const projectQueries = {
 
       if (filter.taskId) {
         const task = await models.Task.findOne({
-          _id: new Types.ObjectId(filter.taskId),
+          _id: filter.taskId,
         });
 
         if (task?.projectId) {
           // status нь active эсвэл тухайн task-ийн project байж болно
-          filterQuery.$or = [
-            { status: statusFilter },
-            { _id: new Types.ObjectId(task.projectId) },
-          ];
+          filterQuery.$or = [{ status: statusFilter }, { _id: task.projectId }];
         } else {
           filterQuery.status = statusFilter;
         }
