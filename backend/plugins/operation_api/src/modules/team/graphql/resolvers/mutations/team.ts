@@ -1,6 +1,6 @@
-import { IContext } from '~/connectionResolvers';
 import { TeamMemberRoles } from '@/team/@types/team';
 import { checkUserRole } from '@/utils';
+import { IContext } from '~/connectionResolvers';
 
 export const teamMutations = {
   teamAdd: async (
@@ -104,17 +104,17 @@ export const teamMutations = {
 
   teamRemoveMember: async (
     _parent: undefined,
-    { _id }: { _id: string },
+    { teamId, memberId }: { teamId: string; memberId: string },
     { models, user }: IContext,
   ) => {
     await checkUserRole({
       models,
-      teamId: _id,
+      teamId,
       userId: user._id,
       allowedRoles: [TeamMemberRoles.ADMIN],
     });
 
-    return models.TeamMember.removeTeamMember(_id);
+    return models.TeamMember.removeTeamMember(teamId, memberId);
   },
 
   teamUpdateMember: async (

@@ -31,13 +31,13 @@ const fetchedTasksState = atom<BoardItemProps[]>([]);
 export const allTasksMapState = atom<Record<string, ITask>>({});
 
 export const TasksBoard = () => {
-  const { teamId } = useParams();
+  const { teamId, cycleId } = useParams();
   const allTasksMap = useAtomValue(allTasksMapState);
   const { updateTask } = useUpdateTask();
 
   const { statuses } = useGetStatusByTeam({
     variables: {
-      teamId: teamId,
+      teamId: teamId || undefined,
     },
     skip: !teamId,
   });
@@ -110,7 +110,7 @@ export const TasksBoard = () => {
 
 export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
   const currentUser = useAtomValue(currentUserState);
-  const { projectId } = useParams();
+  const { projectId, cycleId } = useParams();
   const [taskCards, setTaskCards] = useAtom(fetchedTasksState);
   const [taskCountByBoard, setTaskCountByBoard] = useAtom(taskCountByBoardAtom);
 
@@ -126,6 +126,7 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
     variables: {
       projectId,
       userId: currentUser?._id,
+      cycleId,
       status: column.id,
     },
   });
