@@ -1,6 +1,6 @@
+import { ICycleDocument } from '@/cycle/types';
 import { STATUS_TYPES } from '@/status/constants/types';
 import { IContext } from '~/connectionResolvers';
-import { ICycleDocument } from '@/cycle/types';
 
 export const Cycle = {
   async donePercent(

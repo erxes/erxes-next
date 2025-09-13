@@ -2,7 +2,7 @@ export const types = `
     type Note {
         _id: String
         content: String
-        itemId: String
+        contentId: String
         createdBy: String
         mentions: [String]
 
@@ -13,14 +13,14 @@ export const types = `
 
 const createNoteParams = `
     content: String
-    itemId: String
+    contentId: String
     mentions: [String]
 `;
 
 const updateNoteParams = `
     _id: String!
     content: String
-    itemId: String
+    contentId: String
     mentions: [String]
 `;
 

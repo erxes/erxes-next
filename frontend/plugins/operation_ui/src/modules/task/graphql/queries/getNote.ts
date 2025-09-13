@@ -7,7 +7,7 @@ export const GET_NOTE = gql`
       content
       createdAt
       createdBy
-      itemId
+      contentId
       mentions
       updatedAt
     }

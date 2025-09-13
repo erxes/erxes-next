@@ -2,7 +2,7 @@ import { Model, Document } from 'mongoose';
 
 export interface INote {
   content: string;
-  itemId: string;
+  contentId: string;
   createdBy: string;
   mentions?: string[];
 }
