@@ -127,3 +127,11 @@ export enum AutomationBuilderTabsType {
   Builder = 'builder',
   History = 'history',
 }
+
+export type AutomationTriggerSidebarCoreFormProps = {
+  formRef: React.RefObject<{
+    submit: () => void;
+  }>;
+  activeNode: NodeData;
+  handleSave: (config: any) => void;
+};

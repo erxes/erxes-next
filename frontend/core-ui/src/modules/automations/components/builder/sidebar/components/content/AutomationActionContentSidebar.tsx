@@ -1,11 +1,10 @@
-import { AutomationCoreActionSidebarContent } from '@/automations/components/builder/sidebar/components/AutomationCoreActionSidebarContent';
-import { ErrorState } from '@/automations/utils/ErrorState';
-import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
-import { Button, Card, Spinner, toast } from 'erxes-ui';
+import { AutomationCoreActionSidebarContent } from '@/automations/components/builder/sidebar/components/content/AutomationCoreActionSidebarContent';
+import { ErrorState } from '@/automations/components/common/ErrorState';
+import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
+import { Button, Card, Spinner } from 'erxes-ui';
 import { Suspense, useRef } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { getAutomationTypes } from 'ui-modules';
-import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
+import { useAutomationActionContentSidebar } from '../../hooks/useAutomationActionContentSidebar';
 
 export const AutomationActionContentSidebar = () => {
   const formRef = useRef<{ submit: () => void }>(null);
@@ -14,9 +13,9 @@ export const AutomationActionContentSidebar = () => {
     isCoreActionComponent,
     currentAction,
     control,
-    setQueryParams,
-    setValue,
-    toggleSideBarOpen,
+    onSaveActionRemoteConfig,
+    pluginName,
+    moduleName,
   } = useAutomationActionContentSidebar();
 
   if (!currentAction || currentIndex === -1) {
@@ -24,18 +23,6 @@ export const AutomationActionContentSidebar = () => {
   }
 
   if (!isCoreActionComponent) {
-    const [pluginName, moduleName] = getAutomationTypes(
-      currentAction?.type || '',
-    );
-    const onSaveActionConfig = (config: any) => {
-      setValue(`actions.${currentIndex}.config`, config);
-      setQueryParams({ activeNodeId: null });
-      toggleSideBarOpen();
-      toast({
-        title: 'Action configuration added successfully.',
-      });
-    };
-
     return (
       <div className="flex flex-col h-full">
         <div className="flex-1 w-auto">
@@ -53,7 +40,7 @@ export const AutomationActionContentSidebar = () => {
                   componentType: 'actionForm',
                   type: currentAction?.type,
                   currentAction,
-                  onSaveActionConfig,
+                  onSaveActionConfig: onSaveActionRemoteConfig,
                 }}
               />
             </ErrorBoundary>

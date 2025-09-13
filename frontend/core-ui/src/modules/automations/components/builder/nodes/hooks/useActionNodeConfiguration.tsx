@@ -6,7 +6,7 @@ import {
   isCoreAutomationActionType,
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { NodeData } from '@/automations/types';
-import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
+import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
 import { Handle, Position } from '@xyflow/react';
 import {
   AutomationActionNodeConfigProps,

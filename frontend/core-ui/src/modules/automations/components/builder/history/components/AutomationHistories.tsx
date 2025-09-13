@@ -1,4 +1,4 @@
-import { automationHistoriesColumns } from '@/automations/components/builder/history/AutomtionHistoryRecorTableColumns';
+import { automationHistoriesColumns } from '@/automations/components/builder/history/AutomationHistoryRecordTableColumns';
 import { useAutomationHistories } from '@/automations/hooks/useAutomationHistories';
 import { IconRefresh } from '@tabler/icons-react';
 import { Button, PageSubHeader, RecordTable, Skeleton } from 'erxes-ui';

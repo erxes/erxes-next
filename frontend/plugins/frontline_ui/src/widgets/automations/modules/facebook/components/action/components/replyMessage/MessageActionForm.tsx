@@ -25,7 +25,6 @@ export const MessageActionForm = ({
   useImperativeHandle(formRef, () => ({
     submit: () => {
       handleSubmit(onSaveActionConfig, (error) => {
-        console.log({ error });
         toast({
           title: 'There is some error in the form',
           variant: 'destructive',

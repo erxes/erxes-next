@@ -6,7 +6,7 @@ import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
-import { ErrorState } from '@/automations/utils/ErrorState';
+import { ErrorState } from '@/automations/components/common/ErrorState';
 
 const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   if (data?.error) {

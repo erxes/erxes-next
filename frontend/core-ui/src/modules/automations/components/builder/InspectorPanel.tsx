@@ -8,8 +8,6 @@ import {
 import { AutomationsHotKeyScope } from '@/automations/types';
 import {
   Icon,
-  IconEye,
-  IconEyeOff,
   IconLayoutBottombarExpand,
   IconLayoutSidebarRightExpand,
   IconProps,

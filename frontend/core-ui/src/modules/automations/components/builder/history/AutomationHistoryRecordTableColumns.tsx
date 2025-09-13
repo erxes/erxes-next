@@ -2,7 +2,7 @@ import { AutomationHistoryDetail } from '@/automations/components/builder/histor
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { StatusBadgeValue } from '@/automations/types';
-import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
+import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
 import { IconCalendarTime, IconInfoTriangle } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import dayjs from 'dayjs';

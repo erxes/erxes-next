@@ -276,6 +276,7 @@ import {
   IconClipboard,
   IconChecklist,
   IconNote,
+  IconWebhook,
 } from '@tabler/icons-react';
 
 export const ALL_ICONS = {
@@ -556,4 +557,5 @@ export const ALL_ICONS = {
   IconClipboard,
   IconChecklist,
   IconNote,
+  IconWebhook,
 };

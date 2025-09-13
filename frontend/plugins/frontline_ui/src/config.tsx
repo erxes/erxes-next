@@ -38,6 +38,7 @@ export const CONFIG: IUIConfig = {
       hasSettings: true,
       hasRelationWidget: true,
       hasFloatingWidget: true,
+      hasAutomation: true,
       settingsOnly: true,
     },
     {

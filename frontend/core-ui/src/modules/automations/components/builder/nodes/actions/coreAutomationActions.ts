@@ -1,17 +1,19 @@
 import AiAgentComponents from '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgent';
 import BranchComponents from '@/automations/components/builder/nodes/actions/branches/components/Branches';
 import DelayComponents from '@/automations/components/builder/nodes/actions/delay/components/Delay';
-import ManagePropertiesComponents from '@/automations/components/builder/nodes/actions/manageProperties/component/ManageProperties';
+import ManagePropertiesComponents from '@/automations/components/builder/nodes/actions/manageProperties/components/ManageProperties';
 import SendEmailComponents from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmail';
 import WaitEventComponents from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEvent';
+import WebhooksComponents from '@/automations/components/builder/nodes/actions/webhooks/Webhooks';
 
 const coreActions = {
-  delay: DelayComponents,
-  if: BranchComponents,
-  setProperty: ManagePropertiesComponents,
-  sendEmail: SendEmailComponents,
-  waitEvent: WaitEventComponents,
-  aiAgent: AiAgentComponents,
+  ...DelayComponents,
+  ...BranchComponents,
+  ...ManagePropertiesComponents,
+  ...SendEmailComponents,
+  ...WaitEventComponents,
+  ...AiAgentComponents,
+  ...WebhooksComponents,
 };
 
 type ActionName = keyof typeof coreActions;

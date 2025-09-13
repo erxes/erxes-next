@@ -5,8 +5,10 @@ import {
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { toast } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { getAutomationTypes } from 'ui-modules';
 
 export const useAutomationActionContentSidebar = () => {
   const { queryParams, setQueryParams } = useAutomation();
@@ -31,6 +33,19 @@ export const useAutomationActionContentSidebar = () => {
     CoreComponentType.Sidebar,
   );
 
+  const [pluginName, moduleName] = getAutomationTypes(
+    currentAction?.type || '',
+  );
+
+  const onSaveActionRemoteConfig = (config: any) => {
+    setValue(`actions.${currentIndex}.config`, config);
+    setQueryParams({ activeNodeId: null });
+    toggleSideBarOpen();
+    toast({
+      title: 'Action configuration added successfully.',
+    });
+  };
+
   return {
     isCoreActionComponent,
     control,
@@ -39,5 +54,8 @@ export const useAutomationActionContentSidebar = () => {
     setQueryParams,
     setValue,
     toggleSideBarOpen,
+    onSaveActionRemoteConfig,
+    pluginName,
+    moduleName,
   };
 };

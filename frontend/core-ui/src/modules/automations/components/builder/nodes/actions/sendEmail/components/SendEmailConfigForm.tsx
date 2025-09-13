@@ -21,6 +21,7 @@ import {
   useSendEmailCustomMailField,
   useSendEmailSidebarForm,
 } from '../hooks/useSendEmailSidebarForm';
+import { useSendEmailConfigRow } from '@/automations/components/builder/nodes/actions/sendEmail/hooks/useSendEmailConfigRow';
 
 const ConfigRow = ({
   title,
@@ -35,11 +36,7 @@ const ConfigRow = ({
   buttonText: string;
   children: any;
 }) => {
-  const [isOpen, setOpen] = useState(false);
-
-  const toggleOpen = () => {
-    setOpen(!isOpen);
-  };
+  const { isOpen, toggleOpen } = useSendEmailConfigRow();
 
   return (
     <>

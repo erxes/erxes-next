@@ -1,8 +1,9 @@
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
-import { Button, Dialog, Input } from 'erxes-ui';
+import { Button, Dialog, IconPicker, Input } from 'erxes-ui';
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Form, useFormContext } from 'react-hook-form';
 import { AutomationNodesType, NodeData } from '@/automations/types';
+import { Node, useReactFlow } from '@xyflow/react';
 
 type Props = {
   id: string;
@@ -16,12 +17,14 @@ type Props = {
 
 export const EditForm = ({ id, fieldName, data, callback }: Props) => {
   const { setValue } = useFormContext<TAutomationBuilderForm>();
+  const { updateNodeData } = useReactFlow<Node<NodeData>>();
 
-  const { nodeIndex, label, description } = data || {};
+  const { nodeIndex, label, description, icon } = data || {};
 
   const [doc, setDoc] = useState({
     label: label || '',
     description: description || '',
+    icon,
   });
 
   const handleChange = (e: any) => {
@@ -31,16 +34,17 @@ export const EditForm = ({ id, fieldName, data, callback }: Props) => {
   };
 
   const handleSave = () => {
-    setValue(
-      `${fieldName}.${nodeIndex}`,
-      {
-        ...data,
-        label: doc.label,
-        description: doc.description,
-      },
-      { shouldValidate: true, shouldDirty: true },
-    );
-
+    const updatedNode = {
+      ...data,
+      label: doc.label,
+      description: doc.description,
+      icon: doc.icon,
+    };
+    setValue(`${fieldName}.${nodeIndex}`, updatedNode, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    updateNodeData(id, updatedNode);
     callback();
   };
 
@@ -50,6 +54,15 @@ export const EditForm = ({ id, fieldName, data, callback }: Props) => {
       <Dialog.Description>
         Customize the name and description of this node for better clarity.
       </Dialog.Description>
+      <IconPicker
+        // onValueChange={field.onChange}
+        // value={field.value}
+        onValueChange={(icon) => setDoc({ ...doc, icon: icon || '' })}
+        value={icon}
+        variant="secondary"
+        size="lg"
+        className="w-min p-2"
+      />
       <Input name="label" value={doc.label} onChange={handleChange} />
       <Input
         type="textarea"

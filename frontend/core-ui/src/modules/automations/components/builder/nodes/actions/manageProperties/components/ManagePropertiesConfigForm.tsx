@@ -1,47 +1,10 @@
+import { ManagePropertyRuleProps } from '@/automations/types/manageProperties';
 import { IconTrash } from '@tabler/icons-react';
 import { Button, Form, Label, Select } from 'erxes-ui';
 import { useEffect } from 'react';
-import {
-  IActionProps,
-  PlaceHolderInput,
-  IField as UIModuleField,
-} from 'ui-modules';
+import { IActionProps, PlaceHolderInput } from 'ui-modules';
 import { useManagePropertyRule } from '../hooks/useManagePropertyRule';
 import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
-
-interface IField extends Partial<UIModuleField> {
-  group?: string;
-  groupDetail?: {
-    name: string;
-  };
-}
-
-interface IOperator {
-  value: string;
-  label: string;
-  noInput?: boolean;
-}
-
-interface IRule {
-  field: string;
-  operator: string;
-  value?: any;
-}
-
-interface IConfig {
-  module?: string;
-  rules: IRule[];
-}
-
-interface RuleProps {
-  rule: IRule;
-  propertyType: string;
-  selectedField?: IField;
-  remove: () => void;
-  handleChange: (name: string, value: any) => void;
-  groups: Record<string, IField[]>;
-  operatorOptions: IOperator[];
-}
 
 export const ManagePropertiesConfigForm = ({
   currentActionIndex,
@@ -55,8 +18,6 @@ export const ManagePropertiesConfigForm = ({
     control,
     addRule,
     rules,
-    fields,
-    groups,
     module,
   } = useManagePropertySidebarContent(currentActionIndex, currentAction);
 
@@ -97,24 +58,12 @@ export const ManagePropertiesConfigForm = ({
         <Label className="pb-4">Rules</Label>
 
         {rules.map((rule, index) => {
-          const { handleChange, handleRemove, selectedField, operators } =
-            useManagePropertyRule(
-              rules,
-              index,
-              fieldName,
-              setValue,
-              fields,
-              rule,
-            );
-
           const updatedProps = {
+            rules,
             rule,
-            handleChange,
-            remove: handleRemove,
-            groups,
+            index,
             propertyType,
-            selectedField,
-            operatorOptions: operators,
+            fieldName,
           };
 
           return <Rule key={index} {...updatedProps} />;
@@ -129,14 +78,22 @@ export const ManagePropertiesConfigForm = ({
 };
 
 const Rule = ({
+  rules,
   rule,
-  remove,
-  handleChange,
-  groups,
-  selectedField,
-  operatorOptions,
+
   propertyType,
-}: RuleProps) => {
+  fieldName,
+  index,
+}: ManagePropertyRuleProps) => {
+  const {
+    handleChange,
+    handleRemove,
+    selectedField,
+    operators,
+    groups,
+    fields,
+  } = useManagePropertyRule({ rules, index, fieldName, rule, propertyType });
+
   return (
     <div className="border rounded p-4  mb-2 relative group">
       <div className="flex flex-row gap-4 mb-4  items-end">
@@ -185,7 +142,7 @@ const Rule = ({
               <Select.Value placeholder="Select an operator" />
             </Select.Trigger>
             <Select.Content>
-              {operatorOptions.map(({ value, label }) => (
+              {operators.map(({ value, label }) => (
                 <Select.Item key={value} value={value}>
                   {label}
                 </Select.Item>
@@ -197,7 +154,7 @@ const Rule = ({
           variant="destructive"
           size="icon"
           className="flex-shrink-0 opacity-0 absolute -top-6 right-1 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out"
-          onClick={remove}
+          onClick={handleRemove}
         >
           <IconTrash size={16} />
         </Button>
@@ -208,9 +165,7 @@ const Rule = ({
 
           <PlaceHolderInput
             propertyType={propertyType}
-            isDisabled={operatorOptions.some(
-              (op) => op.value === rule.operator && op.noInput,
-            )}
+            isDisabled={operators.some((op) => op.value === rule.operator)}
             fieldType={selectedField?.type}
             value={rule.value}
             onChange={(value) => handleChange('value', value)}

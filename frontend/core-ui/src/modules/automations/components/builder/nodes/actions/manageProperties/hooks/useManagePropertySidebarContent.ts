@@ -1,11 +1,11 @@
+import { getContentType } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { getFieldsProperties, groupFieldsByType, IAction } from 'ui-modules';
+import { getFieldsProperties, IAction } from 'ui-modules';
 import {
   IConfig,
   IManagePropertyFieldName,
 } from '../types/ManagePropertyTypes';
-import { getContentType } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 
 export const useManagePropertySidebarContent = (
   currentActionIndex: number,
@@ -24,12 +24,7 @@ export const useManagePropertySidebarContent = (
   const propertyType =
     module || getContentType(currentAction.id, actions, triggers)?.type || '';
 
-  const {
-    propertyTypes,
-    fields = [],
-    loading,
-  } = getFieldsProperties(propertyType);
-  const groups = groupFieldsByType(fields || []);
+  const { propertyTypes } = getFieldsProperties(propertyType);
 
   const addRule = () => {
     setValue(fieldName, {
@@ -40,15 +35,12 @@ export const useManagePropertySidebarContent = (
 
   return {
     addRule,
-    groups,
     propertyTypes,
-    loading,
     setValue,
     control,
     propertyType,
     fieldName,
     rules,
-    fields,
     module,
   };
 };

@@ -1,25 +1,35 @@
 import { PROPERTY_OPERATOR } from '@/automations/constants';
+import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { useFormContext } from 'react-hook-form';
+import { getFieldsProperties, groupFieldsByType } from 'ui-modules';
 import {
-  IManagePropertyField,
   IManagePropertyFieldName,
   IManagePropertyRule,
   OperatorType,
 } from '../types/ManagePropertyTypes';
-import { UseFormSetValue } from 'react-hook-form';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export const useManagePropertyRule = (
-  rules: IManagePropertyRule[],
-  index: number,
-  fieldName: IManagePropertyFieldName,
-  setValue: UseFormSetValue<TAutomationBuilderForm>,
-  fields: IManagePropertyField[],
-  rule: IManagePropertyRule,
-) => {
+type ManagePropertyRuleProps = {
+  rules: IManagePropertyRule[];
+  index: number;
+  fieldName: IManagePropertyFieldName;
+  rule: IManagePropertyRule;
+  propertyType: string;
+};
+
+export const useManagePropertyRule = ({
+  rules,
+  index,
+  fieldName,
+  rule,
+  propertyType,
+}: ManagePropertyRuleProps) => {
+  const { setValue } = useFormContext<TAutomationBuilderForm>();
+  const { fields = [] } = getFieldsProperties(propertyType);
+  const groups = groupFieldsByType(fields || []);
   const handleChange = (name: string, value: any) => {
     const updatedRules = [...rules];
     updatedRules[index] = { ...updatedRules[index], [name]: value };
@@ -48,5 +58,7 @@ export const useManagePropertyRule = (
     operators,
     handleChange,
     selectedField,
+    fields,
+    groups,
   };
 };

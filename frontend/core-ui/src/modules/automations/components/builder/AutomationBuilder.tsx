@@ -16,6 +16,7 @@ import {
   automationBuilderActiveTabState,
   automationBuilderSiderbarOpenState,
 } from '@/automations/states/automationState';
+import { deepCleanNulls } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import {
   automationBuilderFormSchema,
   TAutomationBuilderForm,
@@ -23,7 +24,6 @@ import {
 import { useAtom } from 'jotai';
 import { AutomationBuilderTabsType, IAutomation } from '../../types';
 import { AutomationHistories } from './history/components/AutomationHistories';
-import { deepCleanNulls } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 
 type AutomationBuilderProps = {
   detail?: IAutomation;

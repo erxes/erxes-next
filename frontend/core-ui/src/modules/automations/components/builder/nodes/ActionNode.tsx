@@ -4,9 +4,9 @@ import { Handle, Node, NodeProps, Position } from '@xyflow/react';
 import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { AutomationNodeType, NodeData } from '../../../types';
-import { ErrorState } from '../../../utils/ErrorState';
 import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
 import { NodeDropdownActions } from './NodeDropdownActions';
+import { ErrorState } from '@/automations/components/common/ErrorState';
 
 const ActionNodeContent = ({ data }: { data: NodeData }) => {
   if (data?.error) {

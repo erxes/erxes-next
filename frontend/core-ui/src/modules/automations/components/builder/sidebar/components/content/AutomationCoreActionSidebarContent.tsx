@@ -3,7 +3,7 @@ import {
   getCoreAutomationActionComponent,
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
-import { ErrorState } from '@/automations/utils/ErrorState';
+import { ErrorState } from '@/automations/components/common/ErrorState';
 import { Card, Form, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

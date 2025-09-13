@@ -1,4 +1,3 @@
-import { AutomationBuilderEffect } from '@/automations/components/builder/AutomationBuilderEffect';
 import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
 import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
 import { Background, Controls, MiniMap, ReactFlow } from '@xyflow/react';
@@ -39,7 +38,6 @@ export const AutomationBuilderCanvas = () => {
 
   return (
     <div className="h-full flex-1" ref={reactFlowWrapper}>
-      <AutomationBuilderEffect />
       <ReactFlow
         ref={editorWrapper}
         nodes={nodes}

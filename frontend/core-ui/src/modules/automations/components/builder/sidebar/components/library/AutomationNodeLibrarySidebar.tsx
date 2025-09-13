@@ -1,8 +1,8 @@
-import { LoadingSkeleton } from '@/automations/components/builder/sidebar/components/SidebarNodeLibrarySkeleton';
+import { LoadingSkeleton } from '@/automations/components/builder/sidebar/components/library/SidebarNodeLibrarySkeleton';
 import { TDraggingNode } from '@/automations/components/builder/sidebar/states/automationNodeLibrary';
 import { useAutomationsRecordTable } from '@/automations/hooks/useAutomationsRecordTable';
 import { AutomationNodeType } from '@/automations/types';
-import { ErrorState } from '@/automations/utils/ErrorState';
+import { ErrorState } from '@/automations/components/common/ErrorState';
 import { ApolloError } from '@apollo/client';
 import { IconArrowsSplit2, IconExternalLink } from '@tabler/icons-react';
 import {
@@ -20,7 +20,8 @@ import {
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
-import { useAutomationNodeLibrarySidebar } from '../hooks/useAutomationNodeLibrarySidebar';
+import { useAutomationNodeLibrarySidebar } from '../../hooks/useAutomationNodeLibrarySidebar';
+import { AUTOMATION_NODE_TYPES } from '@/automations/constants';
 
 export const AutomationNodeLibrarySidebar = () => {
   const {
@@ -57,15 +58,11 @@ export const AutomationNodeLibrarySidebar = () => {
         className="flex-1 flex flex-col overflow-auto"
       >
         <Tabs.List className="w-full border-b">
-          <Tabs.Trigger value="trigger" className="w-1/3">
-            Triggers
-          </Tabs.Trigger>
-          <Tabs.Trigger value="action" className="w-1/3">
-            Actions
-          </Tabs.Trigger>
-          <Tabs.Trigger value="automation" className="w-1/3">
-            Automations
-          </Tabs.Trigger>
+          {AUTOMATION_NODE_TYPES.map(({ value, label }) => (
+            <Tabs.Trigger value={value} className="w-1/3">
+              {label}
+            </Tabs.Trigger>
+          ))}
         </Tabs.List>
 
         {[
@@ -80,7 +77,7 @@ export const AutomationNodeLibrarySidebar = () => {
             value={type}
             className="flex-1 p-2 pt-0 mt-0 w-full overflow-auto flex-1"
           >
-            <Command.Group className="space-y-2 " heading={type.toUpperCase()}>
+            <Command.Group className="space-y-2">
               <TabContentWrapper
                 {...commonTabContentProps}
                 type={type}
@@ -90,7 +87,7 @@ export const AutomationNodeLibrarySidebar = () => {
           </Tabs.Content>
         ))}
         <Tabs.Content className="space-y-2 " value="automation">
-          <Command.Group heading="Automation">
+          <Command.Group>
             <AutomationsNodeLibrary {...commonTabContentProps} />
           </Command.Group>
         </Tabs.Content>
@@ -165,7 +162,7 @@ const NodeLibraryRow = ({
     <Command.Item value={label} asChild>
       <Card
         className={cn(
-          `hover:shadow-md transition-shadow cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px]`,
+          `cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px]`,
           {
             'hover:border-success': nodeType === 'action',
             'hover:border-primary': nodeType === 'trigger',

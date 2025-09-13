@@ -1,6 +1,7 @@
-import { ErrorState } from '@/automations/utils/ErrorState';
+import { ErrorState } from '@/automations/components/common/ErrorState';
+import { useAutomationsRemoteModules } from '@/automations/utils/useAutomationsModules';
 import { IconInfoTriangle } from '@tabler/icons-react';
-import { isEnabled, Spinner } from 'erxes-ui';
+import { Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { AutomationRemoteEntryProps } from 'ui-modules';
@@ -17,11 +18,13 @@ export const RenderPluginsComponentWrapper = ({
   moduleName,
   props,
 }: Props) => {
-  if (!pluginName || !moduleName) {
+  if (!pluginName || pluginName === 'core' || !moduleName) {
     return null;
   }
 
-  if (!isEnabled(pluginName)) {
+  const { isEnabled } = useAutomationsRemoteModules(pluginName);
+
+  if (!isEnabled) {
     return (
       <p className="flex flex-row gap-2 items-center ml-4">
         {`Plugin ${pluginName} disabled`}

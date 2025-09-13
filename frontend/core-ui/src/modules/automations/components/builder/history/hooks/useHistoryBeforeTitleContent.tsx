@@ -2,7 +2,7 @@ import { ExecutionActionResult } from '@/automations/components/builder/history/
 import { AutomationNodeType } from '@/automations/types';
 import { IconCheck, IconQuestionMark, IconX } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { Badge, cn, Label, Popover, Separator, Tooltip } from 'erxes-ui';
+import { Badge, cn, Label, Popover, Separator } from 'erxes-ui';
 import { IAutomationHistory } from 'ui-modules';
 
 type HistoryStatusType = 'success' | 'error' | 'unknown';

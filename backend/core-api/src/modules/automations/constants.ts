@@ -45,6 +45,13 @@ export const EMAIL_RECIPIENTS_TYPES = [
 
 export const UI_ACTIONS = [
   {
+    type: 'outgoingWebhook',
+    icon: 'IconWebhook',
+    label: 'Outgoing webhook',
+    description: 'Outgoing webhook',
+    isAvailable: true,
+  },
+  {
     type: 'if',
     icon: 'IconSitemap',
     label: 'Branches',
@@ -101,6 +108,14 @@ export const UI_ACTIONS = [
 ];
 
 export const UI_TRIGGERS = [
+  {
+    type: 'core:incoming_webhook',
+    icon: 'IconWebhook',
+    label: 'Incoming Webhook',
+    description:
+      'Trigger automation workflows when external systems send HTTP requests to your webhook endpoint',
+    isCustom: true,
+  },
   {
     type: 'core:user',
     icon: 'IconUsers',

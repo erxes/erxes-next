@@ -1,21 +1,20 @@
 import { useAutomationBuilderSidebarHooks } from '@/automations/components/builder/sidebar/hooks/useAutomationBuilderSidebarHooks';
+import { useAutomation } from '@/automations/context/AutomationProvider';
 import { AutomationsHotKeyScope, NodeData } from '@/automations/types';
 import { IconArrowLeft, IconX } from '@tabler/icons-react';
 import {
   Button,
   Card,
-  cn,
   Separator,
   usePreviousHotkeyScope,
   useScopedHotkeys,
   useSetHotkeyScope,
 } from 'erxes-ui';
+import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
-import { AutomationActionContentSidebar } from './AutomationActionContentSidebar';
-import { AutomationNodeLibrarySidebar } from './AutomationNodeLibrarySidebar';
-import { AutomationTriggerContentSidebar } from './AutomationTriggerContentSidebar';
-import { useAutomation } from '@/automations/context/AutomationProvider';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AutomationActionContentSidebar } from './content/AutomationActionContentSidebar';
+import { AutomationTriggerContentSidebar } from './content/AutomationTriggerContentSidebar';
+import { AutomationNodeLibrarySidebar } from './library/AutomationNodeLibrarySidebar';
 
 export const AutomationBuilderSidebar = () => {
   const { awaitingToConnectNodeId } = useAutomation();

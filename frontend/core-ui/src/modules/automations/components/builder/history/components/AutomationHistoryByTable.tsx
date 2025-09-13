@@ -4,14 +4,15 @@ import {
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { AutomationSendEmailActionResult } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailActionResult';
 import { useAutomation } from '@/automations/context/AutomationProvider';
-import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
+import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
 import { format, isValid } from 'date-fns';
-import { isEnabled, RelativeDateDisplay, Table } from 'erxes-ui';
+import { RelativeDateDisplay, Table } from 'erxes-ui';
 import {
   getAutomationTypes,
   IAutomationHistory,
   IAutomationHistoryAction,
 } from 'ui-modules';
+import { useAutomationsRemoteModules } from '@/automations/utils/useAutomationsModules';
 
 export const ExecutionActionResult = ({
   action,
@@ -56,8 +57,9 @@ export const ExecutionActionResult = ({
   );
 
   const [pluginName, moduleName] = getAutomationTypes(action?.actionType);
+  const { isEnabled } = useAutomationsRemoteModules(pluginName);
 
-  if (!isCoreAction && isEnabled(pluginName) && moduleName) {
+  if (!isCoreAction && isEnabled) {
     return (
       <RenderPluginsComponentWrapper
         pluginName={pluginName}

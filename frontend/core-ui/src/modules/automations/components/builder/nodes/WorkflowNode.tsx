@@ -3,7 +3,6 @@ import { NodeRemoveActionDialog } from '@/automations/components/builder/nodes/N
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
 import { WorkflowActionMapper } from '@/automations/components/builder/nodes/WorkflowActionMapper';
 import {
-  AutomationNodesType,
   AutomationNodeType,
   NodeData,
   WorkflowNodeData,
@@ -12,11 +11,10 @@ import {
   IconArrowsMaximize,
   IconArrowsSplit2,
   IconDotsVertical,
-  IconEdit,
 } from '@tabler/icons-react';
 import { Handle, Node, NodeProps, Position } from '@xyflow/react';
 import { Button, Card, cn, DropdownMenu, Sheet } from 'erxes-ui';
-import { Dispatch, memo, SetStateAction, useState } from 'react';
+import { memo, useState } from 'react';
 
 const WorkflowNode = ({
   data,

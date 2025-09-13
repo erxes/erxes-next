@@ -64,3 +64,9 @@ export const STATUSES_BADGE_VARIABLES = {
 
 export const AUTOMATION_HISTORIES_CURSOR_SESSION_KEY =
   'automation-histories-cursor';
+
+export const AUTOMATION_NODE_TYPES = [
+  { value: 'trigger', label: 'Triggers' },
+  { value: 'action', label: 'Actions' },
+  { value: 'automation', label: 'Automations' },
+];

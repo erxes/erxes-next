@@ -1,11 +1,13 @@
 import { lazy } from 'react';
 
 const BranchComponents = {
-  sidebar: lazy(() =>
-    import('./BranchesConfigForm').then((module) => ({
-      default: module.BranchesConfigForm,
-    })),
-  ),
+  if: {
+    sidebar: lazy(() =>
+      import('./BranchesConfigForm').then((module) => ({
+        default: module.BranchesConfigForm,
+      })),
+    ),
+  },
 };
 
 export default BranchComponents;

@@ -15,6 +15,7 @@ export type IUIConfig = {
     hasRelationWidget?: boolean;
     hasFloatingWidget?: boolean;
     settingsOnly?: boolean;
+    hasAutomation?: boolean;
   }[];
 
   relationWidgets?: {

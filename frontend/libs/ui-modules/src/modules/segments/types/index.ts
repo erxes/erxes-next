@@ -74,6 +74,7 @@ export type IField = {
     labelField: string;
     multi?: boolean;
   };
+  groupDetail?: any;
 };
 
 export type FieldQueryResponse = {
