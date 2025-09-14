@@ -19,6 +19,8 @@ export const CALL_HISTORY_DETAIL = gql`
       extensionNumber
       conversationId
       recordUrl
+      acctId
+      inboxIntegrationId
     }
   }
 `;

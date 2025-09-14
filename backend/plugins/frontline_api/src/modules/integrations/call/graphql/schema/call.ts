@@ -77,6 +77,8 @@ export const types = `
     extensionNumber: String
     conversationId: String
     recordUrl: String
+    inboxIntegrationId: String
+    acctId: String
   }
 
   type CallStatistic {
