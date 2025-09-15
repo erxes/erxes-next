@@ -25,6 +25,7 @@ type ProjectListResponse {
 
 input IProjectFilter {
     _id: String
+    _ids: [String]
     name: String
     description: String
     status: Int

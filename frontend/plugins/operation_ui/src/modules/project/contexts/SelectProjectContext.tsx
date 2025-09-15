@@ -6,6 +6,7 @@ interface SelectProjectContextType {
   projects: {
     _id: string;
     name: string;
+    status: number;
   }[];
   handleFetchMore: () => void;
   totalCount?: number;

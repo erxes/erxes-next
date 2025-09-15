@@ -1,5 +1,5 @@
-import gql from 'graphql-tag';
 import { GQL_PAGE_INFO } from 'erxes-ui';
+import gql from 'graphql-tag';
 
 export const GET_PROJECTS = gql`
   query GetProjects(
@@ -32,6 +32,7 @@ export const GET_PROJECTS_INLINE = gql`
       list {
         _id
         name
+        status
       }
        ${GQL_PAGE_INFO}
     }

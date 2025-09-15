@@ -1,6 +1,6 @@
-import { IContext } from '~/connectionResolvers';
 import { ITeamFilter } from '@/team/@types/team';
 import { getTeamEstimateChoises } from '@/team/utils';
+import { IContext } from '~/connectionResolvers';
 
 export const teamQueries = {
   getTeam: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -73,7 +73,7 @@ export const teamQueries = {
       ]);
     }
 
-    return models.TeamMember.find({ teamId });
+    return models.TeamMember.find({ teamId }).sort({ role: 1 });
   },
 
   getTeamEstimateChoises: async (
