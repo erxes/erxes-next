@@ -1,16 +1,16 @@
-import { IContext } from '~/connectionResolvers';
 import { INoteDocument } from '@/note/types';
+import { IContext } from '~/connectionResolvers';
 
 export const noteMutations = {
   createNote: async (
     _parent: undefined,
-    { content, itemId, mentions },
+    { content, contentId, mentions },
     { models, user, subdomain }: IContext,
   ) => {
     return models.Note.createNote({
       doc: {
         content,
-        itemId,
+        contentId,
         mentions,
         createdBy: user._id,
       },
