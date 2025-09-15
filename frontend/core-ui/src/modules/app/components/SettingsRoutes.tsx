@@ -1,14 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 
+import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
-import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
-import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
-import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -87,13 +86,6 @@ const AutomationSettingsRoutes = lazy(() =>
     default: module.AutomationSettingsRoutes,
   })),
 );
-const NotificationSettingsRoutes = lazy(() =>
-  import('@/notification/settings/components/NotificationsRoutes').then(
-    (module) => ({
-      default: module.NotificationSettingsRoutes,
-    }),
-  ),
-);
 
 const PropertiesSettins = lazy(() =>
   import('~/pages/settings/workspace/PropertiesSettingsPage').then(
@@ -112,10 +104,6 @@ export function SettingsRoutes() {
           element={<Navigate to={`${SettingsPath.Profile}`} replace />}
         />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
-        <Route
-          path={SettingsPath.Notification}
-          element={<NotificationSettingsRoutes />}
-        />
         <Route
           path={SettingsPath.ChangePassword}
           element={<SettingsChangePassword />}
