@@ -5,8 +5,8 @@ import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 
 startPlugin({
-  name: 'finance',
-  port: 33011,
+  name: 'template',
+  port: 33012,
   graphql: async () => ({
     typeDefs: await typeDefs(),
     resolvers,
@@ -17,15 +17,5 @@ startPlugin({
     context.models = models;
 
     return context;
-  },
-  trpcAppRouter: {
-    router: appRouter,
-    createContext: async (subdomain, context) => {
-      const models = await generateModels(subdomain);
-
-      context.models = models;
-
-      return context;
-    },
   },
 });
