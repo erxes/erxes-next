@@ -15,6 +15,7 @@ const authenticateApi = async (req, res, next) => {
   const subdomain = getSubdomain(req);
   if (data.history) {
     next();
+    return;
   }
   const isAuthorized = await validateCompanyAccess(subdomain, erxesApiId, data);
   if (!isAuthorized) {

@@ -138,6 +138,14 @@ import { IInternalNoteDocument } from '@/internalNote/types';
 import { ILogModel, loadLogsClass } from '@/logs/db/models/Logs';
 
 import {
+  emailDeliverySchema,
+  IAutomationDocument,
+  IAutomationExecutionDocument,
+  IEmailDeliveryDocument,
+  INotificationDocument,
+  notificationSchema,
+} from 'erxes-api-shared/core-modules';
+import {
   IAutomationModel,
   loadClass as loadAutomationClass,
 } from './modules/automations/db/models/Automations';
@@ -145,18 +153,6 @@ import {
   IExecutionModel,
   loadClass as loadExecutionClass,
 } from './modules/automations/db/models/Executions';
-import {
-  emailDeliverySchema,
-  IAutomationDocument,
-  IAutomationExecutionDocument,
-  IEmailDeliveryDocument,
-  INotificationConfigDocument,
-  INotificationDocument,
-  IUserNotificationSettingsDocument,
-  notificationConfigSchema,
-  notificationSchema,
-  userNotificationSettingsSchema,
-} from 'erxes-api-shared/core-modules';
 
 export interface IModels {
   Brands: IBrandModel;
@@ -193,8 +189,6 @@ export interface IModels {
   AutomationExecutions: IExecutionModel;
   Logs: ILogModel;
   Notifications: Model<INotificationDocument>;
-  NotificationConfigs: Model<INotificationConfigDocument>;
-  UserNotificationSettings: Model<IUserNotificationSettingsDocument>;
   EmailDeliveries: Model<IEmailDeliveryDocument>;
 }
 
@@ -354,16 +348,6 @@ export const loadClasses = (
     INotificationDocument,
     Model<INotificationDocument>
   >('notifications', notificationSchema);
-
-  models.NotificationConfigs = db.model<
-    INotificationConfigDocument,
-    Model<INotificationConfigDocument>
-  >('notification_configs', notificationConfigSchema);
-
-  models.UserNotificationSettings = db.model<
-    IUserNotificationSettingsDocument,
-    Model<IUserNotificationSettingsDocument>
-  >('user_notification_settings', userNotificationSettingsSchema);
 
   models.EmailDeliveries = db.model<
     IEmailDeliveryDocument,

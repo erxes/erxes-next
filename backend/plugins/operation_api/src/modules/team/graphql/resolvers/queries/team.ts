@@ -65,11 +65,7 @@ export const teamQueries = {
       ]);
     }
 
-    if (teamId) {
-      filter.teamId = teamId;
-    }
-
-    return models.TeamMember.find(filter);
+    return models.TeamMember.find({ teamId }).sort({ role: 1 });
   },
 
   getTeamEstimateChoises: async (

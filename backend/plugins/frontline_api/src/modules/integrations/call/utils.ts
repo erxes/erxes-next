@@ -1089,14 +1089,16 @@ function handleActiveCallStatus(eventBody, graphqlPubsub) {
     }
   });
 }
-export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
+export const mapCdrToCallHistory = (
+  cdr: ICallCdrDocument,
+): ICallHistory & { acctId: string } => {
   return {
-    operatorPhone: cdr.src || '',
-    customerPhone: cdr.dst || '',
+    operatorPhone: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src || '',
+    customerPhone: cdr.userfield === 'Inbound' ? cdr.src : cdr.dst || '',
     callDuration: cdr.billsec || 0,
     callStartTime: cdr.start,
     callEndTime: cdr.end,
-    callType: cdr.actionType || '',
+    callType: cdr.userfield || '',
     callStatus: cdr.disposition || '',
     timeStamp: cdr.start ? cdr.start.getTime() / 1000 : 0,
     modifiedAt: cdr.updatedAt,
@@ -1104,11 +1106,12 @@ export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
     createdBy: cdr.createdBy || '',
     modifiedBy: cdr.updatedBy || '',
     extensionNumber: '',
-    conversationId: cdr.userfield || '',
+    conversationId: cdr.conversationId || '',
     recordUrl: cdr.recordUrl || '',
     endedBy: '',
     acceptedUserId: '',
     queueName: '',
     inboxIntegrationId: cdr.inboxIntegrationId,
+    acctId: cdr.acctId || '',
   };
 };
