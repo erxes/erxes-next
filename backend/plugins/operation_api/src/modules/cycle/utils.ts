@@ -166,7 +166,7 @@ export const getCycleProgressChart = async (
 
   const totalScope = totalScopeResult?.totalScope || 0;
 
-  const chartDataAggregation = await models.Task.aggregate([
+  const dailyAggregation = await models.Task.aggregate([
     {
       $match: {
         ...filter,
@@ -208,21 +208,6 @@ export const getCycleProgressChart = async (
     },
     { $sort: { _id: 1 } },
     {
-      $setWindowFields: {
-        sortBy: { _id: 1 },
-        output: {
-          started: {
-            $sum: '$started',
-            window: { documents: ['unbounded', 'current'] },
-          },
-          completed: {
-            $sum: '$completed',
-            window: { documents: ['unbounded', 'current'] },
-          },
-        },
-      },
-    },
-    {
       $project: {
         _id: 0,
         date: { $dateToString: { format: '%Y-%m-%d', date: '$_id' } },
@@ -231,6 +216,19 @@ export const getCycleProgressChart = async (
       },
     },
   ]);
+
+  let cumulativeStarted = 0;
+  let cumulativeCompleted = 0;
+
+  const chartDataAggregation = (dailyAggregation || []).map((entry) => {
+    cumulativeStarted += entry.started;
+    cumulativeCompleted += entry.completed;
+    return {
+      date: entry.date,
+      started: cumulativeStarted,
+      completed: cumulativeCompleted,
+    };
+  });
 
   const chartData: {
     totalScope: number;
