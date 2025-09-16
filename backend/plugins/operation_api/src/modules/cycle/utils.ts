@@ -241,7 +241,7 @@ export const getCycleProgressChart = async (
   chartData.chartData = fillMissingDays(
     chartDataAggregation,
     cycle.startDate,
-    differenceInCalendarDays(cycle.endDate, cycle.startDate),
+    differenceInCalendarDays(cycle.endDate, cycle.startDate) + 1,
   );
 
   return chartData;
