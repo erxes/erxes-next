@@ -21,15 +21,14 @@ export enum CycleSideWidgetTabsEnum {
 }
 
 export const CycleSideWidget = ({ cycleId }: { cycleId: string }) => {
-  const { cycleDetail } = useGetCycle(cycleId);
+  const { cycleDetail, loading } = useGetCycle(cycleId);
 
   const statistics = cycleDetail?.statistics || {};
   const isCompleted = cycleDetail?.isCompleted || false;
 
-  console.log(cycleDetail);
-
-  const skip = !cycleId || isCompleted;
-  console.log(skip, 'skip');
+  if (loading) {
+    return null;
+  }
 
   return (
     <SideMenu defaultValue="cycle">

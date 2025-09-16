@@ -155,7 +155,6 @@ export const loadCycleClass = (models: IModels) => {
         {
           teamId: endedCycle.teamId,
           isCompleted: false,
-          startDate: { $gte: new Date() },
         },
         { $set: { isActive: true } },
         { sort: { startDate: 1 }, new: true },

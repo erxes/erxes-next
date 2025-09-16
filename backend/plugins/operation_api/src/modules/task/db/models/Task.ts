@@ -264,7 +264,7 @@ export const loadTaskClass = (models: IModels) => {
 
       await models.Task.updateMany(
         { _id: { $in: taskIds } },
-        { $set: { cycleId: newCycleId } },
+        { $set: { cycleId: newCycleId, statusChangedDate: new Date() } },
       );
 
       return taskIds;
