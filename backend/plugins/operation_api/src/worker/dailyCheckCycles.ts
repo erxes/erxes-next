@@ -6,7 +6,7 @@ export const dailyCheckCycles = async () => {
   console.log('daily check cycles is worked');
   const VERSION = getEnv({ name: 'VERSION' });
 
-  if (VERSION === 'saas') {
+  if (VERSION && VERSION === 'saas') {
     const orgs = await getSaasOrganizations();
 
     for (const org of orgs) {
@@ -15,8 +15,9 @@ export const dailyCheckCycles = async () => {
       }
     }
 
+    return 'success';
+  } else {
     await endCycle('os');
-
     return 'success';
   }
 };
