@@ -11,12 +11,15 @@ export const initMQWorkers = async (redis: any) => {
   await myQueue.upsertJobScheduler(
     'operations-daily-cycles-end',
     {
-      pattern: '0 30 23 * * *',
+      pattern: '0 0 *', // daily at midnight
+      tz: 'UTC',
     },
     {
       name: 'operations-daily-cycles-end',
     },
   );
+
+  await dailyCheckCycles(); // call directly once
 
   return createMQWorkerWithListeners(
     'operations',

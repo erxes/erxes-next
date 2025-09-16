@@ -1,8 +1,9 @@
 import { generateModels } from '~/connectionResolvers';
 import { getEnv, getSaasOrganizations } from 'erxes-api-shared/utils';
-import { startOfDay, endOfDay } from 'date-fns'; // эсвэл өөр utility
+import { endOfDay } from 'date-fns'; // эсвэл өөр utility
 
 export const dailyCheckCycles = async () => {
+  console.log('daily check cycles is worked');
   const VERSION = getEnv({ name: 'VERSION' });
 
   if (VERSION === 'saas') {
@@ -21,20 +22,22 @@ export const dailyCheckCycles = async () => {
 };
 
 const endCycle = async (subdomain: string) => {
+  console.log('daily check cycles is worked', subdomain);
   const models = await generateModels(subdomain);
 
   const today = new Date();
 
-  const cycle = await models.Cycle.findOne({
+  const cycles = await models.Cycle.find({
     isActive: true,
     isCompleted: false,
     endDate: {
-      $gte: startOfDay(today), // 00:00:00
-      $lte: endOfDay(today), // 23:59:59.999
+      $lte: endOfDay(today),
     },
   });
 
-  if (!cycle) return;
+  if (!cycles || cycles.length === 0) return;
 
-  await models.Cycle.endCycle(cycle?._id);
+  for (const cycle of cycles) {
+    await models.Cycle.endCycle(cycle?._id);
+  }
 };
