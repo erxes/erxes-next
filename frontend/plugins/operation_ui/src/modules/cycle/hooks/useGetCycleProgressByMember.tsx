@@ -18,8 +18,7 @@ export const useGetCycleProgressByMember = (options: QueryHookOptions) => {
       variables: { ...options.variables, assigneeId: assignee || undefined },
     });
 
-  const cycleProgressByMember =
-    data?.getCycleProgressByMember || ([] as IProjectProgressByMember[]);
+  const cycleProgressByMember = data?.getCycleProgressByMember;
 
   useEffect(() => {
     const unsubscribe = subscribeToMore({

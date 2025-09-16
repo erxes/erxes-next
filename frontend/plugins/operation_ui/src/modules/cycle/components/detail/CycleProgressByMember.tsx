@@ -20,9 +20,6 @@ export const CycleProgressByMember = ({
     skip: !cycleId || isCompleted,
   });
 
-  console.log(statistics.progressByMember, '123123');
-  console.log(cycleProgressByMember, '----');
-
   const progress =
     cycleProgressByMember ||
     (statistics.progressByMember as IProjectProgressByMember[]);

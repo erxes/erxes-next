@@ -120,6 +120,14 @@ export const loadTaskClass = (models: IModels) => {
         }
       }
 
+      if (doc.cycleId) {
+        const cycle = await models.Cycle.findOne({ _id: doc.cycleId });
+
+        if (cycle && cycle.isCompleted) {
+          throw new Error('Cannot add task to completed cycle');
+        }
+      }
+
       doc.createdBy = userId;
 
       const task = await models.Task.insertOne({
