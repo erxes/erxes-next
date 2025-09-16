@@ -1,3 +1,4 @@
+import { IncomingWebhookPayloadSchemaSheet } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookPayloadSchemaSheet';
 import { AUTOMATION_INCOMING_WEBHOOK_API_METHODS } from '@/automations/components/builder/nodes/triggers/webhooks/constants/incomingWebhook';
 import {
   incomingWebhookFormSchema,
@@ -109,6 +110,26 @@ export const IncomingWebhookConfigForm = ({
               </Form.Item>
             );
           }}
+        />
+        <Form.Field
+          control={form.control}
+          name="schema"
+          render={({ field }) => (
+            <Form.Item>
+              <div className="flex items-center justify-between">
+                <Form.Label>Payload Schema</Form.Label>
+                <IncomingWebhookPayloadSchemaSheet
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </div>
+              {field.value && field.value.length > 0 && (
+                <div className="mt-2 p-3 rounded text-xs font-mono overflow-x-auto max-h-48 overflow-y-auto border bg-white">
+                  <pre>{JSON.stringify(field.value, null, 2)}</pre>
+                </div>
+              )}
+            </Form.Item>
+          )}
         />
         <Collapsible>
           <Collapsible.Trigger asChild>

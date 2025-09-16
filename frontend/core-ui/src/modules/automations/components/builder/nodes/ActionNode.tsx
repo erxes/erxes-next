@@ -7,19 +7,16 @@ import { AutomationNodeType, NodeData } from '../../../types';
 import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { ErrorState } from '@/automations/components/common/ErrorState';
+import {
+  NodeErrorDisplay,
+  NodeErrorIndicator,
+} from './components/NodeErrorDisplay';
+import { useNodeContent } from '@/automations/components/builder/nodes/hooks/useTriggerNodeContent';
 
 const ActionNodeContent = ({ data }: { data: NodeData }) => {
-  if (data?.error) {
-    return (
-      <ErrorState errorCode={'Invalid action'} errorDetails={data?.error} />
-    );
-  }
+  const { hasError, shouldRender } = useNodeContent(data);
 
-  if (data.type === 'if') {
-    return null;
-  }
-
-  if (!Object.keys(data?.config || {}).length) {
+  if (!shouldRender || hasError) {
     return null;
   }
 
@@ -127,7 +124,10 @@ const ActionNode = ({
             >
               <IconComponent className="size-4" name={data.icon} />
             </div>
-            <span className="font-medium">{data.label}</span>
+            <div className="flex-1">
+              <span className="font-medium">{data.label}</span>
+            </div>
+            {data?.error && <NodeErrorIndicator error={data.error} />}
           </div>
 
           <div className="flex items-center gap-1">
@@ -139,6 +139,19 @@ const ActionNode = ({
           <span className="text-xs text-accent-foreground font-medium">
             {data.description}
           </span>
+
+          {data?.error && (
+            <div className="mt-2">
+              <NodeErrorDisplay
+                error={data.error}
+                nodeId={id}
+                onClearError={(nodeId) => {
+                  // Clear error logic can be added here
+                  console.log('Clear error for node:', nodeId);
+                }}
+              />
+            </div>
+          )}
         </div>
         <ActionNodeContent data={{ ...data, id }} />
 

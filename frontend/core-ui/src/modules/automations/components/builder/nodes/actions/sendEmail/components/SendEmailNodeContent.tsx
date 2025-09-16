@@ -5,7 +5,7 @@ import { Badge, Button, Label, Popover } from 'erxes-ui';
 import { useMemo } from 'react';
 
 export const SendEmailNodeContent = ({ config }: any) => {
-  const { fromUserId, subject, templateId } = config || {};
+  const { fromUserId, subject } = config || {};
 
   return (
     <>

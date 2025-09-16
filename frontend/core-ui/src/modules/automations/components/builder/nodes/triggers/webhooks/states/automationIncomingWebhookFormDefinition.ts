@@ -13,6 +13,7 @@ export const incomingWebhookFormSchema = z.object({
     .enum(AUTOMATION_INCOMING_WEBHOOK_API_METHODS as [string, ...string[]])
     .default('GET'),
   headers: z.array(incomingWebhookHeadersSchema),
+  schema: z.any(),
   isEnabledSecurity: z.string().optional(),
   security: z
     .object({

@@ -1,4 +1,6 @@
+import { useNodeContent } from '@/automations/components/builder/nodes/hooks/useTriggerNodeContent';
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
+import { ErrorState } from '@/automations/components/common/ErrorState';
 import { AutomationNodeType, NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Node, NodeProps } from '@xyflow/react';
@@ -6,37 +8,48 @@ import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
-import { ErrorState } from '@/automations/components/common/ErrorState';
+import {
+  NodeErrorDisplay,
+  NodeErrorIndicator,
+} from './components/NodeErrorDisplay';
+
+// Configuration header component
+const ConfigurationHeader = () => (
+  <div className="flex items-center gap-2 text-primary/90 pb-2">
+    <IconAdjustmentsAlt className="size-4" />
+    <p className="text-sm font-semibold">Configuration</p>
+  </div>
+);
+
+// Configuration content wrapper
+const ConfigurationContent = ({
+  type,
+  config,
+}: {
+  type: string;
+  config: any;
+}) => (
+  <div className="rounded border bg-muted overflow-x-auto text-muted-foreground text-xs font-mono">
+    <TriggerNodeConfigurationContent type={type} config={config} />
+  </div>
+);
+
+// Main configuration section
+const ConfigurationSection = ({ data }: { data: NodeData }) => (
+  <div className="p-3">
+    <ConfigurationHeader />
+    <ConfigurationContent type={data.type || ''} config={data.config} />
+  </div>
+);
 
 const TriggerNodeContent = ({ data }: { data: NodeData }) => {
-  if (data?.error) {
-    return (
-      <ErrorState errorCode={'Invalid action'} errorDetails={data?.error} />
-    );
-  }
+  const { hasError, shouldRender } = useNodeContent(data);
 
-  if (!data?.isCustom) {
+  if (!shouldRender || hasError) {
     return null;
   }
 
-  if (!Object.keys(data?.config || {}).length) {
-    return null;
-  }
-
-  return (
-    <div className="p-3">
-      <div className="flex items-center gap-2 text-primary/90 pb-2">
-        <IconAdjustmentsAlt className="size-4" />
-        <p className="text-sm font-semibold">Configuration</p>
-      </div>
-      <div className="rounded border bg-muted overflow-x-auto text-muted-foreground text-xs font-mono">
-        <TriggerNodeConfigurationContent
-          type={data.type || ''}
-          config={data.config}
-        />
-      </div>
-    </div>
-  );
+  return <ConfigurationSection data={data} />;
 };
 
 const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
@@ -65,9 +78,10 @@ const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
             >
               <IconComponent className="size-4" name={data.icon} />
             </div>
-            <div>
+            <div className="flex-1">
               <p className="font-medium ">{data.label}</p>
             </div>
+            {data?.error && <NodeErrorIndicator error={data.error} />}
           </div>
 
           <div className="flex items-center gap-1">
@@ -78,6 +92,19 @@ const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
           <span className="text-xs text-accent-foreground ">
             {data.description}
           </span>
+
+          {data?.error && (
+            <div className="mt-2">
+              <NodeErrorDisplay
+                error={data.error}
+                nodeId={id}
+                onClearError={(nodeId) => {
+                  // Clear error logic can be added here
+                  console.log('Clear error for node:', nodeId);
+                }}
+              />
+            </div>
+          )}
 
           <TriggerNodeContent data={data} />
         </div>

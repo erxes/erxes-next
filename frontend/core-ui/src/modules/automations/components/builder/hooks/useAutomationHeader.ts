@@ -4,13 +4,14 @@ import {
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import { AutomationBuilderTabsType } from '@/automations/types';
+import { AutomationBuilderTabsType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
-import { useReactFlow } from '@xyflow/react';
+import { useReactFlow, Node } from '@xyflow/react';
 import { useIsMobile, toast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
+import { useNodeErrorHandler } from './useNodeErrorHandler';
 
 export const useAutomationHeader = () => {
   const { handleSubmit, clearErrors } =
@@ -23,6 +24,12 @@ export const useAutomationHeader = () => {
 
   const { getNodes, setNodes } = useReactFlow();
   const { id } = useParams();
+
+  const { handleNodeErrors } = useNodeErrorHandler({
+    reactFlowInstance,
+    getNodes: getNodes as () => Node<NodeData>[],
+    setNodes: setNodes as (nodes: Node<NodeData>[]) => void,
+  });
 
   const [save, { loading }] = useMutation(
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
@@ -83,7 +90,6 @@ export const useAutomationHeader = () => {
   };
 
   const handleError: SubmitErrorHandler<TAutomationBuilderForm> = (errors) => {
-    const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
 
     const nodeErrorMap: Record<string, string> = {};
@@ -107,24 +113,8 @@ export const useAutomationHeader = () => {
     }
 
     if (Object.keys(nodeErrorMap).length > 0) {
-      const updatedNodes = nodes.map((node) => ({
-        ...node,
-        data: {
-          ...node.data,
-          error: nodeErrorMap[node.id],
-        },
-      }));
-
-      setNodes(updatedNodes);
-
-      // Focus on first error node
-      const firstErrorNode = updatedNodes.find((n) => nodeErrorMap[n.id]);
-      if (firstErrorNode && reactFlowInstance) {
-        reactFlowInstance.fitView({
-          nodes: [firstErrorNode],
-          duration: 800,
-        });
-      }
+      // Use the new error handler
+      handleNodeErrors(nodeErrorMap);
     } else {
       const errorKeys = Object.keys(errors || {});
       if (errorKeys?.length > 0) {
@@ -132,7 +122,6 @@ export const useAutomationHeader = () => {
           (errors as Record<string, { message?: string; ref: any }>)[
             errorKeys[0]
           ] || {};
-        console.log({ errors });
         toast({
           title: 'Something went wrong',
           description: message,

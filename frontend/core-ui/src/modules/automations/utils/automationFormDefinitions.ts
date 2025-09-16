@@ -20,21 +20,32 @@ const automationTriggerBaseSchema = z.object({
   position: automationNodePositionSchema,
 });
 
-const automationTriggerSchema = automationTriggerBaseSchema.refine(
-  ({ config, isCustom }) => {
-    // Only enforce contentId check if not custom
-    if (!isCustom) {
-      return !!config?.contentId;
-    }
+const automationTriggerSchema = automationTriggerBaseSchema
+  .refine(
+    ({ type, config }) => {
+      return type.includes('core:') && !!Object.keys(config)?.length;
+    },
+    {
+      path: ['config'],
+      message: 'Each trigger must include a config ',
+    },
+  )
+  .refine(
+    ({ config, isCustom }) => {
+      // Only enforce contentId check if not custom
 
-    // If custom, it's valid regardless of contentId
-    return true;
-  },
-  {
-    path: ['config'],
-    message: 'Each non-custom trigger must include a config with segment',
-  },
-);
+      if (!isCustom) {
+        return !!config?.contentId;
+      }
+
+      // If custom, it's valid regardless of contentId
+      return true;
+    },
+    {
+      path: ['config'],
+      message: 'Each non-custom trigger must include a config with segment',
+    },
+  );
 
 const automationActionSchema = z.object({
   id: z.string(),

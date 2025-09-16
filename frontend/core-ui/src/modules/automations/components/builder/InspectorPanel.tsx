@@ -51,7 +51,7 @@ export const InspectorPanel = () => {
         className="relative flex flex-row w-full"
       >
         <AutomationBuilderCanvas />
-        <div className="bg-sidebar border-l h-full w-16 flex flex-col gap-2 items-center">
+        <div className="bg-sidebar border-l h-full w-16 flex flex-col gap-2 items-center pt-2">
           <ToggleButton
             isOpen={isOpenSideBar}
             onToggle={toggleSideBarOpen}
@@ -125,7 +125,10 @@ const ToggleButton = ({
           <IconComponent className="size-12" />
         </Button>
       </Tooltip.Trigger>
-      <Tooltip.Content side="left" className="flex flex-row gap-2 items-center">
+      <Tooltip.Content
+        side="left"
+        className="flex flex-row gap-2 items-center bg-background text-primary border font-semibold"
+      >
         {isOpen ? openLabel : closedLabel}
         <Badge variant="secondary">
           <Command.Shortcut>{shortcut}</Command.Shortcut>

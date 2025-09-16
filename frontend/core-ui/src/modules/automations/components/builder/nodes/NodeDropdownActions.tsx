@@ -1,10 +1,9 @@
-import { useNodeDropDownActions } from './hooks/useNodeDropDownActions';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Dispatch, SetStateAction } from 'react';
 import { AutomationNodesType, NodeData } from '@/automations/types';
-
-import { EditForm } from './NodeEditForm';
+import { NodeEditMetaDataForm } from '@/automations/components/builder/nodes/NodeEditMetaDataForm';
+import { useNodeDropDownActions } from '@/automations/components/builder/nodes/hooks/useNodeDropDownActions';
 
 export const NodeDropdownActions = ({
   id,
@@ -28,18 +27,26 @@ export const NodeDropdownActions = ({
     <DropdownMenu
       open={isOpenDropDown || isOpenDialog || isOpenRemoveAlert}
       onOpenChange={(open) => {
-        if (!isOpenDialog || !isOpenRemoveAlert) {
+        if (!isOpenDialog && !isOpenRemoveAlert) {
           setOpenDropDown(open);
         }
       }}
     >
       <DropdownMenu.Trigger asChild>
-        <Button variant="ghost">
+        <Button
+          variant="ghost"
+          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+        >
           <IconDotsVertical className="size-4" />
         </Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="w-42">
-        <NodeEditForm
+      <DropdownMenu.Content
+        className="w-42"
+        onClick={(e) => e.stopPropagation()}
+        onDoubleClick={(e) => e.stopPropagation()}
+      >
+        <NodeEditMetaDataDialog
           isOpenDialog={isOpenDialog}
           setOpenDialog={setOpenDialog}
           data={data}
@@ -69,7 +76,13 @@ export const NodeRemoveActionDialog = ({
     <AlertDialog open={isOpenRemoveAlert} onOpenChange={setOpenRemoveAlert}>
       <AlertDialog.Trigger asChild>
         <DropdownMenu.Item asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-start">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start"
+            onClick={(e) => e.stopPropagation()}
+            onDoubleClick={(e) => e.stopPropagation()}
+          >
             <IconTrash className="size-4 text-destructive" />
             Delete
           </Button>
@@ -93,7 +106,7 @@ export const NodeRemoveActionDialog = ({
   );
 };
 
-const NodeEditForm = ({
+const NodeEditMetaDataDialog = ({
   isOpenDialog,
   setOpenDialog,
   data,
@@ -113,13 +126,19 @@ const NodeEditForm = ({
     <Dialog open={isOpenDialog} onOpenChange={setOpenDialog}>
       <Dialog.Trigger asChild>
         <DropdownMenu.Item asChild>
-          <Button variant="ghost" size="sm" className="w-full justify-start">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start"
+            onClick={(e) => e.stopPropagation()}
+            onDoubleClick={(e) => e.stopPropagation()}
+          >
             <IconEdit className="size-4" />
             Edit
           </Button>
         </DropdownMenu.Item>
       </Dialog.Trigger>
-      <EditForm
+      <NodeEditMetaDataForm
         id={id}
         fieldName={fieldName}
         data={data}

@@ -75,14 +75,6 @@ export const UI_ACTIONS = [
     isAvailable: true,
   },
   {
-    type: 'workflow',
-    icon: 'IconJumpRope',
-    label: 'Workflow',
-    description:
-      'Enroll in another workflow,  trigger outgoing webhook or write custom code',
-    isAvailable: false,
-  },
-  {
     type: 'sendEmail',
     icon: 'IconMailFast',
     label: 'Send Email',

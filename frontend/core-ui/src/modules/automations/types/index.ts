@@ -135,3 +135,48 @@ export type AutomationTriggerSidebarCoreFormProps = {
   activeNode: NodeData;
   handleSave: (config: any) => void;
 };
+
+export type CoreActionSidebarFormProps = {
+  formRef: React.RefObject<{
+    submit: () => void;
+  }>;
+  activeNode: NodeData;
+  handleSave: (config: any) => void;
+};
+
+// Base component type for lazy-loaded components
+type LazyComponent = React.LazyExoticComponent<React.ComponentType<any>>;
+
+// Base component configuration
+interface BaseComponentConfig {
+  sidebar?: LazyComponent;
+  nodeContent?: LazyComponent;
+}
+
+// Action-specific component configuration (includes actionResult)
+interface ActionComponentConfig extends BaseComponentConfig {
+  actionResult?: LazyComponent;
+}
+
+// Trigger-specific component configuration (only base properties)
+export interface TriggerComponentConfig extends BaseComponentConfig {}
+
+// Workflow-specific component configuration (only base properties)
+interface WorkflowComponentConfig extends BaseComponentConfig {}
+
+// Union type for component configurations based on AutomationNodeType
+export type ComponentConfig<T extends AutomationNodeType = AutomationNodeType> =
+  T extends AutomationNodeType.Action
+    ? ActionComponentConfig
+    : T extends AutomationNodeType.Trigger
+    ? TriggerComponentConfig
+    : T extends AutomationNodeType.Workflow
+    ? WorkflowComponentConfig
+    : BaseComponentConfig;
+
+// Type for the entire components object structure
+export type AutomationCoreNodeComponent<
+  N extends AutomationNodeType = AutomationNodeType,
+> = {
+  [key: string]: ComponentConfig<N>;
+};

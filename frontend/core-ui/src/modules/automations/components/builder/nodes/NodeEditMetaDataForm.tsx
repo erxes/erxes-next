@@ -15,7 +15,12 @@ type Props = {
   callback: () => void;
 };
 
-export const EditForm = ({ id, fieldName, data, callback }: Props) => {
+export const NodeEditMetaDataForm = ({
+  id,
+  fieldName,
+  data,
+  callback,
+}: Props) => {
   const { setValue } = useFormContext<TAutomationBuilderForm>();
   const { updateNodeData } = useReactFlow<Node<NodeData>>();
 
@@ -36,9 +41,8 @@ export const EditForm = ({ id, fieldName, data, callback }: Props) => {
   const handleSave = () => {
     const updatedNode = {
       ...data,
-      label: doc.label,
-      description: doc.description,
-      icon: doc.icon,
+      ...doc,
+      id,
     };
     setValue(`${fieldName}.${nodeIndex}`, updatedNode, {
       shouldValidate: true,
@@ -50,7 +54,7 @@ export const EditForm = ({ id, fieldName, data, callback }: Props) => {
 
   return (
     <Dialog.Content>
-      <Dialog.Title>Edit Node</Dialog.Title>
+      <Dialog.Title>Edit Node Metadata</Dialog.Title>
       <Dialog.Description>
         Customize the name and description of this node for better clarity.
       </Dialog.Description>

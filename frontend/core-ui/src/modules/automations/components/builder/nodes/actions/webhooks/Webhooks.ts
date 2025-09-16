@@ -1,13 +1,23 @@
+import {
+  AutomationCoreNodeComponent,
+  AutomationNodeType,
+} from '@/automations/types';
 import { lazy } from 'react';
 
-const WebhooksComponents = {
-  outgoingWebhook: {
-    sidebar: lazy(() =>
-      import('./OutgoingWebhookConfigForm').then((module) => ({
-        default: module.OutgoingWebhookConfigForm,
-      })),
-    ),
-  },
-};
+const WebhooksComponents: AutomationCoreNodeComponent<AutomationNodeType.Action> =
+  {
+    outgoingWebhook: {
+      sidebar: lazy(() =>
+        import('./components/OutgoingWebhookConfigForm').then((module) => ({
+          default: module.OutgoingWebhookConfigForm,
+        })),
+      ),
+      nodeContent: lazy(() =>
+        import('./components/OutgoingWebhookNodeContent').then((module) => ({
+          default: module.OutgoingWebhookNodeContent,
+        })),
+      ),
+    },
+  };
 
 export default WebhooksComponents;
