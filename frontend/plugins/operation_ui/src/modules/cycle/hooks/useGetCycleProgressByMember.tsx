@@ -15,7 +15,7 @@ export const useGetCycleProgressByMember = (options: QueryHookOptions) => {
   const { data, loading, refetch, subscribeToMore } =
     useQuery<IGetCycleQueryResponse>(GET_CYCLE_PROGRESS_BY_MEMBER, {
       ...options,
-      variables: { ...options.variables, assigneeId: assignee },
+      variables: { ...options.variables, assigneeId: assignee || undefined },
     });
 
   const cycleProgressByMember =

@@ -41,7 +41,7 @@ export const CycleProgress = ({
     skip: !cycleId || isCompleted,
   });
 
-  const progress = cycleProgress || statistics.progress;
+  const progress = cycleProgress || statistics.porgress;
 
   return (
     <div className="flex justify-between w-full my-4">
