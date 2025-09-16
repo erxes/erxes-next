@@ -6,6 +6,7 @@ import {
   Button,
   DropdownMenu,
 } from 'erxes-ui';
+import { Badge, NavigationMenuLinkItem, Skeleton } from 'erxes-ui';
 import { useTranslation } from 'react-i18next';
 import { IconDotsVertical, IconSettings } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
@@ -55,14 +56,17 @@ export const MyInboxNavigationItem = () => {
 
 export const NotificationCount = () => {
   const { unreadNotificationsCount, loading } = useUnreadNotificationCount();
+  if (loading) {
+    return <Skeleton className="size-4 rounded-sm" />;
+  }
+
+  if (unreadNotificationsCount === 0) {
+    return null;
+  }
 
   return (
-    <span className="ml-auto text-xs">
-      {loading ? (
-        <Skeleton className="size-4 rounded-sm" />
-      ) : (
-        unreadNotificationsCount || ''
-      )}
-    </span>
+    <Badge className="ml-auto text-xs min-w-6 px-1 justify-center">
+      {unreadNotificationsCount}
+    </Badge>
   );
 };

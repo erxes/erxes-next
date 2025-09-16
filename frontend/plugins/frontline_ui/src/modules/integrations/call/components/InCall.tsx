@@ -16,12 +16,13 @@ import {
   Transfer,
   TransferTrigger,
 } from '@/integrations/call/components/CallTransfer';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import {
   callDurationAtom,
-  historyIdAtom,
+  currentCallConversationIdAtom,
 } from '@/integrations/call/states/callStates';
 import { useCallDuration } from '@/integrations/call/hooks/useCallDuration';
+import { refetchNewMessagesState } from '@/inbox/conversations/states/newMessagesCountState';
 
 export const InCall = () => {
   const { stopCall } = useSip();
@@ -101,15 +102,21 @@ export const Mute = () => {
 
 export const Detail = () => {
   const sip = useAtomValue(sipStateAtom);
-  const historyId = useAtomValue(historyIdAtom);
+  const currentCallConversationId = useAtomValue(currentCallConversationIdAtom);
+  const setRefetchNewMessages = useSetAtom(refetchNewMessagesState);
   const navigate = useNavigate();
 
   return (
     <InCallActionButton
-      disabled={sip.callStatus !== CallStatusEnum.ACTIVE}
+      disabled={
+        sip.callStatus !== CallStatusEnum.ACTIVE || !currentCallConversationId
+      }
       onClick={() => {
         if (sip.callStatus === CallStatusEnum.ACTIVE) {
-          navigate(`/integrations/call/${historyId}`);
+          navigate(
+            `/frontline/inbox?conversationId=${currentCallConversationId}`,
+          );
+          setRefetchNewMessages(true);
         }
       }}
     >

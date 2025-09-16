@@ -7,7 +7,7 @@ import { CycleSection } from '@/team/components/team-details/CycleSection';
 // import { IconTrash } from '@tabler/icons-react';
 // import { Button, useToast } from 'erxes-ui';
 // import { useRemoveTeam } from '@/team/hooks/useRemoveTeam';
-// import { useNavigate } from 'react-router';
+// import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 export const TeamDetails = () => {
   const { id: teamId } = useParams();

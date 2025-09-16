@@ -15,7 +15,7 @@ const InboxIndexPage = () => {
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to="/inbox">
+                  <Link to="/frontline/inbox">
                     <IconInbox />
                     Inbox
                   </Link>

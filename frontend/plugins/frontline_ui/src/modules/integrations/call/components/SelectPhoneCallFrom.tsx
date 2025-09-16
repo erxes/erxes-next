@@ -21,21 +21,18 @@ export const SelectPhoneCallFrom = () => {
     <div className="space-y-2">
       <Label htmlFor="call-from">Call from</Label>
       <Select value={callConfig?.phone} onValueChange={handleSelectPhone}>
-        <Select.Trigger id="call-from">
+        <Select.Trigger id="call-from" type="button">
           <Select.Value placeholder="Select a phone" />
         </Select.Trigger>
         <Select.Content>
-          <Select.Group>
-            <Select.Label>Phone</Select.Label>
-            {callUserIntegrations?.map((integration) => (
-              <Select.Item key={integration._id} value={integration.phone}>
-                {formatPhoneNumber({
-                  value: integration.phone,
-                  defaultCountry: 'MN',
-                })}
-              </Select.Item>
-            ))}
-          </Select.Group>
+          {callUserIntegrations?.map((integration) => (
+            <Select.Item key={integration._id} value={integration.phone}>
+              {formatPhoneNumber({
+                value: integration.phone,
+                defaultCountry: 'MN',
+              })}
+            </Select.Item>
+          ))}
         </Select.Content>
       </Select>
     </div>

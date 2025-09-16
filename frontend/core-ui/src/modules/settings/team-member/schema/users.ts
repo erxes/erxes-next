@@ -42,20 +42,46 @@ const USER_SUBMIT_SCHEMA = z.object({
         })
         .default(''),
       password: z
-        .string({ required_error: 'Required field' })
-        .min(8, 'Password must be at least 8 characters long')
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, {
-          message:
-            'Must contain at least one uppercase letter, one lowercase letter, and one number',
+        .string()
+        .refine((val) => /.{8,}/.test(val), {
+          message: 'At least 8 characters',
+        })
+        .refine((val) => /[0-9]/.test(val), { message: 'At least 1 number' })
+        .refine((val) => /[a-z]/.test(val), {
+          message: 'At least 1 lowercase letter',
+        })
+        .refine((val) => /[A-Z]/.test(val), {
+          message: 'At least 1 uppercase letter',
         })
         .default(''),
-      groupId: z.string({ required_error: 'Required field' }),
-      channelIds: z.string().array().optional(),
-      unitId: z.string().optional(),
-      departmentId: z.string().optional(),
-      branchId: z.string().optional(),
+      // groupId: z.string({ required_error: 'Required field' }),
+      // channelIds: z.string().array().optional(),
+      // unitId: z.string().optional(),
+      // departmentId: z.string().optional(),
+      // branchId: z.string().optional(),
     })
     .array(),
 });
 
-export { USER_SUBMIT_SCHEMA, USER_DETAIL_SCHEMA };
+const USER_RESET_PASSWORD_SCHEMA = z
+  .object({
+    newPassword: z
+      .string()
+      .refine((val) => /.{8,}/.test(val), {
+        message: 'At least 8 characters',
+      })
+      .refine((val) => /[0-9]/.test(val), { message: 'At least 1 number' })
+      .refine((val) => /[a-z]/.test(val), {
+        message: 'At least 1 lowercase letter',
+      })
+      .refine((val) => /[A-Z]/.test(val), {
+        message: 'At least 1 uppercase letter',
+      }),
+    repeatPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.repeatPassword, {
+    message: 'Passwords must match',
+    path: ['repeatPassword'],
+  });
+
+export { USER_SUBMIT_SCHEMA, USER_DETAIL_SCHEMA, USER_RESET_PASSWORD_SCHEMA };

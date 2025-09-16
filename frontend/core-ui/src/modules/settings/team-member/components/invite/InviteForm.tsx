@@ -27,6 +27,7 @@ export function InviteForm({
     control,
     name: 'entries',
   });
+
   const submitHandler: SubmitHandler<TUserForm> = useCallback(
     async (data) => {
       try {
@@ -35,12 +36,13 @@ export function InviteForm({
             entries: data?.entries,
           },
           onCompleted() {
-            toast({ title: 'Invitation sent!' });
+            toast({ title: 'Invitation has been sent' });
             setIsOpen(false);
           },
         });
       } catch (error) {
         console.error('Error submitting form:', error);
+        toast({ title: error.message, variant: 'destructive' });
       }
     },
     [handleInvitations, setIsOpen, toast],
@@ -66,7 +68,7 @@ export function InviteForm({
               </Table.Body>
               <Table.Footer>
                 <tr>
-                  <td colSpan={7} className="p-4">
+                  <td colSpan={3} className="p-4">
                     <div className="flex w-full justify-center gap-4">
                       <AddInviteRowButton append={append} />
                       <InviteRowRemoveButton remove={remove} />
@@ -81,7 +83,7 @@ export function InviteForm({
         <div className="mt-3 w-full flex gap-3 justify-end">
           <Button type="submit" disabled={loading} className="text-sm">
             {(loading && (
-              <Spinner size={'small'} className="stroke-white" />
+              <Spinner size={'sm'} className="stroke-white" />
             )) || <IconSend size={16} />}
             Send invites
           </Button>
@@ -98,10 +100,10 @@ const InviteTableHeader = () => {
         <InviteHeaderCheckbox />
         <Table.Head>Email</Table.Head>
         <Table.Head>Password</Table.Head>
-        <Table.Head>Permission</Table.Head>
+        {/* <Table.Head>Permission</Table.Head>
         <Table.Head>Unit</Table.Head>
         <Table.Head>Department</Table.Head>
-        <Table.Head>Branch</Table.Head>
+        <Table.Head>Branch</Table.Head> */}
       </Table.Row>
     </Table.Header>
   );

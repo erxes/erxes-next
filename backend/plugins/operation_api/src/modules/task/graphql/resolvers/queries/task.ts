@@ -1,8 +1,7 @@
-import { IContext } from '~/connectionResolvers';
-import { ITaskFilter } from '@/task/@types/task';
-import { ITaskDocument } from '@/task/@types/task';
-import { FilterQuery } from 'mongoose';
+import { ITaskDocument, ITaskFilter } from '@/task/@types/task';
 import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FilterQuery } from 'mongoose';
+import { IContext } from '~/connectionResolvers';
 
 export const taskQueries = {
   getTask: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -22,6 +21,9 @@ export const taskQueries = {
 
     if (filter.status) {
       filterQuery.status = filter.status;
+    }
+    if (filter.statusType) {
+      filterQuery.statusType = filter.statusType;
     }
 
     if (filter.priority) {

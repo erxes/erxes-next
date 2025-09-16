@@ -17,11 +17,7 @@ export const getOrCreateCustomer = async (
   callAccount: any,
 ) => {
   const { inboxIntegrationId, primaryPhone } = callAccount;
-  console.log(
-    'inboxIntegrationId, primaryPhone:',
-    inboxIntegrationId,
-    primaryPhone,
-  );
+
   if (typeof primaryPhone !== 'string') {
     throw new Error('Invalid primaryPhone: must be a string');
   }
@@ -29,7 +25,6 @@ export const getOrCreateCustomer = async (
     primaryPhone: { $eq: primaryPhone },
     status: 'completed',
   });
-  console.log('customer2:', customer);
   if (!customer) {
     try {
       customer = await models.CallCustomers.create({
@@ -38,7 +33,6 @@ export const getOrCreateCustomer = async (
         primaryPhone: primaryPhone,
         status: 'pending',
       });
-      console.log('customer3:', customer);
     } catch (e) {
       if (e.message.includes('duplicate')) {
         return await getOrCreateCustomer(models, subdomain, callAccount);
@@ -57,9 +51,7 @@ export const getOrCreateCustomer = async (
           phones: [primaryPhone],
         }),
       };
-      console.log({ ...data }, '-------');
       const apiCustomerResponse = await receiveInboxMessage(subdomain, data);
-      console.log(apiCustomerResponse, 'apiCustomerResponse');
       if (apiCustomerResponse.status === 'success') {
         customer.erxesApiId = apiCustomerResponse.data._id;
         customer.status = 'completed';

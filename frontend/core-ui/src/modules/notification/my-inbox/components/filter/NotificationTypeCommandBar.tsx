@@ -1,20 +1,12 @@
 import { NOTIFICATION_TYPE_ICONS } from '@/notification/my-inbox/constants/notifications';
 import { IconCheck } from '@tabler/icons-react';
-import { Command } from 'erxes-ui';
+import { Command, useQueryState } from 'erxes-ui';
 
-export const NotificationTypeCommandBar = ({
-  type,
-  setQueries,
-}: {
-  type?: string;
-  setQueries: (
-    values: Partial<{
-      type?: string | null;
-    }>,
-  ) => void;
-}) => {
+export const NotificationTypeCommandBar = () => {
+  const [type, setType] = useQueryState<string>('type');
   return (
-    <Command shouldFilter={false}>
+    <Command>
+      <Command.Input placeholder="Search" focusOnMount />
       <Command.List>
         <Command.Empty />
         {['info', 'success', 'warning', 'error'].map((value) => {
@@ -26,10 +18,7 @@ export const NotificationTypeCommandBar = ({
             <Command.Item
               key={value}
               value={value}
-              className={`cursor-pointer`}
-              onSelect={() =>
-                setQueries({ type: type === value ? null : value })
-              }
+              onSelect={() => setType(type === value ? null : value)}
             >
               <Icon />
               <span className="capitalize">{value}</span>

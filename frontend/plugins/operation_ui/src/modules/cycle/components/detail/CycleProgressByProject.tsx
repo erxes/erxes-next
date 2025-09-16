@@ -1,7 +1,7 @@
 import { ProgressDot } from '@/cycle/components/detail/CycleProgress';
-import { ICycleProgressByProject } from '@/cycle/types';
+import CycleProjectDetail from '@/cycle/components/detail/CycleProjectDetail';
 import { useGetCycleProgressByProject } from '@/cycle/hooks/useGetCycleProgressByProject';
-import { ProjectInline } from '@/project/components/ProjectInline';
+import { ICycleProgressByProject } from '@/cycle/types';
 import { Button, ChartConfig, ChartContainer, HoverCard } from 'erxes-ui';
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
 
@@ -47,7 +47,10 @@ export const CycleProgressByProject = ({
               size="lg"
             >
               <div>
-                <ProjectInline projectId={item.projectId} />
+                <CycleProjectDetail
+                  progress={progress}
+                  projectId={item.projectId}
+                />
 
                 <ChartContainer
                   config={chartConfig}

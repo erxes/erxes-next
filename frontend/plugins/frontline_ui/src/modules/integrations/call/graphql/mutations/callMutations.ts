@@ -122,3 +122,9 @@ export const CALL_SELECT_CUSTOMER = gql`
     )
   }
 `;
+
+export const CALL_SYNC_RECORD_FILE = `
+  mutation callSyncRecordFile($acctId: String!, $inboxId: String!) {
+    callSyncRecordFile(acctId: $acctId, inboxId: $inboxId)
+  }
+`;

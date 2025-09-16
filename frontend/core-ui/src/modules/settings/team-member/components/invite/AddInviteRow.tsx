@@ -17,10 +17,6 @@ export const AddInviteRowButton = ({
   const inviteUserDefaultValues = {
     email: '',
     password: '',
-    groupId: '',
-    unitId: '',
-    branchId: '',
-    departmentId: '',
   };
 
   return (

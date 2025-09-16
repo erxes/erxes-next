@@ -6,6 +6,7 @@ import {
   Separator,
   ToggleGroup,
   Tabs,
+  ScrollArea,
 } from 'erxes-ui';
 import { CycleProgressChart } from '@/cycle/components/detail/CycleProgressChart';
 import { CycleProgress } from '@/cycle/components/detail/CycleProgress';
@@ -20,10 +21,14 @@ export enum CycleSideWidgetTabsEnum {
 }
 
 export const CycleSideWidget = ({ cycleId }: { cycleId: string }) => {
-  const { cycleDetail } = useGetCycle(cycleId);
+  const { cycleDetail, loading } = useGetCycle(cycleId);
 
   const statistics = cycleDetail?.statistics || {};
   const isCompleted = cycleDetail?.isCompleted || false;
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <SideMenu defaultValue="cycle">
@@ -95,7 +100,7 @@ export const CycleSideWidgetTabs = ({
   );
   return (
     <>
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-3 overflow-hidden flex-auto flex flex-col">
         <ToggleGroup
           type="single"
           variant="outline"
@@ -122,8 +127,13 @@ export const CycleSideWidgetTabs = ({
             Projects
           </ToggleGroup.Item>
         </ToggleGroup>
-        <Tabs value={value} defaultValue={CycleSideWidgetTabsEnum.Projects}>
-          {children}
+        <Tabs
+          value={value}
+          defaultValue={CycleSideWidgetTabsEnum.Projects}
+          className="overflow-auto flex-auto"
+          asChild
+        >
+          <ScrollArea>{children}</ScrollArea>
         </Tabs>
       </div>
       <Separator />

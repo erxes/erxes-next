@@ -1,18 +1,23 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 
+import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
-import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
-import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
-import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
     default: module.SettingsProfilePage,
+  })),
+);
+
+const SettingsChangePassword = lazy(() =>
+  import('~/pages/settings/account/ChangePasswordPage').then((module) => ({
+    default: module.ChangePasswordPage,
   })),
 );
 
@@ -26,11 +31,11 @@ const SettingsMailConfig = lazy(() =>
     default: module.MailConfigPage,
   })),
 );
-const GeneralSettings = lazy(() =>
-  import('~/pages/settings/workspace/GeneralSettingsPage').then((module) => ({
-    default: module.GeneralSettingsPage,
-  })),
-);
+// const GeneralSettings = lazy(() =>
+//   import('~/pages/settings/workspace/GeneralSettingsPage').then((module) => ({
+//     default: module.GeneralSettingsPage,
+//   })),
+// );
 const TeamMemberSettings = lazy(() =>
   import('~/pages/settings/workspace/TeamMemberPage').then((module) => ({
     default: module.TeamMemberPage,
@@ -41,13 +46,13 @@ const PermissionsSettings = lazy(() =>
     default: module.PermissionPage,
   })),
 );
-const StructureSettings = lazy(() =>
-  import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
-    (module) => ({
-      default: module.StructureSettingsPage,
-    }),
-  ),
-);
+// const StructureSettings = lazy(() =>
+//   import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
+//     (module) => ({
+//       default: module.StructureSettingsPage,
+//     }),
+//   ),
+// );
 
 const TagsSettings = lazy(() =>
   import('~/pages/settings/workspace/tags/TagsSettingPage').then((module) => ({
@@ -81,13 +86,6 @@ const AutomationSettingsRoutes = lazy(() =>
     default: module.AutomationSettingsRoutes,
   })),
 );
-const NotificationSettingsRoutes = lazy(() =>
-  import('@/notification/settings/components/NotificationsRoutes').then(
-    (module) => ({
-      default: module.NotificationSettingsRoutes,
-    }),
-  ),
-);
 
 const PropertiesSettins = lazy(() =>
   import('~/pages/settings/workspace/PropertiesSettingsPage').then(
@@ -107,9 +105,13 @@ export function SettingsRoutes() {
         />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
+          path={SettingsPath.ChangePassword}
+          element={<SettingsChangePassword />}
+        />
+        {/* <Route
           path={SettingsPath.Experience}
           element={<SettingsExperiencePage />}
-        />
+        /> */}
         <Route
           path={SettingsWorkspacePath.FileUpload}
           element={<SettingsFileUpload />}
@@ -118,10 +120,10 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.MailConfig}
           element={<SettingsMailConfig />}
         />
-        <Route
+        {/* <Route
           path={SettingsWorkspacePath.General}
           element={<GeneralSettings />}
-        />
+        /> */}
         <Route
           path={SettingsWorkspacePath.TeamMember}
           element={<TeamMemberSettings />}
@@ -130,10 +132,10 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.Permissions}
           element={<PermissionsSettings />}
         />
-        <Route
+        {/* <Route
           path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
-        />
+        /> */}
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
         <Route
           path={SettingsWorkspacePath.Brands}
@@ -146,10 +148,6 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.AutomationsCatchAll}
           element={<AutomationSettingsRoutes />}
-        />
-        <Route
-          path={SettingsWorkspacePath.NotificationCatchAll}
-          element={<NotificationSettingsRoutes />}
         />
         <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
         <Route
