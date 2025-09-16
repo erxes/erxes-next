@@ -1,52 +1,78 @@
-# Base image for common dependencies
-FROM --platform=linux/amd64 node:22-alpine AS build
+# Base image for dependencies
+FROM --platform=linux/amd64 node:22-alpine AS deps
+
+# Install pnpm
+RUN npm install -g pnpm@9.12.3
 
 # Set working directory
 WORKDIR /app
 
+# Copy only package files for better layer caching
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-
 COPY ./backend/core-api/package.json /app/backend/core-api/
 COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
-# Install pnpm and dependencies
-RUN npm install -g pnpm
-RUN pnpm install
+# Install dependencies with frozen lockfile
+RUN pnpm install --frozen-lockfile
 
-# Build the test project
-FROM --platform=linux/amd64 build AS core-api-build
+# Build stage
+FROM --platform=linux/amd64 deps AS builder
 
 # Copy source code
 COPY ./backend/core-api /app/backend/core-api
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
-# Build following exact sequence
-WORKDIR /app/backend/core-api
-
+# Set build environment
 ENV NX_DAEMON=false
+ENV NODE_ENV=production
+
+# Build erxes-api-shared first
+WORKDIR /app
+RUN pnpm nx build erxes-api-shared
+
+# Build core-api
+WORKDIR /app/backend/core-api
 RUN npx nx build:packageJson core-api
 RUN npx nx build core-api
 
-# Final stage: Run the application
-FROM --platform=linux/amd64 node:22-alpine as core-api
+# Production dependencies stage
+FROM --platform=linux/amd64 node:22-alpine AS prod-deps
+
+# Install pnpm
+RUN npm install -g pnpm@9.12.3
+
+WORKDIR /app/backend/core-api/dist
+
+# Copy built package.json
+COPY --from=builder /app/backend/core-api/dist/package.json ./
+
+# Install only production dependencies
+RUN pnpm install --frozen-lockfile --prod
+
+# Final runtime stage
+FROM --platform=linux/amd64 node:22-alpine AS runtime
 
 WORKDIR /app
 
-# Copy built applications from previous stages
-COPY --chown=1000 --from=core-api-build /app /app
+# Copy built application
+COPY --from=builder --chown=node:node /app/backend/core-api/dist /app/
+COPY --from=builder --chown=node:node /app/backend/erxes-api-shared/dist /app/node_modules/erxes-api-shared/dist/
 
-# Install pnpm for production
-RUN npm install -g pnpm
-
-# Install production dependencies
-WORKDIR /app/backend/core-api/dist
-RUN pnpm install
+# Copy production dependencies
+COPY --from=prod-deps --chown=node:node /app/backend/core-api/dist/node_modules /app/node_modules/
 
 # Set environment variables
 ENV NODE_ENV=production
 
-# Use non root user
-USER 1000
+# Switch to non-root user
+USER node
+
+# Expose port (if needed)
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node --version || exit 1
 
 # Start the application
 CMD ["node", "src/main.js"]

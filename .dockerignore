@@ -1,0 +1,96 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist
+build
+.next
+.nx
+tmp
+
+# Development files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Testing
+coverage
+*.lcov
+.nyc_output
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Documentation
+*.md
+docs
+
+# Frontend specific (not needed for backend)
+frontend
+apps/frontline-widgets
+
+# Other backend services not needed for core-api
+backend/gateway
+backend/plugins
+backend/services
+
+# Development and testing configs
+jest.config.*
+*.spec.ts
+*.test.ts
+__tests__
+test
+
+# Storybook
+.storybook
+storybook-static
+
+# Linting
+.eslintrc*
+eslint.config.*
+
+# TypeScript config (keep only necessary ones)
+tsconfig.spec.json
+
+# Nx cache
+.nx/cache
+
+# Temporary files
+*.tmp
+*.temp
+
+# Scripts not needed in production
+scripts
