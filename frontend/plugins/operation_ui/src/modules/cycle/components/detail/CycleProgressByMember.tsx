@@ -1,4 +1,4 @@
-import { Button, ChartContainer, HoverCard } from 'erxes-ui';
+import { Button, ChartContainer, HoverCard, useQueryState } from 'erxes-ui';
 import { MembersInline } from 'ui-modules';
 
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts';
@@ -15,12 +15,14 @@ export const CycleProgressByMember = ({
   isCompleted: boolean;
   statistics: any;
 }) => {
+  const [assignee] = useQueryState<string>('assignee');
+
   const { cycleProgressByMember } = useGetCycleProgressByMember({
     variables: { _id: cycleId },
     skip: !cycleId || isCompleted,
   });
 
-  const progress =
+  let progress =
     cycleProgressByMember ||
     (statistics.progressByMember as IProjectProgressByMember[]);
 
@@ -31,6 +33,10 @@ export const CycleProgressByMember = ({
         100,
     );
   };
+
+  if (isCompleted && assignee) {
+    progress = progress.filter((item) => item.assigneeId === assignee);
+  }
 
   return (
     <div className="space-y-1">
