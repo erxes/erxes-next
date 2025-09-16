@@ -26,6 +26,11 @@ export const CycleSideWidget = ({ cycleId }: { cycleId: string }) => {
   const statistics = cycleDetail?.statistics || {};
   const isCompleted = cycleDetail?.isCompleted || false;
 
+  console.log(cycleDetail);
+
+  const skip = !cycleId || isCompleted;
+  console.log(skip, 'skip');
+
   return (
     <SideMenu defaultValue="cycle">
       <SideMenu.Content value="cycle">
