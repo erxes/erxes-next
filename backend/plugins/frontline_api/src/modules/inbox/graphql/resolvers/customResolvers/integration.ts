@@ -1,6 +1,9 @@
 import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IContext } from '~/connectionResolvers';
 import { facebookStatus } from '@/integrations/facebook/messageBroker';
+import { graphRequest } from '@/integrations/facebook/utils';
+import { IFacebookPageResponse } from '@/integrations/facebook/@types/integrations';
+
 export const integrationStatus = async (
   serviceName: string,
   subdomain: string,
@@ -130,5 +133,61 @@ export default {
       return null;
     }
     return serviceName;
+  },
+
+  async facebookPage(
+    integration: IIntegrationDocument,
+    _args,
+    { models }: IContext,
+  ) {
+    const serviceName = integration.kind.includes('facebook')
+      ? 'facebook'
+      : integration.kind;
+
+    if (serviceName !== 'facebook') {
+      return null;
+    }
+
+    try {
+      const facebookIntegration = await models.FacebookIntegrations.findOne({
+        erxesApiId: integration._id,
+      });
+
+      if (
+        !facebookIntegration ||
+        !Array.isArray(facebookIntegration.facebookPageIds)
+      ) {
+        console.warn('No facebookIntegration or no facebookPageIds found');
+        return null;
+      }
+
+      const results: ({ pageId: string } & IFacebookPageResponse)[] = [];
+
+      for (const pageId of facebookIntegration.facebookPageIds) {
+        const token = facebookIntegration.facebookPageTokensMap?.[pageId];
+
+        if (!token) {
+          console.warn(`Token not found for pageId: ${pageId}`);
+          continue;
+        }
+
+        try {
+          const response = (await graphRequest.get(
+            `/${pageId}?fields=id,name`,
+            token,
+          )) as IFacebookPageResponse;
+
+          if (response) {
+            results.push({ pageId, ...response });
+          }
+        } catch (err) {
+          console.error(`Failed to fetch page ${pageId}:`, err);
+        }
+      }
+
+      return results.length > 0 ? results : null;
+    } catch (error) {
+      return { error };
+    }
   },
 };
