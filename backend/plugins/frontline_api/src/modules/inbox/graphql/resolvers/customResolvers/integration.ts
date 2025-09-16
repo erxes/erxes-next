@@ -187,7 +187,7 @@ export default {
 
       return results.length > 0 ? results : null;
     } catch (error) {
-      return { error };
+      throw error;
     }
   },
 };
