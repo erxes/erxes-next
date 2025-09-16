@@ -7,11 +7,10 @@ export const initMQWorkers = async (redis: any) => {
     connection: redis,
   });
 
-  // Upserting a repeatable job in the queue
   await myQueue.upsertJobScheduler(
     'operations-daily-cycles-end',
     {
-      pattern: '0 0 *', // daily at midnight
+      pattern: '0 0 * * *',
       tz: 'UTC',
     },
     {
@@ -19,7 +18,7 @@ export const initMQWorkers = async (redis: any) => {
     },
   );
 
-  await dailyCheckCycles(); // call directly once
+  await dailyCheckCycles();
 
   return createMQWorkerWithListeners(
     'operations',
