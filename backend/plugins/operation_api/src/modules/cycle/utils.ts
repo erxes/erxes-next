@@ -1,6 +1,6 @@
 import { fillMissingDays } from '@/project/utils/charUtils';
 import { STATUS_TYPES } from '@/status/constants/types';
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import { Types } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -238,10 +238,15 @@ export const getCycleProgressChart = async (
     chartData: [],
   };
 
+  const start = startOfDay(new Date(cycle.startDate));
+  const end = startOfDay(new Date(cycle.endDate));
+
+  const days = differenceInCalendarDays(end, start) + 1;
+
   chartData.chartData = fillMissingDays(
     chartDataAggregation,
     cycle.startDate,
-    differenceInCalendarDays(cycle.endDate, cycle.startDate) + 1,
+    days,
   );
 
   return chartData;
