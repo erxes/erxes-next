@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { useApolloClient, useMutation } from '@apollo/client';
 import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';

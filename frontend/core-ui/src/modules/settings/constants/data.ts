@@ -1,23 +1,18 @@
 import {
-  IconAdjustmentsAlt,
-  IconBellRinging,
-  IconChartPie2,
-  IconChessKnight,
-  IconColorSwatch,
-  IconFile,
-  IconMail,
-  IconShieldCog,
-  IconTag,
-  IconTools,
-  IconUserCircle,
-  IconUserCog,
-  IconUsersGroup,
-} from '@tabler/icons-react';
-import {
   SettingsPath,
   SettingsWorkspacePath,
   TSettingPath,
 } from '@/types/paths/SettingsPath';
+import {
+  IconChessKnight,
+  IconFile,
+  IconMail,
+  IconPassword,
+  IconTag,
+  IconUserCircle,
+  IconUserCog,
+  IconUsersGroup,
+} from '@tabler/icons-react';
 
 export const KEY_LABELS = {
   UPLOAD_FILE_TYPES: 'Upload File Types',
@@ -114,10 +109,15 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsPath.Profile,
     },
     {
-      name: 'Experience',
-      icon: IconColorSwatch,
-      path: SettingsPath.Experience,
+      name: 'Change password',
+      icon: IconPassword,
+      path: SettingsPath.ChangePassword,
     },
+    // {
+    //   name: 'Experience',
+    //   icon: IconColorSwatch,
+    //   path: SettingsPath.Experience,
+    // },
   ],
   nav: [
     {
@@ -130,11 +130,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       icon: IconUserCog,
       path: SettingsWorkspacePath.Permissions,
     },
-    {
-      name: 'General',
-      icon: IconAdjustmentsAlt,
-      path: SettingsWorkspacePath.General,
-    },
+    // {
+    //   name: 'General',
+    //   icon: IconAdjustmentsAlt,
+    //   path: SettingsWorkspacePath.General,
+    // },
     {
       name: 'File upload',
       icon: IconFile,
@@ -146,11 +146,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsWorkspacePath.MailConfig,
     },
 
-    {
-      name: 'Structure',
-      icon: IconChartPie2,
-      path: SettingsWorkspacePath.Structure,
-    },
+    // {
+    //   name: 'Structure',
+    //   icon: IconChartPie2,
+    //   path: SettingsWorkspacePath.Structure,
+    // },
     {
       name: 'Tags',
       icon: IconTag,
@@ -160,11 +160,6 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Brands',
       icon: IconChessKnight,
       path: SettingsWorkspacePath.Brands,
-    },
-    {
-      name: 'Notification',
-      icon: IconBellRinging,
-      path: SettingsWorkspacePath.Notification,
     },
   ],
 };

@@ -1,9 +1,6 @@
 import { Command, Filter, ToggleGroup, useQueryState } from 'erxes-ui';
 import {
   IconCalendar,
-  IconEyeCancel,
-  IconEyeCheck,
-  IconEyeSearch,
   IconEyeUp,
   IconNotification,
   IconUserUp,
@@ -20,18 +17,25 @@ export const NotificationFilterMenu = () => {
           variant="secondary"
           className="bg-background"
         />
-        <Command.List>
+        <div className="p-1">
           <ToggleGroup
             type="single"
-            value={status || 'unread'}
+            value={status || 'read'}
             onValueChange={(value) => setStatus(value)}
+            variant="outline"
           >
+            <ToggleGroup.Item
+              aria-label="Toggle all"
+              value="all"
+              className="flex-1"
+            >
+              All
+            </ToggleGroup.Item>
             <ToggleGroup.Item
               aria-label="Toggle unread"
               value="unread"
               className="flex-1"
             >
-              <IconEyeCheck />
               Unread
             </ToggleGroup.Item>
             <ToggleGroup.Item
@@ -39,20 +43,11 @@ export const NotificationFilterMenu = () => {
               value="read"
               className="flex-1"
             >
-              <IconEyeCancel />
               Read
             </ToggleGroup.Item>
-            <ToggleGroup.Item
-              aria-label="Toggle all"
-              value="all"
-              className="flex-1"
-            >
-              <IconEyeSearch />
-              All
-            </ToggleGroup.Item>
           </ToggleGroup>
-        </Command.List>
-        <Command.Separator className="my-1" />
+        </div>
+        <Command.Separator />
         <Command.List className="p-1">
           <Filter.Item value="type">
             <IconNotification />
@@ -67,10 +62,7 @@ export const NotificationFilterMenu = () => {
             <IconCalendar />
             Filter by date
           </Filter.Item>
-        </Command.List>
-        <Command.Separator className="my-1" />
-
-        <Command.List className="p-1">
+          <Command.Separator className="my-1" />
           <Filter.Item value="fromUserId">
             <IconUserUp />
             Filter by sender

@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { CALL_HISTORY_ADD } from '../graphql/mutations/callMutations';
-//import { toast } from 'erxes-ui';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   currentCallConversationIdAtom,
   historyIdAtom,
@@ -11,8 +10,8 @@ import { callConfigAtom } from '@/integrations/call/states/sipStates';
 export const useAddCallHistory = () => {
   const [addHistoryMutation, { loading }] = useMutation(CALL_HISTORY_ADD);
 
-  const [hist, setHistoryId] = useAtom(historyIdAtom);
-  const [config] = useAtom(callConfigAtom);
+  const setHistoryId = useSetAtom(historyIdAtom);
+  const config = useAtomValue(callConfigAtom);
   const setCurrentCallConversationId = useSetAtom(
     currentCallConversationIdAtom,
   );
@@ -42,7 +41,8 @@ export const useAddCallHistory = () => {
         setCurrentCallConversationId(callConversationId);
       },
       onError: (e) => {
-        setHistoryId('');
+        setHistoryId(null);
+        setCurrentCallConversationId(null);
 
         if (e.message !== 'You cannot edit') {
           // toast({

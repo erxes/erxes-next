@@ -7,15 +7,20 @@ import {
   PopoverScoped,
   useQueryState,
 } from 'erxes-ui';
-import { ITaskStatus } from '@/task/types';
+import { addTaskSchema, ITaskStatus } from '@/task/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useGetStatusByTeam } from '@/task/hooks/useGetStatusByTeam';
-import { StatusInlineIcon } from '@/operation/components/StatusInline';
+import {
+  STATUS_TYPES,
+  StatusInlineIcon,
+} from '@/operation/components/StatusInline';
 import {
   SelectOperationContent,
   SelectTriggerOperation,
   SelectTriggerVariant,
 } from '@/operation/components/SelectOperation';
+import { UseFormReturn, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 
 interface SelectStatusContextType {
   value: string;
@@ -243,14 +248,13 @@ export const SelectStatusTaskFilterBar = ({
 export const SelectStatusTaskFormItem = ({
   value,
   onValueChange,
-  teamId,
-  scope,
+  form,
 }: {
   value: string;
   onValueChange: (value: string) => void;
-  teamId?: string;
-  scope?: string;
+  form?: UseFormReturn<z.infer<typeof addTaskSchema>>;
 }) => {
+  const teamId = useWatch({ name: 'teamId', control: form?.control });
   const { statuses } = useGetStatusByTeam({
     variables: { teamId },
     skip: !teamId,
@@ -258,7 +262,9 @@ export const SelectStatusTaskFormItem = ({
 
   const [open, setOpen] = useState(false);
 
-  const fallBackStatus = statuses?.find((status) => status.type === 1)?.value;
+  const fallBackStatus = statuses?.find(
+    (status) => status.type === STATUS_TYPES.UNSTARTED,
+  )?.value;
 
   useEffect(() => {
     if (fallBackStatus && !value) {
@@ -275,7 +281,7 @@ export const SelectStatusTaskFormItem = ({
       }}
       teamId={teamId}
     >
-      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+      <PopoverScoped open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="form">
           <SelectStatusValue />
         </SelectTriggerOperation>

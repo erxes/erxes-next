@@ -7,13 +7,17 @@ export default {
   },
   async fromUser(
     { fromUserId }: INotificationDocument,
-    {},
+    _: undefined,
     { models }: IContext,
   ) {
     return await models.Users.findOne({ _id: fromUserId });
   },
 
-  async emailDelivery({ _id }: INotificationDocument, _, { models }: IContext) {
+  async emailDelivery(
+    { _id }: INotificationDocument,
+    _: undefined,
+    { models }: IContext,
+  ) {
     return await models.EmailDeliveries.findOne({ notificationId: _id });
   },
 };
