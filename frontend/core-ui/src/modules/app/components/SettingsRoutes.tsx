@@ -1,14 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 
+import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
-import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
-import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
-import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 import { currentOrganizationState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 
@@ -88,13 +87,6 @@ const AutomationSettingsRoutes = lazy(() =>
   ).then((module) => ({
     default: module.AutomationSettingsRoutes,
   })),
-);
-const NotificationSettingsRoutes = lazy(() =>
-  import('@/notification/settings/components/NotificationsRoutes').then(
-    (module) => ({
-      default: module.NotificationSettingsRoutes,
-    }),
-  ),
 );
 
 const PropertiesSettins = lazy(() =>

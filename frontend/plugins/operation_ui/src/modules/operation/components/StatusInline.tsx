@@ -10,6 +10,14 @@ import {
 import { cn } from 'erxes-ui';
 import React from 'react';
 
+export const STATUS_TYPES = {
+  BACKLOG: 3,
+  UNSTARTED: 2,
+  STARTED: 1,
+  COMPLETED: 4,
+  CANCELLED: 5,
+};
+
 export const StatusInlineIcon = ({
   statusType = 0,
   style,
@@ -21,17 +29,17 @@ export const StatusInlineIcon = ({
     (typeof statusType === 'string' ? parseInt(statusType, 10) : statusType) -
     1;
   const StatusIconComponent = [
-    IconCircleDashed,
-    IconCircle,
     IconCircleDot,
+    IconCircle,
+    IconCircleDashed,
     IconCircleCheck,
     IconCircleX,
   ][numericType];
 
   const colorClassName = [
-    'text-muted-foreground',
-    'text-info',
     'text-warning',
+    'text-info',
+    'text-muted-foreground',
     'text-success',
     'text-destructive',
   ][numericType];
@@ -52,7 +60,7 @@ export const StatusInlineIcon = ({
 StatusInlineIcon.displayName = 'StatusInlineIcon';
 
 export const StatusInlineLabel = ({
-  statusType = 0,
+  statusType = 1,
 }: {
   statusType?: number | string;
 }) => {

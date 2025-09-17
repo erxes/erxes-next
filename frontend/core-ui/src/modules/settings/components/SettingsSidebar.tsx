@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { IconChevronLeft } from '@tabler/icons-react';
 
@@ -78,13 +78,12 @@ export function SettingsSidebar() {
 
         <SettingsNavigationGroup name="Core modules">
           {CORE_MODULES.filter((item) => item.hasSettings).map((item) => (
-            <Sidebar.MenuItem key={item.name}>
-              <NavigationMenuLinkItem
-                pathPrefix={AppPath.Settings}
-                path={item.path}
-                name={item.name}
-              />
-            </Sidebar.MenuItem>
+            <NavigationMenuLinkItem
+              key={item.name}
+              pathPrefix={AppPath.Settings}
+              path={item.path}
+              name={item.name}
+            />
           ))}
         </SettingsNavigationGroup>
 
@@ -95,13 +94,12 @@ export function SettingsSidebar() {
               name={pluginName.charAt(0).toUpperCase() + pluginName.slice(1)}
             >
               {modules.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <NavigationMenuLinkItem
-                    pathPrefix={AppPath.Settings}
-                    path={item.path}
-                    name={item.name}
-                  />
-                </Sidebar.MenuItem>
+                <NavigationMenuLinkItem
+                  key={item.name}
+                  pathPrefix={AppPath.Settings}
+                  path={item.path}
+                  name={item.name}
+                />
               ))}
             </SettingsNavigationGroup>
           ),

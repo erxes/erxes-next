@@ -124,8 +124,8 @@ const mutations = {
   },
 };
 
-requireLogin(mutations, 'invoiceCreate');
+// requireLogin(mutations, 'invoiceCreate');
 
-checkPermission(mutations, 'invoiceCreate', 'createInvoice');
+// checkPermission(mutations, 'invoiceCreate', 'createInvoice');
 
 export default mutations;

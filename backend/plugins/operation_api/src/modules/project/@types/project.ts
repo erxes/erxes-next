@@ -16,6 +16,7 @@ export interface IProject {
 }
 
 export interface IProjectFilter extends ICursorPaginateParams, IListParams {
+  _ids?: string[];
   name?: string;
   description?: string;
   teamIds?: string[];

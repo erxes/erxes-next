@@ -1,25 +1,19 @@
 import {
-  IconAdjustmentsAlt,
-  IconApi,
-  IconBellRinging,
-  IconChartPie2,
-  IconChessKnight,
-  IconColorSwatch,
-  IconFile,
-  IconMail,
-  IconPassword,
-  IconShieldCog,
-  IconTag,
-  IconTools,
-  IconUserCircle,
-  IconUserCog,
-  IconUsersGroup,
-} from '@tabler/icons-react';
-import {
   SettingsPath,
   SettingsWorkspacePath,
   TSettingPath,
 } from '@/types/paths/SettingsPath';
+import {
+  IconChessKnight,
+  IconFile,
+  IconMail,
+  IconPassword,
+  IconTag,
+  IconApi,
+  IconUserCircle,
+  IconUserCog,
+  IconUsersGroup,
+} from '@tabler/icons-react';
 
 export const KEY_LABELS = {
   UPLOAD_FILE_TYPES: 'Upload File Types',

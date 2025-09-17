@@ -23,6 +23,7 @@ export const CALL_HISTORIES = gql`
       callType
       customerPhone
       extensionNumber
+      conversationId
     }
     callHistoriesTotalCount(
       limit: $limit

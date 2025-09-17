@@ -14,7 +14,7 @@ export interface ITask {
   tagIds?: string[];
   assigneeId?: string;
   createdBy?: string;
-  cycleId?: string;
+  cycleId?: string | null;
   projectId?: string;
   estimatePoint?: number;
   userId?: string;

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { ForgotPassword } from '@/auth/login/components/ForgotPassword';
 import { currentUserState } from 'ui-modules';
 import { DynamicBanner } from '@/auth/components/DynamicBanner';

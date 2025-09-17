@@ -1,6 +1,7 @@
-import { IContext } from '~/connectionResolvers';
 import { ITeamFilter } from '@/team/@types/team';
 import { getTeamEstimateChoises } from '@/team/utils';
+import { Types } from 'mongoose';
+import { IContext } from '~/connectionResolvers';
 
 export const teamQueries = {
   getTeam: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -40,6 +41,7 @@ export const teamQueries = {
       const teamIds = await models.TeamMember.find({
         memberId: params.userId,
       }).distinct('teamId');
+
       return models.Team.find({ _id: { $in: teamIds } });
     }
 
@@ -51,29 +53,20 @@ export const teamQueries = {
     { teamId, teamIds }: { teamId: string; teamIds: string[] },
     { models }: IContext,
   ) => {
-    if (teamIds && teamIds.length > 0) {
+    const filter: any = {};
+
+    if (teamIds && teamIds?.length) {
+      filter.teamId = { $in: teamIds.map((id) => new Types.ObjectId(id)) };
+
       return models.TeamMember.aggregate([
-        {
-          $match: {
-            teamId: { $in: teamIds },
-          },
-        },
-        {
-          $sort: { _id: -1 },
-        },
-        {
-          $group: {
-            _id: '$memberId',
-            doc: { $first: '$$ROOT' },
-          },
-        },
-        {
-          $replaceRoot: { newRoot: '$doc' },
-        },
+        { $match: filter },
+        { $sort: { _id: -1 } },
+        { $group: { _id: '$memberId', doc: { $first: '$$ROOT' } } },
+        { $replaceRoot: { newRoot: '$doc' } },
       ]);
     }
 
-    return models.TeamMember.find({ teamId });
+    return models.TeamMember.find({ teamId }).sort({ role: 1 });
   },
 
   getTeamEstimateChoises: async (

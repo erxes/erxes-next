@@ -5,9 +5,9 @@ import { afterProcess } from '~/meta/afterProcess';
 import { router } from '~/routes';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
-import { initializeCallQueueMonitoring } from '~/modules/integrations/call/worker/callDashboard';
 import automations from './meta/automations';
 import initCallApp from '~/modules/integrations/call/initApp';
+import { initWebsocketService } from '~/modules/integrations/call/webSocket';
 
 startPlugin({
   name: 'frontline',
@@ -29,13 +29,9 @@ startPlugin({
   expressRouter: router,
   onServerInit: async (app) => {
     await initCallApp(app);
-
-    try {
-      if (getEnv({ name: 'CALL_DASHBOARD_ENABLED' })) {
-        await initializeCallQueueMonitoring();
-      }
-    } catch (error) {
-      console.error('Failed to initialize call queue monitoring:', error);
+    const VERSION = getEnv({ name: 'VERSION' });
+    if (!VERSION || (VERSION && VERSION !== 'saas')) {
+      await initWebsocketService();
     }
   },
 
