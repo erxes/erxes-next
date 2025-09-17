@@ -8,6 +8,8 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { Skeleton } from 'erxes-ui';
+import { currentOrganizationState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -96,6 +98,8 @@ const PropertiesSettins = lazy(() =>
 );
 
 export function SettingsRoutes() {
+  const currentOrganization = useAtomValue(currentOrganizationState);
+  const isOs = currentOrganization?.type === 'os';
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>
@@ -104,6 +108,10 @@ export function SettingsRoutes() {
           element={<Navigate to={`${SettingsPath.Profile}`} replace />}
         />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
+        {/* <Route
+          path={SettingsPath.Notification}
+          element={<NotificationSettingsRoutes />}
+        /> */}
         <Route
           path={SettingsPath.ChangePassword}
           element={<SettingsChangePassword />}
@@ -112,14 +120,18 @@ export function SettingsRoutes() {
           path={SettingsPath.Experience}
           element={<SettingsExperiencePage />}
         /> */}
-        <Route
-          path={SettingsWorkspacePath.FileUpload}
-          element={<SettingsFileUpload />}
-        />
-        <Route
-          path={SettingsWorkspacePath.MailConfig}
-          element={<SettingsMailConfig />}
-        />
+        {isOs && (
+          <Route
+            path={SettingsWorkspacePath.FileUpload}
+            element={<SettingsFileUpload />}
+          />
+        )}
+        {isOs && (
+          <Route
+            path={SettingsWorkspacePath.MailConfig}
+            element={<SettingsMailConfig />}
+          />
+        )}
         {/* <Route
           path={SettingsWorkspacePath.General}
           element={<GeneralSettings />}
@@ -149,7 +161,10 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.AutomationsCatchAll}
           element={<AutomationSettingsRoutes />}
         />
-        <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
+        <Route
+          path={SettingsWorkspacePath.AppsCatchAll}
+          element={<AppsSettings />}
+        />
         <Route
           path={SettingsWorkspacePath.Properties}
           element={<PropertiesSettins />}
