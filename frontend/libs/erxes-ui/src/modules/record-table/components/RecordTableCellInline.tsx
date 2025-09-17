@@ -61,7 +61,7 @@ const RecordTableCellDisplay = React.forwardRef<
     <Button
       variant="ghost"
       className={cn(
-        'h-8 px-2 w-full justify-start text-left font-normal rounded-none',
+        'h-8 px-2 w-full justify-start text-left font-normal rounded-none overflow-hidden',
         className,
       )}
       ref={ref}

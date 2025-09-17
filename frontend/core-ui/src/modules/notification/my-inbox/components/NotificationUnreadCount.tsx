@@ -11,7 +11,7 @@ export const NotificationsCountLabel = () => {
       {loading ? (
         <Skeleton className="w-16 h-4" />
       ) : (
-        generateText(totalCount, status)
+        generateText(totalCount, status || 'all')
       )}
     </div>
   );

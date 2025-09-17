@@ -85,7 +85,7 @@ type ConfigTypes = {
   corsOptions?: any;
   subscriptionPluginPath?: any;
   trpcAppRouter?: {
-    router: AnyRouter;
+    router: any;
     createContext: <TContext>(
       subdomain: string,
       context: any,

@@ -194,7 +194,7 @@ const SelectCycleRoot = ({
         updateTask({
           variables: {
             _id: taskId,
-            cycleId: value,
+            cycleId: value || null,
           },
         });
         setOpen(false);

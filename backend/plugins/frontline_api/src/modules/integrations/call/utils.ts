@@ -436,6 +436,12 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
   return fetchRecordUrl(MAX_RETRY_COUNT);
 };
 
+function sanitizeFileName(rawFileName: string): string {
+  return rawFileName
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
 export const cfRecordUrl = async (params, user, models, subdomain) => {
   try {
     const { fileDir, recordfiles, inboxIntegrationId, retryCount } = params;
@@ -482,7 +488,7 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     }
     // Prepare file upload
     const uploadUrl = getUrl(subdomain);
-    const sanitizedFileName = rawFileName.replace(/\+/g, '_');
+    const sanitizedFileName = sanitizeFileName(rawFileName);
 
     const formData = new FormData();
     formData.append('file', Buffer.from(fileBuffer), {
@@ -491,12 +497,10 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
 
     console.log(uploadUrl, 'uploadUrl');
 
-    // Upload file to destination
     const uploadResponse = await fetch(uploadUrl, {
       method: 'POST',
       body: formData,
     });
-
     if (!uploadResponse.ok) {
       throw new Error(`Upload failed: ${uploadResponse.statusText}`);
     }
@@ -505,7 +509,7 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     return responseText;
   } catch (error) {
     console.error('Error in cfRecordUrl:', error);
-    throw error; // Re-throw after logging to maintain error propagation
+    throw error;
   }
 };
 
@@ -697,7 +701,6 @@ const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
   }
 };
 const isValidSubdomain = (subdomain) => {
-  // Зөвхөн үсэг, тоо, зураас, 1-63 тэмдэгт
   const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
   return subdomainRegex.test(subdomain);
 };
@@ -720,7 +723,7 @@ export const getUrl = (subdomain) => {
   }
 
   if (NODE_ENV !== 'production') {
-    return `${domain}/pl:core/upload-file`;
+    return `${domain}/upload-file`;
   }
 
   if (VERSION === 'saas') {
@@ -980,14 +983,122 @@ const updateErxesConversation = async (subdomain, payload) => {
   return await receiveInboxMessage(subdomain, data);
 };
 
-export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
+// Enhanced WebSocket Handler with improved publishing
+export function enhancedHandleCallEvent(json, graphqlPubsub) {
+  try {
+    if (json.type !== 'request') return;
+
+    const messages = Array.isArray(json.message)
+      ? json.message
+      : [json.message];
+
+    for (const message of messages) {
+      const { eventname, eventbody } = message;
+
+      switch (eventname) {
+        case 'CallQueueStatus':
+          handleCallQueueStatus(eventbody, graphqlPubsub);
+          break;
+
+        case 'ActiveCallStatus':
+          handleActiveCallStatus(eventbody, graphqlPubsub);
+          break;
+
+        default:
+          console.log(`⚠️ Unhandled event: ${eventname}`);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error handling call event:', error);
+  }
+}
+
+function handleCallQueueStatus(eventBody, graphqlPubsub) {
+  const events = Array.isArray(eventBody) ? eventBody : [eventBody];
+
+  events.forEach((item) => {
+    const { extension } = item;
+
+    if (item.member) {
+      if (extension) {
+        graphqlPubsub.publish(`callAgent_${extension}`, {
+          callStatistic: item,
+        });
+      }
+
+      graphqlPubsub.publish('callAgent', {
+        callStatistic: item,
+      });
+
+      if (extension) {
+        graphqlPubsub.publish(`queueStatus_${extension}`, {
+          callStatistic: item,
+        });
+      }
+    } else {
+      console.log('📊 Statistics event:', item);
+
+      if (extension) {
+        graphqlPubsub.publish(`callStatistic_${extension}`, {
+          callStatistic: item,
+        });
+      }
+
+      graphqlPubsub.publish('callStatistic', {
+        callStatistic: item,
+      });
+
+      if (extension) {
+        graphqlPubsub.publish(`queueStatus_${extension}`, {
+          callStatistic: item,
+        });
+      }
+    }
+  });
+}
+
+function handleActiveCallStatus(eventBody, graphqlPubsub) {
+  const events = Array.isArray(eventBody) ? eventBody : [eventBody];
+
+  events.forEach((callEvent) => {
+    const { feature_calleenum, action, state, callernum, connectednum } =
+      callEvent;
+
+    if (feature_calleenum) {
+      graphqlPubsub.publish(`activeCallStatus_${feature_calleenum}`, {
+        activeCallStatus: callEvent,
+      });
+    }
+
+    graphqlPubsub.publish('activeCallStatus', {
+      activeCallStatus: callEvent,
+    });
+
+    switch (action) {
+      case 'add':
+        console.log(`📞 NEW CALL: ${callernum} → ${connectednum} (${state})`);
+        break;
+      case 'update':
+        console.log(
+          `📞 CALL UPDATE: ${callernum} → ${connectednum} (${state})`,
+        );
+        break;
+      case 'delete':
+        console.log(`📞 CALL ENDED: ${callEvent.channel}`);
+        break;
+    }
+  });
+}
+export const mapCdrToCallHistory = (
+  cdr: ICallCdrDocument,
+): ICallHistory & { acctId: string } => {
   return {
-    operatorPhone: cdr.src || '',
-    customerPhone: cdr.dst || '',
+    operatorPhone: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src || '',
+    customerPhone: cdr.userfield === 'Inbound' ? cdr.src : cdr.dst || '',
     callDuration: cdr.billsec || 0,
     callStartTime: cdr.start,
     callEndTime: cdr.end,
-    callType: cdr.actionType || '',
+    callType: cdr.userfield || '',
     callStatus: cdr.disposition || '',
     timeStamp: cdr.start ? cdr.start.getTime() / 1000 : 0,
     modifiedAt: cdr.updatedAt,
@@ -995,11 +1106,12 @@ export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
     createdBy: cdr.createdBy || '',
     modifiedBy: cdr.updatedBy || '',
     extensionNumber: '',
-    conversationId: cdr.userfield || '',
+    conversationId: cdr.conversationId || '',
     recordUrl: cdr.recordUrl || '',
     endedBy: '',
     acceptedUserId: '',
     queueName: '',
     inboxIntegrationId: cdr.inboxIntegrationId,
+    acctId: cdr.acctId || '',
   };
 };

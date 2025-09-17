@@ -1,13 +1,16 @@
-import { Button, Select, Skeleton, Table } from 'erxes-ui';
-import { useParams } from 'react-router';
-import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
-import { MembersInline } from 'ui-modules';
 import { AddMembers } from '@/team/components/members/AddMembers';
-import { IconX } from '@tabler/icons-react';
-import { useTeamMemberUpdate } from '@/team/hooks/useTeamMemberUpdate';
+import { useGetTeamMembers } from '@/team/hooks/useGetTeamMembers';
 import { useTeamMemberRemove } from '@/team/hooks/useTeamMemberRemove';
+import { useTeamMemberUpdate } from '@/team/hooks/useTeamMemberUpdate';
+import { ITeamMember } from '@/team/types';
+import { IconX } from '@tabler/icons-react';
+import { Button, Select, Skeleton, Table } from 'erxes-ui';
+import { useAtomValue } from 'jotai';
+import { useParams } from 'react-router';
+import { currentUserState, MembersInline } from 'ui-modules';
 
 export function Members() {
+  const currentUser = useAtomValue(currentUserState);
   const { id: teamId } = useParams();
   const { members, loading } = useGetTeamMembers({ teamIds: teamId });
   const { updateTeamMember } = useTeamMemberUpdate();
@@ -22,12 +25,30 @@ export function Members() {
     });
   };
 
-  const removeHandler = (_id: string) => {
+  const removeHandler = (teamId: string, memberId: string) => {
     removeTeamMember({
       variables: {
-        _id,
+        teamId,
+        memberId,
       },
     });
+  };
+
+  const renderMemberRemove = (member: ITeamMember) => {
+    if (member.role === 'admin' || member.memberId === currentUser?._id) {
+      return null;
+    }
+
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => removeHandler(member.teamId, member.memberId)}
+        className="hidden group-hover:flex "
+      >
+        <IconX className="size-4" />
+      </Button>
+    );
   };
 
   return (
@@ -86,14 +107,7 @@ export function Members() {
                       </Select>
                     </Table.Cell>
                     <Table.Cell className="border-none w-8 ">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeHandler(member._id)}
-                        className="hidden group-hover:flex "
-                      >
-                        <IconX className="size-4" />
-                      </Button>
+                      {renderMemberRemove(member)}
                     </Table.Cell>
                   </Table.Row>
                 ))}

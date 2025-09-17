@@ -56,7 +56,6 @@ const queryBuilder = async (params: IListArgs) => {
 
     selector.$or = fields;
   }
-  console.log(selector, 'sdasda');
 
   if (requireUsername) {
     selector.username = { $ne: null };

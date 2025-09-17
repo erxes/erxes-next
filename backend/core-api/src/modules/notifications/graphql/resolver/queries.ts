@@ -5,7 +5,7 @@ import { CORE_NOTIFICATION_MODULES } from '~/modules/notifications/constants';
 import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
 
 const generateOrderByNotifications = (orderBy?: any) => {
-  const sort: any = { createdAt: -1 };
+  const sort: any = { isRead: 1, createdAt: -1 };
 
   if (orderBy?.createdAt === 1) {
     sort.createdAt = 1;
@@ -16,7 +16,7 @@ const generateOrderByNotifications = (orderBy?: any) => {
   }
 
   if (orderBy?.readAt) {
-    sort.readAt == orderBy?.readAt;
+    sort.readAt = orderBy?.readAt;
   }
 
   return sort;
@@ -51,7 +51,11 @@ export const notificationQueries = {
     return pluginsNotifications;
   },
 
-  async notifications(_root, params, { models, user }: IContext) {
+  async notifications(
+    _root: undefined,
+    params: any,
+    { models, user }: IContext,
+  ) {
     const filter = generateNotificationsFilter(params);
 
     let prioritized: INotificationDocument[] = [];
@@ -82,7 +86,11 @@ export const notificationQueries = {
     };
   },
 
-  async notificationDetail(_root, { _id }, { models, user }: IContext) {
+  async notificationDetail(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     const notification = await models.Notifications.findOne({ _id });
     if (!notification) {
       throw new Error('Not found notification');
@@ -90,25 +98,15 @@ export const notificationQueries = {
     return notification;
   },
 
-  async unreadNotificationsCount(_root, _args, { models, user }: IContext) {
+  async unreadNotificationsCount(
+    _root: undefined,
+    _args: undefined,
+    { models, user }: IContext,
+  ) {
     return await models.Notifications.countDocuments({
       userId: user._id,
       isRead: false,
       isArchived: { $ne: true },
     });
-  },
-  async userNotificationSettings(_root, _args, { models, user }: IContext) {
-    return await models.UserNotificationSettings.findOne({ userId: user._id });
-  },
-
-  async organizationNotificationConfigs(
-    _root,
-    _args,
-    { models, user }: IContext,
-  ) {
-    if (!user?.isOwner) {
-      throw new Error('Permission required');
-    }
-    return await models.NotificationConfigs.findOne({});
   },
 };

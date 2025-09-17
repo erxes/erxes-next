@@ -77,6 +77,8 @@ export const types = `
     extensionNumber: String
     conversationId: String
     recordUrl: String
+    inboxIntegrationId: String
+    acctId: String
   }
 
   type CallStatistic {
@@ -210,8 +212,7 @@ export const queries = `
   callGetAgentStatus: String
   callExtensionList(integrationId: String!): JSON
   callQueueList(integrationId: String!): JSON
-  callWaitingList(queue: String!): String
-  callProceedingList(queue: String!): String
+  callQueueInitialList(queue: String!): String
   callQueueMemberList(integrationId: String!, queue: String!): JSON
   callTodayStatistics(queue: String!): JSON
 

@@ -34,6 +34,10 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
     return <CallSelectConfig callUserIntegrations={callUserIntegrations} />;
   }
 
+  if (!callConfig.isAvailable) {
+    return null;
+  }
+
   const { wsServer, operators } = callConfig;
 
   const [host = 'call.erxes.io', port = '8089'] =
@@ -47,7 +51,6 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
     user: operator?.gsUsername,
     password: operator?.gsPassword,
     port: parseInt(port?.toString() || '8089', 10),
-    autoRegister: true,
     iceServers: [
       {
         urls: `turn:${callConfigs.TURN_SERVER_URL}`,

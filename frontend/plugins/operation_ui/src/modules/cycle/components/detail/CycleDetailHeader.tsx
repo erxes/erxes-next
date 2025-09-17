@@ -29,7 +29,7 @@ export const CycleDetailHeader = () => {
         </Breadcrumb>
       </PageHeader.Start>
       <PageHeader.End>
-        <AddTaskSheet />
+        {!cycleDetail?.isCompleted && <AddTaskSheet />}
       </PageHeader.End>
     </PageHeader>
   );
