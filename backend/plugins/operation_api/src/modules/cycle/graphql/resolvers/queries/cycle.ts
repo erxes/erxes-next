@@ -55,10 +55,10 @@ export const cycleQueries = {
 
         query: {
           teamId: params.teamId,
+          isCompleted: { $ne: true },
 
           $or: [
             { isActive: true },
-            { isCompleted: false },
             { _id: params?.cycleId || null },
             {
               startDate: { $lte: new Date() },
