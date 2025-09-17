@@ -21,15 +21,6 @@ export const SAVE_DOCUMENT = gql`
     ) {
       _id
       code
-      createdAt
-      createdUser {
-        _id
-        details {
-          avatar
-          lastName
-          fullName
-        }
-      }
       contentType
       subType
       name

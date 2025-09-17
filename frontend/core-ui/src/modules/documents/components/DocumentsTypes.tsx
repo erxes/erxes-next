@@ -8,8 +8,6 @@ import { IDocumentType } from '../types';
 export const DocumentsTypes = () => {
   const [contentType, setQuery] = useQueryState('contentType');
 
-  const { setValue } = useFormContext<FormType>();
-
   const { documentsTypes } = useDocumentsTypes();
 
   return (
@@ -28,7 +26,6 @@ export const DocumentsTypes = () => {
                       isActive={module === contentType}
                       onClick={() => {
                         setQuery(module);
-                        setValue('contentType', module);
                       }}
                     >
                       <Icon />
