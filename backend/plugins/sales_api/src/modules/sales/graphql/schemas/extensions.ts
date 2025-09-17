@@ -24,6 +24,6 @@ export const TypeExtensions = `
   }
 
   extend type Product @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
   }
 `;
