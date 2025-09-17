@@ -56,7 +56,6 @@ export const cycleQueries = {
         query: {
           teamId: params.teamId,
           isCompleted: { $ne: true },
-
           $or: [
             { isActive: true },
             { _id: params?.cycleId || null },
