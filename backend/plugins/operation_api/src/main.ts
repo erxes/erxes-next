@@ -4,61 +4,8 @@ import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 import { Router } from 'express';
 import { initMQWorkers } from '~/worker';
-import {
-  getCycleProgressByMember,
-  getCycleProgressByProject,
-} from '~/modules/cycle/utils';
-import { getCycleProgressChart } from '~/modules/cycle/utils';
-import { getCyclesProgress } from '~/modules/cycle/utils';
+
 export const router: Router = Router();
-
-router.get('/endCycle', async (req, res) => {
-  const cycleIds = ['68c7b3dc71837212b43c7007', '68c7b3dc71837212b43c7008'];
-  const models = await generateModels('os');
-
-  try {
-    await Promise.all(
-      cycleIds.map(async (cycleId) => {
-        const chartData = await getCycleProgressChart(
-          cycleId,
-          undefined,
-          models,
-        );
-        const progress = await getCyclesProgress(cycleId, undefined, models);
-        const progressByMember = await getCycleProgressByMember(
-          cycleId,
-          undefined,
-          models,
-        );
-        const progressByProject = await getCycleProgressByProject(
-          cycleId,
-          undefined,
-          models,
-        );
-
-        const statistics = {
-          chartData,
-          progress,
-          progressByMember,
-          progressByProject,
-        };
-
-        await models.Cycle.findOneAndUpdate(
-          { _id: cycleId },
-          { $set: { isCompleted: true, isActive: false, statistics } },
-          { new: true },
-        );
-      }),
-    );
-
-    res.json({ message: 'Cycles ended successfully' });
-  } catch (err) {
-    console.error('Error ending cycles:', err);
-    res
-      .status(500)
-      .json({ message: 'Failed to end cycles', error: err.message });
-  }
-});
 
 startPlugin({
   name: 'operation',

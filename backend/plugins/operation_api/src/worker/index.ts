@@ -18,8 +18,6 @@ export const initMQWorkers = async (redis: any) => {
     },
   );
 
-  await dailyCheckCycles();
-
   return createMQWorkerWithListeners(
     'operations',
     'daily-cycles-end',
