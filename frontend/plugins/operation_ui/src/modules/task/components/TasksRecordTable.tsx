@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { taskTotalCountAtom } from '@/task/states/tasksTotalCountState';
 
 export const TasksRecordTable = () => {
-  const { projectId, cycleId } = useParams();
+  const { projectId, cycleId, teamId } = useParams();
   const currentUser = useAtomValue(currentUserState);
   const setTaskTotalCount = useSetAtom(taskTotalCountAtom);
 
@@ -37,11 +37,13 @@ export const TasksRecordTable = () => {
     },
   });
 
+  const team = teams?.find((team) => team._id === teamId);
+
   return (
     <div className="flex flex-col overflow-hidden h-full">
       <RecordTable.Provider
-        columns={tasksColumns(teams)}
-        data={tasks || [{}]}
+        columns={tasksColumns(teams, team)}
+        data={tasks || (loading ? [{}] : [])}
         className="m-3 h-full"
         stickyColumns={['checkbox', 'name']}
       >

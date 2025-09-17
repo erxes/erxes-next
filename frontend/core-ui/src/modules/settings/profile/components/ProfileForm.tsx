@@ -111,7 +111,7 @@ export const ProfileForm = () => {
         </div>
         <div className="w-full flex justify-end">
           <Button type="submit" disabled={updating} size="sm">
-            {(updating && <Spinner size={'small'} className="text-white" />) ||
+            {(updating && <Spinner size={'sm'} className="text-white" />) ||
               'Update'}
           </Button>
         </div>

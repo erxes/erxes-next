@@ -9,10 +9,11 @@ import {
   IconProgressCheck,
   IconUser,
   IconUsersGroup,
+  IconRestore,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import { DateSelectTask } from '@/task/components/select/DateSelectTask';
-import { SelectProject } from '@/task/components/select/SelectProjectTask';
+import { DateSelectTask } from '@/task/components/task-selects/DateSelectTask';
+import { SelectProject } from '@/task/components/task-selects/SelectProjectTask';
 import {
   Badge,
   Input,
@@ -24,19 +25,22 @@ import { ITask } from '@/task/types';
 import { useState } from 'react';
 import { ITeam } from '@/team/types';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
-import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
+import { SelectEstimatedPoint } from '@/task/components/task-selects/SelectEstimatedPointTask';
 import clsx from 'clsx';
-import { SelectTaskPriority } from '@/task/components/select/SelectTaskPriority';
-import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
-import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
-import { SelectTeamTask } from '@/task/components/select/SelectTeamTask';
+import { SelectTaskPriority } from '@/task/components/task-selects/SelectTaskPriority';
+import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
+import { SelectTeamTask } from '@/task/components/task-selects/SelectTeamTask';
 import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
 import { useSetAtom } from 'jotai';
+import { SelectCycle } from '@/task/components/task-selects/SelectCycle';
 
 export const tasksColumns = (
   _teams: ITeam[] | undefined,
+  _team: ITeam | undefined,
 ): ColumnDef<ITask>[] => {
   const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ITask>;
+
   return [
     checkBoxColumn,
     {
@@ -74,15 +78,11 @@ export const tasksColumns = (
             )}
           >
             <RecordTableInlineCell.Trigger>
-              <Badge
-                variant="secondary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTask(cell.row.original._id);
-                }}
+              <RecordTableInlineCell.Anchor
+                onClick={() => setActiveTask(cell.row.original._id)}
               >
                 {name}
-              </Badge>
+              </RecordTableInlineCell.Anchor>
             </RecordTableInlineCell.Trigger>
             <RecordTableInlineCell.Content className="min-w-72">
               <Input
@@ -182,6 +182,22 @@ export const tasksColumns = (
       size: 240,
     },
     {
+      id: 'cycleId',
+      accessorKey: 'cycleId',
+      header: () => <RecordTable.InlineHead label="Cycle" icon={IconRestore} />,
+      cell: ({ cell }) => {
+        return (
+          <SelectCycle
+            taskId={cell.row.original._id}
+            value={cell.row.original.cycleId || ''}
+            teamId={cell.row.original.teamId}
+            variant="table"
+          />
+        );
+      },
+      size: 240,
+    },
+    {
       id: 'project',
       accessorKey: 'project',
       header: () => (
@@ -192,6 +208,7 @@ export const tasksColumns = (
           <SelectProject
             value={cell.row.original.projectId || ''}
             taskId={cell.row.original._id}
+            teamId={cell.row.original.teamId}
             variant="table"
           />
         );

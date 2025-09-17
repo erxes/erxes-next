@@ -15,10 +15,13 @@ import {
 } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { ITransactionGroupForm, TInvSaleJournal } from '../../../types/JournalForms';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
-import { taxPercentsState } from '../../../states/trStates';
+import { followTrDocsState, taxPercentsState } from '../../../states/trStates';
+import { getTempId } from '../../utils';
+import { TR_SIDES, TrJournalEnum } from '@/transactions/types/constants';
+import { ITransaction, ITrDetail } from '@/transactions/types/Transaction';
 
 export const InventoryRow = ({
   detailIndex,
@@ -32,12 +35,99 @@ export const InventoryRow = ({
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
-  });
+  }) as TInvSaleJournal;
 
   const detail = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}.details.${detailIndex}`,
   });
+
+  const [followTrDocs, setFollowTrDocs] = useAtom(followTrDocsState);
+
+  useEffect(() => {
+    const currOut = followTrDocs.find(
+      (ftr) =>
+        ftr.originId === trDoc._id &&
+        ftr.followType === 'invSaleOut'
+    );
+    const currCost = followTrDocs.find(
+      (ftr) =>
+        ftr.originId === trDoc._id &&
+        ftr.followType === 'invSaleCost'
+    );
+
+
+    const invOutTr = {
+      ...currOut,
+      _id: currOut?._id || getTempId(),
+      journal: TrJournalEnum.INV_SALE_OUT,
+      originId: trDoc._id,
+      ptrId: trDoc.ptrId,
+      parentId: trDoc.parentId,
+      followType: 'invSaleOut',
+      details: (trDoc.details || []).map((saleDetail) => {
+        const curOutDetail = currOut?.details.find(outDetail => outDetail.originId === saleDetail._id);
+
+        if (saleDetail._id === detail._id || !curOutDetail) {
+          return {
+            ...saleDetail,
+            ...curOutDetail,
+            productId: saleDetail.productId,
+            account: trDoc.followExtras?.saleOutAccount,
+            accountId: trDoc.followInfos?.saleOutAccountId,
+            side: TR_SIDES.CREDIT,
+            amount: 0,
+          } as ITrDetail
+        }
+        return curOutDetail;
+      }),
+
+      sumDt: 0,
+      sumCt: 0,
+    };
+    const invCostTr: ITransaction = {
+      ...currCost,
+      _id: currCost?._id || getTempId(),
+      journal: TrJournalEnum.INV_SALE_COST,
+      originId: trDoc._id,
+      ptrId: trDoc.ptrId,
+      parentId: trDoc.parentId,
+      followType: 'invSaleCost',
+      details: (trDoc.details || []).map((saleDetail) => {
+        const curCostDetail = currCost?.details.find(costDetail => costDetail.originId === saleDetail._id);
+
+        if (saleDetail._id === detail._id || !curCostDetail) {
+          return {
+            ...saleDetail,
+            ...curCostDetail,
+            productId: saleDetail.productId,
+            account: trDoc.followExtras?.saleCostAccount,
+            accountId: trDoc.followInfos?.saleCostAccountId,
+            side: TR_SIDES.DEBIT,
+            amount: 0,
+          } as ITrDetail
+        }
+        return curCostDetail;
+      }),
+
+      sumDt: 0,
+      sumCt: 0,
+    }
+
+    setFollowTrDocs([
+      ...(followTrDocs || []).filter(
+        (ftr) =>
+          !(
+            ftr.originId === trDoc._id &&
+            ['invSaleOut', 'invSaleCost'].includes(ftr.followType || '')
+          )
+      ),
+      invOutTr,
+      invCostTr,
+    ]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail]);
 
   const [taxPercents] = useAtom(taxPercentsState);
 

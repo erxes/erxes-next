@@ -1,5 +1,3 @@
-'use client';
-
 import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { posCategoryAtom } from '../../states/posCategory';
@@ -7,11 +5,13 @@ import { Button } from 'erxes-ui';
 
 export default function ChooseCategoryPage() {
   const [posCategory, setPosCategory] = useAtom(posCategoryAtom);
-  const [selectedCategory, setSelectedCategory] = useState<"restaurant" | "ecommerce" | "kiosk" | null>(
-    posCategory || null,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<
+    'restaurant' | 'ecommerce' | 'kiosk' | null
+  >(posCategory || null);
 
-  const handleCategorySelect = (category: "restaurant" | "ecommerce" | "kiosk") => {
+  const handleCategorySelect = (
+    category: 'restaurant' | 'ecommerce' | 'kiosk',
+  ) => {
     setSelectedCategory(category);
     setPosCategory(category);
   };

@@ -4,7 +4,7 @@ import {
   PageInfo,
 } from 'erxes-api-shared/utils';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { ITaskDocument } from '~/modules/task/@types/task';
+import { ITaskDocument } from '@/task/@types/task';
 import { IModels } from '~/connectionResolvers';
 
 export const taskCursorPaginationWithAggregation = async ({
@@ -75,8 +75,6 @@ export const taskCursorPaginationWithAggregation = async ({
 
   const hasMore = items.length > limit;
   let list = hasMore ? items.slice(0, limit) : items;
-
-  //   console.log(items);
 
   if (direction === 'backward') {
     list = list.reverse();

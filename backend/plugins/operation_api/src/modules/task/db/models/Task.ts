@@ -8,8 +8,8 @@ import {
   ITaskUpdate,
 } from '@/task/@types/task';
 import { createActivity } from '@/activity/utils/createActivity';
-import { createTaskNotification } from '@/task/notificationUtils';
 import { STATUS_TYPES } from '@/status/constants/types';
+import { createNotifications } from '~/utils/notifications';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
@@ -120,6 +120,14 @@ export const loadTaskClass = (models: IModels) => {
         }
       }
 
+      if (doc.cycleId) {
+        const cycle = await models.Cycle.findOne({ _id: doc.cycleId });
+
+        if (cycle && cycle.isCompleted) {
+          throw new Error('Cannot add task to completed cycle');
+        }
+      }
+
       doc.createdBy = userId;
 
       const task = await models.Task.insertOne({
@@ -127,12 +135,17 @@ export const loadTaskClass = (models: IModels) => {
         number: nextNumber,
       });
 
-      await createTaskNotification({
-        task,
-        doc,
-        userId,
-        subdomain,
-      });
+      if (doc.assigneeId && doc.assigneeId !== userId) {
+        await createNotifications({
+          contentType: 'task',
+          contentTypeId: task._id,
+          fromUserId: userId,
+          subdomain,
+          notificationType: 'taskAssignee',
+          userIds: [doc.assigneeId],
+          action: 'assignee',
+        });
+      }
 
       return task;
     }
@@ -203,6 +216,7 @@ export const loadTaskClass = (models: IModels) => {
 
         rest.number = nextNumber;
         rest.status = newStatus?._id;
+        rest.cycleId = '';
       }
 
       await createActivity({
@@ -214,12 +228,17 @@ export const loadTaskClass = (models: IModels) => {
         contentId: task._id,
       });
 
-      await createTaskNotification({
-        task,
-        doc,
-        userId,
-        subdomain,
-      });
+      if (doc.assigneeId && doc.assigneeId !== userId) {
+        await createNotifications({
+          contentType: 'task',
+          contentTypeId: task._id,
+          fromUserId: userId,
+          subdomain,
+          notificationType: 'note',
+          userIds: [doc.assigneeId],
+          action: 'assignee',
+        });
+      }
 
       return models.Task.findOneAndUpdate(
         { _id },
@@ -233,14 +252,9 @@ export const loadTaskClass = (models: IModels) => {
     }
 
     public static async moveCycle(cycleId: string, newCycleId: string) {
-      const statuses = await models.Status.find({
-        cycleId,
-        type: { $nin: [STATUS_TYPES.COMPLETED] },
-      }).distinct('_id');
-
       const taskIds = await models.Task.find({
         cycleId,
-        status: { $nin: statuses },
+        statusType: { $nin: [STATUS_TYPES.COMPLETED, STATUS_TYPES.COMPLETED] },
       }).distinct('_id');
 
       for (const taskId of taskIds) {
@@ -258,7 +272,7 @@ export const loadTaskClass = (models: IModels) => {
 
       await models.Task.updateMany(
         { _id: { $in: taskIds } },
-        { $set: { cycleId: newCycleId } },
+        { $set: { cycleId: newCycleId, statusChangedDate: new Date() } },
       );
 
       return taskIds;

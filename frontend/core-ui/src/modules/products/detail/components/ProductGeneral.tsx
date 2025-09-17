@@ -1,5 +1,3 @@
-'use client';
-
 import type React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useProductDetail } from '../hooks/useProductDetail';

@@ -11,7 +11,7 @@ export interface INote {
   content: string;
   createdAt: string;
   createdBy: string;
-  itemId: string;
+  contentId: string;
   mentions: string[];
   updatedAt: string;
 }
@@ -31,9 +31,10 @@ export interface ITask {
   projectId: string;
   estimatePoint: number;
   updatedAt: string;
+  cycleId?: string;
 }
 
-export interface IStatus {
+export interface ITaskStatus {
   value: string;
   label: string;
   color: string;

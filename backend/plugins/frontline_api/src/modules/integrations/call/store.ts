@@ -51,9 +51,7 @@ export const getOrCreateCustomer = async (
           phones: [primaryPhone],
         }),
       };
-
       const apiCustomerResponse = await receiveInboxMessage(subdomain, data);
-
       if (apiCustomerResponse.status === 'success') {
         customer.erxesApiId = apiCustomerResponse.data._id;
         customer.status = 'completed';

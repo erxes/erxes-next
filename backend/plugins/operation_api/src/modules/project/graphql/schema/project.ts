@@ -25,6 +25,7 @@ type ProjectListResponse {
 
 input IProjectFilter {
     _id: String
+    _ids: [String]
     name: String
     description: String
     status: Int
@@ -34,6 +35,8 @@ input IProjectFilter {
     startDate: Date
     targetDate: Date
     userId: String
+    active: Boolean
+    taskId: String
     ${GQL_CURSOR_PARAM_DEFS}
 }
 

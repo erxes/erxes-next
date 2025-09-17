@@ -1,28 +1,28 @@
-import { QueryHookOptions, useQuery } from '@apollo/client';
+import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
 import {
   GET_PROJECTS,
   GET_PROJECTS_INLINE,
 } from '@/project/graphql/queries/getProjects';
+import { PROJECT_LIST_CHANGED } from '@/project/graphql/subscriptions/projectListChanged';
+import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
 import { IProject } from '@/project/types';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
-  useRecordTableCursor,
-  mergeCursorData,
-  validateFetchMore,
   EnumCursorDirection,
   ICursorListResponse,
-  useMultiQueryState,
-  useToast,
   isUndefinedOrNull,
+  mergeCursorData,
+  useMultiQueryState,
+  useRecordTableCursor,
+  useToast,
+  validateFetchMore,
 } from 'erxes-ui';
-import { projectTotalCountAtom } from '@/project/states/projectsTotalCount';
-import { currentUserState } from 'ui-modules';
-import { useSetAtom, useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
-import { PROJECTS_CURSOR_SESSION_KEY } from '@/project/constants/ProjectSessionKey';
-import { PROJECT_CHANGED } from '@/project/graphql/subscriptions/projectChanged';
+import { currentUserState } from 'ui-modules';
 
 interface IProjectChanged {
-  operationProjectChanged: {
+  operationProjectListChanged: {
     type: string;
     project: IProject;
   };
@@ -90,12 +90,13 @@ export const useProjects = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<IProjectChanged>({
-      document: PROJECT_CHANGED,
+      document: PROJECT_LIST_CHANGED,
       variables: { filter: variables },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, project } = subscriptionData.data.operationProjectChanged;
+        const { type, project } =
+          subscriptionData.data.operationProjectListChanged;
         const currentList = prev.getProjects.list;
 
         let updatedList = currentList;
@@ -146,9 +147,11 @@ export const useProjects = (
     setProjectTotalCount(totalCount);
   }, [totalCount, setProjectTotalCount]);
 
-  const handleFetchMore = (
-    direction: EnumCursorDirection = EnumCursorDirection.FORWARD,
-  ) => {
+  const handleFetchMore = ({
+    direction = EnumCursorDirection.FORWARD,
+  }: {
+    direction?: EnumCursorDirection;
+  }) => {
     if (!validateFetchMore({ direction, pageInfo })) {
       return;
     }
@@ -191,14 +194,17 @@ export const useProjectsInline = (
     ICursorListResponse<{
       _id: string;
       name: string;
+      status: number;
     }>
   >,
 ) => {
   const variables = useProjectsVariables(options?.variables);
+
   const { data, loading, fetchMore } = useQuery<
     ICursorListResponse<{
       _id: string;
       name: string;
+      status: number;
     }>
   >(GET_PROJECTS_INLINE, {
     ...options,
@@ -215,6 +221,7 @@ export const useProjectsInline = (
     fetchMore({
       variables: {
         filter: {
+          ...variables,
           cursor:
             direction === EnumCursorDirection.FORWARD
               ? pageInfo?.endCursor

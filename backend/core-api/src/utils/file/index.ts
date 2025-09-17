@@ -78,6 +78,8 @@ export const checkFile = async (
     'text/plain',
     'application/vnd.ms-excel',
     'audio/mp3',
+    'audio/vnd.wave',
+    'audio/wave',
   ];
 
   const oldMsOfficeDocs = [
@@ -85,7 +87,6 @@ export const checkFile = async (
     'application/vnd.ms-excel',
     'application/vnd.ms-powerpoint',
   ];
-
   // allow csv, svg to be uploaded
   if (!ft && unsupportedMimeTypes.includes(file.mimetype)) {
     return 'ok';

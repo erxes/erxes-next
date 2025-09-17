@@ -25,8 +25,10 @@ export const receiveInboxMessage = async (
   const { action, metaInfo, payload } = data;
   const { Integrations, ConversationMessages, Conversations } =
     await generateModels(subdomain);
-
-  const doc = JSON.parse(payload || '{}');
+  let doc = JSON.parse(JSON.stringify(payload) || '{}');
+  if (typeof doc === 'string') {
+    doc = JSON.parse(doc);
+  }
 
   if (action === 'get-create-update-customer') {
     const integration = await Integrations.findOne({
@@ -38,7 +40,6 @@ export const receiveInboxMessage = async (
     }
 
     const { primaryEmail, primaryPhone } = doc;
-
     let customer;
 
     const getCustomer = async (selector) => {
@@ -65,7 +66,6 @@ export const receiveInboxMessage = async (
             },
           },
         });
-
         return sendSuccess({ _id: customer._id });
       }
     }
@@ -94,7 +94,7 @@ export const receiveInboxMessage = async (
   }
 
   if (action === 'create-or-update-conversation') {
-    const { conversationId, content, owner, updatedAt } = doc;
+    const { conversationId, content, owner, updatedAt, integrationId } = doc;
     let user;
 
     if (owner) {
@@ -104,7 +104,7 @@ export const receiveInboxMessage = async (
         module: 'users',
         action: 'findOne',
         input: {
-          doc: {
+          query: {
             'details.operatorPhone': owner,
           },
         },
@@ -116,13 +116,14 @@ export const receiveInboxMessage = async (
     if (conversationId) {
       if (!assignedUserId) {
         const existingConversation = await Conversations.findOne({
-          _id: conversationId,
-        });
+          $and: [{ _id: conversationId }, { integrationId: integrationId }],
+        }).lean();
 
         assignedUserId = existingConversation?.assignedUserId || null;
       }
+
       const conversation = await Conversations.findOne({
-        _id: conversationId,
+        $and: [{ _id: conversationId }, { integrationId: integrationId }],
       }).lean();
 
       if (conversation) {
@@ -145,7 +146,6 @@ export const receiveInboxMessage = async (
           conversationId: doc.conversationId,
           updatedAt: doc.updatedAt,
         };
-
         await Conversations.createConversation(formattedDoc);
       }
 
@@ -153,7 +153,6 @@ export const receiveInboxMessage = async (
     }
 
     doc.assignedUserId = assignedUserId;
-
     const conversation = await Conversations.createConversation(doc);
 
     return sendSuccess({ _id: conversation._id });

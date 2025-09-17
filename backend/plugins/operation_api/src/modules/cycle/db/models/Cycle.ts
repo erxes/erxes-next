@@ -1,8 +1,14 @@
+import { cycleSchema } from '@/cycle/db/definitions/cycle';
+import { ICycle, ICycleDocument } from '@/cycle/types';
+import {
+  getCycleProgressByMember,
+  getCycleProgressByProject,
+  getCycleProgressChart,
+  getCyclesProgress,
+} from '@/cycle/utils';
+import { isBefore, isSameDay, startOfDay } from 'date-fns';
 import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { ICycle, ICycleDocument } from '@/cycle/types';
-import { cycleSchema } from '@/cycle/db/definitions/cycle';
-import { isSameDay } from 'date-fns';
 
 export interface ICycleModel extends Model<ICycleDocument> {
   getCycle(_id: string): Promise<ICycleDocument>;
@@ -10,12 +16,16 @@ export interface ICycleModel extends Model<ICycleDocument> {
   createCycle({ doc }: { doc: ICycle }): Promise<ICycleDocument>;
   updateCycle(doc: ICycleDocument): Promise<ICycleDocument>;
   removeCycle({ _id }: { _id: string }): Promise<{ ok: number }>;
+  endCycle(_id: string): Promise<ICycleDocument>;
 }
 
 export const loadCycleClass = (models: IModels) => {
   class Cycle {
     public static async getCycle(_id: string) {
-      const cycle = await models.Cycle.findOne({ _id });
+      const cycle = await models.Cycle.findOne({
+        _id,
+      });
+
       if (!cycle) {
         throw new Error('Cycle not found');
       }
@@ -56,7 +66,10 @@ export const loadCycleClass = (models: IModels) => {
         throw new Error('New cycle with an existing cycle');
       }
 
-      if (doc.startDate < new Date()) {
+      const today = startOfDay(new Date());
+      const start = startOfDay(doc.startDate);
+
+      if (isBefore(start, today)) {
         throw new Error('New cycle start date must be in the future');
       }
 
@@ -77,19 +90,21 @@ export const loadCycleClass = (models: IModels) => {
 
     public static async updateCycle(doc: ICycleDocument) {
       const { _id, ...rest } = doc;
-      const cycle = await models.Cycle.findOne({ _id });
+      const cycle = await models.Cycle.findOne({
+        _id,
+      });
 
       if (cycle && cycle.isCompleted) {
         throw new Error('Completed cycle cannot be updated');
       }
 
       const overlappingCycle = await models.Cycle.findOne({
-        teamId: doc.teamId,
-        _id: { $ne: doc._id },
+        teamId: cycle?.teamId,
+        _id: { $ne: cycle?._id },
         $or: [
           {
-            startDate: { $lte: doc.endDate },
-            endDate: { $gte: doc.startDate },
+            startDate: { $lte: doc.endDate || cycle?.endDate },
+            endDate: { $gte: doc.startDate || cycle?.startDate },
           },
         ],
       });
@@ -105,11 +120,30 @@ export const loadCycleClass = (models: IModels) => {
       );
     }
 
-    public static async endCycle(doc: ICycleDocument) {
-      const { _id, ...rest } = doc;
+    public static async endCycle(_id: string) {
+      const chartData = await getCycleProgressChart(_id, undefined, models);
+      const progress = await getCyclesProgress(_id, undefined, models);
+      const progressByMember = await getCycleProgressByMember(
+        _id,
+        undefined,
+        models,
+      );
+      const progressByProject = await getCycleProgressByProject(
+        _id,
+        undefined,
+        models,
+      );
+
+      const statistics = {
+        chartData,
+        progress,
+        progressByMember,
+        progressByProject,
+      };
+
       const endedCycle = await models.Cycle.findOneAndUpdate(
         { _id },
-        { $set: { isCompleted: true, isActive: false } },
+        { $set: { isCompleted: true, isActive: false, statistics } },
         { new: true },
       );
 
@@ -119,9 +153,8 @@ export const loadCycleClass = (models: IModels) => {
 
       let nextCycle = await models.Cycle.findOneAndUpdate(
         {
-          teamId: rest.teamId,
+          teamId: endedCycle.teamId,
           isCompleted: false,
-          startDate: { $gte: new Date() },
         },
         { $set: { isActive: true } },
         { sort: { startDate: 1 }, new: true },
@@ -135,7 +168,7 @@ export const loadCycleClass = (models: IModels) => {
         const newEndDate = new Date(newStartDate.getTime() + duration);
 
         nextCycle = await models.Cycle.create({
-          teamId: rest.teamId,
+          teamId: endedCycle.teamId,
           startDate: newStartDate,
           endDate: newEndDate,
           isActive: true,

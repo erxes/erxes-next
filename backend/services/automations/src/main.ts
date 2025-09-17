@@ -4,9 +4,7 @@ import {
   closeMongooose,
   createHealthRoute,
   isDev,
-  joinErxesGateway,
   keyForConfig,
-  leaveErxesGateway,
   redis,
 } from 'erxes-api-shared/utils';
 import express from 'express';

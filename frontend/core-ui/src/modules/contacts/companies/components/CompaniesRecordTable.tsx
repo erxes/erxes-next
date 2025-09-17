@@ -10,7 +10,7 @@ export const CompaniesRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={companyColumns}
-      data={companies || []}
+      data={companies || [{}]}
       stickyColumns={['more', 'checkbox', 'avatar', 'primaryName']}
       className="m-3"
     >
@@ -26,7 +26,12 @@ export const CompaniesRecordTable = () => {
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
             />
-            {loading && <RecordTable.RowSkeleton rows={40} />}
+            {loading ? (
+              <RecordTable.RowSkeleton rows={32} />
+            ) : (
+              <RecordTable.RowList />
+            )}
+
             <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}

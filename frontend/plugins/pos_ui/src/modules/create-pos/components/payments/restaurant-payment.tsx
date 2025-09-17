@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Button, Label, Select, Input, Form } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
@@ -39,7 +37,13 @@ export default function RestaurantPaymentsForm({
   });
 
   const form = externalForm || internalForm;
-  const { control, setValue, getValues, handleSubmit, formState: { errors } } = form;
+  const {
+    control,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   const [newPaymentMethod, setNewPaymentMethod] = useState<PaymentMethod>({
     type: '',
@@ -153,11 +157,13 @@ export default function RestaurantPaymentsForm({
         <div className="space-y-6">
           {/* Standard Payments Section */}
           <div className="space-y-4">
-            <h2 className="text-indigo-600 text-xl font-medium uppercase">PAYMENTS</h2>
+            <h2 className="text-indigo-600 text-xl font-medium uppercase">
+              PAYMENTS
+            </h2>
             <p className="text-sm text-gray-500">
               Select payments that you want to use
             </p>
-            
+
             <Form.Field
               control={control}
               name="paymentIds"
@@ -198,9 +204,12 @@ export default function RestaurantPaymentsForm({
 
           {/* Other Payments Section */}
           <div className="space-y-4">
-            <h2 className="text-indigo-600 text-xl font-medium uppercase">OTHER PAYMENTS</h2>
+            <h2 className="text-indigo-600 text-xl font-medium uppercase">
+              OTHER PAYMENTS
+            </h2>
             <p className="text-sm text-gray-500">
-              Type is must latin, some default types: golomtCard, khaanCard, TDBCard
+              Type is must latin, some default types: golomtCard, khaanCard,
+              TDBCard
               <br />
               Хэрэв тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true",
               Харилцагч сонгосон үед л харагдах бол: "mustCustomer: true", Харав
@@ -269,7 +278,9 @@ export default function RestaurantPaymentsForm({
             {/* Add new payment method form */}
             <div className="grid grid-cols-4 gap-4">
               <div>
-                <Label className="text-xs text-gray-500 mb-1 block">Type *</Label>
+                <Label className="text-xs text-gray-500 mb-1 block">
+                  Type *
+                </Label>
                 <Input
                   value={newPaymentMethod.type}
                   onChange={(e) => handleInputChange('type', e.target.value)}
@@ -340,7 +351,9 @@ export default function RestaurantPaymentsForm({
                 </Select>
               </div>
               <div>
-                <Label className="text-xs text-gray-500 mb-1 block">Config</Label>
+                <Label className="text-xs text-gray-500 mb-1 block">
+                  Config
+                </Label>
                 <Input
                   value={newPaymentMethod.config}
                   onChange={(e) => handleInputChange('config', e.target.value)}

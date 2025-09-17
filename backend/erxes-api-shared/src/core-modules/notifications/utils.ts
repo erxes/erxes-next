@@ -1,5 +1,6 @@
-import { sendWorkerQueue } from '../../utils';
+import { Types } from 'mongoose';
 import { z } from 'zod';
+import { sendTRPCMessage } from '../../utils';
 const baseNotificationSchema = z.object({
   title: z.string(),
   message: z.string(),
@@ -17,9 +18,10 @@ const userNotificationSchema = baseNotificationSchema.extend({
   kind: z.literal('user').default('user'),
   fromUserId: z.string(),
   contentType: z.string(),
-  contentTypeId: z.string(),
+  contentTypeId: z.union([z.string(), z.instanceof(Types.ObjectId)]),
   action: z.string(),
   notificationType: z.string(),
+  allowMultiple: z.boolean().default(false),
 });
 
 // Union for notification
@@ -34,11 +36,18 @@ export const sendNotification = async (
   subdomain: string,
   data: { userIds: string[] } & Partial<INotificationData>,
 ) => {
-  sendWorkerQueue('notifications', 'notifications').add('notifications', {
-    subdomain,
-    data: {
-      ...data,
-      kind: data.kind ?? 'user',
-    },
+  const { userIds, kind, ...notificationData } = data;
+
+  const parsedData = notificationZTypeSchema.parse({
+    ...notificationData,
+    kind: kind ?? 'user',
+  });
+
+  sendTRPCMessage({
+    pluginName: 'core',
+    method: 'mutation',
+    module: 'notifications',
+    action: 'create',
+    input: { data: parsedData, userIds },
   });
 };

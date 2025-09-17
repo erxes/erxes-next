@@ -33,9 +33,11 @@ export const types = `
 export const queries = `
     getCycle(_id: String): Cycle
     getCycles(teamId: String, ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
-    getCyclesActive(teamId: String,  ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
-    getCycleProgress(_id: String!): JSON
-    getCycleProgressByMember(_id: String!): JSON
+    getCyclesActive(teamId: String,taskId: String, ${GQL_CURSOR_PARAM_DEFS}): CycleListResponse
+    getCycleProgress(_id: String!, assigneeId: String): JSON
+    getCycleProgressChart(_id: String!, assigneeId: String): JSON
+    getCycleProgressByMember(_id: String!, assigneeId: String): JSON
+    getCycleProgressByProject(_id: String!, assigneeId: String): JSON
 `;
 
 export const mutations = `

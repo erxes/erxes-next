@@ -49,15 +49,11 @@ const SelectPriorityProvider = ({
   onValueChange: (value: number) => void;
   variant?: `${SelectTriggerVariant}`;
 }) => {
-  const handleValueChange = (value: number) => {
-    if (!value) return;
-    onValueChange(value);
-  };
   return (
     <SelectPriorityContext.Provider
       value={{
         value,
-        onValueChange: handleValueChange,
+        onValueChange,
         variant,
       }}
     >
@@ -183,7 +179,10 @@ const SelectPriorityFilterBar = ({ scope }: { scope?: string }) => {
   return (
     <SelectPriorityProvider
       value={Number(priority)}
-      onValueChange={(value) => setPriority(String(value))}
+      onValueChange={(value) => {
+        setPriority(String(value));
+        setOpen(false);
+      }}
     >
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="filter">
@@ -200,16 +199,20 @@ const SelectPriorityFilterBar = ({ scope }: { scope?: string }) => {
 export const SelectPriorityFormItem = ({
   value,
   onValueChange,
-  scope,
 }: {
   value: number;
   onValueChange: (value: number) => void;
-  scope?: string;
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <SelectPriorityProvider value={value} onValueChange={onValueChange}>
-      <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
+    <SelectPriorityProvider
+      value={value}
+      onValueChange={(value) => {
+        onValueChange(value);
+        setOpen(false);
+      }}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="form">
           <SelectPriorityValue />
         </SelectTriggerOperation>

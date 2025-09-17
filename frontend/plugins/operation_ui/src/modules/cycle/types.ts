@@ -24,3 +24,17 @@ export interface ICycleInput {
 }
 
 export type ICycleInputType = z.infer<typeof addCycleSchema>;
+
+export interface ICycleProgressByMember {
+  assigneeId: string;
+  totalScope: number;
+  totalStartedScope: number;
+  totalCompletedScope: number;
+}
+
+export interface ICycleProgressByProject {
+  projectId: string;
+  totalScope: number;
+  totalStartedScope: number;
+  totalCompletedScope: number;
+}

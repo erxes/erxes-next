@@ -45,6 +45,35 @@ export const CALL_HISTORY_ADD = gql`
     }
   }
 `;
+export const callHistoryEdit = gql`
+  mutation CallHistoryEdit(
+    $id: String
+    $inboxIntegrationId: String
+    $customerPhone: String
+    $callDuration: Int
+    $callStartTime: Date
+    $callEndTime: Date
+    $callType: String
+    $callStatus: String
+    $timeStamp: Float
+    $transferredCallStatus: String
+    $endedBy: String
+  ) {
+    callHistoryEdit(
+      _id: $id
+      inboxIntegrationId: $inboxIntegrationId
+      customerPhone: $customerPhone
+      callDuration: $callDuration
+      callStartTime: $callStartTime
+      callEndTime: $callEndTime
+      callType: $callType
+      callStatus: $callStatus
+      timeStamp: $timeStamp
+      transferredCallStatus: $transferredCallStatus
+      endedBy: $endedBy
+    )
+  }
+`;
 
 export const CALL_HISTORY_EDIT_STATUS = gql`
   mutation CallHistoryEditStatus($callStatus: String, $timeStamp: Float) {
@@ -91,5 +120,11 @@ export const CALL_SELECT_CUSTOMER = gql`
       phoneNumber: $phoneNumber
       conversationId: $conversationId
     )
+  }
+`;
+
+export const CALL_SYNC_RECORD_FILE = `
+  mutation callSyncRecordFile($acctId: String!, $inboxId: String!) {
+    callSyncRecordFile(acctId: $acctId, inboxId: $inboxId)
   }
 `;

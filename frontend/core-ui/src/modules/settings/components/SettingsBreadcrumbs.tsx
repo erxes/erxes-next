@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router';
-import { Breadcrumb } from 'erxes-ui';
+import { Breadcrumb, Button } from 'erxes-ui';
 import { IconMinusVertical, IconSettings } from '@tabler/icons-react';
 import { SETTINGS_PATH_DATA } from '../constants/data';
+import { PageHeader, PageHeaderStart } from 'ui-modules';
 
 export function SettingsBreadcrumbs() {
   const { pathname } = useLocation();
@@ -9,27 +10,18 @@ export function SettingsBreadcrumbs() {
     SETTINGS_PATH_DATA.nav.find((nav) => pathname.includes(nav.path)) ||
     SETTINGS_PATH_DATA.account.find((acc) => pathname.includes(acc.path));
   return (
-    <div className="flex items-center justify-between">
-      <Breadcrumb>
-        <Breadcrumb.List>
-          <Breadcrumb.Item>
-            <Breadcrumb.Link asChild className="flex items-center gap-1">
-              <Link className="text-foreground font-semibold" to={`/settings`}>
-                <IconSettings size={16} className="stroke-foreground" />
-                Settings
-              </Link>
-            </Breadcrumb.Link>
-          </Breadcrumb.Item>
-          <IconMinusVertical size={14} className="stroke-foreground" />
-          <Breadcrumb.Item>
-            <Breadcrumb.Link asChild className="flex items-center gap-1">
-              <Link className="text-foreground font-semibold" to={pathname}>
-                {currentPath?.name}
-              </Link>
-            </Breadcrumb.Link>
-          </Breadcrumb.Item>
-        </Breadcrumb.List>
-      </Breadcrumb>
-    </div>
+    <PageHeader>
+      <PageHeaderStart>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            <Breadcrumb.Item>
+              <Button variant="ghost" asChild>
+                <Link to={pathname}>{currentPath?.name}</Link>
+              </Button>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb>
+      </PageHeaderStart>
+    </PageHeader>
   );
 }

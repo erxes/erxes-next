@@ -303,7 +303,6 @@ export const uploadFileCloudflare = async (
     : await getConfig('FILE_SYSTEM_PUBLIC', 'false');
 
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
-
   if (!isValidPath(file.filepath)) {
     throw new Error('Unsafe file path');
   }
@@ -420,7 +419,6 @@ export const uploadFile = async (
   const VERSION = getEnv({ name: 'VERSION' });
 
   const { UPLOAD_SERVICE_TYPE } = await getFileUploadConfigs(models);
-
   let nameOrLink = '';
 
   if (UPLOAD_SERVICE_TYPE === 'AZURE') {

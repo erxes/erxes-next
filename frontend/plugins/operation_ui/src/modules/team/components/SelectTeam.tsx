@@ -57,7 +57,7 @@ const SelectTeamProvider = ({
   const { teams, loading } = useGetCurrentUsersTeams();
 
   const handleValueChange = (teamId: string) => {
-    if (!value) return;
+    if (!teamId) return;
     if (mode === 'single') {
       onValueChange(teamId);
       setOpen?.(false);
@@ -230,15 +230,21 @@ const SelectTeamFilterView = () => {
 const SelectTeamFormItem = ({
   value,
   onValueChange,
-  mode = 'single',
+  mode = 'multiple',
 }: {
   value: string | string[];
   onValueChange: (value: string | string[]) => void;
   mode?: 'single' | 'multiple';
 }) => {
+  const [open, setOpen] = useState(false);
   return (
-    <SelectTeamProvider value={value} onValueChange={onValueChange} mode={mode}>
-      <PopoverScoped>
+    <SelectTeamProvider
+      value={value}
+      onValueChange={onValueChange}
+      mode={mode}
+      setOpen={setOpen}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen}>
         <SelectTriggerOperation variant="form">
           <SelectTeamValue />
         </SelectTriggerOperation>

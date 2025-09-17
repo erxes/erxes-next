@@ -1,4 +1,4 @@
-import { Button, Popover } from 'erxes-ui/components';
+import { Badge, Button, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
 import { Popover as PopoverPrimitive } from 'radix-ui';
@@ -61,7 +61,7 @@ const RecordTableCellDisplay = React.forwardRef<
     <Button
       variant="ghost"
       className={cn(
-        'h-8 px-2 w-full justify-start text-left font-normal rounded-none',
+        'h-8 px-2 w-full justify-start text-left font-normal rounded-none overflow-hidden',
         className,
       )}
       ref={ref}
@@ -76,7 +76,29 @@ const RecordTableCellDisplay = React.forwardRef<
 
 RecordTableCellDisplay.displayName = 'RecordTableCellDisplay';
 
+export const RecordTableInlineAnchor = React.forwardRef<
+  React.ElementRef<typeof Badge>,
+  React.ComponentPropsWithoutRef<typeof Badge>
+>(({ className, onClick, children, ...props }, ref) => {
+  return (
+    <Badge
+      ref={ref}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick?.(e);
+      }}
+      variant="secondary"
+      className={cn('min-w-32 group truncate', className)}
+      {...props}
+    >
+      {children}
+    </Badge>
+  );
+});
+RecordTableInlineAnchor.displayName = 'RecordTableInlineAnchor';
+
 export const RecordTableInlineCell = Object.assign(RecordTableCellDisplay, {
   Trigger: RecordTableCellTrigger,
   Content: RecordTableCellContent,
+  Anchor: RecordTableInlineAnchor,
 });

@@ -7,11 +7,11 @@ export const NotificationsCountLabel = () => {
   const { totalCount, loading } = useNotificationsListContext();
 
   return (
-    <div className="flex justify-end font-semibold text-accent-foreground text-xs">
+    <div className="flex justify-end font-medium text-accent-foreground text-xs">
       {loading ? (
         <Skeleton className="w-16 h-4" />
       ) : (
-        generateText(totalCount, status)
+        generateText(totalCount, status || 'all')
       )}
     </div>
   );

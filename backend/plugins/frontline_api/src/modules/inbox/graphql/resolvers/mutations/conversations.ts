@@ -34,6 +34,9 @@ export const dispatchConversationToService = async (
         // TODO: Implement Instagram logic
         break;
 
+      case 'calls':
+        break;
+
       case 'mobinetSms':
         // TODO: Implement Mobinet SMS logic
         break;

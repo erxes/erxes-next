@@ -1,7 +1,7 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_PROJECT_PROGRESS_CHART } from '@/project/graphql/queries/getProjectProgressChart';
 import { useEffect } from 'react';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 
 interface IGetProjectQueryResponse {
   getProjectProgressChart: {
@@ -22,7 +22,7 @@ export const useGetProjectProgressChart = (options: QueryHookOptions) => {
 
   useEffect(() => {
     const unsubscribe = subscribeToMore({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: { projectId: options.variables?._id } },
       updateQuery: () => {
         refetch();

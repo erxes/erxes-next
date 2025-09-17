@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { PaymentContext } from '../hooks/use-payment';
 import PaymentMethod from './PaymentMethod';
 import PaymentDialog from './PaymentDialog';
+import { API_URL } from '../config';
 
 type Props = {
   invoiceDetail: any;
@@ -20,10 +21,6 @@ const Payment = (props: Props) => {
     [invoiceDetail.transactions],
   );
 
-  const apiDomain =
-    typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL
-      ? import.meta.env.VITE_API_URL
-      : process.env.VITE_API_URL;
 
   const [currentTransaction, setCurrentTransaction] = useState<any>(
     props.newTransaction,
@@ -83,7 +80,7 @@ const Payment = (props: Props) => {
       <PaymentContext.Provider
         value={{
           ...props,
-          apiDomain,
+          apiDomain:API_URL,
           isOpen: modalIsOpen,
           onClose: () => setModalIsOpen(false),
           transaction: currentTransaction,
@@ -109,7 +106,7 @@ const Payment = (props: Props) => {
                   key={payment._id}
                   kind={payment.kind.includes('qpay') ? 'qpay' : payment.kind}
                   name={payment.name}
-                  iconUrl={`${apiDomain}/pl:payment/static/images/payments/${payment.kind}.png`}
+                  iconUrl={`${API_URL}/pl:payment/static/images/payments/${payment.kind}.png`}
                   onClick={() => {
                     openDialog(payment);
                   }}

@@ -15,21 +15,21 @@ import {
   SipProviderProps,
   SipContextValue,
 } from '../types/sipTypes';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
-  callConfigAtom,
   callInfoAtom,
   rtcSessionAtom,
   sipStateAtom,
 } from '../states/sipStates';
 import { getPluginAssetsUrl } from 'erxes-ui';
-import { ICallConfigDoc } from '@/integrations/call/types/callTypes';
 import {
   extractPhoneNumberFromCounterpart,
   logger,
   parseCallDirection,
 } from '@/integrations/call/utils/callUtils';
+
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
+import { historyIdAtom } from '@/integrations/call/states/callStates';
 
 // Context for SIP functionality
 const SipContext = createContext<SipContextValue | null>(null);
@@ -49,30 +49,28 @@ const SipProvider = ({
   children,
   createSession,
   addHistory,
+  updateHistory,
 }: SipProviderProps & { children: React.ReactNode }) => {
-  const [callConfig, setCallConfig] = useAtom(callConfigAtom);
-  const [callInfo, setCallInfo] = useAtom(callInfoAtom);
+  const [callInfo] = useAtom(callInfoAtom);
   const setCallNumber = useSetAtom(callNumberState);
   // State
   const [sipState, setSipState] = useAtom(sipStateAtom);
   const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
 
-  const setPersistentStates = useCallback(
-    (isRegistered: boolean, isAvailable: boolean) => {
-      setCallInfo({ isUnregistered: !isRegistered });
-      setCallConfig((prev) => ({
-        ...((prev || {}) as ICallConfigDoc),
-        isAvailable,
-      }));
-    },
-    [setCallConfig, setCallInfo],
-  );
+  const currentHistoryId = useAtomValue(historyIdAtom);
 
-  // Refs for persistent values
   const uaRef = useRef<any>(null);
   const ringbackToneRef = useRef<HTMLAudioElement | null>(null);
   const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
   const loggerRef = useRef<any>(logger);
+
+  const historyIdRef = useRef<string>('');
+
+  useEffect(() => {
+    if (currentHistoryId) {
+      historyIdRef.current = currentHistoryId;
+    }
+  }, [currentHistoryId]);
 
   const playHangupTone = useCallback(() => {
     if (!ringbackToneRef.current) {
@@ -273,7 +271,7 @@ const SipProvider = ({
         uri: `sip:${user}@${host}`,
         password,
         sockets: [socket],
-        register: autoRegister,
+        register: !callInfo?.isUnregistered,
       };
 
       uaRef.current = new JsSIP.UA(options);
@@ -298,7 +296,6 @@ const SipProvider = ({
     // Set up event handlers
     ua.on('connecting', () => {
       loggerRef.current?.debug('UA "connecting" event');
-      setPersistentStates(false, true);
 
       if (uaRef.current !== ua) {
         return;
@@ -313,7 +310,6 @@ const SipProvider = ({
 
     ua.on('connected', () => {
       loggerRef.current?.debug('UA "connected" event');
-      setPersistentStates(false, true);
 
       if (uaRef.current !== ua) {
         return;
@@ -335,7 +331,6 @@ const SipProvider = ({
       if (uaRef.current !== ua) {
         return;
       }
-      setPersistentStates(false, false);
       setSipState((prev) => ({
         ...prev,
         sipStatus: SipStatusEnum.ERROR,
@@ -355,7 +350,6 @@ const SipProvider = ({
         sipStatus: SipStatusEnum.REGISTERED,
         callStatus: CallStatusEnum.IDLE,
       }));
-      setPersistentStates(true, true);
     });
 
     ua.on('unregistered', () => {
@@ -406,9 +400,16 @@ const SipProvider = ({
         if (uaRef.current !== ua) {
           return;
         }
+        let counterpart = '';
+        let callDirection = '';
+
         if (originator === 'local') {
           const foundUri = rtcRequest.to.toString();
           const toDelimiterPosition = foundUri.indexOf(';') || null;
+
+          counterpart = rtcRequest.to.toString().split(';')[0];
+          callDirection = CallDirectionEnum.OUTGOING;
+
           setSipState((prev) => ({
             ...prev,
             callDirection: CallDirectionEnum.OUTGOING,
@@ -428,6 +429,9 @@ const SipProvider = ({
         } else if (originator === 'remote') {
           const foundUri = rtcRequest.from.toString();
           const delimiterPosition = foundUri.indexOf(';') || null;
+          counterpart = rtcRequest.from.toString().split(';')[0];
+          callDirection = CallDirectionEnum.INCOMING;
+
           const fromParameters = rtcRequest.from._parameters;
           const groupName = fromParameters['x-gs-group-name'] || '';
           if (debug) {
@@ -443,6 +447,7 @@ const SipProvider = ({
           }));
         }
 
+        const diversionHeader = rtcRequest.getHeader('Diversion');
         const timeStamp = rtcRequest.getHeader('Timestamp') || 0;
 
         if (rtcSessionState) {
@@ -466,12 +471,23 @@ const SipProvider = ({
           if (uaRef.current !== ua) {
             return;
           }
+
           if (sipState.callDirection) {
             direction = parseCallDirection(sipState.callDirection);
           }
-          if (sipState.callCounterpart) {
-            customerPhone = extractPhoneNumberFromCounterpart(
-              sipState.callCounterpart,
+          customerPhone = extractPhoneNumberFromCounterpart(counterpart);
+
+          if (updateHistory && rtcSession) {
+            updateHistory(
+              timeStamp,
+              rtcSession.start_time,
+              rtcSession.end_time,
+              'cancelled',
+              direction,
+              customerPhone,
+              diversionHeader || '',
+              e.originator,
+              historyIdRef.current,
             );
           }
 
@@ -483,6 +499,7 @@ const SipProvider = ({
           }));
           setRtcSessionState(null);
           ua?.terminateSessions();
+          historyIdRef.current = '';
           rtcSession = null;
         });
 
@@ -499,9 +516,19 @@ const SipProvider = ({
           if (sipState.callDirection) {
             direction = parseCallDirection(sipState.callDirection);
           }
-          if (sipState.callCounterpart) {
-            customerPhone = extractPhoneNumberFromCounterpart(
-              sipState.callCounterpart,
+          customerPhone = extractPhoneNumberFromCounterpart(counterpart);
+
+          if (updateHistory && rtcSession) {
+            updateHistory(
+              timeStamp,
+              rtcSession.start_time,
+              rtcSession.end_time,
+              'connected',
+              callDirection,
+              customerPhone,
+              diversionHeader || '',
+              data.originator,
+              historyIdRef.current,
             );
           }
 
@@ -514,6 +541,7 @@ const SipProvider = ({
           }));
           setRtcSessionState(null);
           ua?.terminateSessions();
+          historyIdRef.current = '';
           rtcSession = null;
         });
 
@@ -530,12 +558,27 @@ const SipProvider = ({
           }));
           ua?.terminateSessions();
           setRtcSessionState(null);
+          historyIdRef.current = '';
           rtcSession = null;
         });
 
         rtcSession.on('rejected', () => {
           if (uaRef.current !== ua) {
             return;
+          }
+
+          if (updateHistory && rtcSession) {
+            updateHistory(
+              timeStamp,
+              rtcSession.start_time,
+              rtcSession.end_time,
+              'rejected',
+              '',
+              '',
+              undefined,
+              undefined,
+              historyIdRef.current,
+            );
           }
 
           setSipState((prev) => ({
@@ -546,6 +589,7 @@ const SipProvider = ({
             groupName: '',
           }));
           ua?.terminateSessions();
+          historyIdRef.current = '';
         });
 
         rtcSession.on('accepted', () => {
@@ -557,17 +601,12 @@ const SipProvider = ({
             if (sipState.callDirection) {
               direction = parseCallDirection(sipState.callDirection);
             }
-            if (sipState.callCounterpart) {
-              customerPhone = extractPhoneNumberFromCounterpart(
-                sipState.callCounterpart,
-              );
-            }
-
+            customerPhone = extractPhoneNumberFromCounterpart(counterpart);
             if (addHistory) {
               addHistory(
                 'active',
                 timeStamp,
-                direction,
+                callDirection,
                 customerPhone,
                 rtcSession.start_time,
                 sipState.groupName,
@@ -596,7 +635,6 @@ const SipProvider = ({
               return;
             }
 
-            // Retry playback after 2 s: handles browsers that don’t return a Promise from play() or silently block the initial play call
             setTimeout(() => {
               remoteAudioRef.current?.play();
             }, 2000);
@@ -609,12 +647,9 @@ const SipProvider = ({
           }
         });
 
-        // Auto-answer logic
-        // used orignator === 'remote' to check if the call is incoming instead of sipState.callDirection === 'incoming'
         if (originator === 'remote' && autoAnswer) {
           answerCall();
         }
-        // used orignator === 'local' to check if the call is outgoing instead of sipState.callDirection === 'outgoing'
         if (originator === 'local') {
           setTimeout(() => {
             remoteAudioRef.current?.play();
@@ -623,48 +658,35 @@ const SipProvider = ({
       },
     );
 
-    // Set extra headers and start UA
     const extraHeadersRegister = extraHeaders.register || [];
     if (extraHeadersRegister.length) {
       ua.registrator().setExtraHeaders(extraHeadersRegister);
     }
     ua.start();
   }, [
-    debug,
-    addHistory,
-    answerCall,
-    autoAnswer,
-    autoRegister,
-    extraHeaders.register,
     host,
-    password,
-    pathname,
-    playHangupTone,
-    setCallNumber,
     port,
-    setPersistentStates,
+    user,
+    extraHeaders.register,
     setSipState,
-    sipState.callCounterpart,
-    sipState.callDirection,
-    sipState.groupName,
+    pathname,
+    password,
+    callInfo?.isUnregistered,
+    debug,
+    sipState,
     rtcSessionState,
     setRtcSessionState,
+    autoAnswer,
     stopRingbackTone,
-    user,
+    updateHistory,
+    playHangupTone,
+    setCallNumber,
+    addHistory,
+    answerCall,
   ]);
 
   // Initialize audio element and JsSIP on mount
   useEffect(() => {
-    if (
-      sipState.sipStatus === SipStatusEnum.REGISTERED &&
-      callInfo?.isUnregistered
-    ) {
-      unregisterSip();
-    }
-    if (callConfig && !callConfig.isAvailable) {
-      return;
-    }
-
     if (document.getElementById('sip-provider-audio')) {
       throw new Error(
         'Creating two SipProviders in one application is forbidden',
@@ -675,9 +697,7 @@ const SipProvider = ({
     audioElement.id = 'sip-provider-audio';
     document.body.appendChild(audioElement);
     remoteAudioRef.current = audioElement;
-
     reinitializeJsSIP();
-
     return () => {
       if (remoteAudioRef.current) {
         remoteAudioRef.current.parentNode?.removeChild(remoteAudioRef.current);
@@ -689,12 +709,7 @@ const SipProvider = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    user,
-    callInfo?.isUnregistered,
-    callConfig?.isAvailable,
-    callConfig?.phone,
-  ]);
+  }, [user]);
 
   // Create context value
   const contextValue = useMemo(
@@ -702,6 +717,7 @@ const SipProvider = ({
       sip: {
         createSession,
         addHistory,
+        updateHistory,
       },
       registerSip,
       unregisterSip,
@@ -719,6 +735,7 @@ const SipProvider = ({
     [
       createSession,
       addHistory,
+      updateHistory,
       registerSip,
       unregisterSip,
       answerCall,
@@ -749,55 +766,3 @@ export const useSip = () => {
 };
 
 export default SipProvider;
-
-// const playRingbackTone = useCallback(() => {
-//   if (!ringbackToneRef.current) {
-//     ringbackToneRef.current = new Audio(
-//       getPluginAssetsUrl('frontline', '/sound/outgoingRingtone.mp3'),
-//     );
-//     ringbackToneRef.current.loop = true;
-
-//     setTimeout(() => {
-//       ringbackToneRef.current?.play().catch(() => {
-//         stopRingbackTone();
-//       });
-//     }, 4000);
-//   } else {
-//     stopRingbackTone();
-//   }
-// }, []);
-
-// Audio playback functions
-// const playUnavailableAudio = useCallback(() => {
-//   if (!ringbackToneRef.current) {
-//     ringbackToneRef.current = new Audio(
-//       getPluginAssetsUrl('frontline', '/sound/unAvailableCall.mp3'),
-//     );
-//     ringbackToneRef.current.loop = false;
-//     ringbackToneRef.current
-//       .play()
-//       .catch(() => {
-//         ringbackToneRef.current = null;
-//       })
-//       .then(() => {
-//         ringbackToneRef.current = null;
-//       });
-//   }
-// }, []);
-
-// const playBusyAudio = useCallback(() => {
-//   if (!ringbackToneRef.current) {
-//     ringbackToneRef.current = new Audio(
-//       getPluginAssetsUrl('frontline', '/sound/busyCall.mp3'),
-//     );
-//     ringbackToneRef.current.loop = false;
-//     ringbackToneRef.current
-//       .play()
-//       .catch(() => {
-//         ringbackToneRef.current = null;
-//       })
-//       .then(() => {
-//         ringbackToneRef.current = null;
-//       });
-//   }
-// }, []);

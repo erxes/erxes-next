@@ -14,12 +14,12 @@ import { useParams } from 'react-router-dom';
 import { currentUserState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { TASK_CHANGED } from '@/task/graphql/subscriptions/taskChanged';
+import { TASK_LIST_CHANGED } from '@/task/graphql/subscriptions/taskListChanged';
 
 const TASKS_PER_PAGE = 30;
 
 interface ITaskChanged {
-  operationTaskChanged: {
+  operationTaskListChanged: {
     type: string;
     task: ITask;
   };
@@ -29,15 +29,14 @@ export const useTasksVariables = (
   variables?: QueryHookOptions<ICursorListResponse<ITask>>['variables'],
 ) => {
   const { teamId } = useParams();
-  const { searchValue, assignee, team, priority, statusType, status } =
+  const { searchValue, assignee, team, priority, status } =
     useNonNullMultiQueryState<{
       searchValue: string;
       assignee: string;
       team: string;
       priority: string;
       status: string;
-      statusType: string;
-    }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
+    }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
   const currentUser = useAtomValue(currentUserState);
 
   return {
@@ -51,8 +50,8 @@ export const useTasksVariables = (
     assigneeId: assignee,
     teamId: teamId || team,
     priority: priority,
-    status: status,
-    statusType: statusType,
+    status: teamId ? status : undefined,
+    statusType: teamId ? undefined : status,
     ...variables,
     ...(!variables?.teamId &&
       !variables?.userId &&
@@ -88,12 +87,12 @@ export const useTasks = (
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<ITaskChanged>({
-      document: TASK_CHANGED,
+      document: TASK_LIST_CHANGED,
       variables: { filter: variables },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, task } = subscriptionData.data.operationTaskChanged;
+        const { type, task } = subscriptionData.data.operationTaskListChanged;
         const currentList = prev.getTasks.list;
 
         let updatedList = currentList;

@@ -13,23 +13,23 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
-import { SelectProject } from '@/task/components/select/SelectProjectTask';
+import { SelectProject } from '@/task/components/task-selects/SelectProjectTask';
 import { useGetCurrentUsersTeams } from '@/team/hooks/useGetCurrentUsersTeams';
 import { IconChevronRight } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 import { useGetProject } from '@/project/hooks/useGetProject';
-import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
-import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
+import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
+import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
 import clsx from 'clsx';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { SelectPriority } from '@/operation/components/SelectPriority';
-import { DateSelectTask } from '@/task/components/select/DateSelectTask';
-import { SelectEstimatedPoint } from '@/task/components/select/SelectEstimatedPointTask';
+import { DateSelectTask } from '@/task/components/task-selects/DateSelectTask';
+import { SelectEstimatedPoint } from '@/task/components/task-selects/SelectEstimatedPointTask';
 import { SelectTeam } from '@/team/components/SelectTeam';
 import { taskCreateDefaultValuesState } from '@/task/states/taskCreateSheetState';
-import { SelectCycle } from '@/task/components/select/SelectCycle';
+import { SelectCycle } from '@/task/components/task-selects/SelectCycle';
 
 export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const { teamId, projectId, cycleId } = useParams<{
@@ -59,7 +59,6 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
   const defaultValues = {
     teamId: _teamId || undefined,
     name: '',
-    status: '',
     priority: 0,
     assigneeId: teamId ? undefined : currentUser?._id,
     projectId: projectId || undefined,
@@ -73,9 +72,10 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
     resolver: zodResolver(addTaskSchema),
     defaultValues,
   });
+
   useEffect(() => {
     form.setFocus('name');
-  });
+  }, [form]);
 
   useEffect(() => {
     if (teams && teams.length > 0 && !form.getValues('teamId') && !teamId) {
@@ -106,7 +106,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
         ...data,
         description: JSON.stringify(descriptionContent),
         priority: data.priority || 0,
-        status: data.status || '0',
+        status: data.status,
       },
       onCompleted: () => {
         onClose();
@@ -134,6 +134,8 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   onValueChange={(value) => {
                     field.onChange(value);
                     form.resetField('projectId');
+                    form.resetField('status');
+                    form.resetField('cycleId');
                   }}
                   mode="single"
                 />
@@ -153,7 +155,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 <Form.Control>
                   <Input
                     {...field}
-                    className="shadow-none focus-visible:shadow-none h-8 text-xl"
+                    className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
                     placeholder="Task Name"
                   />
                 </Form.Control>
@@ -170,8 +172,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   <SelectStatusTask.FormItem
                     value={field.value || ''}
                     onValueChange={(value) => field.onChange(value)}
-                    teamId={form.getValues('teamId') || _teamId}
-                    scope={clsx(TaskHotKeyScope.TasksPage, 'form', 'Status')}
+                    form={form}
                   />
                 </Form.Item>
               )}
@@ -222,6 +223,41 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               )}
             />
             <Form.Field
+              name="estimatePoint"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="sr-only">Estimate Point</Form.Label>
+                  <SelectEstimatedPoint.FormItem
+                    value={field.value || 0}
+                    onValueChange={(value) => field.onChange(value)}
+                    teamId={form.getValues('teamId') || _teamId || ''}
+                    scope={clsx(
+                      TaskHotKeyScope.TasksPage,
+                      'form',
+                      'Estimate Point',
+                    )}
+                  />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              name="cycleId"
+              control={form.control}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="sr-only">Cycle</Form.Label>
+                  <SelectCycle.FormItem
+                    value={field.value || ''}
+                    onValueChange={(value: any) => {
+                      field.onChange(value);
+                    }}
+                    teamId={form.getValues('teamId') || undefined}
+                  />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
               name="startDate"
               control={form.control}
               render={({ field }) => (
@@ -249,46 +285,13 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                 </Form.Item>
               )}
             />
-            <Form.Field
-              name="estimatePoint"
-              control={form.control}
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label className="sr-only">Estimate Point</Form.Label>
-                  <SelectEstimatedPoint.FormItem
-                    value={field.value || 0}
-                    onValueChange={(value) => field.onChange(value)}
-                    teamId={form.getValues('teamId') || _teamId || ''}
-                    scope={clsx(
-                      TaskHotKeyScope.TasksPage,
-                      'form',
-                      'Estimate Point',
-                    )}
-                  />
-                </Form.Item>
-              )}
-            />
-            <Form.Field
-              name="cycleId"
-              control={form.control}
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label className="sr-only">Cycle</Form.Label>
-                  <SelectCycle
-                    {...field}
-                    teamId={form.getValues('teamId') || _teamId}
-                    value={field.value}
-                  />
-                </Form.Item>
-              )}
-            />
           </div>
           <Separator className="my-4" />
-          <div className="h-[60vh] overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             <BlockEditor
               editor={editor}
               onChange={handleDescriptionChange}
-              className="min-h-full"
+              className="read-only min-h-full"
             />
           </div>
         </Sheet.Content>

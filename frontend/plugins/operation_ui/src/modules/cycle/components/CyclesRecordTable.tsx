@@ -10,9 +10,6 @@ export const CyclesRecordTable = () => {
 
   return (
     <div className="flex flex-col overflow-hidden h-full">
-      {/* <PageSubHeader>
-        <TasksFilter />
-      </PageSubHeader> */}
       <RecordTable.Provider
         columns={cyclesColumns}
         data={cycles || [{}]}

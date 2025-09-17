@@ -20,24 +20,24 @@ import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import clsx from 'clsx';
 import { taskCountByBoardAtom } from '@/task/states/tasksTotalCountState';
 import { IconPlus } from '@tabler/icons-react';
-import { StatusInlineIcon } from '@/task/components/StatusInline';
 import {
   taskCreateDefaultValuesState,
   taskCreateSheetState,
 } from '@/task/states/taskCreateSheetState';
 import { useInView } from 'react-intersection-observer';
+import { StatusInlineIcon } from '@/operation/components/StatusInline';
 
 const fetchedTasksState = atom<BoardItemProps[]>([]);
 export const allTasksMapState = atom<Record<string, ITask>>({});
 
 export const TasksBoard = () => {
-  const { teamId } = useParams();
+  const { teamId, cycleId } = useParams();
   const allTasksMap = useAtomValue(allTasksMapState);
   const { updateTask } = useUpdateTask();
 
   const { statuses } = useGetStatusByTeam({
     variables: {
-      teamId: teamId,
+      teamId: teamId || undefined,
     },
     skip: !teamId,
   });
@@ -110,7 +110,7 @@ export const TasksBoard = () => {
 
 export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
   const currentUser = useAtomValue(currentUserState);
-  const { projectId } = useParams();
+  const { projectId, cycleId } = useParams();
   const [taskCards, setTaskCards] = useAtom(fetchedTasksState);
   const [taskCountByBoard, setTaskCountByBoard] = useAtom(taskCountByBoardAtom);
 
@@ -126,6 +126,7 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
     variables: {
       projectId,
       userId: currentUser?._id,
+      cycleId,
       status: column.id,
     },
   });
@@ -169,10 +170,7 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
     <>
       <Board.Header>
         <h4 className="capitalize flex items-center gap-1 pl-1">
-          <StatusInlineIcon
-            type={column.type as string}
-            color={column.color as string}
-          />
+          <StatusInlineIcon statusType={column.type as number} />
           {column.name}
           <span className="text-accent-foreground font-medium pl-1">
             {loading ? (
@@ -203,7 +201,7 @@ export const TasksBoardCards = ({ column }: { column: BoardColumnProps }) => {
           ))
         )}
         <TaskCardsFetchMore
-          totalCount={totalCount || 0}
+          totalCount={taskCountByBoard[column.id] || 0}
           currentLength={boardCards.length}
           handleFetchMore={() =>
             handleFetchMore({ direction: EnumCursorDirection.FORWARD })

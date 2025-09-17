@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useUpdateProject } from '@/project/hooks/useUpdateProject';
 import {
   IconAlertSquareRounded,
@@ -11,7 +11,6 @@ import {
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
-  Badge,
   Input,
   RecordTable,
   RecordTableInlineCell,
@@ -22,13 +21,13 @@ import { useState } from 'react';
 import { ProjectHotKeyScope } from '@/project/constants/ProjectHotKeyScope';
 import { ITeam } from '@/team/types';
 import {
-  SelectStatus,
   SelectLead,
   DateSelect,
   SelectProjectTeam,
 } from '@/project/components/select';
 import clsx from 'clsx';
 import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
+import { SelectProjectStatus } from '@/project/components/select/SelectProjectStatus';
 
 export const projectsColumns = (
   _teams: ITeam[] | undefined,
@@ -71,15 +70,11 @@ export const projectsColumns = (
             }}
           >
             <RecordTableInlineCell.Trigger>
-              <Badge
-                variant="secondary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`${cell.row.original._id}/overview`);
-                }}
+              <RecordTableInlineCell.Anchor
+                onClick={() => navigate(`${cell.row.original._id}/overview`)}
               >
                 {name}
-              </Badge>
+              </RecordTableInlineCell.Anchor>
             </RecordTableInlineCell.Trigger>
             <RecordTableInlineCell.Content className="min-w-72">
               <Input
@@ -127,9 +122,10 @@ export const projectsColumns = (
       ),
       cell: ({ cell }) => {
         return (
-          <SelectStatus.InlineCell
+          <SelectProjectStatus
+            inInlineCell
+            projectId={cell.row.original._id}
             value={cell.row.original.status || 0}
-            id={cell.row.original._id}
           />
         );
       },

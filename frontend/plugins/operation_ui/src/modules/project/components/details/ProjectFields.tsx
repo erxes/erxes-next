@@ -10,7 +10,6 @@ import { useDebounce } from 'use-debounce';
 import { useEffect, useState } from 'react';
 import { Block } from '@blocknote/core';
 import {
-  SelectStatus,
   SelectLead,
   DateSelect,
   SelectProjectTeam,
@@ -18,6 +17,7 @@ import {
 import { useGetProject } from '@/project/hooks/useGetProject';
 import { SelectProjectPriority } from '@/project/components/select/SelectProjectPriority';
 import { ActivityList } from '@/activity/components/ActivityList';
+import { SelectProjectStatus } from '@/project/components/select/SelectProjectStatus';
 
 export const ProjectFields = ({ projectId }: { projectId: string }) => {
   const { project } = useGetProject({
@@ -105,7 +105,7 @@ export const ProjectFields = ({ projectId }: { projectId: string }) => {
         onChange={(e) => setName(e.target.value)}
       />
       <div className="gap-2 flex flex-wrap w-full">
-        <SelectStatus.Detail value={status} id={projectId} />
+        <SelectProjectStatus value={status} projectId={projectId} />
         <SelectProjectPriority projectId={projectId} value={priority} />
         <SelectLead.Detail value={leadId} id={projectId} teamIds={teamIds} />
         <DateSelect.Detail value={startDate} id={projectId} type="start" />

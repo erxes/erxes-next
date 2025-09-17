@@ -1,21 +1,24 @@
 import { callConfigAtom } from '@/integrations/call/states/sipStates';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import SipProvider from './SipProvider';
 import { useAddCallHistory } from '@/integrations/call/hooks/useAddCallHistory';
+import { useUpdateCallHistory } from '@/integrations/call/hooks/useEditCallHistory';
 import { useCallCreateSession } from '@/integrations/call/hooks/useCallCreateSession';
 import { useCallUserIntegration } from '@/integrations/call/hooks/useCallUserIntegration';
 import { useCallGetConfigs } from '@/integrations/call/hooks/useCallGetConfigs';
 import { CallSelectConfig } from '@/integrations/call/components/CallSelectConfig';
+import { historyIdAtom } from '@/integrations/call/states/callStates';
 
 export const SipContainer = ({ children }: { children: React.ReactNode }) => {
   const [callConfig] = useAtom(callConfigAtom);
+  const historyId = useAtomValue(historyIdAtom);
 
   const { callUserIntegrations, loading: callUserIntegrationLoading } =
     useCallUserIntegration();
   const { callConfigs, loading: callConfigLoading } = useCallGetConfigs();
 
   const { addHistory } = useAddCallHistory();
-
+  const { updateHistory } = useUpdateCallHistory();
   const { createActiveSession } = useCallCreateSession();
 
   if (
@@ -29,6 +32,10 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
 
   if (!callConfig || !callConfig.inboxId) {
     return <CallSelectConfig callUserIntegrations={callUserIntegrations} />;
+  }
+
+  if (!callConfig.isAvailable) {
+    return null;
   }
 
   const { wsServer, operators } = callConfig;
@@ -59,8 +66,9 @@ export const SipContainer = ({ children }: { children: React.ReactNode }) => {
   return (
     <SipProvider
       createSession={createActiveSession}
-      // updateHistory={updateHistory}
+      updateHistory={updateHistory}
       addHistory={addHistory}
+      historyId={historyId}
       {...sipConfig}
     >
       {children}

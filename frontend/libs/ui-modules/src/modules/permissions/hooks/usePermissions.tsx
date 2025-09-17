@@ -1,5 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { useMultiQueryState } from 'erxes-ui';
+import {
+  EnumCursorDirection,
+  mergeCursorData,
+  useMultiQueryState,
+  useRecordTableCursor,
+  validateFetchMore,
+} from 'erxes-ui';
+import { PERMISSION_CURSOR_SESSION_KEY } from 'ui-modules/modules/permissions/constants/permissionCursorSessionKey';
 import {
   GET_PERMISSION_ACTIONS,
   GET_PERMISSION_MODULES,
@@ -15,6 +22,9 @@ import {
 const PERMISSIONS_PER_PAGE = 30;
 
 export const usePermissions = (options?: IQueryPermissionsHookOptions) => {
+  const { cursor } = useRecordTableCursor({
+    sessionKey: PERMISSION_CURSOR_SESSION_KEY,
+  });
   const [{ groupId }] = useMultiQueryState<{ groupId: string }>(['groupId']);
   const { data, error, loading, fetchMore } = useQuery<IPermissionResponse>(
     GET_PERMISSIONS,
@@ -23,33 +33,45 @@ export const usePermissions = (options?: IQueryPermissionsHookOptions) => {
       variables: {
         limit: PERMISSIONS_PER_PAGE,
         groupId: groupId ?? undefined,
+        cursor,
         ...options?.variables,
       },
     },
   );
   const { list = [], totalCount = 0, pageInfo } = data?.permissions || {};
 
-  const handleFetchMore = () => {
-    if (totalCount && totalCount <= list.length) return;
-    if (!fetchMore) return;
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
+    if (
+      !validateFetchMore({
+        direction,
+        pageInfo,
+      })
+    ) {
+      return;
+    }
 
     fetchMore({
       variables: {
         ...options?.variables,
-        cursor: pageInfo?.endCursor,
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
         limit: PERMISSIONS_PER_PAGE,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          permissions: {
-            list: [
-              ...(prev.permissions?.list || []),
-              ...fetchMoreResult.permissions.list,
-            ],
-            totalCount: fetchMoreResult.permissions.totalCount,
-            pageInfo: fetchMoreResult.permissions.pageInfo,
-          },
+          permissions: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.permissions,
+            prevResult: prev.permissions,
+          }),
         });
       },
     });

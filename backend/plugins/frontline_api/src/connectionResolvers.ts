@@ -95,6 +95,11 @@ import {
   ICallOperatorModel,
   loadCallOperatorClass,
 } from '~/modules/integrations/call/db/models/Operators';
+
+import {
+  ICallQueueStatisticsModel,
+  loadCallQueueClass,
+} from '~/modules/integrations/call/db/models/QueueStatistics';
 import { ICallCdrDocument } from '~/modules/integrations/call/@types/cdrs';
 import { ICallOperatorDocuments } from '~/modules/integrations/call/@types/operators';
 import { ICallConfigDocument } from '~/modules/integrations/call/@types/config';
@@ -129,6 +134,7 @@ import {
   IChannelDocument,
   IChannelMemberDocument,
 } from '~/modules/channel/@types/channel';
+import { ICallQueueStatisticsDocuments } from '~/modules/integrations/call/@types/queueStatistics';
 export interface IModels {
   //channel
   Channels: IChannelModel;
@@ -156,6 +162,8 @@ export interface IModels {
   CallConfigs: ICallConfigModel;
   CallOperators: ICallOperatorModel;
   CallCdrs: ICallCdrModel;
+  CallQueueStatistics: ICallQueueStatisticsModel;
+
   FacebookBots: IFacebookBotModel;
   //imap
   ImapCustomers: ICustomerImapModel;
@@ -272,6 +280,11 @@ export const loadClasses = (
     'calls_cdr',
     loadCallCdrClass(models),
   );
+  models.CallQueueStatistics = db.model<
+    ICallQueueStatisticsDocuments,
+    ICallQueueStatisticsModel
+  >('calls_queue_statistics', loadCallQueueClass());
+
   models.FacebookBots = db.model<IFacebookBotDocument, IFacebookBotModel>(
     'facebook_messengers_bots',
     loadFacebookBotClass(models),

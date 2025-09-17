@@ -10,11 +10,12 @@ import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
 import { TasksTotalCount } from '@/task/components/TasksTotalCount';
 import { TASKS_CURSOR_SESSION_KEY } from '@/task/constants';
 import { SelectPriority } from '@/operation/components/SelectPriority';
-import { SelectStatusTask } from '@/task/components/select/SelectStatusTask';
+import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
 import { useParams } from 'react-router-dom';
-import { SelectAssigneeTask } from '@/task/components/select/SelectAssigneeTask';
+import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
 import clsx from 'clsx';
 import { SelectTeam } from '@/team/components/SelectTeam';
+import { SelectStatus } from '@/operation/components/SelectStatus';
 
 const TasksFilterPopover = () => {
   const { teamId } = useParams();
@@ -24,8 +25,7 @@ const TasksFilterPopover = () => {
     team: string;
     priority: string;
     status: string;
-    statusType: string;
-  }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
+  }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,
@@ -70,10 +70,14 @@ const TasksFilterPopover = () => {
               </Command.List>
             </Command>
           </Filter.View>
-          <SelectAssigneeTask.FilterView />
+          <SelectAssigneeTask.FilterView teamIds={[teamId || '']} />
           {!teamId && <SelectTeam.FilterView />}
           <SelectPriority.FilterView />
-          <SelectStatusTask.FilterView teamId={teamId} />
+          {teamId ? (
+            <SelectStatusTask.FilterView teamId={teamId} />
+          ) : (
+            <SelectStatus.FilterView />
+          )}
         </Combobox.Content>
       </Filter.Popover>
       <Filter.Dialog>
@@ -93,8 +97,7 @@ export const TasksFilter = () => {
     team: string;
     priority: string;
     status: string;
-    statusType: string;
-  }>(['searchValue', 'assignee', 'team', 'priority', 'status', 'statusType']);
+  }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
   const { searchValue } = queries || {};
 
   return (
@@ -132,10 +135,14 @@ export const TasksFilter = () => {
             <IconProgressCheck />
             Status
           </Filter.BarName>
-          <SelectStatusTask.FilterBar
-            teamId={teamId}
-            scope={clsx(TaskHotKeyScope.TasksPage, 'filter', 'Status')}
-          />
+          {teamId ? (
+            <SelectStatusTask.FilterBar
+              teamId={teamId}
+              scope={clsx(TaskHotKeyScope.TasksPage, 'filter', 'Status')}
+            />
+          ) : (
+            <SelectStatus.FilterBar />
+          )}
         </Filter.BarItem>
         <Filter.BarItem queryKey="assignee">
           <Filter.BarName>

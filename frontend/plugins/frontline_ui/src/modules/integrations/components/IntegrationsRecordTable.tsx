@@ -180,13 +180,13 @@ export const integrationTypeColumns = ({
     cell: ({ cell }) => {
       const { isActive, _id, name } = cell.row.original;
       return (
-        <div className="flex items-center justify-center gap-1.5">
+        <div className="flex items-center gap-1.5 px-2">
           <Actions cell={cell} />
           <ArchiveIntegration _id={_id} name={name} isActive={isActive} />
           <RemoveIntegration _id={_id} name={name} />
         </div>
       );
     },
-    size: 120,
+    size: 300,
   },
 ];
