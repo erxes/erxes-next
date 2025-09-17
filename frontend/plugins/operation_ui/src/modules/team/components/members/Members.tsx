@@ -52,7 +52,7 @@ export function Members() {
   };
 
   return (
-    <div className="overflow-auto h-full px-8">
+    <div className="px-8">
       <div className="ml-auto flex justify-between py-6">
         <h1 className="text-xlfont-semibold">Members</h1>
         <AddMembers />
