@@ -14,6 +14,7 @@ export const useCallHistories = (missed?: boolean) => {
       callType: string;
       customerPhone: string;
       extensionNumber: string;
+      conversationId: string;
     }[];
     callHistoriesTotalCount: number;
   }>(CALL_HISTORIES, {

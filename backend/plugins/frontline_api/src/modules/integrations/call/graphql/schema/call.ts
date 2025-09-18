@@ -77,6 +77,75 @@ export const types = `
     extensionNumber: String
     conversationId: String
     recordUrl: String
+    inboxIntegrationId: String
+    acctId: String
+  }
+
+  type CallStatistic {
+    extension: String
+    queuename: String
+    strategy: String
+    callstotal: Int
+    callswaiting: Int
+    callscomplete: Int
+    callsabandoned: Int
+    servicelevel: String
+    urgemsg: Int
+    newmsg: Int
+    oldmsg: Int
+    queuechairman: String
+    enable_agent_login: String
+    abandonedrate: String
+    avgwaittime: Int
+    avgtalktime: Int
+    availablecount: Int
+    agentcount: Int
+    transferoutcalls: Int
+    transferoutrate: String
+  }
+
+  type CallQueueStatistics {
+    queuechairman: String
+    queue: Int
+    totalCalls: Int
+    answeredCalls: Int
+    answeredRate: Float
+    abandonedCalls: Int
+    avgWait: Float
+    avgTalk: Float
+    vqTotalCalls: Int
+    slaRate: Float
+    vqSlaRate: Float
+    transferOutCalls: Int
+    transferOutRate: Float
+    abandonedRate: Float
+    createdAt: String
+    updatedAt: String
+  }
+
+  type CallAgent {
+    extension: String
+    member: [AgentMember]
+    idlecount: Int
+  }
+
+  type AgentMember {
+    member_extension: String
+    status: String # InUse, Idle, Paused
+    membership: String
+    answer: Int
+    abandon: Int
+    logintime: String
+    talktime: Int
+    pausetime: String
+    first_name: String
+    last_name: String
+    queue_action: String
+    pause_reason: String
+    # For hangup events
+    callerchannel: String
+    calleechannel: String
+    calleeid: String
   }
 
   type CallConversationNotes {
@@ -99,6 +168,9 @@ export const subscriptions = `
   waitingCallReceived(extension: String): String
   talkingCallReceived(extension: String): String
   agentCallReceived(extension: String): String
+  queueRealtimeUpdate(extension: String): String
+
+  callStatistic(extension: String): CallStatistic
   `;
 
 const commonHistoryFields = `
@@ -140,21 +212,13 @@ export const queries = `
   callGetAgentStatus: String
   callExtensionList(integrationId: String!): JSON
   callQueueList(integrationId: String!): JSON
-  callWaitingList(queue: String!): String
-  callProceedingList(queue: String!): String
+  callQueueInitialList(queue: String!): String
   callQueueMemberList(integrationId: String!, queue: String!): JSON
   callTodayStatistics(queue: String!): JSON
+
   callConversationNotes(conversationId: String! getFirst: Boolean, ${pageParams}): [CallConversationNotes]
   callHistoryDetail(_id: String, conversationId: String): CallHistory
   `;
-
-//old mutations
-
-//callTerminateSession: JSON
-//callDisconnect: String
-//callHistoryAdd(${commonHistoryFields}, queueName: String): CallHistory
-//callHistoryEdit(_id: String,${commonHistoryFields}): String
-//callHistoryEditStatus(callStatus: String, timeStamp: Float): String
 
 export const mutations = `
   callsIntegrationUpdate(configs: CallIntegrationConfigs): JSON

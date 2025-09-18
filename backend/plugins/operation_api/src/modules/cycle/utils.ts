@@ -1,13 +1,26 @@
-import { STATUS_TYPES } from '@/status/constants/types';
 import { fillMissingDays } from '@/project/utils/charUtils';
-import { differenceInCalendarDays } from 'date-fns';
+import { STATUS_TYPES } from '@/status/constants/types';
+import { differenceInCalendarDays, startOfDay } from 'date-fns';
+import { Types } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
-export const getCyclesProgress = async (cycleId: string, models: IModels) => {
+export const getCyclesProgress = async (
+  cycleId: string,
+  assigneeId: string | undefined,
+  models: IModels,
+) => {
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   const result = await models.Task.aggregate([
     {
       $match: {
-        cycleId,
+        ...filter,
       },
     },
     {
@@ -100,8 +113,17 @@ export const getCyclesProgress = async (cycleId: string, models: IModels) => {
 
 export const getCycleProgressChart = async (
   cycleId: string,
+  assigneeId: string | undefined,
   models: IModels,
 ) => {
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   const cycle = await models.Cycle.getCycle(cycleId);
 
   if (!cycle) {
@@ -110,7 +132,7 @@ export const getCycleProgressChart = async (
 
   const [totalScopeResult] = await models.Task.aggregate([
     {
-      $match: { cycleId },
+      $match: { ...filter },
     },
     {
       $match: { statusType: { $ne: STATUS_TYPES.CANCELLED } },
@@ -144,10 +166,10 @@ export const getCycleProgressChart = async (
 
   const totalScope = totalScopeResult?.totalScope || 0;
 
-  const chartDataAggregation = await models.Task.aggregate([
+  const dailyAggregation = await models.Task.aggregate([
     {
       $match: {
-        cycleId,
+        ...filter,
         statusType: { $in: [STATUS_TYPES.STARTED, STATUS_TYPES.COMPLETED] },
         statusChangedDate: { $ne: null },
       },
@@ -188,40 +210,64 @@ export const getCycleProgressChart = async (
     {
       $project: {
         _id: 0,
-        date: {
-          $dateToString: { format: '%Y-%m-%d', date: '$_id' },
-        },
+        date: { $dateToString: { format: '%Y-%m-%d', date: '$_id' } },
         started: 1,
         completed: 1,
       },
     },
   ]);
 
+  let cumulativeStarted = 0;
+  let cumulativeCompleted = 0;
+
+  const chartDataAggregation = (dailyAggregation || []).map((entry) => {
+    cumulativeStarted += entry.started;
+    cumulativeCompleted += entry.completed;
+    return {
+      date: entry.date,
+      started: cumulativeStarted,
+      completed: cumulativeCompleted,
+    };
+  });
+
   const chartData: {
     totalScope: number;
-    chartData: { date: Date; started: number; completed: number }[];
+    chartData: { date: string; started: number; completed: number }[];
   } = {
     totalScope,
     chartData: [],
   };
 
+  const start = startOfDay(new Date(cycle.startDate));
+  const end = startOfDay(new Date(cycle.endDate));
+
+  const days = differenceInCalendarDays(end, start) + 1;
+
   chartData.chartData = fillMissingDays(
     chartDataAggregation,
     cycle.startDate,
-    differenceInCalendarDays(cycle.endDate, cycle.startDate),
+    days,
   );
 
   return chartData;
 };
 export const getCycleProgressByProject = async (
   cycleId: string,
+  assigneeId: string | undefined,
   models: IModels,
 ) => {
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   return models.Task.aggregate([
     {
       $match: {
-        cycleId,
-        projectId: { $exists: true },
+        ...filter,
       },
     },
     {
@@ -354,12 +400,21 @@ export const getCycleProgressByProject = async (
 
 export const getCycleProgressByMember = async (
   cycleId: string,
+  assigneeId: string | undefined,
   models: IModels,
 ) => {
+  const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
+    cycleId: new Types.ObjectId(cycleId),
+  };
+
+  if (assigneeId) {
+    filter.assigneeId = assigneeId;
+  }
+
   return models.Task.aggregate([
     {
       $match: {
-        cycleId,
+        ...filter,
       },
     },
     {

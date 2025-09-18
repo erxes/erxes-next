@@ -5,8 +5,6 @@ export enum SettingsPath {
   Profile = 'profile',
   ChangePassword = 'change-password',
   // Experience = 'experience',
-  Notification = 'notification',
-  NotificationCatchAll = 'notification/*',
 }
 
 export enum SettingsWorkspacePath {

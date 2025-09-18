@@ -45,7 +45,6 @@ const queryBuilder = async (params: IListArgs) => {
   const selector: any = {
     isActive,
   };
-
   if (searchValue) {
     const fields = [
       { email: new RegExp(`.*${params.searchValue}.*`, 'i') },
@@ -70,7 +69,7 @@ const queryBuilder = async (params: IListArgs) => {
     if (excludeIds) {
       selector._id = { $nin: ids };
     } else {
-      return { _id: { $in: ids }, isActive: true };
+      selector._id = { $in: ids };
     }
   }
 

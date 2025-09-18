@@ -4,13 +4,8 @@ import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 import { Router } from 'express';
 import { initMQWorkers } from '~/worker';
-export const router: Router = Router();
 
-router.get('/endCycle', async (req, res) => {
-  const models = await generateModels('os');
-  await models.Cycle.endCycle('kOc9pGV0sGXolGnw9isoD');
-  res.json({ message: 'Cycle ended' });
-});
+export const router: Router = Router();
 
 startPlugin({
   name: 'operation',

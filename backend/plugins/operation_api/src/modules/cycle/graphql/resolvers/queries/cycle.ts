@@ -55,10 +55,9 @@ export const cycleQueries = {
 
         query: {
           teamId: params.teamId,
-
+          isCompleted: { $ne: true },
           $or: [
             { isActive: true },
-            { isCompleted: false },
             { _id: params?.cycleId || null },
             {
               startDate: { $lte: new Date() },
@@ -72,33 +71,33 @@ export const cycleQueries = {
   },
   getCycleProgress: async (
     _parent: undefined,
-    { _id },
+    { _id, assigneeId },
     { models }: IContext,
   ) => {
-    return getCyclesProgress(_id, models);
+    return getCyclesProgress(_id, assigneeId, models);
   },
 
   getCycleProgressChart: async (
     _parent: undefined,
-    { _id },
+    { _id, assigneeId },
     { models }: IContext,
   ) => {
-    return getCycleProgressChart(_id, models);
+    return getCycleProgressChart(_id, assigneeId, models);
   },
 
   getCycleProgressByMember: async (
     _parent: undefined,
-    { _id },
+    { _id, assigneeId },
     { models }: IContext,
   ) => {
-    return getCycleProgressByMember(_id, models);
+    return getCycleProgressByMember(_id, assigneeId, models);
   },
 
   getCycleProgressByProject: async (
     _parent: undefined,
-    { _id },
+    { _id, assigneeId },
     { models }: IContext,
   ) => {
-    return getCycleProgressByProject(_id, models);
+    return getCycleProgressByProject(_id, assigneeId, models);
   },
 };

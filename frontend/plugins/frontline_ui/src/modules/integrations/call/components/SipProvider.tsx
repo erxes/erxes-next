@@ -17,18 +17,17 @@ import {
 } from '../types/sipTypes';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
-  callConfigAtom,
   callInfoAtom,
   rtcSessionAtom,
   sipStateAtom,
 } from '../states/sipStates';
 import { getPluginAssetsUrl } from 'erxes-ui';
-import { ICallConfigDoc } from '@/integrations/call/types/callTypes';
 import {
   extractPhoneNumberFromCounterpart,
   logger,
   parseCallDirection,
 } from '@/integrations/call/utils/callUtils';
+
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 import { historyIdAtom } from '@/integrations/call/states/callStates';
 
@@ -41,7 +40,7 @@ const SipProvider = ({
   pathname = '',
   user = null,
   password,
-  autoRegister = true,
+  autoRegister = false,
   autoAnswer = false,
   sessionTimersExpires = 3600,
   extraHeaders = { register: [], invite: [] },
@@ -52,25 +51,13 @@ const SipProvider = ({
   addHistory,
   updateHistory,
 }: SipProviderProps & { children: React.ReactNode }) => {
-  const [callConfig, setCallConfig] = useAtom(callConfigAtom);
-  const [callInfo, setCallInfo] = useAtom(callInfoAtom);
+  const [callInfo] = useAtom(callInfoAtom);
   const setCallNumber = useSetAtom(callNumberState);
   // State
   const [sipState, setSipState] = useAtom(sipStateAtom);
   const [rtcSessionState, setRtcSessionState] = useAtom(rtcSessionAtom);
 
   const currentHistoryId = useAtomValue(historyIdAtom);
-
-  const setPersistentStates = useCallback(
-    (isRegistered: boolean, isAvailable: boolean) => {
-      setCallInfo({ isUnregistered: !isRegistered });
-      setCallConfig((prev) => ({
-        ...((prev || {}) as ICallConfigDoc),
-        isAvailable,
-      }));
-    },
-    [setCallConfig, setCallInfo],
-  );
 
   const uaRef = useRef<any>(null);
   const ringbackToneRef = useRef<HTMLAudioElement | null>(null);
@@ -284,7 +271,7 @@ const SipProvider = ({
         uri: `sip:${user}@${host}`,
         password,
         sockets: [socket],
-        register: autoRegister,
+        register: !callInfo?.isUnregistered,
       };
 
       uaRef.current = new JsSIP.UA(options);
@@ -309,7 +296,6 @@ const SipProvider = ({
     // Set up event handlers
     ua.on('connecting', () => {
       loggerRef.current?.debug('UA "connecting" event');
-      setPersistentStates(false, true);
 
       if (uaRef.current !== ua) {
         return;
@@ -324,7 +310,6 @@ const SipProvider = ({
 
     ua.on('connected', () => {
       loggerRef.current?.debug('UA "connected" event');
-      setPersistentStates(false, true);
 
       if (uaRef.current !== ua) {
         return;
@@ -346,7 +331,6 @@ const SipProvider = ({
       if (uaRef.current !== ua) {
         return;
       }
-      setPersistentStates(false, false);
       setSipState((prev) => ({
         ...prev,
         sipStatus: SipStatusEnum.ERROR,
@@ -366,7 +350,6 @@ const SipProvider = ({
         sipStatus: SipStatusEnum.REGISTERED,
         callStatus: CallStatusEnum.IDLE,
       }));
-      setPersistentStates(true, true);
     });
 
     ua.on('unregistered', () => {
@@ -681,42 +664,29 @@ const SipProvider = ({
     }
     ua.start();
   }, [
-    debug,
-    addHistory,
-    updateHistory,
-    answerCall,
-    autoAnswer,
-    autoRegister,
-    extraHeaders.register,
     host,
-    password,
-    pathname,
-    playHangupTone,
-    setCallNumber,
     port,
-    setPersistentStates,
+    user,
+    extraHeaders.register,
     setSipState,
-    sipState.callCounterpart,
-    sipState.callDirection,
-    sipState.groupName,
+    pathname,
+    password,
+    callInfo?.isUnregistered,
+    debug,
+    sipState,
     rtcSessionState,
     setRtcSessionState,
+    autoAnswer,
     stopRingbackTone,
-    user,
+    updateHistory,
+    playHangupTone,
+    setCallNumber,
+    addHistory,
+    answerCall,
   ]);
 
   // Initialize audio element and JsSIP on mount
   useEffect(() => {
-    if (
-      sipState.sipStatus === SipStatusEnum.REGISTERED &&
-      callInfo?.isUnregistered
-    ) {
-      unregisterSip();
-    }
-    if (callConfig && !callConfig.isAvailable) {
-      return;
-    }
-
     if (document.getElementById('sip-provider-audio')) {
       throw new Error(
         'Creating two SipProviders in one application is forbidden',
@@ -727,9 +697,7 @@ const SipProvider = ({
     audioElement.id = 'sip-provider-audio';
     document.body.appendChild(audioElement);
     remoteAudioRef.current = audioElement;
-
     reinitializeJsSIP();
-
     return () => {
       if (remoteAudioRef.current) {
         remoteAudioRef.current.parentNode?.removeChild(remoteAudioRef.current);
@@ -740,6 +708,7 @@ const SipProvider = ({
         uaRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // Create context value
