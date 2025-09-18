@@ -11,7 +11,7 @@ export const DocumentsList = ({ documents }: { documents: any }) => {
       <Sidebar.GroupLabel
         className="gap-2 cursor-pointer"
         onClick={() => {
-          removeQuery('contentType');
+          removeQuery('documentId');
         }}
       >
         <IconArrowLeft />
