@@ -1,9 +1,9 @@
 import * as _ from 'underscore';
-import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
+import { CONVERSATION_STATUSES } from '~/modules/inbox/db/definitions/constants';
 import { IListArgs } from '~/conversationQueryBuilder';
 import { fixDate, fetchEs } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
-import { getIntegrationsKinds } from '@/inbox/utils';
+import { getIntegrationsKinds } from '~/modules/inbox/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export interface ICountBy {
@@ -217,22 +217,31 @@ export class CommonBuilder<IArgs extends IListArgs> {
     this.activeIntegrationIds = activeIntegrations.map((integ) => integ._id);
   }
 
-  // filter by channel
   public async channelFilter(channelId: string): Promise<void> {
-    const channel = await this.models.Channels.getChannel(channelId);
-    const memberIds = channel.memberIds || [];
+    const isMember = await this.models.ChannelMembers.exists({
+      channelId,
+      memberId: this.user._id,
+    });
 
-    if (!memberIds.includes(this.user._id)) {
+    if (!isMember) {
       return;
     }
 
-    this.filterList.push({
-      terms: {
-        'integrationId.keyword': (channel.integrationIds || []).filter((id) =>
-          this.activeIntegrationIds.includes(id),
-        ),
-      },
-    });
+    const integrations = await this.models.Integrations.find({
+      channelId,
+    }).lean();
+
+    const integrationIds = integrations
+      .map((i) => i._id.toString())
+      .filter((id) => this.activeIntegrationIds.includes(id));
+
+    if (integrationIds.length > 0) {
+      this.filterList.push({
+        terms: {
+          'integrationId.keyword': integrationIds,
+        },
+      });
+    }
   }
 
   public integrationNotFound() {

@@ -26,8 +26,8 @@ export const INTEGRATION_INLINE = gql`
 `;
 
 export const GET_INTEGRATIONS_BY_KIND = gql`
-  query Integrations($kind: String, $searchValue: String, ${GQL_CURSOR_PARAM_DEFS}) {
-    integrations(kind: $kind, searchValue: $searchValue, ${GQL_CURSOR_PARAMS}) {
+  query Integrations($kind: String, $searchValue: String, $channelId: String!, ${GQL_CURSOR_PARAM_DEFS}) {
+    integrations(kind: $kind, searchValue: $searchValue, channelId: $channelId, ${GQL_CURSOR_PARAMS}) {
       list {
         _id
         name
