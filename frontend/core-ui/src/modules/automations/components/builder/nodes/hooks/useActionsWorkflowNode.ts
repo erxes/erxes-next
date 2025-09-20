@@ -3,7 +3,7 @@ import { generateNode } from '@/automations/utils/automationBuilderUtils/generat
 import {
   TAutomationBuilderForm,
   TAutomationNodeState,
-} from '@/automations/utils/AutomationFormDefinitions';
+} from '@/automations/utils/automationFormDefinitions';
 import { Node, useReactFlow } from '@xyflow/react';
 import { useFormContext } from 'react-hook-form';
 export const useActionsWorkflowNode = (automationId: string) => {

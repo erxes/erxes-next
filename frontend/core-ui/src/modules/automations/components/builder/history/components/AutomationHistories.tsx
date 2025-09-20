@@ -1,7 +1,7 @@
 import { automationHistoriesColumns } from '@/automations/components/builder/history/AutomationHistoryRecordTableColumns';
 import { useAutomationHistories } from '@/automations/hooks/useAutomationHistories';
-import { IconRefresh } from '@tabler/icons-react';
-import { Button, PageSubHeader, RecordTable, Skeleton } from 'erxes-ui';
+import { IconArchive, IconRefresh } from '@tabler/icons-react';
+import { Button, Label, PageSubHeader, RecordTable, Skeleton } from 'erxes-ui';
 import { AutomationHistoriesRecordTableFilter } from './filters/AutomationRecordTableFilter';
 import { AUTOMATION_HISTORIES_CURSOR_SESSION_KEY } from '@/automations/constants';
 
@@ -48,6 +48,16 @@ export const AutomationHistories = () => {
                 <RecordTable.CursorBackwardSkeleton
                   handleFetchMore={handleFetchMore}
                 />
+                {!totalCount && (
+                  <tr className="h-[80vh]">
+                    <td colSpan={6} className="py-10 text-center">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground">
+                        <IconArchive className="w-8 h-8 mb-2" />
+                        <Label>No results</Label>
+                      </div>
+                    </td>
+                  </tr>
+                )}
                 {loading && <RecordTable.RowSkeleton rows={40} />}
                 <RecordTable.RowList />
                 <RecordTable.CursorForwardSkeleton

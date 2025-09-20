@@ -1,5 +1,5 @@
 import { getContentType } from '@/automations/utils/automationBuilderUtils/triggerUtils';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { getFieldsProperties, IAction } from 'ui-modules';
 import {

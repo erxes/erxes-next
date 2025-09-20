@@ -1,5 +1,5 @@
 import { AutomationNodeType, NodeData } from '@/automations/types';
-import { TAutomationNodeState } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import { Node } from '@xyflow/react';
 import { IAction, ITrigger, IWorkflowNode } from 'ui-modules';
 export const generateNodePosition = (

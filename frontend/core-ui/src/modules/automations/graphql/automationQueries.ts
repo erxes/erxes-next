@@ -136,3 +136,9 @@ query AutomationHistories($automationId: String!,${GQL_CURSOR_PARAM_DEFS}, $page
   }
 }
 `;
+
+export const GET_AUTOMATION_WEBHOOK_ENDPOINT = gql`
+  query Query($id: String!) {
+    getAutomationWebhookEndpoint(_id: $id)
+  }
+`;

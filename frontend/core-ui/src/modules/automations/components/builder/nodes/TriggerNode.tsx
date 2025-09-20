@@ -43,7 +43,10 @@ const ConfigurationSection = ({ data }: { data: NodeData }) => (
 );
 
 const TriggerNodeContent = ({ data }: { data: NodeData }) => {
-  const { hasError, shouldRender } = useNodeContent(data);
+  const { hasError, shouldRender } = useNodeContent(
+    data,
+    AutomationNodeType.Trigger,
+  );
 
   if (!shouldRender || hasError) {
     return null;

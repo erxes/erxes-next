@@ -2,8 +2,8 @@ import {
   CoreComponentType,
   getCoreAutomationActionComponent,
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 import { ErrorState } from '@/automations/components/common/ErrorState';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Card, Form, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -13,12 +13,14 @@ type Props = {
   control: Control<TAutomationBuilderForm>;
   currentIndex: number;
   currentAction: TAutomationBuilderForm['actions'][number];
+  onSaveActionConfigCallback: () => void;
 };
 
 export const AutomationCoreActionSidebarContent = ({
   control,
   currentIndex,
   currentAction,
+  onSaveActionConfigCallback,
 }: Props) => {
   const Component = getCoreAutomationActionComponent(
     currentAction.type as any,
@@ -45,12 +47,14 @@ export const AutomationCoreActionSidebarContent = ({
             <Component
               currentActionIndex={currentIndex}
               currentAction={currentAction}
-              handleSave={(config: any) =>
+              handleSave={(config: any) => {
+                console.log({ config });
                 field.onChange({
                   ...(currentAction?.config || {}),
                   ...config,
-                })
-              }
+                });
+                onSaveActionConfigCallback();
+              }}
             />
           )}
         />

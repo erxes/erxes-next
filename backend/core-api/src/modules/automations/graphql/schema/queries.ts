@@ -41,6 +41,7 @@ const queries = `
   automationsAiAgents(kind:String):JSON
   automationsAiAgentDetail:JSON
   getTrainingStatus(agentId: String!): TrainingProgress!
+  getAutomationWebhookEndpoint(_id:String!):String
 `;
 
 export default queries;

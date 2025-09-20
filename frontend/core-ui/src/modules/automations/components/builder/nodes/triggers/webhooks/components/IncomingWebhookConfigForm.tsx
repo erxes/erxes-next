@@ -1,34 +1,24 @@
 import { IncomingWebhookPayloadSchemaSheet } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookPayloadSchemaSheet';
+import { generateSchemaPreview } from '@/automations/components/builder/nodes/triggers/webhooks/components/utils';
 import { AUTOMATION_INCOMING_WEBHOOK_API_METHODS } from '@/automations/components/builder/nodes/triggers/webhooks/constants/incomingWebhook';
+import { useAutomationWebhookEndpoint } from '@/automations/components/builder/nodes/triggers/webhooks/hooks/useAutomationWebhookEndpoint';
 import {
   incomingWebhookFormSchema,
   TIncomingWebhookForm,
 } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 import { AutomationTriggerSidebarCoreFormProps } from '@/automations/types';
+import { copyText } from '@/automations/utils/automationBuilderUtils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  IconChevronDown,
-  IconCopy,
-  IconPlus,
-  IconTrash,
-} from '@tabler/icons-react';
-import {
-  Button,
-  Collapsible,
-  Form,
-  Input,
-  Label,
-  Select,
-  toast,
-} from 'erxes-ui';
-import { useImperativeHandle } from 'react';
+import { IconCopy, IconPlus, IconTrash } from '@tabler/icons-react';
+import { Button, Form, Input, Select, Tabs, toast } from 'erxes-ui';
+import { useImperativeHandle, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-
 export const IncomingWebhookConfigForm = ({
   formRef,
   handleSave,
   activeNode,
 }: AutomationTriggerSidebarCoreFormProps) => {
+  const { endpoint } = useAutomationWebhookEndpoint();
   const form = useForm<TIncomingWebhookForm>({
     resolver: zodResolver(incomingWebhookFormSchema),
     defaultValues: {
@@ -39,13 +29,18 @@ export const IncomingWebhookConfigForm = ({
   useImperativeHandle(formRef, () => ({
     submit: () => {
       console.log({ daczxc: 'Ds' });
-      form.handleSubmit(handleSave, (error) => {
-        console.log({ error });
-        toast({
-          title: 'There is some error in the form',
-          variant: 'destructive',
-        });
-      })();
+      form.handleSubmit(
+        (config) => {
+          handleSave(config);
+        },
+        (error) => {
+          console.log({ error });
+          toast({
+            title: 'There is some error in the form',
+            variant: 'destructive',
+          });
+        },
+      )();
     },
   }));
 
@@ -76,93 +71,116 @@ export const IncomingWebhookConfigForm = ({
               </Form.Item>
             )}
           />
-          <Form.Item className="w-2/6">
-            <Form.Label>URL</Form.Label>
-
-            <Input disabled value="https://api.yourapp.com/webhooks/" />
-          </Form.Item>
 
           <Form.Field
             control={form.control}
             name="endpoint"
             render={({ field }) => (
-              <Form.Item className="w-3/6">
-                <Form.Label>Endpoint</Form.Label>
-
-                <Input {...field} />
-              </Form.Item>
+              <>
+                <Form.Item className="w-full">
+                  <Form.Label>Webhook URL</Form.Label>
+                  <div className="flex">
+                    <span className=" flex items-center h-8 px-3 rounded-sm rounded-r-none bg-accent text-sm text-accent-foreground shadow-xs">
+                      {endpoint}
+                    </span>
+                    <Input
+                      {...field}
+                      className="rounded-l-none"
+                      placeholder="endpoint"
+                    />
+                  </div>
+                </Form.Item>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    copyText(`${endpoint}${field.value}`);
+                  }}
+                >
+                  <IconCopy />
+                </Button>
+              </>
             )}
           />
-          <Button variant="secondary">
-            <IconCopy />
-          </Button>
         </div>
-        <Form.Field
-          control={form.control}
-          name="headers"
-          render={({ field }) => {
-            return (
-              <Form.Item>
-                <IncomingWebhookHeadersBuider
-                  headers={field.value}
-                  onChange={field.onChange}
-                />
-              </Form.Item>
-            );
-          }}
-        />
-        <Form.Field
-          control={form.control}
-          name="schema"
-          render={({ field }) => (
-            <Form.Item>
-              <div className="flex items-center justify-between">
-                <Form.Label>Payload Schema</Form.Label>
-                <IncomingWebhookPayloadSchemaSheet
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </div>
-              {field.value && field.value.length > 0 && (
-                <div className="mt-2 p-3 rounded text-xs font-mono overflow-x-auto max-h-48 overflow-y-auto border bg-white">
-                  <pre>{JSON.stringify(field.value, null, 2)}</pre>
-                </div>
+        <Tabs defaultValue="headers">
+          <Tabs.List>
+            <Tabs.Trigger value="headers">Headers</Tabs.Trigger>
+            <Tabs.Trigger value="body">Body</Tabs.Trigger>
+            <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="headers" className="py-4">
+            <Form.Field
+              control={form.control}
+              name="headers"
+              render={({ field }) => {
+                return (
+                  <Form.Item>
+                    <IncomingWebhookHeadersBuider
+                      headers={field.value}
+                      onChange={field.onChange}
+                    />
+                  </Form.Item>
+                );
+              }}
+            />
+          </Tabs.Content>
+          <Tabs.Content value="body" className="py-4">
+            <Form.Field
+              control={form.control}
+              name="schema"
+              render={({ field }) => {
+                const previewJson = useMemo(
+                  () =>
+                    JSON.stringify(
+                      generateSchemaPreview(field.value || []),
+                      null,
+                      2,
+                    ),
+                  [field.value],
+                );
+
+                return (
+                  <Form.Item>
+                    <div className="flex items-center justify-between">
+                      <Form.Label>Payload Schema</Form.Label>
+                      <IncomingWebhookPayloadSchemaSheet
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </div>
+                    {field.value && (
+                      <div className="mt-2 p-3 rounded text-xs font-mono overflow-x-auto max-h-full overflow-y-auto border bg-white">
+                        <pre>{previewJson}</pre>
+                      </div>
+                    )}
+                  </Form.Item>
+                );
+              }}
+            />
+          </Tabs.Content>
+          <Tabs.Content value="settings" className="py-4">
+            <Form.Field
+              control={form.control}
+              name="maxRetries"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Max Retries</Form.Label>
+                  <Input {...field} type="number" defaultValue={3} />
+                </Form.Item>
               )}
-            </Form.Item>
-          )}
-        />
-        <Collapsible>
-          <Collapsible.Trigger asChild>
-            <Button variant="secondary" className="flex justify-self-center">
-              <Label>Advanced Settings</Label>
-              <IconChevronDown />
-            </Button>
-          </Collapsible.Trigger>
-          <Collapsible.Content>
-            <div>
-              <Form.Field
-                control={form.control}
-                name="maxRetries"
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>Max Retries</Form.Label>
-                    <Input {...field} type="number" defaultValue={3} />
-                  </Form.Item>
-                )}
-              />
-              <Form.Field
-                control={form.control}
-                name="maxRetries"
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>Timeout (seconds)</Form.Label>
-                    <Input {...field} type="number" defaultValue={30} />
-                  </Form.Item>
-                )}
-              />
-            </div>
-          </Collapsible.Content>
-        </Collapsible>
+            />
+            <Form.Field
+              control={form.control}
+              name="maxRetries"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Timeout (seconds)</Form.Label>
+                  <Input {...field} type="number" defaultValue={30} />
+                </Form.Item>
+              )}
+            />
+          </Tabs.Content>
+        </Tabs>
       </div>
     </FormProvider>
   );
@@ -198,6 +216,7 @@ const IncomingWebhookHeadersBuider = ({
       <div className="flex flex-row justify-between">
         <Form.Label>Headers</Form.Label>
         <Button
+          variant="outline"
           onClick={() =>
             onChange([
               ...(headers || []),
@@ -229,11 +248,11 @@ const IncomingWebhookHeadersBuider = ({
           />
           <Input
             value={description}
-            placeholder="Description"
+            placeholder="Description (Optional)"
             className="w-1/4"
             onChange={(e) => handleChange(index, 'description', e.target.value)}
           />
-          <Button variant="secondary" onClick={() => handleRemove(index)}>
+          <Button variant="destructive" onClick={() => handleRemove(index)}>
             <IconTrash />
           </Button>
         </div>

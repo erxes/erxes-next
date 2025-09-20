@@ -1,5 +1,5 @@
 import { AutomationNodeType, NodeData } from '@/automations/types';
-import { TAutomationWorkflow } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationWorkflow } from '@/automations/utils/automationFormDefinitions';
 import { Connection, Edge, EdgeProps, getOutgoers, Node } from '@xyflow/react';
 import { SetStateAction } from 'jotai';
 import { Dispatch } from 'react';

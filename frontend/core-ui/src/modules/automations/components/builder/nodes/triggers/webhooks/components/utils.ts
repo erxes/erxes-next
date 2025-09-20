@@ -1,4 +1,4 @@
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
+import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 
 export function updateNestedProperty(
   properties: PropertySchema[],
@@ -55,46 +55,100 @@ export function removeNestedProperty(
 export function generateSchemaPreview(properties: PropertySchema[]): unknown {
   const result: Record<string, unknown> = {};
 
-  properties.forEach((prop) => {
-    if (!prop.name) return;
+  for (const {
+    name,
+    type,
+    children,
+    arrayItemSchema,
+    arrayItemType,
+  } of properties || []) {
+    if (!name) {
+      continue;
+    }
 
-    switch (prop.type) {
+    switch (type) {
       case 'string':
-        result[prop.name] = 'string_value';
+        result[name] = 'string_value';
         break;
       case 'number':
-        result[prop.name] = 123;
+        result[name] = 123;
         break;
       case 'boolean':
-        result[prop.name] = true;
+        result[name] = true;
         break;
       case 'object':
-        result[prop.name] = prop.children
-          ? generateSchemaPreview(prop.children)
-          : {};
+        result[name] = children ? generateSchemaPreview(children) : {};
         break;
       case 'array':
-        if (prop.arrayItemType === 'object' && prop.arrayItemSchema) {
-          result[prop.name] = [
-            generateSchemaPreview(prop.arrayItemSchema) as Record<
-              string,
-              unknown
-            >,
+        if (arrayItemType === 'object' && arrayItemSchema) {
+          result[name] = [
+            generateSchemaPreview(arrayItemSchema) as Record<string, unknown>,
           ];
         } else {
           const sampleValue =
-            prop.arrayItemType === 'string'
+            arrayItemType === 'string'
               ? 'string_value'
-              : prop.arrayItemType === 'number'
+              : arrayItemType === 'number'
               ? 123
-              : prop.arrayItemType === 'boolean'
+              : arrayItemType === 'boolean'
               ? true
               : 'mixed_value';
-          result[prop.name] = [sampleValue];
+          result[name] = [sampleValue];
         }
         break;
     }
-  });
+  }
 
   return result;
+}
+
+export function updatePropertyInList(
+  list: PropertySchema[],
+  id: string,
+  field: string,
+  value: unknown,
+): PropertySchema[] {
+  return updateNestedProperty(list, id, (prop) => ({
+    ...prop,
+    [field]: value,
+  }));
+}
+
+export function removePropertyFromList(
+  list: PropertySchema[],
+  id: string,
+): PropertySchema[] {
+  return removeNestedProperty(list, id);
+}
+
+export function addChildProperty(
+  list: PropertySchema[],
+  parentId: string,
+): PropertySchema[] {
+  return updateNestedProperty(list, parentId, (prop) => ({
+    ...prop,
+    children: [...(prop.children || []), createNewRootProperty()],
+  }));
+}
+
+export function toggleExpandedInList(
+  list: PropertySchema[],
+  id: string,
+): PropertySchema[] {
+  return updateNestedProperty(list, id, (prop) => ({
+    ...prop,
+    isExpanded: !prop.isExpanded,
+  }));
+}
+
+import { generateAutomationElementId } from 'ui-modules';
+export function createNewRootProperty(): PropertySchema {
+  return {
+    id: generateAutomationElementId(),
+    name: '',
+    type: 'string',
+    required: true,
+    description: '',
+    isExpanded: true,
+  };
 }

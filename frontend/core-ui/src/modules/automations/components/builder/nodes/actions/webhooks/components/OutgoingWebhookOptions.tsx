@@ -1,4 +1,4 @@
-import { LabeledSeparator } from '@/automations/components/builder/nodes/actions/webhooks/components/LabeledSeparator';
+import { OutgoinWebhookLabeledSeparator } from '@/automations/components/builder/nodes/actions/webhooks/components/OutgoinWebhookLabeledSeparator';
 import { TOutgoingWebhookForm } from '@/automations/components/builder/nodes/actions/webhooks/states/outgoingWebhookFormSchema';
 import { Form, Input, Select, Switch } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
@@ -21,6 +21,7 @@ export const OutgoingWebhookOptions = () => {
               </Form.Description>
             </div>
             <Switch checked={field.value} onCheckedChange={field.onChange} />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -32,6 +33,7 @@ export const OutgoingWebhookOptions = () => {
             <Form.Label>Timeout (ms)</Form.Label>
 
             <Input {...field} />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -47,6 +49,7 @@ export const OutgoingWebhookOptions = () => {
               </Form.Description>
             </div>
             <Switch checked={field.value} onCheckedChange={field.onChange} />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -67,6 +70,7 @@ export const OutgoingWebhookOptions = () => {
                     </Form.Description>
                   </div>
                   <Input {...field} />
+                  <Form.Message />
                 </Form.Item>
               )}
             />
@@ -76,7 +80,9 @@ export const OutgoingWebhookOptions = () => {
         }
       />
 
-      <LabeledSeparator>Retry Configuration</LabeledSeparator>
+      <OutgoinWebhookLabeledSeparator>
+        Retry Configuration
+      </OutgoinWebhookLabeledSeparator>
 
       <Form.Field
         control={control}
@@ -84,10 +90,20 @@ export const OutgoingWebhookOptions = () => {
         render={({ field }) => (
           <Form.Item className="space-y-2">
             <Form.Label>Retry Attempts</Form.Label>
-            <Input {...field} type="number" defaultValue="0" min="0" max="10" />
+            <Input
+              value={field.value}
+              onChange={(e) => {
+                const value = e.currentTarget.value;
+                field.onChange(!value ? undefined : Number(value));
+              }}
+              type="number"
+              min="0"
+              max="10"
+            />
             <Form.Description>
               Number of retry attempts (0 = no retry)
             </Form.Description>
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -98,22 +114,26 @@ export const OutgoingWebhookOptions = () => {
           <Form.Item className="space-y-2">
             <Form.Label>Retry Delay (ms)</Form.Label>
             <Input
-              {...field}
+              value={field.value}
+              onChange={(e) => {
+                const value = e.currentTarget.value;
+                field.onChange(!value ? undefined : Number(value));
+              }}
               type="number"
-              defaultValue="1000"
               min="100"
               max="60000"
             />
             <Form.Description className="text-xs text-gray-500">
               Delay between retry attempts
             </Form.Description>
+            <Form.Message />
           </Form.Item>
         )}
       />
       <Form.Field
         control={control}
         name="options.retry.backoff"
-        render={({ field }) => (
+        render={() => (
           <Form.Item className="space-y-2">
             <Form.Label>Backoff Strategy</Form.Label>
             <Select defaultValue="none">
@@ -126,10 +146,13 @@ export const OutgoingWebhookOptions = () => {
                 <Select.Item value="exponential">Exponential</Select.Item>
               </Select.Content>
             </Select>
+            <Form.Message />
           </Form.Item>
         )}
       />
-      <LabeledSeparator>Proxy Configuration</LabeledSeparator>
+      <OutgoinWebhookLabeledSeparator>
+        Proxy Configuration
+      </OutgoinWebhookLabeledSeparator>
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <Form.Field
@@ -139,6 +162,7 @@ export const OutgoingWebhookOptions = () => {
               <Form.Item className="space-y-2">
                 <Form.Label>Proxy Host</Form.Label>
                 <Input {...field} placeholder="proxy.example.com" />
+                <Form.Message />
               </Form.Item>
             )}
           />
@@ -148,7 +172,16 @@ export const OutgoingWebhookOptions = () => {
             render={({ field }) => (
               <Form.Item className="space-y-2">
                 <Form.Label>Proxy Port</Form.Label>
-                <Input {...field} type="number" placeholder="8080" />
+                <Input
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    field.onChange(!value ? undefined : Number(value));
+                  }}
+                  type="number"
+                  placeholder="8080"
+                />
+                <Form.Message />
               </Form.Item>
             )}
           />
@@ -161,6 +194,7 @@ export const OutgoingWebhookOptions = () => {
               <Form.Item className="space-y-2">
                 <Form.Label>Proxy Username</Form.Label>
                 <Input {...field} placeholder="Optional" />
+                <Form.Message />
               </Form.Item>
             )}
           />
@@ -171,6 +205,7 @@ export const OutgoingWebhookOptions = () => {
               <Form.Item className="space-y-2">
                 <Form.Label>Proxy Password</Form.Label>
                 <Input {...field} placeholder="Optional" />
+                <Form.Message />
               </Form.Item>
             )}
           />

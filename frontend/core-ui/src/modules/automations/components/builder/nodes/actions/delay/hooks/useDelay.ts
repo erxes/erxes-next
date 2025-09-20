@@ -1,4 +1,4 @@
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { ChangeEvent } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 

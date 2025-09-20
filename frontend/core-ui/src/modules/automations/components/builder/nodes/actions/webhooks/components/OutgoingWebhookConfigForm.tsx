@@ -3,50 +3,80 @@ import { OutgoingWebhookBody } from '@/automations/components/builder/nodes/acti
 import { OutgoingWebhookHeaders } from '@/automations/components/builder/nodes/actions/webhooks/components/OutgoingWebhookHeaders';
 import { OutgoingWebhookOptions } from '@/automations/components/builder/nodes/actions/webhooks/components/OutgoingWebhookOptions';
 import { OutgoingWebhookRequest } from '@/automations/components/builder/nodes/actions/webhooks/components/OutgoingWebhookRequest';
-import { outgoingWebhookFormSchema } from '@/automations/components/builder/nodes/actions/webhooks/states/outgoingWebhookFormSchema';
+import { OutgoingWebhookTabFilledIndicator } from '@/automations/components/builder/nodes/actions/webhooks/components/OutgoingWebhookTabFilledIndicator';
+import { OUTGOING_WEBHOOK_FORM_DEFAULT_VALUES } from '@/automations/components/builder/nodes/actions/webhooks/constants/outgoingWebhookForm';
+import {
+  outgoingWebhookFormSchema,
+  TOutgoingWebhookForm,
+} from '@/automations/components/builder/nodes/actions/webhooks/states/outgoingWebhookFormSchema';
+import { useFormValidationErrorHandler } from '@/automations/hooks/useFormValidationErrorHandler';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Tabs } from 'erxes-ui';
+import { Button, Tabs } from 'erxes-ui';
+import { merge } from 'lodash';
 import { FormProvider, useForm } from 'react-hook-form';
-import { TOutgoingWebhookForm } from '@/automations/components/builder/nodes/actions/webhooks/states/outgoingWebhookFormSchema';
+import { IActionProps } from 'ui-modules';
 
-export const OutgoingWebhookConfigForm = () => {
+export const OutgoingWebhookConfigForm = ({
+  currentAction,
+  handleSave,
+}: IActionProps) => {
+  const { handleValidationErrors } = useFormValidationErrorHandler({
+    formName: 'Webhook Configuration',
+  });
+
   const form = useForm<TOutgoingWebhookForm>({
     resolver: zodResolver(outgoingWebhookFormSchema),
-    defaultValues: {
-      method: 'POST',
-      url: '',
-      queryParams: [],
-      body: {},
-      auth: { type: 'none' } as any,
-      headers: [],
-      options: {
-        followRedirect: true,
-        retry: { attempts: 0, delay: 1000, backoff: 'none' },
-        keepAlive: true,
-      },
-    },
+    defaultValues: merge(
+      OUTGOING_WEBHOOK_FORM_DEFAULT_VALUES,
+      currentAction?.config || {},
+    ),
   });
 
   return (
-    <div className="w-[650px] h-full">
-      <Tabs defaultValue="request">
+    <div className="w-[650px] flex flex-col h-full">
+      <Tabs defaultValue="request" className="flex-1 overflow-auto">
         <Tabs.List className="w-full" defaultValue="request">
           <Tabs.Trigger className="w-1/5" value="request">
             Request
+            <OutgoingWebhookTabFilledIndicator
+              control={form.control}
+              fields={['method', 'url', 'queryParams']}
+              formErrors={form.formState.errors}
+            />
           </Tabs.Trigger>
           <Tabs.Trigger className="w-1/5" value="body">
             Body
+            <OutgoingWebhookTabFilledIndicator
+              control={form.control}
+              fields={['body']}
+              formErrors={form.formState.errors}
+            />
           </Tabs.Trigger>
 
           <Tabs.Trigger className="w-1/5" value="auth">
             Auth
+            <OutgoingWebhookTabFilledIndicator
+              control={form.control}
+              fields={['auth']}
+              formErrors={form.formState.errors}
+            />
           </Tabs.Trigger>
           <Tabs.Trigger className="w-1/5" value="header">
             Headers
+            <OutgoingWebhookTabFilledIndicator
+              control={form.control}
+              fields={['headers']}
+              formErrors={form.formState.errors}
+            />
           </Tabs.Trigger>
 
           <Tabs.Trigger className="w-1/5" value="options">
             Options
+            <OutgoingWebhookTabFilledIndicator
+              control={form.control}
+              fields={['options']}
+              formErrors={form.formState.errors}
+            />
           </Tabs.Trigger>
         </Tabs.List>
         <FormProvider {...form}>
@@ -71,6 +101,11 @@ export const OutgoingWebhookConfigForm = () => {
           </div>
         </FormProvider>
       </Tabs>
+      <div className="p-2 flex justify-end border-t bg-white">
+        <Button onClick={form.handleSubmit(handleSave, handleValidationErrors)}>
+          Save Configuration
+        </Button>
+      </div>
     </div>
   );
 };

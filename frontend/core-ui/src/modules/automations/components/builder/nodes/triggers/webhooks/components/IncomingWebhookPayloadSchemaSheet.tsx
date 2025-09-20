@@ -1,7 +1,7 @@
 import { IconCode } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui';
 import { IncomingWebhookPayloadSchemaGenerator } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookPayloadSchemaGenerator';
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
+import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 
 interface Props {
   value?: PropertySchema[];
@@ -12,7 +12,7 @@ export function IncomingWebhookPayloadSchemaSheet({ value, onChange }: Props) {
   return (
     <Sheet>
       <Sheet.Trigger asChild>
-        <Button variant="secondary" size="sm" className="gap-2">
+        <Button variant="outline" size="sm" className="gap-2">
           <IconCode className="size-4" /> Edit Payload Schema
         </Button>
       </Sheet.Trigger>

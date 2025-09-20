@@ -5,7 +5,7 @@ import {
 } from '@/automations/graphql/automationMutations';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { AutomationBuilderTabsType, NodeData } from '@/automations/types';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useMutation } from '@apollo/client';
 import { useReactFlow, Node } from '@xyflow/react';
 import { useIsMobile, toast } from 'erxes-ui';

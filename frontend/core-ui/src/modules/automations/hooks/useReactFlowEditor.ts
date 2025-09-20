@@ -70,9 +70,9 @@ export const useReactFlowEditor = () => {
 
     if (nodes.find((node) => node.type === 'scratch')) {
       setNodes((nodes) => nodes.filter((node) => node.type !== 'scratch'));
-      if (newNodeId) {
-        setQueryParams({ activeNodeId: newNodeId });
-      }
+    }
+    if (newNodeId) {
+      setQueryParams({ activeNodeId: newNodeId });
     }
   };
 

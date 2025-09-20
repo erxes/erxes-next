@@ -1,5 +1,5 @@
 import { getContentType } from '@/automations/utils/automationBuilderUtils/triggerUtils';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useWatch } from 'react-hook-form';
 
 export const useAutomationTrigger = (currentActionId: string) => {

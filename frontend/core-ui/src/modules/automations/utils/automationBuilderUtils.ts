@@ -17,7 +17,8 @@ import {
   AutomationNodeType,
   NodeData,
 } from '../types';
-import { TAutomationNodeState } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
+import { toast } from 'erxes-ui';
 
 /**
  * Calculates the position of a node in the React Flow canvas.
@@ -764,3 +765,18 @@ function setNestedField(obj: any, path: string, value: any) {
   current[keys[keys.length - 1]] = value;
   return obj;
 }
+
+export const copyText = async (token: string) => {
+  await navigator.clipboard
+    .writeText(token)
+    .then(() => {
+      toast({ title: 'Copied successfully' });
+    })
+    .catch((error) => {
+      toast({
+        title: 'Something went wrong',
+        description: error.message,
+        variant: 'destructive',
+      });
+    });
+};

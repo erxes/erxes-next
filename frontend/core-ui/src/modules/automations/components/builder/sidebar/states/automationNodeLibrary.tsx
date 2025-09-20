@@ -1,5 +1,5 @@
 import { AutomationNodeType } from '@/automations/types';
-import { automationNodePositionSchema } from '@/automations/utils/AutomationFormDefinitions';
+import { automationNodePositionSchema } from '@/automations/utils/automationFormDefinitions';
 import { z } from 'zod';
 
 const dragginWorkflowNode = z.object({

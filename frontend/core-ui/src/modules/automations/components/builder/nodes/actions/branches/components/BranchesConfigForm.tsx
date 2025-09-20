@@ -8,7 +8,7 @@ export const BranchesConfigForm = ({
   const { trigger } = useAutomationTrigger(currentAction.id);
 
   return (
-    <div className="w-[650px] flex flex-col max-h-full">
+    <div className="w-[650px] h-full">
       <SegmentForm
         contentType={trigger?.type || ''}
         segmentId={currentAction?.config?.contentId}

@@ -6,7 +6,7 @@ import {
 } from '@/automations/types';
 import { handleConnectionAwaitingNode } from '@/automations/utils/automationBuilderUtils/awaitingConnectionHandler';
 import { generateNode } from '@/automations/utils/automationBuilderUtils/generateNodes';
-import { TAutomationNodeState } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import {
   generateAutomationElementId,
   IAction,

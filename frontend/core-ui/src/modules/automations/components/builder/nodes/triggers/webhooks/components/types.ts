@@ -1,14 +1,4 @@
-export interface PropertySchema {
-  id: string;
-  name: string;
-  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
-  required: boolean;
-  description?: string;
-  children?: PropertySchema[];
-  arrayItemType?: 'string' | 'number' | 'boolean' | 'object';
-  arrayItemSchema?: PropertySchema[];
-  isExpanded?: boolean;
-}
+import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 
 export interface PayloadSchemaGeneratorProps {
   value?: PropertySchema[];

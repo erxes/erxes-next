@@ -1,9 +1,9 @@
 import { AutomationHistoryDetail } from '@/automations/components/builder/history/components/AutomationHistoryDetail';
+import { AutomationHistoryResultName } from '@/automations/components/builder/history/components/AutomationHistoryResultName';
+import { AutomationHistoryTriggerCell } from '@/automations/components/builder/history/components/AutomationHistoryTriggerCell';
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
-import { useAutomation } from '@/automations/context/AutomationProvider';
 import { StatusBadgeValue } from '@/automations/types';
-import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
-import { IconCalendarTime, IconInfoTriangle } from '@tabler/icons-react';
+import { IconCalendarTime } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import dayjs from 'dayjs';
 import {
@@ -12,7 +12,7 @@ import {
   RecordTableInlineCell,
   RelativeDateDisplay,
 } from 'erxes-ui';
-import { getAutomationTypes, IAutomationHistory } from 'ui-modules';
+import { IAutomationHistory } from 'ui-modules';
 
 export const automationHistoriesColumns: ColumnDef<IAutomationHistory>[] = [
   {
@@ -24,36 +24,7 @@ export const automationHistoriesColumns: ColumnDef<IAutomationHistory>[] = [
     id: 'title',
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="Title" />,
-    cell: ({ cell }) => {
-      const { triggerType, target } = cell.row.original;
-      const [pluginName, moduleName] = getAutomationTypes(triggerType);
-
-      if (pluginName !== 'core' && moduleName) {
-        return (
-          <RenderPluginsComponentWrapper
-            pluginName={pluginName}
-            moduleName={moduleName}
-            props={{
-              componentType: 'historyName',
-              triggerType,
-              target,
-            }}
-          />
-        );
-      }
-
-      if (pluginName && moduleName) {
-        return (
-          <p className="flex flex-row gap-2 items-center ml-4">
-            {pluginName}
-            {moduleName}
-            <IconInfoTriangle className="size-3 text-destructive" />
-          </p>
-        );
-      }
-
-      return 'Empty';
-    },
+    cell: AutomationHistoryResultName,
   },
   {
     id: 'description',
@@ -67,20 +38,7 @@ export const automationHistoriesColumns: ColumnDef<IAutomationHistory>[] = [
     id: 'trigger',
     accessorKey: 'trigger',
     header: () => <RecordTable.InlineHead label="Trigger" />,
-    cell: ({ cell }) => {
-      const triggerType = cell.row?.original?.triggerType;
-      const { triggersConst } = useAutomation();
-
-      const triggerLabel = triggersConst.find(
-        ({ type }) => type === triggerType,
-      )?.label;
-
-      return (
-        <RecordTableInlineCell>
-          {triggerLabel || triggerType || 'Empty'}
-        </RecordTableInlineCell>
-      );
-    },
+    cell: AutomationHistoryTriggerCell,
   },
 
   {

@@ -6,7 +6,7 @@ export const DelayConfigForm = ({ currentActionIndex }: IActionProps) => {
   const { control, handleValueChange, handleIntervalChange, configField } =
     useDelay(currentActionIndex);
   return (
-    <Card.Content className="flex flex-row gap-4 w-96 pt-6">
+    <Card.Content className="flex space-x-4  pt-6">
       <Form.Field
         name={`${configField}.value`}
         control={control}

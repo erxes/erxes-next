@@ -30,6 +30,7 @@ export const OutgoingWebhookRequest = () => {
                   })}
                 </Select.Content>
               </Select>
+              <Form.Message />
             </Form.Item>
           )}
         />
@@ -41,6 +42,7 @@ export const OutgoingWebhookRequest = () => {
               <Form.Label>URL</Form.Label>
 
               <Input {...field} />
+              <Form.Message />
             </Form.Item>
           )}
         />
@@ -120,6 +122,7 @@ export const OutgoingWebhookRequest = () => {
                     </Button>
                   </div>
                 ))}
+                <Form.Message />
               </>
             );
           }}

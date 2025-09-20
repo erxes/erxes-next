@@ -1,10 +1,10 @@
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import { Form, Select, Card } from 'erxes-ui';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { Card, Form, Select } from 'erxes-ui';
+import { useFormContext } from 'react-hook-form';
 import { IActionProps, SegmentForm } from 'ui-modules';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
 
 type ActionConfigFieldType = `actions.${number}.config`;
 
@@ -55,7 +55,7 @@ export const WaitEventConfigForm = ({
   }
 
   return (
-    <div className="size-full flex flex-col max-h-full">
+    <div className="w-[650px]  h-full">
       {hasTargetableActions && (
         <Card.Content className="flex flex-row gap-4 w-96 pt-6">
           <Form.Field

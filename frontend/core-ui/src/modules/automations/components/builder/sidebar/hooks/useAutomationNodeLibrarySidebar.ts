@@ -12,7 +12,7 @@ import {
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
-import { TAutomationNodeState } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =

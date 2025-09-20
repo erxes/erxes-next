@@ -1,5 +1,5 @@
 import { AutomationNodeType } from '@/automations/types';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useFormContext } from 'react-hook-form';
 import isEqual from 'lodash/isEqual';
 

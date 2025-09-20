@@ -118,11 +118,11 @@ const ToggleButton = ({
       <Tooltip.Trigger asChild>
         <Button
           variant="ghost"
-          className="size-10 bg-sidebar text-primary"
+          className="bg-sidebar text-primary"
           onClick={onToggle}
           asChild
         >
-          <IconComponent className="size-12" />
+          <IconComponent className="size-16" />
         </Button>
       </Tooltip.Trigger>
       <Tooltip.Content

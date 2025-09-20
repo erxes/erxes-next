@@ -4,7 +4,7 @@ import {
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { toast } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -37,13 +37,16 @@ export const useAutomationActionContentSidebar = () => {
     currentAction?.type || '',
   );
 
-  const onSaveActionRemoteConfig = (config: any) => {
-    setValue(`actions.${currentIndex}.config`, config);
+  const onSaveActionConfigCallback = () => {
     setQueryParams({ activeNodeId: null });
     toggleSideBarOpen();
     toast({
       title: 'Action configuration added successfully.',
     });
+  };
+
+  const onSaveActionRemoteConfig = (config: any) => {
+    setValue(`actions.${currentIndex}.config`, config);
   };
 
   return {
@@ -55,6 +58,7 @@ export const useAutomationActionContentSidebar = () => {
     setValue,
     toggleSideBarOpen,
     onSaveActionRemoteConfig,
+    onSaveActionConfigCallback,
     pluginName,
     moduleName,
   };

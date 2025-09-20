@@ -1,7 +1,7 @@
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { NodeData } from '@/automations/types';
 import { onDisconnect } from '@/automations/utils/automationConnectionUtils';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { IconScissors } from '@tabler/icons-react';
 import {
   BaseEdge,

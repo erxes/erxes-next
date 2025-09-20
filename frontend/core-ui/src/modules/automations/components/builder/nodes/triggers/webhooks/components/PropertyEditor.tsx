@@ -6,10 +6,8 @@ import {
 } from '@tabler/icons-react';
 import { Button, Input, Select, Toggle } from 'erxes-ui';
 import { generateAutomationElementId } from 'ui-modules';
-import {
-  PropertyEditorProps,
-  PropertySchema,
-} from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
+import { PropertyEditorProps } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
+import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 
 export function PropertyEditor({
   property,
@@ -20,7 +18,9 @@ export function PropertyEditor({
   onToggleExpanded,
 }: PropertyEditorProps) {
   const hasIndent = depth > 0;
-  const isExpandable = property.type === 'object' || property.type === 'array';
+  const isExpandable =
+    property.type === 'object' ||
+    (property.type === 'array' && property.arrayItemType === 'object');
   const showArrayItemSelector = property.type === 'array';
   const canAddChild =
     property.type === 'object' ||

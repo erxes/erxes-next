@@ -59,7 +59,7 @@ export const AutomationNodeLibrarySidebar = () => {
       >
         <Tabs.List className="w-full border-b">
           {AUTOMATION_NODE_TYPES.map(({ value, label }) => (
-            <Tabs.Trigger value={value} className="w-1/3">
+            <Tabs.Trigger key={value} value={value} className="w-1/3">
               {label}
             </Tabs.Trigger>
           ))}

@@ -15,7 +15,7 @@ import { useSetAtom } from 'jotai';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useFormContext } from 'react-hook-form';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 
 /**
  * Props for automation trigger content components
@@ -319,10 +319,7 @@ CustomTriggerContent.displayName = 'CustomTriggerContent';
  */
 export const AutomationTriggerContentSidebar =
   React.memo<AutomationTriggerContentProps>(({ activeNode }) => {
-    const containerClasses = useMemo(
-      () => 'w-[650px] flex flex-col h-full',
-      [],
-    );
+    const containerClasses = useMemo(() => 'w-[650px] h-full', []);
 
     if (activeNode?.isCustom) {
       return (

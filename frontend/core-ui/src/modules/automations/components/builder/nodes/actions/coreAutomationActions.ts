@@ -5,8 +5,12 @@ import ManagePropertiesComponents from '@/automations/components/builder/nodes/a
 import SendEmailComponents from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmail';
 import WaitEventComponents from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEvent';
 import WebhooksComponents from '@/automations/components/builder/nodes/actions/webhooks/Webhooks';
+import {
+  AutomationCoreNodeComponent,
+  AutomationNodeType,
+} from '@/automations/types';
 
-const coreActions = {
+const coreActions: AutomationCoreNodeComponent<AutomationNodeType.Action> = {
   ...DelayComponents,
   ...BranchComponents,
   ...ManagePropertiesComponents,
@@ -26,6 +30,10 @@ type ActionComponents = {
   sidebar?: React.LazyExoticComponent<any>;
   nodeContent?: React.LazyExoticComponent<any>;
   actionResult?: React.LazyExoticComponent<any>;
+};
+
+export type CoreActionNodeConfigProps<TConfig> = {
+  config: TConfig;
 };
 
 export function isCoreAutomationActionType(

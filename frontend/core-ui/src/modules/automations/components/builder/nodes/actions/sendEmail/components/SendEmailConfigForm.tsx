@@ -1,16 +1,5 @@
-import { IconCheck, IconCircleDashedCheck, IconX } from '@tabler/icons-react';
-import {
-  Badge,
-  Button,
-  Card,
-  Collapsible,
-  Form,
-  Input,
-  Label,
-  Separator,
-  Tabs,
-} from 'erxes-ui';
-import { useState } from 'react';
+import { IconCircleDashedCheck, IconX } from '@tabler/icons-react';
+import { Badge, Card, Form, Input, Label, RadioGroup, Tabs } from 'erxes-ui';
 import {
   IActionProps,
   PlaceHolderInput,
@@ -21,53 +10,32 @@ import {
   useSendEmailCustomMailField,
   useSendEmailSidebarForm,
 } from '../hooks/useSendEmailSidebarForm';
-import { useSendEmailConfigRow } from '@/automations/components/builder/nodes/actions/sendEmail/hooks/useSendEmailConfigRow';
 
 const ConfigRow = ({
   title,
   isDone,
   subContent,
-  buttonText,
   children,
 }: {
   title: string;
   isDone?: boolean;
   subContent?: string;
-  buttonText: string;
   children: any;
 }) => {
-  const { isOpen, toggleOpen } = useSendEmailConfigRow();
-
   return (
     <>
-      <Collapsible open={isOpen} className="w-full">
-        <Collapsible.Trigger className="flex flex-row gap-4 align-between justify-between w-full">
-          <div className="flex flex-row align-between">
-            <div className="flex flex-col gap-2 items-start">
-              <Label className="flex flex-row gap-2 items-center">
-                {title}
-                {isDone && (
-                  <IconCircleDashedCheck className={'text-success w-4 h-4'} />
-                )}
-              </Label>
-              <span className="font-mono text-muted-foreground text-start text-xs">
-                {subContent}
-              </span>
-            </div>
-          </div>
-          {isOpen ? (
-            <Button variant="link" onClick={toggleOpen}>
-              <IconX />
-            </Button>
-          ) : (
-            <Button variant="link" onClick={toggleOpen}>
-              {`Edit ${buttonText}`}
-            </Button>
-          )}
-        </Collapsible.Trigger>
-        <Collapsible.Content>{children}</Collapsible.Content>
-        <Separator className="mt-4" />
-      </Collapsible>
+      <div className="space-y-1 text-left">
+        <div className="flex items-center space-x-2">
+          <Label className="text-sm font-medium">{title}</Label>
+          {isDone && <IconCircleDashedCheck className="text-success size-4" />}
+        </div>
+        {subContent && (
+          <p className="font-mono text-muted-foreground text-xs">
+            {subContent}
+          </p>
+        )}
+      </div>
+      <div className="p-2 border-b">{children}</div>
     </>
   );
 };
@@ -85,19 +53,22 @@ const CustomMailField = ({
       name={`actions.${currentActionIndex}.config.customMails`}
       control={control}
       render={({ field }) => (
-        <Form.Item>
-          {(config?.customMails || []).map((customMail: string) => (
-            <Badge key={customMail}>
-              {customMail}
-              <IconX
-                className="w-4 h-4 hover:text-accent-foreground hover:cursor-pointer"
-                onClick={() => removeMail(customMail)}
-              />
-            </Badge>
-          ))}
+        <Form.Item className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            {(config?.customMails || []).map((customMail: string) => (
+              <Badge key={customMail} variant="secondary" className="pr-1">
+                {customMail}
+                <IconX
+                  className="w-3 h-3 ml-1 hover:text-destructive cursor-pointer"
+                  onClick={() => removeMail(customMail)}
+                />
+              </Badge>
+            ))}
+          </div>
           <Input
             onKeyPress={(e) => onChange(e, field.onChange)}
-            placeholder="Enter some email"
+            placeholder="Enter email address"
+            className="w-full"
           />
         </Form.Item>
       )}
@@ -112,32 +83,52 @@ const SendEmailConfigurationForm = ({
 }) => {
   const { config, control, contentType } =
     useSendEmailSidebarForm(currentActionIndex);
+
   return (
-    <Card.Content className="flex flex-col gap-4 max-w-xl pt-6">
+    <Card.Content className="space-y-2 max-w-xl pt-6">
       <ConfigRow
         title="Sender"
         subContent="Who is sending email"
-        buttonText="sender"
         isDone={!!config?.fromUserId}
       >
         <Form.Field
-          name={`actions.${currentActionIndex}.config.fromUserId`}
+          name={`actions.${currentActionIndex}.config.type`}
           control={control}
           render={({ field }) => (
-            <Form.Item className="py-4">
-              <SelectMember.FormItem
-                value={field.value}
-                onValueChange={field.onChange}
-              />
-            </Form.Item>
+            <RadioGroup
+              value={field.value}
+              onValueChange={(value) => field.onChange(value)}
+            >
+              <label className="flex space-x-2 items-center">
+                <RadioGroup.Item value="default" id="env-sender" />
+                <Label htmlFor="env-sender">Use company email</Label>
+              </label>
+              <label className="flex space-x-2 items-center">
+                <RadioGroup.Item value="custom" id="custom-sender" />
+                <Label htmlFor="custom-sender">Custom sender email</Label>
+              </label>
+            </RadioGroup>
           )}
         />
+        {config.type === 'custom' && (
+          <Form.Field
+            name={`actions.${currentActionIndex}.config.fromUserId`}
+            control={control}
+            render={({ field }) => (
+              <Form.Item className="py-4">
+                <SelectMember.FormItem
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
+              </Form.Item>
+            )}
+          />
+        )}
       </ConfigRow>
 
       <ConfigRow
         title="Recipient"
-        buttonText="select recipients"
-        subContent="Who is reciepents"
+        subContent="Who is recipients"
         isDone={[
           'attributionMails',
           'customMails',
@@ -145,24 +136,31 @@ const SendEmailConfigurationForm = ({
           'teamMember',
         ].some((key) => (config || {})[key])}
       >
-        <Tabs defaultValue="general" className="w-full p-4">
-          <Tabs.List className="w-full">
-            <Tabs.Trigger value="general" className="w-full">
-              General
+        <Tabs defaultValue="dynamic" className="w-full">
+          <Tabs.List className="grid w-full grid-cols-2">
+            <Tabs.Trigger
+              value="dynamic"
+              className="flex items-center space-x-2"
+            >
+              <span>From Target</span>
               {config?.attributionMails && (
-                <Badge variant="destructive">
-                  <IconCheck />
-                </Badge>
+                <div className="ml-2 size-1 bg-primary rounded-full" />
               )}
             </Tabs.Trigger>
-            <Tabs.Trigger value="static" className="relative w-full">
-              Static
+            <Tabs.Trigger
+              value="static"
+              className="flex items-center space-x-2"
+            >
+              <span>Fixed Recipients</span>
               {(config?.customMails ||
                 config?.customer ||
-                config?.teamMember) && <IconCheck className="w-4 h-4" />}
+                config?.teamMember) && (
+                <div className="ml-2 size-1 bg-primary rounded-full" />
+              )}
             </Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content value="general" className="p-4">
+
+          <Tabs.Content value="dynamic" className="p-4">
             <Form.Field
               name={`actions.${currentActionIndex}.config.attributionMails`}
               control={control}
@@ -176,13 +174,15 @@ const SendEmailConfigurationForm = ({
               )}
             />
           </Tabs.Content>
-          <Tabs.Content value="static" className="p-4">
+
+          <Tabs.Content value="static" className="space-y-4 p-4">
             <CustomMailField currentActionIndex={currentActionIndex} />
+
             <Form.Field
               name={`actions.${currentActionIndex}.config.teamMember`}
               control={control}
               render={({ field }) => (
-                <Form.Item className="py-4">
+                <Form.Item>
                   <Form.Label>Team members</Form.Label>
                   <SelectMember.FormItem
                     value={field.value}
@@ -191,11 +191,12 @@ const SendEmailConfigurationForm = ({
                 </Form.Item>
               )}
             />
+
             <Form.Field
               name={`actions.${currentActionIndex}.config.customer`}
               control={control}
               render={({ field }) => (
-                <Form.Item className="py-4">
+                <Form.Item>
                   <Form.Label>Customers</Form.Label>
                   <SelectCustomer.FormItem
                     mode="multiple"
@@ -208,10 +209,10 @@ const SendEmailConfigurationForm = ({
           </Tabs.Content>
         </Tabs>
       </ConfigRow>
+
       <ConfigRow
         title="Subject"
         subContent="Configure the subject of the email"
-        buttonText="Subject"
         isDone={!!config?.subject}
       >
         <Form.Field
@@ -224,11 +225,11 @@ const SendEmailConfigurationForm = ({
           )}
         />
       </ConfigRow>
-      <ConfigRow
-        title="Selected Email Template"
-        buttonText="Change email template"
-      >
-        template
+
+      <ConfigRow title="Selected Email Template">
+        <div className="p-4 text-center text-muted-foreground">
+          Email template selection will be implemented here
+        </div>
       </ConfigRow>
     </Card.Content>
   );

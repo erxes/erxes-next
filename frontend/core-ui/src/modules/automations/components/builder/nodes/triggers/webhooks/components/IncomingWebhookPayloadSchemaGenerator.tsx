@@ -1,26 +1,27 @@
-import { IconDatabase, IconPlus, IconShield } from '@tabler/icons-react';
-import { Button, Label } from 'erxes-ui';
 import { PropertyEditor } from '@/automations/components/builder/nodes/triggers/webhooks/components/PropertyEditor';
-import { usePayloadSchema } from '@/automations/components/builder/nodes/triggers/webhooks/components/usePayloadSchema';
+import { PayloadSchemaGeneratorProps } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
 import {
-  PayloadSchemaGeneratorProps,
-  PropertySchema,
-} from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
-import { generateSchemaPreview } from '@/automations/components/builder/nodes/triggers/webhooks/components/utils';
+  addChildProperty,
+  generateSchemaPreview,
+  removePropertyFromList,
+  toggleExpandedInList,
+  updatePropertyInList,
+} from '@/automations/components/builder/nodes/triggers/webhooks/components/utils';
+import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
+import { IconPlus, IconShield } from '@tabler/icons-react';
+import { Button } from 'erxes-ui';
+import { generateAutomationElementId } from 'ui-modules';
 
 export const IncomingWebhookPayloadSchemaGenerator = ({
   value,
   onChange,
 }: PayloadSchemaGeneratorProps) => {
-  const {
-    properties: requiredProperties,
-    addProperty,
-    removeProperty,
-    updateProperty,
-    toggleExpanded,
-    previewJson,
-  } = usePayloadSchema(value, onChange);
-  const hasProperties = (requiredProperties as PropertySchema[]).length > 0;
+  const properties = (value || []) as PropertySchema[];
+  const previewJson = JSON.stringify(
+    generateSchemaPreview(properties),
+    null,
+    2,
+  );
 
   return (
     <div className="space-y-4">
@@ -33,28 +34,45 @@ export const IncomingWebhookPayloadSchemaGenerator = ({
         <div className="md:col-span-2 space-y-4 p-4 border rounded-lg">
           <div className="flex items-center justify-between">
             <h4 className="font-medium text-sm">Required Properties</h4>
-            <Button variant="outline" size="sm" onClick={() => addProperty()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                onChange([
+                  ...properties,
+                  {
+                    id: generateAutomationElementId(),
+                    name: '',
+                    type: 'string',
+                    required: true,
+                    description: '',
+                    isExpanded: true,
+                  } as PropertySchema,
+                ])
+              }
+            >
               <IconPlus className="mr-1" />
               Add Root Property
             </Button>
           </div>
 
-          {!hasProperties && (
-            <div className="text-center py-10">
-              <IconDatabase className="mx-auto mb-2" />
-              <p className="text-sm">No properties defined.</p>
-            </div>
-          )}
-
           <div className="space-y-4">
-            {requiredProperties.map((property) => (
+            {properties.map((property) => (
               <PropertyEditor
                 key={property.id}
                 property={property}
-                onUpdate={updateProperty}
-                onRemove={removeProperty}
-                onAddChild={addProperty}
-                onToggleExpanded={toggleExpanded}
+                onUpdate={(id, field, v) =>
+                  onChange(updatePropertyInList(properties, id, field, v))
+                }
+                onRemove={(id) =>
+                  onChange(removePropertyFromList(properties, id))
+                }
+                onAddChild={(parentId) =>
+                  onChange(addChildProperty(properties, parentId))
+                }
+                onToggleExpanded={(id) =>
+                  onChange(toggleExpandedInList(properties, id))
+                }
               />
             ))}
           </div>

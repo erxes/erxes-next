@@ -1,149 +1,117 @@
+// schema-builder/hooks/usePayloadSchema.ts
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { generateAutomationElementId } from 'ui-modules';
+import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 import {
+  createNewRootProperty,
   generateSchemaPreview,
   removeNestedProperty,
   updateNestedProperty,
 } from '@/automations/components/builder/nodes/triggers/webhooks/components/utils';
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
+
+export function normalizePropertyType(
+  prop: PropertySchema,
+  nextType: PropertySchema['type'],
+): PropertySchema {
+  if (nextType === 'object') {
+    return {
+      ...prop,
+      type: 'object',
+      children: [],
+      arrayItemType: undefined,
+      arrayItemSchema: undefined,
+    };
+  }
+  if (nextType === 'array') {
+    return {
+      ...prop,
+      type: 'array',
+      arrayItemType: 'string',
+      arrayItemSchema: undefined,
+      children: [],
+    };
+  }
+  return {
+    ...prop,
+    type: nextType,
+    children: [],
+    arrayItemType: undefined,
+    arrayItemSchema: undefined,
+  };
+}
 
 export function usePayloadSchema(
   value: PropertySchema[] | undefined,
   onChange: (next: PropertySchema[]) => void,
 ) {
-  const [properties, setProperties] = useState<PropertySchema[]>(value || []);
-  const lastValueRef = useRef<PropertySchema[] | undefined>(value);
+  const [properties, setProperties] = useState<PropertySchema[]>(value ?? []);
+  const lastValueRef = useRef(value);
 
-  // Sync down when external value reference changes (e.g., form reset)
   useEffect(() => {
     if (lastValueRef.current !== value) {
-      setProperties(value || []);
+      setProperties(value ?? []);
       lastValueRef.current = value;
     }
   }, [value]);
 
+  const applyChange = useCallback(
+    (updater: (prev: PropertySchema[]) => PropertySchema[]) => {
+      setProperties((prev) => {
+        const next = updater(prev);
+        onChange(next);
+        return next;
+      });
+    },
+    [onChange],
+  );
+
   const addProperty = useCallback(
     (parentId?: string) => {
-      const newProperty: PropertySchema = {
-        id: generateAutomationElementId(),
-        name: '',
-        type: 'string',
-        required: true,
-        description: '',
-        isExpanded: true,
-      };
-
-      if (parentId) {
-        const next = updateNestedProperty(properties, parentId, (parent) => ({
-          ...parent,
-          children: [...(parent.children || []), newProperty],
-        }));
-        setProperties(next);
-        onChange(next);
-        return;
-      }
-      const next = [...properties, newProperty];
-      setProperties(next);
-      onChange(next);
+      const newProp = createNewRootProperty();
+      applyChange((prev) =>
+        parentId
+          ? updateNestedProperty(prev, parentId, (p) => ({
+              ...p,
+              children: [...(p.children ?? []), newProp],
+            }))
+          : [...prev, newProp],
+      );
     },
-    [onChange, properties],
+    [applyChange],
   );
 
   const removeProperty = useCallback(
     (propertyId: string) => {
-      const next = removeNestedProperty(properties, propertyId);
-      setProperties(next);
-      onChange(next);
+      applyChange((prev) => removeNestedProperty(prev, propertyId));
     },
-    [onChange, properties],
+    [applyChange],
   );
 
   const updateProperty = useCallback(
-    (propertyId: string, field: string, value: unknown) => {
-      const next = updateNestedProperty(properties, propertyId, (prop) => {
-        // Normalize based on field and type transitions
-        if (field === 'type') {
-          const nextType = value as PropertySchema['type'];
-          if (nextType === 'object') {
-            return {
-              ...prop,
-              type: 'object',
-              children: prop.children || [],
-              arrayItemType: undefined,
-              arrayItemSchema: [],
-            };
-          }
-          if (nextType === 'array') {
-            // default array item type to string if not set
-            const nextArrayItemType = prop.arrayItemType || 'string';
-            return {
-              ...prop,
-              type: 'array',
-              arrayItemType: nextArrayItemType,
-              arrayItemSchema:
-                nextArrayItemType === 'object'
-                  ? prop.arrayItemSchema || []
-                  : [],
-              children: [],
-            };
-          }
-          // primitive switch
-          return {
-            ...prop,
-            type: nextType,
-            children: [],
-            arrayItemType: undefined,
-            arrayItemSchema: [],
-          };
-        }
-
-        if (field === 'arrayItemType') {
-          const nextArrayItemType = value as NonNullable<
-            PropertySchema['arrayItemType']
-          >;
-          return {
-            ...prop,
-            arrayItemType: nextArrayItemType,
-            arrayItemSchema:
-              nextArrayItemType === 'object' ? prop.arrayItemSchema || [] : [],
-          };
-        }
-
-        if (field === 'arrayItemSchema') {
-          return {
-            ...prop,
-            arrayItemSchema: (value as PropertySchema[]) || [],
-          };
-        }
-
-        if (field === 'children') {
-          return {
-            ...prop,
-            children: (value as PropertySchema[]) || [],
-          };
-        }
-
-        return {
-          ...prop,
-          [field]: value as never,
-        };
-      });
-      setProperties(next);
-      onChange(next);
+    (propertyId: string, field: keyof PropertySchema, newValue: unknown) => {
+      applyChange((prev) =>
+        updateNestedProperty(prev, propertyId, (prop) => {
+          if (field === 'type')
+            return normalizePropertyType(
+              prop,
+              newValue as PropertySchema['type'],
+            );
+          return { ...prop, [field]: newValue } as PropertySchema;
+        }),
+      );
     },
-    [onChange, properties],
+    [applyChange],
   );
 
   const toggleExpanded = useCallback(
     (propertyId: string) => {
-      const next = updateNestedProperty(properties, propertyId, (prop) => ({
-        ...prop,
-        isExpanded: !prop.isExpanded,
-      }));
-      setProperties(next);
-      onChange(next);
+      applyChange((prev) =>
+        updateNestedProperty(prev, propertyId, (prop) => ({
+          ...prop,
+          isExpanded: !prop.isExpanded,
+        })),
+      );
     },
-    [onChange, properties],
+    [applyChange],
   );
 
   const previewJson = useMemo(

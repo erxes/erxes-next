@@ -1,6 +1,6 @@
 import { Form, Label } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
-import { JsonBuilderRoot } from './JsonBuilder';
+import { OutgoingWebhookBodyBuilder } from './OutgoingWebhookBodyBuilder';
 
 export const OutgoingWebhookBody = () => {
   const { control } = useFormContext();
@@ -14,7 +14,8 @@ export const OutgoingWebhookBody = () => {
         name="body"
         render={() => (
           <Form.Item>
-            <JsonBuilderRoot name="body" />
+            <Form.Message />
+            <OutgoingWebhookBodyBuilder name="body" />
           </Form.Item>
         )}
       />

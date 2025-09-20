@@ -1,4 +1,9 @@
-import { cursorPaginate, getPlugin, getPlugins } from 'erxes-api-shared/utils';
+import {
+  cursorPaginate,
+  getEnv,
+  getPlugin,
+  getPlugins,
+} from 'erxes-api-shared/utils';
 
 import {
   AUTOMATION_STATUSES,
@@ -273,6 +278,18 @@ export const automationQueries = {
       propertyTypesConst: [],
     };
 
+    // Track seen items to avoid duplicates
+    const seenTriggerTypes = new Set<string>(
+      constants.triggersConst.map((t) => t.type),
+    );
+    const seenTriggerTypeStrings = new Set<string>();
+    const seenPropertyValues = new Set<string>(
+      constants.propertyTypesConst.map((p) => p.value),
+    );
+    const seenActionTypes = new Set<string>(
+      constants.actionsConst.map((a) => a.type),
+    );
+
     for (const pluginName of plugins) {
       const plugin = await getPlugin(pluginName);
       const meta = plugin.config?.meta || {};
@@ -282,16 +299,30 @@ export const automationQueries = {
         const { triggers = [], actions = [] } = pluginConstants;
 
         for (const trigger of triggers) {
-          constants.triggersConst.push({ ...trigger, pluginName });
-          constants.triggerTypesConst.push(trigger.type);
-          constants.propertyTypesConst.push({
-            value: trigger.type,
-            label: trigger.label,
-          });
+          if (!seenTriggerTypes.has(trigger.type)) {
+            constants.triggersConst.push({ ...trigger, pluginName });
+            seenTriggerTypes.add(trigger.type);
+          }
+
+          if (!seenTriggerTypeStrings.has(trigger.type)) {
+            constants.triggerTypesConst.push(trigger.type);
+            seenTriggerTypeStrings.add(trigger.type);
+          }
+
+          if (!seenPropertyValues.has(trigger.type)) {
+            constants.propertyTypesConst.push({
+              value: trigger.type,
+              label: trigger.label,
+            });
+            seenPropertyValues.add(trigger.type);
+          }
         }
 
         for (const action of actions) {
-          constants.actionsConst.push({ ...action, pluginName });
+          if (!seenActionTypes.has(action.type)) {
+            constants.actionsConst.push({ ...action, pluginName });
+            seenActionTypes.add(action.type);
+          }
         }
 
         if (pluginConstants?.emailRecipientTypes?.length) {
@@ -300,21 +331,53 @@ export const automationQueries = {
               ...eRT,
               pluginName,
             }));
-          constants.actionsConst = constants.actionsConst.map((actionConst) =>
-            actionConst.type === 'sendEmail'
-              ? {
-                  ...actionConst,
-                  emailRecipientsConst: actionConst.emailRecipientsConst.concat(
-                    updatedEmailRecipIentTypes,
-                  ),
-                }
-              : actionConst,
-          );
+          constants.actionsConst = constants.actionsConst.map((actionConst) => {
+            if (actionConst.type !== 'sendEmail') {
+              return actionConst;
+            }
+
+            const baseRecipients = actionConst.emailRecipientsConst || [];
+            const merged = [...baseRecipients, ...updatedEmailRecipIentTypes];
+
+            const seenRecipientValues = new Set<string>();
+            const dedupedRecipients = merged.filter((recipient: any) => {
+              const key = recipient.value ?? recipient.type ?? recipient.label;
+              if (!key) {
+                return true;
+              }
+              if (seenRecipientValues.has(key)) {
+                return false;
+              }
+              seenRecipientValues.add(key);
+              return true;
+            });
+
+            return {
+              ...actionConst,
+              emailRecipientsConst: dedupedRecipients,
+            } as IAutomationsActionConfig as any;
+          });
         }
       }
     }
 
     return constants;
+  },
+
+  async getAutomationWebhookEndpoint(
+    _root,
+    { _id },
+    { models, subdomain }: IContext,
+  ) {
+    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+
+    const automation = await models.Automations.findById(_id).lean();
+
+    if (!automation) {
+      throw new Error('Not found');
+    }
+
+    return `${DOMAIN}/${automation._id}/`;
   },
 
   async automationBotsConstants() {

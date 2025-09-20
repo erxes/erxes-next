@@ -1,7 +1,7 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { NodeData } from '@/automations/types';
-import { TAutomationBuilderForm } from '@/automations/utils/AutomationFormDefinitions';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { toast } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';

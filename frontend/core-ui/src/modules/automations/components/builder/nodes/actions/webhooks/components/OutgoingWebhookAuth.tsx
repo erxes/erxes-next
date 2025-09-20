@@ -56,6 +56,7 @@ export const OutgoingWebhookAuth = () => {
                     onChange={onChange}
                   />
                 )}
+                <Form.Message />
               </Form.Item>
             );
           }}

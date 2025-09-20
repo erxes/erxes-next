@@ -20,7 +20,7 @@ import { deepCleanNulls } from '@/automations/utils/automationBuilderUtils/trigg
 import {
   automationBuilderFormSchema,
   TAutomationBuilderForm,
-} from '@/automations/utils/AutomationFormDefinitions';
+} from '@/automations/utils/automationFormDefinitions';
 import { useAtom } from 'jotai';
 import { AutomationBuilderTabsType, IAutomation } from '../../types';
 import { AutomationHistories } from './history/components/AutomationHistories';
