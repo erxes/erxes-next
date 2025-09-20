@@ -30,10 +30,10 @@ export const queries = `
 `;
 
 export const mutations = `
-    channelAdd(name: String!, description: String, memberIds: [String]): Channel
+    channelAdd(name: String!, icon: String,description: String, memberIds: [String]): Channel
     channelUpdate(_id: String!, name: String, description: String, icon: String, memberIds: [String]): Channel
     channelRemove(_id: String!): Channel
     channelAddMembers(_id: String!, memberIds: [String]): [ChannelMember]
-    channelRemoveMember(_id: String!): ChannelMember
+    channelRemoveMember(channelId: String!, memberId: String!): ChannelMember
     channelUpdateMember(_id: String!, role: String): ChannelMember
 `;

@@ -49,7 +49,7 @@ export const channelMutations = {
   channelUpdate: async (
     _parent: undefined,
     { _id, ...doc }: IChannelsEdit,
-    { models, subdomain,user }: IContext,
+    { models, subdomain, user }: IContext,
   ) => {
     await checkUserRole({
       models,
@@ -65,9 +65,8 @@ export const channelMutations = {
   channelRemove: async (
     _parent: undefined,
     { _id }: { _id: string },
-    { models, user}: IContext,
+    { models, user }: IContext,
   ) => {
-
     await checkUserRole({
       models,
       channelId: _id,
@@ -81,9 +80,9 @@ export const channelMutations = {
   channelAddMembers: async (
     _parent: undefined,
     { _id, memberIds }: { _id: string; memberIds: string[] },
-    { models,user }: IContext,
+    { models, user }: IContext,
   ) => {
-console.log("called ...")
+    console.log('called ...');
     await checkUserRole({
       models,
       channelId: _id,
@@ -102,24 +101,23 @@ console.log("called ...")
 
   channelRemoveMember: async (
     _parent: undefined,
-    { _id }: { _id: string },
-    { models,user }: IContext,
+    { channelId, memberId }: { channelId: string; memberId: string },
+    { models, user }: IContext,
   ) => {
-
     await checkUserRole({
       models,
-      channelId: _id,
+      channelId,
       userId: user._id,
       allowedRoles: [ChannelMemberRoles.ADMIN],
     });
 
-    return models.ChannelMembers.removeChannelMember(_id);
+    return models.ChannelMembers.removeChannelMember(channelId, memberId);
   },
 
   channelUpdateMember: async (
     _parent: undefined,
     { _id, role }: { _id: string; memberId: string; role: ChannelMemberRoles },
-    { models,user }: IContext,
+    { models, user }: IContext,
   ) => {
     const channelMember = await models.ChannelMembers.findOne({ _id });
 

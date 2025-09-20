@@ -7,6 +7,7 @@ export const channelSchema = schemaWrapper(
     _id: mongooseStringRandomId,
     createdAt: { type: Date, label: 'Created at' },
     name: { type: String, label: 'Name' },
+    icon: { type: String, label: 'Icon' },
     description: {
       type: String,
       optional: true,

@@ -1,5 +1,5 @@
 import { ruleSchema } from 'erxes-api-shared/core-modules';
-import { channelSchema } from '~/modules/inbox/db/definitions/channels';
+import { channelSchema } from '~/modules/channel/db/definitions/channel';
 import { integrationSchema } from '~/modules/inbox/db/definitions/integrations';
 
 export const MODULE_NAMES = {

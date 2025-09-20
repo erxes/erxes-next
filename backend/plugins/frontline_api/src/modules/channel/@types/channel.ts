@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 export interface IChannel {
   name?: string;
+  icon?: string;
   description?: string;
   userId?: string;
   conversationCount?: number;

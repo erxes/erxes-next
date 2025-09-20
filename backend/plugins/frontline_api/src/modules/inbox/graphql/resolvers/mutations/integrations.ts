@@ -1,5 +1,4 @@
 import {
-  IIntegrationDocument,
   IIntegration,
   IMessengerData,
   IUiOptions,
@@ -216,6 +215,7 @@ export const integrationMutations = {
       channel = await models.Channels.createChannel({
         channelDoc: { name: 'Default channel' },
         adminId: user._id,
+        memberIds: [],
       });
       await models.ChannelMembers.create({
         channelId: channel._id,
