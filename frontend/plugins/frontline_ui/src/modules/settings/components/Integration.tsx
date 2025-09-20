@@ -20,7 +20,7 @@ export const Integration = React.forwardRef<HTMLButtonElement, Props>(
       skip: !to,
     });
     return (
-      <Link to={{ pathname: `/settings/inbox/details/${to}` }}>
+      <Link to={{ pathname: `/settings/frontline/inbox/details/${to}` }}>
         <button
           ref={ref}
           {...rest}

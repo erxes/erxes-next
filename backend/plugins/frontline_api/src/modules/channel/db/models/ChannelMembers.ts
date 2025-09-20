@@ -66,10 +66,10 @@ export const loadChannelMemberClass = (models: IModels) => {
     }
 
     public static async createChannelMembers(members: IChannelMember[]) {
-      return models.ChannelMembers.insertMany({
-        ...members,
-        createdAt: new Date(),
-      });
+      console.log(members,'members....')
+      return models.ChannelMembers.insertMany(
+        members,
+      );
     }
 
     public static async removeChannelMember(_id: string) {

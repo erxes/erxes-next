@@ -20,7 +20,7 @@ export const checkUserRole = async ({
     });
 
     if (!userRoles || userRoles.length === 0) {
-      throw new Error('User not in channel');
+      throw new Error('User not in channel 1');
     }
 
     let isAllowed = false;
@@ -44,7 +44,7 @@ export const checkUserRole = async ({
   });
 
   if (!userRole) {
-    throw new Error('User not in channel');
+    throw new Error('User not in channel 2');
   }
 
   if (!allowedRoles.includes(userRole.role)) {

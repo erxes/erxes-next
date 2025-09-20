@@ -15,9 +15,11 @@ export interface IChannelModel extends Model<IChannelDocument> {
   createChannel({
     channelDoc,
     adminId,
+    memberIds,
   }: {
     channelDoc: IChannel;
     adminId: string;
+    memberIds: string[];
   }): Promise<IChannelDocument>;
   updateChannel(_id: string, doc: IChannel, userId: string): IChannelDocument;
   updateUserChannels(channelIds: string[], userId: string): IChannelDocument[];
@@ -64,7 +66,7 @@ export const loadChannelClass = (models: IModels) => {
           role: ChannelMemberRoles.MEMBER,
         })),
       ];
-
+console.log("roles",roles)
       await models.ChannelMembers.createChannelMembers(roles);
 
       return channel;

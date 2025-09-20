@@ -16,9 +16,8 @@ export const channelMutations = {
       icon,
       memberIds,
     }: { name: string; description: string; icon: string; memberIds: string[] },
-    { models, subdomain }: IContext,
+    { models, subdomain, user }: IContext,
   ) => {
-    let user = { _id: '12' };
     const userId = user._id;
     memberIds = memberIds || [];
     memberIds = memberIds.includes(userId)
@@ -50,9 +49,8 @@ export const channelMutations = {
   channelUpdate: async (
     _parent: undefined,
     { _id, ...doc }: IChannelsEdit,
-    { models, subdomain }: IContext,
+    { models, subdomain,user }: IContext,
   ) => {
-    const user = { _id: '12' };
     await checkUserRole({
       models,
       channelId: _id,
@@ -67,9 +65,8 @@ export const channelMutations = {
   channelRemove: async (
     _parent: undefined,
     { _id }: { _id: string },
-    { models }: IContext,
+    { models, user}: IContext,
   ) => {
-    const user = { _id: '12' };
 
     await checkUserRole({
       models,
@@ -84,10 +81,9 @@ export const channelMutations = {
   channelAddMembers: async (
     _parent: undefined,
     { _id, memberIds }: { _id: string; memberIds: string[] },
-    { models }: IContext,
+    { models,user }: IContext,
   ) => {
-    const user = { _id: '12' };
-
+console.log("called ...")
     await checkUserRole({
       models,
       channelId: _id,
@@ -107,9 +103,8 @@ export const channelMutations = {
   channelRemoveMember: async (
     _parent: undefined,
     { _id }: { _id: string },
-    { models }: IContext,
+    { models,user }: IContext,
   ) => {
-    const user = { _id: '12' };
 
     await checkUserRole({
       models,
@@ -124,9 +119,8 @@ export const channelMutations = {
   channelUpdateMember: async (
     _parent: undefined,
     { _id, role }: { _id: string; memberId: string; role: ChannelMemberRoles },
-    { models }: IContext,
+    { models,user }: IContext,
   ) => {
-    const user = { _id: '12' };
     const channelMember = await models.ChannelMembers.findOne({ _id });
 
     if (!channelMember) {
