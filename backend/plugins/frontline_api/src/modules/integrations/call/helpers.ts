@@ -202,7 +202,7 @@ export const removeIntegration = async ({
 
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
 
-  if (ENDPOINT_URL && !['os'].includes(subdomain)) {
+  if (ENDPOINT_URL) {
     // send domain to core endpoints
     try {
       await fetch(`${ENDPOINT_URL}/remove-endpoint`, {
