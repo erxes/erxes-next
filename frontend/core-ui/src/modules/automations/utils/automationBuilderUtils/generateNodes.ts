@@ -2,7 +2,11 @@ import { AutomationNodeType, NodeData } from '@/automations/types';
 import { generateNodePosition } from '@/automations/utils/automationBuilderUtils/nodePosition';
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import { Node } from '@xyflow/react';
-import { IAction, ITrigger, IWorkflowNode } from 'ui-modules';
+import {
+  TAutomationAction,
+  TAutomationTrigger,
+  TAutomationWorkflowNode,
+} from 'ui-modules';
 
 const generateNodeData = (
   node: TAutomationNodeState,
@@ -92,7 +96,7 @@ export const generateNode = (
     | AutomationNodeType.Action
     | AutomationNodeType.Trigger
     | AutomationNodeType.Workflow,
-  nodes: IAction[] | ITrigger[] | IWorkflowNode[],
+  nodes: TAutomationAction[] | TAutomationTrigger[] | TAutomationWorkflowNode[],
   props: any,
   generatedNodes: Node<NodeData>[],
 ) => {
@@ -127,9 +131,9 @@ export const generateNode = (
  */
 
 export const generateNodes = (
-  triggers: ITrigger[],
-  actions: IAction[],
-  workflows: IWorkflowNode[],
+  triggers: TAutomationTrigger[],
+  actions: TAutomationAction[],
+  workflows: TAutomationWorkflowNode[],
   props: any = {},
 ) => {
   if (triggers.length === 0 && actions.length === 0) {

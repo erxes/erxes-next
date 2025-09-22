@@ -2,14 +2,14 @@ import { ManagePropertyRuleProps } from '@/automations/types/manageProperties';
 import { IconTrash } from '@tabler/icons-react';
 import { Button, Form, Label, Select } from 'erxes-ui';
 import { useEffect } from 'react';
-import { IActionProps, PlaceHolderInput } from 'ui-modules';
+import { TAutomationActionProps, PlaceHolderInput } from 'ui-modules';
 import { useManagePropertyRule } from '../hooks/useManagePropertyRule';
 import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
 
 export const ManagePropertiesConfigForm = ({
   currentActionIndex,
   currentAction,
-}: IActionProps) => {
+}: TAutomationActionProps) => {
   const {
     setValue,
     propertyTypes,

@@ -1,7 +1,5 @@
-import {
-  CoreComponentType,
-  getCoreAutomationActionComponent,
-} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { getCoreAutomationActionComponent } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { ErrorState } from '@/automations/components/common/ErrorState';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Card, Form, Spinner } from 'erxes-ui';
@@ -23,8 +21,8 @@ export const AutomationCoreActionSidebarContent = ({
   onSaveActionConfigCallback,
 }: Props) => {
   const Component = getCoreAutomationActionComponent(
-    currentAction.type as any,
-    CoreComponentType.Sidebar,
+    currentAction.type,
+    TAutomationActionComponent.Sidebar,
   );
 
   if (!Component) {
@@ -47,8 +45,7 @@ export const AutomationCoreActionSidebarContent = ({
             <Component
               currentActionIndex={currentIndex}
               currentAction={currentAction}
-              handleSave={(config: any) => {
-                console.log({ config });
+              handleSave={(config) => {
                 field.onChange({
                   ...(currentAction?.config || {}),
                   ...config,

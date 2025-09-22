@@ -1,13 +1,13 @@
 import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
 import { IconInfoTriangle } from '@tabler/icons-react';
 import { CellContext } from '@tanstack/table-core';
-import { getAutomationTypes, IAutomationHistory } from 'ui-modules';
+import { splitAutomationNodeType, IAutomationHistory } from 'ui-modules';
 
 export const AutomationHistoryResultName = ({
   cell,
 }: CellContext<IAutomationHistory, unknown>) => {
   const { triggerType, target } = cell.row.original;
-  const [pluginName, moduleName] = getAutomationTypes(triggerType);
+  const [pluginName, moduleName] = splitAutomationNodeType(triggerType);
 
   if (pluginName !== 'core' && moduleName) {
     return (

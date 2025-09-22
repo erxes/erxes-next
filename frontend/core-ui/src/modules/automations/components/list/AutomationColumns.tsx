@@ -13,7 +13,7 @@ import {
   Popover,
 } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { IAction, ITrigger, SelectTags } from 'ui-modules';
+import { TAutomationAction, TAutomationTrigger, SelectTags } from 'ui-modules';
 import { IAutomation } from '../../types';
 import { IUser } from '@/settings/team-member/types';
 import { useMutation } from '@apollo/client';
@@ -92,7 +92,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     accessorKey: 'triggers',
     header: () => <RecordTable.InlineHead label="Triggers" />,
     cell: ({ cell }) => {
-      const triggers = (cell.getValue() || []) as ITrigger[];
+      const triggers = (cell.getValue() || []) as TAutomationTrigger[];
       return (
         <RecordTableInlineCell>
           <IconPointerBolt size={12} />
@@ -107,7 +107,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
     accessorKey: 'actions',
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
-      const actions = (cell.getValue() || []) as IAction[];
+      const actions = (cell.getValue() || []) as TAutomationAction[];
       return (
         <RecordTableInlineCell>
           <IconShare size={12} />

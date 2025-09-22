@@ -1,11 +1,16 @@
 import { AutomationNodeType } from '@/automations/types';
 import { Edge } from '@xyflow/react';
-import { IAction, ITrigger, IWorkflowNode, OptionalConnect } from 'ui-modules';
+import {
+  TAutomationAction,
+  TAutomationTrigger,
+  TAutomationWorkflowNode,
+  TAutomationOptionalConnect,
+} from 'ui-modules';
 
 export const generateEdges = (
-  triggers: ITrigger[],
-  actions: IAction[],
-  workFlows: IWorkflowNode[] = [],
+  triggers: TAutomationTrigger[],
+  actions: TAutomationAction[],
+  workFlows: TAutomationWorkflowNode[] = [],
 ): Edge[] => {
   const generatedEdges: Edge[] = [];
 
@@ -18,7 +23,7 @@ export const generateEdges = (
   };
 
   // Pre-index workflows for O(1) lookup
-  const workflowMap = new Map<string, IWorkflowNode>(
+  const workflowMap = new Map<string, TAutomationWorkflowNode>(
     workFlows.map((wf) => [wf.id, wf]),
   );
 
@@ -40,7 +45,7 @@ export const generateEdges = (
 
   const buildIfEdges = (
     nodeType: AutomationNodeType,
-    edge: IAction,
+    edge: TAutomationAction,
     config: Record<string, any>,
   ): Edge[] => {
     const { yes, no } = config;
@@ -64,8 +69,8 @@ export const generateEdges = (
 
   const buildOptionalEdges = (
     nodeType: AutomationNodeType,
-    edge: IAction,
-    optionalConnects: OptionalConnect[],
+    edge: TAutomationAction,
+    optionalConnects: TAutomationOptionalConnect[],
   ): Edge[] =>
     optionalConnects.flatMap(({ actionId, sourceId, optionalConnectId }) =>
       actionId
@@ -87,7 +92,7 @@ export const generateEdges = (
 
   const buildWorkflowEdges = (
     nodeType: AutomationNodeType,
-    edge: IAction,
+    edge: TAutomationAction,
   ): Edge[] => {
     if (nodeType !== AutomationNodeType.Action) return [];
     if (!edge.workflowId) return [];
@@ -131,18 +136,26 @@ export const generateEdges = (
 
       if (type === AutomationNodeType.Action) {
         if (edge.type === 'if') {
-          generatedEdges.push(...buildIfEdges(type, edge as IAction, config));
+          generatedEdges.push(
+            ...buildIfEdges(type, edge as TAutomationAction, config),
+          );
           continue;
         }
 
         if (optionalConnects.length > 0) {
           generatedEdges.push(
-            ...buildOptionalEdges(type, edge as IAction, optionalConnects),
+            ...buildOptionalEdges(
+              type,
+              edge as TAutomationAction,
+              optionalConnects,
+            ),
           );
         }
 
         if (edge.workflowId) {
-          generatedEdges.push(...buildWorkflowEdges(type, edge as IAction));
+          generatedEdges.push(
+            ...buildWorkflowEdges(type, edge as TAutomationAction),
+          );
         }
       }
 

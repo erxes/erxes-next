@@ -1,7 +1,4 @@
-import {
-  CoreComponentType,
-  isCoreAutomationActionType,
-} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { isCoreAutomationActionType } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { AutomationNodeType } from '@/automations/types';
@@ -13,6 +10,7 @@ import {
   IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
+import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =
@@ -57,8 +55,8 @@ export const useAutomationNodeLibrarySidebar = () => {
     return actionsConst.filter(
       (action) =>
         isCoreAutomationActionType(
-          action?.type as any,
-          CoreComponentType.Sidebar,
+          action?.type,
+          TAutomationActionComponent.Sidebar,
         ) || connectableActionTypes.includes(action.type),
     );
   }, [awaitingToConnectNodeId, triggers, actions, actionsConst, triggersConst]);

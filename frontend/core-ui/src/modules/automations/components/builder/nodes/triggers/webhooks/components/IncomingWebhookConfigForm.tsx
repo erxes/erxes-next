@@ -7,7 +7,7 @@ import {
   TIncomingWebhookForm,
 } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
 import { AutomationTriggerSidebarCoreFormProps } from '@/automations/types';
-import { copyText } from '@/automations/utils/automationBuilderUtils';
+import { copyText } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconCopy, IconPlus, IconTrash } from '@tabler/icons-react';
 import { Button, Form, Input, Select, Tabs, toast } from 'erxes-ui';
@@ -28,7 +28,6 @@ export const IncomingWebhookConfigForm = ({
 
   useImperativeHandle(formRef, () => ({
     submit: () => {
-      console.log({ daczxc: 'Ds' });
       form.handleSubmit(
         (config) => {
           handleSave(config);
@@ -46,7 +45,7 @@ export const IncomingWebhookConfigForm = ({
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-row items-end gap-2">
           <Form.Field
             control={form.control}

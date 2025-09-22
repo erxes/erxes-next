@@ -22,7 +22,7 @@ import {
 } from '@xyflow/react';
 import { Card, Spinner, themeState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
-import { IAction } from 'ui-modules';
+import { TAutomationAction } from 'ui-modules';
 
 export const WorkflowActionMapper = ({ id }: { id?: string }) => {
   const { detail, loading } = useAutomationWorkflowActionMapper(id);
@@ -48,7 +48,7 @@ const WorkflowActionCanvas = ({
   actions,
 }: {
   automationId: string;
-  actions: IAction[];
+  actions: TAutomationAction[];
 }) => {
   const theme = useAtomValue(themeState);
   const { onSelectActionWorkflow, selectedActionIds } =

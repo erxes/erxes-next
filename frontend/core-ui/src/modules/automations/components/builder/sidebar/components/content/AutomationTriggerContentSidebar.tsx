@@ -1,7 +1,7 @@
 import {
-  CoreComponentType,
   getCoreAutomationTriggerComponent,
   isCoreAutomationTriggerType,
+  TAutomationTriggerComponent,
 } from '@/automations/components/builder/nodes/triggers/coreAutomationTriggers';
 import { useCustomTriggerContent } from '@/automations/components/builder/sidebar/hooks/useCustomTriggerContent';
 import { useDefaultTriggerContent } from '@/automations/components/builder/sidebar/hooks/useDefaultTriggerContent';
@@ -247,7 +247,7 @@ const CustomCoreTriggerContent = React.memo<
 
   const Component = getCoreAutomationTriggerComponent(
     moduleName as any,
-    CoreComponentType.Sidebar,
+    TAutomationTriggerComponent.Sidebar,
   );
 
   const footerContent = useMemo(
@@ -290,7 +290,7 @@ const CustomTriggerContent = React.memo<AutomationTriggerContentProps>(
       () =>
         isCoreAutomationTriggerType(
           moduleName as any,
-          CoreComponentType.Sidebar,
+          TAutomationTriggerComponent.Sidebar,
         ),
       [moduleName],
     );

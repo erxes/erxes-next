@@ -1,10 +1,10 @@
 import {
-  CoreComponentType,
+  TAutomationTriggerComponent,
   getCoreAutomationTriggerComponent,
   isCoreAutomationTriggerType,
 } from '@/automations/components/builder/nodes/triggers/coreAutomationTriggers';
 import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
-import { getAutomationTypes } from 'ui-modules';
+import { splitAutomationNodeType } from 'ui-modules';
 
 export const TriggerNodeConfigurationContent = ({
   type,
@@ -13,17 +13,17 @@ export const TriggerNodeConfigurationContent = ({
   type: string;
   config: any;
 }) => {
-  const [pluginName, moduleName] = getAutomationTypes(type || '');
+  const [pluginName, moduleName] = splitAutomationNodeType(type || '');
 
   if (
     isCoreAutomationTriggerType(
       moduleName as any,
-      CoreComponentType.NodeContent,
+      TAutomationTriggerComponent.NodeContent,
     )
   ) {
     const CoreActionComponent = getCoreAutomationTriggerComponent(
       moduleName as any,
-      CoreComponentType.NodeContent,
+      TAutomationTriggerComponent.NodeContent,
     );
     return (
       <div className="px-4 py-2">

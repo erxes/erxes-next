@@ -14,12 +14,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Tabs } from 'erxes-ui';
 import { merge } from 'lodash';
 import { FormProvider, useForm } from 'react-hook-form';
-import { IActionProps } from 'ui-modules';
+import { TAutomationActionProps } from 'ui-modules';
 
 export const OutgoingWebhookConfigForm = ({
   currentAction,
   handleSave,
-}: IActionProps) => {
+}: TAutomationActionProps) => {
   const { handleValidationErrors } = useFormValidationErrorHandler({
     formName: 'Webhook Configuration',
   });

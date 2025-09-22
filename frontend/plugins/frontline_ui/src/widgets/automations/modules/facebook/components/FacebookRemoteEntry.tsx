@@ -1,7 +1,7 @@
 import {
   AutomationRemoteEntryProps,
   AutomationRemoteEntryTypes,
-  getAutomationTypes,
+  splitAutomationNodeType,
 } from 'ui-modules';
 import { ActionMessageConfigContent } from './action/components/replyMessage/ActionMessageConfigContent';
 import { MessageActionForm } from './action/components/replyMessage/MessageActionForm';
@@ -64,7 +64,7 @@ function renderActionNodeContent(
 ) {
   const actionType = props?.type || '';
   const [_pluginName, _moduleName, contentType] =
-    getAutomationTypes(actionType);
+    splitAutomationNodeType(actionType);
 
   switch (contentType) {
     case 'messages':
@@ -79,7 +79,7 @@ function renderActionNodeContent(
 function renderActionForm(props: AutomationRemoteEntryTypes['ActionForm']) {
   const actionType = props.currentAction?.type || '';
   const [_pluginName, _moduleName, contentType] =
-    getAutomationTypes(actionType);
+    splitAutomationNodeType(actionType);
 
   switch (contentType) {
     case 'messages':
@@ -94,7 +94,7 @@ function renderActionForm(props: AutomationRemoteEntryTypes['ActionForm']) {
 function renderTriggerForm(props: AutomationRemoteEntryTypes['TriggerForm']) {
   const triggerType = props.activeTrigger?.type || '';
   const [_pluginName, _moduleName, contentType] =
-    getAutomationTypes(triggerType);
+    splitAutomationNodeType(triggerType);
 
   switch (contentType) {
     case 'messages':

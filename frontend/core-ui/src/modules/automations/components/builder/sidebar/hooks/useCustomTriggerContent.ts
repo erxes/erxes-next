@@ -6,7 +6,7 @@ import { toast } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { getAutomationTypes } from 'ui-modules';
+import { splitAutomationNodeType } from 'ui-modules';
 
 export const useCustomTriggerContent = (activeNode: NodeData) => {
   const { setValue, watch } = useFormContext<TAutomationBuilderForm>();
@@ -20,7 +20,7 @@ export const useCustomTriggerContent = (activeNode: NodeData) => {
     (activeNode as any);
 
   const [pluginName, moduleName] = useMemo(
-    () => getAutomationTypes(activeNode.type || ''),
+    () => splitAutomationNodeType(activeNode.type || ''),
     [activeNode.type],
   );
 

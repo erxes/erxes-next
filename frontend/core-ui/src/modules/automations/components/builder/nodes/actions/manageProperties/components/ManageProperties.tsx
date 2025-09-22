@@ -1,10 +1,10 @@
 import { lazy } from 'react';
 import {
-  AutomationCoreNodeComponent,
+  AutomationComponentMap,
   AutomationNodeType,
 } from '@/automations/types';
 
-const ManagePropertiesComponents: AutomationCoreNodeComponent<AutomationNodeType.Action> =
+const ManagePropertiesComponents: AutomationComponentMap<AutomationNodeType.Action> =
   {
     setProperty: {
       sidebar: lazy(() =>

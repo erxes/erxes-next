@@ -1,5 +1,9 @@
 import { AutomationNodeType } from '@/automations/types';
-import { IAction, ITrigger, IWorkflowNode } from 'ui-modules';
+import {
+  TAutomationAction,
+  TAutomationTrigger,
+  TAutomationWorkflowNode,
+} from 'ui-modules';
 
 function setNestedField(obj: any, path: string, value: any) {
   const keys = path.split('.');
@@ -25,7 +29,7 @@ function setNestedField(obj: any, path: string, value: any) {
  */
 
 export const generateAwaitingNodeConnection = (
-  node: IAction | ITrigger,
+  node: TAutomationAction | TAutomationTrigger,
   nodeType: string,
   actionId: string,
   connectionFieldName?: string,
@@ -55,13 +59,13 @@ export const handleConnectionAwaitingNode = ({
 }: {
   id: string;
   awaitingToConnectNodeId?: string;
-  triggers: ITrigger[];
+  triggers: TAutomationTrigger[];
   type:
     | AutomationNodeType.Action
     | AutomationNodeType.Trigger
     | AutomationNodeType.Workflow;
-  actions: IAction[];
-  workflows?: IWorkflowNode[];
+  actions: TAutomationAction[];
+  workflows?: TAutomationWorkflowNode[];
 }) => {
   if (awaitingToConnectNodeId && type !== AutomationNodeType.Workflow) {
     const [awaitingNodeType, nodeId, connectionFieldName] =

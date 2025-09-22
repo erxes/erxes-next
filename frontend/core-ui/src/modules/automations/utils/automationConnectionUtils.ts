@@ -3,11 +3,16 @@ import { TAutomationWorkflow } from '@/automations/utils/automationFormDefinitio
 import { Connection, Edge, EdgeProps, getOutgoers, Node } from '@xyflow/react';
 import { SetStateAction } from 'jotai';
 import { Dispatch } from 'react';
-import { IAction, ITrigger, IWorkflowNode, OptionalConnect } from 'ui-modules';
+import {
+  TAutomationAction,
+  TAutomationTrigger,
+  TAutomationWorkflowNode,
+  TAutomationOptionalConnect,
+} from 'ui-modules';
 
 export const connectionHandler = (
-  triggers: ITrigger[],
-  actions: IAction[],
+  triggers: TAutomationTrigger[],
+  actions: TAutomationAction[],
   info: any,
   actionId: any,
   workFlows: TAutomationWorkflow[],
@@ -46,7 +51,7 @@ export const connectionHandler = (
 
     //update optionalConnects if optional connect exists in sourceAction
     let updatedOptionalConnects = optionalConnects.map(
-      (optConnect: OptionalConnect) =>
+      (optConnect: TAutomationOptionalConnect) =>
         optConnect.sourceId === sourceId &&
         optConnect.optionalConnectId === info.optionalConnectId
           ? { ...optConnect, actionId }
@@ -56,7 +61,7 @@ export const connectionHandler = (
     // add optionalConnect if optional connect not exists in sourceAction
     if (
       !optionalConnects.some(
-        (optConnect: OptionalConnect) =>
+        (optConnect: TAutomationOptionalConnect) =>
           optConnect.sourceId === sourceId &&
           optConnect.optionalConnectId === info?.optionalConnectId,
       )
@@ -72,13 +77,13 @@ export const connectionHandler = (
 
     if (
       optionalConnects.some(
-        (optConnect: OptionalConnect) =>
+        (optConnect: TAutomationOptionalConnect) =>
           optConnect.sourceId === sourceId &&
           optConnect.optionalConnectId === optionalConnectId,
       )
     ) {
       updatedOptionalConnects = optionalConnects.filter(
-        (optConnect: OptionalConnect) =>
+        (optConnect: TAutomationOptionalConnect) =>
           optConnect.optionalConnectId !== optionalConnectId,
       );
     }
@@ -236,9 +241,9 @@ export const onDisconnect = ({
   edge: EdgeProps;
   setEdges: Dispatch<SetStateAction<Edge<EdgeProps>[]>>;
   nodes: Node<NodeData>[];
-  triggers: ITrigger[];
-  actions: IAction[];
-  workflows: IWorkflowNode[];
+  triggers: TAutomationTrigger[];
+  actions: TAutomationAction[];
+  workflows: TAutomationWorkflowNode[];
 }) => {
   setEdges((eds: Edge<EdgeProps>[]) => eds.filter((e) => e.id !== edge.id));
   const info: any = { source: edge.source, target: undefined };

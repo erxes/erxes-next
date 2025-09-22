@@ -1,18 +1,16 @@
-import {
-  CoreComponentType,
-  isCoreAutomationActionType,
-} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { isCoreAutomationActionType } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { AutomationSendEmailActionResult } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailActionResult';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
 import { format, isValid } from 'date-fns';
 import { RelativeDateDisplay, Table } from 'erxes-ui';
 import {
-  getAutomationTypes,
+  splitAutomationNodeType,
   IAutomationHistory,
   IAutomationHistoryAction,
 } from 'ui-modules';
 import { useAutomationsRemoteModules } from '@/automations/utils/useAutomationsModules';
+import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export const ExecutionActionResult = ({
   action,
@@ -52,11 +50,11 @@ export const ExecutionActionResult = ({
   }
 
   const isCoreAction = isCoreAutomationActionType(
-    action?.actionType as any,
-    CoreComponentType.ActionResult,
+    action?.actionType,
+    TAutomationActionComponent.ActionResult,
   );
 
-  const [pluginName, moduleName] = getAutomationTypes(action?.actionType);
+  const [pluginName, moduleName] = splitAutomationNodeType(action?.actionType);
   const { isEnabled } = useAutomationsRemoteModules(pluginName);
 
   if (!isCoreAction && isEnabled) {

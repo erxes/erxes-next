@@ -1,7 +1,7 @@
 import { IconCircleDashedCheck, IconX } from '@tabler/icons-react';
 import { Badge, Card, Form, Input, Label, RadioGroup, Tabs } from 'erxes-ui';
 import {
-  IActionProps,
+  TAutomationActionProps,
   PlaceHolderInput,
   SelectCustomer,
   SelectMember,
@@ -234,6 +234,8 @@ const SendEmailConfigurationForm = ({
     </Card.Content>
   );
 };
-export const SendEmailConfigForm = ({ currentActionIndex }: IActionProps) => {
+export const SendEmailConfigForm = ({
+  currentActionIndex,
+}: TAutomationActionProps) => {
   return <SendEmailConfigurationForm currentActionIndex={currentActionIndex} />;
 };

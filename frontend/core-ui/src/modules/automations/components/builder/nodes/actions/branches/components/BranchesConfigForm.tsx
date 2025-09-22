@@ -1,10 +1,10 @@
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
-import { IActionProps, SegmentForm } from 'ui-modules';
+import { TAutomationActionProps, SegmentForm } from 'ui-modules';
 
 export const BranchesConfigForm = ({
   currentAction,
   handleSave,
-}: IActionProps) => {
+}: TAutomationActionProps) => {
   const { trigger } = useAutomationTrigger(currentAction.id);
 
   return (

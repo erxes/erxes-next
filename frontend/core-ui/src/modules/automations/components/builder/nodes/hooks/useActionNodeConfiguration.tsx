@@ -1,7 +1,6 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
 import {
-  CoreComponentType,
   getCoreAutomationActionComponent,
   isCoreAutomationActionType,
 } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
@@ -10,12 +9,13 @@ import { RenderPluginsComponentWrapper } from '@/automations/components/common/R
 import { Handle, Position } from '@xyflow/react';
 import {
   AutomationActionNodeConfigProps,
-  getAutomationTypes,
+  splitAutomationNodeType,
 } from 'ui-modules';
+import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export const useActionNodeConfiguration = (data: NodeData) => {
   const { id, type = '', config } = data || {};
-  const [pluginName, moduleName] = getAutomationTypes(type);
+  const [pluginName, moduleName] = splitAutomationNodeType(type);
   const { trigger } = useAutomationTrigger(id);
 
   let Component = null;
@@ -27,10 +27,12 @@ export const useActionNodeConfiguration = (data: NodeData) => {
     trigger,
   };
 
-  if (isCoreAutomationActionType(type as any, CoreComponentType.NodeContent)) {
+  if (
+    isCoreAutomationActionType(type, TAutomationActionComponent.NodeContent)
+  ) {
     const CoreActionComponent = getCoreAutomationActionComponent(
-      type as any,
-      CoreComponentType.NodeContent,
+      type,
+      TAutomationActionComponent.NodeContent,
     );
 
     Component = (

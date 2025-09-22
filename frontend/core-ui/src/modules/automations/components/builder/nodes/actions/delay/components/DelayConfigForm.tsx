@@ -1,8 +1,10 @@
 import { Card, Form, Input, Select } from 'erxes-ui';
-import { IActionProps } from 'ui-modules';
+import { TAutomationActionProps } from 'ui-modules';
 import { useDelay } from '../hooks/useDelay';
 
-export const DelayConfigForm = ({ currentActionIndex }: IActionProps) => {
+export const DelayConfigForm = ({
+  currentActionIndex,
+}: TAutomationActionProps) => {
   const { control, handleValueChange, handleIntervalChange, configField } =
     useDelay(currentActionIndex);
   return (

@@ -1,10 +1,11 @@
-import { IAction, ITrigger } from 'ui-modules';
+import { toast } from 'erxes-ui';
+import { TAutomationAction, TAutomationTrigger } from 'ui-modules';
 
-export const getContentType = (
+export const findTriggerForAction = (
   currentActionId: string,
-  actions: IAction[],
-  triggers: ITrigger[],
-): ITrigger | undefined => {
+  actions: TAutomationAction[],
+  triggers: TAutomationTrigger[],
+): TAutomationTrigger | undefined => {
   const trigger = triggers.find((t) => t.actionId === currentActionId);
   if (trigger) {
     return trigger;
@@ -14,7 +15,7 @@ export const getContentType = (
   const parentAction = actions.find((a) => a.nextActionId === currentActionId);
   if (parentAction) {
     // Recursively call the function with the parent action
-    return getContentType(parentAction.id, actions, triggers);
+    return findTriggerForAction(parentAction.id, actions, triggers);
   }
 
   // Fallback if nothing found in the chain
@@ -32,8 +33,8 @@ export const getContentType = (
  */
 export const getTriggerOfAction = (
   currentActionId: string,
-  actions: IAction[],
-  triggers: ITrigger[],
+  actions: TAutomationAction[],
+  triggers: TAutomationTrigger[],
 ) => {
   // Build a map of nextActionId → actionId
   const reverseMap = new Map<string, string>();
@@ -49,7 +50,7 @@ export const getTriggerOfAction = (
   // Walk backward
   while (cursor) {
     const trigger = triggers.find((t) => t.actionId === cursor);
-    if (trigger) return trigger.type;
+    if (trigger) return trigger;
 
     cursor = reverseMap.get(cursor) ?? '';
   }
@@ -69,4 +70,19 @@ export const deepCleanNulls = (input: any): any => {
     );
   }
   return input;
+};
+
+export const copyText = async (token: string) => {
+  await navigator.clipboard
+    .writeText(token)
+    .then(() => {
+      toast({ title: 'Copied successfully' });
+    })
+    .catch((error) => {
+      toast({
+        title: 'Something went wrong',
+        description: error.message,
+        variant: 'destructive',
+      });
+    });
 };

@@ -6,11 +6,16 @@ import SendEmailComponents from '@/automations/components/builder/nodes/actions/
 import WaitEventComponents from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEvent';
 import WebhooksComponents from '@/automations/components/builder/nodes/actions/webhooks/Webhooks';
 import {
-  AutomationCoreNodeComponent,
+  CoreComponentReturn,
+  TActionComponents,
+  TAutomationActionComponent,
+} from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import {
+  AutomationComponentMap,
   AutomationNodeType,
 } from '@/automations/types';
 
-const coreActions: AutomationCoreNodeComponent<AutomationNodeType.Action> = {
+const coreActions: AutomationComponentMap<AutomationNodeType.Action> = {
   ...DelayComponents,
   ...BranchComponents,
   ...ManagePropertiesComponents,
@@ -20,39 +25,24 @@ const coreActions: AutomationCoreNodeComponent<AutomationNodeType.Action> = {
   ...WebhooksComponents,
 };
 
-type ActionName = keyof typeof coreActions;
-export enum CoreComponentType {
-  Sidebar = 'sidebar',
-  NodeContent = 'nodeContent',
-  ActionResult = 'actionResult',
-}
-type ActionComponents = {
-  sidebar?: React.LazyExoticComponent<any>;
-  nodeContent?: React.LazyExoticComponent<any>;
-  actionResult?: React.LazyExoticComponent<any>;
-};
-
-export type CoreActionNodeConfigProps<TConfig> = {
-  config: TConfig;
-};
+type ActionName = keyof typeof coreActions & string;
 
 export function isCoreAutomationActionType(
   actionName: ActionName,
-  componentType: CoreComponentType,
+  componentType: TAutomationActionComponent,
 ): boolean {
   const action = coreActions[actionName];
   return action !== undefined && componentType in action;
 }
 
-// // Alternative version that returns the component if it exists
-export function getCoreAutomationActionComponent(
-  actionName: ActionName,
-  componentType: CoreComponentType,
-): React.LazyExoticComponent<React.ComponentType<any>> | null {
+export function getCoreAutomationActionComponent<
+  N extends ActionName,
+  T extends TAutomationActionComponent,
+>(actionName: N, componentType: T): CoreComponentReturn<T> | null {
   if (isCoreAutomationActionType(actionName, componentType)) {
-    return (
-      (coreActions[actionName] as ActionComponents)?.[componentType] ?? null
-    );
+    const component =
+      (coreActions[actionName] as TActionComponents)?.[componentType] ?? null;
+    return component as CoreComponentReturn<T> | null;
   }
   return null;
 }

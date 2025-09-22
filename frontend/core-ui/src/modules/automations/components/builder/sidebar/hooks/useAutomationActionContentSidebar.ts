@@ -1,14 +1,12 @@
-import {
-  CoreComponentType,
-  isCoreAutomationActionType,
-} from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { isCoreAutomationActionType } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
+import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { toast } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { getAutomationTypes } from 'ui-modules';
+import { splitAutomationNodeType } from 'ui-modules';
 
 export const useAutomationActionContentSidebar = () => {
   const { queryParams, setQueryParams } = useAutomation();
@@ -29,11 +27,11 @@ export const useAutomationActionContentSidebar = () => {
   // Pick component from Actions map or fallback to null
 
   const isCoreActionComponent = isCoreAutomationActionType(
-    currentAction?.type as any,
-    CoreComponentType.Sidebar,
+    currentAction?.type || '',
+    TAutomationActionComponent.Sidebar,
   );
 
-  const [pluginName, moduleName] = getAutomationTypes(
+  const [pluginName, moduleName] = splitAutomationNodeType(
     currentAction?.type || '',
   );
 

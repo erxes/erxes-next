@@ -9,9 +9,9 @@ import { generateNode } from '@/automations/utils/automationBuilderUtils/generat
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import {
   generateAutomationElementId,
-  IAction,
-  ITrigger,
-  IWorkflowNode,
+  TAutomationAction,
+  TAutomationTrigger,
+  TAutomationWorkflowNode,
 } from 'ui-modules';
 
 /**
@@ -31,9 +31,9 @@ export const automationDropHandler = ({
   addNodes,
   getNodes,
 }: AutomationDropHandlerParams): {
-  [AutomationNodesType.Actions]: IAction[];
-  [AutomationNodesType.Triggers]: ITrigger[];
-  [AutomationNodesType.Workflows]?: IWorkflowNode[];
+  [AutomationNodesType.Actions]: TAutomationAction[];
+  [AutomationNodesType.Triggers]: TAutomationTrigger[];
+  [AutomationNodesType.Workflows]?: TAutomationWorkflowNode[];
   newNodeId?: string;
 } => {
   event.preventDefault();

@@ -1,18 +1,17 @@
 import { lazy } from 'react';
 import {
-  AutomationCoreNodeComponent,
+  AutomationComponentMap,
   AutomationNodeType,
 } from '@/automations/types';
 
-const WaitEventComponents: AutomationCoreNodeComponent<AutomationNodeType.Action> =
-  {
-    waitEvent: {
-      sidebar: lazy(() =>
-        import('./WaitEventConfigForm').then((module) => ({
-          default: module.WaitEventConfigForm,
-        })),
-      ),
-    },
-  };
+const WaitEventComponents: AutomationComponentMap<AutomationNodeType.Action> = {
+  waitEvent: {
+    sidebar: lazy(() =>
+      import('./WaitEventConfigForm').then((module) => ({
+        default: module.WaitEventConfigForm,
+      })),
+    ),
+  },
+};
 
 export default WaitEventComponents;

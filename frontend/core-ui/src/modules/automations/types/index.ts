@@ -1,11 +1,13 @@
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
 import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
 import {
-  IAction,
-  IWorkflowNode,
+  TAutomationAction,
+  TAutomationWorkflowNode,
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
-  ITrigger,
+  TAutomationTrigger,
+  TAutomationActionProps,
+  IAutomationHistoryAction,
 } from 'ui-modules';
 
 export interface AutomationConstants {
@@ -18,7 +20,7 @@ export interface ConstantsQueryResponse {
   automationConstants: AutomationConstants;
 }
 
-export type NodeData = {
+export type NodeData<TConfig = any> = {
   id: string;
   nodeIndex: number;
   label: string;
@@ -27,7 +29,7 @@ export type NodeData = {
   description?: string;
   type: string;
   category?: string;
-  config?: Record<string, any>;
+  config?: TConfig;
   configurable?: boolean;
   outputs?: number;
   color?: string;
@@ -53,8 +55,8 @@ export type WorkflowNodeData = {
 export interface IAutomationDoc {
   name: string;
   status: string;
-  triggers: ITrigger[];
-  actions: IAction[];
+  triggers: TAutomationTrigger[];
+  actions: TAutomationAction[];
   updatedAt?: string;
   createdAt?: string;
   updatedBy?: string;
@@ -80,9 +82,9 @@ export interface IAutomation extends IAutomationDoc {
 export type AutomationDropHandlerParams = {
   event: React.DragEvent<HTMLDivElement>;
   reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>> | null;
-  triggers: ITrigger[];
-  actions: IAction[];
-  workflows?: IWorkflowNode[];
+  triggers: TAutomationTrigger[];
+  actions: TAutomationAction[];
+  workflows?: TAutomationWorkflowNode[];
   getNodes: () => Node<NodeData>[];
   addNodes: (payload: Node<NodeData>[] | Node<NodeData>[]) => void;
 };
@@ -145,38 +147,45 @@ export type CoreActionSidebarFormProps = {
 };
 
 // Base component type for lazy-loaded components
-type LazyComponent = React.LazyExoticComponent<React.ComponentType<any>>;
+export type LazyAutomationComponent<TComponentProps = any> =
+  React.LazyExoticComponent<React.ComponentType<TComponentProps>>;
 
 // Base component configuration
-interface BaseComponentConfig {
-  sidebar?: LazyComponent;
-  nodeContent?: LazyComponent;
+interface BaseComponentConfig<TConfig = any> {
+  nodeContent?: LazyAutomationComponent<{ config: TConfig }>;
 }
 
-// Action-specific component configuration (includes actionResult)
-interface ActionComponentConfig extends BaseComponentConfig {
-  actionResult?: LazyComponent;
+// Generic action component configuration with config type parameter
+interface ActionComponentConfig<TConfig = any>
+  extends BaseComponentConfig<TConfig> {
+  sidebar?: LazyAutomationComponent<TAutomationActionProps>;
+  actionResult?: LazyAutomationComponent<{
+    componentType: 'historyActionResult';
+    result: any;
+    action: IAutomationHistoryAction;
+  }>;
+  waitEvent?: LazyAutomationComponent<{ config: TConfig }>;
 }
 
 // Trigger-specific component configuration (only base properties)
-export interface TriggerComponentConfig extends BaseComponentConfig {}
+export interface TriggerComponentConfig extends BaseComponentConfig {
+  sidebar?: LazyAutomationComponent<AutomationTriggerSidebarCoreFormProps>;
+}
 
 // Workflow-specific component configuration (only base properties)
-interface WorkflowComponentConfig extends BaseComponentConfig {}
+interface WorkflowComponentConfig extends BaseComponentConfig {
+  sidebar?: LazyAutomationComponent<TAutomationActionProps>;
+}
 
-// Union type for component configurations based on AutomationNodeType
-export type ComponentConfig<T extends AutomationNodeType = AutomationNodeType> =
-  T extends AutomationNodeType.Action
-    ? ActionComponentConfig
-    : T extends AutomationNodeType.Trigger
-    ? TriggerComponentConfig
-    : T extends AutomationNodeType.Workflow
-    ? WorkflowComponentConfig
-    : BaseComponentConfig;
+interface TAutomationNodeTypeComponentConfig {
+  [AutomationNodeType.Action]: ActionComponentConfig;
+  [AutomationNodeType.Trigger]: TriggerComponentConfig;
+  [AutomationNodeType.Workflow]: WorkflowComponentConfig;
+}
 
 // Type for the entire components object structure
-export type AutomationCoreNodeComponent<
+export type AutomationComponentMap<
   N extends AutomationNodeType = AutomationNodeType,
 > = {
-  [key: string]: ComponentConfig<N>;
+  [key: string]: TAutomationNodeTypeComponentConfig[N];
 };
