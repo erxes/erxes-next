@@ -11,7 +11,7 @@ export interface INote {
   content: string;
   createdAt: string;
   createdBy: string;
-  itemId: string;
+  contentId: string;
   mentions: string[];
   updatedAt: string;
 }

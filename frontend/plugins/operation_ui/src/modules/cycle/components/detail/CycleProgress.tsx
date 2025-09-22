@@ -1,6 +1,7 @@
 import { useGetCycleProgress } from '@/cycle/hooks/useGetCycleProgress';
+import { IProjectProgressByMember } from '@/project/types';
 import { IconCircleFilled } from '@tabler/icons-react';
-import { cn, Tooltip } from 'erxes-ui';
+import { cn, Tooltip, useQueryState } from 'erxes-ui';
 
 export const ProgressDot = ({
   status,
@@ -36,12 +37,26 @@ export const CycleProgress = ({
   isCompleted: boolean;
   statistics: any;
 }) => {
+  const [assignee] = useQueryState<string>('assignee');
+
   const { cycleProgress } = useGetCycleProgress({
     variables: { _id: cycleId },
     skip: !cycleId || isCompleted,
   });
 
-  const progress = cycleProgress || statistics.progress;
+  let progress = cycleProgress || statistics.progress;
+
+  if (isCompleted && assignee) {
+    const progressByMember =
+      (statistics?.progressByMember as IProjectProgressByMember[]) ||
+      ([] as IProjectProgressByMember[]);
+
+    const progressByMemberFiltered = progressByMember.find(
+      (item: IProjectProgressByMember) => item.assigneeId === assignee,
+    );
+
+    progress = progressByMemberFiltered;
+  }
 
   return (
     <div className="flex justify-between w-full my-4">

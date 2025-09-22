@@ -17,3 +17,5 @@ export const CORE_NOTIFICATION_MODULES = [
     ],
   },
 ];
+
+export const PRIORITY_ORDER = { low: 1, medium: 2, high: 3, urgent: 4 };

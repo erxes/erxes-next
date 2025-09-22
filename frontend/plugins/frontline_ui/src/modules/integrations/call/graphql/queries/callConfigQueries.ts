@@ -32,6 +32,8 @@ export const CALL_USER_INTEGRATIONS = gql`
       wsServer
       token
       queues
+      srcTrunk
+      dstTrunk
     }
   }
 `;
@@ -165,15 +167,9 @@ export const CALL_QUEUE_LIST = gql`
   }
 `;
 
-export const CALL_WAITING_LIST = gql`
-  query callWaitingList($queue: String!) {
-    callWaitingList(queue: $queue)
-  }
-`;
-
-export const CALL_PROCEEDING_LIST = gql`
-  query callProceedingList($queue: String!) {
-    callProceedingList(queue: $queue)
+export const CALL_QUEUE_INITIAL_LIST = gql`
+  query callQueueInitialList($queue: String!) {
+    callQueueInitialList(queue: $queue)
   }
 `;
 

@@ -194,6 +194,7 @@ export const useProjectsInline = (
     ICursorListResponse<{
       _id: string;
       name: string;
+      status: number;
     }>
   >,
 ) => {
@@ -203,6 +204,7 @@ export const useProjectsInline = (
     ICursorListResponse<{
       _id: string;
       name: string;
+      status: number;
     }>
   >(GET_PROJECTS_INLINE, {
     ...options,

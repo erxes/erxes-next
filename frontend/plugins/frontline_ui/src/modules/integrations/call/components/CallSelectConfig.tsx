@@ -66,6 +66,26 @@ export const CallSelectConfig = ({
             />
           </div>
           <div className="space-y-2">
+            <Label>Source trunk</Label>
+            <Input
+              value={selectedIntegration?.srcTrunk}
+              disabled
+              readOnly
+              placeholder="srcTrunk"
+              className="disabled:opacity-90"
+            />
+          </div>{' '}
+          <div className="space-y-2">
+            <Label>Destination trunk</Label>
+            <Input
+              value={selectedIntegration?.dstTrunk}
+              disabled
+              readOnly
+              placeholder="dstTrunk"
+              className="disabled:opacity-90"
+            />
+          </div>
+          <div className="space-y-2">
             <Label>Operators</Label>
             {selectedIntegration?.operators.map((operator) => (
               <div key={operator.userId} className="flex items-center gap-2">

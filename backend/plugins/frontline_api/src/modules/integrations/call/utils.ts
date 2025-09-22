@@ -55,7 +55,6 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
     isConvertToJson,
     isAddExtention,
     isGetExtension,
-    isCronRunning,
     extensionNumber: extension,
   } = args;
 
@@ -69,11 +68,9 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
 
   const { wsServer = '' } = integration;
   const operator = integration.operators.find((op) => op.userId === user?._id);
-  const extensionNumber = isCronRunning
-    ? extension
-    : operator?.gsUsername || '1001';
+  const extensionNumber = operator?.gsUsername || '1001';
 
-  let cookie = await getOrSetCallCookie(wsServer, isCronRunning || false);
+  let cookie = await getOrSetCallCookie(wsServer);
   if (!cookie) {
     throw new Error('Cookie not found');
   }
@@ -135,14 +132,11 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
   }
 };
 
-export const getOrSetCallCookie = async (wsServer, isCron) => {
+export const getOrSetCallCookie = async (wsServer) => {
   const {
     CALL_API_USER,
     CALL_API_PASSWORD,
-    CALL_CRON_API_USER,
-    CALL_CRON_API_PASSWORD,
-    CALL_API_EXPIRY = '86400', // Default 24h for regular users
-    CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
+    CALL_API_EXPIRY = '86400',
   } = process.env;
   // disable on production !!!
   // if (process.env.NODE_ENV !== 'production') {
@@ -150,26 +144,19 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
   // }
 
   // Validate credentials
-  if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
+  if (!CALL_API_USER || !CALL_API_PASSWORD) {
     throw new Error('Regular API credentials missing!');
   }
-  if (isCron && (!CALL_CRON_API_USER || !CALL_CRON_API_PASSWORD)) {
-    throw new Error('Cron API credentials missing!');
-  }
-
   // Create unique cookie keys
-  const cookieKey = `${isCron ? 'cronCallCookie' : 'callCookie'}`;
-  const apiUser = isCron ? CALL_CRON_API_USER : CALL_API_USER;
-  const apiPassword = isCron ? CALL_CRON_API_PASSWORD : CALL_API_PASSWORD;
-  const expiry = isCron ? CALL_CRON_API_EXPIRY : CALL_API_EXPIRY;
+  const cookieKey = 'callCookie';
+  const apiUser = CALL_API_USER;
+  const apiPassword = CALL_API_PASSWORD;
+  const expiry = CALL_API_EXPIRY;
 
   // Check existing cookie
   const callCookie = await redis.get(cookieKey);
   if (callCookie) {
-    console.log(
-      `Using existing ${isCron ? 'cron' : 'regular'} cookie:`,
-      callCookie,
-    );
+    console.log(`Using existing regular cookie:`, callCookie);
     return callCookie;
   }
 
@@ -211,14 +198,14 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     if (loginData.status === 0) {
       const { cookie } = loginData.response;
       await redis.set(cookieKey, cookie, 'EX', expiry);
-      console.log(`Stored new ${isCron ? 'cron' : 'regular'} cookie:`, cookie);
+      console.log(`Stored new regular cookie:`, cookie);
       return cookie;
     }
 
     // Error handling
     if (errorList[loginData.status]) {
       console.error(
-        `Auth failed for ${isCron ? 'cron' : 'regular'} user:`,
+        `Auth failed for regular user:`,
         errorList[loginData.status],
         'apiUser:',
         apiUser,
@@ -227,7 +214,7 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     }
     throw new Error('Unknown authentication error');
   } catch (error) {
-    console.error(`Error in ${isCron ? 'cron' : 'regular'} auth:`, error);
+    console.error(`Error in regular auth:`, error);
     throw error;
   }
 };
@@ -241,7 +228,6 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
     callEndTime,
     _id,
     transferredCallStatus,
-    isCronRunning,
   } = params;
   if (transferredCallStatus === 'local' && callType === 'incoming') {
     return 'Check the transferred call record URL!';
@@ -271,7 +257,6 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
           retryCount,
           isConvertToJson: true,
           isGetExtension: true,
-          isCronRunning: isCronRunning || false,
         },
         user,
       );
@@ -304,12 +289,8 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
         caller = extensionNumber;
         callee = customerPhone;
       }
-      const startTime = isCronRunning
-        ? getPureDate(callStartTime, -10)
-        : `${startDate}T00:00:00`;
-      const endTime = isCronRunning
-        ? getPureDate(callEndTime, 10)
-        : `${endDate}T23:59:59`;
+      const startTime = `${startDate}T00:00:00`;
+      const endTime = `${endDate}T23:59:59`;
       const cdrData = await sendToGrandStream(
         models,
         {
@@ -436,6 +417,12 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
   return fetchRecordUrl(MAX_RETRY_COUNT);
 };
 
+function sanitizeFileName(rawFileName: string): string {
+  return rawFileName
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
 export const cfRecordUrl = async (params, user, models, subdomain) => {
   try {
     const { fileDir, recordfiles, inboxIntegrationId, retryCount } = params;
@@ -482,7 +469,7 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     }
     // Prepare file upload
     const uploadUrl = getUrl(subdomain);
-    const sanitizedFileName = rawFileName.replace(/\+/g, '_');
+    const sanitizedFileName = sanitizeFileName(rawFileName);
 
     const formData = new FormData();
     formData.append('file', Buffer.from(fileBuffer), {
@@ -491,12 +478,10 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
 
     console.log(uploadUrl, 'uploadUrl');
 
-    // Upload file to destination
     const uploadResponse = await fetch(uploadUrl, {
       method: 'POST',
       body: formData,
     });
-
     if (!uploadResponse.ok) {
       throw new Error(`Upload failed: ${uploadResponse.statusText}`);
     }
@@ -505,7 +490,7 @@ export const cfRecordUrl = async (params, user, models, subdomain) => {
     return responseText;
   } catch (error) {
     console.error('Error in cfRecordUrl:', error);
-    throw error; // Re-throw after logging to maintain error propagation
+    throw error;
   }
 };
 
@@ -697,7 +682,6 @@ const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
   }
 };
 const isValidSubdomain = (subdomain) => {
-  // Зөвхөн үсэг, тоо, зураас, 1-63 тэмдэгт
   const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
   return subdomainRegex.test(subdomain);
 };
@@ -720,7 +704,7 @@ export const getUrl = (subdomain) => {
   }
 
   if (NODE_ENV !== 'production') {
-    return `${domain}/pl:core/upload-file`;
+    return `${domain}/upload-file`;
   }
 
   if (VERSION === 'saas') {
@@ -992,8 +976,6 @@ export function enhancedHandleCallEvent(json, graphqlPubsub) {
     for (const message of messages) {
       const { eventname, eventbody } = message;
 
-      console.log(`📞 ${eventname} EVENT:`, eventbody);
-
       switch (eventname) {
         case 'CallQueueStatus':
           handleCallQueueStatus(eventbody, graphqlPubsub);
@@ -1019,44 +1001,34 @@ function handleCallQueueStatus(eventBody, graphqlPubsub) {
     const { extension } = item;
 
     if (item.member) {
-      // Agent-specific events
-      console.log('📱 Agent event:', item);
-
-      // Publish to specific extension channel
       if (extension) {
         graphqlPubsub.publish(`callAgent_${extension}`, {
           callStatistic: item,
         });
       }
 
-      // Publish to general channel
       graphqlPubsub.publish('callAgent', {
         callStatistic: item,
       });
 
-      // Publish combined queue status
       if (extension) {
         graphqlPubsub.publish(`queueStatus_${extension}`, {
           callStatistic: item,
         });
       }
     } else {
-      // Queue statistics events
       console.log('📊 Statistics event:', item);
 
-      // Publish to specific extension channel
       if (extension) {
         graphqlPubsub.publish(`callStatistic_${extension}`, {
           callStatistic: item,
         });
       }
 
-      // Publish to general channel
       graphqlPubsub.publish('callStatistic', {
         callStatistic: item,
       });
 
-      // Publish combined queue status
       if (extension) {
         graphqlPubsub.publish(`queueStatus_${extension}`, {
           callStatistic: item,
@@ -1070,24 +1042,19 @@ function handleActiveCallStatus(eventBody, graphqlPubsub) {
   const events = Array.isArray(eventBody) ? eventBody : [eventBody];
 
   events.forEach((callEvent) => {
-    console.log('☎️ Active call event:', callEvent);
-
     const { feature_calleenum, action, state, callernum, connectednum } =
       callEvent;
 
-    // Publish to specific extension if available
     if (feature_calleenum) {
       graphqlPubsub.publish(`activeCallStatus_${feature_calleenum}`, {
         activeCallStatus: callEvent,
       });
     }
 
-    // Publish to general channel
     graphqlPubsub.publish('activeCallStatus', {
       activeCallStatus: callEvent,
     });
 
-    // Log call flow for debugging
     switch (action) {
       case 'add':
         console.log(`📞 NEW CALL: ${callernum} → ${connectednum} (${state})`);
@@ -1103,14 +1070,16 @@ function handleActiveCallStatus(eventBody, graphqlPubsub) {
     }
   });
 }
-export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
+export const mapCdrToCallHistory = (
+  cdr: ICallCdrDocument,
+): ICallHistory & { acctId: string } => {
   return {
-    operatorPhone: cdr.src || '',
-    customerPhone: cdr.dst || '',
+    operatorPhone: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src || '',
+    customerPhone: cdr.userfield === 'Inbound' ? cdr.src : cdr.dst || '',
     callDuration: cdr.billsec || 0,
     callStartTime: cdr.start,
     callEndTime: cdr.end,
-    callType: cdr.actionType || '',
+    callType: cdr.userfield || '',
     callStatus: cdr.disposition || '',
     timeStamp: cdr.start ? cdr.start.getTime() / 1000 : 0,
     modifiedAt: cdr.updatedAt,
@@ -1118,11 +1087,12 @@ export const mapCdrToCallHistory = (cdr: ICallCdrDocument): ICallHistory => {
     createdBy: cdr.createdBy || '',
     modifiedBy: cdr.updatedBy || '',
     extensionNumber: '',
-    conversationId: cdr.userfield || '',
+    conversationId: cdr.conversationId || '',
     recordUrl: cdr.recordUrl || '',
     endedBy: '',
     acceptedUserId: '',
     queueName: '',
     inboxIntegrationId: cdr.inboxIntegrationId,
+    acctId: cdr.acctId || '',
   };
 };

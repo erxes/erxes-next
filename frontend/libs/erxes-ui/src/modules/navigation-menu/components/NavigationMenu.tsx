@@ -84,10 +84,9 @@ export const NavigationMenuGroup = forwardRef<
     name: string;
     children: React.ReactNode;
     separate?: boolean;
-    className?: string;
     defaultOpen?: boolean;
   }
->(({ name, children, separate = true, defaultOpen=true, className, ...props }, ref) => {
+>(({ name, children, separate = true, defaultOpen = true, ...props }, ref) => {
   return (
     <>
       {separate && <Sidebar.Separator />}
