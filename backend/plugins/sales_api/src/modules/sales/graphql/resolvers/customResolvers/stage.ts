@@ -55,8 +55,7 @@ export default {
     const filter = await generateFilter(
       models,
       user._id,
-      { ...args, stageId: stage._id, pipelineId: stage.pipelineId },
-      args.extraParams,
+      { ...args, ...args.extraParams, stageId: stage._id, pipelineId: stage.pipelineId, },
     );
 
     return models.Deals.find(filter).countDocuments();
@@ -74,8 +73,7 @@ export default {
     const filter = await generateFilter(
       models,
       user._id,
-      { ...args, initialStageId: stage._id },
-      args.extraParams,
+      { ...args, ...args.extraParams, initialStageId: stage._id }
     );
 
     return models.Deals.find(filter).countDocuments();
@@ -150,11 +148,11 @@ export default {
       user._id,
       {
         ...args,
+        ...args.extraParams,
         initialStageId: stage._id,
         stageId: stage._id,
         pipelineId: stage.pipelineId,
-      },
-      args.extraParams,
+      }
     );
 
     return models.Deals.find(filter).countDocuments();
