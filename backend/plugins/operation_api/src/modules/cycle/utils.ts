@@ -245,12 +245,7 @@ export const getCycleProgressChart = async (
 
   const days = differenceInCalendarDays(end, start) + 1;
 
-  chartData.chartData = fillMissingDays(
-    chartDataAggregation,
-    start,
-    days,
-    timezone,
-  );
+  chartData.chartData = fillMissingDays(chartDataAggregation, start, days);
 
   return chartData;
 };

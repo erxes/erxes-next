@@ -22,7 +22,7 @@ export const generateApolloContext =
       return {};
     }
     const user: any = extractUserFromHeader(req.headers);
-    const timezone: any = getTimezone(req.headers);
+    const timezone: string = getTimezone(req.headers);
 
     const subdomain = getSubdomain(req);
 
