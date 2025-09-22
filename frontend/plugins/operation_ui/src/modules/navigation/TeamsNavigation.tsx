@@ -22,7 +22,9 @@ import {
   IconDotsVertical,
   IconLink,
   IconSettings,
+  IconLogout,
 } from '@tabler/icons-react';
+import { Members } from '@/team/components/members/Members';
 
 type Team = {
   _id: string;
@@ -144,6 +146,13 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
     }
   };
 
+  const handleRemoveMember = () => {
+    const currentUser = useAtomValue(currentUserState);
+    const { teams, loading } = useGetTeams({
+      variables: { userId: currentUser?._id },
+    });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -177,7 +186,20 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
           <IconLink className="size-4" />
           Copy link
         </DropdownMenu.Item>
-        {/* <DropdownMenu.Item className="cursor-pointer">
+        <DropdownMenu.Item
+          className="cursor-pointer text-red-600 focus:text-red-700"
+          onSelect={handleRemoveMember}
+        >
+          <IconLogout className="size-4 text-red-600" />
+          Leave team
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+};
+
+{
+  /* <DropdownMenu.Item className="cursor-pointer">
           <IconArchive className="size-4" />
           Archive team
         </DropdownMenu.Item>
@@ -203,8 +225,5 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
               An issue is added to the triage queue
             </DropdownMenu.Item>
           </DropdownMenu.SubContent>
-        </DropdownMenu.Sub> */}
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  );
-};
+        </DropdownMenu.Sub> */
+}
