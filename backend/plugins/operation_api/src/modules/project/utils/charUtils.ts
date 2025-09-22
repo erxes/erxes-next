@@ -1,4 +1,5 @@
 import { addDays, differenceInCalendarDays, format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 export const fillUntilTargetDate = (
   data: { date: string; started: number; completed: number }[],
@@ -26,6 +27,7 @@ export const fillMissingDays = (
   data: { date: string; started: number; completed: number }[],
   baseDate: Date,
   totalDays = 7,
+  timezone: string,
 ) => {
   const filledData: { date: string; started: number; completed: number }[] = [];
 
@@ -33,7 +35,7 @@ export const fillMissingDays = (
 
   for (let i = 0; i < totalDays; i++) {
     const date = addDays(baseDate, i);
-    const key = format(date, 'yyyy-MM-dd');
+    const key = format(toZonedTime(date, timezone), 'yyyy-MM-dd');
     const item = mapDateToData.get(key);
 
     if (item) {

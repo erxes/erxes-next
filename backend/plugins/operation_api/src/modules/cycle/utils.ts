@@ -1,6 +1,7 @@
 import { fillMissingDays } from '@/project/utils/charUtils';
 import { STATUS_TYPES } from '@/status/constants/types';
-import { differenceInCalendarDays, startOfDay } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import { Types } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -115,6 +116,7 @@ export const getCycleProgressChart = async (
   cycleId: string,
   assigneeId: string | undefined,
   models: IModels,
+  timezone: string,
 ) => {
   const filter: { cycleId: Types.ObjectId; assigneeId?: string } = {
     cycleId: new Types.ObjectId(cycleId),
@@ -177,10 +179,10 @@ export const getCycleProgressChart = async (
     {
       $addFields: {
         dayDate: {
-          $dateFromParts: {
-            year: { $year: '$statusChangedDate' },
-            month: { $month: '$statusChangedDate' },
-            day: { $dayOfMonth: '$statusChangedDate' },
+          $dateToString: {
+            format: '%Y-%m-%d',
+            date: '$statusChangedDate',
+            timezone,
           },
         },
         isStarted: { $eq: ['$statusType', STATUS_TYPES.STARTED] },
@@ -210,7 +212,7 @@ export const getCycleProgressChart = async (
     {
       $project: {
         _id: 0,
-        date: { $dateToString: { format: '%Y-%m-%d', date: '$_id' } },
+        date: '$_id',
         started: 1,
         completed: 1,
       },
@@ -238,15 +240,16 @@ export const getCycleProgressChart = async (
     chartData: [],
   };
 
-  const start = startOfDay(new Date(cycle.startDate));
-  const end = startOfDay(new Date(cycle.endDate));
+  const start = toZonedTime(cycle.startDate, timezone);
+  const end = toZonedTime(cycle.endDate, timezone);
 
   const days = differenceInCalendarDays(end, start) + 1;
 
   chartData.chartData = fillMissingDays(
     chartDataAggregation,
-    cycle.startDate,
+    start,
     days,
+    timezone,
   );
 
   return chartData;
