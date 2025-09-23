@@ -1,4 +1,5 @@
 import { IModels } from '~/connectionResolvers';
+import { TeamMemberRoles } from '~/modules/team/@types/team';
 
 export const checkUserRole = async ({
   models,
@@ -13,6 +14,15 @@ export const checkUserRole = async ({
   allowedRoles: string[];
   teamIds?: string[];
 }) => {
+  const userRole = await models.TeamMember.findOne({
+    teamId,
+    memberId: userId,
+  });
+
+  if (userRole?.role === TeamMemberRoles.MEMBER) {
+    return;
+  }
+
   if (teamIds && teamIds.length > 0) {
     const userRoles = await models.TeamMember.find({
       teamId: { $in: teamIds },
@@ -32,23 +42,18 @@ export const checkUserRole = async ({
     });
 
     if (!isAllowed) {
-      throw new Error('User is not allowed to perform this action');
+      throw new Error('User is not allowed to perform this action 1');
     }
 
     return;
   }
-
-  const userRole = await models.TeamMember.findOne({
-    teamId,
-    memberId: userId,
-  });
 
   if (!userRole) {
     throw new Error('User not in team');
   }
 
   if (!allowedRoles.includes(userRole.role)) {
-    throw new Error('User is not allowed to perform this action');
+    throw new Error('User is not allowed to perform this action 2');
   }
 
   return;

@@ -12,6 +12,7 @@ import {
   Sidebar,
   Skeleton,
   TextOverflowTooltip,
+  useConfirm,
   useToast,
 } from 'erxes-ui';
 import {
@@ -24,7 +25,7 @@ import {
   IconSettings,
   IconLogout,
 } from '@tabler/icons-react';
-import { Members } from '@/team/components/members/Members';
+import { useTeamMemberRemove } from '@/team/hooks/useTeamMemberRemove';
 
 type Team = {
   _id: string;
@@ -128,7 +129,13 @@ export function TeamsNavigation() {
 
 const TeamActionsMenu = ({ team }: { team: Team }) => {
   const navigate = useNavigate();
+  const currentUser = useAtomValue(currentUserState);
+
   const { toast } = useToast();
+  const { confirm } = useConfirm();
+
+  const { removeTeamMember } = useTeamMemberRemove();
+
   const handleCopyLink = async () => {
     const teamLink = `${window.location.origin}/operation/team/${team._id}/tasks`;
     try {
@@ -147,9 +154,15 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
   };
 
   const handleRemoveMember = () => {
-    const currentUser = useAtomValue(currentUserState);
-    const { teams, loading } = useGetTeams({
-      variables: { userId: currentUser?._id },
+    confirm({
+      message: `Are you sure you want to leave "${team.name}"?`,
+    }).then(() => {
+      removeTeamMember({
+        variables: {
+          teamId: team._id,
+          memberId: currentUser._id,
+        },
+      });
     });
   };
 
@@ -188,18 +201,12 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
         </DropdownMenu.Item>
         <DropdownMenu.Item
           className="cursor-pointer text-red-600 focus:text-red-700"
-          onSelect={handleRemoveMember}
+          onClick={handleRemoveMember}
         >
           <IconLogout className="size-4 text-red-600" />
           Leave team
         </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  );
-};
-
-{
-  /* <DropdownMenu.Item className="cursor-pointer">
+        {/* <DropdownMenu.Item className="cursor-pointer">
           <IconArchive className="size-4" />
           Archive team
         </DropdownMenu.Item>
@@ -225,5 +232,8 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
               An issue is added to the triage queue
             </DropdownMenu.Item>
           </DropdownMenu.SubContent>
-        </DropdownMenu.Sub> */
-}
+        </DropdownMenu.Sub> */}
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+};
