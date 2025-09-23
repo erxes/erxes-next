@@ -51,7 +51,7 @@ export const AutomationNodeLibrarySidebar = () => {
       />
 
       <Tabs
-        defaultValue={activeNodeTab || 'trigger'}
+        defaultValue={activeNodeTab || AutomationNodeType.Trigger}
         onValueChange={(value) =>
           setQueryParams({ activeNodeTab: value as AutomationNodeType })
         }
@@ -67,10 +67,10 @@ export const AutomationNodeLibrarySidebar = () => {
 
         {[
           {
-            type: 'trigger' as AutomationNodeType.Trigger,
+            type: AutomationNodeType.Trigger,
             list: triggersConst,
           },
-          { type: 'action' as AutomationNodeType.Action, list: actionsConst },
+          { type: AutomationNodeType.Action, list: actionsConst },
         ].map(({ type, list = [] }, index) => (
           <Tabs.Content
             key={index}
@@ -164,8 +164,8 @@ const NodeLibraryRow = ({
         className={cn(
           `cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px]`,
           {
-            'hover:border-success': nodeType === 'action',
-            'hover:border-primary': nodeType === 'trigger',
+            'hover:border-success': nodeType === AutomationNodeType.Action,
+            'hover:border-primary': nodeType === AutomationNodeType.Trigger,
           },
         )}
         draggable
@@ -176,9 +176,9 @@ const NodeLibraryRow = ({
             <div
               className={cn(`p-3 rounded-lg`, {
                 'bg-success/10 text-success border-success':
-                  nodeType === 'action',
+                  nodeType === AutomationNodeType.Action,
                 'bg-primary/10 text-primary border-primary':
-                  nodeType === 'trigger',
+                  nodeType === AutomationNodeType.Trigger,
               })}
             >
               <IconComponent name={iconName} />

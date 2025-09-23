@@ -91,7 +91,9 @@ export const useAutomationNodeLibrarySidebar = () => {
   };
 
   return {
-    activeNodeTab: awaitingToConnectNodeId ? 'action' : activeNodeTab,
+    activeNodeTab: awaitingToConnectNodeId
+      ? AutomationNodeType.Action
+      : activeNodeTab,
     setQueryParams,
     loading,
     triggersConst,

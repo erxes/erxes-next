@@ -23,14 +23,13 @@ export const MessageActionForm = ({
   const { handleSubmit } = form;
 
   useImperativeHandle(formRef, () => ({
-    submit: () => {
-      handleSubmit(onSaveActionConfig, (error) => {
+    submit: () =>
+      handleSubmit(onSaveActionConfig, () =>
         toast({
           title: 'There is some error in the form',
           variant: 'destructive',
-        });
-      })();
-    },
+        }),
+      ),
   }));
 
   useEffect(() => {

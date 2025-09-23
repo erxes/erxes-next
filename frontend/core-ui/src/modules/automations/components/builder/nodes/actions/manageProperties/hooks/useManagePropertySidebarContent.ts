@@ -2,16 +2,14 @@ import { findTriggerForAction } from '@/automations/utils/automationBuilderUtils
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { getFieldsProperties, TAutomationAction } from 'ui-modules';
-import {
-  IConfig,
-  IManagePropertyFieldName,
-} from '../types/ManagePropertyTypes';
+import { TAutomationManagePropertyConfig } from '../types/ManagePropertyTypes';
+import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export const useManagePropertySidebarContent = (
   currentActionIndex: number,
   currentAction: TAutomationAction,
 ) => {
-  const fieldName: IManagePropertyFieldName = `actions.${currentActionIndex}.config`;
+  const fieldName: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
   const { setValue, control } = useFormContext<TAutomationBuilderForm>();
   const [actions = [], triggers = [], config = {}] =
     useWatch<TAutomationBuilderForm>({
@@ -19,7 +17,7 @@ export const useManagePropertySidebarContent = (
       name: ['triggers', 'actions', `${fieldName}`],
     });
   const { module, rules = [{ field: '', operator: '' }] } = (config ||
-    {}) as IConfig;
+    {}) as TAutomationManagePropertyConfig;
 
   const propertyType =
     module ||

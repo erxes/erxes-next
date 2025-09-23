@@ -57,8 +57,8 @@ const AwaitToConnectButton = memo(
           >
             <IconLinkPlus
               className={cn('size-4 text-accent-foreground', {
-                'text-primary': nodeType === 'trigger',
-                'text-success': nodeType === 'action',
+                'text-primary': nodeType === AutomationNodeType.Trigger,
+                'text-success': nodeType === AutomationNodeType.Action,
               })}
             />
           </motion.div>

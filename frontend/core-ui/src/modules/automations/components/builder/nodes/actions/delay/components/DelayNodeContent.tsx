@@ -1,9 +1,10 @@
-export const DelayNodeContent = ({ config }: any) => {
+import { TAutomationDelayConfig } from '@/automations/components/builder/nodes/actions/delay/types/automationDelay';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { NodeContentComponentProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+
+export const DelayNodeContent = ({
+  config,
+}: NodeContentComponentProps<TAutomationDelayConfig>) => {
   const { value, type } = config || {};
-  return (
-    <div className="flex justify-between text-slate-600 text-xs">
-      <span className="font-mono">Wait for:</span>
-      <span className="font-mono">{`${value} ${type}s`}</span>
-    </div>
-  );
+  return <MetaFieldLine fieldName="Delay for:" content={`${value} ${type}s`} />;
 };

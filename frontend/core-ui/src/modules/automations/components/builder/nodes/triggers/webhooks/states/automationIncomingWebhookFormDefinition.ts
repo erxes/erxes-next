@@ -7,18 +7,6 @@ const incomingWebhookHeadersSchema = z.object({
   description: z.string(),
 });
 
-export interface PropertySchema {
-  id: string;
-  name: string;
-  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
-  required: boolean;
-  description?: string;
-  isExpanded?: boolean;
-  children?: PropertySchema[];
-  arrayItemType?: 'string' | 'number' | 'boolean' | 'object';
-  arrayItemSchema?: PropertySchema[];
-}
-
 export const incomingWebhookFormSchema = z.object({
   endpoint: z.string(),
   method: z

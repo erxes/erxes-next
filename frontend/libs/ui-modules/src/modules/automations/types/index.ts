@@ -3,7 +3,7 @@ import React from 'react';
 export type TAutomationActionProps<TConfig = any> = {
   currentActionIndex: number;
   currentAction: TAutomationAction<TConfig>;
-  handleSave: (config: any) => void;
+  handleSave: (config: TConfig) => void;
 };
 
 type WorkflowConnection = {

@@ -137,12 +137,12 @@ const AutomationBuilderSidebarContent = ({
   activeNode?: NodeData;
 }) => {
   if (activeNode) {
-    const { nodeType = '' } = activeNode || {};
-    if (nodeType === 'trigger') {
+    const { nodeType } = activeNode || {};
+    if (nodeType === AutomationNodeType.Trigger) {
       return <AutomationTriggerContentSidebar activeNode={activeNode} />;
     }
 
-    if (nodeType === 'action') {
+    if (nodeType === AutomationNodeType.Action) {
       return <AutomationActionContentSidebar />;
     }
   }

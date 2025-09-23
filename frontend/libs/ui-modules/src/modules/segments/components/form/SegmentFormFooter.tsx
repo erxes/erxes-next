@@ -34,7 +34,7 @@ export const SegmentFormFooter = ({
           </div>
         </Sheet.Footer>
       )}
-      <Sheet.Footer className="m-4 ">
+      <Sheet.Footer>
         <Button
           variant="secondary"
           onClick={handleCalculateStats}
@@ -42,11 +42,7 @@ export const SegmentFormFooter = ({
         >
           {loading ? 'Calculating...' : 'Calculate segment reach'}
         </Button>
-        <Button
-          onClick={form.handleSubmit(handleSave, (error) => console.log(error))}
-        >
-          Save Segment
-        </Button>
+        <Button onClick={form.handleSubmit(handleSave)}>Save Segment</Button>
       </Sheet.Footer>
     </>
   );

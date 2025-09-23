@@ -6,7 +6,6 @@ export const AutomationAiAgentsList = () => {
   const [kind, setKind] = useQueryState<string>('kind');
 
   const handleKind = (value: string | null) => {
-    console.log(value, kind, value && kind === value ? null : value);
     setKind(value && kind === value ? null : value);
   };
 

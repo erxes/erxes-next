@@ -103,7 +103,6 @@ const TriggerNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
                 nodeId={id}
                 onClearError={(nodeId) => {
                   // Clear error logic can be added here
-                  console.log('Clear error for node:', nodeId);
                 }}
               />
             </div>

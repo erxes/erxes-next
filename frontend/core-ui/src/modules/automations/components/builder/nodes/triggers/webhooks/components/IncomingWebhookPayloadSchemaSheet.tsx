@@ -1,11 +1,11 @@
 import { IconCode } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui';
 import { IncomingWebhookPayloadSchemaGenerator } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookPayloadSchemaGenerator';
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
+import { TIncomingWebhookJSONPropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/types/incomingWebhookJsonBuilder';
 
 interface Props {
-  value?: PropertySchema[];
-  onChange: (next: PropertySchema[]) => void;
+  value?: TIncomingWebhookJSONPropertySchema[];
+  onChange: (next: TIncomingWebhookJSONPropertySchema[]) => void;
 }
 
 export function IncomingWebhookPayloadSchemaSheet({ value, onChange }: Props) {
@@ -38,6 +38,3 @@ export function IncomingWebhookPayloadSchemaSheet({ value, onChange }: Props) {
     </Sheet>
   );
 }
-
-IncomingWebhookPayloadSchemaSheet.displayName =
-  'IncomingWebhookPayloadSchemaSheet';

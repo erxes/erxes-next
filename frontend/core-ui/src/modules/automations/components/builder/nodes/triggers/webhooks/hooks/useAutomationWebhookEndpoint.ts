@@ -8,13 +8,10 @@ type QueryResponse = {
 
 export const useAutomationWebhookEndpoint = () => {
   const { id } = useParams();
-  console.log({ id });
   const { data, loading } = useQuery<QueryResponse>(
     GET_AUTOMATION_WEBHOOK_ENDPOINT,
     { variables: { id } },
   );
-
-  console.log({ data, loading });
 
   return {
     endpoint: data?.getAutomationWebhookEndpoint,

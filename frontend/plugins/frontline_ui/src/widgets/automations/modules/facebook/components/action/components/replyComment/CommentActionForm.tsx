@@ -21,14 +21,12 @@ export const CommentActionForm = ({
   const { control } = form;
 
   useImperativeHandle(formRef, () => ({
-    submit: () => {
-      form.handleSubmit(onSaveActionConfig, () => {
-        toast({
-          title: 'There is some error in the form',
-          variant: 'destructive',
-        });
-      })();
-    },
+    submit: form.handleSubmit(onSaveActionConfig, () =>
+      toast({
+        title: 'There is some error in the form',
+        variant: 'destructive',
+      }),
+    ),
   }));
 
   return (

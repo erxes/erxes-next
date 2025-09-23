@@ -1,4 +1,4 @@
-import { Button, cn, Label, Spinner } from 'erxes-ui';
+import { Button, cn, Label, Separator, Spinner } from 'erxes-ui';
 import { FormProvider } from 'react-hook-form';
 import { useSegmentActions } from 'ui-modules/modules/segments/hooks/useSegmentActions';
 import { useSegmentDetail } from 'ui-modules/modules/segments/hooks/useSegmentDetail';
@@ -11,6 +11,7 @@ import {
 } from 'ui-modules/modules/segments/context/SegmentProvider';
 import { SegmentGroup } from './SegmentGroup';
 import { SegmentGroups } from './SegmentGroups';
+import { IconPlus } from '@tabler/icons-react';
 
 type Props = {
   contentType: string;
@@ -19,7 +20,7 @@ type Props = {
   isTemporary?: boolean;
 };
 
-const SegmentFormContent = () => {
+const SegmentGroupsContent = () => {
   const { form } = useSegment();
   const conditionSegments = form.watch('conditionSegments');
 
@@ -30,7 +31,7 @@ const SegmentFormContent = () => {
   return <SegmentGroup />;
 };
 
-const SegmentFormA = ({
+const SegmentFormContent = ({
   callback,
   isTemporary,
 }: {
@@ -45,21 +46,25 @@ const SegmentFormA = ({
 
   return (
     <FormProvider {...form}>
-      <form id="segment-form" className="h-full flex flex-col">
-        <div className="flex flex-col flex-1 max-h-full px-8 pt-4 pb-4 overflow-y-auto w-2xl">
+      <form id="segment-form" className="h-full min-h-0 flex flex-col">
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto w-full p-2">
           <SegmentMetadataForm isTemporary={isTemporary} />
           <div className="pb-4">
-            <SegmentFormContent />
+            <SegmentGroupsContent />
           </div>
+          <Separator className="my-2" />
           <Button
-            variant="secondary"
+            variant="outline"
             className={cn(
-              'w-full',
-              (watch('conditionSegments')?.length || 0) > 1 && 'pl-12',
+              'w-full font-mono uppercase font-semibold text-xs text-accent-foreground',
+              {
+                'pl-12': (watch('conditionSegments')?.length || 0) > 1,
+              },
             )}
             onClick={onAddSegmentGroup}
           >
-            <Label>+ Add Group</Label>
+            <IconPlus />
+            Add Group
           </Button>
         </div>
         <SegmentFormFooter callback={callback} />
@@ -87,7 +92,7 @@ export function SegmentForm({
 
   return (
     <SegmentProvider contentType={contentType} segment={segment}>
-      <SegmentFormA {...updatedProps} />
+      <SegmentFormContent {...updatedProps} />
     </SegmentProvider>
   );
 }

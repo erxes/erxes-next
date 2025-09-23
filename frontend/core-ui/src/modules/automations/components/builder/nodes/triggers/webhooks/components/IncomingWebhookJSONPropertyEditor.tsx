@@ -6,17 +6,19 @@ import {
 } from '@tabler/icons-react';
 import { Button, Input, Select, Toggle } from 'erxes-ui';
 import { generateAutomationElementId } from 'ui-modules';
-import { PropertyEditorProps } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
+import {
+  TIncomingWebhookJSONPropertyEditorProps,
+  TIncomingWebhookJSONPropertySchema,
+} from '@/automations/components/builder/nodes/triggers/webhooks/types/incomingWebhookJsonBuilder';
 
-export function PropertyEditor({
+export function IncomingWebhookJSONPropertyEditor({
   property,
   depth = 0,
   onUpdate,
   onRemove,
   onAddChild,
   onToggleExpanded,
-}: PropertyEditorProps) {
+}: TIncomingWebhookJSONPropertyEditorProps) {
   const hasIndent = depth > 0;
   const isExpandable =
     property.type === 'object' ||
@@ -121,7 +123,7 @@ export function PropertyEditor({
               variant="outline"
               size="sm"
               onClick={() => {
-                const newProperty: PropertySchema = {
+                const newProperty: TIncomingWebhookJSONPropertySchema = {
                   id: generateAutomationElementId(),
                   name: '',
                   type: 'string',
@@ -160,7 +162,7 @@ export function PropertyEditor({
       {showObjectChildren && (
         <div className="space-y-2 border-l pl-4 ml-2">
           {property.children?.map((child) => (
-            <PropertyEditor
+            <IncomingWebhookJSONPropertyEditor
               key={child.id}
               property={child}
               depth={depth + 1}
@@ -177,7 +179,7 @@ export function PropertyEditor({
         <div className="space-y-2 border-l pl-4 ml-2">
           <div className="text-xs font-medium">Array Item Schema:</div>
           {property.arrayItemSchema?.map((child) => (
-            <PropertyEditor
+            <IncomingWebhookJSONPropertyEditor
               key={child.id}
               property={child}
               depth={depth + 1}
@@ -192,7 +194,7 @@ export function PropertyEditor({
               variant="outline"
               size="sm"
               onClick={() => {
-                const newProperty: PropertySchema = {
+                const newProperty: TIncomingWebhookJSONPropertySchema = {
                   id: generateAutomationElementId(),
                   name: '',
                   type: 'string',
@@ -214,4 +216,5 @@ export function PropertyEditor({
   );
 }
 
-PropertyEditor.displayName = 'PropertyEditor';
+IncomingWebhookJSONPropertyEditor.displayName =
+  'IncomingWebhookJSONPropertyEditor';

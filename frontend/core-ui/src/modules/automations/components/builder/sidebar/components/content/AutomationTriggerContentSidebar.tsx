@@ -5,7 +5,7 @@ import {
 } from '@/automations/components/builder/nodes/triggers/coreAutomationTriggers';
 import { useCustomTriggerContent } from '@/automations/components/builder/sidebar/hooks/useCustomTriggerContent';
 import { useDefaultTriggerContent } from '@/automations/components/builder/sidebar/hooks/useDefaultTriggerContent';
-import { NodeData } from '@/automations/types';
+import { AutomationNodeType, NodeData } from '@/automations/types';
 import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
 import { IconSettings } from '@tabler/icons-react';
 import { Button, toast } from 'erxes-ui';
@@ -53,8 +53,6 @@ const TriggerContentLoadingFallback = React.memo(() => (
   </div>
 ));
 
-TriggerContentLoadingFallback.displayName = 'TriggerContentLoadingFallback';
-
 /**
  * Error boundary fallback component
  */
@@ -95,8 +93,6 @@ const TriggerContentErrorFallback = React.memo(
   ),
 );
 
-TriggerContentErrorFallback.displayName = 'TriggerContentErrorFallback';
-
 /**
  * Reusable wrapper component for trigger content with consistent layout
  */
@@ -114,7 +110,7 @@ const TriggerContentWrapper = React.memo<TriggerContentWrapperProps>(
         role="region"
         {...props}
       >
-        <div className="flex-1 w-auto overflow-auto">{children}</div>
+        <div className="flex-1 w-auto overflow-auto px-4">{children}</div>
         <footer className="p-3 flex justify-end border-t bg-background/50 backdrop-blur-sm">
           {footer}
         </footer>
@@ -122,8 +118,6 @@ const TriggerContentWrapper = React.memo<TriggerContentWrapperProps>(
     );
   },
 );
-
-TriggerContentWrapper.displayName = 'TriggerContentWrapper';
 
 /**
  * Default trigger content component for standard automation triggers
@@ -152,14 +146,14 @@ const DefaultTriggerContent = React.memo<AutomationTriggerContentProps>(
           segmentId={contentId}
           callback={handleFormCallback}
           isTemporary
-          aria-label={`Configure ${activeNode?.type || 'trigger'} settings`}
+          aria-label={`Configure ${
+            activeNode?.type || AutomationNodeType.Trigger
+          } settings`}
         />
       </Suspense>
     );
   },
 );
-
-DefaultTriggerContent.displayName = 'DefaultTriggerContent';
 
 /**
  * Custom remote trigger content component for plugin-based triggers
@@ -183,7 +177,9 @@ const CustomRemoteTriggerContent = React.memo<AutomationTriggerContentProps>(
       () => (
         <Button
           onClick={handleSave}
-          aria-label={`Save ${activeNode?.type || 'trigger'} configuration`}
+          aria-label={`Save ${
+            activeNode?.type || AutomationNodeType.Trigger
+          } configuration`}
         >
           Save Configuration
         </Button>
@@ -218,8 +214,6 @@ const CustomRemoteTriggerContent = React.memo<AutomationTriggerContentProps>(
   },
 );
 
-CustomRemoteTriggerContent.displayName = 'CustomRemoteTriggerContent';
-
 /**
  * Custom core trigger content component for built-in core triggers
  */
@@ -234,7 +228,6 @@ const CustomCoreTriggerContent = React.memo<
   const handleSave = useCallback(
     (config: any) => {
       // TODO: Implement core trigger configuration save logic
-      console.log('Saving core trigger configuration for:', activeNode?.type);
       setValue(`triggers.${activeNode.nodeIndex}.config`, config);
       setQueryParams({ activeNodeId: null });
       toggleSideBarOpen();
@@ -255,7 +248,6 @@ const CustomCoreTriggerContent = React.memo<
       <Button
         onClick={() => {
           formRef.current?.submit();
-          console.log('fasdnskja');
         }}
         aria-label={`Save ${activeNode?.type || 'core trigger'} configuration`}
       >
@@ -276,8 +268,6 @@ const CustomCoreTriggerContent = React.memo<
     </TriggerContentWrapper>
   );
 });
-
-CustomCoreTriggerContent.displayName = 'CustomCoreTriggerContent';
 
 /**
  * Custom trigger content router component
@@ -308,8 +298,6 @@ const CustomTriggerContent = React.memo<AutomationTriggerContentProps>(
   },
 );
 
-CustomTriggerContent.displayName = 'CustomTriggerContent';
-
 /**
  * Main automation trigger content sidebar component
  *
@@ -335,5 +323,3 @@ export const AutomationTriggerContentSidebar =
       </div>
     );
   });
-
-AutomationTriggerContentSidebar.displayName = 'AutomationTriggerContentSidebar';

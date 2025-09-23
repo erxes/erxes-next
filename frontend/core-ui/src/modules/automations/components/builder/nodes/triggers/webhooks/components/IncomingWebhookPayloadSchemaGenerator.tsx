@@ -1,13 +1,15 @@
-import { PropertyEditor } from '@/automations/components/builder/nodes/triggers/webhooks/components/PropertyEditor';
-import { PayloadSchemaGeneratorProps } from '@/automations/components/builder/nodes/triggers/webhooks/components/types';
+import { IncomingWebhookJSONPropertyEditor } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookJSONPropertyEditor';
+import {
+  PayloadSchemaGeneratorProps,
+  TIncomingWebhookJSONPropertySchema,
+} from '@/automations/components/builder/nodes/triggers/webhooks/types/incomingWebhookJsonBuilder';
 import {
   addChildProperty,
   generateSchemaPreview,
   removePropertyFromList,
   toggleExpandedInList,
   updatePropertyInList,
-} from '@/automations/components/builder/nodes/triggers/webhooks/components/utils';
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
+} from '@/automations/components/builder/nodes/triggers/webhooks/utils/incomingWebhookJsonBuilder';
 import { IconPlus, IconShield } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
 import { generateAutomationElementId } from 'ui-modules';
@@ -16,7 +18,7 @@ export const IncomingWebhookPayloadSchemaGenerator = ({
   value,
   onChange,
 }: PayloadSchemaGeneratorProps) => {
-  const properties = (value || []) as PropertySchema[];
+  const properties = (value || []) as TIncomingWebhookJSONPropertySchema[];
   const previewJson = JSON.stringify(
     generateSchemaPreview(properties),
     null,
@@ -47,7 +49,7 @@ export const IncomingWebhookPayloadSchemaGenerator = ({
                     required: true,
                     description: '',
                     isExpanded: true,
-                  } as PropertySchema,
+                  } as TIncomingWebhookJSONPropertySchema,
                 ])
               }
             >
@@ -58,7 +60,7 @@ export const IncomingWebhookPayloadSchemaGenerator = ({
 
           <div className="space-y-4">
             {properties.map((property) => (
-              <PropertyEditor
+              <IncomingWebhookJSONPropertyEditor
                 key={property.id}
                 property={property}
                 onUpdate={(id, field, v) =>

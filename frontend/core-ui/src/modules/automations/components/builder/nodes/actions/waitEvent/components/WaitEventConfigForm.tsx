@@ -8,6 +8,7 @@ import { WaitEventConfigContent } from './WaitEventConfigContent';
 export const WaitEventConfigForm = ({
   currentAction,
   currentActionIndex,
+  handleSave,
 }: TAutomationActionProps) => {
   const { control } = useFormContext<TAutomationBuilderForm>();
 
@@ -18,19 +19,26 @@ export const WaitEventConfigForm = ({
 
   const { targetType } = config || {};
 
-  console.log({ config });
+  const effectiveTargetType = targetType ?? waitEventOptions[0]?.type;
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div className="h-full min-h-0 flex flex-col gap-4 overflow-hidden">
       <Form.Field
         name={`${configFieldName}.targetType`}
         control={control}
         defaultValue={waitEventOptions[0]?.type}
         render={({ field }) => (
-          <Form.Item>
+          <Form.Item className="px-4">
             <Form.Label>Select target</Form.Label>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <Select.Trigger id="target-type" className="mt-1">
+            <Select
+              value={field.value ?? waitEventOptions[0]?.type}
+              onValueChange={field.onChange}
+            >
+              <Select.Trigger
+                id={`target-type-${currentAction.id}`}
+                aria-describedby={`target-type-help-${currentAction.id}`}
+                className="mt-1"
+              >
                 <Select.Value placeholder="Select target type" />
               </Select.Trigger>
               <Select.Content>
@@ -41,13 +49,19 @@ export const WaitEventConfigForm = ({
                 ))}
               </Select.Content>
             </Select>
+            <Form.Description id={`target-type-help-${currentAction.id}`}>
+              This determines where the event will be listened from.
+            </Form.Description>
+            <Form.Message />
           </Form.Item>
         )}
       />
+
       <WaitEventConfigContent
-        targetType={targetType}
+        targetType={effectiveTargetType}
         action={currentAction}
         configFieldName={configFieldName}
+        handleSave={handleSave}
       />
     </div>
   );

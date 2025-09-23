@@ -1,3 +1,4 @@
+import { AutomationNodeType } from '@/automations/types';
 import { ConnectionLineComponentProps } from '@xyflow/react';
 import { cn } from 'erxes-ui';
 
@@ -15,8 +16,8 @@ const ConnectionLine = ({
       <path
         fill="none"
         className={cn({
-          'stroke-success': fromNode.type === 'action',
-          'stroke-primary': fromNode.type === 'trigger',
+          'stroke-success': fromNode.type === AutomationNodeType.Action,
+          'stroke-primary': fromNode.type === AutomationNodeType.Trigger,
           'stroke-red-300':
             fromNode?.data?.type === 'if' && fromHandle.id === 'no-right',
         })}

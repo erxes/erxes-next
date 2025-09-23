@@ -1,27 +1,50 @@
+import {
+  TAutomationWaitEventConfig,
+  WaitEventTargetTypes,
+} from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import { findTriggerForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
+import {
+  findTriggerForAction,
+  getAllTriggersForAction,
+} from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useFormContext } from 'react-hook-form';
 import { TAutomationAction } from 'ui-modules';
 
 export function useWaitEventConfigContent(
-  targetType: 'trigger' | 'action' | 'custom',
+  targetType: TAutomationWaitEventConfig['targetType'],
   action: TAutomationAction,
   selectedNodeId?: string,
 ) {
   const { getValues } = useFormContext<TAutomationBuilderForm>();
   const { actions } = useAutomationNodes();
 
-  if (targetType === 'trigger') {
-    const trigger = findTriggerForAction(
+  if (targetType === WaitEventTargetTypes.Trigger) {
+    const triggers = getAllTriggersForAction(
       action.id,
       getValues('actions'),
       getValues('triggers'),
     );
-    return { contentType: trigger?.type } as const;
+
+    const selectedTriggerId = getValues(
+      `${'actions'}.${(getValues('actions') || []).findIndex(
+        (a) => a.id === action.id,
+      )}.config.targetTriggerId`,
+    ) as string | undefined;
+
+    const selected = selectedTriggerId
+      ? triggers.find(({ trigger }) => trigger.id === selectedTriggerId)
+          ?.trigger
+      : findTriggerForAction(
+          action.id,
+          getValues('actions'),
+          getValues('triggers'),
+        );
+
+    return { contentType: selected?.type };
   }
 
   return {
     contentType: actions.find((a) => a.id === selectedNodeId)?.type,
-  } as const;
+  };
 }

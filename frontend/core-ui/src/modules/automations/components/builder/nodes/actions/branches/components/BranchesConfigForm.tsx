@@ -4,7 +4,7 @@ import { TAutomationActionProps, SegmentForm } from 'ui-modules';
 export const BranchesConfigForm = ({
   currentAction,
   handleSave,
-}: TAutomationActionProps) => {
+}: TAutomationActionProps<{ contentId: string }>) => {
   const { trigger } = useAutomationTrigger(currentAction.id);
 
   return (

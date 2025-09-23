@@ -1,3 +1,4 @@
+import { TAutomationSendEmailConfig } from '@/automations/components/builder/nodes/actions/sendEmail/types/automationSendEmail';
 import {
   GET_CUSTOMERS_EMAIL,
   GET_TEAM_MEMBERS_EMAIL,
@@ -11,13 +12,8 @@ export const generateSendEmailRecipientMails = ({
   customMails = [],
   customer = [],
   teamMember = [],
-}: {
-  attributionMails?: string;
-  customMails?: string[];
-  customer?: string[];
-  teamMember?: [];
-}) => {
-  let mails = [];
+}: TAutomationSendEmailConfig) => {
+  let mails: string[] = [];
 
   if (attributionMails) {
     mails.push(attributionMails);

@@ -3,20 +3,21 @@ import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefini
 import { useFormContext } from 'react-hook-form';
 import { getFieldsProperties, groupFieldsByType } from 'ui-modules';
 import {
-  IManagePropertyFieldName,
-  IManagePropertyRule,
+  TAutomationManagePropertyRule,
   OperatorType,
+  TAutomationManagePropertyConfig,
 } from '../types/ManagePropertyTypes';
+import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 type ManagePropertyRuleProps = {
-  rules: IManagePropertyRule[];
+  rules: TAutomationManagePropertyRule[];
   index: number;
-  fieldName: IManagePropertyFieldName;
-  rule: IManagePropertyRule;
+  fieldName: TAutomationActionConfigField;
+  rule: TAutomationManagePropertyRule;
   propertyType: string;
 };
 
@@ -30,17 +31,17 @@ export const useManagePropertyRule = ({
   const { setValue } = useFormContext<TAutomationBuilderForm>();
   const { fields = [] } = getFieldsProperties(propertyType);
   const groups = groupFieldsByType(fields || []);
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: string) => {
     const updatedRules = [...rules];
     updatedRules[index] = { ...updatedRules[index], [name]: value };
-    setValue(`${fieldName}.rules` as any, updatedRules);
+    setValue(`${fieldName}.rules`, updatedRules);
   };
 
   const selectedField = fields.find((field) => field.name === rule.field);
 
   const handleRemove = () => {
     setValue(
-      `${fieldName}.rules` as any,
+      `${fieldName}.rules`,
       rules.filter((_, ruleIndex) => index !== ruleIndex),
     );
   };

@@ -1,5 +1,6 @@
+import { IncomingWebhookHeadersBuilder } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookHeaderBuilder';
 import { IncomingWebhookPayloadSchemaSheet } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookPayloadSchemaSheet';
-import { generateSchemaPreview } from '@/automations/components/builder/nodes/triggers/webhooks/components/utils';
+import { generateSchemaPreview } from '@/automations/components/builder/nodes/triggers/webhooks/utils/incomingWebhookJsonBuilder';
 import { AUTOMATION_INCOMING_WEBHOOK_API_METHODS } from '@/automations/components/builder/nodes/triggers/webhooks/constants/incomingWebhook';
 import { useAutomationWebhookEndpoint } from '@/automations/components/builder/nodes/triggers/webhooks/hooks/useAutomationWebhookEndpoint';
 import {
@@ -9,10 +10,11 @@ import {
 import { AutomationTriggerSidebarCoreFormProps } from '@/automations/types';
 import { copyText } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconCopy, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconCopy } from '@tabler/icons-react';
 import { Button, Form, Input, Select, Tabs, toast } from 'erxes-ui';
 import { useImperativeHandle, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+
 export const IncomingWebhookConfigForm = ({
   formRef,
   handleSave,
@@ -27,20 +29,13 @@ export const IncomingWebhookConfigForm = ({
   });
 
   useImperativeHandle(formRef, () => ({
-    submit: () => {
-      form.handleSubmit(
-        (config) => {
-          handleSave(config);
-        },
-        (error) => {
-          console.log({ error });
-          toast({
-            title: 'There is some error in the form',
-            variant: 'destructive',
-          });
-        },
-      )();
-    },
+    submit: () =>
+      form.handleSubmit(handleSave, () =>
+        toast({
+          title: 'There is some error in the form',
+          variant: 'destructive',
+        }),
+      )(),
   }));
 
   return (
@@ -50,6 +45,7 @@ export const IncomingWebhookConfigForm = ({
           <Form.Field
             control={form.control}
             name="method"
+            defaultValue={AUTOMATION_INCOMING_WEBHOOK_API_METHODS[1]}
             render={({ field }) => (
               <Form.Item className="w-1/6">
                 <Form.Label>Method</Form.Label>
@@ -114,7 +110,7 @@ export const IncomingWebhookConfigForm = ({
               render={({ field }) => {
                 return (
                   <Form.Item>
-                    <IncomingWebhookHeadersBuider
+                    <IncomingWebhookHeadersBuilder
                       headers={field.value}
                       onChange={field.onChange}
                     />
@@ -182,80 +178,5 @@ export const IncomingWebhookConfigForm = ({
         </Tabs>
       </div>
     </FormProvider>
-  );
-};
-
-const IncomingWebhookHeadersBuider = ({
-  headers = [],
-  onChange,
-}: {
-  headers: TIncomingWebhookForm['headers'];
-  onChange: (...event: any[]) => void;
-}) => {
-  const handleChange = (
-    index: number,
-    field: 'key' | 'value' | 'description',
-    value: string,
-  ) => {
-    const updatedHeaders = [...(headers || [])];
-    updatedHeaders[index] = {
-      ...updatedHeaders[index],
-      [field]: value,
-    };
-    onChange(updatedHeaders);
-  };
-
-  const handleRemove = (index: number) => {
-    const updatedHeaders = (headers || []).filter((_, i) => i !== index);
-    onChange(updatedHeaders);
-  };
-
-  return (
-    <>
-      <div className="flex flex-row justify-between">
-        <Form.Label>Headers</Form.Label>
-        <Button
-          variant="outline"
-          onClick={() =>
-            onChange([
-              ...(headers || []),
-              { key: '', value: '', description: '' },
-            ])
-          }
-        >
-          <IconPlus /> Add Header
-        </Button>
-      </div>
-      <div>
-        <Form.Label className="w-1/4">Key</Form.Label>
-        <Form.Label className="w-2/4">Value</Form.Label>
-        <Form.Label className="w-1/4">Description</Form.Label>
-      </div>
-      {headers.map(({ key, value, description }, index) => (
-        <div key={index} className="flex flex-row items-center gap-2">
-          <Input
-            value={key}
-            placeholder="Key"
-            className="w-1/4"
-            onChange={(e) => handleChange(index, 'key', e.target.value)}
-          />
-          <Input
-            value={value}
-            placeholder="Value"
-            className="w-2/4"
-            onChange={(e) => handleChange(index, 'value', e.target.value)}
-          />
-          <Input
-            value={description}
-            placeholder="Description (Optional)"
-            className="w-1/4"
-            onChange={(e) => handleChange(index, 'description', e.target.value)}
-          />
-          <Button variant="destructive" onClick={() => handleRemove(index)}>
-            <IconTrash />
-          </Button>
-        </div>
-      ))}
-    </>
   );
 };

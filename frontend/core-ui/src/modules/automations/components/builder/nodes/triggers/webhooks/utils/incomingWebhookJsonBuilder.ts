@@ -1,10 +1,10 @@
-import { PropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/states/automationIncomingWebhookFormDefinition';
-
 export function updateNestedProperty(
-  properties: PropertySchema[],
+  properties: TIncomingWebhookJSONPropertySchema[],
   targetId: string,
-  updater: (prop: PropertySchema) => PropertySchema,
-): PropertySchema[] {
+  updater: (
+    prop: TIncomingWebhookJSONPropertySchema,
+  ) => TIncomingWebhookJSONPropertySchema,
+): TIncomingWebhookJSONPropertySchema[] {
   return properties.map((prop) => {
     if (prop.id === targetId) return updater(prop);
 
@@ -31,9 +31,9 @@ export function updateNestedProperty(
 }
 
 export function removeNestedProperty(
-  properties: PropertySchema[],
+  properties: TIncomingWebhookJSONPropertySchema[],
   targetId: string,
-): PropertySchema[] {
+): TIncomingWebhookJSONPropertySchema[] {
   return properties.filter((prop) => {
     if (prop.id === targetId) return false;
 
@@ -52,7 +52,9 @@ export function removeNestedProperty(
   });
 }
 
-export function generateSchemaPreview(properties: PropertySchema[]): unknown {
+export function generateSchemaPreview(
+  properties: TIncomingWebhookJSONPropertySchema[],
+): unknown {
   const result: Record<string, unknown> = {};
 
   for (const {
@@ -103,11 +105,11 @@ export function generateSchemaPreview(properties: PropertySchema[]): unknown {
 }
 
 export function updatePropertyInList(
-  list: PropertySchema[],
+  list: TIncomingWebhookJSONPropertySchema[],
   id: string,
   field: string,
   value: unknown,
-): PropertySchema[] {
+): TIncomingWebhookJSONPropertySchema[] {
   return updateNestedProperty(list, id, (prop) => ({
     ...prop,
     [field]: value,
@@ -115,16 +117,16 @@ export function updatePropertyInList(
 }
 
 export function removePropertyFromList(
-  list: PropertySchema[],
+  list: TIncomingWebhookJSONPropertySchema[],
   id: string,
-): PropertySchema[] {
+): TIncomingWebhookJSONPropertySchema[] {
   return removeNestedProperty(list, id);
 }
 
 export function addChildProperty(
-  list: PropertySchema[],
+  list: TIncomingWebhookJSONPropertySchema[],
   parentId: string,
-): PropertySchema[] {
+): TIncomingWebhookJSONPropertySchema[] {
   return updateNestedProperty(list, parentId, (prop) => ({
     ...prop,
     children: [...(prop.children || []), createNewRootProperty()],
@@ -132,17 +134,18 @@ export function addChildProperty(
 }
 
 export function toggleExpandedInList(
-  list: PropertySchema[],
+  list: TIncomingWebhookJSONPropertySchema[],
   id: string,
-): PropertySchema[] {
+): TIncomingWebhookJSONPropertySchema[] {
   return updateNestedProperty(list, id, (prop) => ({
     ...prop,
     isExpanded: !prop.isExpanded,
   }));
 }
 
+import { TIncomingWebhookJSONPropertySchema } from '@/automations/components/builder/nodes/triggers/webhooks/types/incomingWebhookJsonBuilder';
 import { generateAutomationElementId } from 'ui-modules';
-export function createNewRootProperty(): PropertySchema {
+export function createNewRootProperty(): TIncomingWebhookJSONPropertySchema {
   return {
     id: generateAutomationElementId(),
     name: '',

@@ -1,80 +1,14 @@
-import { IconCircleDashedCheck, IconX } from '@tabler/icons-react';
-import { Badge, Card, Form, Input, Label, RadioGroup, Tabs } from 'erxes-ui';
+import { SendEmailConfigFormRow } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailConfigFormRow';
+import { SendEmailCustomMailsInput } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailCustomMailsInput';
+import { TAutomationSendEmailConfig } from '@/automations/components/builder/nodes/actions/sendEmail/types/automationSendEmail';
+import { Card, Form, Label, RadioGroup, Tabs } from 'erxes-ui';
 import {
-  TAutomationActionProps,
   PlaceHolderInput,
   SelectCustomer,
   SelectMember,
+  TAutomationActionProps,
 } from 'ui-modules';
-import {
-  useSendEmailCustomMailField,
-  useSendEmailSidebarForm,
-} from '../hooks/useSendEmailSidebarForm';
-
-const ConfigRow = ({
-  title,
-  isDone,
-  subContent,
-  children,
-}: {
-  title: string;
-  isDone?: boolean;
-  subContent?: string;
-  children: any;
-}) => {
-  return (
-    <>
-      <div className="space-y-1 text-left">
-        <div className="flex items-center space-x-2">
-          <Label className="text-sm font-medium">{title}</Label>
-          {isDone && <IconCircleDashedCheck className="text-success size-4" />}
-        </div>
-        {subContent && (
-          <p className="font-mono text-muted-foreground text-xs">
-            {subContent}
-          </p>
-        )}
-      </div>
-      <div className="p-2 border-b">{children}</div>
-    </>
-  );
-};
-
-const CustomMailField = ({
-  currentActionIndex,
-}: {
-  currentActionIndex: number;
-}) => {
-  const { onChange, removeMail, control, config } =
-    useSendEmailCustomMailField(currentActionIndex);
-
-  return (
-    <Form.Field
-      name={`actions.${currentActionIndex}.config.customMails`}
-      control={control}
-      render={({ field }) => (
-        <Form.Item className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {(config?.customMails || []).map((customMail: string) => (
-              <Badge key={customMail} variant="secondary" className="pr-1">
-                {customMail}
-                <IconX
-                  className="w-3 h-3 ml-1 hover:text-destructive cursor-pointer"
-                  onClick={() => removeMail(customMail)}
-                />
-              </Badge>
-            ))}
-          </div>
-          <Input
-            onKeyPress={(e) => onChange(e, field.onChange)}
-            placeholder="Enter email address"
-            className="w-full"
-          />
-        </Form.Item>
-      )}
-    />
-  );
-};
+import { useSendEmailSidebarForm } from '../hooks/useSendEmailSidebarForm';
 
 const SendEmailConfigurationForm = ({
   currentActionIndex,
@@ -86,7 +20,7 @@ const SendEmailConfigurationForm = ({
 
   return (
     <Card.Content className="space-y-2 max-w-xl pt-6">
-      <ConfigRow
+      <SendEmailConfigFormRow
         title="Sender"
         subContent="Who is sending email"
         isDone={!!config?.fromUserId}
@@ -124,9 +58,9 @@ const SendEmailConfigurationForm = ({
             )}
           />
         )}
-      </ConfigRow>
+      </SendEmailConfigFormRow>
 
-      <ConfigRow
+      <SendEmailConfigFormRow
         title="Recipient"
         subContent="Who is recipients"
         isDone={[
@@ -176,7 +110,9 @@ const SendEmailConfigurationForm = ({
           </Tabs.Content>
 
           <Tabs.Content value="static" className="space-y-4 p-4">
-            <CustomMailField currentActionIndex={currentActionIndex} />
+            <SendEmailCustomMailsInput
+              currentActionIndex={currentActionIndex}
+            />
 
             <Form.Field
               name={`actions.${currentActionIndex}.config.teamMember`}
@@ -208,9 +144,9 @@ const SendEmailConfigurationForm = ({
             />
           </Tabs.Content>
         </Tabs>
-      </ConfigRow>
+      </SendEmailConfigFormRow>
 
-      <ConfigRow
+      <SendEmailConfigFormRow
         title="Subject"
         subContent="Configure the subject of the email"
         isDone={!!config?.subject}
@@ -224,18 +160,18 @@ const SendEmailConfigurationForm = ({
             </Form.Item>
           )}
         />
-      </ConfigRow>
+      </SendEmailConfigFormRow>
 
-      <ConfigRow title="Selected Email Template">
+      <SendEmailConfigFormRow title="Selected Email Template">
         <div className="p-4 text-center text-muted-foreground">
           Email template selection will be implemented here
         </div>
-      </ConfigRow>
+      </SendEmailConfigFormRow>
     </Card.Content>
   );
 };
 export const SendEmailConfigForm = ({
   currentActionIndex,
-}: TAutomationActionProps) => {
+}: TAutomationActionProps<TAutomationSendEmailConfig>) => {
   return <SendEmailConfigurationForm currentActionIndex={currentActionIndex} />;
 };

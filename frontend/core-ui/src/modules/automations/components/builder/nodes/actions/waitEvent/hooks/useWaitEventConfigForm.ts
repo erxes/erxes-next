@@ -1,9 +1,14 @@
 import { WAIT_EVENT_TYPES } from '@/automations/components/builder/nodes/actions/waitEvent/constants/waitEventConstants';
+import {
+  TAutomationWaitEventConfig,
+  WaitEventTargetTypes,
+} from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
 import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import { findTriggerForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
+import { getAllTriggersForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { TAutomationAction } from 'ui-modules';
 
@@ -14,22 +19,45 @@ export function useWaitEventConfigForm(
   const { actionsConst } = useAutomation();
   const { actions } = useAutomationNodes();
 
-  const { getValues, watch } = useFormContext<TAutomationBuilderForm>();
+  const { getValues, watch, setValue } =
+    useFormContext<TAutomationBuilderForm>();
   const configFieldName: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
 
-  const config = watch(configFieldName);
+  const config = watch(configFieldName) as TAutomationWaitEventConfig;
 
-  const trigger = findTriggerForAction(
+  const triggers = getAllTriggersForAction(
     currentAction.id,
     getValues('actions'),
     getValues('triggers'),
   );
 
+  const nonCustomTriggers = triggers.filter(({ trigger }) => !trigger.isCustom);
+
+  // Auto-select single non-custom trigger if present and none selected yet
+  useEffect(() => {
+    const selectedId = config?.targetTriggerId;
+    if (!selectedId && nonCustomTriggers.length === 1) {
+      setValue(
+        `${configFieldName}.targetTriggerId`,
+        nonCustomTriggers[0].trigger.id,
+        {
+          shouldDirty: true,
+          shouldTouch: true,
+        },
+      );
+    }
+  }, [
+    config?.targetTriggerId,
+    nonCustomTriggers.length,
+    setValue,
+    configFieldName,
+  ]);
+
   let waitEventOptions = WAIT_EVENT_TYPES;
 
-  if (trigger?.isCustom) {
+  if (!nonCustomTriggers?.length) {
     waitEventOptions = waitEventOptions.filter(
-      ({ type }) => type !== 'trigger',
+      ({ type }) => type !== WaitEventTargetTypes.Trigger,
     );
   }
 
@@ -42,12 +70,14 @@ export function useWaitEventConfigForm(
   );
 
   if (!actionsCanBeTarget?.length) {
-    waitEventOptions = waitEventOptions.filter(({ type }) => type !== 'action');
+    waitEventOptions = waitEventOptions.filter(
+      ({ type }) => type !== WaitEventTargetTypes.Action,
+    );
   }
 
   return {
     waitEventOptions,
     configFieldName,
     config,
-  } as const;
+  };
 }

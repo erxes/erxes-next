@@ -1,4 +1,4 @@
-import { IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { Button, Card, Label } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { TSegmentForm } from '../../types';
@@ -62,7 +62,7 @@ export const SegmentGroup = ({ parentFieldName, onRemove }: Props) => {
           ))}
         </div>
         <Button
-          className="w-full mt-4"
+          className="w-full mt-4 font-mono uppercase font-semibold text-xs text-accent-foreground"
           variant="secondary"
           onClick={() =>
             append({
@@ -72,7 +72,8 @@ export const SegmentGroup = ({ parentFieldName, onRemove }: Props) => {
             })
           }
         >
-          <Label>+ Add Condition</Label>
+          <IconPlus />
+          Add Condition
         </Button>
       </Card>
     </Card>

@@ -1,11 +1,11 @@
+import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { findTriggerForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { KeyboardEvent, KeyboardEventHandler } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-type TSendEmailConfigFieldName = `actions.${number}.config`;
-
 export const useSendEmailSidebarForm = (currentActionIndex: number) => {
-  const configFieldName: TSendEmailConfigFieldName = `actions.${currentActionIndex}.config`;
+  const configFieldName: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
 
   const { control } = useFormContext<TAutomationBuilderForm>();
   const [triggers = [], actions = [], config = {}] =
@@ -24,7 +24,7 @@ export const useSendEmailSidebarForm = (currentActionIndex: number) => {
 };
 
 export const useSendEmailCustomMailField = (currentActionIndex: number) => {
-  const configFieldName: TSendEmailConfigFieldName = `actions.${currentActionIndex}.config`;
+  const configFieldName: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
   const { control, setValue } = useFormContext<TAutomationBuilderForm>();
   const config = useWatch({ control, name: configFieldName });
 
@@ -35,7 +35,10 @@ export const useSendEmailCustomMailField = (currentActionIndex: number) => {
     );
   };
 
-  const onChange = (e: any, onChange: (...props: any[]) => void) => {
+  const onChange = (
+    e: KeyboardEvent<HTMLInputElement>,
+    onChange: (...props: any[]) => void,
+  ) => {
     const { value } = e.currentTarget;
     if (
       e.key === 'Enter' &&

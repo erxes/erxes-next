@@ -1,20 +1,27 @@
+import {
+  TAutomationDelayConfig,
+  TAutomationDelayIntervalType,
+} from '@/automations/components/builder/nodes/actions/delay/types/automationDelay';
+import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { ChangeEvent } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 export const useDelay = (currentActionIndex: number) => {
-  const configField: `actions.${number}.config` = `actions.${currentActionIndex}.config`;
+  const configField: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
   const { control, setValue } = useFormContext<TAutomationBuilderForm>();
 
-  const { value, type } =
-    useWatch<TAutomationBuilderForm>({ control, name: configField }) || {};
+  const { value, type } = (useWatch<TAutomationBuilderForm>({
+    control,
+    name: configField,
+  }) || {}) as TAutomationDelayConfig;
 
   const handleValueChange = (
     e: ChangeEvent<HTMLInputElement>,
     onChange: (...event: any[]) => void,
   ) => {
     let { value } = e.currentTarget;
-    let intervalType: 'minute' | 'hour' | 'day' | 'month' | 'year' | undefined;
+    let intervalType: TAutomationDelayIntervalType;
 
     const numericValue = Number(value);
     const set = (newValue: string, newType: typeof intervalType) => {

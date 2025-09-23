@@ -44,7 +44,7 @@ export const useNodeConnect = () => {
     (params: Connection) => {
       const source = getNode(params.source);
       setEdges((eds) => {
-        const updatedEdges = addEdge({ ...params }, eds);
+        const updatedEdges = addEdge({ ...params, type: 'primary' }, eds);
 
         onConnection(generateConnect(params, source));
 

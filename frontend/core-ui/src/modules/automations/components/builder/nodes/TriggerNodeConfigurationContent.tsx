@@ -17,17 +17,21 @@ export const TriggerNodeConfigurationContent = ({
 
   if (
     isCoreAutomationTriggerType(
-      moduleName as any,
+      moduleName,
       TAutomationTriggerComponent.NodeContent,
     )
   ) {
-    const CoreActionComponent = getCoreAutomationTriggerComponent(
-      moduleName as any,
+    const CoreTriggerComponent = getCoreAutomationTriggerComponent(
+      moduleName,
       TAutomationTriggerComponent.NodeContent,
     );
     return (
       <div className="px-4 py-2">
-        {CoreActionComponent ? <CoreActionComponent config={config} /> : <></>}
+        {CoreTriggerComponent ? (
+          <CoreTriggerComponent config={config} />
+        ) : (
+          <></>
+        )}
       </div>
     );
   }

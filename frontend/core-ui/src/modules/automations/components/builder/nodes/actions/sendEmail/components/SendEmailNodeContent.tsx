@@ -1,10 +1,14 @@
+import { TAutomationSendEmailConfig } from '@/automations/components/builder/nodes/actions/sendEmail/types/automationSendEmail';
 import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { NodeContentComponentProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { generateSendEmailRecipientMails } from '@/automations/utils/automationBuilderUtils/emailUtils';
 import { IconEye } from '@tabler/icons-react';
 import { Badge, Button, Label, Popover } from 'erxes-ui';
 import { useMemo } from 'react';
 
-export const SendEmailNodeContent = ({ config }: any) => {
+export const SendEmailNodeContent = ({
+  config,
+}: NodeContentComponentProps<TAutomationSendEmailConfig>) => {
   const { fromUserId, subject } = config || {};
 
   return (
@@ -32,7 +36,9 @@ export const SendEmailNodeContent = ({ config }: any) => {
     </>
   );
 };
-const ReciepentEmails = ({ config }: { config: any }) => {
+const ReciepentEmails = ({
+  config,
+}: NodeContentComponentProps<TAutomationSendEmailConfig>) => {
   const mails = useMemo(
     () => generateSendEmailRecipientMails(config),
     [config],

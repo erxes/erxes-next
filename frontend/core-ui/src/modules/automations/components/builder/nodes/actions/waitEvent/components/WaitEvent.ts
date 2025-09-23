@@ -11,6 +11,11 @@ const WaitEventComponents: AutomationComponentMap<AutomationNodeType.Action> = {
         default: module.WaitEventConfigForm,
       })),
     ),
+    nodeContent: lazy(() =>
+      import('./WaitEventNodeContent').then((module) => ({
+        default: module.WaitEventNodeContent,
+      })),
+    ),
   },
 };
 
