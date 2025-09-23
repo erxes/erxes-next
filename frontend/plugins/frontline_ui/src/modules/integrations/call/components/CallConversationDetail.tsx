@@ -15,7 +15,10 @@ import {
   IconPhoneIncoming,
   IconRefresh,
 } from '@tabler/icons-react';
-import { formatSeconds } from '@/integrations/call/utils/callUtils';
+import {
+  formatSeconds,
+  safeFormatDate,
+} from '@/integrations/call/utils/callUtils';
 import { useCallSyncAudioRecord } from '@/integrations/call/hooks/useCallSyncAudioRecord';
 
 export function CallConversationDetail() {
@@ -103,13 +106,13 @@ export function CallConversationDetail() {
                     Start Time
                   </div>
                   <div className="font-medium">
-                    {format(callStartTime, 'MMM d, yyyy HH:mm')}
+                    {safeFormatDate(callStartTime)}
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="text-sm text-accent-foreground">End Time</div>
                   <div className="font-medium">
-                    {format(callEndTime, 'MMM d, yyyy HH:mm')}
+                    {safeFormatDate(callEndTime)}
                   </div>
                 </div>
               </div>
