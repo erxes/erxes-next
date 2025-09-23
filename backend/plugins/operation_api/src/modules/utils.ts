@@ -42,7 +42,7 @@ export const checkUserRole = async ({
     });
 
     if (!isAllowed) {
-      throw new Error('User is not allowed to perform this action 1');
+      throw new Error('User is not allowed to perform this action');
     }
 
     return;
@@ -53,7 +53,7 @@ export const checkUserRole = async ({
   }
 
   if (!allowedRoles.includes(userRole.role)) {
-    throw new Error('User is not allowed to perform this action 2');
+    throw new Error('User is not allowed to perform this action');
   }
 
   return;
