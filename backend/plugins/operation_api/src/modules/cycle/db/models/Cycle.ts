@@ -6,6 +6,7 @@ import {
   getCycleProgressChart,
   getCyclesProgress,
 } from '@/cycle/utils';
+import { isBefore, isSameDay, startOfDay } from 'date-fns';
 import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -15,6 +16,7 @@ export interface ICycleModel extends Model<ICycleDocument> {
   createCycle({ doc }: { doc: ICycle }): Promise<ICycleDocument>;
   updateCycle(doc: ICycleDocument): Promise<ICycleDocument>;
   removeCycle({ _id }: { _id: string }): Promise<{ ok: number }>;
+  startCycle(_id: string): Promise<ICycleDocument>;
   endCycle(_id: string): Promise<ICycleDocument>;
 }
 
@@ -47,12 +49,10 @@ export const loadCycleClass = (models: IModels) => {
         throw new Error('Start date and end date are required');
       }
 
-      // Ensure start is before end
       if (startDate > endDate) {
         throw new Error('Start date must be before end date');
       }
 
-      // Check for overlapping cycles
       const overlappingCycle = await models.Cycle.findOne({
         teamId: doc.teamId,
         $or: [
@@ -64,22 +64,22 @@ export const loadCycleClass = (models: IModels) => {
       });
 
       if (overlappingCycle) {
-        throw new Error('New cycle overlaps with an existing cycle');
+        throw new Error('New cycle with an existing cycle');
       }
 
-      const now = new Date(); // full current time
-      if (startDate <= now) {
+      const today = startOfDay(new Date());
+      const start = startOfDay(doc.startDate);
+
+      if (isBefore(start, today)) {
         throw new Error('New cycle start date must be in the future');
       }
 
-      // Get next cycle number
       const [result] = await models.Cycle.aggregate([
         { $match: { teamId: doc.teamId } },
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
       ]);
 
-      // Activate if starting now or in the past (including time)
-      if (startDate <= now && endDate >= now) {
+      if (isSameDay(doc.startDate, new Date())) {
         doc.isActive = true;
       }
 
@@ -117,6 +117,32 @@ export const loadCycleClass = (models: IModels) => {
       return models.Cycle.findOneAndUpdate(
         { _id },
         { $set: rest },
+        { new: true },
+      );
+    }
+
+    public static async startCycle(_id: string) {
+      const cycle = await models.Cycle.getCycle(_id);
+
+      if (cycle?.isActive) {
+        throw new Error('Cycle is already active');
+      }
+
+      const team = await models.Team.getTeam(cycle.teamId);
+
+      const cycles = await models.Cycle.find({
+        isActive: true,
+        isCompleted: false,
+        teamId: team._id,
+      });
+
+      if (cycles?.length) {
+        throw new Error('Previous cycle is active');
+      }
+
+      await models.Cycle.findOneAndUpdate(
+        { _id },
+        { $set: { isActive: true } },
         { new: true },
       );
     }

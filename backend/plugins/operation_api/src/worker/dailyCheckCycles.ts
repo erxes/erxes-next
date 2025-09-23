@@ -1,5 +1,5 @@
 import { Job } from 'bullmq';
-import { endOfDay } from 'date-fns'; // эсвэл өөр utility
+import { addDays, endOfDay, startOfDay } from 'date-fns'; // эсвэл өөр utility
 import {
   getEnv,
   getSaasOrganizations,
@@ -16,7 +16,7 @@ export const dailyCheckCycles = async () => {
 
     for (const org of orgs) {
       if (org.enabledcycles) {
-        sendWorkerQueue('operations', 'endCycle').add('endCycle', {
+        sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
           subdomain: org.subdomain,
         });
       }
@@ -24,14 +24,14 @@ export const dailyCheckCycles = async () => {
 
     return 'success';
   } else {
-    sendWorkerQueue('operations', 'endCycle').add('endCycle', {
+    sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
       subdomain: 'os',
     });
     return 'success';
   }
 };
 
-export const endCycle = async (job: Job) => {
+export const checkCycle = async (job: Job) => {
   const { subdomain } = job?.data ?? {};
 
   console.log('daily check cycles is worked', subdomain);
@@ -39,21 +39,31 @@ export const endCycle = async (job: Job) => {
 
   const today = new Date();
 
-  const cycles = await models.Cycle.find({
+  const endCycles = await models.Cycle.find({
     isActive: true,
     isCompleted: false,
     endDate: {
+      $lte: startOfDay(addDays(today, 1)),
+    },
+  });
+
+  if (endCycles?.length) {
+    for (const cycle of endCycles) {
+      await models.Cycle.endCycle(cycle?._id);
+    }
+  }
+
+  const startCycles = await models.Cycle.find({
+    isActive: false,
+    isCompleted: false,
+    startDate: {
       $lte: endOfDay(today),
     },
   });
 
-  console.log('cycles.length', cycles.length);
-
-  if (!cycles || cycles.length === 0) return;
-
-  console.log('cycles', cycles);
-
-  for (const cycle of cycles) {
-    await models.Cycle.endCycle(cycle?._id);
+  if (startCycles?.length) {
+    for (const cycle of startCycles) {
+      await models.Cycle.startCycle(cycle?._id);
+    }
   }
 };
