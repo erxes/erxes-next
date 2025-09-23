@@ -1,7 +1,5 @@
-import * as _ from 'underscore';
-
+import { IUserDocument } from 'erxes-api-shared/core-types';
 import {
-  checkUserIds,
   cursorPaginate,
   getNextMonth,
   getToday,
@@ -9,22 +7,18 @@ import {
   sendTRPCMessage,
   validSearchText,
 } from 'erxes-api-shared/utils';
+import moment from 'moment';
+import { IModels } from '~/connectionResolvers';
 import {
   IArchiveArgs,
   IDeal,
   IDealDocument,
   IDealQueryParams,
   IPipeline,
-  IStage,
+  IProductData,
   IStageDocument,
 } from './@types';
 import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
-
-import { can } from 'erxes-api-shared/core-modules';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import moment from 'moment';
-import { DeleteResult } from 'mongoose';
-import { IModels } from '~/connectionResolvers';
 import { generateFilter } from './graphql/resolvers/queries/deals';
 
 export const configReplacer = (config) => {
@@ -201,64 +195,6 @@ export const createBoardItem = async (models: IModels, doc: IDeal) => {
   return item;
 };
 
-export const removeStageItems = async (models: IModels, stageId: string) => {
-  await removeItems(models, [stageId]);
-};
-
-export const removeStageWithItems = async (
-  models: IModels,
-  pipelineId: string,
-  prevItemIds: string[] = [],
-): Promise<DeleteResult> => {
-  const selector = { pipelineId, _id: { $nin: prevItemIds } };
-
-  const stageIds = await models.Stages.find(selector).distinct('_id');
-
-  await models.Deals.deleteMany({ stageId: { $in: stageIds } });
-
-  return models.Stages.deleteMany(selector);
-};
-
-export const removeItems = async (models: IModels, stageIds: string[]) => {
-  const items = await models.Deals.find(
-    { stageId: { $in: stageIds } },
-    { _id: 1 },
-  );
-
-  const itemIds = items.map((i) => i._id);
-
-  await models.Checklists.removeChecklists(itemIds);
-
-  //   await sendCoreMessage({
-  //     subdomain,
-  //     action: "conformities.removeConformities",
-  //     data: {
-  //       mainType: type,
-  //       mainTypeIds: itemIds
-  //     }
-  //   });
-
-  //   await sendCoreMessage({
-  //     subdomain,
-  //     action: "removeInternalNotes",
-  //     data: { contentType: `sales:${type}`, contentTypeIds: itemIds }
-  //   });
-
-  await models.Deals.deleteMany({ stageId: { $in: stageIds } });
-};
-
-export const removePipelineStagesWithItems = async (
-  models: IModels,
-  pipelineId: string,
-): Promise<DeleteResult> => {
-  const stageIds = await models.Stages.find({ pipelineId })
-    .distinct('_id')
-    .lean();
-
-  await removeItems(models, stageIds);
-
-  return await models.Stages.deleteMany({ pipelineId });
-};
 
 export const generateLastNum = async (models: IModels, doc: IPipeline) => {
   const replacedConfig = await configReplacer(doc.numberConfig);
@@ -291,64 +227,6 @@ export const generateLastNum = async (models: IModels, doc: IPipeline) => {
   );
 };
 
-export const createOrUpdatePipelineStages = async (
-  models: IModels,
-  stages: IStageDocument[],
-  pipelineId: string,
-): Promise<DeleteResult> => {
-  let order = 0;
-
-  const validStageIds: string[] = [];
-  const bulkOpsPrevEntry: Array<{
-    updateOne: {
-      filter: { _id: string };
-      update: { $set: IStage };
-    };
-  }> = [];
-  const prevItemIds = stages.map((stage) => stage._id);
-  // fetch stage from database
-  const prevEntries = await models.Stages.find({ _id: { $in: prevItemIds } });
-  const prevEntriesIds = prevEntries.map((entry) => entry._id);
-
-  await removeStageWithItems(models, pipelineId, prevItemIds);
-
-  for (const stage of stages) {
-    order++;
-
-    const doc: any = { ...stage, order, pipelineId };
-
-    const _id = doc._id;
-
-    const prevEntry = prevEntriesIds.includes(_id);
-
-    // edit
-    if (prevEntry) {
-      validStageIds.push(_id);
-
-      bulkOpsPrevEntry.push({
-        updateOne: {
-          filter: {
-            _id,
-          },
-          update: {
-            $set: doc,
-          },
-        },
-      });
-      // create
-    } else {
-      delete doc._id;
-      const createdStage = await models.Stages.createStage(doc);
-      validStageIds.push(createdStage._id);
-    }
-  }
-
-  if (bulkOpsPrevEntry.length > 0) {
-    await models.Stages.bulkWrite(bulkOpsPrevEntry);
-  }
-
-  return models.Stages.deleteMany({ pipelineId, _id: { $nin: validStageIds } });
-};
 
 // Removes all board item related things
 export const destroyBoardItemRelations = async (
@@ -1011,498 +889,6 @@ export const getNewOrder = async ({
   return order;
 };
 
-export const itemsEdit = async (
-  models: IModels,
-  _id: string,
-  type: string,
-  oldItem: any,
-  doc: any,
-  proccessId: string,
-  user: IUserDocument,
-  modelUpate,
-) => {
-  const extendedDoc = {
-    ...doc,
-    modifiedAt: new Date(),
-    modifiedBy: user._id,
-  };
-
-  const stage = await models.Stages.getStage(oldItem.stageId);
-
-  const { canEditMemberIds } = stage;
-
-  if (
-    canEditMemberIds &&
-    canEditMemberIds.length > 0 &&
-    !canEditMemberIds.includes(user._id)
-  ) {
-    throw new Error('Permission denied');
-  }
-
-  if (
-    doc.status === 'archived' &&
-    oldItem.status === 'active' &&
-    !(await can('dealsArchive', user))
-  ) {
-    throw new Error('Permission denied');
-  }
-
-  if (extendedDoc.customFieldsData) {
-    // clean custom field values
-    extendedDoc.customFieldsData = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'mutation',
-      module: 'fields',
-      action: 'prepareCustomFieldsData',
-      input: {
-        customFieldsData: extendedDoc.customFieldsData,
-      },
-      defaultValue: [],
-    });
-  }
-
-  const updatedItem = await modelUpate(_id, extendedDoc);
-  // labels should be copied to newly moved pipeline
-  if (doc.stageId) {
-    await copyPipelineLabels(models, { item: oldItem, doc, user });
-  }
-
-  // const notificationDoc: IBoardNotificationParams = {
-  const notificationDoc: any = {
-    item: updatedItem,
-    user,
-    type: `${type}Edit`,
-    contentType: type,
-  };
-
-  if (doc.status && oldItem.status && oldItem.status !== doc.status) {
-    const activityAction = doc.status === 'active' ? 'activated' : 'archived';
-
-    // putActivityLog(subdomain, {
-    //   action: "createArchiveLog",
-    //   data: {
-    //     item: updatedItem,
-    //     contentType: type,
-    //     action: "archive",
-    //     userId: user._id,
-    //     createdBy: user._id,
-    //     contentId: updatedItem._id,
-    //     content: activityAction,
-    //   },
-    // });
-
-    // order notification
-    await changeItemStatus(models, user, {
-      item: updatedItem,
-      status: activityAction,
-      proccessId,
-      stage,
-    });
-  }
-
-  if (doc.assignedUserIds) {
-    const { addedUserIds, removedUserIds } = checkUserIds(
-      oldItem.assignedUserIds,
-      doc.assignedUserIds,
-    );
-
-    // const activityContent = { addedUserIds, removedUserIds };
-
-    // putActivityLog(subdomain, {
-    //   action: "createAssigneLog",
-    //   data: {
-    //     contentId: _id,
-    //     userId: user._id,
-    //     contentType: type,
-    //     content: activityContent,
-    //     action: "assignee",
-    //     createdBy: user._id,
-    //   },
-    // });
-
-    notificationDoc.invitedUsers = addedUserIds;
-    notificationDoc.removedUsers = removedUserIds;
-  }
-
-  // await sendNotifications(models, subdomain, notificationDoc);
-
-  if (!notificationDoc.invitedUsers && !notificationDoc.removedUsers) {
-    // sendCoreMessage({
-    //   subdomain: "os",
-    //   action: "sendMobileNotification",
-    //   data: {
-    //     title: notificationDoc?.item?.name,
-    //     body: `${user?.details?.fullName || user?.details?.shortName
-    //       } has updated`,
-    //     receivers: notificationDoc?.item?.assignedUserIds,
-    //     data: {
-    //       type,
-    //       id: _id,
-    //     },
-    //   },
-    // });
-  }
-
-  // exclude [null]
-  if (doc.tagIds && doc.tagIds.length) {
-    doc.tagIds = doc.tagIds.filter((ti) => ti);
-  }
-
-  // putUpdateLog(
-  //   models,
-  //   subdomain,
-  //   {
-  //     type,
-  //     object: oldItem,
-  //     newData: extendedDoc,
-  //     updatedDocument: updatedItem,
-  //   },
-  //   user
-  // );
-
-  // const updatedStage = await models.Stages.getStage(updatedItem.stageId);
-
-  // if (doc.tagIds || doc.startDate || doc.closeDate || doc.name) {
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //     },
-  //   });
-  // }
-
-  // if (updatedStage.pipelineId !== stage.pipelineId) {
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //       proccessId,
-  //       action: "itemRemove",
-  //       data: {
-  //         item: oldItem,
-  //         oldStageId: stage._id,
-  //       },
-  //     },
-  //   });
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: updatedStage.pipelineId,
-  //       proccessId,
-  //       action: "itemAdd",
-  //       data: {
-  //         item: {
-  //           ...updatedItem._doc,
-  //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
-  //         },
-  //         aboveItemId: "",
-  //         destinationStageId: updatedStage._id,
-  //       },
-  //     },
-  //   });
-  // } else {
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //       proccessId,
-  //       action: "itemUpdate",
-  //       data: {
-  //         item: {
-  //           ...updatedItem._doc,
-  //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
-
-  // await doScoreCampaign(subdomain, models, _id, updatedItem);
-
-  if (oldItem.stageId === updatedItem.stageId) {
-    return updatedItem;
-  }
-
-  // if task moves between stages
-  // const { content, action } = await itemMover(
-  //   models,
-  //   user._id,
-  //   oldItem,
-  //   updatedItem.stageId
-  // );
-
-  // await sendNotifications(models, subdomain, {
-  //   item: updatedItem,
-  //   user,
-  //   type: `${type}Change`,
-  //   content,
-  //   action,
-  //   contentType: type,
-  // });
-
-  return updatedItem;
-};
-
-export const itemMover = async (
-  models: IModels,
-  userId: string,
-  item: IDealDocument,
-  destinationStageId: string,
-) => {
-  const oldStageId = item.stageId;
-
-  let action = `changed order of your deal:`;
-  let content = `'${item.name}'`;
-
-  if (oldStageId !== destinationStageId) {
-    const stage = await models.Stages.getStage(destinationStageId);
-    const oldStage = await models.Stages.getStage(oldStageId);
-
-    const pipeline = await models.Pipelines.getPipeline(stage.pipelineId);
-    const oldPipeline = await models.Pipelines.getPipeline(oldStage.pipelineId);
-
-    const board = await models.Boards.getBoard(pipeline.boardId);
-    const oldBoard = await models.Boards.getBoard(oldPipeline.boardId);
-
-    action = `moved '${item.name}' from ${oldBoard.name}-${oldPipeline.name}-${oldStage.name} to `;
-
-    content = `${board.name}-${pipeline.name}-${stage.name}`;
-
-    // const link = `/${contentType}/board?id=${board._id}&pipelineId=${pipeline._id}&itemId=${item._id}`;
-
-    // const activityLogContent = {
-    //   oldStageId,
-    //   destinationStageId,
-    //   text: `${oldStage.name} to ${stage.name}`,
-    // };
-
-    // await putActivityLog(subdomain, {
-    //   action: "createBoardItemMovementLog",
-    //   data: {
-    //     item,
-    //     contentType,
-    //     userId,
-    //     activityLogContent,
-    //     link,
-    //     action: "moved",
-    //     contentId: item._id,
-    //     createdBy: userId,
-    //     content: activityLogContent,
-    //   },
-    // });
-
-    // sendNotificationsMessage({
-    //   subdomain,
-    //   action: "batchUpdate",
-    //   data: {
-    //     selector: { contentType, contentTypeId: item._id },
-    //     modifier: { $set: { link } },
-    //   },
-    // });
-  }
-
-  return { content, action };
-};
-
-export const changeItemStatus = async (
-  models: IModels,
-  user: any,
-  {
-    item,
-    status,
-    proccessId,
-    stage,
-  }: {
-    item: any;
-    status: string;
-    proccessId: string;
-    stage: IStageDocument;
-  },
-) => {
-  if (status === 'archived') {
-    // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //   salesPipelinesChanged: {
-    //     _id: stage.pipelineId,
-    //     proccessId,
-    //     action: "itemRemove",
-    //     data: {
-    //       item,
-    //       oldStageId: item.stageId,
-    //     },
-    //   },
-    // });
-
-    return;
-  }
-
-  const aboveItems = await models.Deals.find({
-    stageId: item.stageId,
-    status: { $ne: SALES_STATUSES.ARCHIVED },
-    order: { $lt: item.order },
-  })
-    .sort({ order: -1 })
-    .limit(1);
-
-  const aboveItemId = aboveItems[0]?._id || '';
-
-  // maybe, recovered order includes to oldOrders
-  await models.Deals.updateOne(
-    {
-      _id: item._id,
-    },
-    {
-      order: await getNewOrder({
-        collection: models.Deals,
-        stageId: item.stageId,
-        aboveItemId,
-      }),
-    },
-  );
-
-  // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //   salesPipelinesChanged: {
-  //     _id: stage.pipelineId,
-  //     proccessId,
-  //     action: "itemAdd",
-  //     data: {
-  //       item: {
-  //         ...item._doc,
-  //         ...(await itemResolver(models, subdomain, user, type, item)),
-  //       },
-  //       aboveItemId,
-  //       destinationStageId: item.stageId,
-  //     },
-  //   },
-  // });
-};
-
-/**
- * Copies pipeline labels alongside deal when they are moved between different pipelines.
- */
-export const copyPipelineLabels = async (
-  models: IModels,
-  params: {
-    item: IDealDocument;
-    doc: any;
-    user: IUserDocument;
-  },
-) => {
-  const { item, doc, user } = params;
-
-  const oldStage = await models.Stages.findOne({ _id: item.stageId }).lean();
-  const newStage = await models.Stages.findOne({ _id: doc.stageId }).lean();
-
-  if (!(oldStage && newStage)) {
-    throw new Error('Stage not found');
-  }
-
-  if (oldStage.pipelineId === newStage.pipelineId) {
-    return;
-  }
-
-  const oldLabels = await models.PipelineLabels.find({
-    _id: { $in: item.labelIds },
-  }).lean();
-
-  const updatedLabelIds: string[] = [];
-
-  const existingLabels = await models.PipelineLabels.find({
-    name: { $in: oldLabels.map((o) => o.name) },
-    colorCode: { $in: oldLabels.map((o) => o.colorCode) },
-    pipelineId: newStage.pipelineId,
-  }).lean();
-
-  // index using only name and colorCode, since all pipelineIds are same
-  const existingLabelsByUnique = _.indexBy(
-    existingLabels,
-    ({ name, colorCode }) => JSON.stringify({ name, colorCode }),
-  );
-
-  // Collect labels that don't exist on the new stage's pipeline here
-  const notExistingLabels: any[] = [];
-
-  for (const label of oldLabels) {
-    const exists =
-      existingLabelsByUnique[
-        JSON.stringify({ name: label.name, colorCode: label.colorCode })
-      ];
-    if (!exists) {
-      notExistingLabels.push({
-        name: label.name,
-        colorCode: label.colorCode,
-        pipelineId: newStage.pipelineId,
-        createdAt: new Date(),
-        createdBy: user._id,
-      });
-    } else {
-      updatedLabelIds.push(exists._id);
-    }
-  } // end label loop
-
-  // Insert labels that don't already exist on the new stage's pipeline
-  const newLabels = await models.PipelineLabels.insertMany(notExistingLabels, {
-    ordered: false,
-  });
-
-  for (const newLabel of newLabels) {
-    updatedLabelIds.push(newLabel._id);
-  }
-
-  await models.PipelineLabels.labelsLabel(item._id, updatedLabelIds);
-};
-
-/**
- * Copies checklists of board item
- */
-export const copyChecklists = async (
-  models: IModels,
-  params: {
-    contentType: string;
-    contentTypeId: string;
-    targetContentId: string;
-    user: IUserDocument;
-  },
-) => {
-  const { contentType, contentTypeId, targetContentId, user } = params;
-
-  const originalChecklists = await models.Checklists.find({
-    contentType,
-    contentTypeId,
-  }).lean();
-
-  const clonedChecklists = await models.Checklists.insertMany(
-    originalChecklists.map((originalChecklist) => ({
-      contentType,
-      contentTypeId: targetContentId,
-      title: originalChecklist.title,
-      createdUserId: user._id,
-      createdDate: new Date(),
-    })),
-    { ordered: true },
-  );
-
-  const originalChecklistIdToClonedId = new Map<string, string>();
-
-  for (let i = 0; i < originalChecklists.length; i++) {
-    originalChecklistIdToClonedId.set(
-      originalChecklists[i]._id,
-      clonedChecklists[i]._id,
-    );
-  }
-
-  const originalChecklistItems = await models.ChecklistItems.find({
-    checklistId: { $in: originalChecklists.map((x) => x._id) },
-  }).lean();
-
-  await models.ChecklistItems.insertMany(
-    originalChecklistItems.map(({ content, order, checklistId }) => ({
-      checklistId: originalChecklistIdToClonedId.get(checklistId),
-      isChecked: false,
-      createdUserId: user._id,
-      createdDate: new Date(),
-      content,
-      order,
-    })),
-    { ordered: false },
-  );
-};
-
 export const checkMovePermission = (
   stage: IStageDocument,
   user: IUserDocument,
@@ -1528,8 +914,7 @@ export const getAmountsMap = async (
   const filter = await generateFilter(
     models,
     user._id,
-    { ...args, stageId: stage._id, pipelineId: stage.pipelineId },
-    args.extraParams,
+    { ...args, ...args.extraParams, stageId: stage._id, pipelineId: stage.pipelineId },
   );
 
   const amountList = await collection.aggregate([
@@ -1564,3 +949,106 @@ export const getAmountsMap = async (
   });
   return amountsMap;
 };
+
+interface IMainType {
+  mainType: string;
+  mainTypeId: string;
+}
+
+export interface IConformityAdd extends IMainType {
+  relType: string;
+  relTypeId: string;
+}
+
+interface IConformityCreate extends IMainType {
+  companyIds?: string[];
+  customerIds?: string[];
+}
+
+export const getCompanyIds = async (
+  mainType: string,
+  mainTypeId: string
+): Promise<string[]> => {
+  return await sendTRPCMessage({
+    pluginName: 'core',
+    module: 'conformity',
+    action: 'savedConformity',
+    input: {
+      mainType,
+      mainTypeId,
+      relTypes: ['company']
+    },
+    defaultValue: [],
+  });
+};
+
+export const getCustomerIds = async (
+  mainType: string,
+  mainTypeId: string
+): Promise<string[]> => {
+  return await sendTRPCMessage({
+    pluginName: 'core',
+    module: 'conformity',
+    action: 'savedConformity',
+    input: {
+      mainType,
+      mainTypeId,
+      relTypes: ['company']
+    },
+    defaultValue: [],
+  });
+};
+
+
+export const createConformity = async (
+  { companyIds, customerIds, mainType, mainTypeId }: IConformityCreate
+) => {
+  const companyConformities: IConformityAdd[] = (companyIds || []).map(
+    companyId => ({
+      mainType,
+      mainTypeId,
+      relType: "company",
+      relTypeId: companyId
+    })
+  );
+
+  const customerConformities: IConformityAdd[] = (customerIds || []).map(
+    customerId => ({
+      mainType,
+      mainTypeId,
+      relType: "customer",
+      relTypeId: customerId
+    })
+  );
+
+  const allConformities = companyConformities.concat(customerConformities);
+  if (allConformities.length) {
+    await sendTRPCMessage({
+      method: 'mutation',
+      pluginName: 'core',
+      module: 'conformity',
+      action: "addConformities",
+      input: allConformities
+    });
+  }
+};
+
+export const getTotalAmounts = async (productsData: IProductData[]) => {
+  // TODO: future list by currency
+  const result = {
+    totalAmount: 0,
+    unUsedTotalAmount: 0,
+    bothTotalAmount: 0,
+  }
+
+  for (const pData of productsData) {
+    result.bothTotalAmount += pData.amount ?? 0;
+
+    if (pData.tickUsed) {
+      result.totalAmount += pData.amount ?? 0;
+    } else {
+      result.unUsedTotalAmount += pData.amount ?? 0;
+    }
+  }
+  return result;
+}

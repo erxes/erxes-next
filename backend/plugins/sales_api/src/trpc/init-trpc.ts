@@ -7,6 +7,8 @@ export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
 
 const t = initTRPC.context<SalesTRPCContext>().create();
 
-export const appRouter = t.mergeRouters(dealTrpcRouter);
+export const appRouter = t.mergeRouters(
+  dealTrpcRouter
+);
 
 export type AppRouter = typeof appRouter;
