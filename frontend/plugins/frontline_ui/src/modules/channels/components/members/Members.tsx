@@ -11,7 +11,7 @@ import { AddMembers } from './AddMembers';
 
 export function Members() {
   const currentUser = useAtomValue(currentUserState);
-  const { id: channelId } = useParams();
+  const { id: channelId } = useParams<{ id: string }>();
   const { members, loading } = useGetChannelMembers({ channelIds: channelId });
   const { updateChannelMember } = useChannelMemberUpdate();
   const { removeChannelMember } = useChannelMemberRemove();
@@ -25,10 +25,11 @@ export function Members() {
     });
   };
 
-  const removeHandler = (memberId: string) => {
+  const removeHandler = (channelId: string, memberId: string) => {
     removeChannelMember({
       variables: {
-        id: memberId,
+        channelId,
+        memberId,
       },
     });
   };
@@ -36,12 +37,13 @@ export function Members() {
     if (member.role === 'admin' || member.memberId === currentUser?._id) {
       return null;
     }
+    if (!channelId) return null;
 
     return (
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => removeHandler(member._id)}
+        onClick={() => removeHandler(channelId, member._id)}
         className="hidden group-hover:flex "
       >
         <IconX className="size-4" />

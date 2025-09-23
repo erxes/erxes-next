@@ -3,10 +3,16 @@ import { gql } from '@apollo/client';
 const ADD_CHANNEL = gql`
   mutation ChannelAdd(
     $name: String!
+    $icon: String
     $description: String
     $memberIds: [String]
   ) {
-    channelAdd(name: $name, description: $description, memberIds: $memberIds) {
+    channelAdd(
+      name: $name
+      icon: $icon
+      description: $description
+      memberIds: $memberIds
+    ) {
       _id
       icon
       name
@@ -81,8 +87,8 @@ const ADD_CHANNEL_MEMBERS = gql`
 `;
 
 const REMOVE_CHANNEL_MEMBER = gql`
-  mutation ChannelRemoveMember($id: String!) {
-    channelRemoveMember(_id: $id) {
+  mutation ChannelRemoveMember($channelId: String!, $memberId: String!) {
+    channelRemoveMember(channelId: $channelId, memberId: $memberId) {
       _id
       memberId
       role

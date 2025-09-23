@@ -1,6 +1,6 @@
 import { UseFormReturn } from 'react-hook-form';
 import { TChannelForm } from '../../types';
-import { Form, Input, Textarea } from 'erxes-ui';
+import { Form, IconPicker, Input, Textarea } from 'erxes-ui';
 import { SelectMember } from 'ui-modules';
 
 export const ChannelForm = ({
@@ -10,19 +10,40 @@ export const ChannelForm = ({
 }) => {
   return (
     <div className="flex flex-col gap-3">
-      <Form.Field
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>Name</Form.Label>
-            <Form.Control>
-              <Input {...field} />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-        )}
-      />
+      <div className="w-full flex gap-2">
+        <Form.Field
+          control={form.control}
+          name="icon"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Icon</Form.Label>
+              <Form.Description className="sr-only">Icon</Form.Description>
+              <Form.Control>
+                <IconPicker
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="w-min"
+                />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <Form.Item className="flex-auto">
+              <Form.Label>Name</Form.Label>
+              <Form.Control>
+                <Input {...field} />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
+          )}
+        />
+      </div>
+
       <Form.Field
         control={form.control}
         name="description"

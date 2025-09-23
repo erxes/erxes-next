@@ -1,6 +1,12 @@
 import { useGetChannels } from '@/channels/hooks/useGetChannels';
 import { format } from 'date-fns';
-import { Skeleton, Table, ScrollArea } from 'erxes-ui';
+import {
+  Skeleton,
+  Table,
+  ScrollArea,
+  TextOverflowTooltip,
+  IconComponent,
+} from 'erxes-ui';
 import { useNavigate } from 'react-router-dom';
 
 export function Channels() {
@@ -38,7 +44,15 @@ export function Channels() {
                       className="hover:cursor-pointer shadow-xs"
                     >
                       <Table.Cell className="font-medium border-none pl-2 w-auto ">
-                        {channel.name}
+                        <span className="w-full flex gap-2 text-base font-medium">
+                          <span className="[1lh] flex items-center">
+                            <IconComponent
+                              name={channel.icon}
+                              className="size-4"
+                            />
+                          </span>
+                          <TextOverflowTooltip value={channel.name} />
+                        </span>
                       </Table.Cell>
 
                       <Table.Cell className="border-none px-2 w-20">
