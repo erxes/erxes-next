@@ -35,6 +35,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       sessioncode: sessionStorage.getItem('sessioncode') || '',
+      'x-timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   };
 });
