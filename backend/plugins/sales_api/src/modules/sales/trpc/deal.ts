@@ -1,7 +1,8 @@
 import { initTRPC } from '@trpc/server';
-import { ITRPCContext } from 'erxes-api-shared/utils';
+import { ITRPCContext, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 import { IModels } from '~/connectionResolvers';
+import { generateFilter } from '~/modules/sales/graphql/resolvers/queries/deals';
 
 export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
 
@@ -79,5 +80,30 @@ export const dealTrpcRouter = t.router({
 
       return response;
     }),
+    getFilterParams: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { filter, userId } = input;
+      const { models } = ctx;
+      return await generateFilter(models, userId, filter);
+    })
   },
 });
+
+export const fetchSegment = async (
+  segmentId: string,
+  options?,
+  segmentData?: any
+) => {
+  return await sendTRPCMessage({
+    pluginName: 'core',
+    method: 'query',
+    module: 'segments',
+    action: 'fetchSegment',
+    input: {
+      segmentId,
+      options,
+      segmentData
+    },
+    defaultValue: [],
+  });
+}
+

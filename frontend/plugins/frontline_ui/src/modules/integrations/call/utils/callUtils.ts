@@ -1,4 +1,5 @@
 import { CallDirectionEnum } from '@/integrations/call/types/sipTypes';
+import { format } from 'date-fns';
 
 export const extractPhoneNumberFromCounterpart = (counterpart: string) => {
   if (!counterpart) return '';
@@ -40,4 +41,20 @@ export function formatSeconds(seconds: number): string {
   const secs = seconds % 60;
 
   return [hrs, mins, secs].map((v) => String(v).padStart(2, '0')).join(':');
+}
+export function safeFormatDate(value: unknown, fmt = 'MM-dd HH:mm'): string {
+  if (value === '0000-00-00 00:00:00') {
+    return '0000-00-00 00:00:00';
+  }
+
+  if (!value) {
+    return format(new Date(), fmt);
+  }
+
+  const date = new Date(value as string | number | Date);
+  if (isNaN(date.getTime())) {
+    return format(new Date(), fmt);
+  }
+
+  return format(date, fmt);
 }

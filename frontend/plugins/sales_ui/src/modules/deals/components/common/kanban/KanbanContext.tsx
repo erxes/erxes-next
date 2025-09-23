@@ -42,7 +42,7 @@ export const KanbanContext = createContext<KanbanContextProps>({
   data: [],
   activeCardId: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onDataChange: () => {},
+  onDataChange: () => { },
 });
 
 export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
@@ -317,6 +317,7 @@ export const KanbanProvider = <
         {
           itemId: activeId,
           destinationStageId: overId,
+          // aboveItemId: overId
         },
         'card',
       );
@@ -366,7 +367,7 @@ export const KanbanProvider = <
       updateOrders?.(
         {
           itemId: activeId,
-          destinationStageId: overId,
+          destinationStageId: overItem.stage?._id,
         },
         'card',
       );
