@@ -53,6 +53,8 @@ export const CallIntegrationAdd = () => {
           phone: data.phone,
           wsServer: data.websocketServer,
           queues: data.queues,
+          srcTrunk: data.srcTrunk,
+          dstTrunk: data.dstTrunk,
           operators: data.operators,
         },
       },

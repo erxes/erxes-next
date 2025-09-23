@@ -8,9 +8,53 @@ export default {
     return models.Deals.findOne({ _id });
   },
 
-  // async companies() {},
+  async customers(deal: IDealDocument) {
+    const customerIds = await sendTRPCMessage({
+      pluginName: 'core',
+      module: 'conformity',
+      action: 'savedConformity',
+      input: {
+        mainType: 'deal',
+        mainTypeId: deal._id,
+        relTypes: ['customer']
+      },
+      defaultValue: []
+    });
 
-  // async customers() {},
+    if (!customerIds.length) {
+      return [];
+    }
+
+    return customerIds.map((customerId) => ({
+      __typename: 'Customer',
+      _id: customerId,
+    }));
+
+  },
+
+  async companies(deal: IDealDocument) {
+    const customerIds = await sendTRPCMessage({
+      pluginName: 'core',
+      module: 'conformity',
+      action: 'savedConformity',
+      input: {
+        mainType: 'deal',
+        mainTypeId: deal._id,
+        relTypes: ['company']
+      },
+      defaultValue: []
+    });
+
+    if (!customerIds.length) {
+      return [];
+    }
+
+    return customerIds.map((customerId) => ({
+      __typename: 'Customer',
+      _id: customerId,
+    }));
+
+  },
 
   async branches(deal: IDealDocument) {
     if (!deal.branchIds?.length) {
@@ -229,5 +273,15 @@ export default {
     return { __typename: 'User', _id: deal.userId };
   },
 
-  // async vendorCustomers(deal: IDealDocument, _args, { subdomain }: IContext) {}
+  async vendorCustomers(deal: IDealDocument) {
+    return await sendTRPCMessage({
+      pluginName: 'content',
+      module: 'portal',
+      action: 'portalUserCard',
+      input: {
+        contentType: 'deal',
+        contentTypeId: deal.id
+      }
+    })
+  }
 };

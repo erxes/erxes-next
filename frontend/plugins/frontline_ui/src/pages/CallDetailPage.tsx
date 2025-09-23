@@ -27,8 +27,10 @@ import {
   useCallQueueMemberList,
 } from '@/integrations/call/hooks/useCallQueueMemberList';
 import { useState } from 'react';
-import { format } from 'date-fns';
-import { formatSeconds } from '@/integrations/call/utils/callUtils';
+import {
+  formatSeconds,
+  safeFormatDate,
+} from '@/integrations/call/utils/callUtils';
 import { QUEUE_REALTIME_UPDATE } from '@/integrations/call/graphql/subscriptions/subscriptions';
 import { useSubscription } from '@apollo/client';
 import { useCallDurationFromDate } from '@/integrations/call/hooks/useCallDuration';
@@ -312,7 +314,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
       header: () => <RecordTable.InlineHead label="Pause Time" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell className="font-medium">
-          {format(cell.getValue() as Date, 'MM-dd HH:mm')}
+          {safeFormatDate(cell?.getValue())}
         </RecordTableInlineCell>
       ),
       size: 200,

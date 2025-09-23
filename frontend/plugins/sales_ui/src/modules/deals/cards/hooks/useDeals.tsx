@@ -24,9 +24,13 @@ import {
 } from '@apollo/client';
 
 import { UPDATE_STAGES_ORDER } from '@/deals/graphql/mutations/StagesMutations';
+import { useEffect } from 'react';
+import { DEAL_LIST_CHANGED } from '~/modules/deals/graphql/subscriptions/dealListChange';
+import { currentUserState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
 
-export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>) => {
-  const { data, loading, error, fetchMore, refetch } = useQuery<{
+export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>, pipelineId?: string) => {
+  const { data, loading, error, fetchMore, refetch, subscribeToMore } = useQuery<{
     deals: IDealList;
   }>(GET_DEALS, {
     ...options,
@@ -35,11 +39,66 @@ export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>) => {
     },
   });
 
+  const currentUser = useAtomValue(currentUserState);
   const { deals } = data || {};
 
   const { list = [], pageInfo, totalCount = 0 } = deals || {};
 
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
+
+  useEffect(() => {
+    const unsubscribe = subscribeToMore<any>({
+      document: DEAL_LIST_CHANGED,
+      variables: { pipelineId: '2yxzj7yTiJBoWFGQC', userId: currentUser?._id, filter: options?.variables },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!prev || !subscriptionData.data) return prev;
+
+        const { type, task } = subscriptionData.data.salesDealListChanged;
+        const currentList = prev.deals.list;
+
+        let updatedList = currentList;
+
+        if (type === 'create') {
+          const exists = currentList.some(
+            (item: IDeal) => item._id === task._id,
+          );
+          if (!exists) {
+            updatedList = [task, ...currentList];
+          }
+        }
+
+        if (type === 'update') {
+          updatedList = currentList.map((item: IDeal) =>
+            item._id === task._id ? { ...item, ...task } : item,
+          );
+        }
+
+        if (type === 'delete') {
+          updatedList = currentList.filter(
+            (item: IDeal) => item._id !== task._id,
+          );
+        }
+
+        return {
+          ...prev,
+          deals: {
+            ...prev.deals,
+            list: updatedList,
+            pageInfo: prev.deals.pageInfo,
+            totalCount:
+              type === 'create'
+                ? prev.deals.totalCount + 1
+                : type === 'delete'
+                  ? prev.deals.totalCount - 1
+                  : prev.deals.totalCount,
+          },
+        };
+      },
+    });
+
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options?.variables]);
 
   const handleFetchMore = ({
     direction,

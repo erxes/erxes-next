@@ -1,15 +1,25 @@
+import { can } from 'erxes-api-shared/core-modules';
 import { checkUserIds, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { IDeal, IDealDocument, IProductData } from '~/modules/sales/@types';
 import { SALES_STATUSES } from '~/modules/sales/constants';
 import {
   checkMovePermission,
-  copyChecklists,
+  createConformity,
+  getCompanyIds,
+  getCustomerIds,
   destroyBoardItemRelations,
   getNewOrder,
-  itemMover,
-  itemsEdit,
+  getTotalAmounts,
 } from '~/modules/sales/utils';
+import {
+  changeItemStatus,
+  checkAssignedUserFromPData,
+  copyChecklists,
+  copyPipelineLabels,
+  itemMover,
+  subscriptionWrapper,
+} from './utils';
 
 export const dealMutations = {
   /**
@@ -48,16 +58,16 @@ export const dealMutations = {
       });
     }
 
-    return await models.Deals.createDeal(extendedDoc);
+    const deal = await models.Deals.createDeal(extendedDoc);
 
-    //   const stage = await models.Stages.getStage(item.stageId);
+    const stage = await models.Stages.getStage(deal.stageId);
 
-    //   await createConformity(subdomain, {
-    //     mainType: type,
-    //     mainTypeId: item._id,
-    //     companyIds: doc.companyIds,
-    //     customerIds: doc.customerIds,
-    //   });
+    await createConformity({
+      mainType: 'deal',
+      mainTypeId: deal._id,
+      companyIds: doc.companyIds,
+      customerIds: doc.customerIds,
+    });
 
     //   if (user) {
     //     const pipeline = await models.Pipelines.getPipeline(stage.pipelineId);
@@ -71,30 +81,8 @@ export const dealMutations = {
     //   contentType: type,
     // });
 
-    // await putCreateLog(
-    //   models,
-    //   subdomain,
-    //   {
-    //     type,
-    //     newData: extendedDoc,
-    //     object: item,
-    //   },
-    //   user
-    // );
-    //   }
-
-    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //     salesPipelinesChanged: {
-    //       _id: stage.pipelineId,
-    //       proccessId: doc.proccessId,
-    //       action: "itemAdd",
-    //       data: {
-    //         item,
-    //         aboveItemId: doc.aboveItemId,
-    //         destinationStageId: stage._id,
-    //       },
-    //     },
-    //   });
+    await subscriptionWrapper(models, { action: 'create', deal, pipelineId: stage.pipelineId });
+    return deal;
   },
 
   /**
@@ -110,65 +98,228 @@ export const dealMutations = {
     if (doc.assignedUserIds) {
       const { removedUserIds } = checkUserIds(
         oldDeal.assignedUserIds,
-        doc.assignedUserIds,
+        doc.assignedUserIds
       );
       const oldAssignedUserPdata = (oldDeal.productsData || [])
         .filter((pdata) => pdata.assignUserId)
-        .map((pdata) => pdata.assignUserId || '');
+        .map((pdata) => pdata.assignUserId || "");
       const cantRemoveUserIds = removedUserIds.filter((userId) =>
-        oldAssignedUserPdata.includes(userId),
+        oldAssignedUserPdata.includes(userId)
       );
 
       if (cantRemoveUserIds.length > 0) {
         throw new Error(
-          'Cannot remove the team member, it is assigned in the product / service section',
+          "Cannot remove the team member, it is assigned in the product / service section"
         );
       }
     }
 
     if (doc.productsData) {
-      const assignedUsersPdata = doc.productsData
-        .filter((pdata) => pdata.assignUserId)
-        .map((pdata) => pdata.assignUserId || '');
-
-      const oldAssignedUserPdata = (oldDeal.productsData || [])
-        .filter((pdata) => pdata.assignUserId)
-        .map((pdata) => pdata.assignUserId || '');
-
-      const { addedUserIds, removedUserIds } = checkUserIds(
-        oldAssignedUserPdata,
-        assignedUsersPdata,
+      const { assignedUserIds } = checkAssignedUserFromPData(
+        oldDeal.assignedUserIds,
+        doc.productsData
+          .filter((pdata) => pdata.assignUserId)
+          .map((pdata) => pdata.assignUserId || ""),
+        oldDeal.productsData
       );
 
-      if (addedUserIds.length > 0 || removedUserIds.length > 0) {
-        let assignedUserIds =
-          doc.assignedUserIds || oldDeal.assignedUserIds || [];
-        assignedUserIds = [...new Set(assignedUserIds.concat(addedUserIds))];
-        assignedUserIds = assignedUserIds.filter(
-          (userId) => !removedUserIds.includes(userId),
-        );
-        doc.assignedUserIds = assignedUserIds;
-      }
+      doc.assignedUserIds = assignedUserIds;
 
-      //   doc.productsData = await checkPricing(subdomain, models, {
-      //     ...oldDeal,
-      //     ...doc,
-      //   });
+      // doc.productsData = await checkPricing(subdomain, models, { ...oldDeal, ...doc })
     }
 
     // await doScoreCampaign(subdomain, models, _id, doc);
     // await confirmLoyalties(subdomain, _id, doc);
 
-    return itemsEdit(
-      models,
-      _id,
-      'deal',
-      oldDeal,
-      doc,
-      proccessId,
+    const extendedDoc = {
+      ...doc,
+      modifiedAt: new Date(),
+      modifiedBy: user._id,
+    };
+
+    const stage = await models.Stages.getStage(oldDeal.stageId);
+
+    const { canEditMemberIds } = stage;
+
+    if (
+      canEditMemberIds &&
+      canEditMemberIds.length > 0 &&
+      !canEditMemberIds.includes(user._id)
+    ) {
+      throw new Error('Permission denied');
+    }
+
+    if (
+      doc.status === 'archived' &&
+      oldDeal.status === 'active' &&
+      !(await can('dealsArchive', user))
+    ) {
+      throw new Error('Permission denied');
+    }
+
+    if (extendedDoc.customFieldsData) {
+      // clean custom field values
+      extendedDoc.customFieldsData = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'fields',
+        action: 'prepareCustomFieldsData',
+        input: {
+          customFieldsData: extendedDoc.customFieldsData,
+        },
+        defaultValue: [],
+      });
+    }
+
+    const updatedItem = await models.Deals.updateDeal(_id, extendedDoc);
+    // labels should be copied to newly moved pipeline
+    if (updatedItem.stageId !== oldDeal.stageId) {
+      await copyPipelineLabels(models, { item: oldDeal, doc, user });
+    }
+
+    // const notificationDoc: IBoardNotificationParams = {
+    const notificationDoc: any = {
+      item: updatedItem,
       user,
-      models.Deals.updateDeal,
+      type: `dealEdit`,
+      contentType: 'deal',
+    };
+
+    if (doc.status && oldDeal.status && oldDeal.status !== doc.status) {
+      const activityAction = doc.status === 'active' ? 'activated' : 'archived';
+
+      // putActivityLog(subdomain, {
+      //   action: "createArchiveLog",
+      //   data: {
+      //     item: updatedItem,
+      //     contentType: type,
+      //     action: "archive",
+      //     userId: user._id,
+      //     createdBy: user._id,
+      //     contentId: updatedItem._id,
+      //     content: activityAction,
+      //   },
+      // });
+
+      // order notification
+      await changeItemStatus(models, user, {
+        item: updatedItem,
+        status: activityAction,
+        proccessId,
+        stage,
+      });
+    }
+
+    if (doc.assignedUserIds) {
+      const { addedUserIds, removedUserIds } = checkUserIds(
+        oldDeal.assignedUserIds,
+        doc.assignedUserIds,
+      );
+
+      // const activityContent = { addedUserIds, removedUserIds };
+
+      // putActivityLog(subdomain, {
+      //   action: "createAssigneLog",
+      //   data: {
+      //     contentId: _id,
+      //     userId: user._id,
+      //     contentType: type,
+      //     content: activityContent,
+      //     action: "assignee",
+      //     createdBy: user._id,
+      //   },
+      // });
+
+      notificationDoc.invitedUsers = addedUserIds;
+      notificationDoc.removedUsers = removedUserIds;
+    }
+
+    // await sendNotifications(models, subdomain, notificationDoc);
+
+    if (!notificationDoc.invitedUsers && !notificationDoc.removedUsers) {
+      // sendCoreMessage({
+      //   subdomain: "os",
+      //   action: "sendMobileNotification",
+      //   data: {
+      //     title: notificationDoc?.item?.name,
+      //     body: `${user?.details?.fullName || user?.details?.shortName
+      //       } has updated`,
+      //     receivers: notificationDoc?.item?.assignedUserIds,
+      //     data: {
+      //       type,
+      //       id: _id,
+      //     },
+      //   },
+      // });
+    }
+
+    // exclude [null]
+    if (doc.tagIds && doc.tagIds.length) {
+      doc.tagIds = doc.tagIds.filter((ti) => ti);
+    }
+
+    const updatedStage = await models.Stages.getStage(updatedItem.stageId);
+    await subscriptionWrapper(models, { action: 'update', deal: updatedItem, oldDeal, pipelineId: stage.pipelineId });
+
+    // if (updatedStage.pipelineId !== stage.pipelineId) {
+    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+    //     salesPipelinesChanged: {
+    //       _id: stage.pipelineId,
+    //       proccessId,
+    //       action: "itemRemove",
+    //       data: {
+    //         item: oldDeal,
+    //         oldStageId: stage._id,
+    //       },
+    //     },
+    //   });
+    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+    //     salesPipelinesChanged: {
+    //       _id: updatedStage.pipelineId,
+    //       proccessId,
+    //       action: "itemAdd",
+    //       data: {
+    //         item: {
+    //           ...updatedItem._doc,
+    //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
+    //         },
+    //         aboveItemId: "",
+    //         destinationStageId: updatedStage._id,
+    //       },
+    //     },
+    //   });
+    // } else {
+    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+    //     salesPipelinesChanged: {
+    //       _id: stage.pipelineId,
+    //       proccessId,
+    //       action: "itemUpdate",
+    //       data: {
+    //         item: {
+    //           ...updatedItem._doc,
+    //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
+    //         },
+    //       },
+    //     },
+    //   });
+    // }
+
+    // await doScoreCampaign(subdomain, models, _id, updatedItem);
+
+    if (oldDeal.stageId === updatedItem.stageId) {
+      return updatedItem;
+    }
+
+    // if task moves between stages
+    await itemMover(
+      models,
+      user._id,
+      oldDeal,
+      updatedItem.stageId
     );
+
+    return updatedItem;
+
   },
 
   /**
@@ -186,11 +337,10 @@ export const dealMutations = {
     { user, models }: IContext,
   ) {
     const {
-      proccessId,
       itemId,
       aboveItemId,
-      destinationStageId,
       sourceStageId,
+      destinationStageId,
     } = doc;
 
     const item = await models.Deals.findOne({ _id: itemId });
@@ -228,78 +378,15 @@ export const dealMutations = {
 
     const updatedItem = await models.Deals.updateDeal(itemId, extendedDoc);
 
-    const { content, action } = await itemMover(
+    await itemMover(
       models,
       user._id,
       item,
       destinationStageId,
     );
+    await subscriptionWrapper(models, { action: 'update', deal: updatedItem, oldDeal: item, pipelineId: stage.pipelineId });
 
-    // await sendNotifications(models, subdomain, {
-    //   item,
-    //   user,
-    //   type: `${type}Change`,
-    //   content,
-    //   action,
-    //   contentType: type,
-    // });
-
-    // if (item?.assignedUserIds && item?.assignedUserIds?.length > 0) {
-    //   sendCoreMessage({
-    //     subdomain: 'os',
-    //     action: 'sendMobileNotification',
-    //     data: {
-    //       title: `${item.name}`,
-    //       body: `${user?.details?.fullName || user?.details?.shortName} ${
-    //         action + content
-    //       }`,
-    //       receivers: item?.assignedUserIds,
-    //       data: {
-    //         type,
-    //         id: item._id,
-    //       },
-    //     },
-    //   });
-    // }
-
-    // await putUpdateLog(
-    //   models,
-    //   subdomain,
-    //   {
-    //     type,
-    //     object: item,
-    //     newData: extendedDoc,
-    //     updatedDocument: updatedItem,
-    //   },
-    //   user,
-    // );
-
-    // order notification
-    // const labels = await models.PipelineLabels.find({
-    //   _id: {
-    //     $in: item.labelIds,
-    //   },
-    // });
-
-    // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //   salesPipelinesChanged: {
-    //     _id: stage.pipelineId,
-    //     proccessId,
-    //     action: 'orderUpdated',
-    //     data: {
-    //       item: {
-    //         ...item._doc,
-    //         ...(await itemResolver(models, subdomain, user, type, item)),
-    //         labels,
-    //       },
-    //       aboveItemId,
-    //       destinationStageId,
-    //       oldStageId: sourceStageId,
-    //     },
-    //   },
-    // });
-
-    return item;
+    return updatedItem;
   },
 
   /**
@@ -347,7 +434,7 @@ export const dealMutations = {
 
     const removed = await models.Deals.findOneAndDelete({ _id: item._id });
 
-    // await putDeleteLog(models, subdomain, { type, object: item }, user);
+    await subscriptionWrapper(models, { action: 'delete', dealId: item._id, oldDeal: item });
 
     return removed;
   },
@@ -409,15 +496,15 @@ export const dealMutations = {
 
     const clone = await models.Deals.createDeal(doc);
 
-    //   const companyIds = await getCompanyIds(subdomain, type, _id);
-    //   const customerIds = await getCustomerIds(subdomain, type, _id);
+    const companyIds = await getCompanyIds('deal', _id);
+    const customerIds = await getCustomerIds('deal', _id);
 
-    //   await createConformity(subdomain, {
-    //     mainType: type,
-    //     mainTypeId: clone._id,
-    //     customerIds,
-    //     companyIds,
-    //   });
+    await createConformity({
+      mainType: 'deal',
+      mainTypeId: clone._id,
+      customerIds,
+      companyIds,
+    });
 
     await copyChecklists(models, {
       contentType: 'deal',
@@ -516,6 +603,19 @@ export const dealMutations = {
 
     const oldDataIds = (deal.productsData || []).map((pd) => pd._id);
 
+    const { assignedUserIds, addedUserIds, removedUserIds } = checkAssignedUserFromPData(
+      deal.assignedUserIds,
+      [
+        ...(deal.productsData || [])
+          .filter((pdata) => pdata.assignUserId)
+          .map((pdata) => pdata.assignUserId || ""),
+        ...docs
+          .filter((pdata) => pdata.assignUserId)
+          .map((pdata) => pdata.assignUserId || ""),
+      ],
+      deal.productsData
+    );
+
     for (const doc of docs) {
       if (doc._id) {
         const checkDup = (deal.productsData || []).find(
@@ -536,30 +636,18 @@ export const dealMutations = {
       addDocs,
     );
 
-    await models.Deals.updateOne({ _id: dealId }, { $set: { productsData } });
+    await models.Deals.updateOne({ _id: dealId }, {
+      $set: {
+        productsData,
+        assignedUserIds,
+        ...await getTotalAmounts(productsData)
+      }
+    });
 
     const updatedItem =
       (await models.Deals.findOne({ _id: dealId })) || ({} as any);
 
-    // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //   salesPipelinesChanged: {
-    //     _id: stage.pipelineId,
-    //     proccessId,
-    //     action: 'itemUpdate',
-    //     data: {
-    //       item: {
-    //         ...updatedItem,
-    //         ...(await itemResolver(
-    //           models,
-    //           subdomain,
-    //           user,
-    //           'deal',
-    //           updatedItem,
-    //         )),
-    //       },
-    //     },
-    //   },
-    // });
+
 
     const dataIds = (updatedItem.productsData || [])
       .filter((pd) => !oldDataIds.includes(pd._id))
@@ -600,6 +688,11 @@ export const dealMutations = {
     { models, user }: IContext,
   ) {
     const deal = await models.Deals.getDeal(dealId);
+
+    if (!deal.productsData?.length) {
+      throw new Error("Deals productData not found");
+    }
+
     const oldPData = (deal.productsData || []).find(
       (pdata) => pdata._id === dataId,
     );
@@ -608,11 +701,31 @@ export const dealMutations = {
       throw new Error('Deals productData not found');
     }
 
-    const productsData = (deal.productsData || []).map((data) =>
+    const productsData: IProductData[] = (deal.productsData || []).map((data) =>
       data._id === dataId ? { ...doc } : data,
     );
 
-    await models.Deals.updateOne({ _id: dealId }, { $set: { productsData } });
+    const possibleAssignedUsersIds: string[] = (deal.productsData || [])
+      .filter((pdata) => pdata._id !== dataId && pdata.assignUserId)
+      .map((pdata) => pdata.assignUserId || "");
+
+    if (doc.assignUserId) {
+      possibleAssignedUsersIds.push(doc.assignUserId)
+    }
+
+    const { assignedUserIds, addedUserIds, removedUserIds } = checkAssignedUserFromPData(
+      deal.assignedUserIds,
+      possibleAssignedUsersIds,
+      deal.productsData
+    );
+
+    await models.Deals.updateOne({ _id: dealId }, {
+      $set: {
+        productsData,
+        assignedUserIds,
+        ...await getTotalAmounts(productsData)
+      }
+    });
 
     // const stage = await models.Stages.getStage(deal.stageId);
     // const updatedItem =
@@ -684,7 +797,12 @@ export const dealMutations = {
       (data) => data._id !== dataId,
     );
 
-    await models.Deals.updateOne({ _id: dealId }, { $set: { productsData } });
+    await models.Deals.updateOne({ _id: dealId }, {
+      $set: {
+        productsData,
+        ...await getTotalAmounts(productsData)
+      }
+    });
 
     // const stage = await models.Stages.getStage(deal.stageId);
     // const updatedItem =
