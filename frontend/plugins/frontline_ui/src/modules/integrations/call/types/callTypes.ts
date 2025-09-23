@@ -8,6 +8,8 @@ export interface ICallConfig {
   operators: { userId: string; gsUsername: string; gsPassword: string }[];
   token: string;
   queues: string[];
+  srcTrunk: string;
+  dstTrunk: string;
 }
 export interface ICallConfigDoc extends ICallConfig {
   isAvailable: boolean;
