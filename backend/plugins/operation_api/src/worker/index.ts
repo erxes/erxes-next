@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import { createMQWorkerWithListeners } from 'erxes-api-shared/utils';
-import { dailyCheckCycles } from '~/worker/dailyCheckCycles';
+import { dailyCheckCycles, endCycle } from '~/worker/dailyCheckCycles';
 
 export const initMQWorkers = async (redis: any) => {
   const myQueue = new Queue('operations-daily-cycles-end', {
@@ -10,7 +10,7 @@ export const initMQWorkers = async (redis: any) => {
   await myQueue.upsertJobScheduler(
     'operations-daily-cycles-end',
     {
-      pattern: '0 0 * * *',
+      pattern: '* * * * *',
       tz: 'UTC',
     },
     {
@@ -18,13 +18,11 @@ export const initMQWorkers = async (redis: any) => {
     },
   );
 
-  return createMQWorkerWithListeners(
-    'operations',
-    'daily-cycles-end',
-    dailyCheckCycles,
-    redis,
-    () => {
-      console.log('Worker for queue operations-daily-cycles-end is ready');
-    },
-  );
+  createMQWorkerWithListeners('operations', 'endCycle', endCycle, redis, () => {
+    console.log('Worker for queue operations-endCycle is ready');
+  });
+
+  createMQWorkerWithListeners('operations', 'daily-cycles-end', dailyCheckCycles, redis, () => {
+    console.log('Worker for queue operations-daily-cycles-end is ready');
+  });
 };

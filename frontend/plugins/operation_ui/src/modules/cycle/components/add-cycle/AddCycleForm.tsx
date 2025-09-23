@@ -1,10 +1,11 @@
-import { Form, Sheet, Input, Button } from 'erxes-ui';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { addCycleSchema } from '@/cycle/validations';
-import { ICycleInputType } from '@/cycle/types';
-import { DateSelect } from '@/project/components/select';
 import { useCreateCycle } from '@/cycle/hooks/useCreateCycle';
+import { ICycleInputType } from '@/cycle/types';
+import { addCycleSchema } from '@/cycle/validations';
+import { DateSelect } from '@/project/components/select';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { Button, Form, Input, Sheet } from 'erxes-ui';
+import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
@@ -20,6 +21,8 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
     },
   });
   const onSubmit = (data: ICycleInputType) => {
+    console.log('data', data);
+
     createCycle({
       variables: {
         input: {
@@ -74,6 +77,26 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
                     type="start"
                     placeholder="Start Date"
                   />
+
+                  <Input
+                    type="time"
+                    id="time-picker"
+                    step="1"
+                    defaultValue={
+                      field.value ? format(field.value, 'HH:mm:ss') : undefined
+                    }
+                    onChange={(e) => {
+                      const [hours, minutes, seconds] = e.target.value
+                        .split(':')
+                        .map(Number);
+                      const newDate = field.value
+                        ? new Date(field.value)
+                        : new Date();
+                      newDate.setHours(hours, minutes, seconds || 0);
+                      field.onChange(newDate);
+                    }}
+                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                  />
                 </Form.Item>
               )}
             />
@@ -87,6 +110,26 @@ export const AddCycleForm = ({ onClose }: { onClose: () => void }) => {
                     {...field}
                     type="target"
                     placeholder="Target Date"
+                  />
+
+                  <Input
+                    type="time"
+                    id="time-picker"
+                    step="1"
+                    defaultValue={
+                      field.value ? format(field.value, 'HH:mm:ss') : undefined
+                    }
+                    onChange={(e) => {
+                      const [hours, minutes, seconds] = e.target.value
+                        .split(':')
+                        .map(Number);
+                      const newDate = field.value
+                        ? new Date(field.value)
+                        : new Date();
+                      newDate.setHours(hours, minutes, seconds || 0);
+                      field.onChange(newDate);
+                    }}
+                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                   />
                 </Form.Item>
               )}

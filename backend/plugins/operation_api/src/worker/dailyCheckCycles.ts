@@ -1,6 +1,11 @@
-import { generateModels } from '~/connectionResolvers';
-import { getEnv, getSaasOrganizations } from 'erxes-api-shared/utils';
+import { Job } from 'bullmq';
 import { endOfDay } from 'date-fns'; // эсвэл өөр utility
+import {
+  getEnv,
+  getSaasOrganizations,
+  sendWorkerQueue,
+} from 'erxes-api-shared/utils';
+import { generateModels } from '~/connectionResolvers';
 
 export const dailyCheckCycles = async () => {
   console.log('daily check cycles is worked');
@@ -11,18 +16,24 @@ export const dailyCheckCycles = async () => {
 
     for (const org of orgs) {
       if (org.enabledcycles) {
-        await endCycle(org.subdomain);
+        sendWorkerQueue('operations', 'endCycle').add('endCycle', {
+          subdomain: org.subdomain,
+        });
       }
     }
 
     return 'success';
   } else {
-    await endCycle('os');
+    sendWorkerQueue('operations', 'endCycle').add('endCycle', {
+      subdomain: 'os',
+    });
     return 'success';
   }
 };
 
-const endCycle = async (subdomain: string) => {
+export const endCycle = async (job: Job) => {
+  const { subdomain } = job?.data ?? {};
+
   console.log('daily check cycles is worked', subdomain);
   const models = await generateModels(subdomain);
 
@@ -36,7 +47,11 @@ const endCycle = async (subdomain: string) => {
     },
   });
 
+  console.log('cycles.length', cycles.length);
+
   if (!cycles || cycles.length === 0) return;
+
+  console.log('cycles', cycles);
 
   for (const cycle of cycles) {
     await models.Cycle.endCycle(cycle?._id);

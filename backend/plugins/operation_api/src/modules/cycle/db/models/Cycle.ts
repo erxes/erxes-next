@@ -6,7 +6,6 @@ import {
   getCycleProgressChart,
   getCyclesProgress,
 } from '@/cycle/utils';
-import { isBefore, isSameDay, startOfDay } from 'date-fns';
 import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -48,10 +47,12 @@ export const loadCycleClass = (models: IModels) => {
         throw new Error('Start date and end date are required');
       }
 
+      // Ensure start is before end
       if (startDate > endDate) {
         throw new Error('Start date must be before end date');
       }
 
+      // Check for overlapping cycles
       const overlappingCycle = await models.Cycle.findOne({
         teamId: doc.teamId,
         $or: [
@@ -63,22 +64,22 @@ export const loadCycleClass = (models: IModels) => {
       });
 
       if (overlappingCycle) {
-        throw new Error('New cycle with an existing cycle');
+        throw new Error('New cycle overlaps with an existing cycle');
       }
 
-      const today = startOfDay(new Date());
-      const start = startOfDay(doc.startDate);
-
-      if (isBefore(start, today)) {
+      const now = new Date(); // full current time
+      if (startDate <= now) {
         throw new Error('New cycle start date must be in the future');
       }
 
+      // Get next cycle number
       const [result] = await models.Cycle.aggregate([
         { $match: { teamId: doc.teamId } },
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
       ]);
 
-      if (isSameDay(doc.startDate, new Date())) {
+      // Activate if starting now or in the past (including time)
+      if (startDate <= now && endDate >= now) {
         doc.isActive = true;
       }
 
