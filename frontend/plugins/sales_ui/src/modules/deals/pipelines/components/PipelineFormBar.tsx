@@ -33,14 +33,15 @@ export function PipelineFormBar() {
   const pipelineId = searchParams.get('pipelineId');
 
   const submitHandler = (data: TPipelineForm) => {
-    addPipeline({
-      variables: data,
-      onCompleted: () => {
-        toast({ title: 'Pipeline added successfully.' });
-        reset();
-        setOpen(false);
-      },
-    });
+    console.log('ddd', data);
+    // addPipeline({
+    //   variables: data,
+    //   onCompleted: () => {
+    //     toast({ title: 'Pipeline added successfully.' });
+    //     reset();
+    //     setOpen(false);
+    //   },
+    // });
   };
 
   const onOpen = () => {
@@ -90,7 +91,7 @@ export function PipelineFormBar() {
           </Button>
         </Sheet.Trigger>
         <Sheet.View
-          className="p-0 sm:max-w-3xl"
+          className="p-0 md:max-w-screen-2xl"
           onEscapeKeyDown={(e) => {
             e.preventDefault();
           }}

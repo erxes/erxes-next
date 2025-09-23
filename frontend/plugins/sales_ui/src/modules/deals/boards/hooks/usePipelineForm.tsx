@@ -13,6 +13,7 @@ export const usePipelineForm = () => {
       departmentIds: [],
       branchIds: [],
       memberIds: [],
+      stages: [],
     },
     resolver: zodResolver(PIPELINE_CREATE_SCHEMA),
   });
