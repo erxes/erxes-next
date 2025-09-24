@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
-import { redis } from 'erxes-api-shared/utils';
+import { getPlugins, redis } from 'erxes-api-shared/utils';
 import {
   USER_ROLES,
   userSchema,
@@ -808,6 +808,23 @@ export const loadUserClass = (models: IModels, subdomain: string) => {
             template: 'welcomeMessage',
           },
         });
+
+        const pluginNames = await getPlugins();
+
+        for (const pluginName of pluginNames) {
+          sendNotification(subdomain, {
+            title: 'Welcome to ' + pluginName,
+            message:
+              'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
+            type: 'info',
+            userIds: [user._id],
+            priority: 'low',
+            kind: 'system',
+            metadata: {
+              plugin: pluginName,
+            },
+          });
+        }
       }
 
       return {
