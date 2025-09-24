@@ -12,9 +12,9 @@ interface FormValidationErrorHandler {
   handleValidationErrors: (errors: FieldErrors) => void;
 }
 
-export function useFormValidationErrorHandler(
+export const useFormValidationErrorHandler = (
   options: FormValidationErrorHandlerOptions = {},
-): FormValidationErrorHandler {
+): FormValidationErrorHandler => {
   const {
     formName = 'Configuration',
     customTitle,
@@ -23,6 +23,7 @@ export function useFormValidationErrorHandler(
   } = options;
 
   const handleValidationErrors = (errors: FieldErrors) => {
+    console.log({ errors });
     const errorCount = Object.keys(errors).length;
 
     const title =
@@ -44,4 +45,4 @@ export function useFormValidationErrorHandler(
   return {
     handleValidationErrors,
   };
-}
+};

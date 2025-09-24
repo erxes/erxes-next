@@ -3,7 +3,7 @@ import {
   TAutomationWaitEventConfig,
   WaitEventTargetTypes,
 } from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { getAllTriggersForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
@@ -21,9 +21,9 @@ export function useWaitEventConfigForm(
 
   const { getValues, watch, setValue } =
     useFormContext<TAutomationBuilderForm>();
-  const configFieldName: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
+  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `actions.${currentActionIndex}.config`;
 
-  const config = watch(configFieldName) as TAutomationWaitEventConfig;
+  const config = watch(configFieldNamePrefix) as TAutomationWaitEventConfig;
 
   const triggers = getAllTriggersForAction(
     currentAction.id,
@@ -38,7 +38,7 @@ export function useWaitEventConfigForm(
     const selectedId = config?.targetTriggerId;
     if (!selectedId && nonCustomTriggers.length === 1) {
       setValue(
-        `${configFieldName}.targetTriggerId`,
+        `${configFieldNamePrefix}.targetTriggerId`,
         nonCustomTriggers[0].trigger.id,
         {
           shouldDirty: true,
@@ -50,7 +50,7 @@ export function useWaitEventConfigForm(
     config?.targetTriggerId,
     nonCustomTriggers.length,
     setValue,
-    configFieldName,
+    configFieldNamePrefix,
   ]);
 
   let waitEventOptions = WAIT_EVENT_TYPES;
@@ -77,7 +77,7 @@ export function useWaitEventConfigForm(
 
   return {
     waitEventOptions,
-    configFieldName,
+    configFieldNamePrefix,
     config,
   };
 }

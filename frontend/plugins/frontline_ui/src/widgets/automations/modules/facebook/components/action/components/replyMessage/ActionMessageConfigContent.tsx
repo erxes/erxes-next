@@ -2,16 +2,20 @@ import { IconChevronDown, IconLink } from '@tabler/icons-react';
 import { Button, Collapsible, readImage } from 'erxes-ui';
 import { Link } from 'react-router';
 import { REPLY_MESSAGE_ACTION_BUTTONS } from '../../constants/ReplyMessage';
-import { TBotMessage } from '../../states/replyMessageActionForm';
-import { AutomationActionNodeConfigProps } from 'ui-modules';
+import {
+  TBotMessage,
+  TMessageActionForm,
+} from '../../states/replyMessageActionForm';
+import { AutomationActionNodeConfigProps, TAutomationAction } from 'ui-modules';
 import { TMessageTriggerForm } from '~/widgets/automations/modules/facebook/components/trigger/states/messageTriggerFormSchema';
+import { useAutomationOptionalConnect } from 'ui-modules/modules/automations/hooks/useAutomationOptionalConnect';
 
 export const ActionMessageConfigContent = ({
   config,
   trigger,
-  OptionConnectHandle,
+  actionData,
 }: AutomationActionNodeConfigProps<
-  { messages: TBotMessage[] },
+  TMessageActionForm,
   TMessageTriggerForm
 >) => {
   const { messages = [] } = config || {};
@@ -22,10 +26,10 @@ export const ActionMessageConfigContent = ({
     <>
       {messages.map((message: TBotMessage) => (
         <ActionConfigMessage
+          actionData={actionData}
           key={message._id}
           botId={botId}
           message={message}
-          OptionConnectHandle={OptionConnectHandle}
         />
       ))}
     </>
@@ -35,13 +39,11 @@ export const ActionMessageConfigContent = ({
 const ActionConfigMessage = ({
   botId,
   message,
-  OptionConnectHandle,
+  actionData,
 }: {
   botId?: string;
   message: TBotMessage;
-  OptionConnectHandle?:
-    | (({ optionalId }: { optionalId: string }) => React.ReactNode)
-    | null;
+  actionData: TAutomationAction<TMessageActionForm>;
 }) => {
   if (message.type === 'text') {
   }
@@ -54,7 +56,7 @@ const ActionConfigMessage = ({
           type={type}
           text={message.text}
           buttons={message.buttons}
-          OptionConnectHandle={OptionConnectHandle}
+          actionData={actionData}
         />
       );
     case 'card':
@@ -62,8 +64,8 @@ const ActionConfigMessage = ({
         <ActionConfigMessageCard
           key={card._id}
           type={type}
+          actionData={actionData}
           {...card}
-          OptionConnectHandle={OptionConnectHandle}
         />
       ));
     case 'quickReplies':
@@ -71,9 +73,9 @@ const ActionConfigMessage = ({
         <ActionConfigMessageCard
           _id={_id}
           type={type}
+          actionData={actionData}
           text={message.text}
           buttons={message.quickReplies}
-          OptionConnectHandle={OptionConnectHandle}
         />
       );
     // case 'image':
@@ -90,6 +92,7 @@ const ActionConfigMessage = ({
           <ActionConfigMessageCard
             _id={_id}
             type={type}
+            actionData={actionData}
             text="This action must be part of a chain that starts with a trigger"
           />
         );
@@ -98,6 +101,7 @@ const ActionConfigMessage = ({
         <ActionConfigMessageCard
           _id={_id}
           type={type}
+          actionData={actionData}
           text={message.input?.text}
           subtitle={`Input expires in: ${message.input?.value || 0} ${
             message.input?.type || ''
@@ -106,7 +110,6 @@ const ActionConfigMessage = ({
             { _id: botId, text: 'If Reply' },
             { _id: 'ifNotReply', text: 'If Not Reply' },
           ]}
-          OptionConnectHandle={OptionConnectHandle}
         />
       );
 
@@ -118,16 +121,16 @@ const ActionConfigMessage = ({
 const ActionConfigMessageCard = ({
   _id,
   type,
+  actionData,
   text = '',
   title = '',
   subtitle = '',
   buttons = [],
-  // image = '',
-  // audio = '',
-  // video = '',
-  // attachments = [],
-  OptionConnectHandle,
-}: {
+}: // image = '',
+// audio = '',
+// video = '',
+// attachments = [],
+{
   _id: string;
   type: string;
   text?: string;
@@ -138,10 +141,11 @@ const ActionConfigMessageCard = ({
   audio?: string;
   video?: string;
   attachments?: any[];
-  OptionConnectHandle?:
-    | (({ optionalId }: { optionalId: string }) => React.ReactNode)
-    | null;
+  actionData: TAutomationAction<TMessageActionForm>;
 }) => {
+  const OptionConnectHandle = useAutomationOptionalConnect({
+    id: actionData.id,
+  });
   const { title: actionButtonTitle, icon: ActionButtonIcon } =
     REPLY_MESSAGE_ACTION_BUTTONS.find(
       ({ type: btnType }) => btnType === type,
@@ -168,7 +172,7 @@ const ActionConfigMessageCard = ({
           <span>{subtitle}</span>
         </Collapsible.Content>
       </Collapsible>
-      {buttons.map(({ _id, text, link, image_url }, index) => (
+      {buttons.map(({ _id, text, link, image_url }) => (
         <div
           key={`${_id}-right`}
           className="relative bg-background shadow text-xs font-semibold rounded-xs m-2 p-2 text-mono"
@@ -186,7 +190,7 @@ const ActionConfigMessageCard = ({
               <IconLink />
             </Link>
           ) : (
-            OptionConnectHandle && <OptionConnectHandle optionalId={_id} />
+            <OptionConnectHandle optionalId={_id} />
           )}
         </div>
       ))}

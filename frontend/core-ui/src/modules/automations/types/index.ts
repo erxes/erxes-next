@@ -1,3 +1,7 @@
+import {
+  NodeContentComponentProps,
+  WaitEventFormComponentProps,
+} from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
 import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
 import {
@@ -152,7 +156,7 @@ export type LazyAutomationComponent<TComponentProps = any> =
 
 // Base component configuration
 interface BaseComponentConfig<TConfig = any> {
-  nodeContent?: LazyAutomationComponent<{ config: TConfig }>;
+  nodeContent?: LazyAutomationComponent<NodeContentComponentProps<TConfig>>;
 }
 
 // Generic action component configuration with config type parameter
@@ -164,7 +168,7 @@ interface ActionComponentConfig<TConfig = any>
     result: any;
     action: IAutomationHistoryAction;
   }>;
-  waitEvent?: LazyAutomationComponent<{ config: TConfig }>;
+  waitEvent?: LazyAutomationComponent<WaitEventFormComponentProps>;
 }
 
 // Trigger-specific component configuration (only base properties)

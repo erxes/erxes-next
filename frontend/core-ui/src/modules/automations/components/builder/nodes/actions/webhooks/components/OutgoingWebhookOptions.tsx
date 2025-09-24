@@ -4,7 +4,7 @@ import { Form, Input, Select, Switch } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 
 export const OutgoingWebhookOptions = () => {
-  const { control } = useFormContext<TOutgoingWebhookForm>();
+  const { control, getValues } = useFormContext<TOutgoingWebhookForm>();
 
   return (
     <div className="flex flex-col gap-6">

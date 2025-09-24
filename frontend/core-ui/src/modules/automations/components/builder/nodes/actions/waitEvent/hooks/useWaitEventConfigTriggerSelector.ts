@@ -3,7 +3,7 @@ import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefini
 import { useFormContext } from 'react-hook-form';
 
 export const useWaitEventConfigTriggerSelector = (actionId: string) => {
-  const { getValues, control } = useFormContext<TAutomationBuilderForm>();
+  const { getValues } = useFormContext<TAutomationBuilderForm>();
   const triggers = getAllTriggersForAction(
     actionId,
     getValues('actions'),
@@ -11,5 +11,5 @@ export const useWaitEventConfigTriggerSelector = (actionId: string) => {
   );
   const nonCustomTriggers = triggers.filter(({ trigger }) => !trigger.isCustom);
 
-  return { control, nonCustomTriggers };
+  return { nonCustomTriggers };
 };

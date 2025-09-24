@@ -3,20 +3,22 @@ import {
   TAutomationWaitEventConfig,
   WaitEventTargetTypes,
 } from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Form, IconComponent, Select } from 'erxes-ui';
+import { useFormContext } from 'react-hook-form';
 
 export function WaitEventConfigTriggerSelector({
   targetType,
   actionId,
-  configFieldName,
+  configFieldNamePrefix,
 }: {
   targetType: TAutomationWaitEventConfig['targetType'];
   actionId: string;
-  configFieldName: TAutomationActionConfigField;
+  configFieldNamePrefix: TAutomationActionConfigFieldPrefix;
 }) {
-  const { control, nonCustomTriggers } =
-    useWaitEventConfigTriggerSelector(actionId);
+  const { nonCustomTriggers } = useWaitEventConfigTriggerSelector(actionId);
+  const { control } = useFormContext<TAutomationBuilderForm>();
 
   if (
     targetType !== WaitEventTargetTypes.Trigger ||
@@ -27,7 +29,7 @@ export function WaitEventConfigTriggerSelector({
 
   return (
     <Form.Field
-      name={`${configFieldName}.targetTriggerId`}
+      name={`${configFieldNamePrefix}.targetTriggerId`}
       control={control}
       render={({ field }) => (
         <Form.Item className="px-4">

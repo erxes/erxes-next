@@ -17,13 +17,6 @@ const WebhooksComponents: AutomationComponentMap<AutomationNodeType.Action> = {
       })),
     ),
   },
-  incoming_webhook: {
-    waitEvent: lazy(() =>
-      import('./components/OutgoingWebhookWaitEventForm').then((module) => ({
-        default: module.OutgoingWebhookWaitEventForm,
-      })),
-    ),
-  },
 };
 
 export default WebhooksComponents;

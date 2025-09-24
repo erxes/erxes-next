@@ -1,7 +1,7 @@
 import { WaitEventConfigTriggerSelector } from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEventConfigTriggerSelector';
 import { useWaitEventConfigContent } from '@/automations/components/builder/nodes/actions/waitEvent/hooks/useWaitEventConfigContent';
 import { TAutomationWaitEventConfig } from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Form } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
@@ -11,12 +11,12 @@ export function WaitEventConfigSegmentForm({
   targetType,
   action,
   selectedNodeId,
-  configFieldName,
+  configFieldNamePrefix,
 }: {
   targetType: TAutomationWaitEventConfig['targetType'];
   action: TAutomationAction;
   selectedNodeId?: string;
-  configFieldName: TAutomationActionConfigField;
+  configFieldNamePrefix: TAutomationActionConfigFieldPrefix;
 }) {
   const { control } = useFormContext<TAutomationBuilderForm>();
 
@@ -42,10 +42,10 @@ export function WaitEventConfigSegmentForm({
       <WaitEventConfigTriggerSelector
         targetType={targetType}
         actionId={action.id}
-        configFieldName={configFieldName}
+        configFieldNamePrefix={configFieldNamePrefix}
       />
       <Form.Field
-        name={`${configFieldName}.segmentId`}
+        name={`${configFieldNamePrefix}.segmentId`}
         control={control}
         render={({ field }) => (
           <Form.Item className="flex-1 min-h-0 flex flex-col px-4">

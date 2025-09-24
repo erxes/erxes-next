@@ -1,39 +1,41 @@
-import { useAiAgentDetail } from '@/automations/components/settings/components/agents/hooks/useAiAgentDetail';
+import { AiAgentObjectBuilder } from '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgentObjectBuilder';
+import { AiAgentTopicBuilder } from '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgentTopicBuilder';
+import { AI_AGENT_NODE_GOAL_TYPES } from '@/automations/components/builder/nodes/actions/aiAgent/constants/aiAgentConfigForm';
+import {
+  aiAgentConfigFormSchema,
+  TAiAgentConfigForm,
+} from '@/automations/components/builder/nodes/actions/aiAgent/states/aiAgentForm';
+import { AutomationCoreConfigFormWrapper } from '@/automations/components/builder/nodes/components/AutomationConfigFormWrapper';
 import { useAiAgents } from '@/automations/components/settings/components/agents/hooks/useAiAgents';
-import { IconTrash } from '@tabler/icons-react';
-import { Button, Form, Input, Select, Textarea } from 'erxes-ui';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { generateAutomationElementId } from 'ui-modules';
-import { z } from 'zod';
+import { useFormValidationErrorHandler } from '@/automations/hooks/useFormValidationErrorHandler';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, Select, Textarea } from 'erxes-ui';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { TAutomationActionProps } from 'ui-modules';
 
-const aiAgentSchema = z.object({
-  aiAgentId: z.string(),
-  topics: z.array(
-    z.object({
-      id: z.string(),
-      topicName: z.string(),
-      prompt: z.string(),
-    }),
-  ),
-});
-
-type TAIAgent = z.infer<typeof aiAgentSchema>;
-
-export const AIAgentConfigForm = () => {
-  const form = useForm<TAIAgent>({
-    defaultValues: {},
+export const AIAgentConfigForm = ({
+  currentAction,
+  handleSave,
+}: TAutomationActionProps<TAiAgentConfigForm>) => {
+  const { handleValidationErrors } = useFormValidationErrorHandler({
+    formName: 'Ai agent node Configuration',
   });
-  const { control } = form;
-
+  const form = useForm<TAiAgentConfigForm>({
+    resolver: zodResolver(aiAgentConfigFormSchema),
+    defaultValues: { ...(currentAction?.config || {}) },
+  });
   const { automationsAiAgents } = useAiAgents();
-  const { fields, append, remove } = useFieldArray({
+
+  const { control, handleSubmit } = form;
+  const config = useWatch<TAiAgentConfigForm>({
     control,
-    name: 'topics',
   });
 
   return (
-    <div className="flex flex-col gap-2 p-4">
-      <Form {...form}>
+    <FormProvider {...form}>
+      <AutomationCoreConfigFormWrapper
+        onSave={handleSubmit(handleSave, handleValidationErrors)}
+      >
         <Form.Field
           control={control}
           name="aiAgentId"
@@ -47,58 +49,58 @@ export const AIAgentConfigForm = () => {
                   </Select.Trigger>
                   <Select.Content>
                     {automationsAiAgents.map(({ _id, name }) => (
-                      <Select.Item value={_id}>{name}</Select.Item>
+                      <Select.Item key={_id} value={_id}>
+                        {name}
+                      </Select.Item>
                     ))}
                   </Select.Content>
                 </Select>
+                <Form.Message />
               </Form.Item>
             );
           }}
         />
 
-        <div className="flex flex-col gap-2 p-4">
-          {fields.map((field, index) => (
-            <div key={field.id} className="mb-1 flex flex-col gap-2">
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                className="ml-auto"
-                onClick={() => remove(index)}
-              >
-                <IconTrash />
-              </Button>
-              <Controller
-                name={`topics.${index}.topicName`}
-                control={control}
-                render={({ field }) => (
-                  <Input {...field} placeholder="Enter topic name" />
-                )}
-              />
-              <Controller
-                name={`topics.${index}.prompt`}
-                control={control}
-                render={({ field }) => (
-                  <Textarea {...field} placeholder="Enter prompt of topic" />
-                )}
-              />
-            </div>
-          ))}
-        </div>
+        <Form.Field
+          control={control}
+          name="goalType"
+          render={({ field }) => {
+            return (
+              <Form.Item>
+                <Form.Label>Goal Type</Form.Label>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <Select.Trigger className="mt-1">
+                    <Select.Value placeholder="Select goal type" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    {AI_AGENT_NODE_GOAL_TYPES.map(({ type, label }) => (
+                      <Select.Item key={type} value={type}>
+                        {label}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select>
+                <Form.Message />
+              </Form.Item>
+            );
+          }}
+        />
 
-        <Button
-          type="button"
-          onClick={() =>
-            append({
-              id: generateAutomationElementId(),
-              topicName: `Topic ${fields.length + 1}`,
-              prompt: '',
-            })
-          }
-        >
-          Add Topic
-        </Button>
-      </Form>
-    </div>
+        {config?.goalType === 'generateObject' && <AiAgentObjectBuilder />}
+        {config?.goalType === 'classifyTopic' && <AiAgentTopicBuilder />}
+        {config?.goalType === 'generateText' && (
+          <Form.Field
+            name="prompt"
+            control={control}
+            render={({ field }) => (
+              <Form.Item>
+                <Textarea placeholder="Enter prompt" {...field} />Í
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+        )}
+      </AutomationCoreConfigFormWrapper>
+    </FormProvider>
   );
 };

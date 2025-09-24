@@ -2,7 +2,9 @@ import { isCoreAutomationActionType } from '@/automations/components/builder/nod
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
+import { NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { Node, useReactFlow } from '@xyflow/react';
 import { toast } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -12,6 +14,7 @@ export const useAutomationActionContentSidebar = () => {
   const { queryParams, setQueryParams } = useAutomation();
   const { control, setValue } = useFormContext<TAutomationBuilderForm>();
   const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
+  const { getNode, updateNodeData } = useReactFlow<Node<NodeData>>();
 
   // Watch all actions once
   const actions = useWatch({ control, name: 'actions' }) || [];
@@ -43,8 +46,13 @@ export const useAutomationActionContentSidebar = () => {
     });
   };
 
-  const onSaveActionRemoteConfig = (config: any) => {
+  const onSaveActionConfig = (config: any) => {
     setValue(`actions.${currentIndex}.config`, config);
+    if (currentAction) {
+      const node = getNode(currentAction.id);
+      updateNodeData(currentAction.id, { ...node?.data, config });
+    }
+    onSaveActionConfigCallback();
   };
 
   return {
@@ -55,7 +63,7 @@ export const useAutomationActionContentSidebar = () => {
     setQueryParams,
     setValue,
     toggleSideBarOpen,
-    onSaveActionRemoteConfig,
+    onSaveActionConfig,
     onSaveActionConfigCallback,
     pluginName,
     moduleName,

@@ -1,20 +1,23 @@
 import {
-  TAutomationDelayConfig,
-  TAutomationDelayIntervalType,
-} from '@/automations/components/builder/nodes/actions/delay/types/automationDelay';
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
-import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+  delayConfigFormSchema,
+  TDelayConfigForm,
+} from '@/automations/components/builder/nodes/actions/delay/states/delayConfigForm';
+import { TAutomationDelayIntervalType } from '@/automations/components/builder/nodes/actions/delay/types/automationDelay';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangeEvent } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
-export const useDelay = (currentActionIndex: number) => {
-  const configField: TAutomationActionConfigField = `actions.${currentActionIndex}.config`;
-  const { control, setValue } = useFormContext<TAutomationBuilderForm>();
+export const useDelay = (config: TDelayConfigForm) => {
+  const form = useForm<TDelayConfigForm>({
+    resolver: zodResolver(delayConfigFormSchema),
+    defaultValues: { ...config },
+  });
+  const { control, setValue, handleSubmit } = form;
 
-  const { value, type } = (useWatch<TAutomationBuilderForm>({
-    control,
-    name: configField,
-  }) || {}) as TAutomationDelayConfig;
+  const { value, type } =
+    useWatch<TDelayConfigForm>({
+      control,
+    }) || {};
 
   const handleValueChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -48,9 +51,10 @@ export const useDelay = (currentActionIndex: number) => {
     }
 
     if (intervalType) {
-      setValue(`${configField}.type`, intervalType);
+      setValue('type', intervalType);
     }
 
+    console.log({ value: typeof value });
     onChange(value);
   };
 
@@ -71,11 +75,17 @@ export const useDelay = (currentActionIndex: number) => {
     const max = maxValues[type] ?? Infinity;
 
     if (numericValue > max) {
-      setValue(`${configField}.value`, '1');
+      setValue('value', '1');
     }
 
     onChange(type);
   };
 
-  return { control, configField, handleValueChange, handleIntervalChange };
+  return {
+    form,
+    control,
+    handleValueChange,
+    handleIntervalChange,
+    handleSubmit,
+  };
 };

@@ -5,17 +5,16 @@ import {
 } from '@/automations/components/builder/nodes/triggers/coreAutomationTriggers';
 import { useCustomTriggerContent } from '@/automations/components/builder/sidebar/hooks/useCustomTriggerContent';
 import { useDefaultTriggerContent } from '@/automations/components/builder/sidebar/hooks/useDefaultTriggerContent';
-import { AutomationNodeType, NodeData } from '@/automations/types';
 import { RenderPluginsComponentWrapper } from '@/automations/components/common/RenderPluginsComponentWrapper';
-import { IconSettings } from '@tabler/icons-react';
-import { Button, toast } from 'erxes-ui';
-import React, { useCallback, useMemo, useRef, Suspense } from 'react';
-import { SegmentForm } from 'ui-modules';
-import { useSetAtom } from 'jotai';
-import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { useAutomation } from '@/automations/context/AutomationProvider';
-import { useFormContext } from 'react-hook-form';
+import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
+import { AutomationNodeType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { Button, toast } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
+import React, { Suspense, useCallback, useMemo, useRef } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { SegmentForm } from 'ui-modules';
 
 /**
  * Props for automation trigger content components

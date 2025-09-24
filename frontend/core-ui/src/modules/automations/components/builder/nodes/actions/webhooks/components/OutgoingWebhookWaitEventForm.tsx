@@ -1,4 +1,4 @@
-import { CoreActionNodeConfigProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { NodeContentComponentProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { TOutgoingWebhookForm } from '../states/outgoingWebhookFormSchema';
 
 const EVENT_TYPES = [
@@ -9,7 +9,7 @@ const EVENT_TYPES = [
 
 export const OutgoingWebhookWaitEventForm = ({
   config,
-}: CoreActionNodeConfigProps<TOutgoingWebhookForm>) => {
+}: NodeContentComponentProps<TOutgoingWebhookForm>) => {
   // const {} =
   return (
     <div>

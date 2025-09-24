@@ -1,4 +1,4 @@
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Button, Form } from 'erxes-ui';
 import { useRef } from 'react';
@@ -8,10 +8,10 @@ import { TAutomationWaitEventConfig } from '@/automations/components/builder/nod
 import { NodeData } from '@/automations/types';
 
 export function WaitEventConfigCustomForm({
-  configFieldName,
+  configFieldNamePrefix,
   handleSave,
 }: {
-  configFieldName: TAutomationActionConfigField;
+  configFieldNamePrefix: TAutomationActionConfigFieldPrefix;
   handleSave: (config: TAutomationWaitEventConfig) => void;
 }) {
   const { control } = useFormContext<TAutomationBuilderForm>();
@@ -21,7 +21,7 @@ export function WaitEventConfigCustomForm({
     <div className="flex flex-col flex-1 overflow-auto" role="region">
       <div className="flex-1 w-auto overflow-auto px-4">
         <Form.Field
-          name={`${configFieldName}.webhookConfig`}
+          name={`${configFieldNamePrefix}.webhookConfig`}
           control={control}
           render={({ field }) => (
             <Form.Item className="flex-1 overflow-auto">

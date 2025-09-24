@@ -8,17 +8,15 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Control } from 'react-hook-form';
 
 type Props = {
-  control: Control<TAutomationBuilderForm>;
   currentIndex: number;
   currentAction: TAutomationBuilderForm['actions'][number];
-  onSaveActionConfigCallback: () => void;
+  onSaveActionConfig: (config: any) => void;
 };
 
 export const AutomationCoreActionSidebarContent = ({
-  control,
   currentIndex,
   currentAction,
-  onSaveActionConfigCallback,
+  onSaveActionConfig,
 }: Props) => {
   const Component = getCoreAutomationActionComponent(
     currentAction.type,
@@ -38,22 +36,15 @@ export const AutomationCoreActionSidebarContent = ({
           <ErrorState onRetry={resetErrorBoundary} />
         )}
       >
-        <Form.Field
-          name={`actions.${currentIndex}.config`}
-          control={control}
-          render={({ field }) => (
-            <Component
-              currentActionIndex={currentIndex}
-              currentAction={currentAction}
-              handleSave={(config) => {
-                field.onChange({
-                  ...(currentAction?.config || {}),
-                  ...config,
-                });
-                onSaveActionConfigCallback();
-              }}
-            />
-          )}
+        <Component
+          currentActionIndex={currentIndex}
+          currentAction={currentAction}
+          handleSave={(config) => {
+            onSaveActionConfig({
+              ...(currentAction?.config || {}),
+              ...config,
+            });
+          }}
         />
       </ErrorBoundary>
     </Suspense>

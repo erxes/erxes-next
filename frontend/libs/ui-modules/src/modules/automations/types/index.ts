@@ -32,7 +32,7 @@ export type TAutomationAction<TConfig = any> = {
   nextActionId?: string;
   isAvailable?: boolean;
   style?: any;
-  config: TConfig & IConfig;
+  config?: TConfig & IConfig;
   position?: any;
   isAvailableOptionalConnect?: boolean;
   workflowId?: string;
@@ -130,12 +130,9 @@ export type AutomationActionNodeConfigProps<
   TTriggerConfig = any,
 > = BaseAutomationRemoteProps & {
   componentType: 'actionNodeConfiguration';
-  currentAction?: any;
+  actionData: TAutomationAction<TActionConfig>;
   config?: TActionConfig;
   trigger?: TAutomationTrigger<TTriggerConfig>;
-  OptionConnectHandle?:
-    | (({ optionalId }: { optionalId: string }) => React.ReactNode)
-    | null;
 };
 
 export type AutomationExecutionHistoryNameProps<TTarget = any> = {

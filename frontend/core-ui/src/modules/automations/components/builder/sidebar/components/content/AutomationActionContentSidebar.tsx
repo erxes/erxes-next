@@ -13,7 +13,7 @@ export const AutomationActionContentSidebar = () => {
     isCoreActionComponent,
     currentAction,
     control,
-    onSaveActionRemoteConfig,
+    onSaveActionConfig,
     onSaveActionConfigCallback,
     pluginName,
     moduleName,
@@ -41,7 +41,7 @@ export const AutomationActionContentSidebar = () => {
                   componentType: 'actionForm',
                   type: currentAction?.type,
                   currentAction,
-                  onSaveActionConfig: onSaveActionRemoteConfig,
+                  onSaveActionConfig: onSaveActionConfig,
                 }}
               />
             </ErrorBoundary>
@@ -56,10 +56,9 @@ export const AutomationActionContentSidebar = () => {
 
   return (
     <AutomationCoreActionSidebarContent
-      control={control}
       currentIndex={currentIndex}
       currentAction={currentAction}
-      onSaveActionConfigCallback={onSaveActionConfigCallback}
+      onSaveActionConfig={onSaveActionConfig}
     />
   );
 };

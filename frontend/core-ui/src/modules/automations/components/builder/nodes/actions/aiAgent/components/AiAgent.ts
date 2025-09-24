@@ -11,6 +11,11 @@ const AiAgentComponents: AutomationComponentMap<AutomationNodeType.Action> = {
         default: module.AIAgentConfigForm,
       })),
     ),
+    nodeContent: lazy(() =>
+      import('./AiAgentNodeContent').then((module) => ({
+        default: module.AiAgentNodeContent,
+      })),
+    ),
   },
 };
 

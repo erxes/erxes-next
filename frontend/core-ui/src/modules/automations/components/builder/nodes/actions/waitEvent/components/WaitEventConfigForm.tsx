@@ -12,10 +12,8 @@ export const WaitEventConfigForm = ({
 }: TAutomationActionProps) => {
   const { control } = useFormContext<TAutomationBuilderForm>();
 
-  const { waitEventOptions, configFieldName, config } = useWaitEventConfigForm(
-    currentAction,
-    currentActionIndex,
-  );
+  const { waitEventOptions, configFieldNamePrefix, config } =
+    useWaitEventConfigForm(currentAction, currentActionIndex);
 
   const { targetType } = config || {};
 
@@ -24,7 +22,7 @@ export const WaitEventConfigForm = ({
   return (
     <div className="h-full min-h-0 flex flex-col gap-4 overflow-hidden">
       <Form.Field
-        name={`${configFieldName}.targetType`}
+        name={`${configFieldNamePrefix}.targetType`}
         control={control}
         defaultValue={waitEventOptions[0]?.type}
         render={({ field }) => (
@@ -60,7 +58,8 @@ export const WaitEventConfigForm = ({
       <WaitEventConfigContent
         targetType={effectiveTargetType}
         action={currentAction}
-        configFieldName={configFieldName}
+        selectedNodeId={undefined}
+        configFieldNamePrefix={configFieldNamePrefix}
         handleSave={handleSave}
       />
     </div>

@@ -1,7 +1,7 @@
-import { LazyAutomationComponent } from '@/automations/types';
+import { LazyAutomationComponent, NodeData } from '@/automations/types';
 import { TAutomationAction } from 'ui-modules';
 
-export type TAutomationActionConfigField = `actions.${number}.config`;
+export type TAutomationActionConfigFieldPrefix = `actions.${number}.config`;
 
 export enum TAutomationActionComponent {
   Sidebar = 'sidebar',
@@ -17,6 +17,7 @@ export type TSidebarComponentProps = {
 };
 
 export type NodeContentComponentProps<TConfig = any> = {
+  nodeData: NodeData<TConfig>;
   config: TConfig;
 };
 export type ActionResultComponentProps = {};
@@ -30,10 +31,6 @@ export type TActionComponents = {
   nodeContent?: LazyAutomationComponent<NodeContentComponentProps>;
   actionResult?: LazyAutomationComponent<ActionResultComponentProps>;
   waitEvent?: LazyAutomationComponent<WaitEventFormComponentProps>;
-};
-
-export type CoreActionNodeConfigProps<TConfig> = {
-  config: TConfig;
 };
 
 interface CoreComponentPropsMap {

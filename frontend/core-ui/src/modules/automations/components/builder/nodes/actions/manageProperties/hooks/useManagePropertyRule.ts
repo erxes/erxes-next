@@ -7,7 +7,7 @@ import {
   OperatorType,
   TAutomationManagePropertyConfig,
 } from '../types/ManagePropertyTypes';
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,7 +16,7 @@ function capitalizeFirstLetter(string: string) {
 type ManagePropertyRuleProps = {
   rules: TAutomationManagePropertyRule[];
   index: number;
-  fieldName: TAutomationActionConfigField;
+  fieldName: TAutomationActionConfigFieldPrefix;
   rule: TAutomationManagePropertyRule;
   propertyType: string;
 };

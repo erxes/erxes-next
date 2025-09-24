@@ -1,29 +1,26 @@
-import { TAutomationAction } from 'ui-modules';
-import { TAutomationActionConfigField } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { WaitEventConfigCustomForm } from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEventConfigCustomForm';
 import { WaitEventConfigSegmentForm } from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEventConfigSegmentForm';
-import {
-  TAutomationWaitEventConfig,
-  WaitEventTargetTypes,
-} from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
+import { TAutomationWaitEventConfig } from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
+import { TAutomationAction } from 'ui-modules';
+import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export function WaitEventConfigContent({
   targetType,
   action,
   selectedNodeId,
-  configFieldName,
+  configFieldNamePrefix,
   handleSave,
 }: {
   targetType: TAutomationWaitEventConfig['targetType'];
   action: TAutomationAction;
   selectedNodeId?: string;
-  configFieldName: TAutomationActionConfigField;
+  configFieldNamePrefix: TAutomationActionConfigFieldPrefix;
   handleSave: (config: TAutomationWaitEventConfig) => void;
 }) {
   if (targetType === 'custom') {
     return (
       <WaitEventConfigCustomForm
-        configFieldName={configFieldName}
+        configFieldNamePrefix={configFieldNamePrefix}
         handleSave={handleSave}
       />
     );
@@ -34,7 +31,7 @@ export function WaitEventConfigContent({
       targetType={targetType}
       action={action}
       selectedNodeId={selectedNodeId}
-      configFieldName={configFieldName}
+      configFieldNamePrefix={configFieldNamePrefix}
     />
   );
 }

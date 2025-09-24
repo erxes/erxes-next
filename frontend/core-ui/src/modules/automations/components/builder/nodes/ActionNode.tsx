@@ -100,7 +100,7 @@ const ActionNode = ({
   id,
   ...sd
 }: NodeProps<Node<NodeData>>) => {
-  const { beforeTitleContent, config, nextActionId, workflowId } = data;
+  const { beforeTitleContent, config, nextActionId, workflowId, error } = data;
 
   return (
     <div className="flex flex-col" key={id}>
@@ -112,7 +112,7 @@ const ActionNode = ({
           'rounded-md shadow-md bg-background border border-muted w-[280px] font-mono transition-all duration-200',
           {
             'ring-2 ring-success': selected,
-            'ring-2 ring-red-300': data?.error,
+            'ring-2 ring-red-300': error,
           },
         )}
       >
@@ -129,7 +129,7 @@ const ActionNode = ({
             <div className="flex-1">
               <span className="font-medium">{data.label}</span>
             </div>
-            {data?.error && <NodeErrorIndicator error={data.error} />}
+            {error && <NodeErrorIndicator error={error} />}
           </div>
 
           <div className="flex items-center gap-1">
@@ -142,10 +142,10 @@ const ActionNode = ({
             {data.description}
           </span>
 
-          {data?.error && (
+          {error && (
             <div className="mt-2">
               <NodeErrorDisplay
-                error={data.error}
+                error={error}
                 nodeId={id}
                 onClearError={(nodeId) => {
                   // Clear error logic can be added here
