@@ -7,7 +7,6 @@ import {
 } from 'ui-modules';
 import { useRef, useState } from 'react';
 
-import { IPipeline } from '@/deals/types/pipelines';
 import { SelectBoards } from '../SelectBoards';
 
 const VISIBILITY_TYPES = [
@@ -15,19 +14,11 @@ const VISIBILITY_TYPES = [
   { value: 'private', label: 'Private' },
 ];
 
-const GeneralForm = ({
-  form,
-  pipeline,
-}: {
-  form: any;
-  pipeline: IPipeline;
-}) => {
-  const { control } = form;
+const GeneralForm = ({ form }: { form: any }) => {
+  const { control, watch } = form;
 
   const [open, setOpen] = useState(false);
-  const [visibility, setVisibility] = useState(
-    pipeline ? pipeline.visibility : 'public',
-  );
+  const visibility = watch('visibility');
 
   const handleBranchChange = (branchId: string | string[] | undefined) => {
     const singleBranchId = Array.isArray(branchId) ? branchId[0] : branchId;
@@ -48,26 +39,20 @@ const GeneralForm = ({
   const selectParentRef =
     useRef<React.ElementRef<typeof Combobox.Trigger>>(null);
 
-  const { name, boardId, tagId, departmentIds, branchIds, memberIds } =
-    pipeline;
-  console.log('kkkk', pipeline);
   return (
     <div className="space-y-3">
       <Form.Field
         control={control}
         name="name"
-        render={({ field }) => {
-          console.log('nnn', field);
-          return (
-            <Form.Item>
-              <Form.Label>{field.name}</Form.Label>
-              <Form.Control>
-                <Input {...field} placeholder="Enter pipeline name" />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          );
-        }}
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>{field.name}</Form.Label>
+            <Form.Control>
+              <Input {...field} placeholder="Enter pipeline name" />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
       />
       <Form.Field
         control={control}
@@ -76,17 +61,11 @@ const GeneralForm = ({
           <Form.Item>
             <Form.Label>Visibility</Form.Label>
             <Form.Control>
-              <Select
-                onValueChange={(value) => {
-                  setVisibility(value);
-                  field.onChange(value);
-                }}
-                value={visibility}
-              >
+              <Select onValueChange={field.onChange} value={field.value}>
                 <Select.Trigger
-                  className={!visibility ? 'text-muted-foreground' : ''}
+                  className={!field.value ? 'text-muted-foreground' : ''}
                 >
-                  {visibility || 'Select visibility'}
+                  {field.value || 'Select visibility'}
                 </Select.Trigger>
                 <Select.Content>
                   {VISIBILITY_TYPES.map((option) => (
@@ -110,7 +89,7 @@ const GeneralForm = ({
             <SelectBoards.FormItem
               mode="single"
               onValueChange={field.onChange}
-              value={boardId}
+              value={field.value}
               className="focus-visible:relative focus-visible:z-10"
             />
             <Form.Message />
@@ -125,7 +104,7 @@ const GeneralForm = ({
             <Form.Label>{field.name}</Form.Label>
             <SelectTags.Provider
               tagType="sales:deal"
-              value={tagId}
+              value={field.value}
               onValueChange={(tag) => {
                 field.onChange(tag);
                 setOpen(false);
@@ -157,7 +136,7 @@ const GeneralForm = ({
                 <SelectDepartments.FormItem
                   mode="single"
                   onValueChange={handleDepartmentChange}
-                  value={departmentIds}
+                  value={field.value}
                   className="focus-visible:relative focus-visible:z-10"
                 />
               </Form.Item>
@@ -171,7 +150,7 @@ const GeneralForm = ({
                 <Form.Label>Branches</Form.Label>
                 <SelectBranches.FormItem
                   onValueChange={handleBranchChange}
-                  value={branchIds}
+                  value={field.value}
                   mode="single"
                   className="focus-visible:relative focus-visible:z-10"
                 />
@@ -185,7 +164,7 @@ const GeneralForm = ({
               <Form.Item>
                 <Form.Label>Team members</Form.Label>
                 <SelectMember.FormItem
-                  value={memberIds}
+                  value={field.value}
                   onValueChange={field.onChange}
                 />
               </Form.Item>

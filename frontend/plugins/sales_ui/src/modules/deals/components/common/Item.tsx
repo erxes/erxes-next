@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
 import type { Transform } from '@dnd-kit/utilities';
 
-export interface Props {
+export interface SortableItemProps {
   dragOverlay?: boolean;
   color?: string;
   disabled?: boolean;
@@ -29,17 +29,17 @@ export interface Props {
     fadeIn: boolean;
     listeners: DraggableSyntheticListeners;
     style: React.CSSProperties | undefined;
-    transform: Props['transform'];
-    transition: Props['transition'];
-    value: Props['value'];
-    handle: Props['handle'];
+    transform: SortableItemProps['transform'];
+    transition: SortableItemProps['transition'];
+    value: SortableItemProps['value'];
+    handle: SortableItemProps['handle'];
     wrapperStyle?: React.CSSProperties;
     color?: string;
   }): React.ReactElement;
 }
 
 export const Item = React.memo(
-  React.forwardRef<HTMLLIElement, Props>(
+  React.forwardRef<HTMLLIElement, SortableItemProps>(
     (
       {
         color,
@@ -94,13 +94,9 @@ export const Item = React.memo(
         <li
           ref={ref}
           className={`
-            flex box-border origin-top-left touch-manipulation [transform:translate3d(var(--translate-x,0),var(--translate-y,0),0)_scaleX(var(--scale-x,1))_scaleY(var(--scale-y,1))]
+            flex box-border origin-top-left touch-manipulation
             ${fadeIn ? 'animate-fadeIn' : ''}
-            ${
-              dragOverlay
-                ? 'z-[999] [--scale:1.05] [--box-shadow:0_0_0_calc(1px/var(--scale-x,1))_rgba(63,63,68,0.05),0_1px_calc(3px/var(--scale-x,1))_0_rgba(34,33,81,0.15)] [--box-shadow-picked-up:0_0_0_calc(1px/var(--scale-x,1))_rgba(63,63,68,0.05),-1px_0_15px_0_rgba(34,33,81,0.01),0px_15px_15px_0_rgba(34,33,81,0.25)]'
-                : ''
-            }
+            ${dragOverlay ? 'z-[999]' : ''}
           `}
           style={
             {
@@ -128,21 +124,19 @@ export const Item = React.memo(
           <div
             className={`
               relative flex flex-grow items-center
-              px-5 py-[18px] bg-white rounded
-              shadow-md list-none select-none
+              px-5 py-[18px] bg-white rounded shadow-md
+              list-none select-none
               text-gray-800 font-normal text-base
               whitespace-nowrap
               transition-shadow duration-200 ease-out
               ${!handle ? 'cursor-grab touch-manipulation' : ''}
-              ${dragging && !dragOverlay ? 'opacity-50' : ''}
+              ${dragging && !dragOverlay ? 'opacity-50' : 'opacity-100'}
               ${disabled ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : ''}
               ${dragOverlay ? 'cursor-default shadow-lg' : ''}
             `}
             style={style}
             data-cypress="draggable-item"
-            {...(!handle ? listeners : undefined)}
             {...props}
-            tabIndex={!handle ? 0 : undefined}
           >
             {/* Left color bar */}
             {color && (
@@ -152,7 +146,18 @@ export const Item = React.memo(
               />
             )}
 
-            {value}
+            {/* 
+              ⬇️ FIX: wrap the value in a div with `pointer-events-auto`
+              so inputs/selects inside remain interactive.
+              Drag listeners are only applied to the container, not inputs.
+            */}
+            <div
+              className="flex-1 pointer-events-auto"
+              {...(!handle ? listeners : undefined)}
+              tabIndex={!handle ? 0 : undefined}
+            >
+              {value}
+            </div>
           </div>
         </li>
       );

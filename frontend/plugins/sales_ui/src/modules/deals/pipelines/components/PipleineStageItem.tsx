@@ -3,13 +3,38 @@ import {
   PROBABILITY_DEAL,
   VISIBLITIES,
 } from '../../constants/stages';
-import { Checkbox, Form, Input, Select } from 'erxes-ui';
+import { Checkbox, Form, Input, Select, Tooltip } from 'erxes-ui';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDragDrop2,
+} from '@tabler/icons-react';
 
+import { Controller } from 'react-hook-form';
 import { IStage } from '@/deals/types/stages';
+import { SortableItemProps } from '@/deals/components/common/Item';
+import { useState } from 'react';
 
-const PipelineStageItem = (props: any) => {
+interface Props extends SortableItemProps {
+  stage: IStage;
+  control: any;
+}
+
+const showTooltip = (icon: any, text: string) => {
+  return (
+    <Tooltip.Provider>
+      <Tooltip>
+        <Tooltip.Trigger asChild>{icon}</Tooltip.Trigger>
+        <Tooltip.Content>
+          <p>{text}</p>
+        </Tooltip.Content>
+      </Tooltip>
+    </Tooltip.Provider>
+  );
+};
+
+const PipelineStageItem = (props: Props) => {
   const {
-    value,
     dragging,
     dragOverlay,
     listeners,
@@ -22,11 +47,11 @@ const PipelineStageItem = (props: any) => {
     transform,
     wrapperStyle,
     index,
-    stages,
+    stage,
+    control,
   } = props;
 
-  const stage = (stages || []).find((s: IStage) => s._id === value);
-  console.log(index, stage);
+  const [showExtraFields, setShowExtraFields] = useState(false);
 
   return (
     <div
@@ -73,149 +98,223 @@ const PipelineStageItem = (props: any) => {
         `}
         style={style}
         data-cypress="draggable-item"
-        {...(!handle ? listeners : undefined)}
         {...props}
         tabIndex={!handle ? 0 : undefined}
       >
         <span className="absolute top-1/2 left-0 h-full w-[3px] -translate-y-1/2 rounded-l-sm bg-purple-500" />
+        <div {...listeners} className="cursor-grab p-2 pl-0">
+          <IconDragDrop2 />
+        </div>
+
         <div className="flex flex-1 items-center justify-between gap-3">
-          <Form.Item>
-            <Form.Label>Stage Name</Form.Label>
-            <Form.Control>
-              <Input
-                type="text"
-                placeholder="Enter stage name"
-                className="input"
-                value={stage?.name}
-                onChange={(e) => {
-                  console.log(e.target.value);
-                }}
-              />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Probality</Form.Label>
-            <Select
-              // onValueChange={(value) => {
-              //   setVisibility(value);
-              // }}
-              value="10%"
-            >
-              <Select.Trigger className={'text-muted-foreground'}>
-                {'Select probality'}
-              </Select.Trigger>
-              <Select.Content>
-                {PROBABILITY_DEAL.map((option) => (
-                  <Select.Item key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Status</Form.Label>
-            <Select
-              // onValueChange={(value) => {
-              //   setVisibility(value);
-              // }}
-              value="10%"
-            >
-              <Select.Trigger className={'text-muted-foreground'}>
-                {'Select status'}
-              </Select.Trigger>
-              <Select.Content>
-                {BOARD_STATUSES_OPTIONS.map((option) => (
-                  <Select.Item key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Visibility</Form.Label>
-            <Select
-              // onValueChange={(value) => {
-              //   setVisibility(value);
-              // }}
-              value="10%"
-            >
-              <Select.Trigger className={'text-muted-foreground'}>
-                {'Select visibility'}
-              </Select.Trigger>
-              <Select.Content>
-                {VISIBLITIES.map((option) => (
-                  <Select.Item key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Code</Form.Label>
-            <Form.Control>
-              <Input type="text" placeholder="Enter code" className="input" />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Age</Form.Label>
-            <Form.Control>
-              <Input type="text" placeholder="Enter age" className="input" />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-          <Form.Item className="flex flex-row items-center justify-center space-x-3 space-y-0">
-            <Form.Control>
-              <Checkbox
-                checked={false}
-                // onCheckedChange={field.onChange}
-              />
-            </Form.Control>
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Can move members</Form.Label>
-            <Select
-              // onValueChange={(value) => {
-              //   setVisibility(value);
-              // }}
-              value="10%"
-            >
-              <Select.Trigger className={'text-muted-foreground'}>
-                {'Select visibility'}
-              </Select.Trigger>
-              <Select.Content>
-                {VISIBLITIES.map((option) => (
-                  <Select.Item key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Form.Label>Can edit members</Form.Label>
-            <Select
-              // onValueChange={(value) => {
-              //   setVisibility(value);
-              // }}
-              value="10%"
-            >
-              <Select.Trigger className={'text-muted-foreground'}>
-                {'Select visibility'}
-              </Select.Trigger>
-              <Select.Content>
-                {VISIBLITIES.map((option) => (
-                  <Select.Item key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Form.Item>
+          <div className="flex-1">
+            <div className="flex flex-wrap gap-3 justify-between">
+              <Form.Item className="flex-1">
+                <Form.Label>Stage Name</Form.Label>
+                <Form.Control>
+                  <Controller
+                    name={`stages.${index}.name`}
+                    control={control}
+                    defaultValue={stage?.name || ''}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Enter stage name"
+                      />
+                    )}
+                  />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+              <Form.Item className="flex-1">
+                <Form.Label>Probality</Form.Label>
+                <Controller
+                  name={`stages.${index}.probability`}
+                  control={control}
+                  defaultValue={stage?.probability || ''}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <Select.Trigger className={'text-muted-foreground h-8'}>
+                        {field.value || 'Select probability'}
+                      </Select.Trigger>
+                      <Select.Content>
+                        {PROBABILITY_DEAL.map((option) => (
+                          <Select.Item key={option.value} value={option.value}>
+                            {option.label}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  )}
+                />
+              </Form.Item>
+              <Form.Item className="flex-1">
+                <Form.Label>Status</Form.Label>
+                <Controller
+                  name={`stages.${index}.status`}
+                  control={control}
+                  defaultValue={props.stage?.status || ''}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <Select.Trigger className="text-muted-foreground h-8">
+                        {field.value || 'Select status'}
+                      </Select.Trigger>
+                      <Select.Content>
+                        {BOARD_STATUSES_OPTIONS.map((option) => (
+                          <Select.Item key={option.value} value={option.value}>
+                            {option.label}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  )}
+                />
+              </Form.Item>
+
+              <Form.Item className="flex-1">
+                <Form.Label>Visibility</Form.Label>
+                <Controller
+                  name={`stages.${index}.visibility`}
+                  control={control}
+                  defaultValue={props.stage?.visibility || ''}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <Select.Trigger className="text-muted-foreground h-8">
+                        {field.value || 'Select visibility'}
+                      </Select.Trigger>
+                      <Select.Content>
+                        {VISIBLITIES.map((option) => (
+                          <Select.Item key={option.value} value={option.value}>
+                            {option.label}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  )}
+                />
+              </Form.Item>
+            </div>
+            {showExtraFields && (
+              <div className="flex flex-wrap justify-between gap-3 mt-2">
+                <Form.Item className="flex-1">
+                  <Form.Label>Code</Form.Label>
+                  <Form.Control>
+                    <Controller
+                      name={`stages.${index}.code`}
+                      control={control}
+                      defaultValue={props.stage?.code || ''}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter code"
+                          className="input"
+                        />
+                      )}
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+
+                <Form.Item className="flex-1">
+                  <Form.Label>Age</Form.Label>
+                  <Form.Control>
+                    <Controller
+                      name={`stages.${index}.age`}
+                      control={control}
+                      defaultValue={props.stage?.age || ''}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter age"
+                          className="input"
+                        />
+                      )}
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+
+                <Form.Item className="flex-1">
+                  <Form.Label>Can move members</Form.Label>
+                  <Controller
+                    name={`stages.${index}.canMoveMemberIds`}
+                    control={control}
+                    defaultValue={stage?.canMoveMemberIds || ''}
+                    render={({ field }) => (
+                      <Select {...field}>
+                        <Select.Trigger className="text-muted-foreground h-8">
+                          Select can move members
+                        </Select.Trigger>
+                        <Select.Content>
+                          {VISIBLITIES.map((option) => (
+                            <Select.Item
+                              key={option.value}
+                              value={option.value}
+                            >
+                              {option.label}
+                            </Select.Item>
+                          ))}
+                        </Select.Content>
+                      </Select>
+                    )}
+                  />
+                </Form.Item>
+
+                <Form.Item className="flex-1">
+                  <Form.Label>Can edit members</Form.Label>
+                  <Controller
+                    name={`stages.${index}.canEditMemberIds`}
+                    control={control}
+                    defaultValue={stage?.canEditMemberIds || ''}
+                    render={({ field }) => (
+                      <Select {...field}>
+                        <Select.Trigger className="text-muted-foreground h-8">
+                          Select can edit members
+                        </Select.Trigger>
+                        <Select.Content>
+                          {VISIBLITIES.map((option) => (
+                            <Select.Item
+                              key={option.value}
+                              value={option.value}
+                            >
+                              {option.label}
+                            </Select.Item>
+                          ))}
+                        </Select.Content>
+                      </Select>
+                    )}
+                  />
+                </Form.Item>
+
+                <Form.Item className="flex flex-row items-center justify-center space-x-3 space-y-0">
+                  <Form.Control>
+                    <Controller
+                      name={`stages.${index}.defaultTick`}
+                      control={control}
+                      defaultValue={props.stage?.defaultTick || false}
+                      render={({ field }) => (
+                        <Checkbox {...field} checked={field.value} />
+                      )}
+                    />
+                  </Form.Control>
+                </Form.Item>
+              </div>
+            )}
+          </div>
+
+          <div
+            className={`
+              flex items-center gap-1 text-xs text-purple-500 cursor-pointer
+              px-2 py-1 rounded bg-purple-50 hover:bg-purple-100 transition-colors duration-150
+              select-none
+            `}
+            onClick={() => setShowExtraFields(!showExtraFields)}
+          >
+            {showExtraFields
+              ? showTooltip(<IconChevronUp size={14} />, 'Hide extra fields')
+              : showTooltip(<IconChevronDown size={14} />, 'Show extra fields')}
+          </div>
         </div>
       </div>
     </div>

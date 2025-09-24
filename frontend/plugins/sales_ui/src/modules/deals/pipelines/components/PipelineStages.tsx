@@ -5,6 +5,8 @@ import {
 import { Spinner, useQueryState } from 'erxes-ui';
 
 import PipelineStageItem from './PipleineStageItem';
+import { useEffect } from 'react';
+import { useFieldArray } from 'react-hook-form';
 import { useStages } from '@/deals/stage/hooks/useStages';
 import { verticalListSortingStrategy } from '@dnd-kit/sortable';
 
@@ -13,20 +15,33 @@ const props: Partial<SortableProps> = {
   itemCount: 10,
 };
 
-const PipelineStages = () => {
+const PipelineStages = ({ form }: { form: any }) => {
   const [pipelineId] = useQueryState('pipelineId');
+  const { control, watch, setValue } = form;
 
-  const { stages, loading: stagesLoading } = useStages({
+  const { stages: initialStages, loading: stagesLoading } = useStages({
     variables: {
       pipelineId,
     },
   });
 
-  if (stagesLoading) {
-    return <Spinner />;
-  }
+  const { fields } = useFieldArray({
+    control,
+    name: 'stages',
+  });
 
-  const items = (stages || []).map((stage) => stage._id);
+  useEffect(() => {
+    if (initialStages && fields.length === 0) {
+      setValue('stages', initialStages, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [initialStages, fields.length, form, setValue]);
+
+  if (stagesLoading) return <Spinner />;
+
+  const items = (fields || []).map((field) => field.id);
 
   return (
     <div>
@@ -34,8 +49,18 @@ const PipelineStages = () => {
       <Sortable
         {...props}
         items={items || []}
-        renderItem={(props: any) => {
-          return <PipelineStageItem {...props} stages={stages} />;
+        renderItem={({ value, index, ...sortableProps }: any) => {
+          const stage = watch('stages')[index];
+
+          return (
+            <PipelineStageItem
+              {...sortableProps}
+              key={value}
+              index={index}
+              control={control}
+              stage={stage}
+            />
+          );
         }}
       />
     </div>

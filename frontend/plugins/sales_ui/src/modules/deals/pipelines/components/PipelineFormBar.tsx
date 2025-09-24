@@ -7,6 +7,7 @@ import { PipelineForm } from './PipelineForm';
 import { PipelineHotKeyScope } from '@/deals/types/pipelines';
 import { TPipelineForm } from '@/deals/types/pipelines';
 import { usePipelineAdd } from '@/deals/boards/hooks/usePipelines';
+import { usePipelineDetail } from '@/deals/boards/hooks/usePipelines';
 import { usePipelineForm } from '@/deals/boards/hooks/usePipelineForm';
 import { usePreviousHotkeyScope } from 'erxes-ui';
 import { useScopedHotkeys } from 'erxes-ui';
@@ -32,6 +33,8 @@ export function PipelineFormBar() {
   const searchParams = new URLSearchParams(location.search);
   const pipelineId = searchParams.get('pipelineId');
 
+  const { pipelineDetail } = usePipelineDetail();
+  console.log('ppppp', pipelineDetail);
   const submitHandler = (data: TPipelineForm) => {
     console.log('ddd', data);
     // addPipeline({
@@ -81,6 +84,19 @@ export function PipelineFormBar() {
   );
 
   const title = pipelineId ? 'Edit Pipeline' : 'Add Pipeline';
+
+  useEffect(() => {
+    if (!pipelineDetail) return;
+    reset({
+      name: pipelineDetail?.name,
+      visibility: pipelineDetail?.visibility,
+      boardId: pipelineDetail?.boardId,
+      tagId: pipelineDetail?.tagId,
+      departmentIds: pipelineDetail?.departmentIds,
+      branchIds: pipelineDetail?.branchIds,
+      memberIds: pipelineDetail?.memberIds,
+    });
+  }, [pipelineDetail, reset]);
 
   return (
     <div className="ml-auto flex items-center gap-3">

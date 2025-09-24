@@ -53,7 +53,7 @@ export const SelectBoardsProvider = ({
 
 const SelectBoardsValue = () => {
   const { selectedBoardName } = useSelectBoardsContext();
-  console.log('sss', selectedBoardName);
+
   return (
     <Combobox.Value placeholder="Select Board" value={selectedBoardName} />
   );
