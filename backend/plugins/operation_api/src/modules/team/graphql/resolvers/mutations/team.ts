@@ -95,7 +95,10 @@ export const teamMutations = {
     });
 
     for (const memberId of memberIds) {
-      const teamMember = await models.TeamMember.findOne({ memberId });
+      const teamMember = await models.TeamMember.findOne({
+        memberId,
+        teamId: _id,
+      });
 
       if (!teamMember) {
         sendNotification(subdomain, {

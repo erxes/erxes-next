@@ -811,6 +811,8 @@ export const loadUserClass = (models: IModels, subdomain: string) => {
               contentType: `${pluginName}:system.welcome`,
             });
 
+            await user.updateOne({ $set: { lastSeenAt: new Date() } });
+
             continue;
           }
 

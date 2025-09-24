@@ -8,7 +8,7 @@ const NotificationsWidgets = (props: any) => {
     .replace(':', '.')
     .split('.');
 
-  if (moduleName === 'system') {
+  if (moduleName === 'system' && collectionType) {
     const NotificationComponent =
       NotificationContent[collectionType as keyof typeof NotificationContent];
 
