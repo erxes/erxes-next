@@ -7,9 +7,6 @@ const baseNotificationSchema = z.object({
   type: z.enum(['info', 'success', 'warning', 'error']),
   priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
   metadata: z.record(z.any()).optional(),
-
-  contentType: z.string(),
-  contentTypeId: z.union([z.string(), z.instanceof(Types.ObjectId)]),
 });
 
 const systemNotificationSchema = baseNotificationSchema.extend({
@@ -23,6 +20,9 @@ const userNotificationSchema = baseNotificationSchema.extend({
   action: z.string(),
   notificationType: z.string(),
   allowMultiple: z.boolean().default(false),
+
+  contentType: z.string(),
+  contentTypeId: z.union([z.string(), z.instanceof(Types.ObjectId)]),
 });
 
 // Union for notification
