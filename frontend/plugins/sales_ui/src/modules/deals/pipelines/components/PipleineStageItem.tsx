@@ -12,6 +12,7 @@ import {
 
 import { Controller } from 'react-hook-form';
 import { IStage } from '@/deals/types/stages';
+import { SelectMember } from 'ui-modules';
 import { SortableItemProps } from '@/deals/components/common/Item';
 import { useState } from 'react';
 
@@ -237,54 +238,40 @@ const PipelineStageItem = (props: Props) => {
 
                 <Form.Item className="flex-1">
                   <Form.Label>Can move members</Form.Label>
-                  <Controller
-                    name={`stages.${index}.canMoveMemberIds`}
-                    control={control}
-                    defaultValue={stage?.canMoveMemberIds || ''}
-                    render={({ field }) => (
-                      <Select {...field}>
-                        <Select.Trigger className="text-muted-foreground h-8">
-                          Select can move members
-                        </Select.Trigger>
-                        <Select.Content>
-                          {VISIBLITIES.map((option) => (
-                            <Select.Item
-                              key={option.value}
-                              value={option.value}
-                            >
-                              {option.label}
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select>
-                    )}
-                  />
+                  <Form.Control>
+                    <Controller
+                      name={`stages.${index}.canMoveMemberIds`}
+                      control={control}
+                      defaultValue={stage?.canMoveMemberIds || ''}
+                      render={({ field }) => (
+                        <SelectMember.FormItem
+                          mode="multiple"
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </Form.Control>
+                  <Form.Message />
                 </Form.Item>
 
                 <Form.Item className="flex-1">
                   <Form.Label>Can edit members</Form.Label>
-                  <Controller
-                    name={`stages.${index}.canEditMemberIds`}
-                    control={control}
-                    defaultValue={stage?.canEditMemberIds || ''}
-                    render={({ field }) => (
-                      <Select {...field}>
-                        <Select.Trigger className="text-muted-foreground h-8">
-                          Select can edit members
-                        </Select.Trigger>
-                        <Select.Content>
-                          {VISIBLITIES.map((option) => (
-                            <Select.Item
-                              key={option.value}
-                              value={option.value}
-                            >
-                              {option.label}
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select>
-                    )}
-                  />
+                  <Form.Control>
+                    <Controller
+                      name={`stages.${index}.canEditMemberIds`}
+                      control={control}
+                      defaultValue={stage?.canEditMemberIds || ''}
+                      render={({ field }) => (
+                        <SelectMember.FormItem
+                          mode="multiple"
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </Form.Control>
+                  <Form.Message />
                 </Form.Item>
 
                 <Form.Item className="flex flex-row items-center justify-center space-x-3 space-y-0">
@@ -294,7 +281,10 @@ const PipelineStageItem = (props: Props) => {
                       control={control}
                       defaultValue={props.stage?.defaultTick || false}
                       render={({ field }) => (
-                        <Checkbox {...field} checked={field.value} />
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       )}
                     />
                   </Form.Control>

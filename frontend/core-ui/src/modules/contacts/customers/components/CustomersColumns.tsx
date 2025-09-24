@@ -22,7 +22,6 @@ import {
   readImage,
   useQueryState,
   PopoverScoped,
-  Badge,
   FullNameValue,
 } from 'erxes-ui';
 import { useState } from 'react';
@@ -149,7 +148,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     id: 'tagIds',
     accessorKey: 'tagIds',
     header: () => <RecordTable.InlineHead label="Tags" icon={IconTags} />,
-    cell: ({ cell }) => {
+    cell: ({ cell }) => { 
       return (
         <SelectTags.InlineCell
           tagType="core:customer"
@@ -166,6 +165,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                 fields: {
                   tagIds: () => newSelectedTagIds,
                 },
+                optimistic: true,
               });
             },
           })}
