@@ -1,7 +1,7 @@
-import { Input, Separator, useBlockEditor, BlockEditor } from 'erxes-ui';
+import { Separator, useBlockEditor, BlockEditor, Textarea } from 'erxes-ui';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useDebounce } from 'use-debounce';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Block } from '@blocknote/core';
 import { ITask } from '@/task/types';
 import { ActivityList } from '@/activity/components/ActivityList';
@@ -46,6 +46,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
   });
   const { updateTask } = useUpdateTask();
   const [name, setName] = useState(_name);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleDescriptionChange = async () => {
     const content = await editor?.document;
@@ -84,10 +85,20 @@ export const TaskFields = ({ task }: { task: ITask }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedDescriptionContent]);
+
+  useEffect(() => {
+    if (textareaRef.current && name) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [name]);
+
   return (
     <div className="flex flex-col gap-3">
-      <Input
-        className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
+      <Textarea
+        ref={textareaRef}
+        className="shadow-none focus-visible:shadow-none p-0"
+        style={{ fontSize: "1.25rem", lineHeight: "1.75rem" }}
         placeholder="Task Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
