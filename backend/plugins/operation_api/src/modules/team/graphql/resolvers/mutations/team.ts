@@ -99,19 +99,23 @@ export const teamMutations = {
 
       if (!teamMember) {
         sendNotification(subdomain, {
-          title: 'Team introduction',
-          message: `Team introduction`,
+          title: 'Team Invitation',
+          message: `You have been invited to join a new team!`,
           type: 'info',
           userIds: [memberId],
           priority: 'low',
           kind: 'system',
+          contentType: 'operation:team',
+          contentTypeId: _id,
         });
       } else {
         const team = await models.Team.findOne({ _id });
 
         sendNotification(subdomain, {
           title: 'Team Invitation',
-          message: `You have been invited to ${team?.name} team`,
+          message: `You have been invited to join the ${
+            team?.name || 'a'
+          } team.`,
           userIds: [memberId],
           fromUserId: user._id,
           contentType: `operation:team`,

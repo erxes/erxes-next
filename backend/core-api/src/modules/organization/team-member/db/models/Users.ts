@@ -796,33 +796,32 @@ export const loadUserClass = (models: IModels, subdomain: string) => {
       }
 
       if (user.isOwner && !user.lastSeenAt) {
-        sendNotification(subdomain, {
-          title: 'Welcome to erxes 🎉',
-          message:
-            'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
-          type: 'info',
-          userIds: [user._id],
-          priority: 'low',
-          kind: 'system',
-          metadata: {
-            template: 'welcomeMessage',
-          },
-        });
-
         const pluginNames = await getPlugins();
 
         for (const pluginName of pluginNames) {
+          if (pluginName === 'core') {
+            sendNotification(subdomain, {
+              title: 'Welcome to erxes 🎉',
+              message:
+                'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
+              type: 'info',
+              userIds: [user._id],
+              priority: 'low',
+              kind: 'system',
+              contentType: 'core',
+            });
+
+            continue;
+          }
+
           sendNotification(subdomain, {
-            title: 'Welcome to ' + pluginName,
-            message:
-              'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
+            title: `Get Started with ${pluginName}`,
+            message: `Excited to introduce ${pluginName}! Dive in to explore its features and see how it can help your business thrive.`,
             type: 'info',
             userIds: [user._id],
             priority: 'low',
             kind: 'system',
-            metadata: {
-              plugin: pluginName,
-            },
+            contentType: pluginName,
           });
         }
       }
