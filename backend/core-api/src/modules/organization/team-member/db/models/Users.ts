@@ -131,7 +131,7 @@ export interface IUserModel extends Model<IUserDocument> {
   createSystemUser(doc: IAppDocument): IUserDocument;
 }
 
-export const loadUserClass = (models: IModels) => {
+export const loadUserClass = (models: IModels, subdomain: string) => {
   class User {
     public static async getUser(_id: string) {
       const user = await models.Users.findOne({ _id });
@@ -795,6 +795,21 @@ export const loadUserClass = (models: IModels) => {
         }
       }
 
+      if (user.isOwner && !user.lastSeenAt) {
+        sendNotification(subdomain, {
+          title: 'Welcome to erxes 🎉',
+          message:
+            'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
+          type: 'info',
+          userIds: [user._id],
+          priority: 'low',
+          kind: 'system',
+          metadata: {
+            template: 'welcomeMessage',
+          },
+        });
+      }
+
       return {
         token,
         refreshToken,
@@ -811,6 +826,11 @@ export const loadUserClass = (models: IModels) => {
 
       if (validatedToken) {
         await redis.del(`user_token_${user._id}_${currentToken}`);
+
+        await models.Users.updateOne(
+          { _id: user._id },
+          { $set: { lastSeenAt: new Date() } },
+        );
 
         return 'loggedout';
       }

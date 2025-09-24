@@ -1,5 +1,6 @@
 import { TeamMemberRoles } from '@/team/@types/team';
 import { checkUserRole } from '@/utils';
+import { sendNotification } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 
 export const teamMutations = {
@@ -84,7 +85,7 @@ export const teamMutations = {
   teamAddMembers: async (
     _parent: undefined,
     { _id, memberIds }: { _id: string; memberIds: string[] },
-    { models, user }: IContext,
+    { models, subdomain, user }: IContext,
   ) => {
     await checkUserRole({
       models,
@@ -92,6 +93,35 @@ export const teamMutations = {
       userId: user._id,
       allowedRoles: [TeamMemberRoles.ADMIN, TeamMemberRoles.LEAD],
     });
+
+    for (const memberId of memberIds) {
+      const teamMember = await models.TeamMember.findOne({ memberId });
+
+      if (!teamMember) {
+        sendNotification(subdomain, {
+          title: 'Team introduction',
+          message: `Team introduction`,
+          type: 'info',
+          userIds: [memberId],
+          priority: 'low',
+          kind: 'system',
+        });
+      } else {
+        const team = await models.Team.findOne({ _id });
+
+        sendNotification(subdomain, {
+          title: 'Team Invitation',
+          message: `You have been invited to ${team?.name} team`,
+          userIds: [memberId],
+          fromUserId: user._id,
+          contentType: `operation:team`,
+          contentTypeId: _id,
+          type: 'info',
+          priority: 'low',
+          kind: 'user',
+        });
+      }
+    }
 
     return models.TeamMember.createTeamMembers(
       memberIds.map((memberId) => ({
