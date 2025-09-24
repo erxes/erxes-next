@@ -1,4 +1,5 @@
 import {
+  rtcSessionAtom,
   sipStateAtom,
 } from '@/integrations/call/states/sipStates';
 import { CallStatusEnum } from '@/integrations/call/types/sipTypes';
@@ -10,7 +11,7 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Button, ButtonProps, cn } from 'erxes-ui';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
 import {
@@ -185,10 +186,11 @@ const CallInfo = ({
   const sip = useAtomValue(sipStateAtom);
   const setStartDate = useSetAtom(callDurationAtom);
   const time = useCallDuration();
+  const [rtcSessionState] = useAtom(rtcSessionAtom);
 
   useEffect(() => {
     if (sip.callStatus === CallStatusEnum.ACTIVE) {
-      setStartDate(new Date());
+      setStartDate(rtcSessionState?.start_time || new Date());
     } else {
       setStartDate(null);
     }
