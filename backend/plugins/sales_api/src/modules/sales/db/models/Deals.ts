@@ -5,6 +5,7 @@ import {
   createBoardItem,
   destroyBoardItemRelations,
   fillSearchTextItem,
+  getTotalAmounts,
   watchItem,
 } from '../../utils';
 import { dealSchema } from '../definitions/deals';
@@ -45,6 +46,7 @@ export const loadDealClass = (models: IModels) => {
 
       if (doc.productsData) {
         doc.productsData = doc.productsData.filter((pd) => pd);
+        Object.assign(doc, { ...getTotalAmounts(doc.productsData) })
       }
 
       return createBoardItem(models, doc);
@@ -61,6 +63,7 @@ export const loadDealClass = (models: IModels) => {
 
       if (doc.productsData) {
         doc.productsData = doc.productsData.filter((pd) => pd && pd.productId);
+        Object.assign(doc, { ...getTotalAmounts(doc.productsData) });
       }
 
       await models.Deals.updateOne({ _id }, { $set: doc, searchText });

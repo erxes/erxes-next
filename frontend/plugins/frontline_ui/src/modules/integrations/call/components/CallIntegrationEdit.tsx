@@ -47,6 +47,8 @@ export const CallIntegrationEdit = () => {
         details: {
           phone: data.phone,
           wsServer: data.websocketServer,
+          srcTrunk: data?.srcTrunk || '',
+          dstTrunk: data?.dstTrunk || '',
           queues: data.queues
             ? data.queues
                 .split(',')
@@ -90,6 +92,8 @@ export const CallIntegrationEdit = () => {
         name: integrationDetail.name || '',
         phone: callsIntegrationDetail?.phone || '',
         websocketServer: callsIntegrationDetail?.wsServer || '',
+        srcTrunk: callsIntegrationDetail?.srcTrunk || '',
+        dstTrunk: callsIntegrationDetail?.dstTrunk || '',
         queues: Array.isArray(callsIntegrationDetail?.queues)
           ? callsIntegrationDetail?.queues.join(',')
           : callsIntegrationDetail?.queues || '',

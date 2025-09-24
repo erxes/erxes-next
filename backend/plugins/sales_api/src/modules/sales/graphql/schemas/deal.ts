@@ -26,6 +26,51 @@ const inputDeps = `
   }
 `;
 
+const queryParams = `
+  _ids: [String]
+  date: SalesItemDate
+  parentId:String
+  pipelineId: String
+  pipelineIds: [String]
+  customerIds: [String]
+  vendorCustomerIds: [String]
+  companyIds: [String]
+  assignedUserIds: [String]
+  productIds: [String]
+  closeDateType: String
+  labelIds: [String]
+  search: String
+  priority: [String]
+  userIds: [String]
+  segment: String
+  segmentData: String
+  assignedToMe: String
+  startDate: String
+  endDate: String
+  hasStartAndCloseDate: Boolean
+  stageChangedStartDate: Date
+  stageChangedEndDate: Date
+  noSkipArchive: Boolean
+  tagIds: [String]
+  number: String
+  branchIds: [String]
+  departmentIds: [String]
+  boardIds: [String]
+  stageCodes: [String]
+  dateRangeFilters:JSON,
+  createdStartDate: Date,
+  createdEndDate: Date
+  stateChangedStartDate: Date
+  stateChangedEndDate: Date
+  startDateStartDate: Date
+  startDateEndDate: Date
+  closeDateStartDate: Date
+  closeDateEndDate: Date
+  resolvedDayBetween:[Int]
+
+  ${GQL_CURSOR_PARAM_DEFS}
+`;
+
 export const types = `
   ${typeDeps}
   ${inputDeps}
@@ -99,51 +144,17 @@ export const types = `
     pageInfo: PageInfo
     totalCount: Int,
   }
-`;
 
-const queryParams = `
-  _ids: [String]
-  date: SalesItemDate
-  parentId:String
-  pipelineId: String
-  pipelineIds: [String]
-  customerIds: [String]
-  vendorCustomerIds: [String]
-  companyIds: [String]
-  assignedUserIds: [String]
-  productIds: [String]
-  closeDateType: String
-  labelIds: [String]
-  search: String
-  priority: [String]
-  userIds: [String]
-  segment: String
-  segmentData: String
-  assignedToMe: String
-  startDate: String
-  endDate: String
-  hasStartAndCloseDate: Boolean
-  stageChangedStartDate: Date
-  stageChangedEndDate: Date
-  noSkipArchive: Boolean
-  tagIds: [String]
-  number: String
-  branchIds: [String]
-  departmentIds: [String]
-  boardIds: [String]
-  stageCodes: [String]
-  dateRangeFilters:JSON,
-  createdStartDate: Date,
-  createdEndDate: Date
-  stateChangedStartDate: Date
-  stateChangedEndDate: Date
-  startDateStartDate: Date
-  startDateEndDate: Date
-  closeDateStartDate: Date
-  closeDateEndDate: Date
-  resolvedDayBetween:[Int]
+  input IDealFilter {
+    stageId: String,
+    initialStageId: String,
+    ${queryParams}
+  }
 
-  ${GQL_CURSOR_PARAM_DEFS}
+  type DealSubscription {
+    action: String
+    deal: Deal
+  }
 `;
 
 const archivedDealsParams = `

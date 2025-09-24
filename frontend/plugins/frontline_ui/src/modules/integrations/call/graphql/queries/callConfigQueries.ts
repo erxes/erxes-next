@@ -32,6 +32,8 @@ export const CALL_USER_INTEGRATIONS = gql`
       wsServer
       token
       queues
+      srcTrunk
+      dstTrunk
     }
   }
 `;

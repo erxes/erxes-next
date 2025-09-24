@@ -35,7 +35,7 @@ export const CallIntegrationForm = ({
               onClick={() => form.handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading && <Spinner size="small" />}
+              {loading && <Spinner size="sm" />}
               Save
             </Button>
           }
@@ -115,6 +115,30 @@ export const CallIntegrationForm = ({
               </Form.Item>
             )}
           />
+          <Form.Field
+            name="srcTrunk"
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Source Trunk</Form.Label>
+                <Form.Control>
+                  <Input {...field} />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+          <Form.Field
+            name="dstTrunk"
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Destination Trunk</Form.Label>
+                <Form.Control>
+                  <Input {...field} />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
           <div className="font-medium">Operators</div>
           {fields.map((field, index) => (
             <div
@@ -168,20 +192,6 @@ export const CallIntegrationForm = ({
                   <IconTrash />
                 </Button>
               </div>
-              <Form.Field
-                name={`operators.${index}.gsForwardAgent`}
-                render={({ field }) => (
-                  <Form.Item className="mt-4">
-                    <div className="flex gap-2 items-center">
-                      <Form.Control>
-                        <Checkbox {...field} />
-                      </Form.Control>
-                      <Form.Label variant="peer">Is forwarding</Form.Label>
-                    </div>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
             </div>
           ))}
           <Button
