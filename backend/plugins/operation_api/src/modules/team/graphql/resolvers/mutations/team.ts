@@ -105,8 +105,7 @@ export const teamMutations = {
           userIds: [memberId],
           priority: 'low',
           kind: 'system',
-          contentType: 'operation:team',
-          contentTypeId: _id,
+          contentType: 'operation:team.invite',
         });
       } else {
         const team = await models.Team.findOne({ _id });

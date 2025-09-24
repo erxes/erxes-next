@@ -34,22 +34,6 @@ const NotificationContentWrapper = ({
 }: {
   notification: INotification;
 }) => {
-  if (notification.kind === INotificationKind.SYSTEM) {
-    const { template = '' } = notification?.metadata || ({} as any);
-
-    const SystemComponent =
-      SystemNotificationContents[
-        template as keyof typeof SystemNotificationContents
-      ];
-    return SystemComponent ? (
-      <Suspense fallback={<Spinner />}>
-        <SystemComponent />
-      </Suspense>
-    ) : (
-      <UnknownSystemNotificationContent />
-    );
-  }
-
   const [pluginName, moduleName, collectionType] = (
     notification?.contentType || ''
   )

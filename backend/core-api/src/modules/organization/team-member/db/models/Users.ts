@@ -808,9 +808,7 @@ export const loadUserClass = (models: IModels, subdomain: string) => {
               userIds: [user._id],
               priority: 'low',
               kind: 'system',
-              metadata: {
-                template: `${pluginName}:welcome`,
-              },
+              contentType: `${pluginName}:system.welcome`,
             });
 
             continue;
@@ -823,9 +821,7 @@ export const loadUserClass = (models: IModels, subdomain: string) => {
             userIds: [user._id],
             priority: 'low',
             kind: 'system',
-            metadata: {
-              template: `${pluginName}:welcome`,
-            },
+            contentType: `${pluginName}:system.welcome`,
           });
         }
       }
