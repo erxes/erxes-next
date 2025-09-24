@@ -1,4 +1,6 @@
-import { sipStateAtom } from '@/integrations/call/states/sipStates';
+import {
+  sipStateAtom,
+} from '@/integrations/call/states/sipStates';
 import { CallStatusEnum } from '@/integrations/call/types/sipTypes';
 import {
   IconDialpad,
@@ -11,7 +13,6 @@ import { Button, ButtonProps, cn } from 'erxes-ui';
 import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
-import { CallNumber } from '@/integrations/call/components/CallNumber';
 import {
   Transfer,
   TransferTrigger,
@@ -23,14 +24,40 @@ import {
 } from '@/integrations/call/states/callStates';
 import { useCallDuration } from '@/integrations/call/hooks/useCallDuration';
 import { refetchNewMessagesState } from '@/inbox/conversations/states/newMessagesCountState';
+import { ICustomer } from '@/integrations/call/types/callTypes';
+import { renderUserInfo } from '@/integrations/call/utils/renderUserInfo';
+import { extractPhoneNumberFromCounterpart } from '@/integrations/call/utils/callUtils';
+import { useCustomerDetail } from '@/integrations/call/hooks/useCustomerDetail';
 
-export const InCall = () => {
+export const InCall = ({
+  customer,
+  channels,
+  loading,
+}: {
+  customer: any;
+  channels: any;
+  loading: boolean;
+}) => {
+  const sipState = useAtomValue(sipStateAtom);
+
+  const phoneNumber = extractPhoneNumberFromCounterpart(
+    sipState.callCounterpart || '',
+  );
+  const { customerDetail, loading: CallLoading } = useCustomerDetail({
+    phoneNumber,
+  });
+
   const { stopCall } = useSip();
 
   return (
     <>
       <div className="text-center space-y-2 px-2 py-6">
-        <CallInfo />
+        <CallInfo
+          customer={customer}
+          channels={channels}
+          loading={loading}
+          customerDetail={customerDetail}
+        />
       </div>
       <Transfer />
       <div className="grid grid-cols-5 p-1 gap-1 items-stretch border-b-0">
@@ -144,7 +171,17 @@ export const SelectCustomer = () => {
   );
 };
 
-const CallInfo = () => {
+const CallInfo = ({
+  customerDetail,
+  customer,
+  channels,
+  loading,
+}: {
+  customerDetail: any;
+  customer: ICustomer;
+  channels: any;
+  loading: boolean;
+}) => {
   const sip = useAtomValue(sipStateAtom);
   const setStartDate = useSetAtom(callDurationAtom);
   const time = useCallDuration();
@@ -163,7 +200,8 @@ const CallInfo = () => {
         {sip.callStatus === CallStatusEnum.STARTING && 'Calling...'}
         {sip.callStatus === CallStatusEnum.ACTIVE && 'In call'}
       </div>
-      <CallNumber />
+      {!loading && renderUserInfo(customer, customerDetail)}
+
       {sip.callStatus === CallStatusEnum.ACTIVE && (
         <div className="text-center text-accent-foreground text-sm">
           Duration: {time}

@@ -24,3 +24,27 @@ export interface ICallConversationNote {
   userId?: string;
   internal?: boolean;
 }
+
+export interface ICustomerDoc {
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  phones?: any[];
+  primaryPhone?: string;
+}
+
+export interface ICustomer extends ICustomerDoc {
+  _id: string;
+  getTags?: ITag[];
+}
+
+export interface ITag {
+  _id: string;
+  type: string;
+  name: string;
+  colorCode: string;
+  objectCount?: number;
+  parentId?: string;
+  order?: string;
+  totalObjectCount?: number;
+}
