@@ -52,7 +52,7 @@ export const DeleteTeamForm = () => {
               onClick={handleClick}
               disabled={loading}
             >
-              Delete...
+              Delete
             </Button>
           </div>
         </div>
