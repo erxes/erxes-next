@@ -7,6 +7,7 @@ export const CREATE_TASK_MUTATION = gql`
     $description: String
     $status: String
     $priority: Int
+    $estimatePoint: Int
     $startDate: Date
     $targetDate: Date
     $assigneeId: String
@@ -19,6 +20,7 @@ export const CREATE_TASK_MUTATION = gql`
       description: $description
       status: $status
       priority: $priority
+      estimatePoint: $estimatePoint
       startDate: $startDate
       targetDate: $targetDate
       assigneeId: $assigneeId
