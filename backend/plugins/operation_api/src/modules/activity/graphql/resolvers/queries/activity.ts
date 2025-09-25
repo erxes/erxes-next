@@ -10,7 +10,7 @@ export const activityQueries = {
   ) => {
     return cursorPaginate({
       model: models.Activity,
-      params: { ...params, orderBy: { createdAt: 1 } },
+      params: { ...params, orderBy: { createdAt: -1 } },
       query: { contentId: params.contentId },
     });
   },
