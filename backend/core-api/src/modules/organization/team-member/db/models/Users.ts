@@ -25,6 +25,7 @@ import {
 
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-shared/core-modules';
 import { title } from 'process';
+import { PERMISSION_ROLES } from '~/modules/permissions/db/constants';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -234,7 +235,7 @@ export const loadUserClass = (models: IModels) => {
         this.checkPassword(password);
       }
 
-      return models.Users.create({
+      const user = await models.Users.create({
         isOwner,
         username,
         email,
@@ -246,6 +247,13 @@ export const loadUserClass = (models: IModels) => {
         password: notUsePassword ? '' : await this.generatePassword(password),
         code: await this.generateUserCode(),
       });
+
+      models.Roles.create({
+        userId: user._id,
+        role: PERMISSION_ROLES.MEMBER,
+      });
+
+      return user;
     }
 
     /**
@@ -329,7 +337,7 @@ export const loadUserClass = (models: IModels) => {
 
       this.checkPassword(password);
 
-      await models.Users.create({
+      const user = await models.Users.create({
         email,
         groupIds: [groupId],
         isActive: true,
@@ -339,6 +347,11 @@ export const loadUserClass = (models: IModels) => {
         registrationTokenExpires: expires,
         code: await this.generateUserCode(),
         brandIds,
+      });
+
+      models.Roles.create({
+        userId: user._id,
+        role: PERMISSION_ROLES.MEMBER,
       });
 
       return token;
