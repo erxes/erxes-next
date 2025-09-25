@@ -188,7 +188,7 @@ const LazyVideo = ({ src }: { src: string }) => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-video border border-border  overflow-hidden bg-muted p-3 rounded-[20px]"
+      className="relative w-full aspect-video border border-foreground/10  overflow-hidden bg-foreground/10 p-3 rounded-[20px]"
     >
       {isInView && (
         <>
@@ -196,11 +196,11 @@ const LazyVideo = ({ src }: { src: string }) => {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
-          )}
+          )}  
           <video
             src={src}
             controls
-            className={`w-full h-full object-cover transition-opacity duration-300 bg-background rounded-md ${
+            className={`w-full h-full object-cover transition-opacity duration-300 bg-background rounded-md border border-foreground/10 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             onLoadedData={() => setIsLoaded(true)}
