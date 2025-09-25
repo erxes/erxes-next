@@ -136,7 +136,7 @@ export const commonDragVariables = `
   $aboveItemId: String,
   $destinationStageId: String!,
   $sourceStageId: String,
-  $proccessId: String
+  $processId: String
 `;
 
 export const commonDragParams = `
@@ -144,12 +144,12 @@ export const commonDragParams = `
   aboveItemId: $aboveItemId,
   destinationStageId: $destinationStageId,
   sourceStageId: $sourceStageId,
-  proccessId: $proccessId
+  processId: $processId
 `;
 
 export const commonMutationVariables = `
   $parentId: String,
-  $proccessId: String,
+  $processId: String,
   $aboveItemId: String,
   $stageId: String,
   $startDate: Date,
@@ -171,7 +171,7 @@ export const commonMutationVariables = `
 
 export const commonMutationParams = `
   parentId: $parentId,
-  proccessId: $proccessId,
+  processId: $processId,
   aboveItemId: $aboveItemId,
   stageId: $stageId,
   startDate: $startDate,
@@ -236,14 +236,14 @@ export const DEALS_WATCH = gql`
 `;
 
 export const DEALS_ARCHIVE = gql`
-  mutation dealsArchive($stageId: String!, $proccessId: String) {
-    dealsArchive(stageId: $stageId, proccessId: $proccessId)
+  mutation dealsArchive($stageId: String!, $processId: String) {
+    dealsArchive(stageId: $stageId, processId: $processId)
   }
 `;
 
 export const DEALS_COPY = gql`
-  mutation dealsCopy($_id: String!, $proccessId: String) {
-    dealsCopy(_id: $_id, proccessId: $proccessId) {
+  mutation dealsCopy($_id: String!, $processId: String) {
+    dealsCopy(_id: $_id, processId: $processId) {
       ${commonFields}
       ${dealFields}
     }

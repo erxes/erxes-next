@@ -19,7 +19,8 @@ import {
   copyPipelineLabels,
   itemMover,
   subscriptionWrapper,
-} from './utils';
+} from '../utils';
+import { dealsEdit } from '~/modules/sales/graphql/resolvers/mutations/utils';
 
 export const dealMutations = {
   /**
@@ -27,7 +28,7 @@ export const dealMutations = {
    */
   async dealsAdd(
     _root,
-    doc: IDeal & { proccessId: string; aboveItemId: string },
+    doc: IDeal & { processId: string; aboveItemId: string },
     { user, models }: IContext,
   ) {
     doc.initialStageId = doc.stageId;
@@ -81,7 +82,11 @@ export const dealMutations = {
     //   contentType: type,
     // });
 
-    await subscriptionWrapper(models, { action: 'create', deal, pipelineId: stage.pipelineId });
+    await subscriptionWrapper(models, {
+      action: 'create',
+      deal,
+      pipelineId: stage.pipelineId,
+    });
     return deal;
   },
 
@@ -90,236 +95,10 @@ export const dealMutations = {
    */
   async dealsEdit(
     _root,
-    { _id, proccessId, ...doc }: IDealDocument & { proccessId: string },
+    { _id, processId, ...doc }: IDealDocument & { processId: string },
     { user, models }: IContext,
   ) {
-    const oldDeal = await models.Deals.getDeal(_id);
-
-    if (doc.assignedUserIds) {
-      const { removedUserIds } = checkUserIds(
-        oldDeal.assignedUserIds,
-        doc.assignedUserIds
-      );
-      const oldAssignedUserPdata = (oldDeal.productsData || [])
-        .filter((pdata) => pdata.assignUserId)
-        .map((pdata) => pdata.assignUserId || "");
-      const cantRemoveUserIds = removedUserIds.filter((userId) =>
-        oldAssignedUserPdata.includes(userId)
-      );
-
-      if (cantRemoveUserIds.length > 0) {
-        throw new Error(
-          "Cannot remove the team member, it is assigned in the product / service section"
-        );
-      }
-    }
-
-    if (doc.productsData) {
-      const { assignedUserIds } = checkAssignedUserFromPData(
-        oldDeal.assignedUserIds,
-        doc.productsData
-          .filter((pdata) => pdata.assignUserId)
-          .map((pdata) => pdata.assignUserId || ""),
-        oldDeal.productsData
-      );
-
-      doc.assignedUserIds = assignedUserIds;
-
-      // doc.productsData = await checkPricing(subdomain, models, { ...oldDeal, ...doc })
-    }
-
-    // await doScoreCampaign(subdomain, models, _id, doc);
-    // await confirmLoyalties(subdomain, _id, doc);
-
-    const extendedDoc = {
-      ...doc,
-      modifiedAt: new Date(),
-      modifiedBy: user._id,
-    };
-
-    const stage = await models.Stages.getStage(oldDeal.stageId);
-
-    const { canEditMemberIds } = stage;
-
-    if (
-      canEditMemberIds &&
-      canEditMemberIds.length > 0 &&
-      !canEditMemberIds.includes(user._id)
-    ) {
-      throw new Error('Permission denied');
-    }
-
-    if (
-      doc.status === 'archived' &&
-      oldDeal.status === 'active' &&
-      !(await can('dealsArchive', user))
-    ) {
-      throw new Error('Permission denied');
-    }
-
-    if (extendedDoc.customFieldsData) {
-      // clean custom field values
-      extendedDoc.customFieldsData = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'mutation',
-        module: 'fields',
-        action: 'prepareCustomFieldsData',
-        input: {
-          customFieldsData: extendedDoc.customFieldsData,
-        },
-        defaultValue: [],
-      });
-    }
-
-    const updatedItem = await models.Deals.updateDeal(_id, extendedDoc);
-    // labels should be copied to newly moved pipeline
-    if (updatedItem.stageId !== oldDeal.stageId) {
-      await copyPipelineLabels(models, { item: oldDeal, doc, user });
-    }
-
-    // const notificationDoc: IBoardNotificationParams = {
-    const notificationDoc: any = {
-      item: updatedItem,
-      user,
-      type: `dealEdit`,
-      contentType: 'deal',
-    };
-
-    if (doc.status && oldDeal.status && oldDeal.status !== doc.status) {
-      const activityAction = doc.status === 'active' ? 'activated' : 'archived';
-
-      // putActivityLog(subdomain, {
-      //   action: "createArchiveLog",
-      //   data: {
-      //     item: updatedItem,
-      //     contentType: type,
-      //     action: "archive",
-      //     userId: user._id,
-      //     createdBy: user._id,
-      //     contentId: updatedItem._id,
-      //     content: activityAction,
-      //   },
-      // });
-
-      // order notification
-      await changeItemStatus(models, user, {
-        item: updatedItem,
-        status: activityAction,
-        proccessId,
-        stage,
-      });
-    }
-
-    if (doc.assignedUserIds) {
-      const { addedUserIds, removedUserIds } = checkUserIds(
-        oldDeal.assignedUserIds,
-        doc.assignedUserIds,
-      );
-
-      // const activityContent = { addedUserIds, removedUserIds };
-
-      // putActivityLog(subdomain, {
-      //   action: "createAssigneLog",
-      //   data: {
-      //     contentId: _id,
-      //     userId: user._id,
-      //     contentType: type,
-      //     content: activityContent,
-      //     action: "assignee",
-      //     createdBy: user._id,
-      //   },
-      // });
-
-      notificationDoc.invitedUsers = addedUserIds;
-      notificationDoc.removedUsers = removedUserIds;
-    }
-
-    // await sendNotifications(models, subdomain, notificationDoc);
-
-    if (!notificationDoc.invitedUsers && !notificationDoc.removedUsers) {
-      // sendCoreMessage({
-      //   subdomain: "os",
-      //   action: "sendMobileNotification",
-      //   data: {
-      //     title: notificationDoc?.item?.name,
-      //     body: `${user?.details?.fullName || user?.details?.shortName
-      //       } has updated`,
-      //     receivers: notificationDoc?.item?.assignedUserIds,
-      //     data: {
-      //       type,
-      //       id: _id,
-      //     },
-      //   },
-      // });
-    }
-
-    // exclude [null]
-    if (doc.tagIds && doc.tagIds.length) {
-      doc.tagIds = doc.tagIds.filter((ti) => ti);
-    }
-
-    const updatedStage = await models.Stages.getStage(updatedItem.stageId);
-    await subscriptionWrapper(models, { action: 'update', deal: updatedItem, oldDeal, pipelineId: stage.pipelineId });
-
-    // if (updatedStage.pipelineId !== stage.pipelineId) {
-    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //     salesPipelinesChanged: {
-    //       _id: stage.pipelineId,
-    //       proccessId,
-    //       action: "itemRemove",
-    //       data: {
-    //         item: oldDeal,
-    //         oldStageId: stage._id,
-    //       },
-    //     },
-    //   });
-    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //     salesPipelinesChanged: {
-    //       _id: updatedStage.pipelineId,
-    //       proccessId,
-    //       action: "itemAdd",
-    //       data: {
-    //         item: {
-    //           ...updatedItem._doc,
-    //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
-    //         },
-    //         aboveItemId: "",
-    //         destinationStageId: updatedStage._id,
-    //       },
-    //     },
-    //   });
-    // } else {
-    //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //     salesPipelinesChanged: {
-    //       _id: stage.pipelineId,
-    //       proccessId,
-    //       action: "itemUpdate",
-    //       data: {
-    //         item: {
-    //           ...updatedItem._doc,
-    //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
-    //         },
-    //       },
-    //     },
-    //   });
-    // }
-
-    // await doScoreCampaign(subdomain, models, _id, updatedItem);
-
-    if (oldDeal.stageId === updatedItem.stageId) {
-      return updatedItem;
-    }
-
-    // if task moves between stages
-    await itemMover(
-      models,
-      user._id,
-      oldDeal,
-      updatedItem.stageId
-    );
-
-    return updatedItem;
-
+    return await dealsEdit({ models, _id, processId, doc, user });
   },
 
   /**
@@ -328,7 +107,7 @@ export const dealMutations = {
   async dealsChange(
     _root,
     doc: {
-      proccessId: string;
+      processId: string;
       itemId: string;
       aboveItemId?: string;
       destinationStageId: string;
@@ -336,12 +115,7 @@ export const dealMutations = {
     },
     { user, models }: IContext,
   ) {
-    const {
-      itemId,
-      aboveItemId,
-      sourceStageId,
-      destinationStageId,
-    } = doc;
+    const { itemId, aboveItemId, sourceStageId, destinationStageId } = doc;
 
     const item = await models.Deals.findOne({ _id: itemId });
 
@@ -378,13 +152,13 @@ export const dealMutations = {
 
     const updatedItem = await models.Deals.updateDeal(itemId, extendedDoc);
 
-    await itemMover(
-      models,
-      user._id,
-      item,
-      destinationStageId,
-    );
-    await subscriptionWrapper(models, { action: 'update', deal: updatedItem, oldDeal: item, pipelineId: stage.pipelineId });
+    await itemMover(models, user._id, item, destinationStageId);
+    await subscriptionWrapper(models, {
+      action: 'update',
+      deal: updatedItem,
+      oldDeal: item,
+      pipelineId: stage.pipelineId,
+    });
 
     return updatedItem;
   },
@@ -434,7 +208,11 @@ export const dealMutations = {
 
     const removed = await models.Deals.findOneAndDelete({ _id: item._id });
 
-    await subscriptionWrapper(models, { action: 'delete', dealId: item._id, oldDeal: item });
+    await subscriptionWrapper(models, {
+      action: 'delete',
+      dealId: item._id,
+      oldDeal: item,
+    });
 
     return removed;
   },
@@ -452,7 +230,7 @@ export const dealMutations = {
 
   async dealsCopy(
     _root,
-    { _id, proccessId }: { _id: string; proccessId: string },
+    { _id, processId }: { _id: string; processId: string },
     { user, models }: IContext,
   ) {
     const item = await models.Deals.findOne({ _id }).lean();
@@ -519,7 +297,7 @@ export const dealMutations = {
     // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
     //   salesPipelinesChanged: {
     //     _id: stage.pipelineId,
-    //     proccessId,
+    //     processId,
     //     action: 'itemAdd',
     //     data: {
     //       item: {
@@ -539,7 +317,7 @@ export const dealMutations = {
 
   async dealsArchive(
     _root,
-    { stageId, proccessId }: { stageId: string; proccessId: string },
+    { stageId, processId }: { stageId: string; processId: string },
     { user, models }: IContext,
   ) {
     // const items = await models.Deals.find({
@@ -572,7 +350,7 @@ export const dealMutations = {
     //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
     //     salesPipelinesChanged: {
     //       _id: stage.pipelineId,
-    //       proccessId,
+    //       processId,
     //       action: 'itemsRemove',
     //       data: {
     //         item,
@@ -588,11 +366,11 @@ export const dealMutations = {
   async dealsCreateProductsData(
     _root,
     {
-      proccessId,
+      processId,
       dealId,
       docs,
     }: {
-      proccessId: string;
+      processId: string;
       dealId: string;
       docs: IProductData[];
     },
@@ -603,18 +381,19 @@ export const dealMutations = {
 
     const oldDataIds = (deal.productsData || []).map((pd) => pd._id);
 
-    const { assignedUserIds, addedUserIds, removedUserIds } = checkAssignedUserFromPData(
-      deal.assignedUserIds,
-      [
-        ...(deal.productsData || [])
-          .filter((pdata) => pdata.assignUserId)
-          .map((pdata) => pdata.assignUserId || ""),
-        ...docs
-          .filter((pdata) => pdata.assignUserId)
-          .map((pdata) => pdata.assignUserId || ""),
-      ],
-      deal.productsData
-    );
+    const { assignedUserIds, addedUserIds, removedUserIds } =
+      checkAssignedUserFromPData(
+        deal.assignedUserIds,
+        [
+          ...(deal.productsData || [])
+            .filter((pdata) => pdata.assignUserId)
+            .map((pdata) => pdata.assignUserId || ''),
+          ...docs
+            .filter((pdata) => pdata.assignUserId)
+            .map((pdata) => pdata.assignUserId || ''),
+        ],
+        deal.productsData,
+      );
 
     for (const doc of docs) {
       if (doc._id) {
@@ -636,18 +415,19 @@ export const dealMutations = {
       addDocs,
     );
 
-    await models.Deals.updateOne({ _id: dealId }, {
-      $set: {
-        productsData,
-        assignedUserIds,
-        ...await getTotalAmounts(productsData)
-      }
-    });
+    await models.Deals.updateOne(
+      { _id: dealId },
+      {
+        $set: {
+          productsData,
+          assignedUserIds,
+          ...(await getTotalAmounts(productsData)),
+        },
+      },
+    );
 
     const updatedItem =
       (await models.Deals.findOne({ _id: dealId })) || ({} as any);
-
-
 
     const dataIds = (updatedItem.productsData || [])
       .filter((pd) => !oldDataIds.includes(pd._id))
@@ -656,7 +436,7 @@ export const dealMutations = {
     // graphqlPubsub.publish(`salesProductsDataChanged:${dealId}`, {
     //   salesProductsDataChanged: {
     //     _id: dealId,
-    //     proccessId,
+    //     processId,
     //     action: 'create',
     //     data: {
     //       dataIds,
@@ -675,12 +455,12 @@ export const dealMutations = {
   async dealsEditProductData(
     _root,
     {
-      proccessId,
+      processId,
       dealId,
       dataId,
       doc,
     }: {
-      proccessId: string;
+      processId: string;
       dealId: string;
       dataId: string;
       doc: IProductData;
@@ -690,7 +470,7 @@ export const dealMutations = {
     const deal = await models.Deals.getDeal(dealId);
 
     if (!deal.productsData?.length) {
-      throw new Error("Deals productData not found");
+      throw new Error('Deals productData not found');
     }
 
     const oldPData = (deal.productsData || []).find(
@@ -707,25 +487,29 @@ export const dealMutations = {
 
     const possibleAssignedUsersIds: string[] = (deal.productsData || [])
       .filter((pdata) => pdata._id !== dataId && pdata.assignUserId)
-      .map((pdata) => pdata.assignUserId || "");
+      .map((pdata) => pdata.assignUserId || '');
 
     if (doc.assignUserId) {
-      possibleAssignedUsersIds.push(doc.assignUserId)
+      possibleAssignedUsersIds.push(doc.assignUserId);
     }
 
-    const { assignedUserIds, addedUserIds, removedUserIds } = checkAssignedUserFromPData(
-      deal.assignedUserIds,
-      possibleAssignedUsersIds,
-      deal.productsData
-    );
+    const { assignedUserIds, addedUserIds, removedUserIds } =
+      checkAssignedUserFromPData(
+        deal.assignedUserIds,
+        possibleAssignedUsersIds,
+        deal.productsData,
+      );
 
-    await models.Deals.updateOne({ _id: dealId }, {
-      $set: {
-        productsData,
-        assignedUserIds,
-        ...await getTotalAmounts(productsData)
-      }
-    });
+    await models.Deals.updateOne(
+      { _id: dealId },
+      {
+        $set: {
+          productsData,
+          assignedUserIds,
+          ...(await getTotalAmounts(productsData)),
+        },
+      },
+    );
 
     // const stage = await models.Stages.getStage(deal.stageId);
     // const updatedItem =
@@ -734,7 +518,7 @@ export const dealMutations = {
     // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
     //   salesPipelinesChanged: {
     //     _id: stage.pipelineId,
-    //     proccessId,
+    //     processId,
     //     action: 'itemUpdate',
     //     data: {
     //       item: {
@@ -754,7 +538,7 @@ export const dealMutations = {
     // graphqlPubsub.publish(`salesProductsDataChanged:${dealId}`, {
     //   salesProductsDataChanged: {
     //     _id: dealId,
-    //     proccessId,
+    //     processId,
     //     action: 'edit',
     //     data: {
     //       dataId,
@@ -773,11 +557,11 @@ export const dealMutations = {
   async dealsDeleteProductData(
     _root,
     {
-      proccessId,
+      processId,
       dealId,
       dataId,
     }: {
-      proccessId: string;
+      processId: string;
       dealId: string;
       dataId: string;
     },
@@ -797,12 +581,15 @@ export const dealMutations = {
       (data) => data._id !== dataId,
     );
 
-    await models.Deals.updateOne({ _id: dealId }, {
-      $set: {
-        productsData,
-        ...await getTotalAmounts(productsData)
-      }
-    });
+    await models.Deals.updateOne(
+      { _id: dealId },
+      {
+        $set: {
+          productsData,
+          ...(await getTotalAmounts(productsData)),
+        },
+      },
+    );
 
     // const stage = await models.Stages.getStage(deal.stageId);
     // const updatedItem =
@@ -811,7 +598,7 @@ export const dealMutations = {
     // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
     //   salesPipelinesChanged: {
     //     _id: stage.pipelineId,
-    //     proccessId,
+    //     processId,
     //     action: 'itemUpdate',
     //     data: {
     //       item: {
@@ -831,7 +618,7 @@ export const dealMutations = {
     // graphqlPubsub.publish(`salesProductsDataChanged:${dealId}`, {
     //   salesProductsDataChanged: {
     //     _id: dealId,
-    //     proccessId,
+    //     processId,
     //     action: 'delete',
     //     data: {
     //       dataId,
