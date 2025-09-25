@@ -1,7 +1,12 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { AutomationNodeType } from '@/automations/types';
 import { IconLinkPlus, IconPlus } from '@tabler/icons-react';
-import { Handle, Position } from '@xyflow/react';
+import {
+  ConnectionState,
+  Handle,
+  Position,
+  useConnection,
+} from '@xyflow/react';
 import { Button, cn } from 'erxes-ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { memo, useCallback } from 'react';
@@ -12,17 +17,65 @@ interface NodeOutputHandlerProps extends React.HTMLAttributes<HTMLDivElement> {
   showAddButton: boolean;
   addButtonClassName?: string;
 }
+const selector = (
+  { inProgress, fromHandle }: ConnectionState,
+  nodeId: string,
+) => {
+  return fromHandle?.nodeId === nodeId && inProgress;
+};
+
+const AwaitToConnectButtonIcon = ({
+  isSelected,
+  nodeType,
+}: {
+  isSelected: boolean;
+  nodeType: AutomationNodeType;
+}) => {
+  if (isSelected) {
+    return (
+      <motion.div
+        key="link"
+        initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
+        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+        exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
+        transition={{ duration: 0.2 }}
+      >
+        <IconLinkPlus
+          className={cn('size-4 text-accent-foreground', {
+            'text-primary': nodeType === AutomationNodeType.Trigger,
+            'text-success': nodeType === AutomationNodeType.Action,
+          })}
+        />
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      key="plus"
+      initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
+      animate={{ opacity: 1, rotate: 0, scale: 1 }}
+      exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
+      transition={{ duration: 0.2 }}
+    >
+      <IconPlus className="size-4 text-accent-foreground" />
+    </motion.div>
+  );
+};
 
 const AwaitToConnectButton = memo(
-  ({
+  React.forwardRef<
+    HTMLDivElement,
+    {
+      nodeType: AutomationNodeType;
+      addButtonClassName?: string;
+      nodeHandleId: string;
+    }
+  >(function AwaitToConnectButton({
     nodeType,
-    nodeHandleId,
     addButtonClassName,
-  }: {
-    nodeType: AutomationNodeType;
-    addButtonClassName?: string;
-    nodeHandleId: string;
-  }) => {
+    nodeHandleId,
+  }) {
     const {
       awaitingToConnectNodeId,
       setAwaitingToConnectNodeId,
@@ -45,36 +98,6 @@ const AwaitToConnectButton = memo(
 
     const isSelected = awaitingToConnectNodeId === nodeHandleId;
 
-    const IconComponent = (
-      <AnimatePresence mode="wait">
-        {isSelected ? (
-          <motion.div
-            key="link"
-            initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
-            animate={{ opacity: 1, rotate: 0, scale: 1 }}
-            exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <IconLinkPlus
-              className={cn('size-4 text-accent-foreground', {
-                'text-primary': nodeType === AutomationNodeType.Trigger,
-                'text-success': nodeType === AutomationNodeType.Action,
-              })}
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="plus"
-            initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
-            animate={{ opacity: 1, rotate: 0, scale: 1 }}
-            exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <IconPlus className="size-4 text-accent-foreground" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
     return (
       <div className="absolute flex items-center top-1/2 -translate-y-1/2 translate-x-3 pointer-events-none ml-0.5">
         <div className="bg-accent-foreground h-px w-10 -z-1" />
@@ -85,12 +108,17 @@ const AwaitToConnectButton = memo(
             variant="outline"
             className={cn(addButtonClassName)}
           >
-            {IconComponent}
+            <AnimatePresence mode="wait">
+              <AwaitToConnectButtonIcon
+                isSelected={isSelected}
+                nodeType={nodeType}
+              />
+            </AnimatePresence>
           </Button>
         </div>
       </div>
     );
-  },
+  }),
 );
 
 export const NodeOutputHandler = memo(
@@ -106,6 +134,9 @@ export const NodeOutputHandler = memo(
         children,
         ...rest
       } = props;
+      const connectionInProgress = useConnection((connection) =>
+        selector(connection, handlerId),
+      );
 
       const nodeHandleId = `${nodeType}__${handlerId}`;
 
@@ -118,11 +149,12 @@ export const NodeOutputHandler = memo(
           className={cn('!size-4 -z-10', className)}
           {...rest}
         >
-          {showAddButton && (
+          {!connectionInProgress && showAddButton && (
             <AwaitToConnectButton
               addButtonClassName={addButtonClassName}
               nodeType={nodeType}
               nodeHandleId={nodeHandleId}
+              ref={ref}
             />
           )}
           {children}

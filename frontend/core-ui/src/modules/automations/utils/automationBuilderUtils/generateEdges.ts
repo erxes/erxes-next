@@ -36,6 +36,7 @@ export const generateEdges = (
   ): Edge => ({
     ...commonEdgeDoc,
     id: `${nodeType}-${sourceId}`,
+    sourceHandle: 'right',
     source: sourceId,
     target: targetId,
     style: commonStyle,

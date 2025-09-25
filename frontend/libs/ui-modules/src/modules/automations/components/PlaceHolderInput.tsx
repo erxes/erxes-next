@@ -1,5 +1,5 @@
 import { Input } from 'erxes-ui';
-import { Attributes } from 'ui-modules/modules/automations/components/Attributes';
+import { Attributes } from 'ui-modules/modules/automations/components/attributes/Attributes';
 import { IField } from 'ui-modules/modules/segments';
 
 type Props = {

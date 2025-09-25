@@ -8,7 +8,9 @@ const managePropertyRuleSchema = z.object({
 });
 
 export const managePropertiesFormSchema = z.object({
-  module: z.string().optional(),
+  module: z.string(),
+  targetTriggerId: z.string().optional(),
+  targetActionId: z.string().optional(),
   rules: z.array(managePropertyRuleSchema).default([]),
 });
 
