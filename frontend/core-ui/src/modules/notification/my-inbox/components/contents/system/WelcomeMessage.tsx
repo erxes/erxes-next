@@ -1,130 +1,257 @@
-import { IconKeyboard, IconSun } from '@tabler/icons-react';
-import { Button, Card } from 'erxes-ui';
+import {
+  IconBrandInstagramFilled,
+  IconBrandLinkedinFilled,
+  IconUsers,
+  IconSettings,
+  IconMailFilled,
+  IconBrandDiscordFilled,
+  IconBrandGithubFilled,
+  IconArrowRight,
+} from '@tabler/icons-react';
+import { currentUserState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
+import { Button, cn } from 'erxes-ui';
 import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-interface FeatureProps {
+type SocialItem = {
+  icon: React.ReactNode;
+  url: string;
+};
+type OnboardingStepItem = {
   icon: React.ReactNode;
   title: string;
+  forOwner?: boolean;
   description: string;
-}
+  action: {
+    label: string;
+    to: string;
+  };
+};
 
-const Feature = ({ icon, title, description }: FeatureProps) => (
-  <div className="flex items-start space-x-3">
-    <div className="mt-1 rounded-lg bg-primary/10 p-2">{icon}</div>
-    <div>
-      <h3 className="font-semibold">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
-  </div>
-);
-const features: FeatureProps[] = [
+const Socials: SocialItem[] = [
   {
-    icon: <IconSun className="h-4 w-4" />,
-    title: 'Revamped UI',
-    description:
-      'Built with ShadCN and Radix UI, delivering a smoother, more accessible interface.',
+    icon: <IconMailFilled className="size-5" />,
+    url: 'https://www.instagram.com/erxes/',
   },
   {
-    icon: <IconKeyboard className="h-4 w-4" />,
-    title: 'Keyboard Shortcuts',
-    description: 'Navigate erxes with ease using built-in shortcuts.',
+    icon: <IconBrandInstagramFilled className="size-5" />,
+    url: 'https://www.instagram.com/erxes/',
   },
   {
-    icon: <IconSun className="h-4 w-4" />,
-    title: 'Dark & Light Mode',
-    description: 'Choose the theme that suits your preference, by default.',
+    icon: <IconBrandLinkedinFilled className="size-5" />,
+    url: 'https://www.linkedin.com/company/erxes/',
+  },
+  {
+    icon: <IconBrandGithubFilled className="size-5" />,
+    url: 'https://github.com/erxes',
+  },
+  {
+    icon: <IconBrandDiscordFilled className="size-5" />,
+    url: 'https://discord.gg/erxes',
   },
 ];
 
-export const WelcomeMessageNotificationContent = () => {
+const OnboardingSteps: OnboardingStepItem[] = [
+  {
+    icon: <IconUsers className="size-5" />,
+    title: 'Invite Your Team',
+    description:
+      'Collaborate better by inviting team members to join your workspace and start working together.',
+    action: {
+      label: 'Invite Team Member',
+      to: '/settings/team-member',
+    },
+  },
+  {
+    icon: <IconSettings className="size-5" />,
+    title: 'Customize Your Workspace',
+    forOwner: true,
+    description:
+      'Tailor your workspace to your preferences with customizable settings.',
+    action: {
+      label: 'Customize Workspace',
+      to: '/settings/workspace',
+    },
+  },
+  {
+    icon: <IconSettings className="size-5" />,
+    title: 'Customize Your Workspace',
+    forOwner: true,
+    description:
+      'Tailor your workspace to your preferences with customizable settings.',
+    action: {
+      label: 'Customize Workspace',
+      to: '/settings/workspace',
+    },
+  },
+];
+
+const SocialSection = () => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 1.0 }}
+  >
+    <h3 className="text-base font-medium text-muted-foreground text-center mb-4">
+      Contact Us:
+    </h3>
+    <div className="flex flex-wrap justify-center gap-2">
+      {Socials.map((item) => {
+        return (
+          <Link to={item.url}>
+            <div className="bg-muted text-muted-foreground  rounded-sm p-[6px]">
+              {item.icon}
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  </motion.div>
+);
+
+const OnboardingStepsSection = ({ isOwner }: { isOwner: boolean }) => {
   return (
-    <>
-      <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="max-w-4xl mx-auto">
-            <Card.Header>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-2 text-center"
-              >
-                <h1 className="text-3xl font-bold tracking-tight">
-                  Welcome to erxes 3.0 – A New Experience Begins!
-                </h1>
-                <p className="text-muted-foreground">
-                  A Fresh Start with a New UX/UI
-                </p>
-              </motion.div>
-            </Card.Header>
-            <Card.Content className="space-y-8">
-              <p className="text-center text-muted-foreground">
-                We've completely redesigned erxes from the ground up, bringing a
-                modern, faster, and more intuitive experience. This is just the
-                beginning—the new UX/UI will continue to evolve, with more
-                features and plugins rolling out daily.
-              </p>
-
-              <div className="grid gap-6 md:grid-cols-3">
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={feature.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 + 0.5 }}
-                  >
-                    <Feature {...feature} />
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-center">
-                  What to Expect?
-                </h2>
-                <p className="text-center text-muted-foreground">
-                  At launch, only a few plugins will feature the new UI, but we
-                  are actively working to upgrade the entire platform. Every
-                  day, you'll see new improvements.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-center">
-                  Your Feedback Shapes erxes 3.0
-                </h2>
-                <p className="text-center text-muted-foreground">
-                  Your input is essential! Share your thoughts and help us
-                  refine this new experience.
-                </p>
-                <div className="flex justify-center gap-4">
-                  <Button
-                    variant="default"
-                    onClick={() =>
-                      window.open(
-                        'https://discord.gg/Mqvc9kDq',
-                        '_blank',
-                        'noopener,noreferrer',
-                      )
-                    }
-                  >
-                    Join the Community
-                  </Button>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.8 }}
+      className="space-y-4"
+    >
+      <h2 className="text-xl font-semibold text-center mb-6">Get Started</h2>
+      <div className="p-2 rounded-3xl sm:flex flex-col sm:flex-row lg:grid lg:grid-cols-2 border bg-muted gap-2">
+        {OnboardingSteps.map((item, index) => {
+          if (item.forOwner && !isOwner) {
+            return null;
+          }
+          return (
+            <div
+              className={cn(
+                'border rounded-2xl p-3 flex flex-col gap-3 bg-background flex-1 min-w-0',
+                index === 2 &&
+                  OnboardingSteps.length === 3 &&
+                  'lg:col-span-2 col-span-2 sm:col-span-1',
+              )}
+            >
+              <div className="flex flex-col gap-2">
+                <div className="p-[10px] rounded-md text-primary bg-primary/10 w-min">
+                  {item.icon}
                 </div>
+                <h3 className="font-semibold text-primary text-lg break-words">
+                  {item.title}
+                </h3>
+                <p className="text-base text-muted-foreground break-words">
+                  {item.description}
+                </p>
               </div>
-
-              <p className="text-sm text-center text-muted-foreground italic">
-                We've been working tirelessly for the last a month to make this
-                happen—now it's your turn to explore!
-              </p>
-            </Card.Content>
-          </Card>
-        </motion.div>
+              <Button asChild size="sm" variant="ghost" className="self-start">
+                <Link to={item.action.to} className="hover:bg-background">
+                  <span className="text-primary font-semibold text-base flex items-center gap-1 break-words">
+                    <span className="truncate">{item.action.label}</span>
+                    <IconArrowRight className="size-4 flex-shrink-0" />
+                  </span>
+                </Link>
+              </Button>
+            </div>
+          );
+        })}
       </div>
-    </>
+    </motion.div>
+  );
+};
+
+const LazyVideo = ({ src }: { src: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full aspect-video bg-muted rounded-lg overflow-hidden"
+    >
+      {isInView && (
+        <>
+          {!isLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          )}
+          <video
+            src={src}
+            controls
+            className={`w-full h-full object-cover transition-opacity duration-300 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoadedData={() => setIsLoaded(true)}
+            preload="metadata"
+          />
+        </>
+      )}
+      {!isInView && (
+        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+          Video will load when visible
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const WelcomeMessageNotificationContent = () => {
+  const currentUser = useAtomValue(currentUserState);
+  return (
+    <div className="container px-4 sm:px-8 md:px-20 py-8 lg:px-4 xl:px-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-4xl min-w-0 mx-auto space-y-8"
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="space-y-3 text-center"
+        >
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            Welcome to erxes
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            A New Experience Begins!
+          </p>
+        </motion.div>
+
+        <div className="space-y-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <LazyVideo src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" />
+          </motion.div>
+          <OnboardingStepsSection isOwner={currentUser?.isOwner || false} />
+          <SocialSection />
+        </div>
+      </motion.div>
+    </div>
   );
 };

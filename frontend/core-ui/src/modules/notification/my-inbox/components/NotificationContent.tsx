@@ -10,9 +10,14 @@ import {
 import { ScrollArea, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { WelcomeMessageNotificationContent } from '@/notification/my-inbox/components/contents/system/WelcomeMessage';
+import { currentUserState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
 
 export const NotificationContent = () => {
   const { notification, loading } = useNotification();
+  const currentUser = useAtomValue(currentUserState);
+  console.log({ notification, currentUser });
 
   if (loading) {
     return <Spinner />;
@@ -34,6 +39,7 @@ const NotificationContentWrapper = ({
 }: {
   notification: INotification;
 }) => {
+  console.log(notification);
   const [pluginName, moduleName, collectionType] = (
     notification?.contentType || ''
   )
