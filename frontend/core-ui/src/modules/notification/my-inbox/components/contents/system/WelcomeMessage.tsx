@@ -8,6 +8,7 @@ import {
   IconBrandGithubFilled,
   IconArrowRight,
 } from '@tabler/icons-react';
+import { WelcomeMessageBackground } from './WelcomeMessageBackground';
 import { currentUserState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { Button, cn } from 'erxes-ui';
@@ -117,10 +118,10 @@ const OnboardingStepsSection = ({ isOwner }: { isOwner: boolean }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8 }}
-      className="space-y-4"
+      className=" max-w-3xl w-full items-center mx-auto"
     >
       <h2 className="text-xl font-semibold text-center mb-6">Get Started</h2>
-      <div className="p-2 rounded-3xl sm:flex flex-col sm:flex-row lg:grid lg:grid-cols-2 border bg-muted gap-2">
+      <div className="p-2 rounded-3xl flex flex-col sm:flex-row lg:grid lg:grid-cols-2 border bg-muted gap-2">
         {OnboardingSteps.map((item, index) => {
           if (item.forOwner && !isOwner) {
             return null;
@@ -187,7 +188,7 @@ const LazyVideo = ({ src }: { src: string }) => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-video bg-muted rounded-lg overflow-hidden"
+      className="relative w-full aspect-video border border-border  overflow-hidden bg-muted p-3 rounded-[20px]"
     >
       {isInView && (
         <>
@@ -199,7 +200,7 @@ const LazyVideo = ({ src }: { src: string }) => {
           <video
             src={src}
             controls
-            className={`w-full h-full object-cover transition-opacity duration-300 ${
+            className={`w-full h-full object-cover transition-opacity duration-300 bg-background rounded-md ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             onLoadedData={() => setIsLoaded(true)}
@@ -219,34 +220,48 @@ const LazyVideo = ({ src }: { src: string }) => {
 export const WelcomeMessageNotificationContent = () => {
   const currentUser = useAtomValue(currentUserState);
   return (
-    <div className="container px-4 sm:px-8 md:px-20 py-8 lg:px-4 xl:px-20">
+    <div className="container px-4 sm:px-8 md:px-20 py-12 lg:px-4 xl:px-12 relative">
+      <WelcomeMessageBackground className="absolute inset-0 z-0" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-4xl min-w-0 mx-auto space-y-8"
+        className="max-w-5xl min-w-0 mx-auto space-y-8 relative z-10"
       >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="space-y-3 text-center"
+          className="space-y-2 text-center"
         >
           <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Welcome to erxes
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             A New Experience Begins!
           </p>
         </motion.div>
 
-        <div className="space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-center"
+        >
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Discover the power of unified customer experience management. Get
+            started with our comprehensive platform designed to streamline your
+            business operations and enhance customer relationships.
+          </p>
+        </motion.div>
+
+        <div className="space-y-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <LazyVideo src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" />
+            <LazyVideo src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
           </motion.div>
           <OnboardingStepsSection isOwner={currentUser?.isOwner || false} />
           <SocialSection />
