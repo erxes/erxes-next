@@ -51,7 +51,6 @@ export const TaskDetailSheetHeader = () => {
         </Link>
       </Button>
       <Separator.Inline />
-      <Sheet.Title>{task?.name}</Sheet.Title>
     </div>
   );
 };

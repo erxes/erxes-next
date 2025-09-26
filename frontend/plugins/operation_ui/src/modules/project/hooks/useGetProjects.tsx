@@ -36,13 +36,11 @@ export const useProjectsVariables = (
   const { cursor } = useRecordTableCursor({
     sessionKey: PROJECTS_CURSOR_SESSION_KEY,
   });
-  const [{ name, team, priority, status, lead }] = useMultiQueryState<{
+  const [{ name, team, lead }] = useMultiQueryState<{
     name: string;
     team: string;
-    priority: string;
-    status: string;
     lead: string;
-  }>(['name', 'team', 'priority', 'status', 'lead']);
+  }>(['name', 'team', 'lead']);
   const currentUser = useAtomValue(currentUserState);
 
   return {
@@ -52,9 +50,6 @@ export const useProjectsVariables = (
     },
     cursor,
     name: name || undefined,
-
-    priority: priority || undefined,
-    status: status || undefined,
     leadId: lead || undefined,
     ...variables,
     ...(variables?.teamIds || variables?.userId || !currentUser?._id

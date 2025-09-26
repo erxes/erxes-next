@@ -12,7 +12,7 @@ export const TaskDetails = ({ taskId }: { taskId: string }) => {
 
   return (
     <div className="h-full w-full flex overflow-auto">
-      <div className="w-full xl:max-w-3xl mx-auto py-12 px-6">
+      <div className="w-full xl:max-w-3xl mx-auto p-6">
         <TaskFields task={task} />
       </div>
     </div>
