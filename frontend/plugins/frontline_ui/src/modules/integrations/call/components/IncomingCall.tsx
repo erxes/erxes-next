@@ -1,15 +1,19 @@
 import { useSip } from '@/integrations/call/components/SipProvider';
-import { sipStateAtom } from '@/integrations/call/states/sipStates';
+import {
+  callConfigAtom,
+  sipStateAtom,
+} from '@/integrations/call/states/sipStates';
 import { IconPhone, IconPhoneEnd } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
   CallDirectionEnum,
   CallStatusEnum,
 } from '@/integrations/call/types/sipTypes';
-import { CallNumber } from '@/integrations/call/components/CallNumber';
 import { useEffect, useRef } from 'react';
 import { getPluginAssetsUrl } from 'erxes-ui';
+import { extractPhoneNumberFromCounterpart } from '@/integrations/call/utils/callUtils';
+import { renderUserInfo } from '@/integrations/call/utils/renderUserInfo';
 
 export const IncomingCallAudio = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -42,10 +46,31 @@ export const IncomingCallAudio = () => {
   return <audio ref={audioRef} loop autoPlay />;
 };
 
-export const IncomingCall = () => {
+export const IncomingCall = ({
+  addCustomer,
+  customer,
+  channels,
+  loading,
+}: {
+  addCustomer: any;
+  customer: any;
+  channels: any;
+  loading: boolean;
+}) => {
   const sipState = useAtomValue(sipStateAtom);
 
+  const phoneNumber = extractPhoneNumberFromCounterpart(
+    sipState.callCounterpart || '',
+  );
+  const [callConfig] = useAtom(callConfigAtom);
+
   const { answerCall, stopCall } = useSip();
+
+  useEffect(() => {
+    if (phoneNumber) {
+      addCustomer(callConfig?.inboxId || '', phoneNumber, sipState.groupName);
+    }
+  }, [phoneNumber]);
 
   const onAcceptCall = () => {
     if (answerCall && sipState?.callStatus !== CallStatusEnum.IDLE) {
@@ -62,7 +87,7 @@ export const IncomingCall = () => {
   return (
     <>
       <div className="mt-2 px-3 pt-3 mb-1 space-y-2">
-        <CallNumber />
+        {!loading && renderUserInfo(customer, channels)}
         <div className="text-center text-accent-foreground">
           Incoming call to{' '}
           <span className="font-semibold text-foreground">

@@ -112,10 +112,13 @@ const SelectTeamValue = ({ placeholder }: { placeholder?: string }) => {
   return (
     <div className="flex gap-2 items-center">
       <IconComponent
-        name={selectedTeams[0].icon}
+        name={selectedTeams[0]?.icon}
         className="size-4 flex-shrink-0"
       />
-      <TextOverflowTooltip value={selectedTeams[0].name} className="max-w-32" />
+      <TextOverflowTooltip
+        value={selectedTeams[0]?.name}
+        className="max-w-32"
+      />
     </div>
   );
 };

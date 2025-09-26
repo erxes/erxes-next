@@ -70,5 +70,5 @@ export const mutations = `
   salesStagesUpdateOrder(orders: [SalesOrderItem]): [SalesStage]
   salesStagesRemove(_id: String!): JSON
   salesStagesEdit(_id: String!, name: String, status: String): SalesStage
-  salesStagesSortItems(stageId: String!, proccessId: String, sortType: String): String
+  salesStagesSortItems(stageId: String!, processId: String, sortType: String): String
 `;
