@@ -39,7 +39,6 @@ const NotificationContentWrapper = ({
 }: {
   notification: INotification;
 }) => {
-  console.log(notification);
   const [pluginName, moduleName, collectionType] = (
     notification?.contentType || ''
   )
