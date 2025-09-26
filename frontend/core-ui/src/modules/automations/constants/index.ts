@@ -1,3 +1,5 @@
+import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
+
 const fitViewOptions = { padding: 4, minZoom: 0.8 };
 export const PROPERTY_OPERATOR = {
   String: [
@@ -70,3 +72,15 @@ export const AUTOMATION_NODE_TYPES = [
   { value: 'action', label: 'Actions' },
   { value: 'automation', label: 'Automations' },
 ];
+
+export const CONNECTION_PROPERTY_NAME_MAP = {
+  [AutomationNodeType.Action]: 'nextActionId',
+  [AutomationNodeType.Trigger]: 'actionId',
+  [AutomationNodeType.Workflow]: 'nextActionId',
+};
+
+export const AUTOMATION_NODE_TYPE_LIST_PROERTY = {
+  [AutomationNodeType.Action]: AutomationNodesType.Actions,
+  [AutomationNodeType.Trigger]: AutomationNodesType.Triggers,
+  [AutomationNodeType.Workflow]: AutomationNodesType.Workflows,
+};

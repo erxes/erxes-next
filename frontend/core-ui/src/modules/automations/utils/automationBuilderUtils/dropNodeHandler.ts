@@ -1,4 +1,5 @@
 import { TDroppedNode } from '@/automations/components/builder/sidebar/states/automationNodeLibrary';
+import { AUTOMATION_NODE_TYPE_LIST_PROERTY } from '@/automations/constants';
 import {
   AutomationDropHandlerParams,
   AutomationNodesType,
@@ -6,13 +7,12 @@ import {
 } from '@/automations/types';
 import { handleConnectionAwaitingNode } from '@/automations/utils/automationBuilderUtils/awaitingConnectionHandler';
 import { generateNode } from '@/automations/utils/automationBuilderUtils/generateNodes';
-import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import {
-  generateAutomationElementId,
-  TAutomationAction,
-  TAutomationTrigger,
-  TAutomationWorkflowNode,
-} from 'ui-modules';
+  TAutomationBuilderForm,
+  TAutomationNodeState,
+} from '@/automations/utils/automationFormDefinitions';
+import { XYPosition } from '@xyflow/react';
+import { generateAutomationElementId } from 'ui-modules';
 
 /**
  * Handles the drop event on the automation canvas, allowing
@@ -22,19 +22,73 @@ import {
  * triggers list, and actions list.
  */
 
+const generateNewNode = ({
+  draggingNode,
+  id,
+  position,
+}: {
+  draggingNode: TDroppedNode;
+  id: string;
+  position?: XYPosition;
+}) => {
+  const nodeType = draggingNode.nodeType;
+
+  if (nodeType === AutomationNodeType.Trigger) {
+    const { icon, type, label, description, isCustom } = draggingNode;
+    return {
+      id,
+      type,
+      config: {},
+      icon,
+      label,
+      description,
+      isCustom,
+      position,
+    };
+  }
+
+  if (nodeType === AutomationNodeType.Action) {
+    const { icon, label, isCustom, description, type } = draggingNode;
+    return {
+      id,
+      type,
+      config: {},
+      icon,
+      label,
+      description,
+      isCustom,
+      position,
+    };
+  }
+  if (nodeType === AutomationNodeType.Workflow) {
+    const { name, description, automationId } = draggingNode;
+
+    return {
+      id,
+      name: name,
+      description,
+      position,
+      config: {},
+      automationId,
+    };
+  }
+};
+
 export const automationDropHandler = ({
   triggers,
   actions,
   workflows,
   event,
   reactFlowInstance,
-  addNodes,
   getNodes,
 }: AutomationDropHandlerParams): {
-  [AutomationNodesType.Actions]: TAutomationAction[];
-  [AutomationNodesType.Triggers]: TAutomationTrigger[];
-  [AutomationNodesType.Workflows]?: TAutomationWorkflowNode[];
+  // [AutomationNodesType.Actions]: TAutomationBuilderForm[AutomationNodesType.Actions];
+  // [AutomationNodesType.Triggers]: TAutomationBuilderForm[AutomationNodesType.Triggers];
+  // [AutomationNodesType.Workflows]?: TAutomationBuilderForm[AutomationNodesType.Workflows];
   newNodeId?: string;
+  generatedNode?: any;
+  newNode: any;
+  nodeType: AutomationNodeType;
 } => {
   event.preventDefault();
 
@@ -44,13 +98,9 @@ export const automationDropHandler = ({
 
   const { nodeType, awaitingToConnectNodeId } = draggingNode;
 
-  if (!nodeType) {
-    return {
-      actions,
-      triggers,
-      workflows,
-    };
-  }
+  // if (!nodeType) {
+  //   return null as any
+  // }
 
   const position = reactFlowInstance?.screenToFlowPosition({
     x: event.clientX,
@@ -59,6 +109,22 @@ export const automationDropHandler = ({
 
   const id = generateAutomationElementId(
     [...triggers, ...actions, ...(workflows || [])].map((a) => a.id),
+  );
+
+  const map = { triggers, actions, workflows };
+
+  const nodes = map[AUTOMATION_NODE_TYPE_LIST_PROERTY[nodeType]] || [];
+
+  const newNode = generateNewNode({ draggingNode, id, position });
+  const generatedNode = generateNode(
+    { ...newNode, nodeType } as Extract<
+      TAutomationNodeState,
+      { nodeType: typeof nodeType }
+    >,
+    AutomationNodeType.Trigger,
+    nodes,
+    { nodeIndex: nodes.length },
+    getNodes(),
   );
 
   handleConnectionAwaitingNode({
@@ -70,84 +136,5 @@ export const automationDropHandler = ({
     id,
   });
 
-  if (nodeType === AutomationNodeType.Trigger) {
-    const { icon, type, label, description, isCustom } = draggingNode;
-    const newNode = {
-      id,
-      type,
-      nodeType,
-      config: {},
-      icon,
-      label,
-      description,
-      isCustom,
-      position,
-    };
-    const generatedNode = generateNode(
-      newNode as Extract<
-        TAutomationNodeState,
-        { nodeType: AutomationNodeType.Trigger }
-      >,
-      AutomationNodeType.Trigger,
-      triggers || [],
-      { nodeIndex: (triggers || []).length },
-      getNodes(),
-    );
-    addNodes(generatedNode);
-    triggers = [...triggers, newNode];
-  }
-  if (nodeType === AutomationNodeType.Workflow) {
-    const { name, description, automationId } = draggingNode;
-
-    const newNode = {
-      id,
-      name: name,
-      description,
-      position,
-      config: {},
-      automationId: automationId,
-    };
-
-    const generatedNode = generateNode(
-      newNode as Extract<
-        TAutomationNodeState,
-        { nodeType: AutomationNodeType.Workflow }
-      >,
-      AutomationNodeType.Workflow,
-      workflows || [],
-      { nodeIndex: (workflows || []).length },
-      getNodes(),
-    );
-    addNodes(generatedNode);
-    workflows = [...(workflows || []), newNode];
-  }
-  if (nodeType === AutomationNodeType.Action) {
-    const { icon, label, isCustom, description, type } = draggingNode;
-    const newNode = {
-      id,
-      type,
-      nodeType,
-      config: {},
-      icon,
-      label,
-      description,
-      isCustom,
-      position,
-    };
-
-    const generatedNode = generateNode(
-      newNode as Extract<
-        TAutomationNodeState,
-        { nodeType: AutomationNodeType.Action }
-      >,
-      AutomationNodeType.Action,
-      actions || [],
-      { nodeIndex: (actions || []).length },
-      getNodes(),
-    );
-    addNodes(generatedNode);
-    actions = [...actions, newNode];
-  }
-
-  return { triggers, actions, workflows, newNodeId: id };
+  return { newNodeId: id, generatedNode, newNode, nodeType };
 };

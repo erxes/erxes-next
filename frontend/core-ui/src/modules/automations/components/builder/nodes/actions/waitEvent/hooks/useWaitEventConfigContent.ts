@@ -3,6 +3,7 @@ import {
   WaitEventTargetTypes,
 } from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
+import { AutomationNodesType } from '@/automations/types';
 import {
   findTriggerForAction,
   getAllTriggersForAction,
@@ -27,7 +28,7 @@ export function useWaitEventConfigContent(
     );
 
     const selectedTriggerId = getValues(
-      `${'actions'}.${(getValues('actions') || []).findIndex(
+      `${AutomationNodesType.Actions}.${(getValues('actions') || []).findIndex(
         (a) => a.id === action.id,
       )}.config.targetTriggerId`,
     ) as string | undefined;

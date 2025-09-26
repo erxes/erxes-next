@@ -1,3 +1,7 @@
+import {
+  AUTOMATION_NODE_TYPE_LIST_PROERTY,
+  CONNECTION_PROPERTY_NAME_MAP,
+} from '@/automations/constants';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
   AutomationNodesType,
@@ -8,12 +12,6 @@ import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefini
 import { Node, useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-
-const fields: Record<AutomationNodeType, AutomationNodesType> = {
-  [AutomationNodeType.Trigger]: AutomationNodesType.Triggers,
-  [AutomationNodeType.Action]: AutomationNodesType.Actions,
-  [AutomationNodeType.Workflow]: AutomationNodesType.Workflows,
-};
 
 export const useNodeDropDownActions = (
   id: string,
@@ -27,9 +25,8 @@ export const useNodeDropDownActions = (
   const [isOpenDialog, setOpenDialog] = useState(false);
   const [isOpenRemoveAlert, setOpenRemoveAlert] = useState(false);
 
-  const fieldName = fields[nodeType] as AutomationNodesType;
-  const actionFieldName =
-    fieldName === 'triggers' ? 'actionId' : 'nextActionId';
+  const fieldName = AUTOMATION_NODE_TYPE_LIST_PROERTY[nodeType];
+  const actionFieldName = CONNECTION_PROPERTY_NAME_MAP[nodeType];
 
   const onRemoveNode = () => {
     const nodes = getValues(`${fieldName}`) || [];
@@ -46,7 +43,7 @@ export const useNodeDropDownActions = (
 
     if (queryParams?.activeNodeId === id) {
       setQueryParams({ activeNodeId: null });
-      if (fieldName === 'triggers' && !updatedNodes?.length) {
+      if (fieldName === AutomationNodesType.Triggers && !updatedNodes?.length) {
         setNodes([
           {
             id: 'scratch-node',

@@ -1,15 +1,15 @@
 import { getCoreAutomationActionComponent } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { ErrorState } from '@/automations/components/common/ErrorState';
+import { AutomationNodesType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
-import { Card, Form, Spinner } from 'erxes-ui';
+import { Card, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Control } from 'react-hook-form';
 
 type Props = {
   currentIndex: number;
-  currentAction: TAutomationBuilderForm['actions'][number];
+  currentAction: TAutomationBuilderForm[AutomationNodesType.Actions][number];
   onSaveActionConfig: (config: any) => void;
 };
 

@@ -1,11 +1,12 @@
 import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { AutomationNodesType } from '@/automations/types';
 import { findTriggerForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
-import { KeyboardEvent, KeyboardEventHandler } from 'react';
+import { KeyboardEvent } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 export const useSendEmailSidebarForm = (currentActionIndex: number) => {
-  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `actions.${currentActionIndex}.config`;
+  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `${AutomationNodesType.Actions}.${currentActionIndex}.config`;
 
   const { control } = useFormContext<TAutomationBuilderForm>();
   const [triggers = [], actions = [], config = {}] =
@@ -24,7 +25,7 @@ export const useSendEmailSidebarForm = (currentActionIndex: number) => {
 };
 
 export const useSendEmailCustomMailField = (currentActionIndex: number) => {
-  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `actions.${currentActionIndex}.config`;
+  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `${AutomationNodesType.Actions}.${currentActionIndex}.config`;
   const { control, setValue } = useFormContext<TAutomationBuilderForm>();
   const config = useWatch({ control, name: configFieldNamePrefix });
 

@@ -11,6 +11,7 @@ import {
 } from 'ui-modules';
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { splitAwaitingConnectionId } from '@/automations/utils/automationBuilderUtils/awaitingConnectionHandler';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =
@@ -25,10 +26,9 @@ export const useAutomationNodeLibrarySidebar = () => {
   const filteredActionsConst = useMemo(() => {
     if (!awaitingToConnectNodeId) return actionsConst;
 
-    const [nodeType, nodeId] = awaitingToConnectNodeId.split('__') as [
-      AutomationNodeType.Trigger | AutomationNodeType.Action,
-      string,
-    ];
+    const [nodeType, nodeId] = splitAwaitingConnectionId(
+      awaitingToConnectNodeId,
+    );
 
     const nodeList = getList(nodeType);
     const { type: nodeTypeValue } = nodeList.find(

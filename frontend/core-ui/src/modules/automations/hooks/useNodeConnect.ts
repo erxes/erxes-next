@@ -6,7 +6,7 @@ import { generateNodes } from '@/automations/utils/automationBuilderUtils/genera
 import {
   checkIsValidConnect,
   connectionHandler,
-  generateConnect,
+  generateConnectInfo,
 } from '@/automations/utils/automationConnectionUtils';
 import { addEdge, Connection, Node, useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
@@ -28,6 +28,8 @@ export const useNodeConnect = () => {
       workFlows: updateWorkflows,
     } = connectionHandler(triggers, actions, info, info.targetId, workflows);
 
+    console.log({ actions, updatedActions });
+
     setNodesChangeToState({
       newTriggers: updatedTriggers,
       newActions: updatedActions.map((action) => ({
@@ -46,7 +48,7 @@ export const useNodeConnect = () => {
       setEdges((eds) => {
         const updatedEdges = addEdge({ ...params, type: 'primary' }, eds);
 
-        onConnection(generateConnect(params, source));
+        onConnection(generateConnectInfo(params, source));
 
         return updatedEdges;
       });

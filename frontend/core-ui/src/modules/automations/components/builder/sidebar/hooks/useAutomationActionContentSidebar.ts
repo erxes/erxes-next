@@ -2,7 +2,7 @@ import { isCoreAutomationActionType } from '@/automations/components/builder/nod
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
-import { NodeData } from '@/automations/types';
+import { AutomationNodesType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Node, useReactFlow } from '@xyflow/react';
 import { toast } from 'erxes-ui';
@@ -47,7 +47,7 @@ export const useAutomationActionContentSidebar = () => {
   };
 
   const onSaveActionConfig = (config: any) => {
-    setValue(`actions.${currentIndex}.config`, config);
+    setValue(`${AutomationNodesType.Actions}.${currentIndex}.config`, config);
     if (currentAction) {
       const node = getNode(currentAction.id);
       updateNodeData(currentAction.id, { ...node?.data, config });

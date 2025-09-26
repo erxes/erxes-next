@@ -1,10 +1,10 @@
-import { AutomationNodeType } from '@/automations/types';
+import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
-import { useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import isEqual from 'lodash/isEqual';
 
 export const useAutomationNodes = () => {
-  const { watch, setValue } = useFormContext<TAutomationBuilderForm>();
+  const { control, watch, setValue } = useFormContext<TAutomationBuilderForm>();
 
   const [triggers = [], actions = [], workflows = []] = watch([
     'triggers',
@@ -28,23 +28,23 @@ export const useAutomationNodes = () => {
     newActions,
     newWorkflows,
   }: {
-    newTriggers?: TAutomationBuilderForm['triggers'];
-    newActions?: TAutomationBuilderForm['actions'];
-    newWorkflows?: TAutomationBuilderForm['workflows'];
+    newTriggers?: TAutomationBuilderForm[AutomationNodesType.Triggers];
+    newActions?: TAutomationBuilderForm[AutomationNodesType.Actions];
+    newWorkflows?: TAutomationBuilderForm[AutomationNodesType.Workflows];
   }) => {
     if (newTriggers) {
       if (!isEqual(newTriggers, triggers)) {
-        setValue('triggers', newTriggers);
+        setValue(AutomationNodesType.Triggers, newTriggers);
       }
     }
     if (newActions) {
       if (!isEqual(newActions, actions)) {
-        setValue('actions', newActions);
+        setValue(AutomationNodesType.Actions, newActions);
       }
     }
     if (newWorkflows) {
       if (!isEqual(newWorkflows, workflows)) {
-        setValue('workflows', newWorkflows);
+        setValue(AutomationNodesType.Workflows, newWorkflows);
       }
     }
   };

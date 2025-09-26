@@ -9,9 +9,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, Label, Select } from 'erxes-ui';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { Alert } from 'erxes-ui';
-import { FormProvider, useForm } from 'react-hook-form';
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 import { TAutomationActionProps } from 'ui-modules';
 import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
+import { ReachableTrigger } from '@/automations/utils/automationBuilderUtils/triggerUtils';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { AutomationNodesType } from '@/automations/types';
 
 export const ManagePropertiesConfigForm = ({
   currentAction,
@@ -27,6 +35,7 @@ export const ManagePropertiesConfigForm = ({
   });
   const { propertyTypes, propertyType, nonCustomTriggers, actionsCanBeTarget } =
     useManagePropertySidebarContent(currentAction, form);
+  console.log({ propertyType });
 
   // Keep module in sync with inferred propertyType if needed
   // if (module && module !== propertyType) setValue('module', propertyType);
@@ -52,6 +61,12 @@ export const ManagePropertiesConfigForm = ({
         onSave={form.handleSubmit(handleSave, handleValidationErrors)}
       >
         <div className="w-[500px] p-4">
+          <SelectManagePropertyTriggerTarget
+            nonCustomTriggers={nonCustomTriggers}
+          />
+          <SelectManagePropertyActionTarget
+            actionsCanBeTarget={actionsCanBeTarget}
+          />
           <Form.Field
             control={form.control}
             name="module"
@@ -74,64 +89,6 @@ export const ManagePropertiesConfigForm = ({
               </Form.Item>
             )}
           />
-
-          {!form.getValues('module') &&
-            (nonCustomTriggers?.length ?? 0) > 1 && (
-              <Form.Field
-                control={form.control}
-                name="targetTriggerId"
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>Select trigger</Form.Label>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <Select.Trigger>
-                        <Select.Value placeholder="Select a trigger" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {nonCustomTriggers.map(({ trigger }) => (
-                          <Select.Item key={trigger.id} value={trigger.id}>
-                            {trigger.label || trigger.type}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
-                    <Form.Description>
-                      Choose which trigger’s context to use for properties.
-                    </Form.Description>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
-            )}
-
-          {!form.getValues('module') &&
-            (actionsCanBeTarget?.length ?? 0) > 1 && (
-              <Form.Field
-                control={form.control}
-                name="targetActionId"
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>Select action</Form.Label>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <Select.Trigger>
-                        <Select.Value placeholder="Select an action" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {actionsCanBeTarget.map((a) => (
-                          <Select.Item key={a.id} value={a.id}>
-                            {a.label || a.type}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
-                    <Form.Description>
-                      Optionally choose a targetable action’s context.
-                    </Form.Description>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
-            )}
           <Form.Field
             control={form.control}
             name="rules"
@@ -165,5 +122,87 @@ export const ManagePropertiesConfigForm = ({
         </div>
       </AutomationCoreConfigFormWrapper>
     </FormProvider>
+  );
+};
+
+const SelectManagePropertyTriggerTarget = ({
+  nonCustomTriggers,
+}: {
+  nonCustomTriggers: ReachableTrigger[];
+}) => {
+  const { control } = useFormContext<TManagePropertiesForm>();
+
+  if (nonCustomTriggers?.length <= 1) {
+    return null;
+  }
+
+  return (
+    <Form.Field
+      control={control}
+      name="targetTriggerId"
+      render={({ field }) => (
+        <Form.Item>
+          <Form.Label>Select trigger</Form.Label>
+          <Select value={field.value} onValueChange={field.onChange}>
+            <Select.Trigger>
+              <Select.Value placeholder="Select a trigger" />
+            </Select.Trigger>
+            <Select.Content>
+              {nonCustomTriggers.map(({ trigger }) => (
+                <Select.Item key={trigger.id} value={trigger.id}>
+                  {trigger.label || trigger.type}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select>
+          <Form.Description>
+            Choose which trigger’s context to use for properties.
+          </Form.Description>
+          <Form.Message />
+        </Form.Item>
+      )}
+    />
+  );
+};
+
+const SelectManagePropertyActionTarget = ({
+  actionsCanBeTarget,
+}: {
+  actionsCanBeTarget: TAutomationBuilderForm[AutomationNodesType.Actions];
+}) => {
+  const { control } = useFormContext<TManagePropertiesForm>();
+
+  const module = useWatch({ control, name: 'module' });
+
+  if (actionsCanBeTarget?.length <= 1) {
+    return null;
+  }
+
+  return (
+    <Form.Field
+      control={control}
+      name="targetActionId"
+      render={({ field }) => (
+        <Form.Item>
+          <Form.Label>Select action</Form.Label>
+          <Select value={field.value} onValueChange={field.onChange}>
+            <Select.Trigger>
+              <Select.Value placeholder="Select an action" />
+            </Select.Trigger>
+            <Select.Content>
+              {actionsCanBeTarget.map((a) => (
+                <Select.Item key={a.id} value={a.id}>
+                  {a.label || a.type}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select>
+          <Form.Description>
+            Optionally choose a targetable action’s context.
+          </Form.Description>
+          <Form.Message />
+        </Form.Item>
+      )}
+    />
   );
 };

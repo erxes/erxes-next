@@ -3,15 +3,15 @@ import {
   WaitEventFormComponentProps,
 } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
 import {
-  TAutomationAction,
-  TAutomationWorkflowNode,
+  IAutomationHistoryAction,
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
-  TAutomationTrigger,
+  TAutomationAction,
   TAutomationActionProps,
-  IAutomationHistoryAction,
+  TAutomationTrigger,
 } from 'ui-modules';
 
 export interface AutomationConstants {
@@ -86,11 +86,10 @@ export interface IAutomation extends IAutomationDoc {
 export type AutomationDropHandlerParams = {
   event: React.DragEvent<HTMLDivElement>;
   reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>> | null;
-  triggers: TAutomationTrigger[];
-  actions: TAutomationAction[];
-  workflows?: TAutomationWorkflowNode[];
+  triggers: TAutomationBuilderForm['triggers'];
+  actions: TAutomationBuilderForm['actions'];
+  workflows?: TAutomationBuilderForm['workflows'];
   getNodes: () => Node<NodeData>[];
-  addNodes: (payload: Node<NodeData>[] | Node<NodeData>[]) => void;
 };
 
 export type TDraggingNode = {

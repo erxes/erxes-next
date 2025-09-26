@@ -1,7 +1,6 @@
 import { automationBuilderActiveTabState } from '@/automations/states/automationState';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
-import { IconEye, IconEyeOff } from '@tabler/icons-react';
-import { Badge, Button, Command, Form, Label, Switch } from 'erxes-ui';
+import { Form, Label, Switch } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { useFormContext } from 'react-hook-form';
 
@@ -36,38 +35,5 @@ export const AutomationBuilderHeaderActions = () => {
         )}
       />
     </div>
-  );
-};
-
-const ToggleButton = ({
-  isOpen,
-  onToggle,
-  openLabel,
-  closedLabel,
-  shortcut,
-}: {
-  isOpen: boolean;
-  onToggle: () => void;
-  openLabel: React.ReactNode;
-  closedLabel: React.ReactNode;
-  shortcut: string;
-}) => {
-  return (
-    <Button variant="ghost" onClick={onToggle}>
-      {isOpen ? (
-        <>
-          <IconEyeOff />
-          {openLabel}
-        </>
-      ) : (
-        <>
-          <IconEye />
-          {closedLabel}
-        </>
-      )}
-      <Badge variant="secondary">
-        <Command.Shortcut>{shortcut}</Command.Shortcut>
-      </Badge>
-    </Button>
   );
 };

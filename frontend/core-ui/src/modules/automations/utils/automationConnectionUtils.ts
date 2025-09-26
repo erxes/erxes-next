@@ -1,6 +1,14 @@
+import { CONNECTION_PROPERTY_NAME_MAP } from '@/automations/constants';
 import { AutomationNodeType, NodeData } from '@/automations/types';
 import { TAutomationWorkflow } from '@/automations/utils/automationFormDefinitions';
-import { Connection, Edge, EdgeProps, getOutgoers, Node } from '@xyflow/react';
+import {
+  Connection,
+  Edge,
+  EdgeProps,
+  getOutgoers,
+  Node,
+  useReactFlow,
+} from '@xyflow/react';
 import { SetStateAction } from 'jotai';
 import { Dispatch } from 'react';
 import {
@@ -14,7 +22,7 @@ export const connectionHandler = (
   triggers: TAutomationTrigger[],
   actions: TAutomationAction[],
   info: any,
-  actionId: any,
+  actionId: string,
   workFlows: TAutomationWorkflow[],
 ) => {
   const { sourceId, type, connectType, optionalConnectId } = info || {};
@@ -151,7 +159,7 @@ export const connectionHandler = (
   return { triggers, actions, workFlows };
 };
 
-export const generateConnect = (
+export const generateConnectInfo = (
   params: Connection,
   source?: Node<NodeData>,
 ) => {
@@ -233,6 +241,7 @@ export const checkIsValidConnect = ({
 export const onDisconnect = ({
   edge,
   setEdges,
+  updateNodeData,
   nodes,
   triggers,
   actions,
@@ -240,6 +249,13 @@ export const onDisconnect = ({
 }: {
   edge: EdgeProps;
   setEdges: Dispatch<SetStateAction<Edge<EdgeProps>[]>>;
+  updateNodeData: (
+    id: string,
+    dataUpdate: Partial<Node['data']> | ((node: Node) => Partial<Node['data']>),
+    options?: {
+      replace: boolean;
+    },
+  ) => void;
   nodes: Node<NodeData>[];
   triggers: TAutomationTrigger[];
   actions: TAutomationAction[];
@@ -259,7 +275,7 @@ export const onDisconnect = ({
   connectionHandler(
     triggers,
     actions,
-    generateConnect(
+    generateConnectInfo(
       {
         source: edge.source,
         target: edge.target,
@@ -271,4 +287,11 @@ export const onDisconnect = ({
     info.targetId,
     workflows,
   );
+  if (sourceNode) {
+    const { id, data } = sourceNode;
+
+    const propertyName = CONNECTION_PROPERTY_NAME_MAP[data.nodeType];
+
+    updateNodeData(id, { ...data, [propertyName]: undefined });
+  }
 };

@@ -69,11 +69,7 @@ export const handleConnectionAwaitingNode = ({
 }) => {
   if (awaitingToConnectNodeId && type !== AutomationNodeType.Workflow) {
     const [awaitingNodeType, nodeId, connectionFieldName] =
-      awaitingToConnectNodeId.split('__') as [
-        AutomationNodeType,
-        string,
-        string | undefined,
-      ];
+      splitAwaitingConnectionId(awaitingToConnectNodeId);
 
     const isValidNodeType = [
       AutomationNodeType.Trigger,
@@ -106,4 +102,12 @@ export const handleConnectionAwaitingNode = ({
       }
     }
   }
+};
+
+export const splitAwaitingConnectionId = (awaitingToConnectNodeId: string) => {
+  return awaitingToConnectNodeId.split('__') as [
+    AutomationNodeType.Trigger | AutomationNodeType.Action,
+    string,
+    string | undefined,
+  ];
 };
