@@ -1,10 +1,11 @@
-import { IContext } from '~/connectionResolvers';
 import {
-  IUser,
   IDetail,
-  ILink,
   IEmailSignature,
+  ILink,
+  IUser,
 } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
+import { PERMISSION_ROLES } from '~/modules/permissions/db/constants';
 
 export interface IUsersEdit extends IUser {
   channelIds?: string[];
@@ -48,7 +49,12 @@ export const userMutations = {
       },
     };
 
-    await models.Users.createUser(doc);
+    const user = await models.Users.createUser(doc);
+
+    models.Roles.create({
+      userId: user._id,
+      role: PERMISSION_ROLES.OWNER,
+    });
 
     if (subscribeEmail && process.env.NODE_ENV === 'production') {
       await fetch('https://erxes.io/subscribe', {
@@ -138,14 +144,14 @@ export const userMutations = {
       details,
       links,
       employeeId,
-      positionIds
+      positionIds,
     }: {
       username: string;
       email: string;
       details: IDetail;
       links: ILink;
       employeeId: string;
-      positionIds: string[]
+      positionIds: string[];
     },
     { user, models }: IContext,
   ) {
@@ -158,7 +164,7 @@ export const userMutations = {
       },
       links,
       employeeId,
-      positionIds
+      positionIds,
     };
 
     const updatedUser = await models.Users.editProfile(user._id, doc);
