@@ -2,6 +2,7 @@ import { initTRPC } from '@trpc/server';
 import { ITRPCContext, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 import { IModels } from '~/connectionResolvers';
+import { dealsEdit } from '~/modules/sales/graphql/resolvers/mutations/utils';
 import { generateFilter } from '~/modules/sales/graphql/resolvers/queries/deals';
 
 export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
@@ -9,7 +10,28 @@ export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
 const t = initTRPC.context<SalesTRPCContext>().create();
 
 export const dealTrpcRouter = t.router({
+  //  t.procedure.input(z.any()).mutation(async ({ctx, input}) => {}),
   deal: {
+    editItem: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
+      const { models } = ctx;
+
+      const { itemId, processId, type, user, ...doc } = input;
+
+      if (!itemId || !type || !user || !processId) {
+        return {
+          status: 'error',
+          errorMessage: 'you must provide some params',
+        };
+      }
+
+      const oldItem = await models.Deals.findOne({ _id: itemId });
+      const typeUpperCase = type.charAt(0).toUpperCase() + type.slice(1);
+
+      return {
+        status: 'success',
+        data: await dealsEdit({ models, _id: itemId, doc, processId, user }),
+      };
+    }),
     contentIds: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { pipelineId } = input;
       const { models } = ctx;
@@ -80,18 +102,20 @@ export const dealTrpcRouter = t.router({
 
       return response;
     }),
-    getFilterParams: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
-      const { filter, userId } = input;
-      const { models } = ctx;
-      return await generateFilter(models, userId, filter);
-    })
+    getFilterParams: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { filter, userId } = input;
+        const { models } = ctx;
+        return await generateFilter(models, userId, filter);
+      }),
   },
 });
 
 export const fetchSegment = async (
   segmentId: string,
   options?,
-  segmentData?: any
+  segmentData?: any,
 ) => {
   return await sendTRPCMessage({
     pluginName: 'core',
@@ -101,9 +125,8 @@ export const fetchSegment = async (
     input: {
       segmentId,
       options,
-      segmentData
+      segmentData,
     },
     defaultValue: [],
   });
-}
-
+};
