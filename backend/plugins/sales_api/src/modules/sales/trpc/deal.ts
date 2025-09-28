@@ -2,7 +2,7 @@ import { initTRPC } from '@trpc/server';
 import { ITRPCContext, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 import { IModels } from '~/connectionResolvers';
-import { addDeal, editDeal, removeDeal } from '~/modules/sales/graphql/resolvers/mutations/utils';
+import { addDeal, editDeal } from '~/modules/sales/graphql/resolvers/mutations/utils';
 import { generateFilter } from '~/modules/sales/graphql/resolvers/queries/deals';
 import { convertNestedDate } from '~/modules/sales/utils';
 

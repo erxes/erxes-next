@@ -17,7 +17,7 @@ import {
   itemMover,
   subscriptionWrapper,
 } from '../utils';
-import { addDeal, editDeal, removeDeal } from './utils';
+import { addDeal, editDeal } from './utils';
 
 export const dealMutations = {
   /**
