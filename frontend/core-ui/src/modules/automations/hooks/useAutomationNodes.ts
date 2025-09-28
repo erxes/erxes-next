@@ -1,59 +1,26 @@
-import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
+import { AutomationNodeType } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import isEqual from 'lodash/isEqual';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 export const useAutomationNodes = () => {
-  const { control, watch, setValue } = useFormContext<TAutomationBuilderForm>();
+  const { control } = useFormContext<TAutomationBuilderForm>();
 
-  const [triggers = [], actions = [], workflows = []] = watch([
-    'triggers',
-    'actions',
-    'workflows',
-  ]);
+  const [triggers = [], actions = [], workflows = []] = useWatch({
+    control,
+    name: ['triggers', 'actions', 'workflows'],
+  });
 
-  const getList = (
-    type:
-      | AutomationNodeType.Action
-      | AutomationNodeType.Trigger
-      | AutomationNodeType.Workflow,
-  ) => {
-    return (
-      { trigger: triggers, action: actions, workflow: workflows }[type] || []
-    );
-  };
-
-  const setNodesChangeToState = ({
-    newTriggers,
-    newActions,
-    newWorkflows,
-  }: {
-    newTriggers?: TAutomationBuilderForm[AutomationNodesType.Triggers];
-    newActions?: TAutomationBuilderForm[AutomationNodesType.Actions];
-    newWorkflows?: TAutomationBuilderForm[AutomationNodesType.Workflows];
-  }) => {
-    if (newTriggers) {
-      if (!isEqual(newTriggers, triggers)) {
-        setValue(AutomationNodesType.Triggers, newTriggers);
-      }
-    }
-    if (newActions) {
-      if (!isEqual(newActions, actions)) {
-        setValue(AutomationNodesType.Actions, newActions);
-      }
-    }
-    if (newWorkflows) {
-      if (!isEqual(newWorkflows, workflows)) {
-        setValue(AutomationNodesType.Workflows, newWorkflows);
-      }
-    }
-  };
+  const getList = (type: AutomationNodeType) =>
+    ({
+      [AutomationNodeType.Trigger]: triggers,
+      [AutomationNodeType.Action]: actions,
+      [AutomationNodeType.Workflow]: workflows,
+    }[type]);
 
   return {
     triggers,
     actions,
     workflows,
     getList,
-    setNodesChangeToState,
   };
 };

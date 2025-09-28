@@ -1,16 +1,10 @@
-import { useAutomationConnections } from '@/automations/components/builder/hooks/useAutomationConnections';
-import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
-import { NodeData } from '@/automations/types';
-import { onDisconnect } from '@/automations/utils/automationConnectionUtils';
+import { useNodeConnect } from '@/automations/hooks/useNodeConnect';
 import { IconScissors } from '@tabler/icons-react';
 import {
   BaseEdge,
-  Edge,
   EdgeLabelRenderer,
   EdgeProps,
   getBezierPath,
-  Node,
-  useReactFlow,
 } from '@xyflow/react';
 import { Button } from 'erxes-ui';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -27,7 +21,7 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
     targetPosition,
     selected,
   } = edge;
-  const { handleDisconnect } = useAutomationConnections(edge);
+  const { onDisconnect } = useNodeConnect();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -71,7 +65,7 @@ const PrimaryEdge: FC<EdgeProps> = (edge) => {
                   variant="outline"
                   className="rounded-full"
                   size="icon"
-                  onClick={handleDisconnect}
+                  onClick={() => onDisconnect(edge)}
                 >
                   <IconScissors className="w-4 h-4 text-red-500" />
                 </Button>

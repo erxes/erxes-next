@@ -8,7 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { Tabs, useMultiQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from '../../context/AutomationBuilderDnDProvider';
-import { AutomationBuilderHeader } from './AutomationBuilderHeader';
+import { AutomationBuilderHeader } from './header/AutomationBuilderHeader';
 
 import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
 import { AutomationProvider } from '@/automations/context/AutomationProvider';

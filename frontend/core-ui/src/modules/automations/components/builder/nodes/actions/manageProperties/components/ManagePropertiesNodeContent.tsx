@@ -1,5 +1,5 @@
 import { TAutomationManagePropertyConfig } from '@/automations/components/builder/nodes/actions/manageProperties/types/ManagePropertyTypes';
-import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/components/MetaFieldLine';
 import { NodeContentComponentProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export const ManagePropertiesNodeContent = ({

@@ -9,8 +9,10 @@ import { AutomationCoreConfigFormWrapper } from '@/automations/components/builde
 import { useAiAgents } from '@/automations/components/settings/components/agents/hooks/useAiAgents';
 import { useFormValidationErrorHandler } from '@/automations/hooks/useFormValidationErrorHandler';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, Select, Textarea } from 'erxes-ui';
+import { IconPlus } from '@tabler/icons-react';
+import { Button, Command, Form, Select, Textarea } from 'erxes-ui';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Link } from 'react-router';
 import { TAutomationActionProps } from 'ui-modules';
 
 export const AIAgentConfigForm = ({
@@ -43,6 +45,7 @@ export const AIAgentConfigForm = ({
             return (
               <Form.Item>
                 <Form.Label>Ai Agent</Form.Label>
+
                 <Select value={field.value} onValueChange={field.onChange}>
                   <Select.Trigger className="mt-1">
                     <Select.Value placeholder="Select ai agent" />
@@ -53,6 +56,11 @@ export const AIAgentConfigForm = ({
                         {name}
                       </Select.Item>
                     ))}
+                    <Link to="/settings/automations/agents">
+                      <Button variant="ghost" className="w-full">
+                        <IconPlus /> Add new agent
+                      </Button>
+                    </Link>
                   </Select.Content>
                 </Select>
                 <Form.Message />

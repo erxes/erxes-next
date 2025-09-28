@@ -1,13 +1,12 @@
+import { AUTOMATION_NODE_TYPE_LIST_PROERTY } from '@/automations/constants';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { useNodeConnect } from '@/automations/hooks/useNodeConnect';
 import { useNodeEvents } from '@/automations/hooks/useNodeEvents';
 import { automationDropHandler } from '@/automations/utils/automationBuilderUtils/dropNodeHandler';
-import {
-  buildPrimaryEdge,
-  generateEdges,
-} from '@/automations/utils/automationBuilderUtils/generateEdges';
+import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
+import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import {
   Node,
   useEdgesState,
@@ -18,19 +17,13 @@ import '@xyflow/react/dist/style.css';
 import { themeState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useRef } from 'react';
-import { NodeData } from '../types';
-import { splitAwaitingConnectionId } from '@/automations/utils/automationBuilderUtils/awaitingConnectionHandler';
-import {
-  AUTOMATION_NODE_TYPE_LIST_PROERTY,
-  CONNECTION_PROPERTY_NAME_MAP,
-} from '@/automations/constants';
 import { useFormContext } from 'react-hook-form';
-import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import { NodeData } from '../types';
 
 export const useReactFlowEditor = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const editorWrapper = useRef<HTMLDivElement>(null);
-  const { control } = useFormContext<TAutomationBuilderForm>();
+  const { setValue } = useFormContext<TAutomationBuilderForm>();
 
   const theme = useAtomValue(themeState);
   const {
@@ -40,10 +33,8 @@ export const useReactFlowEditor = () => {
     setReactFlowInstance,
     setQueryParams,
   } = useAutomation();
-  const { triggers, actions, workflows, setNodesChangeToState } =
-    useAutomationNodes();
-  const { getNodes, updateNodeData, addNodes, setNodes, addEdges } =
-    useReactFlow<Node<NodeData>>();
+  const { triggers, actions, workflows, getList } = useAutomationNodes();
+  const { getNodes, addNodes, setNodes } = useReactFlow<Node<NodeData>>();
 
   const [nodes, _setNodes, onNodesChange] = useNodesState<Node<NodeData>>(
     generateNodes(triggers, actions, workflows),
@@ -53,7 +44,8 @@ export const useReactFlowEditor = () => {
   );
 
   const { onNodeDoubleClick, onNodeDragStop } = useNodeEvents();
-  const { isValidConnection, onConnect } = useNodeConnect();
+  const { isValidConnection, onConnect, onAwaitingNodeConnection } =
+    useNodeConnect();
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -61,15 +53,7 @@ export const useReactFlowEditor = () => {
   }, []);
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    const {
-      // actions: newActions,
-      // triggers: newTriggers,
-      // workflows: newWorkflows,
-      newNodeId,
-      newNode,
-      nodeType,
-      generatedNode,
-    } =
+    const { newNodeId, newNode, nodeType, generatedNode } =
       automationDropHandler({
         triggers,
         actions,
@@ -77,39 +61,30 @@ export const useReactFlowEditor = () => {
         event,
         reactFlowInstance,
         getNodes,
-      }) || {};
-    // setNodesChangeToState({ newTriggers, newActions, newWorkflows });
+      });
 
-    if (awaitingToConnectNodeId) {
-      setAwaitingToConnectNodeId('');
+    const listFieldName = AUTOMATION_NODE_TYPE_LIST_PROERTY[nodeType];
+
+    // Update form state minimally
+    setValue(listFieldName, [...getList(nodeType), newNode]);
+
+    if (newNodeId && generatedNode) {
+      addNodes(generatedNode);
+      if (awaitingToConnectNodeId) {
+        onAwaitingNodeConnection(
+          awaitingToConnectNodeId,
+          newNodeId,
+          generatedNode,
+        );
+      }
+      setQueryParams({ activeNodeId: newNodeId });
     }
 
     if (nodes.find((node) => node.type === 'scratch')) {
       setNodes((nodes) => nodes.filter((node) => node.type !== 'scratch'));
     }
-    if (newNodeId) {
-      if (generatedNode) {
-        addNodes(generatedNode);
-        if (awaitingToConnectNodeId) {
-          const [nodeType, nodeId] = splitAwaitingConnectionId(
-            awaitingToConnectNodeId,
-          );
-          // addEdges(buildPrimaryEdge(nodeType, nodeId, newNodeId));
-
-          // const listPropertyName = AUTOMATION_NODE_TYPE_LIST_PROERTY[nodeType]
-          console.log({ nodeType, nodeId });
-          onConnect({
-            source: nodeId,
-            target: newNodeId,
-            sourceHandle: null,
-            targetHandle: null,
-          });
-          updateNodeData(nodeId, {
-            [CONNECTION_PROPERTY_NAME_MAP[nodeType]]: newNodeId,
-          });
-        }
-      }
-      setQueryParams({ activeNodeId: newNodeId });
+    if (awaitingToConnectNodeId) {
+      setAwaitingToConnectNodeId('');
     }
   };
 

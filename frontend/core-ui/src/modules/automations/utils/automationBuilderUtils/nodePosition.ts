@@ -1,4 +1,5 @@
-import { AutomationNodeType, NodeData } from '@/automations/types';
+import { CONNECTION_PROPERTY_NAME_MAP } from '@/automations/constants';
+import { NodeData } from '@/automations/types';
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import { Node } from '@xyflow/react';
 import {
@@ -6,6 +7,7 @@ import {
   TAutomationTrigger,
   TAutomationWorkflowNode,
 } from 'ui-modules';
+
 export const generateNodePosition = (
   nodes: TAutomationAction[] | TAutomationTrigger[] | TAutomationWorkflowNode[],
   node: TAutomationNodeState,
@@ -27,8 +29,7 @@ export const generateNodePosition = (
     return node.position;
   }
 
-  const targetField =
-    node.nodeType === AutomationNodeType.Trigger ? 'actionId' : 'nextActionId';
+  const targetField = CONNECTION_PROPERTY_NAME_MAP[node.nodeType];
 
   const prevNode = nodes.find((n: any) => n[targetField] === node.id);
 

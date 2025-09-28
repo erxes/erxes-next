@@ -1,5 +1,5 @@
 import { TAutomationSendEmailConfig } from '@/automations/components/builder/nodes/actions/sendEmail/types/automationSendEmail';
-import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/components/MetaFieldLine';
 import { NodeContentComponentProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { generateSendEmailRecipientMails } from '@/automations/utils/automationBuilderUtils/emailUtils';
 import { IconEye } from '@tabler/icons-react';
@@ -38,7 +38,9 @@ export const SendEmailNodeContent = ({
 };
 const ReciepentEmails = ({
   config,
-}: NodeContentComponentProps<TAutomationSendEmailConfig>) => {
+}: {
+  config: TAutomationSendEmailConfig;
+}) => {
   const mails = useMemo(
     () => generateSendEmailRecipientMails(config),
     [config],

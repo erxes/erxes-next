@@ -1,5 +1,5 @@
-import { AutomationBuilderHeaderActions } from '@/automations/components/builder/edges/AutomationBuilderHeaderActions';
-import { AutomationHeaderTabs } from '@/automations/components/builder/edges/AutomationHeaderTabs';
+import { AutomationBuilderHeaderActions } from '@/automations/components/builder/header/AutomationBuilderHeaderActions';
+import { AutomationHeaderTabs } from '@/automations/components/builder/header/AutomationHeaderTabs';
 import { AutomationBuilderNameInput } from '@/automations/components/builder/header/AutomationBuilderNameInput';
 import { IconAffiliate, IconSettings } from '@tabler/icons-react';
 import {
@@ -12,7 +12,7 @@ import {
 } from 'erxes-ui';
 import { Link } from 'react-router';
 import { PageHeader } from 'ui-modules';
-import { useAutomationHeader } from './hooks/useAutomationHeader';
+import { useAutomationHeader } from '@/automations/components/builder/hooks/useAutomationHeader';
 
 export const AutomationBuilderHeader = () => {
   const {
@@ -24,7 +24,7 @@ export const AutomationBuilderHeader = () => {
     isMobile,
   } = useAutomationHeader();
   return (
-    <div className="">
+    <div>
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>

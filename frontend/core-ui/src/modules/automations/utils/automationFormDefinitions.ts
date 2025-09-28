@@ -1,4 +1,4 @@
-import { AutomationNodeType } from '@/automations/types';
+import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
 import { z } from 'zod';
 
 export const automationNodePositionSchema = z
@@ -97,8 +97,16 @@ const automationNodeStateSchema = z.discriminatedUnion('nodeType', [
 ]);
 
 export type TAutomationNodeState = z.infer<typeof automationNodeStateSchema>;
-export type TAutomationWorkflow = z.infer<typeof automationWorkflowSchema>;
 
 export type TAutomationBuilderForm = z.infer<
   typeof automationBuilderFormSchema
 >;
+
+export type TAutomationBuilderActions =
+  TAutomationBuilderForm[AutomationNodesType.Actions];
+
+export type TAutomationBuilderTriggers =
+  TAutomationBuilderForm[AutomationNodesType.Triggers];
+
+export type TAutomationBuilderWorkflows =
+  TAutomationBuilderForm[AutomationNodesType.Workflows];

@@ -11,7 +11,7 @@ import {
 } from 'ui-modules';
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
-import { splitAwaitingConnectionId } from '@/automations/utils/automationBuilderUtils/awaitingConnectionHandler';
+import { splitAwaitingConnectionId } from '@/automations/utils/automationConnectionUtils';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =

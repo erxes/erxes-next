@@ -18,7 +18,10 @@ import {
 import { TAutomationActionProps } from 'ui-modules';
 import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
 import { ReachableTrigger } from '@/automations/utils/automationBuilderUtils/triggerUtils';
-import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import {
+  TAutomationBuilderActions,
+  TAutomationBuilderForm,
+} from '@/automations/utils/automationFormDefinitions';
 import { AutomationNodesType } from '@/automations/types';
 
 export const ManagePropertiesConfigForm = ({
@@ -168,7 +171,7 @@ const SelectManagePropertyTriggerTarget = ({
 const SelectManagePropertyActionTarget = ({
   actionsCanBeTarget,
 }: {
-  actionsCanBeTarget: TAutomationBuilderForm[AutomationNodesType.Actions];
+  actionsCanBeTarget: TAutomationBuilderActions;
 }) => {
   const { control } = useFormContext<TManagePropertiesForm>();
 

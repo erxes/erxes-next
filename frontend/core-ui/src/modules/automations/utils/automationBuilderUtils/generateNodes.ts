@@ -8,7 +8,7 @@ import {
   TAutomationWorkflowNode,
 } from 'ui-modules';
 
-const generateNodeData = (
+export const generateNodeData = (
   node: TAutomationNodeState,
   nodeType:
     | AutomationNodeType.Action

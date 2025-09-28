@@ -1,6 +1,7 @@
 import { AutomationNodesType, AutomationNodeType } from '@/automations/types';
 
-const fitViewOptions = { padding: 4, minZoom: 0.8 };
+export const CANVAS_FIT_VIEW_OPTIONS = { padding: 4, minZoom: 0.8 };
+
 export const PROPERTY_OPERATOR = {
   String: [
     {
@@ -72,11 +73,15 @@ export const AUTOMATION_NODE_TYPES = [
   { value: 'action', label: 'Actions' },
   { value: 'automation', label: 'Automations' },
 ];
+type ConnectionPropertyName = 'nextActionId' | 'actionId' | 'workflowId';
 
-export const CONNECTION_PROPERTY_NAME_MAP = {
+export const CONNECTION_PROPERTY_NAME_MAP: Record<
+  AutomationNodeType,
+  ConnectionPropertyName
+> = {
   [AutomationNodeType.Action]: 'nextActionId',
   [AutomationNodeType.Trigger]: 'actionId',
-  [AutomationNodeType.Workflow]: 'nextActionId',
+  [AutomationNodeType.Workflow]: 'workflowId',
 };
 
 export const AUTOMATION_NODE_TYPE_LIST_PROERTY = {

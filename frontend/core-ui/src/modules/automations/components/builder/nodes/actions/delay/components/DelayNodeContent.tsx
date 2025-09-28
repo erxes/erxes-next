@@ -1,5 +1,5 @@
 import { TDelayConfigForm } from '@/automations/components/builder/nodes/actions/delay/states/delayConfigForm';
-import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/components/MetaFieldLine';
 import { NodeContentComponentProps } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 
 export const DelayNodeContent = ({

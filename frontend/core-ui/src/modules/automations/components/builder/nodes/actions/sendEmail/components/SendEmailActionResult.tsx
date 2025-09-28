@@ -1,4 +1,4 @@
-import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/components/MetaFieldLine';
 import { IconEye } from '@tabler/icons-react';
 import { Badge, Button, Popover, Tooltip } from 'erxes-ui';
 import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';

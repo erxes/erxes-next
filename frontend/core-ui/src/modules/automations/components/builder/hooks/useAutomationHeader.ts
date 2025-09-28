@@ -1,3 +1,4 @@
+import { useNodeErrorHandler } from '@/automations/components/builder/hooks/useNodeErrorHandler';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
   AUTOMATION_CREATE,
@@ -11,7 +12,6 @@ import { useReactFlow, Node } from '@xyflow/react';
 import { useIsMobile, toast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
-import { useNodeErrorHandler } from './useNodeErrorHandler';
 
 export const useAutomationHeader = () => {
   const { handleSubmit, clearErrors } =

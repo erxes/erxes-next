@@ -3,7 +3,12 @@ import {
   WaitEventFormComponentProps,
 } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
-import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
+import {
+  TAutomationBuilderActions,
+  TAutomationBuilderForm,
+  TAutomationBuilderTriggers,
+  TAutomationBuilderWorkflows,
+} from '@/automations/utils/automationFormDefinitions';
 import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
 import {
   IAutomationHistoryAction,
@@ -86,9 +91,9 @@ export interface IAutomation extends IAutomationDoc {
 export type AutomationDropHandlerParams = {
   event: React.DragEvent<HTMLDivElement>;
   reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>> | null;
-  triggers: TAutomationBuilderForm['triggers'];
-  actions: TAutomationBuilderForm['actions'];
-  workflows?: TAutomationBuilderForm['workflows'];
+  triggers: TAutomationBuilderTriggers;
+  actions: TAutomationBuilderActions;
+  workflows?: TAutomationBuilderWorkflows;
   getNodes: () => Node<NodeData>[];
 };
 
@@ -192,3 +197,20 @@ export type AutomationComponentMap<
 > = {
   [key: string]: TAutomationNodeTypeComponentConfig[N];
 };
+
+export interface ConnectionInfo {
+  source: string;
+  target: string;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+  sourceId: string;
+  targetId: string;
+  sourceType?: AutomationNodeType;
+  targetType?: AutomationNodeType;
+  connectType?: 'optional' | 'workflow';
+  optionalConnectId?: string;
+  automationId?: string;
+  actionId?: string;
+  sourceIndex: number;
+  targetIndex: number;
+}

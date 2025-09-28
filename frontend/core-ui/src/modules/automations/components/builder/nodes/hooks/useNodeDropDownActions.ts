@@ -9,7 +9,7 @@ import {
   NodeData,
 } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
-import { Node, useReactFlow } from '@xyflow/react';
+import { Edge, Node, useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -18,7 +18,7 @@ export const useNodeDropDownActions = (
   nodeType: AutomationNodeType,
 ) => {
   const { queryParams, setQueryParams } = useAutomation();
-  const { setNodes } = useReactFlow<Node<NodeData>>();
+  const { setNodes, getEdges, setEdges } = useReactFlow<Node<NodeData>, Edge>();
 
   const { setValue, getValues } = useFormContext<TAutomationBuilderForm>();
   const [isOpenDropDown, setOpenDropDown] = useState(false);
@@ -37,7 +37,8 @@ export const useNodeDropDownActions = (
           : node,
       )
       .filter((node) => node.id !== id);
-
+    // remove connected edges to this node (as source or target)
+    setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
     setNodes((nodes) => nodes.filter((n) => n.id !== id));
     setValue(`${fieldName}`, updatedNodes);
 

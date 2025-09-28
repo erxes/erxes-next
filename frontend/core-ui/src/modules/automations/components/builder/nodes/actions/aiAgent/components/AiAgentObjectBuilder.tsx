@@ -24,7 +24,7 @@ export const AiAgentObjectBuilder = () => {
                 <div className="col-span-1" />
               </div>
 
-              {fields.map((field, index) => (
+              {fields.map((_, index) => (
                 <AiAgentObjectFieldBuilder
                   key={index}
                   isLastElement={index + 1 !== fields.length}

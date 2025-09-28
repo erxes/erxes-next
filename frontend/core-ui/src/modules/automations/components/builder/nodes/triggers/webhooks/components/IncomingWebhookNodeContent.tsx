@@ -1,4 +1,4 @@
-import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/components/MetaFieldLine';
 
 export const IncomingWebhookNodeContent = ({ config }: any) => {
   const { endpoint, method } = config || {};

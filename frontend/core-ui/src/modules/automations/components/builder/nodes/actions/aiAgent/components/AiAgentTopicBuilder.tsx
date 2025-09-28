@@ -13,25 +13,28 @@ export const AiAgentTopicBuilder = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-2 p-4">
+      <div className="flex flex-col gap-2 py-4">
         {fields.map((field, index) => (
           <div key={field.id} className="mb-1 flex flex-col gap-2">
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              className="ml-auto"
-              onClick={() => remove(index)}
-            >
-              <IconTrash />
-            </Button>
-            <Controller
-              name={`topics.${index}.topicName`}
-              control={control}
-              render={({ field }) => (
-                <Input {...field} placeholder="Enter topic name" />
-              )}
-            />
+            <div className="flex flex-row gap-2">
+              <Controller
+                name={`topics.${index}.topicName`}
+                control={control}
+                render={({ field }) => (
+                  <Input {...field} placeholder="Enter topic name" />
+                )}
+              />
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                className="ml-auto"
+                onClick={() => remove(index)}
+              >
+                <IconTrash />
+              </Button>
+            </div>
+
             <Controller
               name={`topics.${index}.prompt`}
               control={control}

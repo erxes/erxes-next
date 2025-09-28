@@ -2,15 +2,9 @@ import { TDroppedNode } from '@/automations/components/builder/sidebar/states/au
 import { AUTOMATION_NODE_TYPE_LIST_PROERTY } from '@/automations/constants';
 import {
   AutomationDropHandlerParams,
-  AutomationNodesType,
   AutomationNodeType,
 } from '@/automations/types';
-import { handleConnectionAwaitingNode } from '@/automations/utils/automationBuilderUtils/awaitingConnectionHandler';
 import { generateNode } from '@/automations/utils/automationBuilderUtils/generateNodes';
-import {
-  TAutomationBuilderForm,
-  TAutomationNodeState,
-} from '@/automations/utils/automationFormDefinitions';
 import { XYPosition } from '@xyflow/react';
 import { generateAutomationElementId } from 'ui-modules';
 
@@ -82,9 +76,6 @@ export const automationDropHandler = ({
   reactFlowInstance,
   getNodes,
 }: AutomationDropHandlerParams): {
-  // [AutomationNodesType.Actions]: TAutomationBuilderForm[AutomationNodesType.Actions];
-  // [AutomationNodesType.Triggers]: TAutomationBuilderForm[AutomationNodesType.Triggers];
-  // [AutomationNodesType.Workflows]?: TAutomationBuilderForm[AutomationNodesType.Workflows];
   newNodeId?: string;
   generatedNode?: any;
   newNode: any;
@@ -98,10 +89,6 @@ export const automationDropHandler = ({
 
   const { nodeType, awaitingToConnectNodeId } = draggingNode;
 
-  // if (!nodeType) {
-  //   return null as any
-  // }
-
   const position = reactFlowInstance?.screenToFlowPosition({
     x: event.clientX,
     y: event.clientY,
@@ -114,27 +101,21 @@ export const automationDropHandler = ({
   const map = { triggers, actions, workflows };
 
   const nodes = map[AUTOMATION_NODE_TYPE_LIST_PROERTY[nodeType]] || [];
+  const nodeIndex = nodes.length;
 
   const newNode = generateNewNode({ draggingNode, id, position });
   const generatedNode = generateNode(
-    { ...newNode, nodeType } as Extract<
-      TAutomationNodeState,
-      { nodeType: typeof nodeType }
-    >,
-    AutomationNodeType.Trigger,
+    { ...newNode, nodeType } as any,
+    nodeType,
     nodes,
-    { nodeIndex: nodes.length },
+    { nodeIndex },
     getNodes(),
   );
 
-  handleConnectionAwaitingNode({
-    triggers,
-    actions,
-    workflows,
-    awaitingToConnectNodeId,
-    type: nodeType,
-    id,
-  });
-
-  return { newNodeId: id, generatedNode, newNode, nodeType };
+  return {
+    newNodeId: id,
+    generatedNode,
+    newNode,
+    nodeType,
+  };
 };
