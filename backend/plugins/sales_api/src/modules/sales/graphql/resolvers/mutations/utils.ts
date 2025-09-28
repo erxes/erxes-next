@@ -1,28 +1,85 @@
 import { can } from 'erxes-api-shared/core-modules';
+import { IUserDocument } from 'erxes-api-shared/core-types';
 import { checkUserIds, sendTRPCMessage } from 'erxes-api-shared/utils';
-import { IContext, IModels } from '~/connectionResolvers';
-import { IDeal, IDealDocument, IProductData } from '~/modules/sales/@types';
-import { SALES_STATUSES } from '~/modules/sales/constants';
-import {
-  checkMovePermission,
-  createConformity,
-  getCompanyIds,
-  getCustomerIds,
-  destroyBoardItemRelations,
-  getNewOrder,
-  getTotalAmounts,
-} from '~/modules/sales/utils';
+import { IModels } from '~/connectionResolvers';
+import { IDeal } from '~/modules/sales/@types';
 import {
   changeItemStatus,
   checkAssignedUserFromPData,
-  copyChecklists,
   copyPipelineLabels,
   itemMover,
   subscriptionWrapper,
 } from '../utils';
-import { IUserDocument } from 'erxes-api-shared/core-types';
+import { models } from 'mongoose';
+import { createConformity, destroyBoardItemRelations, getNewOrder } from '~/modules/sales/utils';
 
-export const dealsEdit = async ({
+export const addDeal = async ({
+  models, doc, user
+}: {
+  models: IModels,
+  doc: IDeal & { processId: string; aboveItemId: string },
+  user: IUserDocument
+}) => {
+  doc.initialStageId = doc.stageId;
+  doc.watchedUserIds = user && [user._id];
+
+  const extendedDoc = {
+    ...doc,
+    modifiedBy: user && user._id,
+    userId: user ? user._id : doc.userId,
+    order: await getNewOrder({
+      collection: models.Deals,
+      stageId: doc.stageId,
+      aboveItemId: doc.aboveItemId,
+    }),
+  };
+
+  if (extendedDoc.customFieldsData) {
+    // clean custom field values
+    extendedDoc.customFieldsData = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'mutation',
+      module: 'fields',
+      action: 'prepareCustomFieldsData',
+      input: {
+        customFieldsData: extendedDoc.customFieldsData,
+      },
+      defaultValue: [],
+    });
+  }
+
+  const deal = await models.Deals.createDeal(extendedDoc);
+
+  const stage = await models.Stages.getStage(deal.stageId);
+
+  await createConformity({
+    mainType: 'deal',
+    mainTypeId: deal._id,
+    companyIds: doc.companyIds,
+    customerIds: doc.customerIds,
+  });
+
+  //   if (user) {
+  //     const pipeline = await models.Pipelines.getPipeline(stage.pipelineId);
+
+  // sendNotifications(models, subdomain, {
+  //   item,
+  //   user,
+  //   type: `${type}Add`,
+  //   action: `invited you to the ${pipeline.name}`,
+  //   content: `'${item.name}'.`,
+  //   contentType: type,
+  // });
+
+  await subscriptionWrapper(models, {
+    action: 'create',
+    deal,
+    pipelineId: stage.pipelineId,
+  });
+  return deal;
+}
+
+export const editDeal = async ({
   user,
   models,
   _id,
