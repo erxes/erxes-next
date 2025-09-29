@@ -23,7 +23,7 @@ export const cycleQueries = {
           ...params,
           orderBy: { isActive: -1, isCompleted: 1, startDate: 1 },
         },
-        query: { teamId: params.teamId },
+        query: { teamId: params.teamId, isCompleted: false },
       },
     );
 
