@@ -3,9 +3,8 @@ import { IActivity } from '@/activity/types';
 import {
   ActivityIcon,
   ActivityItem as ActivityItemContent,
-} from './ActivityItem';
-import { ActivityTimelineItem } from './ActivityTimelineItem';
-
+} from '@/activity/components/ActivityItem';
+import { ActivityTimelineItem } from '@/activity/components/ActivityTimelineItem';
 interface ActivityItemWrapperProps {
   activity: IActivity;
 }
