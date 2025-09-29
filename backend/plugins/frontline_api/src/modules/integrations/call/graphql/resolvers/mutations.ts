@@ -9,12 +9,11 @@ import { IContext } from '~/connectionResolvers';
 import acceptCall from '../../acceptCall';
 import { saveRecordUrl, getOrCreateCustomer } from '../../store';
 import { redlock } from '../../redlock';
-import { checkPermission } from 'erxes-api-shared/core-modules';
 import {
   ICallHistory,
   ICallHistoryEdit,
 } from '~/modules/integrations/call/@types/histories';
-import { getEnv, graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { getEnv, graphqlPubsub } from 'erxes-api-shared/utils';
 
 export interface ISession {
   sessionCode: string;
@@ -467,7 +466,5 @@ const callsMutations = {
     throw new Error('Cannot sync record file');
   },
 };
-
-checkPermission(callsMutations, 'callSyncRecordFile', 'syncCallRecordFile');
 
 export default callsMutations;

@@ -58,3 +58,38 @@ export function safeFormatDate(value: unknown, fmt = 'MM-dd HH:mm'): string {
 
   return format(date, fmt);
 }
+
+export const renderFullName = (data: any, noPhone?: boolean) => {
+  console.log(data, 'datadatadata');
+  if (data.firstName || data.lastName || data.middleName || data.primaryPhone) {
+    return (
+      (data.firstName || '') +
+      ' ' +
+      (data.middleName || '') +
+      ' ' +
+      (data.lastName || '') +
+      ' ' +
+      ((!noPhone && data.primaryPhone) || '')
+    );
+  }
+
+  if (data.primaryEmail || data.primaryPhone) {
+    return data.primaryEmail || data.primaryPhone;
+  }
+
+  if (data.emails && data.emails.length > 0) {
+    return data.emails[0]?.email || 'Unknown';
+  }
+
+  if (data.phones && data.phones.length > 0) {
+    return data.phones[0]?.phone || 'Unknown';
+  }
+
+  const { visitorContactInfo } = data;
+
+  if (visitorContactInfo) {
+    return visitorContactInfo.phone || visitorContactInfo.email || 'Unknown';
+  }
+
+  return 'Unknown';
+};

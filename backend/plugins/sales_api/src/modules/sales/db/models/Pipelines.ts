@@ -4,13 +4,9 @@ import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { IPipeline, IPipelineDocument, IStageDocument } from '../../@types';
 import { SALES_STATUSES } from '../../constants';
-import {
-  createOrUpdatePipelineStages,
-  generateLastNum,
-  removePipelineStagesWithItems,
-  watchItem,
-} from '../../utils';
 import { pipelineSchema } from '../definitions/pipelines';
+import { createOrUpdatePipelineStages, removePipelineStagesWithItems } from '~/modules/sales/graphql/resolvers/utils';
+import { generateLastNum, watchItem } from '~/modules/sales/utils';
 
 export interface IPipelineModel extends Model<IPipelineDocument> {
   getPipeline(_id: string): Promise<IPipelineDocument>;
