@@ -1,5 +1,5 @@
 import { Job } from 'bullmq';
-import { addDays, endOfDay, startOfDay } from 'date-fns'; // эсвэл өөр utility
+import { endOfDay } from 'date-fns'; // эсвэл өөр utility
 import {
   getEnv,
   getSaasOrganizations,
@@ -8,7 +8,6 @@ import {
 import { generateModels } from '~/connectionResolvers';
 
 export const dailyCheckCycles = async () => {
-  console.log('daily check cycles is worked');
   const VERSION = getEnv({ name: 'VERSION' });
 
   if (VERSION && VERSION === 'saas') {
@@ -34,7 +33,6 @@ export const dailyCheckCycles = async () => {
 export const checkCycle = async (job: Job) => {
   const { subdomain } = job?.data ?? {};
 
-  console.log('daily check cycles is worked', subdomain);
   const models = await generateModels(subdomain);
 
   const today = new Date();
@@ -43,7 +41,7 @@ export const checkCycle = async (job: Job) => {
     isActive: true,
     isCompleted: false,
     endDate: {
-      $lte: startOfDay(addDays(today, 1)),
+      $lte: endOfDay(today),
     },
   });
 

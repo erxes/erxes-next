@@ -1,8 +1,9 @@
 import { IProjectUpdate } from '@/project/@types/project';
-import { checkUserRole } from '@/utils';
 import { TeamMemberRoles } from '@/team/@types/team';
-import { IContext } from '~/connectionResolvers';
+import { checkUserRole } from '@/utils';
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
 
 export const projectMutations = {
   createProject: async (
@@ -100,3 +101,7 @@ export const projectMutations = {
     return deletedProject;
   },
 };
+
+requireLogin(projectMutations, 'createProject');
+requireLogin(projectMutations, 'updateProject');
+requireLogin(projectMutations, 'removeProject');

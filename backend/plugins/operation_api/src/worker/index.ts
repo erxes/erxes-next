@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import { createMQWorkerWithListeners } from 'erxes-api-shared/utils';
-import { dailyCheckCycles, checkCycle } from '~/worker/dailyCheckCycles';
+import { checkCycle, dailyCheckCycles } from '~/worker/dailyCheckCycles';
 
 export const initMQWorkers = async (redis: any) => {
   const myQueue = new Queue('operations-daily-cycles-check', {
