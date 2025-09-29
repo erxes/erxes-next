@@ -87,10 +87,11 @@ export const TaskFields = ({ task }: { task: ITask }) => {
   }, [debouncedDescriptionContent]);
 
   useEffect(() => {
-    if (textareaRef.current && name) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    if (!textareaRef.current) {
+      return;
     }
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
   }, [name]);
 
   return (
@@ -98,7 +99,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
       <Textarea
         ref={textareaRef}
         className="shadow-none focus-visible:shadow-none p-0"
-        style={{ fontSize: "1.25rem", lineHeight: "1.75rem" }}
+        style={{ fontSize: '1.25rem', lineHeight: '1.75rem' }}
         placeholder="Task Name"
         value={name}
         onChange={(e) => setName(e.target.value)}

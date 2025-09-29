@@ -50,7 +50,6 @@ export const TaskDetailSheetHeader = () => {
           <IconArrowsDiagonal className="text-accent-foreground" />
         </Link>
       </Button>
-      <Separator.Inline />
     </div>
   );
 };
