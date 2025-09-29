@@ -6,7 +6,7 @@ import {
   getCycleProgressChart,
   getCyclesProgress,
 } from '@/cycle/utils';
-import { isBefore, isSameDay, startOfDay } from 'date-fns';
+import { format, isBefore, isSameDay, startOfDay } from 'date-fns';
 import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -67,8 +67,8 @@ export const loadCycleClass = (models: IModels) => {
         throw new Error('New cycle with an existing cycle');
       }
 
-      const today = startOfDay(new Date());
-      const start = startOfDay(doc.startDate);
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const start = format(doc.startDate, 'yyyy-MM-dd');
 
       if (isBefore(start, today)) {
         throw new Error('New cycle start date must be in the future');
@@ -79,7 +79,7 @@ export const loadCycleClass = (models: IModels) => {
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
       ]);
 
-      if (isSameDay(doc.startDate, new Date())) {
+      if (isSameDay(start, today)) {
         doc.isActive = true;
       }
 
