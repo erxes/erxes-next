@@ -84,7 +84,7 @@ export const loadTaskClass = (models: IModels) => {
       if (params.projectId) {
         query.projectId = params.projectId;
       }
-
+      
       if (params.createdAt) {
         query.createdAt = { $gte: params.createdAt };
       }
@@ -161,6 +161,8 @@ export const loadTaskClass = (models: IModels) => {
     }) {
       const { _id, ...rest } = doc;
 
+      if (rest.projectId === '') rest.projectId = null;
+
       const task = await models.Task.findOne({ _id });
 
       if (!task) {
@@ -216,7 +218,7 @@ export const loadTaskClass = (models: IModels) => {
 
         rest.number = nextNumber;
         rest.status = newStatus?._id;
-        rest.cycleId = '';
+        rest.cycleId = null;
       }
 
       await createActivity({
