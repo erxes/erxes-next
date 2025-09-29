@@ -41,11 +41,11 @@ export const stageMutations = {
     _root,
     {
       stageId,
-      proccessId,
+      processId,
       sortType,
     }: {
       stageId: string;
-      proccessId: string;
+      processId: string;
       sortType: string;
     },
     { models }: IContext,
@@ -101,7 +101,7 @@ export const stageMutations = {
     // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
     //   salesPipelinesChanged: {
     //     _id: stage.pipelineId,
-    //     proccessId,
+    //     processId,
     //     action: "reOrdered",
     //     data: {
     //       destinationStageId: stageId

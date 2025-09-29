@@ -174,6 +174,11 @@ export const userSchema = schemaWrapper(
       optional: true,
       label: 'Custom fields data',
     }),
+    lastSeenAt: mongooseField({
+      type: Date,
+      optional: true,
+      label: 'Last seen at',
+    }),
   }),
   { contentType: 'core:user' },
 );
