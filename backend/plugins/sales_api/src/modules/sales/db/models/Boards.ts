@@ -1,8 +1,9 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { IBoard, IBoardDocument } from '../../@types';
-import { removePipelineStagesWithItems } from '../../utils';
+
 import { boardSchema } from '../definitions/boards';
+import { removePipelineStagesWithItems } from '~/modules/sales/graphql/resolvers/utils';
 
 export interface IBoardModel extends Model<IBoardDocument> {
   getBoard(_id: string): Promise<IBoardDocument>;
