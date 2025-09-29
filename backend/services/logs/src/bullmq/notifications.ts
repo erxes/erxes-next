@@ -11,7 +11,7 @@ export const handleNotifications = ({
   models: IModels;
   logDoc: ILogDocument;
 }) => {
-  sendWelcomeNotification({ subdomain, models, logDoc });
+  // sendWelcomeNotification({ subdomain, models, logDoc });
 };
 
 const sendWelcomeNotification = async ({

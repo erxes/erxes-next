@@ -206,7 +206,7 @@ export const loadClasses = (
 
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
-    loadUserClass(models),
+    loadUserClass(models, subdomain),
   );
 
   models.Brands = db.model<IBrandDocument, IBrandModel>(

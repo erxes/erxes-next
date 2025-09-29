@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 export const SystemNotificationContents = {
-  welcomeMessage: lazy(() =>
+  'core:welcome': lazy(() =>
     import('./WelcomeMessage').then((module) => ({
       default: module.WelcomeMessageNotificationContent,
     })),
