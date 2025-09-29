@@ -1,26 +1,23 @@
-import { can } from 'erxes-api-shared/core-modules';
-import { checkUserIds, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { IDeal, IDealDocument, IProductData } from '~/modules/sales/@types';
 import { SALES_STATUSES } from '~/modules/sales/constants';
 import {
   checkMovePermission,
   createConformity,
+  destroyBoardItemRelations,
   getCompanyIds,
   getCustomerIds,
-  destroyBoardItemRelations,
   getNewOrder,
   getTotalAmounts,
 } from '~/modules/sales/utils';
 import {
-  changeItemStatus,
   checkAssignedUserFromPData,
   copyChecklists,
-  copyPipelineLabels,
   itemMover,
   subscriptionWrapper,
 } from '../utils';
-import { dealsEdit } from '~/modules/sales/graphql/resolvers/mutations/utils';
+import { addDeal, editDeal } from './utils';
 
 export const dealMutations = {
   /**
@@ -31,63 +28,7 @@ export const dealMutations = {
     doc: IDeal & { processId: string; aboveItemId: string },
     { user, models }: IContext,
   ) {
-    doc.initialStageId = doc.stageId;
-    doc.watchedUserIds = user && [user._id];
-
-    const extendedDoc = {
-      ...doc,
-      modifiedBy: user && user._id,
-      userId: user ? user._id : doc.userId,
-      order: await getNewOrder({
-        collection: models.Deals,
-        stageId: doc.stageId,
-        aboveItemId: doc.aboveItemId,
-      }),
-    };
-
-    if (extendedDoc.customFieldsData) {
-      // clean custom field values
-      extendedDoc.customFieldsData = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'mutation',
-        module: 'fields',
-        action: 'prepareCustomFieldsData',
-        input: {
-          customFieldsData: extendedDoc.customFieldsData,
-        },
-        defaultValue: [],
-      });
-    }
-
-    const deal = await models.Deals.createDeal(extendedDoc);
-
-    const stage = await models.Stages.getStage(deal.stageId);
-
-    await createConformity({
-      mainType: 'deal',
-      mainTypeId: deal._id,
-      companyIds: doc.companyIds,
-      customerIds: doc.customerIds,
-    });
-
-    //   if (user) {
-    //     const pipeline = await models.Pipelines.getPipeline(stage.pipelineId);
-
-    // sendNotifications(models, subdomain, {
-    //   item,
-    //   user,
-    //   type: `${type}Add`,
-    //   action: `invited you to the ${pipeline.name}`,
-    //   content: `'${item.name}'.`,
-    //   contentType: type,
-    // });
-
-    await subscriptionWrapper(models, {
-      action: 'create',
-      deal,
-      pipelineId: stage.pipelineId,
-    });
-    return deal;
+    return await addDeal({ models, user, doc });
   },
 
   /**
@@ -98,7 +39,7 @@ export const dealMutations = {
     { _id, processId, ...doc }: IDealDocument & { processId: string },
     { user, models }: IContext,
   ) {
-    return await dealsEdit({ models, _id, processId, doc, user });
+    return await editDeal({ models, _id, processId, doc, user });
   },
 
   /**

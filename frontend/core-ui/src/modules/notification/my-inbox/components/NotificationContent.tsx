@@ -10,9 +10,14 @@ import {
 import { ScrollArea, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { WelcomeMessageNotificationContent } from '@/notification/my-inbox/components/contents/system/WelcomeMessage';
+import { currentUserState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
 
 export const NotificationContent = () => {
   const { notification, loading } = useNotification();
+  const currentUser = useAtomValue(currentUserState);
+  console.log({ notification, currentUser });
 
   if (loading) {
     return <Spinner />;
@@ -34,22 +39,6 @@ const NotificationContentWrapper = ({
 }: {
   notification: INotification;
 }) => {
-  if (notification.kind === INotificationKind.SYSTEM) {
-    const { template = '' } = notification?.metadata || ({} as any);
-
-    const SystemComponent =
-      SystemNotificationContents[
-        template as keyof typeof SystemNotificationContents
-      ];
-    return SystemComponent ? (
-      <Suspense fallback={<Spinner />}>
-        <SystemComponent />
-      </Suspense>
-    ) : (
-      <UnknownSystemNotificationContent />
-    );
-  }
-
   const [pluginName, moduleName, collectionType] = (
     notification?.contentType || ''
   )

@@ -1,12 +1,19 @@
 import {
   IconBrandInstagramFilled,
   IconBrandLinkedinFilled,
-  IconUsers,
-  IconSettings,
   IconMailFilled,
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconArrowRight,
+  IconForms,
+  IconBrandTrello,
+  IconMessage,
+  IconChartCovariate,
+  IconTicket,
+  IconBriefcase,
+  IconMessageCircle,
+  IconMessage2,
+  IconMail,
 } from '@tabler/icons-react';
 import { WelcomeMessageBackground } from './WelcomeMessageBackground';
 import { currentUserState } from 'ui-modules';
@@ -29,6 +36,11 @@ type OnboardingStepItem = {
     label: string;
     to: string;
   };
+};
+type TabItem = {
+  label: string;
+  icon: React.ReactNode;
+  isActive?: boolean;
 };
 
 const Socials: SocialItem[] = [
@@ -54,38 +66,85 @@ const Socials: SocialItem[] = [
   },
 ];
 
-const OnboardingSteps: OnboardingStepItem[] = [
+export const OnboardingSteps: OnboardingStepItem[] = [
   {
-    icon: <IconUsers className="size-5" />,
-    title: 'Invite Your Team',
+    icon: <IconMail size={24} />,
+    title: 'Team inbox',
+    forOwner: false,
     description:
-      'Collaborate better by inviting team members to join your workspace and start working together.',
+      'Built with ShadCN and Radix UI for a more accessible interface.',
     action: {
-      label: 'Invite Team Member',
-      to: '/settings/team-member',
+      label: 'Try it out now',
+      to: '#',
     },
   },
   {
-    icon: <IconSettings className="size-5" />,
-    title: 'Customize Your Workspace',
-    forOwner: true,
+    icon: <IconTicket size={24} />,
+    title: 'Ticket',
+    forOwner: false,
     description:
-      'Tailor your workspace to your preferences with customizable settings.',
+      'Built with ShadCN and Radix UI for a more accessible interface.',
     action: {
-      label: 'Customize Workspace',
-      to: '/settings/workspace',
+      label: 'Try it out now',
+      to: '#',
     },
   },
   {
-    icon: <IconSettings className="size-5" />,
-    title: 'Customize Your Workspace',
-    forOwner: true,
+    icon: <IconBriefcase size={24} />,
+    title: 'Deal',
+    forOwner: false,
     description:
-      'Tailor your workspace to your preferences with customizable settings.',
+      'Built with ShadCN and Radix UI for a more accessible interface.',
     action: {
-      label: 'Customize Workspace',
-      to: '/settings/workspace',
+      label: 'Try it out now',
+      to: '#',
     },
+  },
+  {
+    icon: <IconMessageCircle size={24} />,
+    title: 'Business messenger',
+    forOwner: false,
+    description:
+      'Built with ShadCN and Radix UI for a more accessible interface.',
+    action: {
+      label: 'Try it out now',
+      to: '#',
+    },
+  },
+  {
+    icon: <IconMessage2 size={24} />,
+    title: 'Business messenger',
+    forOwner: false,
+    description:
+      'Built with ShadCN and Radix UI for a more accessible interface.',
+    action: {
+      label: 'Try it out now',
+      to: '#',
+    },
+  },
+];
+
+const TabItems: TabItem[] = [
+  {
+    label: 'Pop-up forms',
+    icon: <IconForms className="size-4" />,
+  },
+  {
+    label: 'Contacts',
+    icon: <IconMail className="size-4" />,
+  },
+  {
+    label: 'Ticket management',
+    icon: <IconBrandTrello className="size-4" />,
+    isActive: true,
+  },
+  {
+    label: 'Business messenger',
+    icon: <IconMessage className="size-4" />,
+  },
+  {
+    label: 'Insight',
+    icon: <IconChartCovariate className="size-4" />,
   },
 ];
 
@@ -113,50 +172,60 @@ const SocialSection = () => (
 );
 
 const OnboardingStepsSection = ({ isOwner }: { isOwner: boolean }) => {
+  const filteredSteps = OnboardingSteps.filter(
+    (item) => !item.forOwner || isOwner,
+  );
+
+  const renderCard = (item: OnboardingStepItem, index: number) => (
+    <div
+      key={index}
+      className="border rounded-2xl p-4 flex flex-col gap-3 bg-background min-h-[200px]"
+    >
+      <div className="flex flex-col gap-3 flex-1">
+        <div className="p-[10px] rounded-md text-primary bg-primary/10 w-min">
+          {item.icon}
+        </div>
+        <h3 className="font-semibold text-primary text-lg break-words">
+          {item.title}
+        </h3>
+        <p className="text-base text-muted-foreground break-words flex-1">
+          {item.description}
+        </p>
+      </div>
+      <Button asChild size="sm" variant="ghost" className="self-start mt-auto">
+        <Link to={item.action.to} className="hover:bg-background">
+          <span className="text-primary font-semibold text-base flex items-center gap-1 break-words">
+            <span className="truncate">{item.action.label}</span>
+            <IconArrowRight className="size-4 flex-shrink-0" />
+          </span>
+        </Link>
+      </Button>
+    </div>
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8 }}
-      className=" max-w-3xl w-full items-center mx-auto"
+      className="max-w-4xl w-full items-center mx-auto"
     >
       <h2 className="text-xl font-semibold text-center mb-6">Get Started</h2>
-      <div className="p-2 rounded-3xl flex flex-col sm:flex-row lg:grid lg:grid-cols-2 border bg-muted gap-2">
-        {OnboardingSteps.map((item, index) => {
-          if (item.forOwner && !isOwner) {
-            return null;
-          }
-          return (
-            <div
-              className={cn(
-                'border rounded-2xl p-3 flex flex-col gap-3 bg-background flex-1 min-w-0',
-                index === 2 &&
-                  OnboardingSteps.length === 3 &&
-                  'lg:col-span-2 col-span-2 sm:col-span-1',
-              )}
-            >
-              <div className="flex flex-col gap-2">
-                <div className="p-[10px] rounded-md text-primary bg-primary/10 w-min">
-                  {item.icon}
-                </div>
-                <h3 className="font-semibold text-primary text-lg break-words">
-                  {item.title}
-                </h3>
-                <p className="text-base text-muted-foreground break-words">
-                  {item.description}
-                </p>
-              </div>
-              <Button asChild size="sm" variant="ghost" className="self-start">
-                <Link to={item.action.to} className="hover:bg-background">
-                  <span className="text-primary font-semibold text-base flex items-center gap-1 break-words">
-                    <span className="truncate">{item.action.label}</span>
-                    <IconArrowRight className="size-4 flex-shrink-0" />
-                  </span>
-                </Link>
-              </Button>
+      <div className="p-2 rounded-3xl border bg-muted">
+        <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {filteredSteps
+              .slice(0, 3)
+              .map((item, index) => renderCard(item, index))}
+          </div>
+          {filteredSteps.length > 3 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {filteredSteps
+                .slice(3, 5)
+                .map((item, index) => renderCard(item, index + 3))}
             </div>
-          );
-        })}
+          )}
+        </div>
       </div>
     </motion.div>
   );
@@ -217,6 +286,29 @@ const LazyVideo = ({ src }: { src: string }) => {
   );
 };
 
+const ReadOnlyTabs = () => {
+  return (
+    <div className="cursor-default w-min   mx-auto max-w-[calc(100vw-2rem)]">
+      <div className="rounded-lg border overflow-x-auto  border-foreground/10 bg-foreground/10 p-1">
+        <div className="flex gap-2 ">
+          {TabItems.map((item) => (
+            <div
+              key={item.label}
+              className={cn(
+                'flex items-center justify-center gap-2 font-medium text-[13px] py-2 px-2 rounded-[4px] text-center',
+                item.isActive && 'bg-white text-primary shadow-sm',
+              )}
+            >
+              {item.icon}
+              <span className="truncate">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const WelcomeMessageNotificationContent = () => {
   const currentUser = useAtomValue(currentUserState);
   return (
@@ -234,27 +326,14 @@ export const WelcomeMessageNotificationContent = () => {
           transition={{ delay: 0.2 }}
           className="space-y-2 text-center"
         >
-          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Welcome to erxes
+          <h1 className="text-2xl font-semibold tracking-tight bg-clip-text">
+            erxes Frontline
           </h1>
           <p className="text-base text-muted-foreground">
-            A New Experience Begins!
+            Engage customers, respond quickly, improve satisfaction
           </p>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-center"
-        >
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Discover the power of unified customer experience management. Get
-            started with our comprehensive platform designed to streamline your
-            business operations and enhance customer relationships.
-          </p>
-        </motion.div>
-
+        <ReadOnlyTabs />
         <div className="space-y-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
