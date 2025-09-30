@@ -2,7 +2,7 @@ import { TaskDetails } from '@/task/components/detail/TaskDetails';
 import { useGetTask } from '@/task/hooks/useGetTask';
 import { taskDetailSheetState } from '@/task/states/taskDetailSheetState';
 import { IconArrowsDiagonal } from '@tabler/icons-react';
-import { Button, Separator, Sheet } from 'erxes-ui';
+import { Button, Separator, Sheet, TextOverflowTooltip } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { Link, useParams } from 'react-router-dom';
 
@@ -51,7 +51,9 @@ export const TaskDetailSheetHeader = () => {
         </Link>
       </Button>
       <Separator.Inline />
-      <Sheet.Title>{task?.name}</Sheet.Title>
+      <Sheet.Title className="lg:max-w-xl max-w-[18rem] sm:max-w-sm truncate">
+        <TextOverflowTooltip value={task?.name} />
+      </Sheet.Title>
     </div>
   );
 };
