@@ -6,7 +6,7 @@ export const roleMutations = {
   async rolesUpsert(_root: undefined, doc: IRole, { models, user }: IContext) {
     const { userId } = doc || {};
 
-    const role = await models.Roles.getRole(userId);
+    const role = await models.Roles.findOne({ userId }).lean();
 
     if (role) {
       return await models.Roles.updateRole(doc, user);

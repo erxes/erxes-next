@@ -1,6 +1,7 @@
+import { Resolver } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 
-export const authQueries = {
+export const authQueries: Record<string, Resolver> = {
   /**
    * Current user
    */
@@ -16,3 +17,5 @@ export const authQueries = {
     return result;
   },
 };
+
+authQueries.currentUser.metadata = { public: true };

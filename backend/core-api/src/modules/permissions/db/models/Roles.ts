@@ -64,10 +64,18 @@ export const loadRoleClass = (models: IModels) => {
       const role = await models.Roles.findOne({ userId }).lean();
 
       if (!role) {
-        return await models.Roles.create({
+        const user = await models.Users.getUser(userId);
+
+        const userRole = {
           userId,
           role: PERMISSION_ROLES.MEMBER,
-        });
+        };
+
+        if (user.isOwner) {
+          userRole.role = PERMISSION_ROLES.OWNER;
+        }
+
+        return await models.Roles.create(userRole);
       }
 
       return role;

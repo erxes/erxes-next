@@ -7,7 +7,7 @@ export const types = `
     member
   }
 
-  type Role @key(fields: "userId") @cacheControl(maxAge: 3) {
+  type Role {
     user: User
     role: ROLE
 

@@ -1,3 +1,5 @@
+import { WorkOS } from '@workos-inc/node';
+import { Resolver } from 'erxes-api-shared/core-types';
 import {
   authCookieOptions,
   getEnv,
@@ -5,9 +7,8 @@ import {
   redis,
   updateSaasOrganization,
 } from 'erxes-api-shared/utils';
-import { IContext } from '~/connectionResolvers';
-import { WorkOS } from '@workos-inc/node';
 import * as jwt from 'jsonwebtoken';
+import { IContext } from '~/connectionResolvers';
 import {
   getCallbackRedirectUrl,
   isValidEmail,
@@ -21,7 +22,7 @@ type LoginParams = {
   deviceToken?: string;
 };
 
-export const authMutations = {
+export const authMutations: Record<string, Resolver> = {
   /*
    * Login
    */
@@ -239,3 +240,5 @@ export const authMutations = {
     return 'success';
   },
 };
+
+authMutations.login.metadata = { public: true };
