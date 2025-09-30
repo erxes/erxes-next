@@ -31,6 +31,7 @@ import {
 } from '@dnd-kit/sortable';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { IconFolderCancel } from '@tabler/icons-react';
 import { Item } from './Item';
 import { List } from './List';
 import { createPortal } from 'react-dom';
@@ -233,28 +234,38 @@ export function Sortable({
       measuring={measuring}
       modifiers={modifiers}
     >
-      <div style={style} className="flex w-full py-4 justify-center">
-        <SortableContext items={items} strategy={strategy}>
-          <Container>
-            {items.map((value, index) => (
-              <SortableItem
-                key={value}
-                id={value}
-                handle={handle}
-                index={index}
-                style={getItemStyles}
-                wrapperStyle={wrapperStyle}
-                disabled={isDisabled(value)}
-                renderItem={renderItem}
-                onRemove={handleRemove}
-                animateLayoutChanges={animateLayoutChanges}
-                useDragOverlay={useDragOverlay}
-                getNewIndex={getNewIndex}
-              />
-            ))}
-          </Container>
-        </SortableContext>
-      </div>
+      {items.length > 0 ? (
+        <div style={style} className="flex w-full py-4 justify-center">
+          <SortableContext items={items} strategy={strategy}>
+            <Container>
+              {items.map((value, index) => (
+                <SortableItem
+                  key={value}
+                  id={value}
+                  handle={handle}
+                  index={index}
+                  style={getItemStyles}
+                  wrapperStyle={wrapperStyle}
+                  disabled={isDisabled(value)}
+                  renderItem={renderItem}
+                  onRemove={handleRemove}
+                  animateLayoutChanges={animateLayoutChanges}
+                  useDragOverlay={useDragOverlay}
+                  getNewIndex={getNewIndex}
+                />
+              ))}
+            </Container>
+          </SortableContext>
+        </div>
+      ) : (
+        <div
+          style={style}
+          className="flex flex-col w-full py-4 h-48 justify-center items-center"
+        >
+          <IconFolderCancel />
+          <p className="text-muted-foreground pt-2">No items found.</p>
+        </div>
+      )}
       {useDragOverlay
         ? createPortal(
             <DragOverlay

@@ -157,6 +157,7 @@ export function PipelineFormBar() {
         departmentIds: [],
         branchIds: [],
         memberIds: [],
+        stages: [],
       });
     }
   }, [pipelineId, pipelineDetail, reset, boardId, initialStages]);

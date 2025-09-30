@@ -8,6 +8,7 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconDragDrop2,
+  IconTrashX,
 } from '@tabler/icons-react';
 
 import { Controller } from 'react-hook-form';
@@ -19,6 +20,7 @@ import { useState } from 'react';
 interface Props extends SortableItemProps {
   stage: IStage;
   control: any;
+  onRemoveStage: () => void;
 }
 
 const showTooltip = (icon: any, text: string) => {
@@ -50,6 +52,7 @@ const PipelineStageItem = (props: Props) => {
     index,
     stage,
     control,
+    onRemoveStage,
   } = props;
 
   const [showExtraFields, setShowExtraFields] = useState(false);
@@ -304,6 +307,17 @@ const PipelineStageItem = (props: Props) => {
             {showExtraFields
               ? showTooltip(<IconChevronUp size={14} />, 'Hide extra fields')
               : showTooltip(<IconChevronDown size={14} />, 'Show extra fields')}
+          </div>
+
+          <div
+            className={`
+              flex items-center gap-1 text-xs text-red-500 cursor-pointer
+              px-2 py-1 rounded bg-red-50 hover:bg-red-100 transition-colors duration-150
+              select-none
+            `}
+            onClick={onRemoveStage}
+          >
+            <IconTrashX size={14} />
           </div>
         </div>
       </div>

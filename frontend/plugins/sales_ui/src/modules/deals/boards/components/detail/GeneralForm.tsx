@@ -150,6 +150,7 @@ const GeneralForm = ({ form }: { form: any }) => {
                 <SelectMember.FormItem
                   value={field.value}
                   onValueChange={field.onChange}
+                  mode="multiple"
                 />
               </Form.Item>
             )}
