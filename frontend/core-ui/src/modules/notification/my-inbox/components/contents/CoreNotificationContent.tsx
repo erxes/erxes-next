@@ -4,7 +4,7 @@ const WelcomeNotificationContent = lazy(() =>
   import(
     '@/notification/my-inbox/components/contents/system/WelcomeMessage'
   ).then((module) => ({
-    default: module.WelcomeMessageNotificationContent,
+    default: module.WelcomeMessageContent,
   })),
 );
 
