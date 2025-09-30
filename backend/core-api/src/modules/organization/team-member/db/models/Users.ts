@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
-import { redis } from 'erxes-api-shared/utils';
+import { getPlugins, redis } from 'erxes-api-shared/utils';
 import {
   USER_ROLES,
   userSchema,
@@ -131,7 +131,7 @@ export interface IUserModel extends Model<IUserDocument> {
   createSystemUser(doc: IAppDocument): IUserDocument;
 }
 
-export const loadUserClass = (models: IModels) => {
+export const loadUserClass = (models: IModels, subdomain: string) => {
   class User {
     public static async getUser(_id: string) {
       const user = await models.Users.findOne({ _id });
@@ -795,6 +795,39 @@ export const loadUserClass = (models: IModels) => {
         }
       }
 
+      if (user.isOwner && !user.lastSeenAt) {
+        const pluginNames = await getPlugins();
+
+        for (const pluginName of pluginNames) {
+          if (pluginName === 'core') {
+            sendNotification(subdomain, {
+              title: 'Welcome to erxes 🎉',
+              message:
+                'We’re excited to have you on board! Explore the features, connect with your team, and start growing your business with erxes.',
+              type: 'info',
+              userIds: [user._id],
+              priority: 'low',
+              kind: 'system',
+              contentType: `${pluginName}:system.welcome`,
+            });
+
+            await user.updateOne({ $set: { lastSeenAt: new Date() } });
+
+            continue;
+          }
+
+          sendNotification(subdomain, {
+            title: `Get Started with ${pluginName}`,
+            message: `Excited to introduce ${pluginName}! Dive in to explore its features and see how it can help your business thrive.`,
+            type: 'info',
+            userIds: [user._id],
+            priority: 'low',
+            kind: 'system',
+            contentType: `${pluginName}:system.welcome`,
+          });
+        }
+      }
+
       return {
         token,
         refreshToken,
@@ -811,6 +844,11 @@ export const loadUserClass = (models: IModels) => {
 
       if (validatedToken) {
         await redis.del(`user_token_${user._id}_${currentToken}`);
+
+        await models.Users.updateOne(
+          { _id: user._id },
+          { $set: { lastSeenAt: new Date() } },
+        );
 
         return 'loggedout';
       }
