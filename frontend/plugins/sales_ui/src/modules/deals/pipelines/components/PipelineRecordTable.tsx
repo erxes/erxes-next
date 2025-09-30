@@ -3,6 +3,7 @@ import {
   Combobox,
   Command,
   Input,
+  PageSubHeader,
   Popover,
   RecordTable,
   RecordTableInlineCell,
@@ -278,39 +279,43 @@ const PipelineRecordTable = () => {
 
   const { contentType, searchValue } = queries;
 
-  const { pipelines, loading, pageInfo, handleFetchMore } = usePipelines({
-    variables: {
-      type: contentType || '',
-      searchValue: searchValue ?? undefined,
-      boardId: queries.activeBoardId || '',
-    },
-  });
+  const { pipelines, loading, pageInfo, handleFetchMore, totalCount } =
+    usePipelines({
+      variables: {
+        type: contentType || '',
+        searchValue: searchValue ?? undefined,
+        boardId: queries.activeBoardId || '',
+      },
+    });
 
   return (
-    <RecordTable.Provider
-      columns={pipelinesColumns}
-      data={pipelines || []}
-      className="m-3"
-      stickyColumns={['more', 'name']}
-    >
-      <RecordTableTree id="pipelines-list" ordered>
-        <RecordTable.Scroll>
-          <RecordTable className="w-full">
-            <RecordTable.Header />
-            <RecordTable.Body>
-              <RecordTable.RowList Row={RecordTableTree.Row} />
-              {loading && <RecordTable.RowSkeleton rows={30} />}
-              {!loading && pageInfo?.hasNextPage && (
-                <RecordTable.RowSkeleton
-                  rows={1}
-                  handleInView={handleFetchMore}
-                />
-              )}
-            </RecordTable.Body>
-          </RecordTable>
-        </RecordTable.Scroll>
-      </RecordTableTree>
-    </RecordTable.Provider>
+    <>
+      <PageSubHeader>Pipelines ({totalCount})</PageSubHeader>
+      <RecordTable.Provider
+        columns={pipelinesColumns}
+        data={pipelines || []}
+        className="m-3"
+        stickyColumns={['more', 'name']}
+      >
+        <RecordTableTree id="pipelines-list" ordered>
+          <RecordTable.Scroll>
+            <RecordTable className="w-full">
+              <RecordTable.Header />
+              <RecordTable.Body>
+                <RecordTable.RowList Row={RecordTableTree.Row} />
+                {loading && <RecordTable.RowSkeleton rows={30} />}
+                {!loading && pageInfo?.hasNextPage && (
+                  <RecordTable.RowSkeleton
+                    rows={1}
+                    handleInView={handleFetchMore}
+                  />
+                )}
+              </RecordTable.Body>
+            </RecordTable>
+          </RecordTable.Scroll>
+        </RecordTableTree>
+      </RecordTable.Provider>
+    </>
   );
 };
 

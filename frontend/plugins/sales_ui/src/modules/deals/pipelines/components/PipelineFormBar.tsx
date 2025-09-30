@@ -33,11 +33,7 @@ export function PipelineFormBar() {
 
   const {
     methods,
-    methods: {
-      reset,
-      handleSubmit,
-      formState: { errors },
-    },
+    methods: { reset, handleSubmit },
   } = usePipelineForm();
 
   const { stages: initialStages, loading: stagesLoading } = useStages({
@@ -45,7 +41,7 @@ export function PipelineFormBar() {
       pipelineId,
     },
   });
-  console.log('eee', errors);
+
   const { toast } = useToast();
   const [open, setOpen] = useState<boolean>(false);
 
