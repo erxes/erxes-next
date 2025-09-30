@@ -19,10 +19,14 @@ const PipelineConfig = ({ form }: { form: any }) => {
             <Form.Item className="flex-1">
               <div className="flex justify-between items-center">
                 <Form.Label>Number configuration</Form.Label>
-                <Attribution config={BOARD_NUMBERS} onChange={field.onChange} />
+                <Attribution
+                  config={BOARD_NUMBERS}
+                  onChange={field.onChange}
+                  value={field.value}
+                />
               </div>
               <Form.Control>
-                <Input {...field} placeholder="Enter pipeline name" />
+                <Input {...field} placeholder="Enter number configuration" />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -35,7 +39,7 @@ const PipelineConfig = ({ form }: { form: any }) => {
             <Form.Item className="w-48">
               <Form.Label>Fractional part</Form.Label>
               <Form.Control>
-                <Input {...field} placeholder="Enter pipeline name" />
+                <Input {...field} placeholder="1-8" />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -53,10 +57,11 @@ const PipelineConfig = ({ form }: { form: any }) => {
               <Attribution
                 config={BOARD_NAMES_CONFIGS}
                 onChange={field.onChange}
+                value={field.value}
               />
             </div>
             <Form.Control>
-              <Input {...field} placeholder="Enter pipeline name" />
+              <Input {...field} placeholder="Enter name configuration" />
             </Form.Control>
             <Form.Message />
           </Form.Item>

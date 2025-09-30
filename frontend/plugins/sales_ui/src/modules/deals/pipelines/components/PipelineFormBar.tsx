@@ -33,7 +33,11 @@ export function PipelineFormBar() {
 
   const {
     methods,
-    methods: { reset, handleSubmit },
+    methods: {
+      reset,
+      handleSubmit,
+      formState: { errors },
+    },
   } = usePipelineForm();
 
   const { stages: initialStages, loading: stagesLoading } = useStages({
@@ -41,7 +45,7 @@ export function PipelineFormBar() {
       pipelineId,
     },
   });
-
+  console.log('eee', errors);
   const { toast } = useToast();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -147,6 +151,12 @@ export function PipelineFormBar() {
         branchIds: pipelineDetail?.branchIds || [],
         memberIds: pipelineDetail?.memberIds || [],
         stages: initialStages || [],
+        numberConfig: pipelineDetail?.numberConfig || '',
+        numberSize: pipelineDetail?.numberSize || '',
+        nameConfig: pipelineDetail?.nameConfig || '',
+        isCheckDate: pipelineDetail?.isCheckDate || false,
+        isCheckUser: pipelineDetail?.isCheckUser || false,
+        isCheckDepartment: pipelineDetail?.isCheckDepartment || false,
       });
     } else {
       reset({
@@ -158,6 +168,12 @@ export function PipelineFormBar() {
         branchIds: [],
         memberIds: [],
         stages: [],
+        numberConfig: '',
+        numberSize: '',
+        nameConfig: '',
+        isCheckDate: false,
+        isCheckUser: false,
+        isCheckDepartment: false,
       });
     }
   }, [pipelineId, pipelineDetail, reset, boardId, initialStages]);

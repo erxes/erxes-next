@@ -1,58 +1,54 @@
 import { Combobox, Command, Popover, toast } from 'erxes-ui';
 
 import { IconArrowDown } from '@tabler/icons-react';
+import { useState } from 'react';
 
 type Props = {
   config: { value: string; label: string }[];
-  onChange: () => void;
+  value: string; // current input value
+  onChange: (value: string) => void;
 };
 
-const Attribution = ({ config, onChange }: Props) => {
-  const onChangeConfig = (conf: string) => {
-    if (conf.startsWith(' ')) {
-      return toast({
+const Attribution = ({ config, value, onChange }: Props) => {
+  const [open, setOpen] = useState(false);
+
+  const handleSelect = (val: string) => {
+    if (val.startsWith(' ')) {
+      toast({
         title: 'Error',
         description:
           "Please make sure the number configuration doesn't start with a space",
         variant: 'destructive',
       });
+      return;
     }
 
-    onChange();
-  };
-
-  const onClickAttribute = (value: string) => {
     const characters = ['_', '-', '/', ' '];
+    const newValue = characters.includes(val)
+      ? value + val
+      : value + `{${val}}`;
 
-    let changedConfig;
-
-    if (characters.includes(value)) {
-      changedConfig = `${config}${value}`;
-    } else {
-      changedConfig = `${config}{${value}}`;
-    }
-
-    onChangeConfig(changedConfig);
+    onChange(newValue);
+    setOpen(false); // close popover after selection
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <span className="text-sm text-foreground/50 font-semibold flex items-center gap-1 cursor-pointer hover:text-foreground transition-colors duration-200">
-          Attribution
-          <IconArrowDown size={13} />
+          Attribution <IconArrowDown size={13} />
         </span>
       </Popover.Trigger>
       <Popover.Content className="p-1">
-        <Command shouldFilter={false} onSelect={(e) => e.currentTarget}>
-          <Command.List className="p-1 ">
+        <Command shouldFilter={false}>
+          <Command.List className="p-1">
             <Combobox.Empty />
-            {config.map(({ value, label }) => (
+            {config.map(({ value: val, label }) => (
               <Command.Item
-                key={value}
-                value={value}
-                className={`cursor-pointer text-xs`}
-                onSelect={() => onClickAttribute(value)}
+                key={val}
+                value={val}
+                className="cursor-pointer text-xs"
+                onSelect={() => handleSelect(val)}
               >
                 {label}
               </Command.Item>

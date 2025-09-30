@@ -232,6 +232,7 @@ const PipelineStageItem = (props: Props) => {
                           {...field}
                           placeholder="Enter age"
                           className="input"
+                          type="number"
                         />
                       )}
                     />
