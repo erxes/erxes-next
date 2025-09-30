@@ -29,6 +29,7 @@ import {
   currentCallConversationIdAtom,
   historyIdAtom,
 } from '@/integrations/call/states/callStates';
+import { useAddCallCustomer } from '@/integrations/call/hooks/useAddCustomer';
 
 export const CallWidgetContent = () => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
@@ -36,6 +37,7 @@ export const CallWidgetContent = () => {
   const setCurrentCallConversationId = useSetAtom(
     currentCallConversationIdAtom,
   );
+  const { addCustomer, customer, channels, loading } = useAddCallCustomer();
 
   useEffect(() => {
     if (sipState.callStatus === CallStatusEnum.ENDED) {
@@ -45,17 +47,30 @@ export const CallWidgetContent = () => {
   }, [sipState.callStatus, setHistoryId, setCurrentCallConversationId]);
 
   if (sipState.callStatus === CallStatusEnum.IDLE) {
-    return <CallTabs keypad={<Dialpad />} />;
+    return <CallTabs keypad={<Dialpad addCustomer={addCustomer} />} />;
   }
 
   if (
     sipState.callDirection === CallDirectionEnum.INCOMING &&
     sipState.callStatus === CallStatusEnum.STARTING
   ) {
-    return <IncomingCall />;
+    return (
+      <IncomingCall
+        addCustomer={addCustomer}
+        customer={customer}
+        channels={channels}
+        loading={loading}
+      />
+    );
   }
 
-  return <CallTabs keypad={<InCall />} />;
+  return (
+    <CallTabs
+      keypad={
+        <InCall customer={customer} channels={channels} loading={loading} />
+      }
+    />
+  );
 };
 
 export const CallWidgetMoreActions = () => {

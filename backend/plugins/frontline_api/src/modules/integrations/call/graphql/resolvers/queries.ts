@@ -34,11 +34,9 @@ const callQueries = {
     const customer = await sendTRPCMessage({
       pluginName: 'core',
       method: 'query',
-      module: 'customer',
+      module: 'customers',
       action: 'findOne',
-      input: {
-        primaryPhone: customerPhone,
-      },
+      input: { query: { customerPrimaryPhone: customerPhone } },
     });
 
     return customer;

@@ -145,7 +145,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
           <IconChevronRight className="size-4" />
           <Sheet.Title className="">New task</Sheet.Title>
         </Sheet.Header>
-        <Sheet.Content className="px-7 py-4 gap-2 flex flex-col">
+        <Sheet.Content className="px-7 py-4 gap-2 flex flex-col min-h-0">
           <Form.Field
             name="name"
             control={form.control}
