@@ -73,6 +73,11 @@ const initCallApp = async (app) => {
     next();
   });
 
+  app.get('/resetCallCookie', async (req, res) => {
+    await redis.del('callCookie');
+    return res.send('Reseted call cookie');
+  });
+
   app.post('/call/queueRealtimeUpdate', authenticateApi, async (req, res) => {
     try {
       const VERSION = getEnv({ name: 'VERSION' });
