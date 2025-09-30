@@ -8,7 +8,7 @@ export const TeamMembersPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="h-screen">
+    <div className="flex-auto overflow-auto mb-4">
       <div className="px-4 h-16 flex items-center">
         <Breadcrumb>
           <Breadcrumb.List>

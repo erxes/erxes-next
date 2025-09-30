@@ -7,6 +7,10 @@ import { useSip } from '@/integrations/call/components/SipProvider';
 import { callUiAtom } from '@/integrations/call/states/callUiAtom';
 import { callNumberState } from '@/integrations/call/states/callWidgetStates';
 import {
+  callConfigAtom,
+  sipStateAtom,
+} from '@/integrations/call/states/sipStates';
+import {
   IconAddressBook,
   IconDialpadFilled,
   IconHistory,
@@ -62,25 +66,35 @@ const CallTabsTrigger = ({
   );
 };
 
-export const Dialpad = () => {
+export const Dialpad = ({ addCustomer }: { addCustomer: any }) => {
   return (
     <div className="px-3 pt-3">
       <CallSipActions />
       <CallNumberInput />
       <SelectPhoneCallFrom />
-      <CallButton />
+      <CallButton addCustomer={addCustomer} />
     </div>
   );
 };
 
-export const CallButton = () => {
-  const phoneNumber = useAtomValue(callNumberState);
+export const CallButton = ({ addCustomer }: { addCustomer: any }) => {
   const { startCall } = useSip();
+  const sipState = useAtomValue(sipStateAtom);
+  const [callConfig] = useAtom(callConfigAtom);
+  const phoneNumber = useAtomValue(callNumberState);
+
+  const call = () => {
+    if (phoneNumber && phoneNumber.length > 0) {
+      addCustomer(callConfig?.inboxId || '', phoneNumber, sipState.groupName);
+      startCall(phoneNumber);
+    }
+  };
+
   return (
     <Button
       className="my-3 w-full"
       disabled={!phoneNumber || !phoneNumber.length}
-      onClick={() => startCall(phoneNumber)}
+      onClick={call}
     >
       Call
     </Button>
