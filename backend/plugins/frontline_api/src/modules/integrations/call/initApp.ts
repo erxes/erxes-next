@@ -3,6 +3,7 @@ import { generateModels } from '~/connectionResolvers';
 import { receiveCdr } from '~/modules/integrations/call/services/cdrServices';
 
 import express from 'express';
+import redis from '~/modules/integrations/call/redlock';
 
 const authenticateApi = async (req, res, next) => {
   const erxesApiId = req.headers['x-integration-id'];
@@ -59,6 +60,9 @@ async function validateCompanyAccess(subdomain, erxesApiId, cdrData) {
 }
 
 const initCallApp = async (app) => {
+  console.log('********* INIT CALL ********');
+  await redis.del('callCookie');
+
   app.use(
     express.json({
       limit: '15mb',

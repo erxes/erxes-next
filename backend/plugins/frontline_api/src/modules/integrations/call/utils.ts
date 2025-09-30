@@ -6,7 +6,6 @@ import FormData from 'form-data';
 import momentTz from 'moment-timezone';
 
 import type { RequestInit, HeadersInit } from 'node-fetch';
-import { getOrCreateCustomer } from './store';
 import redis from '~/modules/integrations/call/redlock';
 import { IModels, generateModels } from '~/connectionResolvers';
 import { getEnv } from 'erxes-api-shared/utils';
@@ -425,7 +424,8 @@ function sanitizeFileName(rawFileName: string): string {
 }
 export const cfRecordUrl = async (params, user, models, subdomain) => {
   try {
-    const { fileDir, recordfiles, inboxIntegrationId, retryCount } = params;
+    const { fileDir, recordfiles, inboxIntegrationId, retryCount } =
+      params;
 
     if (!recordfiles) {
       throw new Error('Missing required parameter: recordfiles');
@@ -546,141 +546,6 @@ export const getPureDate = (date: Date, updateTime) => {
   return new Date(updatedDate.getTime() + diffTimeZone);
 };
 
-export const saveCdrData = async (subdomain, cdrData, result) => {
-  const models = await generateModels(subdomain);
-  try {
-    for (const cdr of cdrData) {
-      const history = createHistoryObject(cdr, result);
-      await saveCallHistory(models, history);
-      await processCustomerAndConversation(
-        models,
-        history,
-        cdr,
-        result,
-        subdomain,
-      );
-    }
-  } catch (error) {
-    console.error(`Error in saveCdrData: ${error.message}`);
-  }
-};
-
-const createHistoryObject = (cdr, result) => {
-  const callType = cdr.userfield === 'Outbound' ? 'outgoing' : 'incoming';
-  const customerPhone = cdr.userfield === 'Inbound' ? cdr.src : cdr.dst;
-
-  return {
-    operatorPhone: result.phone,
-    customerPhone,
-    callDuration: parseInt(cdr.billsec),
-    callStartTime: new Date(cdr.start),
-    callEndTime: new Date(cdr.end),
-    callType,
-    callStatus: cdr.disposition === 'ANSWERED' ? 'connected' : 'missed',
-    timeStamp: cdr.cdr ? parseInt(cdr.cdr) : 0,
-    createdAt: cdr.start ? new Date(cdr.start) : new Date(),
-    extensionNumber: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src,
-    inboxIntegrationId: result.inboxId,
-    recordFiles: cdr.recordfiles,
-    queueName: cdr.lastdata ? cdr.lastdata.split(',')[0] : '',
-    conversationId: '',
-  };
-};
-
-const saveCallHistory = async (models, history) => {
-  try {
-    await models.CallHistory.updateOne(
-      { timeStamp: history.timeStamp },
-      { $set: history },
-      { upsert: true },
-    );
-  } catch (error) {
-    throw new Error(`Failed to save call history: ${error.message}`);
-  }
-};
-
-const processCustomerAndConversation = async (
-  models: IModels,
-  history,
-  cdr,
-  result,
-  subdomain,
-) => {
-  let customer = await models.CallCustomers.findOne({
-    primaryPhone: history.customerPhone,
-  });
-  if (!customer || !customer.erxesApiId) {
-    customer = await getOrCreateCustomer(models, subdomain, {
-      inboxIntegrationId: result.inboxId,
-      primaryPhone: history.customerPhone,
-    });
-  }
-
-  try {
-    const payload = JSON.stringify({
-      customerId: customer?.erxesApiId,
-      integrationId: result.inboxId,
-      content: history.callType || '',
-      conversationId: history.timeStamp,
-      updatedAt: history.callStartTime,
-      createdAt: history.callStartTime,
-    });
-
-    const apiConversationResponse = await createOrUpdateErxesConversation(
-      subdomain,
-      payload,
-    );
-
-    if (apiConversationResponse.status === 'success') {
-      await models.CallHistory.updateOne(
-        { timeStamp: history.timeStamp },
-        { $set: { conversationId: apiConversationResponse.data._id } },
-        { upsert: true },
-      );
-    } else {
-      throw new Error(
-        `Conversation creation failed: ${JSON.stringify(
-          apiConversationResponse,
-        )}`,
-      );
-    }
-  } catch (e) {
-    await models.CallHistory.deleteOne({ timeStamp: history.timeStamp });
-    throw new Error(e);
-  }
-
-  await handleRecordUrl(cdr, history, result, models, subdomain);
-};
-
-const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
-  if (history?.recordUrl) return;
-
-  try {
-    if (cdr?.recordfiles) {
-      const recordPath = await cfRecordUrl(
-        {
-          fileDir: 'queue',
-          recordfiles: cdr?.recordfiles,
-          inboxIntegrationId: result.inboxId,
-          retryCount: 1,
-        },
-        '',
-        models,
-        subdomain,
-      );
-
-      if (recordPath) {
-        await models.CallHistory.updateOne(
-          { timeStamp: history.timeStamp },
-          { $set: { recordUrl: recordPath } },
-          { upsert: true },
-        );
-      }
-    }
-  } catch (error) {
-    console.log(`Failed to process record URL: ${error.message}`);
-  }
-};
 const isValidSubdomain = (subdomain) => {
   const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
   return subdomainRegex.test(subdomain);
