@@ -1,0 +1,50 @@
+{
+  "name": "frontline-widget",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/plugins/frontline_api/src/widget/src",
+  "projectType": "application",
+  "tags": ["widget", "frontline"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["backend/plugins/frontline_api/src/public/widget"],
+      "options": {
+        "cwd": "backend/plugins/frontline_api/src/widget",
+        "command": "vite build"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "backend/plugins/frontline_api/src/widget",
+        "command": "vite"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "frontline-widget:build",
+        "spa": true,
+        "port": 3001
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "backend/plugins/frontline_api/src/widget/**/*.{ts,tsx,js,jsx}"
+        ],
+        "eslintConfig": "backend/plugins/frontline_api/src/widget/eslint.config.js"
+      }
+    },
+    "type-check": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "tsConfig": "backend/plugins/frontline_api/src/widget/tsconfig.app.json"
+      }
+    }
+  }
+}
