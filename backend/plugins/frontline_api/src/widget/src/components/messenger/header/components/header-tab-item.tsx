@@ -1,10 +1,8 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '../../../ui/button';
 import { useMessenger } from '../../hooks/useMessenger';
 import { IHeaderItem } from '../../types';
 
-interface HeaderTabItemProps extends IHeaderItem {}
-
-export function HeaderTabItem({ Icon, value }: HeaderTabItemProps) {
+export function HeaderTabItem({ Icon, value }: IHeaderItem) {
   const { activeTab, switchToTab } = useMessenger();
 
   return (
@@ -12,9 +10,10 @@ export function HeaderTabItem({ Icon, value }: HeaderTabItemProps) {
       type="button"
       variant="ghost"
       role="tab"
+      size="icon"
       tabIndex={0}
       aria-selected={activeTab === value}
-      className="flex items-center gap-2 bg-none rounded-[4px] p-2 stroke-zinc-900 aria-selected:stroke-[#6366F1]"
+      className="flex items-center gap-2 bg-none hover:bg-transparent size-8 rounded-sm p-2 stroke-foreground aria-selected:stroke-primary"
       onClick={() => switchToTab(value as any)}
     >
       <Icon size={16} className="stroke-inherit" />

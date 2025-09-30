@@ -1,14 +1,13 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ErxesMessenger } from './components/messenger/erxes-messenger';
+import { Apollo } from './components/apollo-provider';
 
 function App() {
-  console.log('App loaded!');
+  console.log('App component rendering...');
+
   return (
-    <Router basename="/pl:frontline/widget">
-      <Routes>
-        <Route path="/brand/:id" element={<ErxesMessenger />} />
-      </Routes>
-    </Router>
+    <Apollo>
+      <ErxesMessenger brandId="tBdZg4" />
+    </Apollo>
   );
 }
 

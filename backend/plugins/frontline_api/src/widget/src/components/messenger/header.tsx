@@ -16,7 +16,7 @@ export const Header = () => {
     }
   };
 
-  return <div className="flex flex-col gap-4 p-4">{render()}</div>;
+  return <div className="flex flex-col gap-4 p-4 bg-background border-b border-accent">{render()}</div>;
 };
 
 // Re-export components for backward compatibility

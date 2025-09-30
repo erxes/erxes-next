@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"]
     },
     "jsx": "react-jsx",
     "allowJs": false,
@@ -10,7 +12,7 @@
     "strict": true
   },
   "files": [],
-  "include": [],
+
   "references": [
     {
       "path": "./tsconfig.app.json"

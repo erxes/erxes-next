@@ -7,6 +7,8 @@ export function useMessenger() {
   const [, setActiveTab] = useAtom(setActiveTabAtom);
   const [, resetTab] = useAtom(resetTabAtom);
   const [isOpen, setIsOpen] = useAtom(isMessengerOpenAtom);
+  
+  console.log('useMessenger - activeTab:', activeTab, 'isOpen:', isOpen);
 
   const switchToTab = (tab: TabType) => {
     setActiveTab(tab);

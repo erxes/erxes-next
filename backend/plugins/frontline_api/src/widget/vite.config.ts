@@ -9,9 +9,9 @@ export default defineConfig({
     hmr: true
   },
   plugins: [react()],
-  root: __dirname, // This is /app/backend/plugins/frontline_api/src/widget
+  root: __dirname,
   build: {
-    outDir: '../public/widget', // This goes to /app/backend/plugins/frontline_api/src/public/widget
+    outDir: '../public/widget',
     emptyOutDir: true,
   },
   resolve: {

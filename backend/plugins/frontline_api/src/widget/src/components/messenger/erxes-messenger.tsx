@@ -1,23 +1,59 @@
-import { Popover } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
 import { IconMessage2 } from '@tabler/icons-react';
-import { Header } from './header';
-import { useMessenger } from './hooks/useMessenger';
-import { CreateTicket } from './create-ticket';
-import { ConversationMessage, OperatorMessage } from './conversation';
-import { DateSeparator } from './date-seperator';
-import { CustomerMessage } from './conversation';
-import { ChatInput } from './chat-input';
-import { MessengerProps } from './types';
+import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover';
+import { Button } from '../ui/button';
+import { Header } from '../messenger/header';
+import { useMessenger } from '../messenger/hooks/useMessenger';
+import { CreateTicket } from '../messenger/create-ticket';
+import {
+  ConversationMessage,
+  OperatorMessage,
+} from '../messenger/conversation';
+import { DateSeparator } from '../messenger/date-seperator';
+import { CustomerMessage } from '../messenger/conversation';
+import { ChatInput } from '../messenger/chat-input';
+import { useEnabledServices } from '@/components/messenger/hooks/useEnabledServices';
+import { useConnect } from '@/components/messenger/hooks/useConnect';
+
+interface MessengerProps {
+  brandId?: string;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
 
 export const ErxesMessenger = ({
+  brandId: _brandId,
   isOpen: controlledOpen,
   onOpenChange,
-}: Omit<MessengerProps, 'brandId'>) => {
+}: MessengerProps) => {
+  console.log('ErxesMessenger rendered with brandId:', _brandId);
   const { activeTab, isOpen, setIsOpen } = useMessenger();
-
+  const { enabledServices, loading, error } = useEnabledServices();
+  const {
+    result,
+    loading: isConnecting,
+    error: connectError,
+  } = useConnect({ brandId: _brandId ?? '' });
+  console.log(
+    'enabledServices',
+    enabledServices,
+    'loading:',
+    loading,
+    'error:',
+    error,
+  );
   const open = controlledOpen ?? isOpen;
   const handleOpenChange = onOpenChange ?? setIsOpen;
+
+  console.log(
+    'result',
+    result,
+    'isConnecting:',
+    isConnecting,
+    'connectError:',
+    connectError,
+  );
+
+  console.log('Popover state:', { open, controlledOpen, isOpen, _brandId });
 
   const renderContent = () => {
     switch (activeTab) {
@@ -48,15 +84,24 @@ export const ErxesMessenger = ({
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <Popover.Trigger asChild className='fixed bottom-4 right-4 z-50'>
-        <Button size="icon">
-          <IconMessage2 />
+      <PopoverTrigger asChild>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="fixed bottom-4 right-4 z-50 size-12 flex items-center justify-center rounded-full shadow-xs shadow-accent"
+        >
+          <IconMessage2 size={24} />
         </Button>
-      </Popover.Trigger>
-      <Popover.Content side="top">
+      </PopoverTrigger>
+      <PopoverContent
+        side="top"
+        align="end"
+        sideOffset={16}
+        className="max-w-[var(--widget-width)] min-w-96 w-full bg-sidebar"
+      >
         <Header />
         {renderContent()}
-      </Popover.Content>
+      </PopoverContent>
     </Popover>
   );
 };

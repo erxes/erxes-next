@@ -1,6 +1,6 @@
+import { z } from 'zod';
 import { TablerIcon } from '@tabler/icons-react';
 import { ticketSchema } from './schema';
-import { z } from 'zod';
 
 export interface IHeaderItem {
   Icon: TablerIcon;
@@ -25,10 +25,4 @@ export interface Conversation {
   messages: Message[];
   isActive: boolean;
   lastMessage?: Message;
-}
-
-export interface MessengerProps {
-  brandId?: string;
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
 }

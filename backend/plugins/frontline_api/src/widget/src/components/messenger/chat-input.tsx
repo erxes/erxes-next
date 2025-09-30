@@ -1,8 +1,8 @@
 import { IconArrowUp } from '@tabler/icons-react';
 import { useId } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useChatInput } from './hooks/useChatInput';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { useChatInput } from '../messenger/hooks/useChatInput';
 
 export function ChatInput() {
   const id = useId();
@@ -14,7 +14,7 @@ export function ChatInput() {
       <div className="flex items-center gap-2 w-full">
         <Input
           id={id}
-          className="bg-accent shadow-none"
+          className="bg-black/5 border-none shadow-none"
           placeholder="How can we help you?"
           value={message}
           onChange={handleInputChange}
@@ -23,6 +23,7 @@ export function ChatInput() {
           size="icon"
           type="submit"
           aria-label="Send"
+          className='aspect-square'
           disabled={isDisabled}
         >
           <IconArrowUp size={16} />

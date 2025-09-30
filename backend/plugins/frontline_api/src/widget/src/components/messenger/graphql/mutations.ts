@@ -241,7 +241,10 @@ const readConversationMessages = `
   }
 `;
 
-const connect = (isCloudFlareEnabled?: boolean, isTicketEnabled?: boolean) => `
+const connect = (
+  isCloudFlareEnabled?: boolean,
+  isTicketEnabled?: boolean,
+) => gql`
   mutation connect($brandCode: String!, $email: String, $phone: String, $code: String
     $isUser: Boolean, $data: JSON,
     $companyData: JSON, $cachedCustomerId: String $visitorId: String) {

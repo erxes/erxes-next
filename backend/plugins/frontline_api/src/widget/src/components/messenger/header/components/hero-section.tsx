@@ -7,7 +7,7 @@ export function HeroSection() {
         <div className="font-semibold text-foreground text-base">
           Need help?
         </div>
-        <div className="text-accent-foreground font-medium text-sm">
+        <div className="text-muted-foreground font-medium text-base">
           Get help with setting up using erxes. We're available between 9.00 am
           and 6.00 pm (GMT +8). We'll get back to you as soon as possible.
         </div>

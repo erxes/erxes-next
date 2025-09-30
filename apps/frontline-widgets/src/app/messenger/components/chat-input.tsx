@@ -2,6 +2,7 @@ import { IconArrowUp } from '@tabler/icons-react';
 import { useId, useState, FormEvent } from 'react';
 import { useAtom } from 'jotai';
 import { activeTabAtom } from '../atoms';
+import { Button, Input } from 'erxes-ui';
 
 export function ChatInput() {
   const id = useId();
@@ -21,22 +22,23 @@ export function ChatInput() {
   return (
     <form className="p-4 flex" onSubmit={handleSubmit} autoComplete="off">
       <div className="flex items-center gap-2 w-full">
-        <input
+        <Input
           id={id}
-          type="text"
-          className="flex-1 bg-black/5 p-2 rounded-lg text-sm text-zinc-400 font-medium"
+          // type="text"
+          className="bg-accent shadow-none"
           placeholder="How can we help you?"
           value={message}
           onChange={handleInputChange}
         />
-        <button
+        <Button
+          size="icon"
           type="submit"
-          className="bg-[#4F46E5] text-white aspect-square h-full rounded-lg flex items-center justify-center disabled:opacity-90"
+          // className="bg-[#4F46E5] text-white aspect-square h-full rounded-lg flex items-center justify-center disabled:opacity-90"
           aria-label="Send"
           disabled={!message.trim()}
         >
           <IconArrowUp size={16} />
-        </button>
+        </Button>
       </div>
     </form>
   );

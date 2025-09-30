@@ -1,7 +1,7 @@
 import { useTicketsForm } from './hooks/useTicketsForm';
 import { TicketsFormData } from './types';
 import { TicketForm } from './ticket-form';
-import { Form } from '@/components/ui/form';
+import { Form } from '../ui/form';
 
 export const CreateTicket = () => {
   const form = useTicketsForm();
