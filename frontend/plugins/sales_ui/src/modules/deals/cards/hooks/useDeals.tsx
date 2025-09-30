@@ -1,5 +1,6 @@
 import {
   ADD_DEALS,
+  DEALS_ARCHIVE,
   DEALS_CHANGE,
   EDIT_DEALS,
   REMOVE_DEALS,
@@ -23,21 +24,24 @@ import {
   useQuery,
 } from '@apollo/client';
 
-import { UPDATE_STAGES_ORDER } from '@/deals/graphql/mutations/StagesMutations';
-import { useEffect } from 'react';
 import { DEAL_LIST_CHANGED } from '~/modules/deals/graphql/subscriptions/dealListChange';
 import { currentUserState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
+import { useEffect } from 'react';
 
-export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>, pipelineId?: string) => {
-  const { data, loading, error, fetchMore, refetch, subscribeToMore } = useQuery<{
-    deals: IDealList;
-  }>(GET_DEALS, {
-    ...options,
-    variables: {
-      ...options?.variables,
-    },
-  });
+export const useDeals = (
+  options?: QueryHookOptions<{ deals: IDealList }>,
+  pipelineId?: string,
+) => {
+  const { data, loading, error, fetchMore, refetch, subscribeToMore } =
+    useQuery<{
+      deals: IDealList;
+    }>(GET_DEALS, {
+      ...options,
+      variables: {
+        ...options?.variables,
+      },
+    });
 
   const currentUser = useAtomValue(currentUserState);
   const { deals } = data || {};
@@ -49,7 +53,11 @@ export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>, pipel
   useEffect(() => {
     const unsubscribe = subscribeToMore<any>({
       document: DEAL_LIST_CHANGED,
-      variables: { pipelineId: '2yxzj7yTiJBoWFGQC', userId: currentUser?._id, filter: options?.variables },
+      variables: {
+        pipelineId,
+        userId: currentUser?._id,
+        filter: options?.variables,
+      },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
 
@@ -89,8 +97,8 @@ export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>, pipel
               type === 'create'
                 ? prev.deals.totalCount + 1
                 : type === 'delete'
-                  ? prev.deals.totalCount - 1
-                  : prev.deals.totalCount,
+                ? prev.deals.totalCount - 1
+                : prev.deals.totalCount,
           },
         };
       },
@@ -332,42 +340,39 @@ export function useDealsChange(options?: MutationHookOptions<any, any>) {
   };
 }
 
-export function useDealsStageChange(options?: MutationHookOptions<any, any>) {
-  const [changeDealsStage, { loading, error }] = useMutation(
-    UPDATE_STAGES_ORDER,
-    {
-      ...options,
-      variables: {
-        ...options?.variables,
-      },
-      refetchQueries: [
-        {
-          query: GET_DEALS,
-          variables: {
-            ...options?.variables,
-          },
-        },
-      ],
-      awaitRefetchQueries: true,
-      onCompleted: (...args) => {
-        toast({
-          title: 'Successfully updated a deal',
-          variant: 'default',
-        });
-        options?.onCompleted?.(...args);
-      },
-      onError: (err) => {
-        toast({
-          title: 'Error',
-          description: err.message || 'Update failed',
-          variant: 'destructive',
-        });
-      },
+export function useDealsArchive(options?: MutationHookOptions<any, any>) {
+  const [archiveDeals, { loading, error }] = useMutation(DEALS_ARCHIVE, {
+    ...options,
+    variables: {
+      ...options?.variables,
     },
-  );
+    refetchQueries: [
+      {
+        query: GET_DEALS,
+        variables: {
+          ...options?.variables,
+        },
+      },
+    ],
+    awaitRefetchQueries: true,
+    onCompleted: (...args) => {
+      toast({
+        title: 'Successfully archived cards',
+        variant: 'default',
+      });
+      options?.onCompleted?.(...args);
+    },
+    onError: (err) => {
+      toast({
+        title: 'Error',
+        description: err.message || 'Update failed',
+        variant: 'destructive',
+      });
+    },
+  });
 
   return {
-    changeDealsStage,
+    archiveDeals,
     loading,
     error,
   };

@@ -69,7 +69,7 @@ const SalesDescription = ({
               disabled={loading}
               onClick={onSave}
             >
-              {loading ? <Spinner size="small" /> : <IconArrowUp />}
+              {loading ? <Spinner size="sm" /> : <IconArrowUp />}
               Save
             </Button>
           </div>

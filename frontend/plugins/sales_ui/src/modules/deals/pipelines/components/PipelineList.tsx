@@ -1,8 +1,9 @@
 import { Accordion, Sidebar } from 'erxes-ui';
 
+import { IPipeline } from '@/deals/types/pipelines';
 import { Link } from 'react-router-dom';
 import { PipelineListLoading } from '@/deals/components/loading/PipelineListLoading';
-import { usePipelines } from '@/deals/boards/hooks/usePipelines';
+import { useBoardDetail } from '@/deals/boards/hooks/useBoards';
 
 export const PipelineList = ({
   boardId,
@@ -11,15 +12,17 @@ export const PipelineList = ({
   boardId: string;
   pipelineId: string;
 }) => {
-  const { pipelines, loading: pipelinesLoading } = usePipelines({
+  const { boardDetail, loading } = useBoardDetail({
     variables: {
-      boardId,
+      _id: boardId,
     },
   });
 
-  if (pipelinesLoading) {
+  if (loading) {
     return <PipelineListLoading />;
   }
+
+  const pipelines = boardDetail?.pipelines || ([] as IPipeline[]);
 
   return (
     <>
