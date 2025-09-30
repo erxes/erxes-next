@@ -37,7 +37,7 @@ const PipelineStages = ({ form }: { form: any }) => {
         shouldDirty: true,
       });
     }
-  }, [initialStages, fields.length, form, setValue]);
+  }, [initialStages, fields, form, setValue]);
 
   if (stagesLoading) return <Spinner />;
 

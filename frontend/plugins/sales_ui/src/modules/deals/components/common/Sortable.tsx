@@ -128,6 +128,13 @@ export function Sortable({
       initialItems ??
       createRange<UniqueIdentifier>(itemCount, (index) => index),
   );
+
+  useEffect(() => {
+    if (initialItems) {
+      setItems(initialItems);
+    }
+  }, [initialItems]);
+
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const sensors = useSensors(
     useSensor(MouseSensor, {

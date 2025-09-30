@@ -1,6 +1,7 @@
 import { Button, Tabs } from 'erxes-ui';
 
 import GeneralForm from '@/deals/boards/components/detail/GeneralForm';
+import PipelineConfig from './PipelineConfig';
 import PipelineStages from './PipelineStages';
 
 export const PipelineForm = ({ form }: { form: any }) => {
@@ -42,7 +43,7 @@ export const PipelineForm = ({ form }: { form: any }) => {
         value="productConfig"
         className="h-full py-4 px-5 overflow-auto"
       >
-        hi
+        <PipelineConfig form={form} />
       </Tabs.Content>
     </Tabs>
   );

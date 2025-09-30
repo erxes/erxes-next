@@ -4,46 +4,68 @@ import {
   Filter,
   Form,
   Popover,
-  TextOverflowTooltip,
+  RecordTableInlineCell,
   cn,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
-import { IBoard, ISelectBoardsProviderProps } from '@/deals/types/boards';
 import React, { useState } from 'react';
 import {
   SelectBoardsContext,
   useSelectBoardsContext,
 } from '@/deals/context/DealContext';
 
-import { IconBlocks } from '@tabler/icons-react';
-import { useBoards } from '@/deals/boards/hooks/useBoards';
+import { BoardsInline } from './BoardsInline';
+import { IBoard } from '@/deals/types/boards';
+import { IconLabel } from '@tabler/icons-react';
+import { useBoards } from '../hooks/useBoards';
+import { useDebounce } from 'use-debounce';
 
-export const SelectBoardsProvider = ({
+export const SelectBoardProvider = ({
   children,
+  mode = 'single',
   value,
   onValueChange,
-}: ISelectBoardsProviderProps) => {
-  const [, setSelectedBoardName] = useState<string | string[]>('');
-  const [selectedBoard, setSelectedBoard] = useState<IBoard>();
+  boards,
+}: {
+  children: React.ReactNode;
+  mode?: 'single' | 'multiple';
+  value?: string[] | string;
+  onValueChange: (value: string[] | string) => void;
+  boards?: IBoard[];
+}) => {
+  const [_boards, setBoards] = useState<IBoard[]>(boards || []);
+  const isSingleMode = mode === 'single';
 
   const onSelect = (board: IBoard) => {
-    if (!board) {
-      return;
+    if (!board) return;
+    if (isSingleMode) {
+      setBoards([board]);
+      return onValueChange?.(board._id);
     }
 
-    setSelectedBoard(board);
-    setSelectedBoardName(board.name);
-    onValueChange?.(board.name);
+    const arrayValue = Array.isArray(value) ? value : [];
+
+    const isBoardSelected = arrayValue.includes(board._id);
+    const newSelectedBoardIds = isBoardSelected
+      ? arrayValue.filter((id) => id !== board._id)
+      : [...arrayValue, board._id];
+
+    setBoards((prev) =>
+      [...prev, board].filter((b) => newSelectedBoardIds.includes(b._id)),
+    );
+    onValueChange?.(newSelectedBoardIds);
   };
 
   return (
     <SelectBoardsContext.Provider
       value={{
-        selectedBoard,
-        setSelectedBoard,
-        selectedBoardName: !value ? '' : value,
+        boards: _boards,
+        boardIds: !value ? [] : Array.isArray(value) ? value : [value],
         onSelect,
+        setBoards,
+        loading: false,
+        error: null,
       }}
     >
       {children}
@@ -51,139 +73,272 @@ export const SelectBoardsProvider = ({
   );
 };
 
-const SelectBoardsValue = () => {
-  const { selectedBoardName } = useSelectBoardsContext();
+const SelectBoardsValue = ({ placeholder }: { placeholder?: string }) => {
+  const { boardIds, boards, setBoards } = useSelectBoardsContext();
 
   return (
-    <Combobox.Value placeholder="Select Board" value={selectedBoardName} />
+    <BoardsInline
+      boardIds={boardIds}
+      boards={boards}
+      updateBoards={setBoards}
+      placeholder={placeholder}
+    />
   );
 };
 
-const SelectBoardsCommand = () => {
-  const { onSelect, selectedBoardName } = useSelectBoardsContext();
-  const { boards, loading, error } = useBoards();
+const SelectBoardCommandItem = ({ board }: { board: IBoard }) => {
+  const { onSelect, boardIds } = useSelectBoardsContext();
 
   return (
-    <Command shouldFilter={false}>
-      <Command.List className="max-h-[300px] overflow-y-auto">
-        <Combobox.Empty loading={loading} error={error} />
-        {boards &&
-          boards.map((board) => (
-            <Command.Item
-              key={board.name}
-              value={board.name}
-              onSelect={() => onSelect(board)}
-            >
-              <TextOverflowTooltip
-                value={board.name}
-                className="flex-auto w-auto font-medium"
-              />
-              <Combobox.Check checked={selectedBoardName === board.name} />
-            </Command.Item>
+    <Command.Item
+      value={board._id}
+      onSelect={() => {
+        onSelect(board);
+      }}
+    >
+      <BoardsInline boards={[board]} placeholder="Unnamed board" />
+      <Combobox.Check checked={boardIds.includes(board._id)} />
+    </Command.Item>
+  );
+};
+
+const SelectBoardContent = () => {
+  const [search, setSearch] = React.useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { boards: selectedBoards } = useSelectBoardsContext();
+
+  const { boards = [], loading } = useBoards({
+    variables: {
+      searchValue: debouncedSearch,
+    },
+  });
+
+  return (
+    <Command shouldFilter={false} id="board-command-menu">
+      <Command.Input
+        value={search}
+        onValueChange={setSearch}
+        variant="secondary"
+        wrapperClassName="flex-auto"
+        placeholder="Search board..."
+        className="h-9"
+      />
+      <Command.List>
+        <Combobox.Empty loading={loading} />
+        {selectedBoards.length > 0 && (
+          <>
+            {selectedBoards?.map((board) => (
+              <SelectBoardCommandItem key={board._id} board={board} />
+            ))}
+            <Command.Separator className="my-1" />
+          </>
+        )}
+        {boards
+          .filter((board) => !selectedBoards.some((b) => b._id === board._id))
+          .map((board) => (
+            <SelectBoardCommandItem key={board._id} board={board} />
           ))}
       </Command.List>
     </Command>
   );
 };
 
-export const SelectBoardsFormItem = ({
-  className,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectBoardsProvider>, 'children'> & {
-  className?: string;
-}) => {
-  const [open, setOpen] = useState<boolean>(false);
-
-  return (
-    <SelectBoardsProvider
-      {...props}
-      onValueChange={(value) => {
-        setOpen(false);
-        props.onValueChange?.(value);
-      }}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <Form.Control>
-          <Combobox.Trigger className={cn('w-full', className)}>
-            <SelectBoardsValue />
-          </Combobox.Trigger>
-        </Form.Control>
-        <Combobox.Content>
-          <SelectBoardsCommand />
-        </Combobox.Content>
-      </Popover>
-    </SelectBoardsProvider>
-  );
-};
-
-const SelectBoardsFilterItem = () => {
+export const SelectBoardFilterItem = () => {
   return (
     <Filter.Item value="board">
-      <IconBlocks />
+      <IconLabel />
       Board
     </Filter.Item>
   );
 };
 
-const SelectBoardsFilterView = () => {
-  const [board, setBoard] = useQueryState<string>('board');
+export const SelectBoardFilterView = ({
+  onValueChange,
+  queryKey,
+  mode = 'single',
+}: {
+  onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
+}) => {
+  const [board, setBoard] = useQueryState<string[] | string>(
+    queryKey || 'board',
+  );
   const { resetFilterState } = useFilterContext();
 
   return (
-    <Filter.View filterKey="board">
-      <SelectBoardsProvider
-        value={board || ''}
+    <Filter.View filterKey={queryKey || 'board'}>
+      <SelectBoardProvider
+        mode={mode}
+        value={board || (mode === 'single' ? '' : [])}
         onValueChange={(value) => {
-          setBoard(value as string);
+          setBoard(value as string[] | string);
           resetFilterState();
+          onValueChange?.(value);
         }}
       >
-        <SelectBoardsCommand />
-      </SelectBoardsProvider>
+        <SelectBoardContent />
+      </SelectBoardProvider>
     </Filter.View>
   );
 };
 
-const SelectBoardsFilterBarItem = () => {
-  const [board, setBoard] = useQueryState<string>('board');
-  const { resetFilterState } = useFilterContext();
+export const SelectBoardFilterBar = ({
+  iconOnly,
+  onValueChange,
+  queryKey,
+  mode = 'single',
+}: {
+  iconOnly?: boolean;
+  onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
+}) => {
+  const [board, setBoard] = useQueryState<string[] | string>(
+    queryKey || 'board',
+  );
   const [open, setOpen] = useState(false);
 
   return (
-    <Filter.BarItem queryKey="board">
+    <Filter.BarItem queryKey={queryKey || 'board'}>
       <Filter.BarName>
-        <IconBlocks />
-        Board
+        <IconLabel />
+        {!iconOnly && 'Board'}
       </Filter.BarName>
-      <SelectBoardsProvider
-        value={board as string}
+      <SelectBoardProvider
+        mode={mode}
+        value={board || (mode === 'single' ? '' : [])}
         onValueChange={(value) => {
-          setBoard(value as string);
-          resetFilterState();
+          if (value.length > 0) {
+            setBoard(value as string[] | string);
+          } else {
+            setBoard(null);
+          }
           setOpen(false);
+          onValueChange?.(value);
         }}
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
-            <Filter.BarButton filterKey="board" className="rounded-l">
+            <Filter.BarButton filterKey={queryKey || 'board'}>
               <SelectBoardsValue />
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>
-            <SelectBoardsCommand />
+            <SelectBoardContent />
           </Combobox.Content>
         </Popover>
-      </SelectBoardsProvider>
+      </SelectBoardProvider>
     </Filter.BarItem>
   );
 };
 
-export const SelectBoards = {
-  Provider: SelectBoardsProvider,
-  Value: SelectBoardsValue,
-  Command: SelectBoardsCommand,
-  FormItem: SelectBoardsFormItem,
-  FilterItem: SelectBoardsFilterItem,
-  FilterView: SelectBoardsFilterView,
-  BarItem: SelectBoardsFilterBarItem,
+export const SelectBoardInlineCell = ({
+  onValueChange,
+  scope,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectBoardProvider>, 'children'> & {
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectBoardProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <RecordTableInlineCell.Trigger>
+          <SelectBoardsValue placeholder={''} />
+        </RecordTableInlineCell.Trigger>
+        <RecordTableInlineCell.Content>
+          <SelectBoardContent />
+        </RecordTableInlineCell.Content>
+      </Popover>
+    </SelectBoardProvider>
+  );
 };
+
+export const SelectBoardFormItem = ({
+  onValueChange,
+  className,
+  placeholder,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectBoardProvider>, 'children'> & {
+  className?: string;
+  placeholder?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectBoardProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
+            <SelectBoardsValue placeholder={placeholder} />
+          </Combobox.Trigger>
+        </Form.Control>
+
+        <Combobox.Content>
+          <SelectBoardContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectBoardProvider>
+  );
+};
+
+SelectBoardFormItem.displayName = 'SelectBoardFormItem';
+
+const SelectBoardRoot = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectBoardProvider>, 'children'> &
+    React.ComponentProps<typeof Combobox.Trigger> & {
+      placeholder?: string;
+    }
+>(({ onValueChange, className, mode, value, placeholder, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectBoardProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      mode={mode}
+      value={value}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.Trigger
+          ref={ref}
+          className={cn('w-full inline-flex', className)}
+          variant="outline"
+          {...props}
+        >
+          <SelectBoardsValue placeholder={placeholder} />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <SelectBoardContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectBoardProvider>
+  );
+});
+
+SelectBoardRoot.displayName = 'SelectBoardRoot';
+
+export const SelectBoard = Object.assign(SelectBoardRoot, {
+  Provider: SelectBoardProvider,
+  Value: SelectBoardsValue,
+  Content: SelectBoardContent,
+  FilterItem: SelectBoardFilterItem,
+  FilterView: SelectBoardFilterView,
+  FilterBar: SelectBoardFilterBar,
+  InlineCell: SelectBoardInlineCell,
+  FormItem: SelectBoardFormItem,
+});

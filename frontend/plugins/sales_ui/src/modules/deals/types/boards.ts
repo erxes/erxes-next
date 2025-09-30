@@ -34,11 +34,19 @@ export type ISelectBoardsProviderProps = {
 };
 
 export interface ISelectBoardsContext {
-  onSelect: (board: IBoard) => void;
-  selectedBoard?: IBoard;
-  setSelectedBoard?: (board: IBoard) => void;
-  selectedBoardName?: string | string[];
-  setSelectedBoardName?: (name: string | string[]) => void;
+  boardIds: string[];
+    boards: IBoard[];
+    setBoards: (boards: IBoard[]) => void;
+    onSelect: (board: IBoard) => void;
+    loading: boolean;
+    error: string | null;
+}
+
+export interface BoardsInlineProps {
+  boardIds?: string[];
+  boards?: IBoard[];
+  placeholder?: string;
+  updateBoards?: (boards: IBoard[]) => void;
 }
 
 export type TBoardForm = z.infer<typeof BOARD_CREATE_SCHEMA>;

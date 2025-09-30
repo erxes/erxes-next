@@ -34,7 +34,7 @@ export function PipelineFormBar() {
   const pipelineId = searchParams.get('pipelineId');
 
   const { pipelineDetail } = usePipelineDetail();
-  console.log('ppppp', pipelineDetail);
+
   const submitHandler = (data: TPipelineForm) => {
     console.log('ddd', data);
     // addPipeline({

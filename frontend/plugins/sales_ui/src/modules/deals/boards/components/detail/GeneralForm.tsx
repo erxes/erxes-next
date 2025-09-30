@@ -7,7 +7,7 @@ import {
 } from 'ui-modules';
 import { useRef, useState } from 'react';
 
-import { SelectBoards } from '../SelectBoards';
+import { SelectBoard } from '../SelectBoards';
 
 const VISIBILITY_TYPES = [
   { value: 'public', label: 'Public' },
@@ -85,8 +85,8 @@ const GeneralForm = ({ form }: { form: any }) => {
         name="boardId"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label>{field.name}</Form.Label>
-            <SelectBoards.FormItem
+            <Form.Label>Board</Form.Label>
+            <SelectBoard.FormItem
               mode="single"
               onValueChange={field.onChange}
               value={field.value}
@@ -101,7 +101,7 @@ const GeneralForm = ({ form }: { form: any }) => {
         name="tagId"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label>{field.name}</Form.Label>
+            <Form.Label>Tag</Form.Label>
             <SelectTags.Provider
               tagType="sales:deal"
               value={field.value}
