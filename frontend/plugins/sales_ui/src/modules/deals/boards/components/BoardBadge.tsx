@@ -18,7 +18,6 @@ export const BoardBadge = React.forwardRef<
     { board, boardId, renderClose, onCompleted, renderAsPlainText, ...props },
     ref,
   ) => {
-    console.log('BoardBadge:', board);
     const { boardDetail, loading } = useBoardDetail({
       variables: {
         _id: boardId,

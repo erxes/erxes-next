@@ -31,16 +31,13 @@ const PIPELINES_PER_PAGE = 20;
 export const usePipelines = (
   options?: QueryHookOptions<ICursorListResponse<IPipeline>>,
 ) => {
-  const [boardId] = useQueryState('activeBoardId');
-
   const { data, loading, error, fetchMore } = useQuery<
     ICursorListResponse<IPipeline>
   >(GET_PIPELINES, {
     ...options,
     variables: {
-      ...options?.variables,
-      boardId,
       isAll: true,
+      ...options?.variables,
     },
   });
 
@@ -86,14 +83,7 @@ export const usePipelineRemove = (
     variables: {
       ...options?.variables,
     },
-    refetchQueries: [
-      {
-        query: GET_PIPELINES,
-        variables: {
-          ...options?.variables,
-        },
-      },
-    ],
+    refetchQueries: ['SalesPipelines'],
     awaitRefetchQueries: true,
   });
 
@@ -111,18 +101,8 @@ export const usePipelineAdd = () => {
     addPipeline({
       ...options,
       variables,
-      refetchQueries: [
-        {
-          query: GET_PIPELINES,
-          variables,
-        },
-      ],
+      refetchQueries: ['SalesPipelines'],
       awaitRefetchQueries: true,
-      onCompleted: (data) => {
-        if (data?.salesPipelinesAdd) {
-          toast({ title: 'Pipeline added successfully!' });
-        }
-      },
       onError: (error) => {
         toast({
           title: error.message,
@@ -147,12 +127,7 @@ export const usePipelineEdit = () => {
     editPipeline({
       ...options,
       variables,
-      refetchQueries: [
-        {
-          query: GET_PIPELINES,
-          variables,
-        },
-      ],
+      refetchQueries: ['SalesPipelines'],
       awaitRefetchQueries: true,
       update: (cache, { data: { salesPipelinesEdit } }) => {
         if (!salesPipelinesEdit) return;
@@ -167,11 +142,6 @@ export const usePipelineEdit = () => {
           ),
           optimistic: true,
         });
-      },
-      onCompleted: (data) => {
-        if (data?.salesPipelinesEdit) {
-          toast({ title: 'Pipeline updated successfully!' });
-        }
       },
       onError: (error) => {
         toast({
@@ -193,15 +163,19 @@ export const usePipelineArchive = (
     variables: {
       ...options?.variables,
     },
-    refetchQueries: [
-      {
-        query: GET_PIPELINES,
-        variables: {
-          ...options?.variables,
-        },
-      },
-    ],
+    refetchQueries: ['SalesPipelines'],
     awaitRefetchQueries: true,
+    onCompleted: () => {
+      toast({
+        title: 'Pipeline archived successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: error.message,
+        variant: 'destructive',
+      });
+    },
   });
 
   return {
@@ -219,15 +193,19 @@ export const usePipelineCopy = (
     variables: {
       ...options?.variables,
     },
-    refetchQueries: [
-      {
-        query: GET_PIPELINES,
-        variables: {
-          ...options?.variables,
-        },
-      },
-    ],
+    refetchQueries: ['SalesPipelines'],
     awaitRefetchQueries: true,
+    onCompleted: () => {
+      toast({
+        title: 'Pipeline copied successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: error.message,
+        variant: 'destructive',
+      });
+    },
   });
 
   return {
@@ -247,15 +225,19 @@ export const usePipelineUpdateOrder = (
       variables: {
         ...options?.variables,
       },
-      refetchQueries: [
-        {
-          query: GET_PIPELINES,
-          variables: {
-            ...options?.variables,
-          },
-        },
-      ],
+      refetchQueries: ['SalesPipelines'],
       awaitRefetchQueries: true,
+      onCompleted: () => {
+        toast({
+          title: 'Pipeline order updated successfully',
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: error.message,
+          variant: 'destructive',
+        });
+      },
     },
   );
 

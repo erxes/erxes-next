@@ -20,22 +20,6 @@ const GeneralForm = ({ form }: { form: any }) => {
   const [open, setOpen] = useState(false);
   const visibility = watch('visibility');
 
-  const handleBranchChange = (branchId: string | string[] | undefined) => {
-    const singleBranchId = Array.isArray(branchId) ? branchId[0] : branchId;
-    form.setValue('branchId', singleBranchId || '');
-    form.trigger('branchId');
-  };
-
-  const handleDepartmentChange = (
-    departmentId: string | string[] | undefined,
-  ) => {
-    const singleDepartmentId = Array.isArray(departmentId)
-      ? departmentId[0]
-      : departmentId;
-    form.setValue('departmentId', singleDepartmentId || '');
-    form.trigger('departmentId');
-  };
-
   const selectParentRef =
     useRef<React.ElementRef<typeof Combobox.Trigger>>(null);
 
@@ -134,9 +118,9 @@ const GeneralForm = ({ form }: { form: any }) => {
               <Form.Item>
                 <Form.Label>Departments</Form.Label>
                 <SelectDepartments.FormItem
-                  mode="single"
-                  onValueChange={handleDepartmentChange}
+                  mode="multiple"
                   value={field.value}
+                  onValueChange={field.onChange}
                   className="focus-visible:relative focus-visible:z-10"
                 />
               </Form.Item>
@@ -149,9 +133,9 @@ const GeneralForm = ({ form }: { form: any }) => {
               <Form.Item>
                 <Form.Label>Branches</Form.Label>
                 <SelectBranches.FormItem
-                  onValueChange={handleBranchChange}
+                  onValueChange={field.onChange}
                   value={field.value}
-                  mode="single"
+                  mode="multiple"
                   className="focus-visible:relative focus-visible:z-10"
                 />
               </Form.Item>

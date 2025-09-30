@@ -4,7 +4,12 @@ import GeneralForm from '@/deals/boards/components/detail/GeneralForm';
 import PipelineConfig from './PipelineConfig';
 import PipelineStages from './PipelineStages';
 
-export const PipelineForm = ({ form }: { form: any }) => {
+type Props = {
+  form: any;
+  stagesLoading: boolean;
+};
+
+export const PipelineForm = ({ form, stagesLoading }: Props) => {
   return (
     <Tabs defaultValue="general" className="flex flex-col h-full shadow-none">
       <Tabs.List className="flex justify-center">
@@ -37,7 +42,7 @@ export const PipelineForm = ({ form }: { form: any }) => {
         <GeneralForm form={form} />
       </Tabs.Content>
       <Tabs.Content value="stages" className="h-full py-4 px-5 overflow-auto">
-        <PipelineStages form={form} />
+        <PipelineStages form={form} stagesLoading={stagesLoading} />
       </Tabs.Content>
       <Tabs.Content
         value="productConfig"

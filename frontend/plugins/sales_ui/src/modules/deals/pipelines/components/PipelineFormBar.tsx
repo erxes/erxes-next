@@ -1,51 +1,76 @@
-import { Button, Form, Sheet, Spinner, useToast } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Sheet,
+  Spinner,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+  useSetHotkeyScope,
+  useToast,
+} from 'erxes-ui';
 import { IconGitBranch, IconPlus } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { PipelineHotKeyScope, TPipelineForm } from '@/deals/types/pipelines';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  usePipelineAdd,
+  usePipelineDetail,
+  usePipelineEdit,
+} from '@/deals/boards/hooks/usePipelines';
 
 import { PipelineForm } from './PipelineForm';
-import { PipelineHotKeyScope } from '@/deals/types/pipelines';
-import { TPipelineForm } from '@/deals/types/pipelines';
-import { usePipelineAdd } from '@/deals/boards/hooks/usePipelines';
-import { usePipelineDetail } from '@/deals/boards/hooks/usePipelines';
+import { SubmitHandler } from 'react-hook-form';
 import { usePipelineForm } from '@/deals/boards/hooks/usePipelineForm';
-import { usePreviousHotkeyScope } from 'erxes-ui';
-import { useScopedHotkeys } from 'erxes-ui';
-import { useSetHotkeyScope } from 'erxes-ui';
+import { useStages } from '@/deals/stage/hooks/useStages';
 
 export function PipelineFormBar() {
-  const {
-    methods,
-    methods: { reset, handleSubmit },
-  } = usePipelineForm();
-
-  const { toast } = useToast();
-  const [open, setOpen] = useState<boolean>(false);
-
-  const { addPipeline, loading } = usePipelineAdd();
-
-  const setHotkeyScope = useSetHotkeyScope();
-  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
-
   const location = useLocation();
   const navigate = useNavigate();
 
   const searchParams = new URLSearchParams(location.search);
   const pipelineId = searchParams.get('pipelineId');
+  const boardId = searchParams.get('activeBoardId');
+
+  const {
+    methods,
+    methods: { reset, handleSubmit },
+  } = usePipelineForm();
+
+  const { stages: initialStages, loading: stagesLoading } = useStages({
+    variables: {
+      pipelineId,
+    },
+  });
+
+  const { toast } = useToast();
+  const [open, setOpen] = useState<boolean>(false);
+
+  const setHotkeyScope = useSetHotkeyScope();
+  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
   const { pipelineDetail } = usePipelineDetail();
 
-  const submitHandler = (data: TPipelineForm) => {
-    console.log('ddd', data);
-    // addPipeline({
-    //   variables: data,
-    //   onCompleted: () => {
-    //     toast({ title: 'Pipeline added successfully.' });
-    //     reset();
-    //     setOpen(false);
-    //   },
-    // });
-  };
+  useEffect(() => {
+    if (initialStages?.length) {
+      const mappedStages = initialStages.map((stage) => ({
+        _id: stage._id || '',
+        code: stage.code || '',
+        name: stage.name || '',
+        type: stage.type || '',
+        visibility: stage.visibility || 'public',
+        status: stage.status || 'active',
+        age: stage.age || 0,
+        canMoveMemberIds: stage.canMoveMemberIds ?? [],
+        canEditMemberIds: stage.canEditMemberIds ?? [],
+        probability: stage.probability || '',
+      }));
+
+      methods.setValue('stages', mappedStages, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [initialStages, methods]);
 
   const onOpen = () => {
     setOpen(true);
@@ -54,16 +79,42 @@ export function PipelineFormBar() {
     );
   };
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setHotkeyScope(PipelineHotKeyScope.PipelineSettingsPage);
     setOpen(false);
+    reset();
 
     const searchParams = new URLSearchParams(location.search);
     searchParams.delete('pipelineId');
     navigate(`${location.pathname}?${searchParams.toString()}`, {
       replace: true,
     });
-  };
+  }, [location, navigate, reset, setHotkeyScope]);
+
+  const { addPipeline, loading: addLoading } = usePipelineAdd();
+  const { pipelineEdit, loading: editLoading } = usePipelineEdit();
+
+  const submitHandler: SubmitHandler<TPipelineForm> = useCallback(
+    async (data) => {
+      const managePipeline = pipelineId ? pipelineEdit : addPipeline;
+      const successTitle = pipelineId
+        ? 'Pipeline updated successfully'
+        : 'Pipeline added successfully';
+
+      const variables = pipelineId
+        ? { _id: pipelineId, ...data } // include _id for edit
+        : { ...data };
+
+      managePipeline({
+        variables,
+        onCompleted: () => {
+          toast({ title: successTitle });
+          onClose();
+        },
+      });
+    },
+    [addPipeline, pipelineEdit, pipelineId, toast, onClose],
+  );
 
   useEffect(() => {
     if (pipelineId) {
@@ -86,17 +137,29 @@ export function PipelineFormBar() {
   const title = pipelineId ? 'Edit Pipeline' : 'Add Pipeline';
 
   useEffect(() => {
-    if (!pipelineDetail) return;
-    reset({
-      name: pipelineDetail?.name,
-      visibility: pipelineDetail?.visibility,
-      boardId: pipelineDetail?.boardId,
-      tagId: pipelineDetail?.tagId,
-      departmentIds: pipelineDetail?.departmentIds,
-      branchIds: pipelineDetail?.branchIds,
-      memberIds: pipelineDetail?.memberIds,
-    });
-  }, [pipelineDetail, reset]);
+    if (pipelineId && pipelineDetail) {
+      reset({
+        name: pipelineDetail?.name || '',
+        visibility: pipelineDetail?.visibility || 'public',
+        boardId: pipelineDetail?.boardId || boardId || '',
+        tagId: pipelineDetail?.tagId || '',
+        departmentIds: pipelineDetail?.departmentIds || [],
+        branchIds: pipelineDetail?.branchIds || [],
+        memberIds: pipelineDetail?.memberIds || [],
+        stages: initialStages || [],
+      });
+    } else {
+      reset({
+        name: '',
+        visibility: 'public',
+        boardId: boardId || '',
+        tagId: '',
+        departmentIds: [],
+        branchIds: [],
+        memberIds: [],
+      });
+    }
+  }, [pipelineId, pipelineDetail, reset, boardId, initialStages]);
 
   return (
     <div className="ml-auto flex items-center gap-3">
@@ -125,14 +188,14 @@ export function PipelineFormBar() {
                 <Sheet.Close />
               </Sheet.Header>
               <Sheet.Content className="grow size-full h-auto flex flex-col overflow-hidden">
-                <PipelineForm form={methods} />
+                <PipelineForm form={methods} stagesLoading={stagesLoading} />
               </Sheet.Content>
               <Sheet.Footer>
                 <Button variant={'ghost'} onClick={onClose}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? <Spinner /> : 'Create'}
+                <Button type="submit" disabled={addLoading || editLoading}>
+                  {addLoading || editLoading ? <Spinner /> : 'Create'}
                 </Button>
               </Sheet.Footer>
             </form>
