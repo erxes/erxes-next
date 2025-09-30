@@ -9,7 +9,7 @@ import { PERMISSION_ROLES } from '~/modules/permissions/db/constants';
 import { roleSchema } from '../definitions/roles';
 
 export interface IRoleModel extends Model<IRoleDocument> {
-  getRole(_id: string): Promise<IRoleDocument>;
+  getRole(userId: string): Promise<IRoleDocument>;
   createRole(doc: IRole, user: IUserDocument): Promise<IRoleDocument>;
   updateRole(doc: IRole, user: IUserDocument): Promise<IRoleDocument>;
 }
@@ -35,6 +35,10 @@ export const loadRoleClass = (models: IModels) => {
         return;
       }
 
+      if (userRole.role === PERMISSION_ROLES.MEMBER) {
+        throw new Error('Access denied');
+      }
+
       if (userRole.role === PERMISSION_ROLES.ADMIN) {
         const isOwner = await models.Roles.findOne({
           userId,
@@ -54,17 +58,16 @@ export const loadRoleClass = (models: IModels) => {
           throw new Error('Access denied');
         }
       }
-
-      if (userRole.role === PERMISSION_ROLES.MEMBER) {
-        throw new Error('Access denied');
-      }
     }
 
-    public static async getRole(_id: string) {
-      const role = await models.Roles.findOne({ _id }).lean();
+    public static async getRole(userId: string) {
+      const role = await models.Roles.findOne({ userId }).lean();
 
       if (!role) {
-        throw new Error('Role not found');
+        return await models.Roles.create({
+          userId,
+          role: PERMISSION_ROLES.MEMBER,
+        });
       }
 
       return role;

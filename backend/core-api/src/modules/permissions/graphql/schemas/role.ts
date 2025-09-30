@@ -7,8 +7,7 @@ export const types = `
     member
   }
 
-  type Role {
-    _id: String!
+  type Role @key(fields: "userId") @cacheControl(maxAge: 3) {
     user: User
     role: ROLE
 
@@ -39,6 +38,5 @@ const mutationParams = `
 `;
 
 export const mutations = `
-  rolesAdd(${mutationParams}): [Role]
-  rolesEdit(${mutationParams}): [Role]
+  rolesUpsert(${mutationParams}): [Role]
 `;

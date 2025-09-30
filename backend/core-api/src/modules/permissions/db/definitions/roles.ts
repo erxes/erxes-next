@@ -14,3 +14,5 @@ export const roleSchema = new Schema(
     timestamps: true,
   },
 );
+
+roleSchema.index({ userId: 1, role: 1 }, { unique: true });

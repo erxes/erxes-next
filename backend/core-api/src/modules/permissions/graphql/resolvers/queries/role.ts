@@ -1,3 +1,4 @@
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { IRoleDocument, IRoleParams } from 'erxes-api-shared/core-types';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
@@ -29,3 +30,5 @@ export const roleQueries = {
     return { list, pageInfo, totalCount };
   },
 };
+
+requireLogin(roleQueries, 'roles');

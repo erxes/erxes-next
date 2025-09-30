@@ -1,12 +1,19 @@
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { IRole } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 
 export const roleMutations = {
-  async rolesAdd(_root: undefined, doc: IRole, { models, user }: IContext) {
+  async rolesUpsert(_root: undefined, doc: IRole, { models, user }: IContext) {
+    const { userId } = doc || {};
+
+    const role = await models.Roles.getRole(userId);
+
+    if (role) {
+      return await models.Roles.updateRole(doc, user);
+    }
+
     return await models.Roles.createRole(doc, user);
   },
-
-  async rolesEdit(_root: undefined, doc: IRole, { models, user }: IContext) {
-    return await models.Roles.updateRole(doc, user);
-  },
 };
+
+requireLogin(roleMutations, 'rolesUpsert');

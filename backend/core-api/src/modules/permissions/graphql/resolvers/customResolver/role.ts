@@ -1,19 +1,21 @@
-import { IPermissionDocument } from 'erxes-api-shared/core-types';
+import { IRoleDocument } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 
 export default {
   __resolveReference: async (
-    { _id }: { _id: string },
+    { userId }: { userId: string },
     { models }: IContext,
   ) => {
-    return await models.Permissions.getPermission(_id);
+    const { role } = await models.Roles.getRole(userId);
+
+    return role;
   },
 
-  user: async (permission: IPermissionDocument) => {
-    if (!permission.userId) {
+  user: async (role: IRoleDocument) => {
+    if (!role.userId) {
       return;
     }
 
-    return { __typename: 'User', _id: permission.userId };
+    return { __typename: 'User', _id: role.userId };
   },
 };
