@@ -3,6 +3,7 @@ import { IHeaderItem } from '../types';
 import { HEADER_ITEMS } from '../constants';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { activeTabAtom, setActiveTabAtom, resetTabAtom } from '../atoms';
+import { Badge } from 'erxes-ui';
 
 export const Header = () => {
   const [activeTab] = useAtom(activeTabAtom);
@@ -19,16 +20,20 @@ export const Header = () => {
     }
   };
 
-  return <div className="flex flex-col gap-4">{render()}</div>;
+  return <div className="flex flex-col gap-4 p-4">{render()}</div>;
 };
 
 export function HeroSection() {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="font-semibold text-black text-base">Need help?</div>
-      <div className="text-zinc-400 font-medium text-sm">
-        Get help with setting up using erxes. We're available between 9.00 am
-        and 6.00 pm (GMT +8). We'll get back to you as soon as possible.
+    <div className="flex flex-col gap-4">
+      <div className="gap-2 flex flex-col">
+        <div className="font-semibold text-foreground text-base">
+          Need help?
+        </div>
+        <div className="text-accent-foreground font-medium text-sm">
+          Get help with setting up using erxes. We're available between 9.00 am
+          and 6.00 pm (GMT +8). We'll get back to you as soon as possible.
+        </div>
       </div>
       <HeaderItemsList />
     </div>
@@ -38,7 +43,7 @@ export function HeroSection() {
 export function HeaderStart() {
   const [activeTab] = useAtom(activeTabAtom);
   const [, resetTab] = useAtom(resetTabAtom);
-  
+
   const title = HEADER_ITEMS.find((item) => item.value === activeTab)?.title;
   return (
     <div
@@ -57,45 +62,37 @@ export function HeaderStart() {
         >
           <IconChevronLeft size={16} />
         </button>
-        <div className="text-base text-zinc-900 font-semibold">{title ?? 'Chat'}</div>
+        <div className="text-base text-zinc-900 font-semibold">
+          {title ?? 'Chat'}
+        </div>
       </div>
       <HeaderTabList />
     </div>
   );
 }
 
-export function HeaderItemLabel({
-  title,
-  Icon,
-  value,
-}: IHeaderItem) {
+export function HeaderItemLabel({ title, Icon, value }: IHeaderItem) {
   const [activeTab] = useAtom(activeTabAtom);
   const [, setActiveTab] = useAtom(setActiveTabAtom);
-  
+
   return (
-    <button
-      type="button"
-      role="tab"
-      tabIndex={0}
-      aria-selected={activeTab === value}
-      className="flex items-center gap-2 bg-zinc-100 rounded-[4px] p-2"
+    <Badge
+      variant="secondary"
       onClick={() => setActiveTab(value as string)}
+      className="py-2 cursor-pointer"
     >
       <Icon size={16} className="stroke-zinc-900" />
       <div className="text-[13px] leading-none font-semibold text-zinc-900">
         {title}
       </div>
-    </button>
+    </Badge>
   );
 }
 
-export function HeaderTabItem({
-  Icon,
-  value,
-}: IHeaderItem) {
+export function HeaderTabItem({ Icon, value }: IHeaderItem) {
   const [activeTab] = useAtom(activeTabAtom);
   const [, setActiveTab] = useAtom(setActiveTabAtom);
-  
+
   return (
     <button
       type="button"
@@ -129,11 +126,7 @@ export function HeaderTabList() {
   return (
     <div className="flex items-center gap-1" role="tablist">
       {HEADER_ITEMS.map((item) => (
-        <HeaderTabItem
-          key={item.title}
-          value={item.value}
-          Icon={item.Icon}
-        />
+        <HeaderTabItem key={item.title} value={item.value} Icon={item.Icon} />
       ))}
     </div>
   );

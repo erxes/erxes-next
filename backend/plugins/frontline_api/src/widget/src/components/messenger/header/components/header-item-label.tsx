@@ -1,20 +1,18 @@
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '../../../ui/badge';
 import { useMessenger } from '../../hooks/useMessenger';
 import { IHeaderItem } from '../../types';
 
-interface HeaderItemLabelProps extends IHeaderItem {}
-
-export function HeaderItemLabel({ title, Icon, value }: HeaderItemLabelProps) {
+export function HeaderItemLabel({ title, Icon, value }: IHeaderItem) {
   const { switchToTab } = useMessenger();
 
   return (
     <Badge
-      variant="secondary"
+      variant="outline"
       onClick={() => switchToTab(value as any)}
-      className="py-2 cursor-pointer"
+      className="py-2 flex items-center gap-2 cursor-pointer rounded-sm bg-sidebar border-none"
     >
-      <Icon size={16} className="stroke-zinc-900" />
-      <div className="text-[13px] leading-none font-semibold text-zinc-900">
+      <Icon size={16} className="stroke-foreground" />
+      <div className="text-sm leading-none font-semibold text-foreground">
         {title}
       </div>
     </Badge>

@@ -17,5 +17,5 @@ export const Body = () => {
     }
   };
 
-  return <div>{render()}</div>;
+  return <div className='bg-sidebar'>{render()}</div>;
 };

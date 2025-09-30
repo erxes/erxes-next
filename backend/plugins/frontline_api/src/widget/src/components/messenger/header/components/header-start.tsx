@@ -1,5 +1,5 @@
 import { IconChevronLeft } from '@tabler/icons-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../../ui/button';
 import { useHeader } from '../hooks/useHeader';
 import { HeaderTabList } from './header-tab-list';
 
@@ -12,14 +12,15 @@ export function HeaderStart() {
       aria-level={1}
       className="flex items-center justify-between"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
         <Button
           type="button"
           role="button"
+          size="icon"
           variant="ghost"
           tabIndex={0}
           aria-label="Back"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 hover:bg-transparent size-8"
           onClick={goBack}
         >
           <IconChevronLeft size={16} />

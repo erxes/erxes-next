@@ -7,9 +7,7 @@ export function HeaderTabList() {
       {HEADER_ITEMS.map((item) => (
         <HeaderTabItem 
           key={item.title} 
-          title={item.title}
-          value={item.value} 
-          Icon={item.Icon} 
+          {...item}
         />
       ))}
     </div>

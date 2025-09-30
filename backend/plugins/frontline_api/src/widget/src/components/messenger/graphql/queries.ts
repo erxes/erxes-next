@@ -2,6 +2,12 @@ import { gql } from '@apollo/client';
 import { MESSAGE_FIELDS, USER_DETAIL_FIELD, messageFields } from './fields';
 import { connection } from '../connection';
 
+const GET_ENABLED_SERVICES = gql`
+  query enabledServices {
+    enabledServices
+  }
+`;
+
 const GET_UNREAD_COUNT = gql`
   query widgetsUnreadCount($conversationId: String) {
     widgetsUnreadCount(conversationId: $conversationId)
@@ -312,6 +318,7 @@ const integrationsFetchApi = `
 `;
 
 export {
+  GET_ENABLED_SERVICES,
   GET_UNREAD_COUNT,
   GET_CONVERSATION_DETAIL,
   GET_WIDGET_EXPORT_MESSENGER_DATA,
