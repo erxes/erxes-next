@@ -101,9 +101,9 @@ export interface IPageInfo {
   endCursor: string | null;
 }
 
-export type ResolverMetadata = {
-  public?: boolean;
-};
+export interface IResolverSymbol {
+  skipPermission?: boolean;
+}
 
 export type Resolver<
   Parent = any,
@@ -115,6 +115,5 @@ export type Resolver<
   args: Args,
   context: Context,
   info: GraphQLResolveInfo,
-) => Promise<Result> | Result) & {
-  metadata?: ResolverMetadata;
-};
+) => Promise<Result> | Result) &
+  IResolverSymbol;

@@ -1,9 +1,9 @@
 import { WorkOS } from '@workos-inc/node';
-import { Resolver } from 'erxes-api-shared/core-types';
 import {
   authCookieOptions,
   getEnv,
   logHandler,
+  markResolvers,
   redis,
   updateSaasOrganization,
 } from 'erxes-api-shared/utils';
@@ -22,7 +22,7 @@ type LoginParams = {
   deviceToken?: string;
 };
 
-export const authMutations: Record<string, Resolver> = {
+export const authMutations = {
   /*
    * Login
    */
@@ -241,4 +241,6 @@ export const authMutations: Record<string, Resolver> = {
   },
 };
 
-authMutations.login.metadata = { public: true };
+markResolvers(authMutations, {
+  skipPermission: true,
+});

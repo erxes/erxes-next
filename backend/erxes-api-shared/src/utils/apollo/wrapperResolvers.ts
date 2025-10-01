@@ -1,5 +1,5 @@
 import { wrapPermission } from '../../core-modules/permissions/utils';
-import { Resolver } from '../../core-types/common';
+import { IResolverSymbol, Resolver } from '../../core-types/common';
 import { logHandler } from '../logs';
 
 const withLogging = (resolver: Resolver): Resolver => {
@@ -32,10 +32,8 @@ export const wrapApolloResolvers = (resolvers: Record<string, Resolver>) => {
     if (key === 'Mutation') {
       const mutationResolvers: any = {};
 
-      for (const [mutationKey, mutationResolver] of Object.entries(
-        resolvers[key],
-      )) {
-        const isPublic = mutationResolver.metadata?.public === true;
+      for (const [mutationKey, mutationResolver] of Object.entries(resolver)) {
+        const isPublic = mutationResolver.skipPermission === true;
 
         if (isPublic) {
           mutationResolvers[mutationKey] = mutationResolver;
@@ -53,8 +51,8 @@ export const wrapApolloResolvers = (resolvers: Record<string, Resolver>) => {
     if (key === 'Query') {
       const queryResolvers: any = {};
 
-      for (const [queryKey, queryResolver] of Object.entries(resolvers[key])) {
-        const isPublic = queryResolver.metadata?.public === true;
+      for (const [queryKey, queryResolver] of Object.entries(resolver)) {
+        const isPublic = queryResolver.skipPermission === true;
 
         if (isPublic) {
           queryResolvers[queryKey] = queryResolver;
@@ -71,4 +69,13 @@ export const wrapApolloResolvers = (resolvers: Record<string, Resolver>) => {
   }
 
   return wrappedResolvers;
+};
+
+export const markResolvers = (
+  resolvers: Record<string, Resolver>,
+  symbols: IResolverSymbol,
+) => {
+  for (const key in resolvers) {
+    resolvers[key] = Object.assign(resolvers[key], symbols);
+  }
 };

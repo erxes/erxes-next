@@ -1,7 +1,7 @@
-import { Resolver } from 'erxes-api-shared/core-types';
+import { markResolvers } from 'erxes-api-shared/utils/apollo/wrapperResolvers';
 import { IContext } from '~/connectionResolvers';
 
-export const authQueries: Record<string, Resolver> = {
+export const authQueries = {
   /**
    * Current user
    */
@@ -18,4 +18,6 @@ export const authQueries: Record<string, Resolver> = {
   },
 };
 
-authQueries.currentUser.metadata = { public: true };
+markResolvers(authQueries, {
+  skipPermission: true,
+});
