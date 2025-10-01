@@ -16,7 +16,7 @@ export interface IBoardCount {
     count: number;
 }     
 
-export type ISelectBoardsProviderProps = {
+export interface ISelectBoardsProviderProps {
   targetIds?: string[];
   value?: string[] | string;
   onValueChange?: (boards?: string[] | string) => void;
@@ -31,15 +31,17 @@ export type ISelectBoardsProviderProps = {
     },
     OperationVariables
   >;
-};
+}
 
 export interface ISelectBoardsContext {
   boardIds: string[];
-    boards: IBoard[];
-    setBoards: (boards: IBoard[]) => void;
-    onSelect: (board: IBoard) => void;
-    loading: boolean;
-    error: string | null;
+  boards: IBoard[];
+  setBoards: (boards: IBoard[]) => void;
+  onSelect: (board: IBoard) => void;
+  loading: boolean;
+  error: string | null;
+  newBoardName?: string;
+  setNewBoardName?: (name: string) => void;
 }
 
 export interface BoardsInlineProps {

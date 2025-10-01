@@ -23,7 +23,7 @@ export const STAGES_REMOVE = gql`
 `;
 
 export const STAGES_SORT_ITEMS = gql`
-  mutation salesStagesSortItems($stageId: String!, $proccessId: String, $sortType: String) {
-    salesStagesSortItems(stageId: $stageId, proccessId: $proccessId, sortType: $sortType)
+  mutation salesStagesSortItems($stageId: String!, $processId: String, $sortType: String) {
+    salesStagesSortItems(stageId: $stageId, processId: $processId, sortType: $sortType)
   }
 `;

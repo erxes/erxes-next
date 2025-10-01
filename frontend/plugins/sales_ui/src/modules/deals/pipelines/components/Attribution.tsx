@@ -17,7 +17,7 @@ const Attribution = ({ config, value, onChange }: Props) => {
       toast({
         title: 'Error',
         description:
-          "Please make sure the number configuration doesn't start with a space",
+          "Please make sure the attribution doesn't start with a space",
         variant: 'destructive',
       });
       return;

@@ -1,8 +1,8 @@
 import {
   BOARD_STATUSES_OPTIONS,
   PROBABILITY_DEAL,
-  VISIBLITIES,
-} from '../../constants/stages';
+  VISIBILITIES,
+} from '@/deals/constants/stages';
 import { Checkbox, Form, Input, Select, Tooltip } from 'erxes-ui';
 import {
   IconChevronDown,
@@ -132,7 +132,7 @@ const PipelineStageItem = (props: Props) => {
                 <Form.Message />
               </Form.Item>
               <Form.Item className="flex-1">
-                <Form.Label>Probality</Form.Label>
+                <Form.Label>Probability</Form.Label>
                 <Controller
                   name={`stages.${index}.probability`}
                   control={control}
@@ -158,7 +158,7 @@ const PipelineStageItem = (props: Props) => {
                 <Controller
                   name={`stages.${index}.status`}
                   control={control}
-                  defaultValue={props.stage?.status || ''}
+                  defaultValue={stage?.status || ''}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
                       <Select.Trigger className="text-muted-foreground h-8">
@@ -181,14 +181,14 @@ const PipelineStageItem = (props: Props) => {
                 <Controller
                   name={`stages.${index}.visibility`}
                   control={control}
-                  defaultValue={props.stage?.visibility || ''}
+                  defaultValue={stage?.visibility || ''}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
                       <Select.Trigger className="text-muted-foreground h-8">
                         {field.value || 'Select visibility'}
                       </Select.Trigger>
                       <Select.Content>
-                        {VISIBLITIES.map((option) => (
+                        {VISIBILITIES.map((option) => (
                           <Select.Item key={option.value} value={option.value}>
                             {option.label}
                           </Select.Item>
@@ -207,7 +207,7 @@ const PipelineStageItem = (props: Props) => {
                     <Controller
                       name={`stages.${index}.code`}
                       control={control}
-                      defaultValue={props.stage?.code || ''}
+                      defaultValue={stage?.code || ''}
                       render={({ field }) => (
                         <Input
                           {...field}
@@ -226,7 +226,7 @@ const PipelineStageItem = (props: Props) => {
                     <Controller
                       name={`stages.${index}.age`}
                       control={control}
-                      defaultValue={props.stage?.age || ''}
+                      defaultValue={stage?.age || ''}
                       render={({ field }) => (
                         <Input
                           {...field}
@@ -283,7 +283,7 @@ const PipelineStageItem = (props: Props) => {
                     <Controller
                       name={`stages.${index}.defaultTick`}
                       control={control}
-                      defaultValue={props.stage?.defaultTick || false}
+                      defaultValue={stage?.defaultTick || false}
                       render={({ field }) => (
                         <Checkbox
                           checked={field.value}

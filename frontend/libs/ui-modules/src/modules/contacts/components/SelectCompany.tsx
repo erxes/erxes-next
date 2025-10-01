@@ -331,7 +331,9 @@ export const SelectCompanyFilterBar = ({
   filterKey: string;
   label: string;
 }) => {
-  const [query, setQuery] = useQueryState<string[]>(filterKey);
+  const [query, setQuery] = useQueryState<string[] | string | undefined>(
+    filterKey,
+  );
   const [open, setOpen] = useState<boolean>(false);
 
   if (!query) {

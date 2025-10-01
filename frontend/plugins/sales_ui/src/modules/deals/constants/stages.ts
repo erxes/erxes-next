@@ -18,7 +18,7 @@ export const BOARD_STATUSES_OPTIONS = [
   { label: "Archived", value: "archived" }
 ];
 
-export const VISIBLITIES = [
-{ label: "Public", value: "public" },
-{ label: "Private", value: "private" }
+export const VISIBILITIES = [
+  { label: "Public", value: "public" },
+  { label: "Private", value: "private" }
 ];

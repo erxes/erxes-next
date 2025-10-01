@@ -1,4 +1,4 @@
-import { Badge, Skeleton, TextOverflowTooltip } from 'erxes-ui';
+import { Badge, Skeleton, TextOverflowTooltip, toast } from 'erxes-ui';
 
 import { IBoard } from '@/deals/types/boards';
 import React from 'react';
@@ -27,7 +27,11 @@ export const BoardBadge = React.forwardRef<
         onCompleted?.(data?.salesBoardDetail);
       },
       onError: (error) => {
-        console.log('error', error);
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
       },
     });
 

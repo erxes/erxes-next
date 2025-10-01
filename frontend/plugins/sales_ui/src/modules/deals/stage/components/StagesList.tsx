@@ -1,4 +1,4 @@
-import { Button, useQueryState } from 'erxes-ui';
+import { Button, toast, useQueryState } from 'erxes-ui';
 import { IconBrandTrello, IconSettings } from '@tabler/icons-react';
 import {
   KanbanBoard,
@@ -40,9 +40,12 @@ export const StagesList = () => {
       await mutation({
         variables,
       });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // Error handling is already done in the mutation hooks via toast
+      toast({
+        title: 'Error',
+        description: err.message,
+        variant: 'destructive',
+      });
     }
   };
 

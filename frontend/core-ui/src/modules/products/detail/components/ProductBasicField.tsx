@@ -54,20 +54,15 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
       <Form.Field
         control={control}
         name="name"
-        render={({ field }) => {
-          console.log('ff', field);
-          return (
-            <Form.Item>
-              <Form.Label className={formLabelClassName}>
-                PRODUCT NAME
-              </Form.Label>
-              <Form.Control>
-                <Input {...field} placeholder="Enter product name" />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          );
-        }}
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label className={formLabelClassName}>PRODUCT NAME</Form.Label>
+            <Form.Control>
+              <Input {...field} placeholder="Enter product name" />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
       />
 
       <Form.Field

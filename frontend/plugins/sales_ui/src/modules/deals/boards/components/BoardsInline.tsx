@@ -32,6 +32,17 @@ const BoardsInlineProvider = ({
 }) => {
   const [_boards, _setBoards] = useState<IBoard[]>(boards || []);
 
+  useEffect(() => {
+    if (boards) return;
+
+    if (!boardIds?.length) {
+      _setBoards([]);
+      return;
+    }
+
+    _setBoards((prev) => prev.filter((board) => boardIds.includes(board._id)));
+  }, [boardIds, boards]);
+
   return (
     <BoardsInlineContext.Provider
       value={{
@@ -66,8 +77,7 @@ const BoardsInlineEffectComponent = ({ boardId }: { boardId: string }) => {
     if (boardDetail) {
       updateBoards?.([...newBoards, boardDetail]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boardDetail]);
+  }, [boardDetail, boards, updateBoards, boardId]);
 
   return null;
 };

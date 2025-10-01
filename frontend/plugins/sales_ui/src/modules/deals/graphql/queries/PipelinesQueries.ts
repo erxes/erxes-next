@@ -29,7 +29,6 @@ export const GET_PIPELINE_DETAIL = gql`
       departmentIds
       branchIds
       boardId
-      tagId
     }
   }
 `;
@@ -79,7 +78,7 @@ const commonParamDefs = `
   cursor: $cursor,
   cursorMode: $cursorMode,
   direction: $direction,
-  orderBy: $orderBy,
+  orderBy: $orderBy
 `;
 
 export const GET_PIPELINES = gql`

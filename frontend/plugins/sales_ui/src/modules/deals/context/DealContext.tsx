@@ -1,4 +1,3 @@
-// context/DealsContext.tsx
 import { ReactNode, createContext, useContext, useMemo } from 'react';
 import {
   useDealsAdd,
@@ -75,5 +74,5 @@ export const useSelectBoardsContext = () => {
       'useSelectBoardsContext must be used within <SelectBoardsProvider>',
     );
   }
-  return context || ({} as ISelectBoardsContext);
+  return context;
 };

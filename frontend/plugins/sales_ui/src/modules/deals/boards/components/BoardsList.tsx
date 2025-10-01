@@ -2,15 +2,18 @@ import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar, Skeleton, useConfirm, useQueryState } from 'erxes-ui';
 import { useBoardRemove, useBoards } from '@/deals/boards/hooks/useBoards';
+import { useEffect, useMemo } from 'react';
 
 import { BoardForm } from './BoardForm';
 import { IBoard } from '@/deals/types/boards';
-import { useEffect } from 'react';
 
 export const BoardsList = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search],
+  );
   const activeBoardId = searchParams.get('activeBoardId');
 
   const { boards, loading } = useBoards();
@@ -23,8 +26,7 @@ export const BoardsList = () => {
         replace: true,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boards, loading, activeBoardId, navigate, location]);
+  }, [boards, loading, activeBoardId, navigate, location, searchParams]);
 
   return (
     <Sidebar collapsible="none" className="flex-none border-r">

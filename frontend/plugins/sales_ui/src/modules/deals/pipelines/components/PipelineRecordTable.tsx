@@ -101,10 +101,6 @@ export const PipelineMoreColumnCell = ({
     });
   };
 
-  const onProductConfig = () => {
-    console.log('productConfig');
-  };
-
   return (
     <Popover>
       <Popover.Trigger asChild>
@@ -124,9 +120,6 @@ export const PipelineMoreColumnCell = ({
             <Command.Item value="duplicate" onSelect={onDuplicate}>
               <IconCopy /> Duplicate
             </Command.Item>
-            {/* <Command.Item value="template" onSelect={onTemplate}>
-              <IconTemplate /> Save as template
-            </Command.Item> */}
             <Command.Item value="archive" onSelect={onArchive}>
               {status === 'active' ? (
                 <>
@@ -138,7 +131,7 @@ export const PipelineMoreColumnCell = ({
                 </>
               )}
             </Command.Item>
-            <Command.Item value="productConfig" onSelect={onProductConfig}>
+            <Command.Item value="productConfig">
               <IconSettings /> Product config
             </Command.Item>
             <Command.Item

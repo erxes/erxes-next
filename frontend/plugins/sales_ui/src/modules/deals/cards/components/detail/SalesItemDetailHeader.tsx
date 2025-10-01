@@ -35,7 +35,7 @@ export const SalesItemDetailHeader = ({ deal }: { deal: IDeal }) => {
       <Sheet.Title className="shrink-0">
         <Input
           className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
-          placeholder="Task Name"
+          placeholder="Deal Name"
           value={name}
           onChange={(e) => {
             setName(e.target.value);

@@ -123,17 +123,6 @@ const SelectPriorityProvider = ({
   </SelectPriorityContext.Provider>
 );
 
-const SelectPriorityValue = () => {
-  const { value } = useSelectPriorityContext();
-
-  return (
-    <>
-      <PriorityIcon priority={value} />
-      <PriorityTitle priority={value} />
-    </>
-  );
-};
-
 const SelectPriorityCommandItem = ({ priority }: { priority: string }) => {
   const { onValueChange, value } = useSelectPriorityContext();
 

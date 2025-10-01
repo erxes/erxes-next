@@ -3,7 +3,6 @@ import { IconChevronLeft, IconLoader2 } from '@tabler/icons-react';
 import { useEffect, useRef } from 'react';
 
 import { Combobox } from 'erxes-ui';
-// import { Popover } from 'erxes-ui';
 import { Form } from 'erxes-ui';
 import { Input } from 'erxes-ui';
 import { useBoardAdd } from '@/deals/boards/hooks/useBoards';
@@ -17,7 +16,6 @@ const formSchema = z.object({
 });
 
 export const CreateBoardForm = () => {
-  // const [open, setOpen] = useState(false);
   const { newBoardName, setNewBoardName } = useSelectBoardsContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,7 +40,7 @@ export const CreateBoardForm = () => {
         ...values,
       },
       onCompleted({ addBoard }) {
-        setNewBoardName('');
+        setNewBoardName && setNewBoardName('');
         // onSelect({
         //   _id: addBoard._id,
         //   ...values,
@@ -94,7 +92,7 @@ export function SelectBoardsCreateContainer({
         <Button
           variant="ghost"
           onClick={() => {
-            setNewBoardName('');
+            setNewBoardName && setNewBoardName('');
           }}
           className="pl-1 gap-1"
         >

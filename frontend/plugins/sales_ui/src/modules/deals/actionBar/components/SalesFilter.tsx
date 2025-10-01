@@ -13,7 +13,7 @@ import {
 } from 'ui-modules';
 
 import { IDeal } from '@/deals/types/deals';
-import { SalesFilterState } from '../types/actionBarTypes';
+import { SalesFilterState } from '@/deals/actionBar/types/actionBarTypes';
 import { SelectLabels } from '@/deals/components/common/filters/SelectLabel';
 import { SelectPriority } from '@/deals/components/common/filters/SelectPriority';
 
@@ -185,20 +185,6 @@ const SalesFilterView = () => {
       <Filter.View>
         <Command>
           <Command.List className="p-1">
-            {/* {ActionBarFilters.map((group, groupIndex) => (
-              <div key={groupIndex}>
-                {group.map((item) => (
-                  <Filter.Item key={item.value} value={item.value}>
-                    <item.icon className="mr-1" />
-                    {item.value}
-                  </Filter.Item>
-                ))}
-
-                {groupIndex < ActionBarFilters.length - 1 && (
-                  <Command.Separator className="my-1" />
-                )}
-              </div>
-            ))} */}
             <SelectCompany.FilterItem value="companyIds" label="By Company" />
             <Command.Separator className="my-1" />
             <SelectMember.FilterItem />

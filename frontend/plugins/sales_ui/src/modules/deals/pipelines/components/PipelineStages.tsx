@@ -4,7 +4,7 @@ import {
 } from '@/deals/components/common/Sortable';
 
 import { IconPlus } from '@tabler/icons-react';
-import PipelineStageItem from './PipleineStageItem';
+import PipelineStageItem from './PipelineStageItem';
 import { Spinner } from 'erxes-ui';
 import { useFieldArray } from 'react-hook-form';
 import { verticalListSortingStrategy } from '@dnd-kit/sortable';

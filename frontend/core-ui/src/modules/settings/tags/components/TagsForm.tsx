@@ -1,8 +1,7 @@
 import { Button, Combobox, Form, Input, Popover } from 'erxes-ui';
+import { SelectTagType, SelectTags } from 'ui-modules';
 
 import { IconChevronDown } from '@tabler/icons-react';
-import { SelectTagType } from 'ui-modules';
-import { SelectTags } from 'ui-modules';
 import { TTagsForm } from '../hooks/useTagsForm';
 import { useFormContext } from 'react-hook-form';
 

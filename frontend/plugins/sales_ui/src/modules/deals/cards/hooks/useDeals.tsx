@@ -357,7 +357,7 @@ export function useDealsArchive(options?: MutationHookOptions<any, any>) {
     awaitRefetchQueries: true,
     onCompleted: (...args) => {
       toast({
-        title: 'Successfully archived cards',
+        title: 'Successfully archived deals',
         variant: 'default',
       });
       options?.onCompleted?.(...args);

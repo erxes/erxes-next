@@ -27,7 +27,7 @@ export const List = forwardRef<HTMLUListElement, Props>(
           rounded-md 
           min-h-[200px] 
           transition-colors 
-          duration-350 
+          duration-300 
           ease-in-out 
           [grid-template-columns:repeat(var(--columns,1),minmax(0,1fr))]
           after:content-[''] after:h-[10px] after:[grid-column-start:span_var(--columns,1)]
