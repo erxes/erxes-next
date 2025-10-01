@@ -1,11 +1,16 @@
 import { useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { IUIConfig } from 'erxes-ui';
-import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
+import { GET_CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
+import { useVersion } from 'ui-modules';
 
 export const usePluginsModules = () => {
   const [pluginsMetaData] = useAtom(pluginsConfigState);
+
+  const version = useVersion();
+
+  const CORE_MODULES = GET_CORE_MODULES(version);
 
   const modules = useMemo(() => {
     if (pluginsMetaData) {
