@@ -51,12 +51,14 @@ export const channelMutations = {
     { _id, ...doc }: IChannelsEdit,
     { models, subdomain, user }: IContext,
   ) => {
-    await checkUserRole({
-      models,
-      channelId: _id,
-      userId: user?._id,
-      allowedRoles: [ChannelMemberRoles.ADMIN],
-    });
+    if (!user.isOwner) {
+      await checkUserRole({
+        models,
+        channelId: _id,
+        userId: user?._id,
+        allowedRoles: [ChannelMemberRoles.ADMIN],
+      });
+    }
     await models.Channels.updateChannel(_id, doc, user._id);
 
     return await models.Channels.getChannel(_id);
@@ -67,12 +69,14 @@ export const channelMutations = {
     { _id }: { _id: string },
     { models, user }: IContext,
   ) => {
-    await checkUserRole({
-      models,
-      channelId: _id,
-      userId: user._id,
-      allowedRoles: [ChannelMemberRoles.ADMIN],
-    });
+    if (!user.isOwner) {
+      await checkUserRole({
+        models,
+        channelId: _id,
+        userId: user._id,
+        allowedRoles: [ChannelMemberRoles.ADMIN],
+      });
+    }
 
     return models.Channels.removeChannel(_id);
   },
@@ -82,13 +86,14 @@ export const channelMutations = {
     { _id, memberIds }: { _id: string; memberIds: string[] },
     { models, user }: IContext,
   ) => {
-    console.log('called ...');
-    await checkUserRole({
-      models,
-      channelId: _id,
-      userId: user._id,
-      allowedRoles: [ChannelMemberRoles.ADMIN, ChannelMemberRoles.LEAD],
-    });
+    if (!user.isOwner) {
+      await checkUserRole({
+        models,
+        channelId: _id,
+        userId: user._id,
+        allowedRoles: [ChannelMemberRoles.ADMIN, ChannelMemberRoles.LEAD],
+      });
+    }
 
     return models.ChannelMembers.createChannelMembers(
       memberIds.map((memberId) => ({
@@ -104,12 +109,14 @@ export const channelMutations = {
     { channelId, memberId }: { channelId: string; memberId: string },
     { models, user }: IContext,
   ) => {
-    await checkUserRole({
-      models,
-      channelId,
-      userId: user._id,
-      allowedRoles: [ChannelMemberRoles.ADMIN],
-    });
+    if (!user.isOwner) {
+      await checkUserRole({
+        models,
+        channelId,
+        userId: user._id,
+        allowedRoles: [ChannelMemberRoles.ADMIN],
+      });
+    }
 
     return models.ChannelMembers.removeChannelMember(channelId, memberId);
   },
@@ -124,13 +131,14 @@ export const channelMutations = {
     if (!channelMember) {
       throw new Error('Channels member not found');
     }
-
-    await checkUserRole({
-      models,
-      channelId: channelMember.channelId,
-      userId: user._id,
-      allowedRoles: [ChannelMemberRoles.ADMIN],
-    });
+    if (!user.isOwner) {
+      await checkUserRole({
+        models,
+        channelId: channelMember.channelId,
+        userId: user._id,
+        allowedRoles: [ChannelMemberRoles.ADMIN],
+      });
+    }
 
     return models.ChannelMembers.updateChannelMember(_id, role, user._id);
   },

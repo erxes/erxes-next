@@ -59,10 +59,14 @@ export function Channels() {
                         {channel.memberCount}
                       </Table.Cell>
                       <Table.Cell className="border-none px-2 w-32 text-muted-foreground">
-                        {format(channel.createdAt, 'MMM d, yyyy')}
+                        {channel.createdAt
+                          ? format(channel.createdAt, 'MMM d, yyyy')
+                          : ''}
                       </Table.Cell>
                       <Table.Cell className="border-none px-2 w-32 text-muted-foreground">
-                        {format(channel.updatedAt, 'MMM d, yyyy')}
+                        {channel.updatedAt
+                          ? format(new Date(channel.updatedAt), 'MMM d, yyyy')
+                          : ''}
                       </Table.Cell>
                     </Table.Row>
                   ))}
