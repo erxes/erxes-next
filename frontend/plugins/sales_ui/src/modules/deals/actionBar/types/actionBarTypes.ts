@@ -13,7 +13,7 @@ export type SalesFilterState = {
   userIds?: string[] | null;   
   branchIds?: string[] | null;   
   departmentIds?: string[] | null;   
-  assignedTo?: string[] | null;  
+  assignedUserIds?: string[] | null;  
   createdStartDate?: string | null;   
   createdEndDate?: string | null;     
   startDateStartDate?: string | null; 

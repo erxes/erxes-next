@@ -25,7 +25,7 @@ export const SalesFilter = () => {
     'branchIds',
     'departmentIds',
     'customerIds',
-    'assignedTo',
+    'assignedUserIds',
     'createdStartDate',
     'createdEndDate',
     'startDateStartDate',
@@ -96,7 +96,7 @@ export const filterDeals = (deals: IDeal[], filters: SalesFilterState) => {
 const SalesFilterBar = ({ queries }: { queries: SalesFilterState }) => {
   const {
     search,
-    assignedTo,
+    assignedUserIds,
     branchIds,
     departmentIds,
     companyIds,
@@ -145,7 +145,13 @@ const SalesFilterBar = ({ queries }: { queries: SalesFilterState }) => {
           label="By Company"
         />
       )}
-      {assignedTo && <SelectMember.FilterBar />}
+      {assignedUserIds && (
+        <SelectMember.FilterBar
+          mode="multiple"
+          queryKey="assignedUserIds"
+          label="By User"
+        />
+      )}
       {userIds && (
         <SelectMember.FilterBar
           mode="multiple"
@@ -187,7 +193,10 @@ const SalesFilterView = () => {
           <Command.List className="p-1">
             <SelectCompany.FilterItem value="companyIds" label="By Company" />
             <Command.Separator className="my-1" />
-            <SelectMember.FilterItem />
+            <SelectMember.FilterItem
+              value="assignedUserIds"
+              label="By Assigned user"
+            />
             <SelectMember.FilterItem value="userIds" label="Created By" />
             <SelectBranches.FilterItem value="branchIds" label="By Branch" />
             <Command.Separator className="my-1" />
@@ -213,7 +222,7 @@ const SalesFilterView = () => {
           </Command.List>
         </Command>
       </Filter.View>
-      <SelectMember.FilterView />
+      <SelectMember.FilterView mode="multiple" queryKey="assignedUserIds" />
       <SelectMember.FilterView mode="multiple" queryKey="userIds" />
       <SelectCompany.FilterView mode="multiple" filterKey="companyIds" />
       <SelectBranches.FilterView mode="multiple" filterKey="branchIds" />
