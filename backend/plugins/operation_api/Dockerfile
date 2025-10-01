@@ -28,7 +28,6 @@ WORKDIR /app
 # Copy production node_modules
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
-COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
 # RUN rm -rf node_modules
 
