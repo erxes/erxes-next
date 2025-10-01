@@ -54,4 +54,4 @@ export const PROJECT_PRIORITIES_OPTIONS = [
   'Critical',
 ];
 
-export type TPriorityValue = keyof typeof PROJECT_PRIORITIES_OPTIONS;
+export type TPriorityValue = (typeof PROJECT_PRIORITIES_OPTIONS)[number];

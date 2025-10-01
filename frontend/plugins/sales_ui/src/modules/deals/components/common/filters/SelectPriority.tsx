@@ -7,15 +7,17 @@ import {
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
+import {
+  PROJECT_PRIORITIES_OPTIONS,
+  TPriorityValue,
+} from '@/deals/constants/cards';
 import React, { useState } from 'react';
 
 import { IconStackFront } from '@tabler/icons-react';
-import { PROJECT_PRIORITIES_OPTIONS } from '@/deals/constants/cards';
-import clsx from 'clsx';
 
 interface SelectPriorityContextType {
-  value: number;
-  onValueChange: (value: number) => void;
+  value: string;
+  onValueChange: (value: string) => void;
 }
 
 const SelectPriorityContext =
@@ -31,17 +33,22 @@ const useSelectPriorityContext = () => {
   return context;
 };
 
+const getPriorityIndex = (priority: string) =>
+  PROJECT_PRIORITIES_OPTIONS.findIndex((p) => p === priority);
+
 export const PriorityIcon = React.forwardRef<
   SVGSVGElement,
-  React.SVGProps<SVGSVGElement> & { priority: number }
+  React.SVGProps<SVGSVGElement> & { priority: string }
 >(({ priority, className, ...props }, ref) => {
-  const color = [
-    'text-muted-foreground',
-    'text-success',
-    'text-info',
-    'text-warning',
-    'text-destructive',
-  ][priority];
+  const index = getPriorityIndex(priority);
+  const color =
+    [
+      'text-muted-foreground',
+      'text-success',
+      'text-info',
+      'text-warning',
+      'text-destructive',
+    ][index] || 'text-muted-foreground';
 
   return (
     <svg
@@ -59,19 +66,19 @@ export const PriorityIcon = React.forwardRef<
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path
         d="M6 18l0 -3"
-        className={priority > 0 ? 'stroke-current' : 'stroke-scroll'}
+        className={index > 0 ? 'stroke-current' : 'stroke-scroll'}
       />
       <path
         d="M10 18l0 -6"
-        className={priority > 1 ? 'stroke-current' : 'stroke-scroll'}
+        className={index > 1 ? 'stroke-current' : 'stroke-scroll'}
       />
       <path
         d="M14 18l0 -9"
-        className={priority > 2 ? 'stroke-current' : 'stroke-scroll'}
+        className={index > 2 ? 'stroke-current' : 'stroke-scroll'}
       />
       <path
         d="M18 18l0 -12"
-        className={priority > 3 ? 'stroke-current' : 'stroke-scroll'}
+        className={index > 3 ? 'stroke-current' : 'stroke-scroll'}
       />
     </svg>
   );
@@ -81,15 +88,16 @@ PriorityIcon.displayName = 'PriorityIcon';
 
 export const PriorityTitle = React.forwardRef<
   HTMLSpanElement,
-  React.ComponentProps<'span'> & { priority: number }
+  React.ComponentProps<'span'> & { priority: string }
 >(({ priority, className, ...props }, ref) => {
-  const text = PROJECT_PRIORITIES_OPTIONS[priority];
+  const index = getPriorityIndex(priority);
+  const text = PROJECT_PRIORITIES_OPTIONS[index];
   return (
     <span
       ref={ref}
       className={cn(
         'font-medium',
-        priority === 0 && 'text-muted-foreground',
+        index === 0 && 'text-muted-foreground',
         className,
       )}
       {...props}
@@ -103,24 +111,17 @@ PriorityTitle.displayName = 'PriorityTitle';
 
 const SelectPriorityProvider = ({
   children,
-  value = 0,
+  value = 'No Priority',
   onValueChange,
 }: {
   children: React.ReactNode;
-  value?: number;
-  onValueChange: (value: number) => void;
-}) => {
-  return (
-    <SelectPriorityContext.Provider
-      value={{
-        value,
-        onValueChange,
-      }}
-    >
-      {children}
-    </SelectPriorityContext.Provider>
-  );
-};
+  value?: TPriorityValue;
+  onValueChange: (value: TPriorityValue) => void;
+}) => (
+  <SelectPriorityContext.Provider value={{ value, onValueChange }}>
+    {children}
+  </SelectPriorityContext.Provider>
+);
 
 const SelectPriorityValue = () => {
   const { value } = useSelectPriorityContext();
@@ -133,14 +134,11 @@ const SelectPriorityValue = () => {
   );
 };
 
-const SelectPriorityCommandItem = ({ priority }: { priority: number }) => {
+const SelectPriorityCommandItem = ({ priority }: { priority: string }) => {
   const { onValueChange, value } = useSelectPriorityContext();
-  const priorityLabel = PROJECT_PRIORITIES_OPTIONS[priority];
+
   return (
-    <Command.Item
-      value={clsx(priorityLabel, value)}
-      onSelect={() => onValueChange(priority)}
-    >
+    <Command.Item value={priority} onSelect={() => onValueChange(priority)}>
       <div className="flex items-center gap-2 flex-1">
         <PriorityIcon priority={priority} />
         <PriorityTitle priority={priority} />
@@ -156,8 +154,8 @@ const SelectPriorityContent = () => {
       <Command.Input placeholder="Search priority" />
       <Command.Empty>No priority found</Command.Empty>
       <Command.List>
-        {PROJECT_PRIORITIES_OPTIONS.map((priority, index) => (
-          <SelectPriorityCommandItem key={priority} priority={index} />
+        {PROJECT_PRIORITIES_OPTIONS.map((priority) => (
+          <SelectPriorityCommandItem key={priority} priority={priority} />
         ))}
       </Command.List>
     </Command>
@@ -180,15 +178,17 @@ export const SelectPriorityFilterItem = ({
 };
 
 const SelectPriorityFilterView = () => {
-  const [priority, setPriority] = useQueryState<string>('priority');
+  const [priority, setPriority] = useQueryState<TPriorityValue[]>('priority', {
+    defaultValue: [],
+  });
   const { resetFilterState } = useFilterContext();
 
   return (
     <Filter.View filterKey="priority">
       <SelectPriorityProvider
-        value={Number(priority)}
-        onValueChange={(value) => {
-          setPriority(String(value));
+        value={priority?.[0] ?? 'No Priority'}
+        onValueChange={(val) => {
+          setPriority([val]);
           resetFilterState();
         }}
       >
@@ -199,34 +199,32 @@ const SelectPriorityFilterView = () => {
 };
 
 const SelectPriorityFilterBar = () => {
-  const [priority, setPriority] = useQueryState<string>('priority');
+  const [priority, setPriority] = useQueryState<TPriorityValue[]>('priority', {
+    defaultValue: [],
+  });
   const [open, setOpen] = useState(false);
 
-  if (!priority) {
-    return null;
-  }
+  if (!priority?.[0]) return null;
 
   return (
-    <Filter.BarItem queryKey={priority}>
+    <Filter.BarItem queryKey="priority">
       <Filter.BarName>
         <IconStackFront />
         By Priority
       </Filter.BarName>
       <SelectPriorityProvider
-        value={Number(priority)}
-        onValueChange={(value) => {
-          if (value && value > 0) {
-            setPriority(String(value));
-          } else {
-            setPriority(null);
-          }
+        value={priority?.[0] ?? 'No Priority'}
+        onValueChange={(val) => {
+          if (val && val !== 'No Priority') setPriority([val]);
+          else setPriority([]);
           setOpen(false);
         }}
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
-            <Filter.BarButton filterKey={priority}>
-              <SelectPriorityValue />
+            <Filter.BarButton filterKey="priority">
+              <PriorityIcon priority={priority?.[0] ?? 'No Priority'} />
+              <PriorityTitle priority={priority?.[0] ?? 'No Priority'} />
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>

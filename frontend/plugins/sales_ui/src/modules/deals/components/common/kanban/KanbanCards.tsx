@@ -11,6 +11,7 @@ import { cn } from 'erxes-ui';
 import { useDeals } from '@/deals/cards/hooks/useDeals';
 import { useDroppable } from '@dnd-kit/core';
 import { useInView } from 'react-intersection-observer';
+import { useSearchParams } from 'react-router-dom';
 
 export const KanbanCards = <T extends IDeal = IDeal>({
   id, // stage id
@@ -18,6 +19,8 @@ export const KanbanCards = <T extends IDeal = IDeal>({
   children,
   ...props
 }: KanbanCardsProps<T> & { id: string; className?: string }) => {
+  const [searchParams] = useSearchParams();
+
   const { onDataChange, data } = useContext(
     KanbanContext,
   ) as KanbanContextProps<T>;
@@ -31,8 +34,23 @@ export const KanbanCards = <T extends IDeal = IDeal>({
     threshold: 0,
   });
 
+  const ignoredKeys = ['boardId', 'pipelineId'];
+
+  const queryVariables: Record<string, any> = {};
+
+  for (const [key, value] of searchParams.entries()) {
+    if (ignoredKeys.includes(key)) continue;
+
+    try {
+      const parsed = JSON.parse(value);
+      queryVariables[key] = parsed;
+    } catch {
+      queryVariables[key] = value;
+    }
+  }
+
   const { list, loading, handleFetchMore, hasNextPage } = useDeals({
-    variables: { stageId: id },
+    variables: { stageId: id, ...queryVariables },
     skip: !isTriggerInView,
     fetchPolicy: 'cache-and-network',
   });
