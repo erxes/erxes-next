@@ -34,7 +34,7 @@ export const KanbanCards = <T extends IDeal = IDeal>({
     threshold: 0,
   });
 
-  const ignoredKeys = ['boardId', 'pipelineId'];
+  const ignoredKeys = ['boardId', 'pipelineId', 'salesItemId'];
 
   const queryVariables: Record<string, any> = {};
 

@@ -43,6 +43,10 @@ export const useDeals = (
       },
     });
 
+  const [qryStrPipelineId] = useQueryState('pipelineId');
+
+  const lastPipelineId = pipelineId || qryStrPipelineId || '';
+  
   const currentUser = useAtomValue(currentUserState);
   const { deals } = data || {};
 
@@ -51,39 +55,47 @@ export const useDeals = (
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   useEffect(() => {
+    console.log('111111111111111111111111111111111')
     const unsubscribe = subscribeToMore<any>({
       document: DEAL_LIST_CHANGED,
       variables: {
-        pipelineId,
+        pipelineId: lastPipelineId,
         userId: currentUser?._id,
         filter: options?.variables,
       },
       updateQuery: (prev, { subscriptionData }) => {
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         if (!prev || !subscriptionData.data) return prev;
 
-        const { type, task } = subscriptionData.data.salesDealListChanged;
+        console.log(subscriptionData.data.salesDealListChanged, 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
+        
+
+        const { action, deal } = subscriptionData.data.salesDealListChanged;
         const currentList = prev.deals.list;
 
         let updatedList = currentList;
+        console.log(currentList,'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu', action, deal)
 
-        if (type === 'create') {
+        if (action === 'add') {
           const exists = currentList.some(
-            (item: IDeal) => item._id === task._id,
+            (item: IDeal) => item._id === deal._id,
           );
           if (!exists) {
-            updatedList = [task, ...currentList];
+            updatedList = [deal, ...currentList];
           }
         }
 
-        if (type === 'update') {
-          updatedList = currentList.map((item: IDeal) =>
-            item._id === task._id ? { ...item, ...task } : item,
-          );
+        if (action === 'edit') {
+          console.log('eeeeeeeeeeeeeeeeeeeeeeeee', currentList, )
+          updatedList = currentList.map((item: IDeal) => {
+            console.log(item.name, deal.name, 'nnnnnnnnnnnnnnnnnnnnnnnnnnn')
+            return item._id === deal._id ? { ...item, ...deal } : item
+          });
         }
 
-        if (type === 'delete') {
+        if (action === 'remove') {
           updatedList = currentList.filter(
-            (item: IDeal) => item._id !== task._id,
+            (item: IDeal) => item._id !== deal._id,
           );
         }
 
@@ -94,19 +106,18 @@ export const useDeals = (
             list: updatedList,
             pageInfo: prev.deals.pageInfo,
             totalCount:
-              type === 'create'
+              action === 'add'
                 ? prev.deals.totalCount + 1
-                : type === 'delete'
-                ? prev.deals.totalCount - 1
-                : prev.deals.totalCount,
+                : action === 'remove'
+                  ? prev.deals.totalCount - 1
+                  : prev.deals.totalCount,
           },
         };
       },
     });
 
     return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options?.variables]);
+  }, [options?.variables, subscribeToMore]);
 
   const handleFetchMore = ({
     direction,
@@ -119,6 +130,7 @@ export const useDeals = (
 
     fetchMore({
       variables: {
+        ...options?.variables,
         cursor:
           direction === EnumCursorDirection.FORWARD
             ? pageInfo?.endCursor
