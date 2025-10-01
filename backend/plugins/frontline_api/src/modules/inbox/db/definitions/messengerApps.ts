@@ -1,5 +1,6 @@
 import { Document, Schema } from 'mongoose';
 import { schemaHooksWrapper } from '~/modules/integrations/call/db/utils';
+import { mongooseField } from 'erxes-api-shared/utils';
 
 export interface IGoogleCredentials {
   access_token: string;
@@ -46,17 +47,17 @@ export interface IMessengerAppDocument extends IMessengerApp, Document {
 // Messenger apps ===============
 export const messengerAppSchema = schemaHooksWrapper(
   new Schema({
-    _id: { pkey: true },
+    _id: mongooseField({ pkey: true }),
 
-    kind: {
+    kind: mongooseField({
       type: String,
       enum: ['googleMeet', 'knowledgebase', 'lead', 'website'],
-    },
+    }),
 
-    name: { type: String },
-    accountId: { type: String, optional: true },
-    showInInbox: { type: Boolean, default: false },
-    credentials: { type: Object },
+    name: mongooseField({ type: String }),
+    accountId: mongooseField({ type: String, optional: true }),
+    showInInbox: mongooseField({ type: Boolean, default: false }),
+    credentials: mongooseField({ type: Object }),
   }),
   'erxes_messenger_apps',
 );

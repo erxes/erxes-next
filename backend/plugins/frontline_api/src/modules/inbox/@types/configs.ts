@@ -1,3 +1,4 @@
+import { mongooseField } from 'erxes-api-shared/utils';
 import { Document, Model, Schema } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -13,9 +14,9 @@ export interface IConfigDocument extends IConfig, Document {
 // Mongoose schemas ===========
 
 export const configSchema = new Schema({
-  _id: { pkey: true },
-  code: { type: String, unique: true },
-  value: { type: Object },
+  _id: mongooseField({ pkey: true }),
+  code: mongooseField({ type: String, unique: true }),
+  value: mongooseField({ type: Object }),
 });
 
 export interface IConfigModel extends Model<IConfigDocument> {
