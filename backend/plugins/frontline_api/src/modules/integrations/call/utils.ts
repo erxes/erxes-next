@@ -6,7 +6,6 @@ import FormData from 'form-data';
 import momentTz from 'moment-timezone';
 
 import type { RequestInit, HeadersInit } from 'node-fetch';
-import { getOrCreateCustomer } from './store';
 import redis from '~/modules/integrations/call/redlock';
 import { IModels, generateModels } from '~/connectionResolvers';
 import { getEnv } from 'erxes-api-shared/utils';
@@ -55,7 +54,6 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
     isConvertToJson,
     isAddExtention,
     isGetExtension,
-    isCronRunning,
     extensionNumber: extension,
   } = args;
 
@@ -69,11 +67,9 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
 
   const { wsServer = '' } = integration;
   const operator = integration.operators.find((op) => op.userId === user?._id);
-  const extensionNumber = isCronRunning
-    ? extension
-    : operator?.gsUsername || '1001';
+  const extensionNumber = operator?.gsUsername || '1001';
 
-  let cookie = await getOrSetCallCookie(wsServer, isCronRunning || false);
+  let cookie = await getOrSetCallCookie(wsServer);
   if (!cookie) {
     throw new Error('Cookie not found');
   }
@@ -135,14 +131,11 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
   }
 };
 
-export const getOrSetCallCookie = async (wsServer, isCron) => {
+export const getOrSetCallCookie = async (wsServer) => {
   const {
     CALL_API_USER,
     CALL_API_PASSWORD,
-    CALL_CRON_API_USER,
-    CALL_CRON_API_PASSWORD,
-    CALL_API_EXPIRY = '86400', // Default 24h for regular users
-    CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
+    CALL_API_EXPIRY = '86400',
   } = process.env;
   // disable on production !!!
   // if (process.env.NODE_ENV !== 'production') {
@@ -150,26 +143,19 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
   // }
 
   // Validate credentials
-  if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
+  if (!CALL_API_USER || !CALL_API_PASSWORD) {
     throw new Error('Regular API credentials missing!');
   }
-  if (isCron && (!CALL_CRON_API_USER || !CALL_CRON_API_PASSWORD)) {
-    throw new Error('Cron API credentials missing!');
-  }
-
   // Create unique cookie keys
-  const cookieKey = `${isCron ? 'cronCallCookie' : 'callCookie'}`;
-  const apiUser = isCron ? CALL_CRON_API_USER : CALL_API_USER;
-  const apiPassword = isCron ? CALL_CRON_API_PASSWORD : CALL_API_PASSWORD;
-  const expiry = isCron ? CALL_CRON_API_EXPIRY : CALL_API_EXPIRY;
+  const cookieKey = 'callCookie';
+  const apiUser = CALL_API_USER;
+  const apiPassword = CALL_API_PASSWORD;
+  const expiry = CALL_API_EXPIRY;
 
   // Check existing cookie
   const callCookie = await redis.get(cookieKey);
   if (callCookie) {
-    console.log(
-      `Using existing ${isCron ? 'cron' : 'regular'} cookie:`,
-      callCookie,
-    );
+    console.log(`Using existing regular cookie:`, callCookie);
     return callCookie;
   }
 
@@ -211,14 +197,14 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     if (loginData.status === 0) {
       const { cookie } = loginData.response;
       await redis.set(cookieKey, cookie, 'EX', expiry);
-      console.log(`Stored new ${isCron ? 'cron' : 'regular'} cookie:`, cookie);
+      console.log(`Stored new regular cookie:`, cookie);
       return cookie;
     }
 
     // Error handling
     if (errorList[loginData.status]) {
       console.error(
-        `Auth failed for ${isCron ? 'cron' : 'regular'} user:`,
+        `Auth failed for regular user:`,
         errorList[loginData.status],
         'apiUser:',
         apiUser,
@@ -227,7 +213,7 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     }
     throw new Error('Unknown authentication error');
   } catch (error) {
-    console.error(`Error in ${isCron ? 'cron' : 'regular'} auth:`, error);
+    console.error(`Error in regular auth:`, error);
     throw error;
   }
 };
@@ -241,7 +227,6 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
     callEndTime,
     _id,
     transferredCallStatus,
-    isCronRunning,
   } = params;
   if (transferredCallStatus === 'local' && callType === 'incoming') {
     return 'Check the transferred call record URL!';
@@ -271,7 +256,6 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
           retryCount,
           isConvertToJson: true,
           isGetExtension: true,
-          isCronRunning: isCronRunning || false,
         },
         user,
       );
@@ -304,12 +288,8 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
         caller = extensionNumber;
         callee = customerPhone;
       }
-      const startTime = isCronRunning
-        ? getPureDate(callStartTime, -10)
-        : `${startDate}T00:00:00`;
-      const endTime = isCronRunning
-        ? getPureDate(callEndTime, 10)
-        : `${endDate}T23:59:59`;
+      const startTime = `${startDate}T00:00:00`;
+      const endTime = `${endDate}T23:59:59`;
       const cdrData = await sendToGrandStream(
         models,
         {
@@ -444,7 +424,8 @@ function sanitizeFileName(rawFileName: string): string {
 }
 export const cfRecordUrl = async (params, user, models, subdomain) => {
   try {
-    const { fileDir, recordfiles, inboxIntegrationId, retryCount } = params;
+    const { fileDir, recordfiles, inboxIntegrationId, retryCount } =
+      params;
 
     if (!recordfiles) {
       throw new Error('Missing required parameter: recordfiles');
@@ -565,141 +546,6 @@ export const getPureDate = (date: Date, updateTime) => {
   return new Date(updatedDate.getTime() + diffTimeZone);
 };
 
-export const saveCdrData = async (subdomain, cdrData, result) => {
-  const models = await generateModels(subdomain);
-  try {
-    for (const cdr of cdrData) {
-      const history = createHistoryObject(cdr, result);
-      await saveCallHistory(models, history);
-      await processCustomerAndConversation(
-        models,
-        history,
-        cdr,
-        result,
-        subdomain,
-      );
-    }
-  } catch (error) {
-    console.error(`Error in saveCdrData: ${error.message}`);
-  }
-};
-
-const createHistoryObject = (cdr, result) => {
-  const callType = cdr.userfield === 'Outbound' ? 'outgoing' : 'incoming';
-  const customerPhone = cdr.userfield === 'Inbound' ? cdr.src : cdr.dst;
-
-  return {
-    operatorPhone: result.phone,
-    customerPhone,
-    callDuration: parseInt(cdr.billsec),
-    callStartTime: new Date(cdr.start),
-    callEndTime: new Date(cdr.end),
-    callType,
-    callStatus: cdr.disposition === 'ANSWERED' ? 'connected' : 'missed',
-    timeStamp: cdr.cdr ? parseInt(cdr.cdr) : 0,
-    createdAt: cdr.start ? new Date(cdr.start) : new Date(),
-    extensionNumber: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src,
-    inboxIntegrationId: result.inboxId,
-    recordFiles: cdr.recordfiles,
-    queueName: cdr.lastdata ? cdr.lastdata.split(',')[0] : '',
-    conversationId: '',
-  };
-};
-
-const saveCallHistory = async (models, history) => {
-  try {
-    await models.CallHistory.updateOne(
-      { timeStamp: history.timeStamp },
-      { $set: history },
-      { upsert: true },
-    );
-  } catch (error) {
-    throw new Error(`Failed to save call history: ${error.message}`);
-  }
-};
-
-const processCustomerAndConversation = async (
-  models: IModels,
-  history,
-  cdr,
-  result,
-  subdomain,
-) => {
-  let customer = await models.CallCustomers.findOne({
-    primaryPhone: history.customerPhone,
-  });
-  if (!customer || !customer.erxesApiId) {
-    customer = await getOrCreateCustomer(models, subdomain, {
-      inboxIntegrationId: result.inboxId,
-      primaryPhone: history.customerPhone,
-    });
-  }
-
-  try {
-    const payload = JSON.stringify({
-      customerId: customer?.erxesApiId,
-      integrationId: result.inboxId,
-      content: history.callType || '',
-      conversationId: history.timeStamp,
-      updatedAt: history.callStartTime,
-      createdAt: history.callStartTime,
-    });
-
-    const apiConversationResponse = await createOrUpdateErxesConversation(
-      subdomain,
-      payload,
-    );
-
-    if (apiConversationResponse.status === 'success') {
-      await models.CallHistory.updateOne(
-        { timeStamp: history.timeStamp },
-        { $set: { conversationId: apiConversationResponse.data._id } },
-        { upsert: true },
-      );
-    } else {
-      throw new Error(
-        `Conversation creation failed: ${JSON.stringify(
-          apiConversationResponse,
-        )}`,
-      );
-    }
-  } catch (e) {
-    await models.CallHistory.deleteOne({ timeStamp: history.timeStamp });
-    throw new Error(e);
-  }
-
-  await handleRecordUrl(cdr, history, result, models, subdomain);
-};
-
-const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
-  if (history?.recordUrl) return;
-
-  try {
-    if (cdr?.recordfiles) {
-      const recordPath = await cfRecordUrl(
-        {
-          fileDir: 'queue',
-          recordfiles: cdr?.recordfiles,
-          inboxIntegrationId: result.inboxId,
-          retryCount: 1,
-        },
-        '',
-        models,
-        subdomain,
-      );
-
-      if (recordPath) {
-        await models.CallHistory.updateOne(
-          { timeStamp: history.timeStamp },
-          { $set: { recordUrl: recordPath } },
-          { upsert: true },
-        );
-      }
-    }
-  } catch (error) {
-    console.log(`Failed to process record URL: ${error.message}`);
-  }
-};
 const isValidSubdomain = (subdomain) => {
   const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
   return subdomainRegex.test(subdomain);

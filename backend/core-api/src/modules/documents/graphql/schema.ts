@@ -55,6 +55,7 @@ export const queries = `
   documentsGetEditorAttributes(contentType: String!): [DocumentEditorAttribute]
   documentsTypes:[DocumentsTypes]
   documentsTotalCount(searchValue: String, contentType: String): Int
+  documentsProcess(_id: String, replacerIds: [String], config: JSON): String
 `;
 
 const mutationParams = `

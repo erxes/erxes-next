@@ -25,12 +25,20 @@ import {
 import { FilterQuery } from 'mongoose';
 import dealResolvers from '../customResolvers/deal';
 import moment from 'moment';
+import { fetchSegment } from '~/modules/sales/trpc/deal';
+
+const contains = (values: string[]) => {
+  return { $in: values };
+};
+
+const isListEmpty = (value) => {
+  return value.length === 1 && value[0].length === 0;
+};
 
 export const generateFilter = async (
   models: IModels,
   userId: string,
   params: any,
-  extraParams?: any,
 ) => {
   const filter: FilterQuery<IDealDocument> = {};
 
@@ -45,23 +53,27 @@ export const generateFilter = async (
     search,
     closeDateType,
     assignedUserIds,
-    // customerIds,
+    customerIds,
     vendorCustomerIds,
-    // companyIds,
+    companyIds,
+    conformityMainType,
+    conformityMainTypeId,
+    conformityIsRelated,
+    conformityIsSaved,
     initialStageId,
     labelIds,
     priority,
     userIds,
     tagIds,
-    // segment,
-    // segmentData,
+    segment,
+    segmentData,
     assignedToMe,
     startDate,
     endDate,
     hasStartAndCloseDate,
     stageChangedStartDate,
     stageChangedEndDate,
-    // noSkipArchive,
+    noSkipArchive,
     number,
     branchIds,
     departmentIds,
@@ -78,27 +90,20 @@ export const generateFilter = async (
     startDateEndDate,
     closeDateStartDate,
     closeDateEndDate,
+    source,
   } = params;
+  Object.assign(filter, noSkipArchive
+    ? {}
+    : { status: { $ne: SALES_STATUSES.ARCHIVED }, parentId: undefined });
 
-  //   let filter = await generateCommonFilters(
-  //     models,
-  //     subdomain,
-  //     userId,
-  //     args
-  //   );
-
-  const isListEmpty = (value) => {
-    return value.length === 1 && value[0].length === 0;
-  };
-
-  //   const filter: any = noSkipArchive
-  //     ? {}
-  //     : { status: { $ne: SALES_STATUSES.ARCHIVED }, parentId: undefined };
-
-  //   let filterIds: string[] = [];
+  let filterIds: string[] = [];
 
   if (parentId) {
     filter.parentId = parentId;
+  }
+
+  if (source) {
+    filter.source = contains(source);
   }
 
   if (assignedUserIds) {
@@ -140,81 +145,82 @@ export const generateFilter = async (
     filter.departmentIds = { $in: departments.map((item) => item._id) };
   }
 
-  //   if (customerIds && type) {
-  //     const relIds = await sendCoreMessage({
-  //       subdomain,
-  //       action: 'conformities.filterConformity',
-  //       data: {
-  //         mainType: 'customer',
-  //         mainTypeIds: customerIds,
-  //         relType: type
-  //       },
-  //       isRPC: true,
-  //       defaultValue: []
-  //     });
+  if (customerIds) {
+    const relIds = await sendTRPCMessage({
+      method: 'query',
+      pluginName: 'core',
+      module: 'conformity',
+      action: "filterConformity",
+      input: {
+        mainType: 'customer',
+        mainTypeIds: customerIds,
+        relType: 'deal'
+      },
+      defaultValue: []
+    });
 
-  //     filterIds = relIds;
-  //   }
+    filterIds = relIds;
+  }
 
-  //   if (companyIds && type) {
-  //     const relIds = await sendCoreMessage({
-  //       subdomain,
-  //       action: 'conformities.filterConformity',
-  //       data: {
-  //         mainType: 'company',
-  //         mainTypeIds: companyIds,
-  //         relType: type
-  //       },
-  //       isRPC: true,
-  //       defaultValue: []
-  //     });
+  if (companyIds) {
+    const relIds = await sendTRPCMessage({
+      pluginName: 'core',
+      module: 'conformity',
+      action: 'filterConformity',
+      input: {
+        mainType: 'company',
+        mainTypeIds: companyIds,
+        relType: 'deal'
+      },
+      defaultValue: []
+    });
 
-  //     filterIds = filterIds.length
-  //       ? filterIds.filter(id => relIds.includes(id))
-  //       : relIds;
-  //   }
+    filterIds = filterIds.length
+      ? filterIds.filter(id => relIds.includes(id))
+      : relIds;
+  }
 
-  //   if (customerIds || companyIds) {
-  //     filter._id = {$in: filterIds}
-  //   }
+  if (customerIds || companyIds) {
+    filter._id = { $in: filterIds }
+  }
 
   if (_ids && _ids.length) {
     filter._id = { $in: _ids };
   }
 
-  //   if (conformityMainType && conformityMainTypeId) {
-  //     if (conformityIsSaved) {
-  //       const relIds = await sendCoreMessage({
-  //         subdomain,
-  //         action: 'conformities.savedConformity',
-  //         data: {
-  //           mainType: conformityMainType,
-  //           mainTypeId: conformityMainTypeId,
-  //           relTypes: [type]
-  //         },
-  //         isRPC: true,
-  //         defaultValue: []
-  //       });
+  if (conformityMainType && conformityMainTypeId) {
+    if (conformityIsSaved) {
+      const relIds = await sendTRPCMessage({
+        pluginName: 'core',
+        module: 'conformity',
+        action: "savedConformity",
+        input: {
+          mainType: conformityMainType,
+          mainTypeId: conformityMainTypeId,
+          relTypes: ['deal']
+        },
+        defaultValue: []
+      });
 
-  //       filter._id = contains(relIds || []);
-  //     }
+      filter._id = contains(relIds || []);
+    }
 
-  //     if (conformityIsRelated) {
-  //       const relIds = await sendCoreMessage({
-  //         subdomain,
-  //         action: 'conformities.relatedConformity',
-  //         data: {
-  //           mainType: conformityMainType,
-  //           mainTypeId: conformityMainTypeId,
-  //           relType: type
-  //         },
-  //         isRPC: true,
-  //         defaultValue: []
-  //       });
+    if (conformityIsRelated) {
+      const relIds = await sendTRPCMessage({
+        pluginName: 'core',
+        module: 'conformity',
+        action: 'conformities.relatedConformity',
+        input: {
+          mainType: conformityMainType,
+          mainTypeId: conformityMainTypeId,
+          relType: 'deal'
+        },
+        defaultValue: []
+      });
 
-  //       filter._id = contains(relIds);
-  //     }
-  //   }
+      filter._id = contains(relIds);
+    }
+  }
 
   if (initialStageId) {
     filter.initialStageId = initialStageId;
@@ -510,23 +516,17 @@ export const generateFilter = async (
     filter.assignedUserIds = { $in: [userId] };
   }
 
-  //   if (segmentData) {
-  //     const segment = JSON.parse(segmentData);
-  //     const itemIds = await fetchSegment(subdomain, '', {}, segment);
-  //     filter._id = { $in: itemIds };
-  //   }
+  if (segmentData) {
+    const segment = JSON.parse(segmentData);
+    const itemIds = await fetchSegment('', {}, segment);
+    filter._id = { $in: itemIds };
+  }
 
-  //   if (segment) {
-  //     const segmentObj = await sendCoreMessage({
-  //       subdomain,
-  //       action: 'segmentFindOne',
-  //       data: { _id: segment },
-  //       isRPC: true
-  //     });
-  //     const itemIds = await fetchSegment(subdomain, segmentObj);
+  if (segment) {
+    const itemIds = await fetchSegment(segment);
 
-  //     filter._id = { $in: itemIds };
-  //   }
+    filter._id = { $in: itemIds };
+  }
 
   if (hasStartAndCloseDate) {
     filter.startDate = { $exists: true };
@@ -537,25 +537,24 @@ export const generateFilter = async (
     filter.number = { $regex: `${number}`, $options: 'mui' };
   }
   if (vendorCustomerIds?.length > 0) {
-    // const cards = await sendCommonMessage({
-    //   subdomain,
-    //   serviceName: 'clientportal',
-    //   action: 'clientPortalUserCards.find',
-    //   data: {
-    //     contentType: 'deal',
-    //     cpUserId: { $in: vendorCustomerIds }
-    //   },
-    //   isRPC: true,
-    //   defaultValue: []
-    // });
-    // const cardIds = cards.map(d => d.contentTypeId);
-    // if (filter._id) {
-    //   const ids = filter._id.$in;
-    //   const newIds = ids.filter(d => cardIds.includes(d));
-    //   filter._id = { $in: newIds };
-    // } else {
-    //   filter._id = { $in: cardIds };
-    // }
+    const cards = await sendTRPCMessage({
+      pluginName: 'content',
+      module: 'portal',
+      action: 'clientPortalUserCards',
+      input: {
+        contentType: 'deal',
+        cpUserId: { $in: vendorCustomerIds }
+      },
+      defaultValue: []
+    });
+    const cardIds = cards.map(d => d.contentTypeId);
+    if (filter._id) {
+      const ids = filter._id.$in;
+      const newIds = ids.filter(d => cardIds.includes(d));
+      filter._id = { $in: newIds };
+    } else {
+      filter._id = { $in: cardIds };
+    }
   }
   if ((stageId || stageCodes) && resolvedDayBetween) {
     const [dayFrom, dayTo] = resolvedDayBetween;

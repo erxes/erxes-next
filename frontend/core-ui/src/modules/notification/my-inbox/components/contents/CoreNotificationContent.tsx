@@ -1,5 +1,13 @@
 import { lazy } from 'react';
 
+const WelcomeNotificationContent = lazy(() =>
+  import(
+    '@/notification/my-inbox/components/contents/system/WelcomeMessage'
+  ).then((module) => ({
+    default: module.WelcomeMessageContent,
+  })),
+);
+
 const BranchNotificationContent = lazy(() =>
   import(
     '@/notification/my-inbox/components/contents/structure/BranchNotificationContent'
@@ -17,6 +25,7 @@ const DepartmentNotificationContent = lazy(() =>
 );
 
 export const CoreNotificationContent = {
+  welcome: WelcomeNotificationContent,
   branch: BranchNotificationContent,
   department: DepartmentNotificationContent,
 };

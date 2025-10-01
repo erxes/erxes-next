@@ -87,6 +87,31 @@ export const CallIntegrationForm = ({
               </Form.Item>
             )}
           />
+
+          <Form.Field
+            name="srcTrunk"
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Source Trunk</Form.Label>
+                <Form.Control>
+                  <Input {...field} />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+          <Form.Field
+            name="dstTrunk"
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Destination Trunk</Form.Label>
+                <Form.Control>
+                  <Input {...field} />
+                </Form.Control>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
           <div className="font-medium">Operators</div>
           {fields.map((field, index) => (
             <div

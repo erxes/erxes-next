@@ -11,6 +11,8 @@ export const CALL_INTEGRATION_FORM_SCHEMA = z.object({
     .min(1),
   websocketServer: z.string().min(1),
   queues: z.string().optional(),
+  srcTrunk: z.string().optional(),
+  dstTrunk: z.string().optional(),
   operators: z.array(
     z.object({
       userId: z.string().optional(),

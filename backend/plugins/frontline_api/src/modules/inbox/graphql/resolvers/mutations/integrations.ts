@@ -482,7 +482,7 @@ export const integrationMutations = {
         await sendRemoveIntegration(subdomain, kind, { integrationId: _id });
       } catch (e) {
         if (e.message !== 'Integration not found') {
-          throw e;
+          throw new Error(e);
         }
       }
     }

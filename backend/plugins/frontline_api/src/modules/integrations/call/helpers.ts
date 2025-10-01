@@ -43,7 +43,7 @@ export const createIntegration = async (subdomain: string, data) => {
         console.error('Failed to update queue names:', error.message);
       }
 
-      if (ENDPOINT_URL && !['os', 'localhost'].includes(subdomain)) {
+      if (ENDPOINT_URL) {
         // send domain to core endpoints
         try {
           const requestBody = {
@@ -204,7 +204,7 @@ export const removeIntegration = async ({
 
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
 
-  if (ENDPOINT_URL && !['os', 'localhost'].includes(subdomain)) {
+  if (ENDPOINT_URL) {
     // send domain to core endpoints
     try {
       await fetch(`${ENDPOINT_URL}/remove-endpoint`, {

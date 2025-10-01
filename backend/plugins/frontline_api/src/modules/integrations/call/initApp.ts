@@ -3,6 +3,7 @@ import { generateModels } from '~/connectionResolvers';
 import { receiveCdr } from '~/modules/integrations/call/services/cdrServices';
 
 import express from 'express';
+import redis from '~/modules/integrations/call/redlock';
 
 const authenticateApi = async (req, res, next) => {
   const erxesApiId = req.headers['x-integration-id'];
@@ -32,14 +33,21 @@ async function validateCompanyAccess(subdomain, erxesApiId, cdrData) {
     const models = await generateModels(subdomain);
 
     const integration = await models.CallIntegrations.findOne({
-      inboxId: erxesApiId,
+      _id: erxesApiId,
     });
     if (!integration) {
       return false;
     }
 
     const { src_trunk_name, dst_trunk_name } = cdrData;
-
+    console.log(
+      'integration.srcTrunk::',
+      integration.srcTrunk,
+      src_trunk_name,
+      '----',
+      integration.dstTrunk,
+      dst_trunk_name,
+    );
     const hasTrunkAccess =
       integration.srcTrunk === src_trunk_name ||
       integration.dstTrunk === dst_trunk_name;
@@ -52,6 +60,9 @@ async function validateCompanyAccess(subdomain, erxesApiId, cdrData) {
 }
 
 const initCallApp = async (app) => {
+  console.log('********* INIT CALL ********');
+  await redis.del('callCookie');
+
   app.use(
     express.json({
       limit: '15mb',
@@ -60,6 +71,11 @@ const initCallApp = async (app) => {
 
   app.use((_req, _res, next) => {
     next();
+  });
+
+  app.get('/resetCallCookie', async (req, res) => {
+    await redis.del('callCookie');
+    return res.send('Reseted call cookie');
   });
 
   app.post('/call/queueRealtimeUpdate', authenticateApi, async (req, res) => {

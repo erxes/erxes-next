@@ -17,6 +17,48 @@ export const CALL_DISCONNECT = gql`
     callDisconnect
   }
 `;
+export const CALL_CUSTOMER_ADD = gql`
+  mutation CallAddCustomer(
+    $inboxIntegrationId: String
+    $primaryPhone: String
+    $queueName: String
+  ) {
+    callAddCustomer(
+      inboxIntegrationId: $inboxIntegrationId
+      primaryPhone: $primaryPhone
+      queueName: $queueName
+    ) {
+      channels {
+        _id
+        name
+      }
+      customer {
+        _id
+        avatar
+        code
+        createdAt
+        getTags {
+          _id
+          name
+          type
+          colorCode
+          createdAt
+          objectCount
+          totalObjectCount
+          parentId
+          order
+          relatedIds
+        }
+        email
+        primaryPhone
+        tagIds
+        lastName
+        firstName
+        phones
+      }
+    }
+  }
+`;
 
 export const CALL_HISTORY_ADD = gql`
   mutation CallHistoryAdd(
