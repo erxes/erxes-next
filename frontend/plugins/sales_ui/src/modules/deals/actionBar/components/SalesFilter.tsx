@@ -191,6 +191,10 @@ const SalesFilterView = () => {
       <Filter.View>
         <Command>
           <Command.List className="p-1">
+            <Filter.Item value="search" inDialog>
+              <IconSearch />
+              Search
+            </Filter.Item>
             <SelectCompany.FilterItem value="companyIds" label="By Company" />
             <Command.Separator className="my-1" />
             <SelectMember.FilterItem
