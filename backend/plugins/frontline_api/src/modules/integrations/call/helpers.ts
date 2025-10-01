@@ -104,6 +104,8 @@ export const updateIntegration = async ({
     const integration = await models.CallIntegrations.findOne({
       inboxId: integrationId,
     }).lean();
+
+    console.log({ integrationId, doc }, 'wahahhah');
     if (!integration) {
       return { status: 'error', errorMessage: 'Integration not found.' };
     }

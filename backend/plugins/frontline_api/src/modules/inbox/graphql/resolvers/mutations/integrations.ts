@@ -238,7 +238,7 @@ export const integrationMutations = {
     const integrationDocs = {
       name: 'Default brand',
       channelId: channel._id,
-      brandId: brand._id,
+      // brandId: brand._id,
       messengerData: {},
     } as IIntegration;
 
@@ -260,13 +260,13 @@ export const integrationMutations = {
     { _id, brandId, ...fields }: any,
     { models }: IContext,
   ) {
-    const brand = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'mutation',
-      module: 'brands',
-      action: 'updateOne',
-      input: { _id: brandId, fields: { name: fields.brandName } },
-    });
+    // const brand = await sendTRPCMessage({
+    //   pluginName: 'core',
+    //   method: 'mutation',
+    //   module: 'brands',
+    //   action: 'updateOne',
+    //   input: { _id: brandId, fields: { name: fields.brandName } },
+    // });
     const integration = await models.Integrations.getIntegration({ _id });
 
     if (!integration) {
@@ -279,7 +279,7 @@ export const integrationMutations = {
 
     const integrationDocs = {
       name: 'Default brand',
-      brandId: brand._id,
+      // brandId: brand._id,
       channelId: channel?._id,
     } as IIntegration;
 
@@ -433,12 +433,12 @@ export const integrationMutations = {
 
   async integrationsEditCommonFields(
     _root,
-    { _id, name, brandId, details },
+    { _id, name, details },
     { models, subdomain }: IContext,
   ) {
     const integration = await models.Integrations.getIntegration({ _id });
 
-    const doc: any = { name, brandId, details };
+    const doc: any = { name, details };
 
     let { kind } = integration;
     if (kind === 'facebook-messenger' || kind === 'facebook-post') {

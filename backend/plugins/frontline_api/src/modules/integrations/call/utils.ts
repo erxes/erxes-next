@@ -835,9 +835,9 @@ export const updateIntegrationQueues = async (
       integrationId,
     );
     const { queues } = checkedIntegration;
-
+    console.log(queues, 'queues');
     // Prepare update data
-    const updateData = { $set: { queues, ...details } };
+    const updateData = { $set: { queues, ...details }, $upsert: true };
 
     // Update the integration
     const integration = await models.CallIntegrations.findOneAndUpdate(

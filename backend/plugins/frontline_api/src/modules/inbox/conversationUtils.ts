@@ -119,9 +119,9 @@ export const countByConversations = async (
       await countByIntegrationTypes(qb, counts);
       break;
 
-    case 'byBrands':
-      await countByBrands(qb, counts);
-      break;
+    // case 'byBrands':
+    //   await countByBrands(qb, counts);
+    //   break;
 
     case 'byTags':
       await countByTags(qb, counts);
@@ -398,10 +398,10 @@ export class CommonBuilder<IArgs extends IListArgs> {
       await this.channelFilter(this.params.channelId);
     }
 
-    // filter by brand
-    if (this.params.brandId) {
-      await this.brandFilter(this.params.brandId);
-    }
+    // // filter by brand
+    // if (this.params.brandId) {
+    //   await this.brandFilter(this.params.brandId);
+    // }
 
     // unassigned
     if (this.params.unassigned) {

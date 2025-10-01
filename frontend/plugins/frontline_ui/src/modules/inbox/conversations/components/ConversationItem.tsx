@@ -35,7 +35,7 @@ export const ConversationItem = ({
       _id: integrationId,
     },
   });
-  const { brandId } = integration || {};
+  // const { brandId } = integration || {};
 
   if (inboxLayout === 'split') {
     return (
@@ -55,12 +55,12 @@ export const ConversationItem = ({
                   )}
                 </div>
               </div>
-              <div className="font-normal text-accent-foreground text-xs">
+              {/* <div className="font-normal text-accent-foreground text-xs">
                 <BrandsInline
                   brandIds={[brandId || '']}
                   placeholder={brandId ? 'brand not found' : 'no brand'}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
           <ConversationItemContent />
@@ -75,9 +75,9 @@ export const ConversationItem = ({
         <ConversationSelector />
         <CustomersInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
-        <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
+        {/* <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
           to <BrandsInline brandIds={[brandId || '']} />
-        </div>
+        </div> */}
         <div className="w-32 text-right flex-none">
           {createdAt && (
             <RelativeDateDisplay value={updatedAt || createdAt}>

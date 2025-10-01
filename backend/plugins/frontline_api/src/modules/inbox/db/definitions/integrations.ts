@@ -263,7 +263,7 @@ export const integrationSchema = schemaWrapper(
     createdAt: { type: 'Date', label: 'Created at' },
 
     name: { type: String, label: 'Name' },
-    brandId: { type: String, label: 'Brand' },
+    // brandId: { type: String, label: 'Brand' },
 
     tagIds: { type: [String], label: 'Tags', index: true },
     formId: { type: String, label: 'Form' },

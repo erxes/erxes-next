@@ -30,7 +30,6 @@ export const types = `
    _id: String!
     kind: String!
     name: String!
-    brandId: String!
     languageCode: String
     code: String
     formId: String
@@ -45,8 +44,7 @@ export const types = `
     isActive: Boolean
     isConnected: Boolean
     webhookData: JSON
-
-    brand: Brand
+    channelId: String
 
     channel: Channel
 
@@ -171,7 +169,6 @@ export const queries = `
     kind: String,
     searchValue: String,
     channelId: String!,
-    brandId: String,
     tag: String,
     status: String,
     formLoadType: String,
@@ -183,7 +180,7 @@ export const queries = `
   integrationsGetUsedTypes: [integrationsGetUsedTypes]
   integrationGetLineWebhookUrl(_id: String!): String
   integrationDetail(_id: String!): Integration
-  integrationsTotalCount(kind: String, brandId: String, tag: String, channelId: String, status: String, formLoadType: String): integrationsTotalCount
+  integrationsTotalCount(kind: String, tag: String, channelId: String!, status: String, formLoadType: String): integrationsTotalCount
 `;
 
 export const mutations = `
@@ -199,7 +196,6 @@ export const mutations = `
   integrationsEditMessengerOnboarding(
     _id: String!,
     channelId: String!,
-    brandId: String!,
     brandName: String!,
     languageCode: String
     color: String
@@ -209,7 +205,6 @@ export const mutations = `
   integrationsCreateMessengerIntegration(
     channelId: String!,
     name: String!,
-    brandId: String!,
     languageCode: String
     channelId: String
     ): Integration
@@ -218,7 +213,6 @@ export const mutations = `
     _id: String!,
     channelId: String!,
     name: String!,
-    brandId: String!,
     languageCode: String
     channelId: String
   ): Integration
@@ -239,11 +233,10 @@ export const mutations = `
     kind: String!,
     channelId: String!,
     name: String!,
-    brandId: String!,
     accountId: String,
     data: JSON): Integration
 
-  integrationsEditCommonFields(_id: String!, name: String!, brandId: String!, channelId: String, details: JSON): Integration
+  integrationsEditCommonFields(_id: String!, name: String!, channelId: String, details: JSON): Integration
 
   integrationsRemove(_id: String!): JSON
   integrationsRemoveAccount(_id: String!, kind: String): JSON
@@ -255,14 +248,12 @@ export const mutations = `
 
   integrationsCreateLeadIntegration(
     name: String!,
-    brandId: String!,
     channelId: String
     ): Integration
 
   integrationsEditLeadIntegration(
     _id: String!
     name: String!,
-    brandId: String!,
     channelId: String
   ): Integration
   integrationsCopyLeadIntegration(_id: String!): Integration

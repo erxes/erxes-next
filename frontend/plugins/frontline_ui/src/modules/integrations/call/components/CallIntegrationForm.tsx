@@ -3,8 +3,7 @@ import { Button, Sheet, Form, Input, Checkbox, Spinner } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { CALL_INTEGRATION_FORM_SCHEMA } from '@/integrations/call/constants/callIntegrationAddSchema';
 import { z } from 'zod';
-import { SelectBrand, SelectMember } from 'ui-modules';
-import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
+import { SelectMember } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { callEditSheetAtom } from '@/integrations/call/states/callEditSheetAtom';
 
@@ -35,7 +34,7 @@ export const CallIntegrationForm = ({
               onClick={() => form.handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading && <Spinner size="small" />}
+              {loading && <Spinner size="sm" />}
               Save
             </Button>
           }
@@ -84,33 +83,6 @@ export const CallIntegrationForm = ({
                 <Form.Control>
                   <Input {...field} />
                 </Form.Control>
-                <Form.Message />
-              </Form.Item>
-            )}
-          />
-          <Form.Field
-            name="brandId"
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Label>Select brand</Form.Label>
-                <SelectBrand.FormItem
-                  value={field.value}
-                  onValueChange={(val) => field.onChange(val)}
-                />
-                <Form.Message />
-              </Form.Item>
-            )}
-          />
-          <Form.Field
-            name="channelIds"
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Label>Select channels</Form.Label>
-                <SelectChannel.FormItem
-                  value={field.value}
-                  mode="multiple"
-                  onValueChange={(val) => field.onChange(val)}
-                />
                 <Form.Message />
               </Form.Item>
             )}
@@ -168,20 +140,6 @@ export const CallIntegrationForm = ({
                   <IconTrash />
                 </Button>
               </div>
-              <Form.Field
-                name={`operators.${index}.gsForwardAgent`}
-                render={({ field }) => (
-                  <Form.Item className="mt-4">
-                    <div className="flex gap-2 items-center">
-                      <Form.Control>
-                        <Checkbox {...field} />
-                      </Form.Control>
-                      <Form.Label variant="peer">Is forwarding</Form.Label>
-                    </div>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
             </div>
           ))}
           <Button
@@ -192,7 +150,6 @@ export const CallIntegrationForm = ({
                 userId: undefined,
                 gsUsername: '',
                 gsPassword: '',
-                gsForwardAgent: false,
               })
             }
           >

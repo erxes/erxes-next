@@ -20,7 +20,6 @@ export const INTEGRATION_INLINE = gql`
     integrationDetail(_id: $_id) {
       _id
       kind
-      brandId
     }
   }
 `;
@@ -32,7 +31,6 @@ export const GET_INTEGRATIONS_BY_KIND = gql`
         _id
         name
         kind
-        brandId
         isActive
         healthStatus
       }

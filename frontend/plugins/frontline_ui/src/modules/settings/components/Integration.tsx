@@ -1,7 +1,6 @@
 import { cn } from 'erxes-ui';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useIntegrationContext } from '../hooks/useIntegrationContext';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 
 type Props = {

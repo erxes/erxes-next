@@ -162,7 +162,6 @@ const mutationFilterParams = `
   channelId: String
   status: String
   unassigned: String
-  brandId: String
   tag: String
   integrationType: String
   participating: String

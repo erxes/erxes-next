@@ -32,7 +32,6 @@ export interface IArchiveParams {
 
 export interface IOnboardingParamsEdit extends IOnboardingParams {
   _id: string;
-  brandId: string;
 }
 
 export interface IMessengerOnlineHours {
@@ -160,7 +159,6 @@ export interface IIntegration {
   kind: string;
   channelId: string;
   name?: string;
-  brandId?: string;
   languageCode?: string;
   tagIds?: string[];
   formId?: string;

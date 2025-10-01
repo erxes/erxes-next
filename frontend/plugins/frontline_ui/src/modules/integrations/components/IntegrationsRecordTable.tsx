@@ -123,19 +123,6 @@ export const integrationTypeColumns = ({
     size: 250,
   },
   {
-    id: 'brandId',
-    accessorKey: 'brandId',
-    header: () => <RecordTable.InlineHead label="Brand" />,
-    cell: ({ cell }) => {
-      return (
-        <RecordTableInlineCell>
-          <BrandsInline brandIds={[cell.getValue() as string]} />
-        </RecordTableInlineCell>
-      );
-    },
-    size: 235,
-  },
-  {
     id: 'isActive',
     accessorKey: 'isActive',
     header: () => <RecordTable.InlineHead label="Status" />,

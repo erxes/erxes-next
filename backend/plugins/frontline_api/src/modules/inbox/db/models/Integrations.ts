@@ -15,7 +15,7 @@ import { integrationSchema } from '~/modules/inbox/db/definitions/integrations';
 export interface IMessengerIntegration {
   kind: string;
   name: string;
-  brandId: string;
+  // brandId: string;
   languageCode: string;
   channelId: string;
 }
@@ -23,14 +23,14 @@ export interface IMessengerIntegration {
 export interface IExternalIntegrationParams {
   kind: string;
   name: string;
-  brandId: string;
+  // brandId: string;
   accountId: string;
   channelId: string;
 }
 
 interface IIntegrationBasicInfo {
   name: string;
-  brandId: string;
+  // brandId: string;
 }
 
 /**
@@ -198,7 +198,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
           $project: {
             isActive: 1,
             name: 1,
-            brandId: 1,
+            // brandId: 1,
             tagIds: 1,
             formId: 1,
             kind: 1,
@@ -255,7 +255,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
     ) {
       const integration = await models.Integrations.findOne({
         kind: 'messenger',
-        brandId: doc.brandId,
+        // brandId: doc.brandId,
       });
 
       if (integration) {
@@ -275,7 +275,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
       const integration = await models.Integrations.findOne({
         _id: { $ne: _id },
         kind: 'messenger',
-        brandId: doc.brandId,
+        // brandId: doc.brandId,
       });
 
       if (integration) {

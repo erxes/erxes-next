@@ -167,20 +167,18 @@ export default class Builder {
   public async integrationsFilter(): Promise<IIntersectIntegrationIds> {
     let availIntegrationIds: string[] = [];
 
-    if (this.user.role && this.user.role === 'system') {
+    if (this.user.role === 'system') {
       const integrations = await this.models.Integrations.find({}).lean();
       availIntegrationIds = integrations.map((i) => i._id.toString());
     } else {
-      const channelMembers = await this.models.ChannelMembers.find({
+      const channelMemberships = await this.models.ChannelMembers.find({
         memberId: this.user._id,
       }).lean();
 
-      const channelIds = channelMembers.map((m) => m.channelId);
+      const channelIds = channelMemberships.map((m) => m.channelId);
 
       if (channelIds.length === 0) {
-        return {
-          integrationId: { $in: [] },
-        };
+        return { integrationId: { $in: [] } };
       }
 
       const integrations = await this.models.Integrations.find({
@@ -205,9 +203,7 @@ export default class Builder {
     // filter by brand
     if (this.params.brandId) {
       const brandQuery = await this.brandFilter(this.params.brandId);
-      if (brandQuery) {
-        nestedIntegrationIds.push(brandQuery);
-      }
+      if (brandQuery) nestedIntegrationIds.push(brandQuery);
     }
 
     return this.intersectIntegrationIds(...nestedIntegrationIds);
@@ -217,16 +213,13 @@ export default class Builder {
   public async channelFilter(
     channelId: string,
   ): Promise<{ integrationId: IIn }> {
-    const channelMembers = await this.models.ChannelMembers.find({
+    const isMember = await this.models.ChannelMembers.exists({
       channelId,
-    }).lean();
+      memberId: this.user._id,
+    });
 
-    const memberIds = channelMembers.map((m) => m.memberId);
-
-    if (!memberIds.includes(this.user._id)) {
-      return {
-        integrationId: { $in: [] },
-      };
+    if (!isMember) {
+      return { integrationId: { $in: [] } };
     }
 
     const integrations = await this.models.Integrations.find({
@@ -248,19 +241,15 @@ export default class Builder {
   public async brandFilter(
     brandId: string,
   ): Promise<{ integrationId: IIn } | undefined> {
-    const integrations = await this.models.Integrations.findIntegrations({
+    const integrations = await this.models.Integrations.find({
       brandId,
-    });
+    }).lean();
 
-    if (integrations.length === 0) {
-      return;
-    }
+    if (integrations.length === 0) return;
 
-    const integrationIds = _.pluck(integrations, '_id');
+    const integrationIds = integrations.map((i) => i._id.toString());
 
-    return {
-      integrationId: { $in: integrationIds },
-    };
+    return { integrationId: { $in: integrationIds } };
   }
 
   // filter all unassigned

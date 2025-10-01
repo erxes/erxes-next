@@ -5,7 +5,7 @@ import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 import { IChannelDocument } from '~/modules/channel/@types/channel';
 const generateFilterQuery = async (
-  { kind, channelId, brandId, searchValue, tag, status },
+  { kind, channelId, searchValue, tag, status },
   models,
 ) => {
   const query: any = {};
@@ -19,10 +19,10 @@ const generateFilterQuery = async (
     query.channelId = channelId;
   }
 
-  // filter integrations by brand
-  if (brandId) {
-    query.brandId = brandId;
-  }
+  // // filter integrations by brand
+  // if (brandId) {
+  //   query.brandId = brandId;
+  // }
 
   if (searchValue) {
     query.name = new RegExp(`.*${searchValue}.*`, 'i');
@@ -70,7 +70,6 @@ export const integrationQueries = {
       kind: string;
       searchValue: string;
       channelId: string;
-      brandId: string;
       tag: string;
       status: string;
       formLoadType: string;
@@ -175,7 +174,7 @@ export const integrationQueries = {
     args: {
       kind: string;
       channelId: string;
-      brandId: string;
+      // brandId: string;
       tag: string;
       searchValue: string;
       status: string;
@@ -249,23 +248,23 @@ export const integrationQueries = {
     }
     // Counting integrations by brand
 
-    const brands = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'brands',
-      action: 'find',
-      input: {
-        query: {},
-      },
-    });
-    for (const brand of brands) {
-      const countQueryResult = await count({ brandId: brand._id, ...qry });
-      counts.byBrand[brand._id] = !args.brandId
-        ? countQueryResult
-        : args.brandId === brand._id
-        ? countQueryResult
-        : 0;
-    }
+    // const brands = await sendTRPCMessage({
+    //   pluginName: 'core',
+    //   method: 'query',
+    //   module: 'brands',
+    //   action: 'find',
+    //   input: {
+    //     query: {},
+    //   },
+    // });
+    // for (const brand of brands) {
+    //   const countQueryResult = await count({ brandId: brand._id, ...qry });
+    //   counts.byBrand[brand._id] = !args.brandId
+    //     ? countQueryResult
+    //     : args.brandId === brand._id
+    //     ? countQueryResult
+    //     : 0;
+    // }
 
     counts.byStatus.active = await count({ isActive: true, ...qry });
     counts.byStatus.archived = await count({ isActive: false, ...qry });
