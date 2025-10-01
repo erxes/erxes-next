@@ -38,6 +38,9 @@ jobs:
       - name: Build shared module
         run: pnpm nx build erxes-api-shared
 
+      - name: Build operation_api
+        run: pnpm nx build operation_api
+
       - name: Login to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
@@ -48,8 +51,8 @@ jobs:
       - name: Build and push Docker image
         if: github.event_name != 'pull_request'
         run: |
-          pnpm nx docker-build operation_api
-          docker tag erxes/erxes-next-operation_api erxes/erxes-next-operation_api:latest
-          docker tag erxes/erxes-next-operation_api erxes/erxes-next-operation_api:${{ github.sha }}
+          docker build -f backend/plugins/operation_api/Dockerfile . \
+            -t erxes/erxes-next-operation_api:latest \
+            -t erxes/erxes-next-operation_api:${{ github.sha }}
           docker push erxes/erxes-next-operation_api:latest
           docker push erxes/erxes-next-operation_api:${{ github.sha }}
