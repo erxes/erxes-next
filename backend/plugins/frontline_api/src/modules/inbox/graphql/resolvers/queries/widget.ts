@@ -1,0 +1,416 @@
+import { IBrowserInfo } from 'erxes-api-shared/core-types';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import * as momentTz from 'moment-timezone';
+import { IModels, IContext } from '~/connectionResolvers';
+import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
+import { getOrCreateEngageMessage } from '~/modules/inbox/widgetUtils';
+
+const isMessengerOnline = async (
+  models: IModels,
+  integration: IIntegrationDocument,
+  userTimezone?: string,
+) => {
+  if (!integration.messengerData) {
+    return false;
+  }
+
+  const { availabilityMethod, isOnline, onlineHours, timezone } =
+    integration.messengerData;
+
+  const modifiedIntegration = {
+    ...(integration.toJSON ? integration.toJSON() : integration),
+    messengerData: {
+      availabilityMethod,
+      isOnline,
+      onlineHours,
+      timezone,
+    },
+  };
+
+  return models.Integrations.isOnline(modifiedIntegration, userTimezone);
+};
+
+const fetchUsers = async (
+  models: IModels,
+  subdomain: string,
+  integration: IIntegrationDocument,
+  query: any,
+) => {
+  const users = await sendTRPCMessage({
+    pluginName: 'core',
+    method: 'query',
+    module: 'users',
+    action: 'find',
+    input: {
+      query: {
+        query,
+      },
+    },
+  });
+
+  for (const user of users) {
+    if (user.details && user.details.location) {
+      user.isOnline = await isMessengerOnline(
+        models,
+        integration,
+        user.details.location,
+      );
+    }
+  }
+
+  return users;
+};
+
+const getWidgetMessages = (models: IModels, conversationId: string) => {
+  return models.ConversationMessages.find({
+    conversationId,
+    internal: false,
+    // fromBot: { $exists: false }
+  }).sort({
+    createdAt: 1,
+  });
+};
+
+export const widgetQueries = {
+  async widgetsTicketComments(
+    _root,
+    args: { typeId?: string },
+    { subdomain }: IContext,
+  ) {
+    const { typeId } = args;
+
+    // const data = await sendTicketsMessage({
+    //   subdomain,
+    //   action: 'widgets.comments.find',
+    //   data: { typeId },
+    //   isRPC: true,
+    //   defaultValue: null,
+    // });
+    // return data;
+  },
+  async widgetsTicketCustomerDetail(
+    _root,
+    args: { customerId?: string; type?: string },
+    { models, subdomain }: IContext,
+  ) {
+    const { customerId } = args;
+    // return await sendCoreMessage({
+    //   subdomain,
+    //   action: 'customers.findOne',
+    //   data: { _id: customerId },
+    //   isRPC: true,
+    //   defaultValue: null,
+    // });
+  },
+  async widgetsTicketActivityLogs(
+    _root,
+    args: { contentId?: string; contentType?: string },
+    { subdomain }: IContext,
+  ) {
+    const { contentId, contentType } = args;
+    // return await sendCoreMessage({
+    //   subdomain,
+    //   action: 'activityLogs.findOne',
+    //   data: { contentType, contentId },
+    //   isRPC: true,
+    //   defaultValue: null,
+    // });
+  },
+
+  async widgetsGetMessengerIntegration(
+    _root,
+    args: { brandCode: string },
+    { models }: IContext,
+  ) {
+    return models.Integrations.getWidgetIntegration(
+      args.brandCode,
+      'messenger',
+    );
+  },
+
+  async widgetsConversations(
+    _root,
+    args: { integrationId: string; customerId?: string; visitorId?: string },
+    { models }: IContext,
+  ) {
+    const { integrationId, customerId, visitorId } = args;
+
+    const query = customerId
+      ? { integrationId, customerId }
+      : { integrationId, visitorId };
+
+    return models.Conversations.find(query).sort({ updatedAt: -1 });
+  },
+  async widgetsConversationDetail(
+    _root,
+    args: { _id: string; integrationId: string },
+    { models, subdomain }: IContext,
+  ) {
+    try {
+      const { _id, integrationId } = args;
+
+      const [conversation, integration] = await Promise.all([
+        models.Conversations.findOne({ _id, integrationId }),
+        models.Integrations.findOne({ _id: integrationId }),
+      ]);
+
+      if (!integration) return null;
+
+      type GetStartedCondition = { isSelected?: boolean } | any;
+
+      let getStartedCondition: GetStartedCondition = false;
+
+      //   if (isEnabled('automations')) {
+      //     const getStarted = await sendAutomationsMessage({
+      //       subdomain,
+      //       action: 'trigger.find',
+      //       data: {
+      //         query: {
+      //           triggerType: 'inbox:messages',
+      //           botId: integration._id,
+      //         },
+      //       },
+      //       isRPC: true,
+      //     }).catch((error) => {
+      //       throw error;
+      //     });
+
+      //     getStartedCondition = (
+      //       getStarted[0]?.triggers[0]?.config?.conditions || []
+      //     ).find((condition) => condition.type === 'getStarted');
+      //   }
+
+      const messengerData = integration.messengerData || {
+        supporterIds: [],
+        persistentMenus: [],
+        botGreetMessage: '',
+      };
+
+      if (!conversation) {
+        return {
+          persistentMenus: messengerData.persistentMenus,
+          botGreetMessage: messengerData.botGreetMessage,
+          getStarted:
+            getStartedCondition && typeof getStartedCondition !== 'boolean'
+              ? getStartedCondition.isSelected ?? false
+              : false,
+          messages: [],
+          isOnline: await isMessengerOnline(models, integration),
+        };
+      }
+
+      const [messages, participatedUsers, readUsers, supporters, isOnline] =
+        await Promise.all([
+          getWidgetMessages(models, conversation._id),
+          fetchUsers(models, subdomain, integration, {
+            _id: { $in: conversation.participatedUserIds },
+          }),
+          fetchUsers(models, subdomain, integration, {
+            _id: { $in: conversation.readUserIds },
+          }),
+          fetchUsers(models, subdomain, integration, {
+            _id: { $in: messengerData.supporterIds },
+          }),
+          isMessengerOnline(models, integration),
+        ]);
+
+      return {
+        _id,
+        persistentMenus: messengerData.persistentMenus,
+        botGreetMessage: messengerData.botGreetMessage,
+        getStarted: getStartedCondition
+          ? getStartedCondition.isSelected
+          : false,
+        messages,
+        isOnline,
+        operatorStatus: conversation.operatorStatus,
+        participatedUsers,
+        readUsers,
+        supporters,
+      };
+    } catch (error) {
+      throw new Error('Failed to fetch conversation details');
+    }
+  },
+
+  async widgetsMessages(
+    _root,
+    args: { conversationId: string },
+    { models }: IContext,
+  ) {
+    const { conversationId } = args;
+
+    return getWidgetMessages(models, conversationId);
+  },
+
+  async widgetsUnreadCount(
+    _root,
+    args: { conversationId: string },
+    { models }: IContext,
+  ) {
+    const { conversationId } = args;
+
+    return models.ConversationMessages.widgetsGetUnreadMessagesCount(
+      conversationId,
+    );
+  },
+
+  async widgetsTotalUnreadCount(
+    _root,
+    args: { integrationId: string; customerId?: string },
+    { models }: IContext,
+  ) {
+    const { integrationId, customerId } = args;
+
+    if (!customerId) {
+      return 0;
+    }
+    // find conversations
+    const convs = await models.Conversations.find({
+      integrationId,
+      customerId,
+    });
+
+    // find read messages count
+    return models.ConversationMessages.countDocuments(
+      models.Conversations.widgetsUnreadMessagesQuery(convs),
+    );
+  },
+
+  async widgetsMessengerSupporters(
+    _root,
+    { integrationId }: { integrationId: string },
+    { models, subdomain }: IContext,
+  ) {
+    const integration = await models.Integrations.findOne({
+      _id: integrationId,
+    });
+
+    let timezone = momentTz.tz.guess();
+
+    if (!integration) {
+      return {
+        supporters: [],
+        isOnline: false,
+      };
+    }
+
+    const messengerData = integration.messengerData || { supporterIds: [] };
+
+    if (integration.messengerData && integration.messengerData.timezone) {
+      timezone = integration.messengerData.timezone;
+    }
+
+    return {
+      supporters: await fetchUsers(models, subdomain, integration, {
+        _id: { $in: messengerData.supporterIds || [] },
+      }),
+      isOnline: await isMessengerOnline(models, integration),
+      timezone,
+    };
+  },
+
+  async widgetsGetEngageMessage(
+    _root,
+    {
+      integrationId,
+      customerId,
+      visitorId,
+      browserInfo,
+    }: {
+      integrationId: string;
+      customerId?: string;
+      visitorId?: string;
+      browserInfo: IBrowserInfo;
+    },
+    { models, subdomain }: IContext,
+  ) {
+    return getOrCreateEngageMessage(
+      models,
+      subdomain,
+      integrationId,
+      browserInfo,
+      visitorId,
+      customerId,
+    );
+  },
+
+  async widgetsProductCategory(_root, { _id }: { _id: string }) {
+    return {
+      __typename: 'ProductCategory',
+      _id,
+    };
+  },
+
+  /*
+   * Search published articles that contain searchString (case insensitive)
+   * in a topic found by topicId
+   * @return {Promise} searched articles
+   */
+  async widgetsKnowledgeBaseArticles(
+    _root: any,
+    args: { topicId: string; searchString: string },
+    { subdomain }: IContext,
+  ) {
+    const { topicId, searchString = '' } = args;
+
+    return await sendTRPCMessage({
+      pluginName: 'content',
+      method: 'query',
+      module: 'articles',
+      action: 'find',
+      input: {
+        query: {
+          topicId,
+          content: { $regex: `.*${searchString.trim()}.*`, $options: 'i' },
+          status: 'publish',
+        },
+      },
+    });
+  },
+
+  /**
+   * Topic detail
+   */
+  async widgetsKnowledgeBaseTopicDetail(
+    _root,
+    { _id }: { _id: string },
+    { subdomain }: IContext,
+  ) {
+    // const commonOptions = { subdomain, isRPC: true };
+
+    // const topic = await sendTRPCMessage({
+    //   pluginName: 'content',
+    //   method: 'query',
+    //   module: 'topics',
+    //   action: 'findOne',
+    //   input: {
+    //     query: {
+    //       _id,
+    //     },
+    //   },
+    // });
+
+    // if (topic && topic.createdBy) {
+    //   const user = await sendCoreMessage({
+    //     ...commonOptions,
+    //     action: 'users.findOne',
+    //     data: {
+    //       _id: topic.createdBy,
+    //     },
+    //     defaultValue: {},
+    //   });
+
+    //   sendCoreMessage({
+    //     subdomain,
+    //     action: 'registerOnboardHistory',
+    //     data: {
+    //       type: 'knowledgeBaseInstalled',
+    //       user,
+    //     },
+    //   });
+    // }
+
+    return;
+  },
+};
