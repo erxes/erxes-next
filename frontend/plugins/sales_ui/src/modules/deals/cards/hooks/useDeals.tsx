@@ -46,7 +46,7 @@ export const useDeals = (
   const [qryStrPipelineId] = useQueryState('pipelineId');
 
   const lastPipelineId = pipelineId || qryStrPipelineId || '';
-  
+
   const currentUser = useAtomValue(currentUserState);
   const { deals } = data || {};
 
@@ -55,7 +55,7 @@ export const useDeals = (
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   useEffect(() => {
-    console.log('111111111111111111111111111111111')
+    console.log('111111111111111111111111111111111');
     const unsubscribe = subscribeToMore<any>({
       document: DEAL_LIST_CHANGED,
       variables: {
@@ -64,17 +64,24 @@ export const useDeals = (
         filter: options?.variables,
       },
       updateQuery: (prev, { subscriptionData }) => {
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         if (!prev || !subscriptionData.data) return prev;
 
-        console.log(subscriptionData.data.salesDealListChanged, 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
-        
+        console.log(
+          subscriptionData.data.salesDealListChanged,
+          'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
+        );
 
         const { action, deal } = subscriptionData.data.salesDealListChanged;
         const currentList = prev.deals.list;
 
         let updatedList = currentList;
-        console.log(currentList,'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu', action, deal)
+        console.log(
+          currentList,
+          'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu',
+          action,
+          deal,
+        );
 
         if (action === 'add') {
           const exists = currentList.some(
@@ -86,10 +93,10 @@ export const useDeals = (
         }
 
         if (action === 'edit') {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeee', currentList, )
+          console.log('eeeeeeeeeeeeeeeeeeeeeeeee', currentList);
           updatedList = currentList.map((item: IDeal) => {
-            console.log(item.name, deal.name, 'nnnnnnnnnnnnnnnnnnnnnnnnnnn')
-            return item._id === deal._id ? { ...item, ...deal } : item
+            console.log(item.name, deal.name, 'nnnnnnnnnnnnnnnnnnnnnnnnnnn');
+            return item._id === deal._id ? { ...item, ...deal } : item;
           });
         }
 
@@ -109,15 +116,15 @@ export const useDeals = (
               action === 'add'
                 ? prev.deals.totalCount + 1
                 : action === 'remove'
-                  ? prev.deals.totalCount - 1
-                  : prev.deals.totalCount,
+                ? prev.deals.totalCount - 1
+                : prev.deals.totalCount,
           },
         };
       },
     });
 
     return unsubscribe;
-  }, [options?.variables, subscribeToMore]);
+  }, [options?.variables, subscribeToMore, currentUser?._id, lastPipelineId]);
 
   const handleFetchMore = ({
     direction,

@@ -33,9 +33,13 @@ export function PipelineFormBar() {
 
   const {
     methods,
-    methods: { reset, handleSubmit },
+    methods: {
+      reset,
+      handleSubmit,
+      formState: { errors },
+    },
   } = usePipelineForm();
-
+  console.log('ee', errors);
   const { stages: initialStages, loading: stagesLoading } = useStages({
     variables: {
       pipelineId,
@@ -146,7 +150,7 @@ export function PipelineFormBar() {
         departmentIds: pipelineDetail?.departmentIds || [],
         branchIds: pipelineDetail?.branchIds || [],
         memberIds: pipelineDetail?.memberIds || [],
-        stages: initialStages || [],
+        stages: methods.getValues('stages') || [],
         numberConfig: pipelineDetail?.numberConfig || '',
         numberSize: pipelineDetail?.numberSize || '',
         nameConfig: pipelineDetail?.nameConfig || '',
@@ -172,7 +176,7 @@ export function PipelineFormBar() {
         isCheckDepartment: false,
       });
     }
-  }, [pipelineId, pipelineDetail, reset, boardId, initialStages]);
+  }, [pipelineId, pipelineDetail, reset, boardId, methods]);
 
   return (
     <div className="ml-auto flex items-center gap-3">
