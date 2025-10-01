@@ -5,7 +5,7 @@ import * as path from 'path';
 export default defineConfig({
   base: '/pl:frontline/widget/',
   server: {
-    port: 3001,
+    port: 5173,
     hmr: true
   },
   plugins: [react()],
@@ -13,6 +13,13 @@ export default defineConfig({
   build: {
     outDir: '../public/widget',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'erxes-messenger-widget-bundle.js',
+        chunkFileNames: 'chunks/erxes-messenger-widget-bundle.js',
+        assetFileNames: 'assets/erxes-messenger-widget-bundle.[ext]'
+      }
+    }
   },
   resolve: {
     alias: {

@@ -7,6 +7,9 @@ export const GET_INTEGRATION_DETAIL = gql`
       kind
       name
       brandId
+      brand {
+        code
+      }
       languageCode
       code
       tagIds

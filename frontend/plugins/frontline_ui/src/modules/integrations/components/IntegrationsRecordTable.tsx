@@ -17,6 +17,7 @@ import { RemoveIntegration } from '@/integrations/components/RemoveIntegration';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import clsx from 'clsx';
 import { IntegrationType } from '@/types/Integration';
+import { InstallIntegration } from '@/integrations/components/InstallIntegration';
 
 export const IntegrationsRecordTable = ({
   Actions,
@@ -178,11 +179,15 @@ export const integrationTypeColumns = ({
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       const { isActive, _id, name } = cell.row.original;
+      const { integrationType } = useParams();
       return (
         <div className="flex items-center gap-1.5 px-2">
           <Actions cell={cell} />
           <ArchiveIntegration _id={_id} name={name} isActive={isActive} />
           <RemoveIntegration _id={_id} name={name} />
+          {integrationType === IntegrationType.ERXES_MESSENGER && (
+            <InstallIntegration cell={cell} />
+          )}
         </div>
       );
     },

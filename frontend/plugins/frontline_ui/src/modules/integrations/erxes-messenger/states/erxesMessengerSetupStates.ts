@@ -18,6 +18,12 @@ export const erxesMessengerSetupStepAtom = atomWithStorage<number>(
 export const erxesMessengerSetupSheetOpenAtom = atom(false);
 
 export const erxesMessengerSetupEditSheetOpenAtom = atom<false | string>(false);
+export const erxesMessengerSetupInstallDialogOpenAtom = atom<false | string>(
+  false,
+);
+export const erxesMessengerSetupInstallDialogTabAtom = atom<
+  'basic' | undefined
+>('basic');
 
 export const settedIntegrationDetailAtom = atomWithStorage(
   'settedIntegrationDetail',

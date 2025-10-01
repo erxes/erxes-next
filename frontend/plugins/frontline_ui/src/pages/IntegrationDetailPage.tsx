@@ -15,6 +15,14 @@ const ErxesMessengerDetail = lazy(() =>
   ),
 );
 
+const InstallErxesMessengerDialog = lazy(() =>
+  import(
+    '@/integrations/erxes-messenger/components/InstallErxesMessengerDialog'
+  ).then((module) => ({
+    default: module.InstallErxesMessengerDialog,
+  })),
+);
+
 const ErxesMessengerActions = lazy(() =>
   import('@/integrations/erxes-messenger/components/ErxesMessengerDetail').then(
     (module) => ({
@@ -86,6 +94,9 @@ export const IntegrationDetailPage = () => {
       <Suspense fallback={<div />}>
         {integrationType === IntegrationType.ERXES_MESSENGER && (
           <ErxesMessengerDetail />
+        )}
+        {integrationType === IntegrationType.ERXES_MESSENGER && (
+          <InstallErxesMessengerDialog />
         )}
         {integrationType === IntegrationType.FACEBOOK_MESSENGER && (
           <FacebookIntegrationDetail />

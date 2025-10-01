@@ -85,3 +85,7 @@ export interface MessengerSetupPayload {
     logo?: string;
   };
 }
+
+export enum EMInstallDialogTab {
+  BASIC = 'basic',
+}

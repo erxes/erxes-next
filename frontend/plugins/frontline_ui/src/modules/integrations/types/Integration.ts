@@ -3,6 +3,9 @@ export interface IIntegration {
   name: string;
   kind: string;
   brandId: string;
+  brand?: {
+    code: string;
+  };
   channelIds?: string[];
   channels?: { _id: string }[];
 }
