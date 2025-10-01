@@ -3,37 +3,33 @@ FROM node:22-alpine AS base
 WORKDIR /app
 RUN npm install -g pnpm
 
-# Dependencies (install all)
+# Dependencies (production only)
 FROM base AS deps
+# Copy root manifests
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
+# Copy only the package.json files for selective deps resolution
 COPY backend/plugins/operation_api/package.json backend/plugins/operation_api/
 COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
-RUN pnpm install --frozen-lockfile
 
-# Prune only production deps
-FROM deps AS pruned
-RUN pnpm prune --prod \
-  && pnpm store prune \
-  && rm -rf /root/.pnpm-store
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile
 
 # Runtime image
-FROM node:22-alpine AS runtime
+FROM base AS runtime
 WORKDIR /app
 
-# Copy only dist + package.json (NO sources)
-COPY backend/plugins/operation_api/dist ./backend/plugins/operation_api/dist
-COPY backend/plugins/operation_api/package.json ./backend/plugins/operation_api/
-COPY backend/erxes-api-shared/dist ./backend/erxes-api-shared/dist
-COPY backend/erxes-api-shared/package.json ./backend/erxes-api-shared/
+# Copy built dist from CI (nx build already ran in workflow)
+COPY backend/plugins/operation_api ./backend/plugins/operation_api
+COPY backend/erxes-api-shared ./backend/erxes-api-shared
 
-# Copy pruned production node_modules
-COPY --from=pruned /app/node_modules ./node_modules
-COPY --from=pruned /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
-COPY --from=pruned /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
+# Copy production node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
+COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
 # Environment & security
 ENV NODE_ENV=production
 USER 1000
 
-# Start the app
+# Run app
 CMD ["node", "backend/plugins/operation_api/dist/src/main.js"]
