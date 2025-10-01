@@ -1,22 +1,26 @@
-import { ICompany } from '../types';
+import {
+  Button,
+  Combobox,
+  Command,
+  Filter,
+  Popover,
+  PopoverScoped,
+  RecordTableInlineCell,
+  cn,
+  useFilterContext,
+  useQueryState,
+} from 'erxes-ui';
+import { IconBuilding, IconPlus } from '@tabler/icons-react';
 import {
   SelectCompanyContext,
   useSelectCompanyContext,
 } from 'ui-modules/modules/contacts/contexts/SelectCompanyContext';
+
+import { CompaniesInline } from './CompaniesInline';
+import { ICompany } from '../types';
 import { useCompanies } from 'ui-modules/modules/contacts/hooks/useCompanies';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
-import {
-  Button,
-  cn,
-  Combobox,
-  Command,
-  Popover,
-  PopoverScoped,
-  RecordTableInlineCell,
-} from 'erxes-ui';
-import { CompaniesInline } from './CompaniesInline';
-import { IconPlus } from '@tabler/icons-react';
 
 interface SelectCompanyProviderProps {
   children: React.ReactNode;
@@ -275,6 +279,98 @@ const SelectCompanyDetail = ({
   );
 };
 
+export const SelectCompanyFilterItem = ({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) => {
+  return (
+    <Filter.Item value={value}>
+      <IconBuilding />
+      {label}
+    </Filter.Item>
+  );
+};
+
+export const SelectCompanyFilterView = ({
+  mode,
+  filterKey,
+}: {
+  mode: 'single' | 'multiple';
+  filterKey: string;
+}) => {
+  const [query, setQuery] = useQueryState<string[] | string | undefined>(
+    filterKey,
+  );
+  const { resetFilterState } = useFilterContext();
+
+  return (
+    <Filter.View filterKey={filterKey}>
+      <SelectCompanyProvider
+        mode={mode}
+        value={query || []}
+        onValueChange={(value) => {
+          setQuery(value);
+          resetFilterState();
+        }}
+      >
+        <SelectCompany.Content />
+      </SelectCompanyProvider>
+    </Filter.View>
+  );
+};
+
+export const SelectCompanyFilterBar = ({
+  mode = 'multiple',
+  filterKey,
+  label,
+}: {
+  mode: 'single' | 'multiple';
+  filterKey: string;
+  label: string;
+}) => {
+  const [query, setQuery] = useQueryState<string[]>(filterKey);
+  const [open, setOpen] = useState<boolean>(false);
+
+  if (!query) {
+    return null;
+  }
+
+  return (
+    <Filter.BarItem queryKey={filterKey}>
+      <Filter.BarName>
+        <IconBuilding />
+        {label}
+      </Filter.BarName>
+      <SelectCompanyProvider
+        mode={mode}
+        value={query || []}
+        onValueChange={(value) => {
+          if (value && value.length > 0) {
+            setQuery(value as string[]);
+          } else {
+            setQuery(null);
+          }
+          setOpen(false);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Filter.BarButton filterKey={filterKey}>
+              <SelectCompanyValue />
+            </Filter.BarButton>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <SelectCompany.Content />
+          </Combobox.Content>
+        </Popover>
+      </SelectCompanyProvider>
+    </Filter.BarItem>
+  );
+};
+
 export const SelectCompany = Object.assign(SelectCompanyRoot, {
   Provider: SelectCompanyProvider,
   Content: SelectCompanyContent,
@@ -283,4 +379,7 @@ export const SelectCompany = Object.assign(SelectCompanyRoot, {
   Value: SelectCompanyValue,
   Badges: SelectCompanyBadgesView,
   Detail: SelectCompanyDetail,
+  FilterItem: SelectCompanyFilterItem,
+  FilterView: SelectCompanyFilterView,
+  FilterBar: SelectCompanyFilterBar,
 });

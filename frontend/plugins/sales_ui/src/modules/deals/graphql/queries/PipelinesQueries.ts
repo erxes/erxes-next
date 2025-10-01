@@ -35,8 +35,8 @@ export const GET_PIPELINE_DETAIL = gql`
 `;
 
 export const GET_PIPELINE_LABELS = gql`
-  query SalesPipelineLabels($pipelineId: String!) {
-    salesPipelineLabels(pipelineId: $pipelineId) {
+  query SalesPipelineLabels($pipelineId: String, $pipelineIds: [String]) {
+    salesPipelineLabels(pipelineId: $pipelineId, pipelineIds: $pipelineIds) {
       ${pipelineLabelFields}
     }
   }

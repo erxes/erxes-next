@@ -16,62 +16,22 @@ import {
 import { FilterItem } from '../types/actionBarTypes';
 
 export const ActionBarFilters: FilterItem[][] = [
+  [{ key: 'companyIds', value: 'Company / Project', icon: IconBuilding }],
   [
-    {
-      icon: IconBuilding,
-      value: 'Company / Project',
-    },
+    { key: 'createdByIds', value: 'Created By', icon: IconUserPlus },
+    { key: 'assignedUserIds', value: 'Assigned To', icon: IconUserShare },
   ],
   [
-    {
-      icon: IconUserPlus,
-      value: 'Created By',
-    },
-    {
-      icon: IconUserShare,
-      value: 'Assigned To',
-    },
+    { key: 'createdStartDate', value: 'Date created', icon: IconCalendar },
+    { key: 'startDateStartDate', value: 'Start date', icon: IconCalendarBolt },
+    { key: 'startDateEndDate', value: 'End date', icon: IconCalendarX },
+    { key: 'cycle', value: 'Cycle', icon: IconCalendarClock },
   ],
   [
-    {
-      icon: IconCalendar,
-      value: 'Date created',
-    },
-    {
-      icon: IconCalendarBolt,
-      value: 'Start date',
-    },
-    {
-      icon: IconCalendarX,
-      value: 'End date',
-    },
-    {
-      icon: IconCalendarClock,
-      value: 'Cycle',
-    },
+    { key: 'priority', value: 'Priority', icon: IconStackFront },
+    { key: 'labelIds', value: 'Label', icon: IconLabel },
+    { key: 'tagIds', value: 'Tags', icon: IconTag },
+    { key: 'awaiting', value: 'Awaiting response', icon: IconLoader },
   ],
-  [
-    {
-      icon: IconStackFront,
-      value: 'Priority',
-    },
-    {
-      icon: IconLabel,
-      value: 'Label',
-    },
-    {
-      icon: IconTag,
-      value: 'Tags',
-    },
-    {
-      icon: IconLoader  ,
-      value: 'Awaiting response',
-    },
-  ],
-  [
-    {
-      icon: IconFilter,
-      value: 'Advanced filters',
-    },
-  ],
+  [{ key: 'advanced', value: 'Advanced filters', icon: IconFilter }],
 ];
