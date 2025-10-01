@@ -16,7 +16,8 @@ FROM base AS runtime
 WORKDIR /app
 
 WORKDIR /app/backend/plugins/operation_api/dist
-RUN pnpm install --filter operation_api, erxes-api-shared
+
+RUN pnpm install
 
 WORKDIR /app
 
