@@ -382,7 +382,7 @@ export const widgetMutations = {
         },
       },
     });
-
+    console.log(brand, 'brand');
     if (!brand) {
       throw new Error('Invalid configuration');
     }
@@ -396,7 +396,7 @@ export const widgetMutations = {
     if (!integration) {
       throw new Error('Integration not found');
     }
-
+    console.log('1');
     let customer;
 
     if (cachedCustomerId || email || phone || code) {
@@ -426,6 +426,7 @@ export const widgetMutations = {
         deviceToken,
         scopeBrandIds: [brand._id],
       };
+      console.log('111');
 
       customer = customer
         ? await sendTRPCMessage({
@@ -453,146 +454,146 @@ export const widgetMutations = {
               },
             },
           });
+      console.log('1221');
+    }
+    if (visitorId) {
+      await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'customers',
+        action: 'createMessengerCustomer',
+        input: {
+          query: {
+            customData,
+          },
+        },
+      });
 
-      if (visitorId) {
-        await sendTRPCMessage({
+      // await sendCoreMessage({
+      //   subdomain,
+      //   action: 'visitor.createOrUpdate',
+      //   data: {
+      //     visitorId,
+      //     integrationId: integration._id,
+      //     scopeBrandIds: [brand._id],
+      //   },
+      // });
+    }
+    console.log('122121');
+    // get or create company
+    if (companyData && companyData.name) {
+      let company = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'companies',
+        action: 'findOne',
+        input: {
+          query: {
+            companyData,
+          },
+        },
+      });
+
+      const { customFieldsData, trackedData } = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'fields',
+        action: 'generateCustomFieldsData',
+        input: {
+          query: {
+            customData: companyData,
+            contentType: 'core:company',
+          },
+        },
+      });
+
+      companyData.customFieldsData = customFieldsData;
+      companyData.trackedData = trackedData;
+
+      if (!company) {
+        companyData.primaryName = companyData.name;
+        companyData.names = [companyData.name];
+
+        company = await sendTRPCMessage({
           pluginName: 'core',
-          method: 'mutation',
-          module: 'customers',
-          action: 'createMessengerCustomer',
+          method: 'query',
+          module: 'companies',
+          action: 'createCompany',
           input: {
             query: {
-              doc,
-              customData,
+              ...companyData,
+              scopeBrandIds: [brand._id],
             },
           },
         });
-
-        // await sendCoreMessage({
-        //   subdomain,
-        //   action: 'visitor.createOrUpdate',
-        //   data: {
-        //     visitorId,
-        //     integrationId: integration._id,
-        //     scopeBrandIds: [brand._id],
-        //   },
-        // });
-      }
-
-      // get or create company
-      if (companyData && companyData.name) {
-        let company = await sendTRPCMessage({
+      } else {
+        company = await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation',
           module: 'companies',
-          action: 'findOne',
+          action: 'updateCompany',
           input: {
             query: {
-              companyData,
+              _id: company._id,
+              doc: companyData,
+              scopeBrandIds: [brand._id],
             },
           },
         });
 
-        const { customFieldsData, trackedData } = await sendTRPCMessage({
-          pluginName: 'core',
-          method: 'query',
-          module: 'fields',
-          action: 'generateCustomFieldsData',
-          input: {
-            query: {
-              customData: companyData,
-              contentType: 'core:company',
-            },
-          },
-        });
-
-        companyData.customFieldsData = customFieldsData;
-        companyData.trackedData = trackedData;
-
-        if (!company) {
-          companyData.primaryName = companyData.name;
-          companyData.names = [companyData.name];
-
-          company = await sendTRPCMessage({
-            pluginName: 'core',
-            method: 'query',
-            module: 'companies',
-            action: 'createCompany',
-            input: {
-              query: {
-                ...companyData,
-                scopeBrandIds: [brand._id],
-              },
-            },
-          });
-        } else {
-          company = await sendTRPCMessage({
-            pluginName: 'core',
-            method: 'mutation',
-            module: 'companies',
-            action: 'updateCompany',
-            input: {
-              query: {
-                _id: company._id,
-                doc: companyData,
-                scopeBrandIds: [brand._id],
-              },
-            },
-          });
-
-          // sendAutomationsMessage({
-          //   subdomain,
-          //   action: 'trigger',
-          //   data: { type: 'core:company', targets: [company] },
-          //   isRPC: true,
-          //   defaultValue: null,
-          // });
-        }
-
-        if (customer && company) {
-          // add company to customer's companyIds list
-
-          await sendTRPCMessage({
-            pluginName: 'core',
-            method: 'mutation',
-            module: 'conformities',
-            action: 'create',
-            input: {
-              mainType: 'customer',
-              mainTypeId: customer._id,
-              relType: 'company',
-              relTypeId: company._id,
-            },
-          });
-        }
-      }
-
-      if (!integration.isConnected) {
-        await models.Integrations.updateOne(
-          { _id: integration._id },
-          { $set: { isConnected: true } },
-        );
-
-        // await sendCoreMessage({
+        // sendAutomationsMessage({
         //   subdomain,
-        //   action: 'registerOnboardHistory',
-        //   data: {
-        //     type: 'erxesMessagerConnect',
-        //     user,
-        //   },
+        //   action: 'trigger',
+        //   data: { type: 'core:company', targets: [company] },
+        //   isRPC: true,
+        //   defaultValue: null,
         // });
       }
-      return {
-        integrationId: integration._id,
-        uiOptions: integration.uiOptions,
-        languageCode: integration.languageCode,
-        ticketData: integration.ticketData,
-        messengerData: await getMessengerData(models, integration, subdomain),
-        customerId: customer && customer._id,
-        visitorId: customer ? null : visitorId,
-        brand,
-      };
+
+      if (customer && company) {
+        // add company to customer's companyIds list
+
+        await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'mutation',
+          module: 'conformities',
+          action: 'create',
+          input: {
+            mainType: 'customer',
+            mainTypeId: customer._id,
+            relType: 'company',
+            relTypeId: company._id,
+          },
+        });
+      }
     }
+
+    if (!integration.isConnected) {
+      await models.Integrations.updateOne(
+        { _id: integration._id },
+        { $set: { isConnected: true } },
+      );
+
+      // await sendCoreMessage({
+      //   subdomain,
+      //   action: 'registerOnboardHistory',
+      //   data: {
+      //     type: 'erxesMessagerConnect',
+      //     user,
+      //   },
+      // });
+    }
+    console.log('12', integration);
+    return {
+      integrationId: integration._id,
+      uiOptions: integration.uiOptions,
+      languageCode: integration.languageCode,
+      ticketData: integration.ticketData,
+      messengerData: await getMessengerData(models, integration, subdomain),
+      customerId: customer && customer._id,
+      visitorId: customer ? null : visitorId,
+      brand,
+    };
   },
   /*
    * Create a new message
