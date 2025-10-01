@@ -15,9 +15,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        entryFileNames: 'erxes-messenger-widget-bundle.js',
-        chunkFileNames: 'chunks/erxes-messenger-widget-bundle.js',
-        assetFileNames: 'assets/erxes-messenger-widget-bundle.[ext]'
+        entryFileNames: 'messengerWidget.bundle.js',
+        chunkFileNames: 'chunks/messengerWidget.bundle.js',
+        assetFileNames: 'assets/messengerWidget.bundle.[ext]'
       }
     }
   },
