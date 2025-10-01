@@ -16,7 +16,7 @@ FROM base AS runtime
 WORKDIR /app
 
 # Copy built dist from CI (nx build already ran in workflow)
-COPY backend/plugins/operation_api/dist ./backend/plugins/operation_api/dist
+COPY backend/plugins/operation_api ./backend/plugins/operation_api
 COPY backend/erxes-api-shared ./backend/erxes-api-shared
 
 # Copy production node_modules
