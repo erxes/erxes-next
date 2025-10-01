@@ -8,6 +8,7 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
 COPY backend/plugins/operation_api/package.json backend/plugins/operation_api/
 COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
+
 RUN pnpm install --prod --frozen-lockfile
 
 # Runtime image
@@ -16,7 +17,7 @@ WORKDIR /app
 
 # Copy built dist from CI (nx build already ran in workflow)
 COPY backend/plugins/operation_api/dist ./backend/plugins/operation_api/dist
-COPY backend/erxes-api-shared/dist ./backend/erxes-api-shared/dist
+COPY backend/erxes-api-shared ./backend/erxes-api-shared
 
 # Copy production node_modules
 COPY --from=deps /app/node_modules ./node_modules
