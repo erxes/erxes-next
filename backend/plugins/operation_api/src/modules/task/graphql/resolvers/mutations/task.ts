@@ -77,4 +77,14 @@ export const taskMutations = {
 
     return deletedTask;
   },
+
+  convertToProject: async (
+    _parent: undefined,
+    { _id },
+    { models }: IContext,
+  ) => {
+    const convertedTask = await models.Task.convertToProject(_id);
+
+    return convertedTask;
+  },
 };
