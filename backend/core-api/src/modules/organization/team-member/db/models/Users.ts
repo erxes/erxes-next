@@ -808,7 +808,7 @@ export const loadUserClass = (models: IModels, subdomain: string) => {
         }
       }
 
-      if (user.isOwner && !user.lastSeenAt) {
+      if (!user.lastSeenAt) {
         const pluginNames = await getPlugins();
 
         for (const pluginName of pluginNames) {

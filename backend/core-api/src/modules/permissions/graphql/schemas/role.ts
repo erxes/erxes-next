@@ -38,5 +38,5 @@ const mutationParams = `
 `;
 
 export const mutations = `
-  rolesUpsert(${mutationParams}): [Role]
+  rolesUpsert(${mutationParams}): Role
 `;
