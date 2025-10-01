@@ -204,31 +204,8 @@ const createVisitor = async (subdomain: string, visitorId: string) => {
   return customer;
 };
 
-interface IWidgetEmailParams {
-  toEmails: string[];
-  fromEmail: string;
-  title: string;
-  content: string;
-  customerId?: string;
-  formId?: string;
-  attachments?: IAttachment[];
-}
-
-interface ITicketWidget {
-  name: string;
-  description: string;
-  attachments: IAttachment[];
-  stageId: string;
-  type: string; // consider narrowing this down to specific ticket types, e.g., "request" | "issue"
-  customerIds: string[];
-}
-
-const widgetMutations = {
-  async widgetTicketCreated(
-    _root,
-    doc: ITicketWidget,
-    { subdomain }: IContext,
-  ) {
+export const widgetMutations = {
+  async widgetTicketCreated(_root, doc, { subdomain }: IContext) {
     // return await sendTicketsMessage({
     //   subdomain,
     //   action: 'widgets.createTicket',
@@ -1043,11 +1020,7 @@ const widgetMutations = {
     return 'ok';
   },
 
-  async widgetsSendEmail(
-    _root,
-    args: IWidgetEmailParams,
-    { subdomain, models }: IContext,
-  ) {
+  async widgetsSendEmail(_root, args, { subdomain, models }: IContext) {
     const { toEmails, fromEmail, title, content, customerId, formId } = args;
 
     const attachments = args.attachments || [];
@@ -1273,5 +1246,3 @@ const widgetMutations = {
     return { botData: botRequest.responses };
   },
 };
-
-export default widgetMutations;

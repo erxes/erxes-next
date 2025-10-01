@@ -335,13 +335,6 @@ export const widgetQueries = {
     );
   },
 
-  async widgetsProductCategory(_root, { _id }: { _id: string }) {
-    return {
-      __typename: 'ProductCategory',
-      _id,
-    };
-  },
-
   /*
    * Search published articles that contain searchString (case insensitive)
    * in a topic found by topicId

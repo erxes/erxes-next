@@ -1,4 +1,3 @@
-import widgetMutations from '~/modules/inbox/graphql/resolvers/mutations/widget';
 import {
   mutations as ChannelMutations,
   queries as ChannelQueries,
@@ -15,21 +14,30 @@ import {
   queries as IntegrationQueries,
   types as integrationTypes,
 } from './integration';
+
+import {
+  mutations as WidgetMutations,
+  queries as WidgetQueries,
+  types as WidgetTypes,
+} from './widget';
+
 export const types = `
   ${ChannelTypes},
   ${ConversationTypes}
   ${integrationTypes}
+  ${WidgetTypes}
 `;
 
 export const queries = `
   ${ChannelQueries}
   ${ConversationQueries}
   ${IntegrationQueries}
+  ${WidgetQueries}
 `;
 
 export const mutations = `
   ${ChannelMutations}
   ${ConversationMutations}
   ${IntegrationMutations}
-  ${widgetMutations}
+  ${WidgetMutations}
 `;
