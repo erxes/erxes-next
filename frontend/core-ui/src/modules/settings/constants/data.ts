@@ -9,6 +9,7 @@ import {
   IconMail,
   IconPassword,
   IconTag,
+  IconApi,
   IconUserCircle,
   IconUserCog,
   IconUsersGroup,
@@ -118,6 +119,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
     //   icon: IconColorSwatch,
     //   path: SettingsPath.Experience,
     // },
+    // {
+    //   name: 'Notification',
+    //   icon: IconBellRinging,
+    //   path: SettingsPath.Notification,
+    // },
   ],
   nav: [
     {
@@ -160,6 +166,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Brands',
       icon: IconChessKnight,
       path: SettingsWorkspacePath.Brands,
+    },
+    {
+      name: 'Apps',
+      icon: IconApi,
+      path: SettingsWorkspacePath.Apps,
     },
   ],
 };
