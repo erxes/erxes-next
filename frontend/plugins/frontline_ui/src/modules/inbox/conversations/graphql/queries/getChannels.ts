@@ -10,11 +10,25 @@ export const GET_CHANNELS_BY_MEMBERS = gql`
 `;
 
 export const GET_CHANNELS = gql`
-  query Channels($page: Int, $perPage: Int, $memberIds: [String]) {
-    channels(page: $page, perPage: $perPage, memberIds: $memberIds) {
+  query getChannels(
+    $name: String
+    $userId: String
+    $channelIds: [String]
+    $integrationid: String
+  ) {
+    getChannels(
+      name: $name
+      userId: $userId
+      channelIds: $channelIds
+      integrationid: $integrationid
+    ) {
       _id
+      icon
       name
+      description
+      createdAt
+      updatedAt
+      memberCount
     }
-    channelsTotalCount
   }
 `;

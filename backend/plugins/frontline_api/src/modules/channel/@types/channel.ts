@@ -18,6 +18,7 @@ export interface IChannelDocument extends IChannel, Document {
 export interface IChannelFilter extends IChannel {
   userId: string;
   channelIds: string[];
+  integrationId: string;
 }
 
 export enum ChannelMemberRoles {

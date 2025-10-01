@@ -27,6 +27,12 @@ export const channelQueries = {
     if (params.channelIds && params.channelIds.length > 0) {
       return models.Channels.find({ _id: { $in: params.channelIds } });
     }
+    if (params.integrationId) {
+      const channelIds = await models.Integrations.findOne({
+        _id: params.integrationId,
+      }).distinct('channelId');
+      return models.Channels.find({ _id: { $in: channelIds } });
+    }
 
     if (params.userId) {
       const channelIds = await models.ChannelMembers.find({

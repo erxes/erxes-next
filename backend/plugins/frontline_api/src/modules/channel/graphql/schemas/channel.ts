@@ -25,7 +25,7 @@ export const types = `
 
 export const queries = `
     getChannel(_id: String!): Channel
-    getChannels(name: String, userId: String, channelIds: [String], projectId: String): [Channel]
+    getChannels(name: String, userId: String, channelIds: [String], integrationId: String): [Channel]
     getChannelMembers(channelId: String, channelIds: [String]): [ChannelMember]
 `;
 

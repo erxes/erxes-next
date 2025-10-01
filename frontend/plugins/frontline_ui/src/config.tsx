@@ -35,6 +35,7 @@ export const CONFIG: IUIConfig = {
       name: 'channels',
       path: 'frontline/channels',
       settingsOnly: true,
+      hasFloatingWidget: true,
     },
     {
       name: 'configs',

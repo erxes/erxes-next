@@ -27,49 +27,10 @@ export const useChannelsByMembers = (
   return { channels: data?.channelsByMembers, loading };
 };
 
-const CHANNELS_PER_PAGE = 20;
+export const useGetChannels = (options?: QueryHookOptions) => {
+  const { data, loading } = useQuery(GET_CHANNELS, options);
 
-export const useChannels = (
-  options?: QueryHookOptions<{
-    channels: IChannel[];
-    channelsTotalCount: number;
-  }>,
-) => {
-  const { data, loading, fetchMore, error } = useQuery<{
-    channels: IChannel[];
-    channelsTotalCount: number;
-  }>(GET_CHANNELS, {
-    ...options,
-    variables: {
-      page: 1,
-      perPage: CHANNELS_PER_PAGE,
-      ...options?.variables,
-    },
-  });
+  const channels = data?.getChannels;
 
-  const { channels, channelsTotalCount } = data || {};
-
-  const handleFetchMore = () => {
-    if (!channels?.length || channels.length % CHANNELS_PER_PAGE !== 0) {
-      return null;
-    }
-
-    fetchMore({
-      variables: {
-        page: Math.ceil(channels.length / CHANNELS_PER_PAGE) + 1,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
-          return prev;
-        }
-
-        return {
-          channels: [...prev.channels, ...fetchMoreResult.channels],
-          channelsTotalCount: fetchMoreResult.channelsTotalCount,
-        };
-      },
-    });
-  };
-
-  return { channels, loading, handleFetchMore, error, channelsTotalCount };
+  return { channels, loading };
 };
