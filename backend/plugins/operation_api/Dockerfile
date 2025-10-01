@@ -1,53 +1,38 @@
-# Base image for common dependencies
-FROM --platform=linux/amd64 node:22-alpine AS build
-
-# Set working directory
+# Base image
+FROM --platform=linux/amd64 node:22-alpine AS base
 WORKDIR /app
-
-COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-
-COPY ./backend/plugins/operation_api/package.json /app/backend/plugins/operation_api/
-COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
-
-# Install pnpm and dependencies
 RUN npm install -g pnpm
-RUN pnpm install
 
-# Build the test project
-FROM --platform=linux/amd64 build AS operation_api-build
+# Dependencies (cached layer)
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
+COPY backend/plugins/operation_api/package.json backend/plugins/operation_api/
+COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
+RUN pnpm install --frozen-lockfile
 
-# Copy source code
-COPY ./backend/plugins/operation_api /app/backend/plugins/operation_api
-COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
-
-# Build following exact sequence
+# Builder
+FROM deps AS build
+COPY . .
 WORKDIR /app/backend/plugins/operation_api
-
 ENV NX_DAEMON=false
-RUN npx nx build:packageJson operation_api
-RUN npx nx build operation_api
+RUN pnpm nx build:packageJson operation_api && pnpm nx build operation_api
 
-# Final stage: Run the application
-FROM --platform=linux/amd64 node:22-alpine as operation_api
+# Production deps only
+FROM base AS prod-deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
+COPY backend/plugins/operation_api/package.json backend/plugins/operation_api/
+COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
+RUN pnpm install --prod --frozen-lockfile
 
+# Final runtime
+FROM base AS runtime
 WORKDIR /app
+COPY --from=build /app/backend/plugins/operation_api/dist ./backend/plugins/operation_api/dist
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=prod-deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
+COPY --from=prod-deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
-# Copy built applications from previous stages
-COPY --chown=1000 --from=operation_api-build /app /app
-
-# Install pnpm for production
-RUN npm install -g pnpm
-
-# Install production dependencies
-WORKDIR /app/backend/plugins/operation_api/dist
-RUN pnpm install
-
-# Set environment variables
 ENV NODE_ENV=production
-
-# Use non root user
 USER 1000
 
-# Start the application
-CMD ["node", "src/main.js"]
-
+CMD ["node", "backend/plugins/operation_api/dist/src/main.js"]
