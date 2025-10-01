@@ -64,15 +64,36 @@ export const KanbanCards = <T extends IDeal = IDeal>({
   useEffect(() => {
     if (!list || list.length === 0) return;
 
-    const newCards = list.filter(
-      (newCard) => !data.some((existing) => existing._id === newCard._id),
-    );
+    onDataChange((prevData: IDeal[]) => {
+      let changed = false;
 
-    if (newCards.length === 0) return;
+      const updated = list.map((l) => {
+        const existing = prevData.find((p) => p._id === l._id);
+        if (existing) {
+          // Compare shallowly or by JSON if you need full deep check
+          if (
+            existing.name !== l.name ||
+            existing.stage?._id !== l.stage?._id
+          ) {
+            changed = true;
+            return { ...existing, ...l }; // update existing
+          }
+          return existing; // no change
+        } else {
+          changed = true;
+          return l; // new card
+        }
+      });
 
-    // Use callback form to avoid stale closure issues
-    onDataChange((prevData: any) => [...prevData, ...newCards]);
-  }, [list, data, onDataChange]);
+      // Append any prevData items not in list (if necessary)
+      const allData = prevData.filter(
+        (p) => !updated.some((u) => u._id === p._id),
+      );
+      const finalData = [...updated, ...allData];
+
+      return changed ? finalData : prevData; // only trigger update if changed
+    });
+  }, [list, onDataChange]);
 
   const filteredData = useMemo(
     () => data.filter((item) => item.stage?._id === id),

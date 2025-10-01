@@ -55,7 +55,6 @@ export const useDeals = (
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   useEffect(() => {
-    console.log('111111111111111111111111111111111');
     const unsubscribe = subscribeToMore<any>({
       document: DEAL_LIST_CHANGED,
       variables: {
@@ -64,24 +63,12 @@ export const useDeals = (
         filter: options?.variables,
       },
       updateQuery: (prev, { subscriptionData }) => {
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         if (!prev || !subscriptionData.data) return prev;
-
-        console.log(
-          subscriptionData.data.salesDealListChanged,
-          'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
-        );
 
         const { action, deal } = subscriptionData.data.salesDealListChanged;
         const currentList = prev.deals.list;
 
         let updatedList = currentList;
-        console.log(
-          currentList,
-          'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu',
-          action,
-          deal,
-        );
 
         if (action === 'add') {
           const exists = currentList.some(
@@ -93,9 +80,7 @@ export const useDeals = (
         }
 
         if (action === 'edit') {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeee', currentList);
           updatedList = currentList.map((item: IDeal) => {
-            console.log(item.name, deal.name, 'nnnnnnnnnnnnnnnnnnnnnnnnnnn');
             return item._id === deal._id ? { ...item, ...deal } : item;
           });
         }
@@ -124,7 +109,8 @@ export const useDeals = (
     });
 
     return unsubscribe;
-  }, [options?.variables, subscribeToMore, currentUser?._id, lastPipelineId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options?.variables]);
 
   const handleFetchMore = ({
     direction,
@@ -202,8 +188,29 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
       _id,
     },
     optimisticResponse: ({ _id, name }) => ({
-      editDeals: { __typename: 'Deal', _id, name },
+      dealsEdit: { __typename: 'Deal', _id, name },
     }),
+    update: (cache, { data }) => {
+      const updatedDeal = data?.dealsEdit;
+      if (!updatedDeal) return;
+
+      const existing = cache.readQuery<{ deals: IDealList }>({
+        query: GET_DEALS,
+      });
+      if (!existing?.deals) return;
+
+      cache.writeQuery({
+        query: GET_DEALS,
+        data: {
+          deals: {
+            ...existing.deals,
+            list: existing.deals.list.map((d) =>
+              d._id === updatedDeal._id ? { ...d, ...updatedDeal } : d,
+            ),
+          },
+        },
+      });
+    },
     refetchQueries: [
       {
         query: GET_DEAL_DETAIL,

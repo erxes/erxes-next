@@ -32,7 +32,7 @@ export const SalesItemDetailHeader = ({ deal }: { deal: IDeal }) => {
       <Button variant="ghost" size="icon">
         <IconLayoutSidebarLeftCollapse />
       </Button>
-      <Sheet.Title className="shrink-0">
+      <Sheet.Title className="shrink-0 w-4/5">
         <Input
           className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
           placeholder="Deal Name"
