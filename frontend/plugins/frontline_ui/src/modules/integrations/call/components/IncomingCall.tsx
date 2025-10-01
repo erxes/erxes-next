@@ -87,14 +87,20 @@ export const IncomingCall = ({
   return (
     <>
       <div className="mt-2 px-3 pt-3 mb-1 space-y-2">
-        {!loading && renderUserInfo(customer, channels)}
+        {!loading && renderUserInfo(customer, null, phoneNumber)}
         <div className="text-center text-accent-foreground">
           Incoming call to{' '}
           <span className="font-semibold text-foreground">
             <span role="img" aria-label="flag-mn">
               🇲🇳
             </span>
-            erxes Mongolia
+            {channels && channels.length > 0 && (
+              <div className="text-xs text-accent-foreground">
+                {channels.map((channel: any, index: number) => (
+                  <div key={index}>{channel.name}</div>
+                ))}
+              </div>
+            )}
           </span>
         </div>
       </div>
