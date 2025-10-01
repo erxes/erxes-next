@@ -1,10 +1,9 @@
-import { Button, PageContainer, PageSubHeader } from 'erxes-ui';
+import { Button, PageContainer } from 'erxes-ui';
 
 import { BoardsList } from '@/deals/boards/components/BoardsList';
 import { IconSandbox } from '@tabler/icons-react';
-import { PipelineFormBar } from '@/deals/boards/components/PipelineFormBar';
-import PipelineRecordTable from '@/deals/boards/components/PipelineRecordTable';
-import { PipelineSettingsFilter } from '@/deals/boards/components/PipelineSettingsFilter';
+import { PipelineFormBar } from '@/deals/pipelines/components/PipelineFormBar';
+import PipelineRecordTable from '@/deals/pipelines/components/PipelineRecordTable';
 import { SettingsHeader } from 'ui-modules';
 
 const Settings = () => {
@@ -21,9 +20,6 @@ const Settings = () => {
         </SettingsHeader>
         <div className="flex flex-auto w-full overflow-hidden">
           <div className="w-full overflow-hidden flex flex-col">
-            <PageSubHeader>
-              <PipelineSettingsFilter />
-            </PageSubHeader>
             <PipelineRecordTable />
           </div>
         </div>

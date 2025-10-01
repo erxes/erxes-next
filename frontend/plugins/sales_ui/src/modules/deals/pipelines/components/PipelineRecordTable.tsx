@@ -3,6 +3,7 @@ import {
   Combobox,
   Command,
   Input,
+  PageSubHeader,
   Popover,
   RecordTable,
   RecordTableInlineCell,
@@ -15,15 +16,17 @@ import {
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import {
   IconArchive,
+  IconArrowBack,
   IconCalendarTime,
   IconCopy,
   IconEdit,
   IconSettings,
-  IconTemplate,
   IconTrash,
   IconUser,
 } from '@tabler/icons-react';
 import {
+  usePipelineArchive,
+  usePipelineCopy,
   usePipelineEdit,
   usePipelineRemove,
   usePipelines,
@@ -40,8 +43,11 @@ export const PipelineMoreColumnCell = ({
   const confirmOptions = { confirmationValue: 'delete' };
   const { confirm } = useConfirm();
   const [, setOpen] = useQueryState('pipelineId');
-  const { removePipeline, loading } = usePipelineRemove();
-  const { _id } = cell.row.original;
+  const { removePipeline, loading: removeLoading } = usePipelineRemove();
+  const { copyPipeline } = usePipelineCopy();
+  const { archivePipeline } = usePipelineArchive();
+
+  const { _id, status } = cell.row.original;
 
   const onRemove = () => {
     confirm({
@@ -61,19 +67,38 @@ export const PipelineMoreColumnCell = ({
   };
 
   const onDuplicate = () => {
-    console.log('duplicate');
-  };
-
-  const onTemplate = () => {
-    console.log('template');
+    confirm({
+      message:
+        'This will duplicate the current pipeline. Are you absolutely sure?',
+    }).then(async () => {
+      try {
+        copyPipeline({
+          variables: {
+            _id,
+          },
+        });
+      } catch (e) {
+        console.error(e.message);
+      }
+    });
   };
 
   const onArchive = () => {
-    console.log('archive');
-  };
-
-  const onProductConfig = () => {
-    console.log('productConfig');
+    confirm({
+      message: `This will ${
+        status === 'active' ? 'archive' : 'unarchive'
+      } the current pipeline. Are you absolutely sure?`,
+    }).then(async () => {
+      try {
+        archivePipeline({
+          variables: {
+            _id,
+          },
+        });
+      } catch (e) {
+        console.error(e.message);
+      }
+    });
   };
 
   return (
@@ -95,16 +120,25 @@ export const PipelineMoreColumnCell = ({
             <Command.Item value="duplicate" onSelect={onDuplicate}>
               <IconCopy /> Duplicate
             </Command.Item>
-            <Command.Item value="template" onSelect={onTemplate}>
-              <IconTemplate /> Save as template
-            </Command.Item>
             <Command.Item value="archive" onSelect={onArchive}>
-              <IconArchive /> Archive
+              {status === 'active' ? (
+                <>
+                  <IconArchive /> Archive
+                </>
+              ) : (
+                <>
+                  <IconArrowBack /> Unarchive
+                </>
+              )}
             </Command.Item>
-            <Command.Item value="productConfig" onSelect={onProductConfig}>
+            <Command.Item value="productConfig">
               <IconSettings /> Product config
             </Command.Item>
-            <Command.Item disabled={loading} value="remove" onSelect={onRemove}>
+            <Command.Item
+              disabled={removeLoading}
+              value="remove"
+              onSelect={onRemove}
+            >
               <IconTrash /> Delete
             </Command.Item>
           </Command.List>
@@ -233,42 +267,48 @@ const PipelineRecordTable = () => {
   const [queries] = useMultiQueryState<{
     contentType: string;
     searchValue: string;
-  }>(['contentType', 'searchValue']);
+    activeBoardId: string;
+  }>(['contentType', 'searchValue', 'activeBoardId']);
 
   const { contentType, searchValue } = queries;
 
-  const { pipelines, loading } = usePipelines({
-    variables: {
-      type: contentType || '',
-      searchValue: searchValue ?? undefined,
-    },
-  });
+  const { pipelines, loading, pageInfo, handleFetchMore, totalCount } =
+    usePipelines({
+      variables: {
+        type: contentType || '',
+        searchValue: searchValue ?? undefined,
+        boardId: queries.activeBoardId || '',
+      },
+    });
 
   return (
-    <RecordTable.Provider
-      columns={pipelinesColumns}
-      data={pipelines || []}
-      className="m-3"
-      stickyColumns={['more', 'name']}
-    >
-      <RecordTableTree id="pipelines-list" ordered>
-        <RecordTable.Scroll>
-          <RecordTable className="w-full">
-            <RecordTable.Header />
-            <RecordTable.Body>
-              <RecordTable.RowList Row={RecordTableTree.Row} />
-              {loading && <RecordTable.RowSkeleton rows={30} />}
-              {/* {!loading && pageInfo?.hasNextPage && (
-                <RecordTable.RowSkeleton
-                  rows={1}
-                  handleInView={handleFetchMore}
-                />
-              )} */}
-            </RecordTable.Body>
-          </RecordTable>
-        </RecordTable.Scroll>
-      </RecordTableTree>
-    </RecordTable.Provider>
+    <>
+      <PageSubHeader>Pipelines ({totalCount})</PageSubHeader>
+      <RecordTable.Provider
+        columns={pipelinesColumns}
+        data={pipelines || []}
+        className="m-3"
+        stickyColumns={['more', 'name']}
+      >
+        <RecordTableTree id="pipelines-list" ordered>
+          <RecordTable.Scroll>
+            <RecordTable className="w-full">
+              <RecordTable.Header />
+              <RecordTable.Body>
+                <RecordTable.RowList Row={RecordTableTree.Row} />
+                {loading && <RecordTable.RowSkeleton rows={30} />}
+                {!loading && pageInfo?.hasNextPage && (
+                  <RecordTable.RowSkeleton
+                    rows={1}
+                    handleInView={handleFetchMore}
+                  />
+                )}
+              </RecordTable.Body>
+            </RecordTable>
+          </RecordTable.Scroll>
+        </RecordTableTree>
+      </RecordTable.Provider>
+    </>
   );
 };
 
