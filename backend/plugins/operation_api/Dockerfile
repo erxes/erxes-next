@@ -15,14 +15,18 @@ RUN pnpm install --prod --frozen-lockfile
 FROM base AS runtime
 WORKDIR /app
 
+WORKDIR /app/backend/plugins/operation_api/dist
+RUN pnpm install --filter operation_api, erxes-api-shared
+
+WORKDIR /app
+
 # Copy built dist from CI (nx build already ran in workflow)
 COPY backend/plugins/operation_api ./backend/plugins/operation_api
 COPY backend/erxes-api-shared ./backend/erxes-api-shared
 
-# Copy production node_modules
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
-COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
+
+RUN rm -rf node_modules
+
 
 ENV NODE_ENV=production
 USER 1000
