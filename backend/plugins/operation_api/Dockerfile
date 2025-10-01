@@ -24,14 +24,11 @@ COPY backend/erxes-api-shared ./backend/erxes-api-shared
 
 # Copy production node_modules
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
+COPY --from=deps /app/backend/plugins/operation_api/dist/node_modules ./backend/plugins/operation_api/node_modules
 COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
 WORKDIR /app/backend/plugins/operation_api/dist
-
 RUN pnpm install
-
-
 WORKDIR /app
 
 RUN rm -rf node_modules
