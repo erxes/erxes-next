@@ -8,6 +8,14 @@ import {
 } from './constants';
 import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
+
+export interface IAttachment {
+  name: string;
+  url: string;
+  size: number;
+  type: string;
+}
+
 const messengerOnlineHoursSchema = new Schema(
   {
     day: { type: String },

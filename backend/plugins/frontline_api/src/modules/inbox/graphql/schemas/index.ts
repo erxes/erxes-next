@@ -1,3 +1,4 @@
+import widgetMutations from '~/modules/inbox/graphql/resolvers/mutations/widget';
 import {
   mutations as ChannelMutations,
   queries as ChannelQueries,
@@ -30,4 +31,5 @@ export const mutations = `
   ${ChannelMutations}
   ${ConversationMutations}
   ${IntegrationMutations}
+  ${widgetMutations}
 `;
