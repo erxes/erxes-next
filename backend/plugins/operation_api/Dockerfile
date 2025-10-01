@@ -24,11 +24,12 @@ WORKDIR /app
 COPY backend/plugins/operation_api ./backend/plugins/operation_api
 COPY backend/erxes-api-shared ./backend/erxes-api-shared
 
-RUN rm -rf node_modules
+# Copy production node_modules
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
+COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
 ENV NODE_ENV=production
 USER 1000
 
-WORKDIR /app/backend/plugins/operation_api/dist
-
-CMD ["node", "src/main.js"]
+CMD ["node", "backend/plugins/operation_api/dist/src/main.js"]
