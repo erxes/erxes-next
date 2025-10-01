@@ -6,7 +6,8 @@ import {
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
 import { EMInstallDialogTab } from '@/integrations/erxes-messenger/types/EMStateTypes';
 import { useIntegrationDetail } from '@/integrations/hooks/useIntegrationDetail';
-import { IconCopy } from '@tabler/icons-react';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
+import React from 'react';
 
 export const InstallErxesMessengerDialog = () => {
   const [installId, setInstallId] = useAtom(
@@ -14,7 +15,7 @@ export const InstallErxesMessengerDialog = () => {
   );
   return (
     <Dialog open={!!installId} onOpenChange={() => setInstallId(false)}>
-      <Dialog.Content className="max-w-2xl">
+      <Dialog.Content className="max-w-3xl">
         <Dialog.Header>
           <Dialog.Title>Install Erxes Messenger</Dialog.Title>
           <Dialog.Close />
@@ -47,8 +48,8 @@ export const InstallErxesMessengerDialogTabs = () => {
 };
 
 export const InstallJavaScriptCode = ({ brandId }: { brandId: string }) => {
-  // here i want to get REACT_APP_CDN_HOST from window.env
-  const cdnHost = process.env.REACT_APP_CDN_HOST;
+  const [copied, setCopied] = React.useState<boolean>(false);
+  const cdnHost = process.env.REACT_APP_CDN_HOST || '';
   const installScript = `<script>
   window.erxesSettings = {
     messenger: {
@@ -58,12 +59,20 @@ export const InstallJavaScriptCode = ({ brandId }: { brandId: string }) => {
       
   (function() {
     var script = document.createElement('script');
-    script.src = "${cdnHost}/pl:frontline/widget/assets/erxes-messenger-widget-bundle.js";
+    script.src = "${cdnHost}/pl:frontline/widget/messengerWidget.bundle.js";
     script.async = true;
     var entry = document.getElementsByTagName('script')[0];
     entry.parentNode.insertBefore(script, entry);
   })();
 </script>`;
+
+  function handleCopy() {
+    navigator.clipboard.writeText(installScript);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  }
   return (
     <Tabs.Content value={EMInstallDialogTab.BASIC}>
       <Badge className="my-2 w-full">
@@ -74,12 +83,10 @@ export const InstallJavaScriptCode = ({ brandId }: { brandId: string }) => {
         <Button
           variant="secondary"
           size="icon"
-          onClick={() => {
-            navigator.clipboard.writeText(installScript);
-          }}
+          onClick={handleCopy}
           className="absolute right-2 top-2"
         >
-          <IconCopy />
+          {copied ? <IconCheck /> : <IconCopy />}
         </Button>
         <code>{installScript}</code>
       </pre>
