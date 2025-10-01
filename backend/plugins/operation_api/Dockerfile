@@ -9,14 +9,11 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json 
 COPY backend/plugins/operation_api/package.json backend/plugins/operation_api/
 COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
 
-RUN pnpm install --prod --frozen-lockfile
+# RUN pnpm install --prod --frozen-lockfile
 
 # Runtime image
 FROM base AS runtime
 
-
-
-RUN pnpm install
 
 WORKDIR /app
 
@@ -33,7 +30,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/backend/plugins/operation_api/node_modules ./backend/plugins/operation_api/node_modules
 COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
-RUN rm -rf node_modules
+# RUN rm -rf node_modules
 
 ENV NODE_ENV=production
 USER 1000
