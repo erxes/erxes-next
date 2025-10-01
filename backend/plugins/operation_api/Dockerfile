@@ -17,10 +17,10 @@
     COPY backend/plugins/operation_api/package.json backend/plugins/operation_api/
     COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
     
-    # Install all deps (needed for deploy)
+    # Install deps (needed for deploy)
     RUN pnpm install --frozen-lockfile
     
-    # Deploy only production deps for operation_api (and its deps)
+    # Deploy only production deps for operation_api
     RUN pnpm deploy --filter operation_api --prod /app/deploy
     
     # ---------------------------
@@ -29,13 +29,12 @@
     FROM base AS runtime
     WORKDIR /app
     
-    # Copy built dist (already built in CI)
+    # Copy built dist (nx build already ran in CI)
     COPY backend/plugins/operation_api ./backend/plugins/operation_api
     COPY backend/erxes-api-shared ./backend/erxes-api-shared
     
     # Copy pruned node_modules (only operation_api + deps)
     COPY --from=deps /app/deploy/node_modules ./node_modules
-    COPY --from=deps /app/deploy/backend/plugins/operation_api/package.json ./backend/plugins/operation_api/package.json
     
     ENV NODE_ENV=production
     USER 1000
