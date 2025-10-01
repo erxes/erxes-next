@@ -13,7 +13,7 @@ import {
 import { IUIConfig } from 'erxes-ui';
 
 export const GET_CORE_MODULES = (version?: boolean): IUIConfig['modules'] => {
-  const MODULES: any = [
+  const MODULES: IUIConfig['modules'] = [
     {
       name: 'contacts',
       icon: IconAddressBook,
