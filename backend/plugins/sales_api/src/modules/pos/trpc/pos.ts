@@ -9,15 +9,13 @@ export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
 const t = initTRPC.context<SalesTRPCContext>().create();
 
 export const posTrpcRouter = t.router({
-  inbox: t.router({
-    getConversations: t.procedure
-      .input(z.any())
-      .query(async ({ ctx, input }) => {
-        const { query } = input;
-        const { models } = ctx;
+  pos: t.router({
+    confirm: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
 
-        return await models.Pos.find(query).lean();
-      }),
+      return await models.Pos.find(query).lean();
+    }),
     // removeCustomersConversations: t.procedure
     //   .input(z.any())
     //   .mutation(async ({ ctx, input }) => {
