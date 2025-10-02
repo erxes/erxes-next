@@ -424,8 +424,7 @@ function sanitizeFileName(rawFileName: string): string {
 }
 export const cfRecordUrl = async (params, user, models, subdomain) => {
   try {
-    const { fileDir, recordfiles, inboxIntegrationId, retryCount } =
-      params;
+    const { fileDir, recordfiles, inboxIntegrationId, retryCount } = params;
 
     if (!recordfiles) {
       throw new Error('Missing required parameter: recordfiles');
@@ -651,7 +650,6 @@ export const checkForExistingIntegrations = async (
     wsServer: details.wsServer, // Match same wsServer
     queues: { $in: queues }, // Check if any queue already exists
   }).lean();
-
   if (existingIntegrations.length > 0) {
     existingIntegrations.forEach((existingIntegration) => {
       if (existingIntegration.inboxId.toString() !== integrationId.toString()) {

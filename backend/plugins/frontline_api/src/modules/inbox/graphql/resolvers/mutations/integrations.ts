@@ -38,6 +38,7 @@ interface UpdateIntegrationDoc {
   accountId: string;
   kind: string;
   integrationId: string;
+  channelId: string;
   data?: string;
 }
 
@@ -433,13 +434,13 @@ export const integrationMutations = {
 
   async integrationsEditCommonFields(
     _root,
-    { _id, name, details },
+    { _id, name, details, channelId },
     { models, subdomain }: IContext,
   ) {
     const integration = await models.Integrations.getIntegration({ _id });
 
     const doc: any = { name, details };
-
+    console.log(doc, 'doc');
     let { kind } = integration;
     if (kind === 'facebook-messenger' || kind === 'facebook-post') {
       kind = 'facebook';
@@ -447,7 +448,10 @@ export const integrationMutations = {
     if (kind === 'instagram-messenger' || kind === 'instagram-post') {
       kind = 'instagram';
     }
-    await models.Integrations.updateOne({ _id }, { $set: doc });
+    await models.Integrations.updateOne(
+      { _id },
+      { $set: { ...doc, ...(channelId && { channelId }) } },
+    );
 
     const updated = await models.Integrations.getIntegration({ _id });
 
@@ -459,6 +463,7 @@ export const integrationMutations = {
         accountId: doc.accountId,
         kind: kind,
         integrationId: integration._id,
+        channelId: doc.channelId,
         data: details ? JSON.stringify(details) : '',
       },
     });

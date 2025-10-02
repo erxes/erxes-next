@@ -5,13 +5,13 @@ const GET_CHANNELS = gql`
     $name: String
     $userId: String
     $channelIds: [String]
-    $projectId: String
+    $integrationId: String
   ) {
     getChannels(
       name: $name
       userId: $userId
       channelIds: $channelIds
-      projectId: $projectId
+      integrationId: $integrationId
     ) {
       _id
       icon
