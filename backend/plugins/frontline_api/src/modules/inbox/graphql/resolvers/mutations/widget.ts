@@ -18,7 +18,7 @@ import {
   MESSAGE_TYPES,
 } from '~/modules/inbox/db/definitions/constants';
 import { debugError, handleAutomation } from '~/modules/inbox/utils';
-import * as strip from 'strip';
+import strip from 'strip';
 import { IBrowserInfo } from 'erxes-api-shared/core-types';
 import { trackViewPageEvent } from '~/modules/inbox/events';
 import { VERIFY_EMAIL_TRANSLATIONS } from '~/modules/inbox/constants';
