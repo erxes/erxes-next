@@ -183,18 +183,7 @@ const createVisitor = async (subdomain: string, visitorId: string) => {
     module: 'customers',
     action: 'createCustomer',
     input: {
-      state: 'visitor',
-      visitorId,
-    },
-  });
-  await sendTRPCMessage({
-    pluginName: 'core',
-    method: 'mutation',
-    module: 'customers',
-    action: 'createCustomer',
-    input: {
-      state: 'visitor',
-      visitorId,
+      doc: { state: 'visitor', visitorId },
     },
   });
 
@@ -522,7 +511,6 @@ export const widgetMutations = {
 
     if (visitorId && !customerId) {
       const customer = await createVisitor(subdomain, visitorId);
-
       customerId = customer._id;
     }
 
