@@ -45,7 +45,7 @@ export const CycleProgressByMember = ({
           <HoverCard.Trigger asChild>
             <div className="flex justify-start items-center gap-2 text-sm font-normal py-1">
               <Button
-                className="p-0"
+                className="p-0 truncate max-w-[170px]"
                 variant="ghost"
                 onClick={() => {
                   setAssignee(
@@ -57,6 +57,7 @@ export const CycleProgressByMember = ({
                   memberIds={[item.assigneeId]}
                   placeholder="No Assignee"
                 />
+              </Button>
 
                 <ChartContainer config={{}} className="aspect-square size-6">
                   <RadialBarChart
@@ -92,7 +93,6 @@ export const CycleProgressByMember = ({
                 <span className="text-sm text-accent-foreground">
                   {getProgress(item)}% of {item.totalScope}
                 </span>
-              </Button>
             </div>
           </HoverCard.Trigger>
           <HoverCard.Content side="left" className="w-32 p-3">
