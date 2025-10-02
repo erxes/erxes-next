@@ -174,8 +174,11 @@ export default class Builder {
       const channelMemberships = await this.models.ChannelMembers.find({
         memberId: this.user._id,
       }).lean();
+      let channelIds = channelMemberships.map((m) => m.channelId);
 
-      const channelIds = channelMemberships.map((m) => m.channelId);
+      if (this.params.channelId) {
+        channelIds = [this.params.channelId];
+      }
 
       if (channelIds.length === 0) {
         return { integrationId: { $in: [] } };
