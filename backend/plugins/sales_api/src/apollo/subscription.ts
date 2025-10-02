@@ -67,7 +67,7 @@ export default {
             return { ...payload.salesDealListChanged, action: 'add' }
           }
 
-          return { ...payload.salesDealListChanged, action: 'update' }
+          return { ...payload.salesDealListChanged, action: 'edit' }
         },
       },
     };

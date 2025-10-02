@@ -1,12 +1,14 @@
 export const renderUserInfo = (
   customer: any,
   customerDetail: any,
-  channels?: any,
+  phoneNumber?: string,
 ) => {
   if (!customer) {
     return (
       <div className="text-center">
-        <div className="text-accent-foreground">Unknown caller</div>
+        <div className="text-accent-foreground">
+          {phoneNumber ? phoneNumber : 'Unknown caller'}{' '}
+        </div>
       </div>
     );
   }
@@ -20,7 +22,9 @@ export const renderUserInfo = (
       ? `${customerDetail?.firstName || ''} ${
           customerDetail?.lastName || ''
         }`.trim()
-      : customerDetail?.primaryPhone || 'Unknown';
+      : customerDetail?.primaryPhone || phoneNumber
+      ? phoneNumber
+      : 'Unknown';
 
   return (
     <div className="text-center space-y-1">
@@ -41,15 +45,6 @@ export const renderUserInfo = (
       {!customerDetail && customer.primaryEmail && (
         <div className="text-accent-foreground text-sm">
           {customer?.primaryEmail || customerDetail?.primaryPhone}
-        </div>
-      )}
-      {channels && channels.length > 0 && (
-        <div className="text-xs text-accent-foreground">
-          {channels.map((channel: any, index: number) => (
-            <div key={index}>
-              {channel.name} - {channel.integrationKind}
-            </div>
-          ))}
         </div>
       )}
     </div>

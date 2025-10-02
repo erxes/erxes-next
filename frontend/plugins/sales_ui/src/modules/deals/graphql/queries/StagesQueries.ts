@@ -70,6 +70,10 @@ const stageCommon = `
   age
   defaultTick
   probability
+  visibility
+  status
+  canMoveMemberIds
+  canEditMemberIds
 `;
 
 export const GET_ARCHIVED_STAGES_COUNT = gql`
