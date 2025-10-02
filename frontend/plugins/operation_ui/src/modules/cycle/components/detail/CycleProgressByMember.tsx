@@ -15,7 +15,7 @@ export const CycleProgressByMember = ({
   isCompleted: boolean;
   statistics: any;
 }) => {
-  const [assignee, setAssignee] = useQueryState<string>('assignee');
+  const [assignee, setAssignee] = useQueryState<string | null>('assignee');
 
   const { cycleProgressByMember } = useGetCycleProgressByMember({
     variables: { _id: cycleId },
