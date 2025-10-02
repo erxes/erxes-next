@@ -7,7 +7,7 @@ export interface IProject {
   icon: string;
   tagIds: string[];
   createdAt: string;
-  createdBy: string;
+  createdBy?: string;
   priority: number;
   status: number;
   targetDate: Date;

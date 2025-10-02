@@ -1,7 +1,7 @@
 import { MembersInline } from 'ui-modules';
 import { ITask } from '@/task/types';
 import { IProject } from '@/project/types';
-import { ActivityTimelineItem } from './ActivityTimelineItem';
+import { ActivityTimelineItem } from '@/activity/components/ActivityTimelineItem';
 import { IconUser } from '@tabler/icons-react';
 
 interface CreatorInfoProps {
