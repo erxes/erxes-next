@@ -41,7 +41,13 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   ...(DOMAIN ? [DOMAIN] : []),
-  ...(isDev ? ['http://localhost:3001', 'http://localhost:5173'] : []),
+  ...(isDev
+    ? [
+        'http://localhost:3001',
+        'http://localhost:5173',
+        'http://localhost:4000',
+      ]
+    : []),
   ...(ALLOWED_DOMAINS || '').split(','),
   ...(CLIENT_PORTAL_DOMAINS || '').split(','),
   ...(process.env.ALLOWED_ORIGINS || '').split(',').map((c) => c && RegExp(c)),

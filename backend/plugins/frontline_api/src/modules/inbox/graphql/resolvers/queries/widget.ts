@@ -1,9 +1,7 @@
-import { IBrowserInfo } from 'erxes-api-shared/core-types';
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import { isEnabled, sendTRPCMessage } from 'erxes-api-shared/utils';
 import * as momentTz from 'moment-timezone';
 import { IModels, IContext } from '~/connectionResolvers';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
-import { getOrCreateEngageMessage } from '~/modules/inbox/widgetUtils';
 
 const isMessengerOnline = async (
   models: IModels,
@@ -72,51 +70,6 @@ const getWidgetMessages = (models: IModels, conversationId: string) => {
 };
 
 export const widgetQueries = {
-  async widgetsTicketComments(
-    _root,
-    args: { typeId?: string },
-    { subdomain }: IContext,
-  ) {
-    const { typeId } = args;
-
-    // const data = await sendTicketsMessage({
-    //   subdomain,
-    //   action: 'widgets.comments.find',
-    //   data: { typeId },
-    //   isRPC: true,
-    //   defaultValue: null,
-    // });
-    // return data;
-  },
-  async widgetsTicketCustomerDetail(
-    _root,
-    args: { customerId?: string; type?: string },
-    { models, subdomain }: IContext,
-  ) {
-    const { customerId } = args;
-    // return await sendCoreMessage({
-    //   subdomain,
-    //   action: 'customers.findOne',
-    //   data: { _id: customerId },
-    //   isRPC: true,
-    //   defaultValue: null,
-    // });
-  },
-  async widgetsTicketActivityLogs(
-    _root,
-    args: { contentId?: string; contentType?: string },
-    { subdomain }: IContext,
-  ) {
-    const { contentId, contentType } = args;
-    // return await sendCoreMessage({
-    //   subdomain,
-    //   action: 'activityLogs.findOne',
-    //   data: { contentType, contentId },
-    //   isRPC: true,
-    //   defaultValue: null,
-    // });
-  },
-
   async widgetsGetMessengerIntegration(
     _root,
     args: { brandCode: string },
@@ -160,25 +113,26 @@ export const widgetQueries = {
 
       let getStartedCondition: GetStartedCondition = false;
 
-      //   if (isEnabled('automations')) {
-      //     const getStarted = await sendAutomationsMessage({
-      //       subdomain,
-      //       action: 'trigger.find',
-      //       data: {
-      //         query: {
-      //           triggerType: 'inbox:messages',
-      //           botId: integration._id,
-      //         },
-      //       },
-      //       isRPC: true,
-      //     }).catch((error) => {
-      //       throw error;
-      //     });
+      if (await isEnabled('automations')) {
+        const getStarted = await sendTRPCMessage({
+          pluginName: 'automations',
+          method: 'query',
+          module: 'triggers',
+          action: 'find',
+          input: {
+            query: {
+              triggerType: 'inbox:messages',
+              botId: integration._id,
+            },
+          },
+        }).catch((error) => {
+          throw error;
+        });
 
-      //     getStartedCondition = (
-      //       getStarted[0]?.triggers[0]?.config?.conditions || []
-      //     ).find((condition) => condition.type === 'getStarted');
-      //   }
+        getStartedCondition = (
+          getStarted[0]?.triggers[0]?.config?.conditions || []
+        ).find((condition) => condition.type === 'getStarted');
+      }
 
       const messengerData = integration.messengerData || {
         supporterIds: [],
@@ -229,7 +183,7 @@ export const widgetQueries = {
         supporters,
       };
     } catch (error) {
-      throw new Error('Failed to fetch conversation details');
+      throw new Error(`Failed to fetch conversation details: ${error.message}`);
     }
   },
 
@@ -308,102 +262,5 @@ export const widgetQueries = {
       isOnline: await isMessengerOnline(models, integration),
       timezone,
     };
-  },
-
-  async widgetsGetEngageMessage(
-    _root,
-    {
-      integrationId,
-      customerId,
-      visitorId,
-      browserInfo,
-    }: {
-      integrationId: string;
-      customerId?: string;
-      visitorId?: string;
-      browserInfo: IBrowserInfo;
-    },
-    { models, subdomain }: IContext,
-  ) {
-    return getOrCreateEngageMessage(
-      models,
-      subdomain,
-      integrationId,
-      browserInfo,
-      visitorId,
-      customerId,
-    );
-  },
-
-  /*
-   * Search published articles that contain searchString (case insensitive)
-   * in a topic found by topicId
-   * @return {Promise} searched articles
-   */
-  async widgetsKnowledgeBaseArticles(
-    _root: any,
-    args: { topicId: string; searchString: string },
-    { subdomain }: IContext,
-  ) {
-    const { topicId, searchString = '' } = args;
-
-    return await sendTRPCMessage({
-      pluginName: 'content',
-      method: 'query',
-      module: 'articles',
-      action: 'find',
-      input: {
-        query: {
-          topicId,
-          content: { $regex: `.*${searchString.trim()}.*`, $options: 'i' },
-          status: 'publish',
-        },
-      },
-    });
-  },
-
-  /**
-   * Topic detail
-   */
-  async widgetsKnowledgeBaseTopicDetail(
-    _root,
-    { _id }: { _id: string },
-    { subdomain }: IContext,
-  ) {
-    // const commonOptions = { subdomain, isRPC: true };
-
-    // const topic = await sendTRPCMessage({
-    //   pluginName: 'content',
-    //   method: 'query',
-    //   module: 'topics',
-    //   action: 'findOne',
-    //   input: {
-    //     query: {
-    //       _id,
-    //     },
-    //   },
-    // });
-
-    // if (topic && topic.createdBy) {
-    //   const user = await sendCoreMessage({
-    //     ...commonOptions,
-    //     action: 'users.findOne',
-    //     data: {
-    //       _id: topic.createdBy,
-    //     },
-    //     defaultValue: {},
-    //   });
-
-    //   sendCoreMessage({
-    //     subdomain,
-    //     action: 'registerOnboardHistory',
-    //     data: {
-    //       type: 'knowledgeBaseInstalled',
-    //       user,
-    //     },
-    //   });
-    // }
-
-    return;
   },
 };

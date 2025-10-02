@@ -10,16 +10,14 @@ import {
   IIntegrationDocument,
   IMessengerDataMessagesItem,
 } from '~/modules/inbox/@types/integrations';
-import { IAttachment } from '~/modules/inbox/db/definitions/integrations';
 import { IContext } from '~/connectionResolvers';
-import { IconLetterB } from '@tabler/icons-react';
 import {
   AUTO_BOT_MESSAGES,
   CONVERSATION_OPERATOR_STATUS,
   CONVERSATION_STATUSES,
   MESSAGE_TYPES,
 } from '~/modules/inbox/db/definitions/constants';
-import { debugError } from '~/modules/inbox/utils';
+import { debugError, handleAutomation } from '~/modules/inbox/utils';
 import * as strip from 'strip';
 import { IBrowserInfo } from 'erxes-api-shared/core-types';
 import { trackViewPageEvent } from '~/modules/inbox/events';
@@ -92,7 +90,6 @@ export const pConversationClientMessageInserted = async (
 export const getMessengerData = async (
   models: IModels,
   integration: IIntegrationDocument,
-  subdomain,
 ) => {
   let messagesByLanguage: IMessengerDataMessagesItem | null = null;
   let messengerData = integration.messengerData;
@@ -205,128 +202,6 @@ const createVisitor = async (subdomain: string, visitorId: string) => {
 };
 
 export const widgetMutations = {
-  async widgetTicketCreated(_root, doc, { subdomain }: IContext) {
-    // return await sendTicketsMessage({
-    //   subdomain,
-    //   action: 'widgets.createTicket',
-    //   data: {
-    //     doc,
-    //   },
-    //   isRPC: true,
-    // });
-  },
-  async widgetsTicketCustomersEdit(
-    _root,
-    args: {
-      customerId?: string;
-      firstName?: string;
-      lastName?: string;
-      emails?: string[];
-      phones?: string[];
-    },
-    { models, subdomain }: IContext,
-  ) {
-    const { customerId, firstName, lastName, emails, phones } = args;
-    if (!customerId) {
-      throw new Error('Customer ID not found');
-    }
-    // return await sendCoreMessage({
-    //   subdomain,
-    //   action: 'customers.updateCustomer',
-    //   data: {
-    //     _id: customerId,
-    //     doc: {
-    //       firstName,
-    //       lastName,
-    //       emails: emails?.map((email) => ({ email, type: 'other' })),
-    //       phones: phones?.map((phone) => ({ phone, type: 'other' })),
-    //     },
-    //   },
-    //   isRPC: true,
-    //   defaultValue: null,
-    // });
-  },
-  async widgetsTicketCheckProgressForget(
-    _root,
-    args: {
-      email?: string;
-      phoneNumber?: string;
-    },
-    { subdomain }: IContext,
-  ) {
-    const { email, phoneNumber } = args;
-    // return sendTicketsMessage({
-    //   subdomain,
-    //   action: 'widgets.fetchTicketProgressForget',
-    //   data: {
-    //     email,
-    //     phoneNumber,
-    //   },
-    //   isRPC: true,
-    // });
-  },
-
-  async widgetsTicketCommentAdd(
-    _root,
-    args: {
-      type: string;
-      typeId: string;
-      content: string;
-      userType: string;
-      customerId: string;
-    },
-    { subdomain }: IContext,
-  ) {
-    const { type, typeId, content, userType, customerId } = args;
-    // return await sendTicketsMessage({
-    //   subdomain,
-    //   action: 'widgets.commentAdd',
-    //   data: {
-    //     type,
-    //     typeId,
-    //     content,
-    //     userType,
-    //     customerId,
-    //   },
-    //   isRPC: true,
-    // });
-  },
-  async widgetsTicketCommentsRemove(
-    _root,
-    args: {
-      _id: string;
-    },
-    { subdomain }: IContext,
-  ) {
-    const { _id } = args;
-    // await sendTicketsMessage({
-    //   subdomain,
-    //   action: 'widgets.comment.remove',
-    //   data: {
-    //     _id,
-    //   },
-    //   isRPC: true,
-    // });
-    return 'deleted';
-  },
-
-  async widgetsTicketCheckProgress(
-    _root,
-    args: {
-      number?: string;
-    },
-    { models, subdomain }: IContext,
-  ) {
-    const { number } = args;
-    // return sendTicketsMessage({
-    //   subdomain,
-    //   action: 'widgets.fetchTicketProgress',
-    //   data: {
-    //     number,
-    //   },
-    //   isRPC: true,
-    // });
-  },
   async widgetsLeadIncreaseViewCount(
     _root,
     { formId }: { formId: string },
@@ -335,10 +210,6 @@ export const widgetMutations = {
     return models.Integrations.increaseViewCount(formId);
   },
 
-  /*
-   * Create a new customer or update existing customer info
-   * when connection established
-   */
   async widgetsMessengerConnect(
     _root,
     args: {
@@ -353,7 +224,7 @@ export const widgetMutations = {
       deviceToken?: string;
       visitorId?: string;
     },
-    { models, subdomain, user }: IContext,
+    { models }: IContext,
   ) {
     const {
       brandCode,
@@ -382,7 +253,6 @@ export const widgetMutations = {
         },
       },
     });
-    console.log(brand, 'brand');
     if (!brand) {
       throw new Error('Invalid configuration');
     }
@@ -396,7 +266,6 @@ export const widgetMutations = {
     if (!integration) {
       throw new Error('Integration not found');
     }
-    console.log('1');
     let customer;
 
     if (cachedCustomerId || email || phone || code) {
@@ -417,7 +286,7 @@ export const widgetMutations = {
         defaultValue: [],
       });
 
-      let doc = {
+      const doc = {
         integrationId: integration._id,
         email,
         phone,
@@ -426,8 +295,6 @@ export const widgetMutations = {
         deviceToken,
         scopeBrandIds: [brand._id],
       };
-      console.log('111');
-
       customer = customer
         ? await sendTRPCMessage({
             pluginName: 'core',
@@ -454,7 +321,6 @@ export const widgetMutations = {
               },
             },
           });
-      console.log('1221');
     }
     if (visitorId) {
       await sendTRPCMessage({
@@ -468,18 +334,7 @@ export const widgetMutations = {
           },
         },
       });
-
-      // await sendCoreMessage({
-      //   subdomain,
-      //   action: 'visitor.createOrUpdate',
-      //   data: {
-      //     visitorId,
-      //     integrationId: integration._id,
-      //     scopeBrandIds: [brand._id],
-      //   },
-      // });
     }
-    console.log('122121');
     // get or create company
     if (companyData && companyData.name) {
       let company = await sendTRPCMessage({
@@ -541,13 +396,16 @@ export const widgetMutations = {
           },
         });
 
-        // sendAutomationsMessage({
-        //   subdomain,
-        //   action: 'trigger',
-        //   data: { type: 'core:company', targets: [company] },
-        //   isRPC: true,
-        //   defaultValue: null,
-        // });
+        await sendTRPCMessage({
+          pluginName: 'automations',
+          method: 'mutation',
+          module: 'triggers',
+          action: 'trigger',
+          input: {
+            type: 'core:company',
+            targets: [company],
+          },
+        });
       }
 
       if (customer && company) {
@@ -573,26 +431,19 @@ export const widgetMutations = {
         { _id: integration._id },
         { $set: { isConnected: true } },
       );
-
-      // await sendCoreMessage({
-      //   subdomain,
-      //   action: 'registerOnboardHistory',
-      //   data: {
-      //     type: 'erxesMessagerConnect',
-      //     user,
-      //   },
-      // });
     }
-    console.log('12', integration);
+
     return {
       integrationId: integration._id,
       uiOptions: integration.uiOptions,
       languageCode: integration.languageCode,
       ticketData: integration.ticketData,
-      messengerData: await getMessengerData(models, integration, subdomain),
+      messengerData: await getMessengerData(models, integration),
       customerId: customer && customer._id,
       visitorId: customer ? null : visitorId,
-      brand,
+      brand: {
+        _id: brand._id,
+      },
     };
   },
   /*
@@ -675,8 +526,6 @@ export const widgetMutations = {
       customerId = customer._id;
     }
 
-    // customer can write a message
-    // to the closed conversation even if it's closed
     let conversation;
 
     const integration =
@@ -697,15 +546,12 @@ export const widgetMutations = {
       conversation = await models.Conversations.findByIdAndUpdate(
         conversationId,
         {
-          // mark this conversation as unread
           readUserIds: [],
 
-          // reopen this conversation if it's closed
           status: CONVERSATION_STATUSES.OPEN,
         },
         { new: true },
       );
-      // create conversation
     } else {
       conversation = await models.Conversations.createConversation({
         botId,
@@ -721,7 +567,6 @@ export const widgetMutations = {
       });
     }
 
-    // create message
     const msg = await models.ConversationMessages.createMessage({
       conversationId: conversation._id,
       customerId,
@@ -735,18 +580,14 @@ export const widgetMutations = {
       { _id: msg.conversationId },
       {
         $set: {
-          // Reopen its conversation if it's closed
           status: CONVERSATION_STATUSES.OPEN,
 
-          // setting conversation's content to last message
           content: conversationContent,
 
-          // Mark as unread
           readUserIds: [],
 
           customerId,
 
-          // clear visitorId
           visitorId: '',
         },
       },
@@ -766,14 +607,13 @@ export const widgetMutations = {
     graphqlPubsub.publish(`conversationMessageInserted:${msg.conversationId}`, {
       conversationMessageInserted: msg,
     });
-    // if (isEnabled('automations')) {
-    //   await handleAutomation(subdomain, {
-    //     conversationMessage: msg, // Pass msg as conversationMessage
-    //     payload: payload,
-    //   });
-    // }
+    if (await isEnabled('automations')) {
+      await handleAutomation(subdomain, {
+        conversationMessage: msg, // Pass msg as conversationMessage
+        payload: payload,
+      });
+    }
 
-    // bot message ================
     if (
       HAS_BOTENDPOINT_URL &&
       !botShowInitialMessage &&
@@ -848,7 +688,6 @@ export const widgetMutations = {
     if (customerLastStatus === 'left' && customerId) {
       await redis.set(`customer_last_status_${customerId}`, 'joined');
 
-      // customer has joined + time
       const conversationMessages =
         await models.Conversations.changeCustomerStatus(
           'joined',
@@ -865,7 +704,6 @@ export const widgetMutations = {
         );
       }
 
-      // notify as connected
       graphqlPubsub.publish(`customerConnectionChanged:${customerId}`, {
         customerConnectionChanged: {
           _id: customerId,
@@ -873,15 +711,6 @@ export const widgetMutations = {
         },
       });
     }
-
-    // await sendToWebhook({
-    //   subdomain,
-    //   data: {
-    //     action: 'create',
-    //     type: 'inbox:customerMessages',
-    //     params: msg,
-    //   },
-    // });
 
     return msg;
   },
@@ -953,8 +782,6 @@ export const widgetMutations = {
     }: { visitorId?: string; customerId?: string; browserInfo: IBrowserInfo },
     { subdomain }: IContext,
   ) {
-    // update location
-
     if (customerId) {
       await sendTRPCMessage({
         pluginName: 'core',
@@ -1021,24 +848,10 @@ export const widgetMutations = {
     return 'ok';
   },
 
-  async widgetsSendEmail(_root, args, { subdomain, models }: IContext) {
+  async widgetsSendEmail(_root, args, { subdomain }: IContext) {
     const { toEmails, fromEmail, title, content, customerId, formId } = args;
 
     const attachments = args.attachments || [];
-
-    // do not use Customers.getCustomer() because it throws error if not found
-
-    const customer = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'customers',
-      action: 'findOne',
-      input: {
-        query: {
-          _id: customerId,
-        },
-      },
-    });
 
     const form = await sendTRPCMessage({
       pluginName: 'core',
@@ -1053,28 +866,6 @@ export const widgetMutations = {
     });
 
     let finalContent = content;
-
-    if (customer && form) {
-      // const replacedContent = await new EditorAttributeUtil(
-      //   `${process.env.DOMAIN}/gateway/pl:core`,
-      //   await getServices(),
-      //   subdomain,
-      // ).replaceAttributes({
-      //   content,
-      //   customer,
-      //   user:
-      //     (await sendCoreMessage({
-      //       subdomain,
-      //       action: 'users.findOne',
-      //       data: {
-      //         _id: form.createdUserId,
-      //       },
-      //       isRPC: true,
-      //       defaultValue: {},
-      //     })) || {},
-      // });
-      // finalContent = replacedContent || '';
-    }
 
     let mailAttachment: any = [];
 
@@ -1151,17 +942,16 @@ export const widgetMutations = {
       integrationId,
       conversationId,
       customerId,
-      visitorId,
       message,
-      payload,
       type,
+      payload,
     }: {
       conversationId?: string;
       customerId?: string;
       visitorId?: string;
       integrationId: string;
       message: string;
-      payload: String;
+      payload: string;
       type: string;
     },
     { models, subdomain }: IContext,
@@ -1182,7 +972,7 @@ export const widgetMutations = {
         botId: integrationId,
       });
     } else {
-      let conversation = await models.Conversations.createConversation({
+      const conversation = await models.Conversations.createConversation({
         botId: integrationId,
         customerId,
         integrationId,
@@ -1201,14 +991,14 @@ export const widgetMutations = {
     });
 
     const key = type.includes('persistentMenu') ? 'persistentMenuId' : 'btnId';
-    // if (isEnabled('automations')) {
-    //   if (key) {
-    //     await handleAutomation(subdomain, {
-    //       conversationMessage: msg,
-    //       payload: { [key]: payload, conversationId, customerId },
-    //     });
-    //   }
-    // }
+    if (await isEnabled('automations')) {
+      if (key) {
+        await handleAutomation(subdomain, {
+          conversationMessage: msg,
+          payload: { [key]: payload, conversationId, customerId },
+        });
+      }
+    }
 
     return msg;
   },
