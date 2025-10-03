@@ -25,12 +25,9 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false # шууд install хийлгэхгүй
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
-        with:
-          node-version: '22'
 
       - name: Install dependencies
         run: pnpm install
@@ -38,8 +35,8 @@ jobs:
       - name: Build shared module
         run: pnpm nx build erxes-api-shared
 
-      - name: Build operation_api
-        run: pnpm nx build operation_api
+      - name: Build core-api
+        run: pnpm nx build core-api
 
       # Buildx setup
       - name: Set up QEMU
@@ -60,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: backend/plugins/operation_api/Dockerfile
+          file: backend/core-api/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
