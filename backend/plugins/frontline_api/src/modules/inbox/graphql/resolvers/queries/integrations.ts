@@ -4,10 +4,13 @@ import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 import { IChannelDocument } from '~/modules/channel/@types/channel';
-const generateFilterQuery = async (
-  { kind, channelId, searchValue, tag, status },
-  models,
-) => {
+const generateFilterQuery = async ({
+  kind,
+  channelId,
+  searchValue,
+  tag,
+  status,
+}) => {
   const query: any = {};
 
   if (kind) {
@@ -18,11 +21,6 @@ const generateFilterQuery = async (
   if (channelId) {
     query.channelId = channelId;
   }
-
-  // // filter integrations by brand
-  // if (brandId) {
-  //   query.brandId = brandId;
-  // }
 
   if (searchValue) {
     query.name = new RegExp(`.*${searchValue}.*`, 'i');
@@ -82,7 +80,7 @@ export const integrationQueries = {
       throw new Error('User not authenticated');
     }
     let query = {
-      ...(await generateFilterQuery(args, models)),
+      ...(await generateFilterQuery(args)),
     };
     if (!user.isOwner) {
       query = {
@@ -192,7 +190,7 @@ export const integrationQueries = {
     };
 
     const qry = {
-      ...(await generateFilterQuery(args, models)),
+      ...(await generateFilterQuery(args)),
     };
 
     const count = async (query) => {
@@ -246,25 +244,6 @@ export const integrationQueries = {
           : 0;
       }
     }
-    // Counting integrations by brand
-
-    // const brands = await sendTRPCMessage({
-    //   pluginName: 'core',
-    //   method: 'query',
-    //   module: 'brands',
-    //   action: 'find',
-    //   input: {
-    //     query: {},
-    //   },
-    // });
-    // for (const brand of brands) {
-    //   const countQueryResult = await count({ brandId: brand._id, ...qry });
-    //   counts.byBrand[brand._id] = !args.brandId
-    //     ? countQueryResult
-    //     : args.brandId === brand._id
-    //     ? countQueryResult
-    //     : 0;
-    // }
 
     counts.byStatus.active = await count({ isActive: true, ...qry });
     counts.byStatus.archived = await count({ isActive: false, ...qry });

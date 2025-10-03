@@ -12,9 +12,7 @@ export interface IChannelMemberModel extends Model<IChannelMemberDocument> {
     memberId: string,
     channelId: string,
   ): Promise<IChannelMemberDocument>;
-  createChannelMember(
-    members: IChannelMember[],
-  ): Promise<IChannelMemberDocument>;
+  createChannelMember(doc: IChannelMember): Promise<IChannelMemberDocument>;
   updateChannelMember(
     _id: string,
     role: ChannelMemberRoles,
@@ -37,7 +35,7 @@ export const loadChannelMemberClass = (models: IModels) => {
     }
 
     public static async createChannelMember(doc: IChannelMember) {
-      return models.ChannelMembers.insertOne({ ...doc, createdBy: new Date() });
+      return models.ChannelMembers.create({ ...doc, createdAt: new Date() });
     }
 
     public static async updateChannelMember(
@@ -57,19 +55,19 @@ export const loadChannelMemberClass = (models: IModels) => {
           role: ChannelMemberRoles.ADMIN,
         });
 
-        if (adminsCount === 1) {
-          throw new Error('Admin cannot be removed');
+        if (adminsCount <= 1) {
+          throw new Error('At least one admin must remain in the channel');
         }
       }
 
       return models.ChannelMembers.findOneAndUpdate(
         { _id },
-        { $set: { role, updateBy: userId } },
+        { $set: { role, updatedBy: userId, updatedAt: new Date() } },
+        { new: true, runValidators: true },
       );
     }
 
     public static async createChannelMembers(members: IChannelMember[]) {
-      console.log(members, 'members....');
       return models.ChannelMembers.insertMany(members);
     }
 

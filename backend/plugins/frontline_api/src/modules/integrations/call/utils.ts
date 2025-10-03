@@ -679,7 +679,6 @@ export const updateIntegrationQueues = async (
       integrationId,
     );
     const { queues } = checkedIntegration;
-    console.log(queues, 'queues');
     // Prepare update data
     const updateData = { $set: { queues, ...details }, $upsert: true };
 

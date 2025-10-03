@@ -60,7 +60,7 @@ export function Channels() {
                       </Table.Cell>
                       <Table.Cell className="border-none px-2 w-32 text-muted-foreground">
                         {channel.createdAt
-                          ? format(channel.createdAt, 'MMM d, yyyy')
+                          ? format(new Date(channel.createdAt), 'MMM d, yyyy')
                           : ''}
                       </Table.Cell>
                       <Table.Cell className="border-none px-2 w-32 text-muted-foreground">

@@ -5,9 +5,9 @@ export const types = `
     }  
 
     type Channel {
-        _id: String
+        _id: String!
         icon: String
-        name: String
+        name: String!
         description: String
         createdAt: Date
         updatedAt: Date
@@ -15,9 +15,9 @@ export const types = `
     }
 
     type ChannelMember {
-        _id: String
-        memberId: String
-        channelId: String
+        _id: String!
+        memberId: String!
+        channelId: String!
         member: User
         role: String
     }

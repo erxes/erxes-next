@@ -9,7 +9,7 @@ import { Button, PageContainer } from 'erxes-ui';
 
 import { InboxSettingsTopbar } from '../settings/components/InboxSettingsTopbar';
 import { InboxSettingsSidebar } from '../settings/components/Sidebar';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 import { IconMailFilled } from '@tabler/icons-react';
 import { FrontlinePaths } from '@/types/FrontlinePaths';

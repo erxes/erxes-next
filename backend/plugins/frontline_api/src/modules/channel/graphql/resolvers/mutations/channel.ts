@@ -1,7 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import {
   ChannelMemberRoles,
-  IChannel,
   IChannelsEdit,
 } from '~/modules/channel/@types/channel';
 import { checkUserRole } from '../../../utils';
@@ -18,6 +17,7 @@ export const channelMutations = {
     }: { name: string; description: string; icon: string; memberIds: string[] },
     { models, subdomain, user }: IContext,
   ) => {
+    if (!user?._id) throw new Error('Unauthorized');
     const userId = user._id;
     memberIds = memberIds || [];
     memberIds = memberIds.includes(userId)
@@ -25,7 +25,7 @@ export const channelMutations = {
       : [...memberIds];
 
     const channel = await models.Channels.createChannel({
-      channelDoc: { name, description },
+      channelDoc: { name, description, icon },
       memberIds,
       adminId: userId,
     });

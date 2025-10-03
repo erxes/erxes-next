@@ -206,7 +206,6 @@ export const mutations = `
     channelId: String!,
     name: String!,
     languageCode: String
-    channelId: String
     ): Integration
 
   integrationsEditMessengerIntegration(
@@ -214,7 +213,6 @@ export const mutations = `
     channelId: String!,
     name: String!,
     languageCode: String
-    channelId: String
   ): Integration
 
   integrationsSaveMessengerAppearanceData(

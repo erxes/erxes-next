@@ -11,6 +11,7 @@ export const channelQueries = {
     _params: undefined,
     { models, user }: IContext,
   ) => {
+    if (!user?._id) throw new Error('Unauthorized');
     const userId = user._id;
     const channelIds = await models.ChannelMembers.find({
       memberId: userId,
@@ -28,9 +29,9 @@ export const channelQueries = {
       return models.Channels.find({ _id: { $in: params.channelIds } });
     }
     if (params.integrationId) {
-      const channelIds = await models.Integrations.findOne({
+      const channelIds = await models.Integrations.distinct('channelId', {
         _id: params.integrationId,
-      }).distinct('channelId');
+      });
       return models.Channels.find({ _id: { $in: channelIds } });
     }
 

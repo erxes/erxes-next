@@ -82,7 +82,8 @@ export const createIntegration = async (subdomain: string, data: any) => {
     return { status: 'success' };
   } catch (error: any) {
     // Rollback Integration if creation fails
-    await models.Integrations.deleteOne({ inboxId: integrationId });
+    await models.CallIntegrations.deleteOne({ inboxId: integrationId });
+    await models.Integrations.deleteOne({ _id: integrationId });
 
     const duplicateErrors: Record<string, string> = {
       wsServer:
@@ -117,7 +118,6 @@ export const updateIntegration = async ({
       inboxId: integrationId,
     }).lean();
 
-    console.log({ integrationId, doc }, 'wahahhah');
     if (!integration) {
       return { status: 'error', errorMessage: 'Integration not found.' };
     }

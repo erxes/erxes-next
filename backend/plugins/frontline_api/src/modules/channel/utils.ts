@@ -37,7 +37,6 @@ export const checkUserRole = async ({
 
     return;
   }
-  console.log({ channelId, memberId: userId });
   const userRole = await models.ChannelMembers.findOne({
     channelId,
     memberId: userId,

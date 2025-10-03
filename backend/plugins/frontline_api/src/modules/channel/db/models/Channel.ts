@@ -46,9 +46,9 @@ export const loadChannelClass = (models: IModels) => {
       memberIds: string[];
       adminId: string;
     }): Promise<IChannelDocument> {
-      if (!adminId) throw new Error('userId must be supplied');
+      if (!adminId) throw new Error('Admin Id must be supplied');
 
-      const channel = await models.Channels.insertOne({
+      const channel = await models.Channels.create({
         ...channelDoc,
         createdAt: new Date(),
         createdBy: adminId,
@@ -66,7 +66,6 @@ export const loadChannelClass = (models: IModels) => {
           role: ChannelMemberRoles.MEMBER,
         })),
       ];
-console.log("roles",roles)
       await models.ChannelMembers.createChannelMembers(roles);
 
       return channel;
@@ -77,19 +76,11 @@ console.log("roles",roles)
       doc: IChannel,
       userId: string,
     ) {
-      await models.Channels.updateOne(
+      return models.Channels.findOneAndUpdate(
         { _id },
-        {
-          $set: {
-            ...doc,
-            updatedBy: userId,
-            updatedAt: new Date(),
-          },
-        },
-        { runValidators: true },
+        { $set: { ...doc, updatedBy: userId, updatedAt: new Date() } },
+        { new: true, runValidators: true },
       );
-
-      return models.Channels.findOne({ _id });
     }
 
     public static async updateUserChannels(
@@ -108,9 +99,11 @@ console.log("roles",roles)
       return models.Channels.find({ _id: { $in: channelIds } }).lean();
     }
 
-    public static removeChannel(_id: string) {
-      models.Channels.deleteOne({ _id });
-      models.ChannelMembers.deleteMany({ channelId: _id });
+    public static async removeChannel(_id: string) {
+      await Promise.all([
+        models.Channels.deleteOne({ _id }),
+        models.ChannelMembers.deleteMany({ channelId: _id }),
+      ]);
     }
 
     public static async getChannels(

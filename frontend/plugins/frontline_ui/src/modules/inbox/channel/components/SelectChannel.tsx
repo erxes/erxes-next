@@ -95,9 +95,7 @@ export const SelectChannelsContent = () => {
   });
 
   // Mock the missing properties for now
-  const handleFetchMore = () => {
-    console.log('handleFetchMore');
-  };
+
   const channelsTotalCount = channelsData?.length || 0;
 
   return (
@@ -110,7 +108,6 @@ export const SelectChannelsContent = () => {
         onValueChange={setSearch}
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
-        {/* <Combobox.Empty loading={loading}/> */}
         {channels.length > 0 && (
           <>
             {channels.map((channel) => (
@@ -144,7 +141,7 @@ export const SelectChannelsContent = () => {
               ))}
 
             <Combobox.FetchMore
-              fetchMore={handleFetchMore}
+              fetchMore={() => ({})}
               currentLength={channelsData.length}
               totalCount={channelsTotalCount || 0}
             />

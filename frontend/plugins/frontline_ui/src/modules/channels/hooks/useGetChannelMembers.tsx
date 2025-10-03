@@ -11,14 +11,19 @@ export const useGetChannelMembers = ({
 }: {
   channelIds?: string[] | string;
 }) => {
-  const { data, loading } = useQuery<IGetChannelMembersQueryResponse>(
+  const normalizedIds = Array.isArray(channelIds)
+    ? channelIds
+    : channelIds
+    ? [channelIds]
+    : [];
+
+  const { data, loading, error } = useQuery<IGetChannelMembersQueryResponse>(
     GET_CHANNEL_MEMBERS,
     {
-      variables: {
-        channelIds,
-      },
+      variables: { channelIds: normalizedIds },
+      skip: normalizedIds.length === 0,
     },
   );
   const members = data?.getChannelMembers;
-  return { members, loading };
+  return { members, loading, error };
 };

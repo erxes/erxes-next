@@ -11,11 +11,10 @@ export function ChannelIntegrations() {
     },
     skip: !channelId,
   });
-  console.log(integrations, 'integrations');
   return (
     <div className="overflow-hidden h-full px-8">
       <div className="ml-auto flex justify-between py-6">
-        <h1 className="text-xlfont-semibold">Integrations</h1>
+        <h1 className="text-xl font-semibold">Integrations</h1>
       </div>
       <div className="bg-sidebar border border-sidebar pl-1 border-t-4 border-l-4 pb-2 pr-2 rounded-lg">
         <Table>
@@ -43,14 +42,8 @@ export function ChannelIntegrations() {
                       <Table.Cell className="font-medium border-none pl-2 w-auto">
                         {integration.name}
                       </Table.Cell>
-                      <Table.Cell className="w-52 border-none">
-                        {/* {integration.isActive ? 'Active' : 'Inactive'} */}
-                        ss
-                      </Table.Cell>
-                      <Table.Cell className="w-52 border-none">
-                        {/* {integration.healthStatus} */}
-                        aa
-                      </Table.Cell>
+                      <Table.Cell className="w-52 border-none"></Table.Cell>
+                      <Table.Cell className="w-52 border-none"></Table.Cell>
                       <Table.Cell className="w-52 border-none">
                         <Button variant="outline">
                           <IconSettings />

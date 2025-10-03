@@ -6,6 +6,7 @@ export const channelSchema = schemaWrapper(
   new Schema({
     _id: mongooseStringRandomId,
     createdAt: { type: Date, label: 'Created at' },
+    createdBy: { type: String, label: 'Created by' },
     name: { type: String, label: 'Name' },
     icon: { type: String, label: 'Icon' },
     description: {
@@ -43,6 +44,8 @@ export const channelMembers = schemaWrapper(
     channelId: { type: String, label: 'Channel ID' },
     role: { type: String, label: 'Role', enum: channelMemberRole.ALL },
     createdAt: { type: Date, label: 'Created at' },
-    createdBy: { type: Date, label: 'Created by' },
+    createdBy: { type: String, label: 'Created by' },
   }),
 );
+
+channelMembers.index({ channelId: 1, memberId: 1 }, { unique: true });
