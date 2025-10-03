@@ -1,4 +1,4 @@
-name: CI plugin-accounting_api
+name: CI plugin--accounting_api
 
 on:
   push:

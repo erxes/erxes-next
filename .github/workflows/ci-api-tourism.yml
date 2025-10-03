@@ -1,4 +1,4 @@
-name: CI plugin-tourism_api
+name: CI plugin--tourism_api
 
 on:
   push:

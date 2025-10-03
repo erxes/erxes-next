@@ -1,4 +1,4 @@
-name: CI plugin-sales_ui
+name: CI plugin--sales_ui
 
 on:
   push:

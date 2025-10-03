@@ -1,4 +1,4 @@
-name: CI plugin-operation_api
+name: CI plugin--operation_api
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CI plugin-payment_ui
+name: CI plugin--payment_ui
 
 on:
   push:

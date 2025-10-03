@@ -1,4 +1,4 @@
-name: CI plugin-content_api
+name: CI plugin--content_api
 
 on:
   push:

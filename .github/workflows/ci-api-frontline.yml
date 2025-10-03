@@ -1,4 +1,4 @@
-name: CI plugin-frontline_api
+name: CI plugin--frontline_api
 
 on:
   push:
