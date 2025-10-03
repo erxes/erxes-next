@@ -1,7 +1,13 @@
 # Base image
 FROM node:22-alpine AS base
 WORKDIR /app
+
+# Install pnpm
 RUN npm install -g pnpm
+
+# Fix pnpm global bin issue
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="${PNPM_HOME}:${PATH}"
 
 # Dependencies (production only)
 FROM base AS deps
@@ -28,7 +34,6 @@ COPY --from=deps /app/backend/gateway/node_modules ./backend/gateway/node_module
 COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
 # ---- Apollo Router setup ----
-# Install curl & ca-certificates
 RUN apk add --no-cache curl ca-certificates
 
 # Install Rover CLI for supergraph composition
