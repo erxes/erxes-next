@@ -1,5 +1,5 @@
 import { MutationHookOptions, useMutation } from '@apollo/client';
-import { ROLES_UPSERT } from '../graphql/roleMutation';
+import { ROLES_UPSERT } from '@/settings/team-member/graphql/roleMutation';
 import { toast } from 'erxes-ui';
 export const useRoleUpsert = () => {
   const [_roleUpsert, { loading }] = useMutation(ROLES_UPSERT);
