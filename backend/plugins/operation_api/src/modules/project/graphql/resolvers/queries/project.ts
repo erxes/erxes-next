@@ -6,6 +6,7 @@ import {
 } from '@/project/utils/charUtils';
 import { STATUS_TYPES } from '@/status/constants/types';
 import { differenceInCalendarDays } from 'date-fns';
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
@@ -675,3 +676,9 @@ export const projectQueries = {
     return chartData;
   },
 };
+
+requireLogin(projectQueries, 'getProject');
+requireLogin(projectQueries, 'getProjects');
+requireLogin(projectQueries, 'getProjectProgress');
+requireLogin(projectQueries, 'getProjectProgressByMember');
+requireLogin(projectQueries, 'getProjectProgressChart');

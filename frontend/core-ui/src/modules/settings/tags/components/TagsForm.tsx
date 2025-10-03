@@ -1,13 +1,14 @@
-import { useFormContext } from 'react-hook-form';
-import { TTagsForm } from '../hooks/useTagsForm';
 import { Button, Combobox, Form, Input, Popover } from 'erxes-ui';
-import { SelectTags } from 'ui-modules';
+import { SelectTagType, SelectTags } from 'ui-modules';
+
 import { IconChevronDown } from '@tabler/icons-react';
-import { SelectTagType } from 'ui-modules';
+import { TTagsForm } from '../hooks/useTagsForm';
+import { useFormContext } from 'react-hook-form';
 
 export const TagsForm = () => {
   const form = useFormContext<TTagsForm>();
   const { control, watch } = form;
+
   return (
     <div className="flex flex-col gap-3 py-4">
       <Form.Field

@@ -12,13 +12,13 @@ import {
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
+import { IconPlus, IconUser } from '@tabler/icons-react';
 import {
   SelectMemberContext,
   useSelectMemberContext,
 } from '../contexts/SelectMemberContext';
 
 import { IUser } from '../types/TeamMembers';
-import { IconPlus, IconUser } from '@tabler/icons-react';
 import { MembersInline } from './MembersInline';
 import React from 'react';
 import { currentUserState } from 'ui-modules/states';
@@ -199,11 +199,17 @@ const SelectMemberContent = () => {
   );
 };
 
-export const SelectMemberFilterItem = () => {
+export const SelectMemberFilterItem = ({
+  value,
+  label,
+}: {
+  value?: string;
+  label?: string;
+}) => {
   return (
-    <Filter.Item value="assignedTo">
+    <Filter.Item value={value || 'assignedTo'}>
       <IconUser />
-      Assigned To
+      {label || 'Assigned To'}
     </Filter.Item>
   );
 };
@@ -244,11 +250,13 @@ export const SelectMemberFilterBar = ({
   onValueChange,
   queryKey,
   mode = 'single',
+  label,
 }: {
   iconOnly?: boolean;
   onValueChange?: (value: string[] | string | null) => void;
   queryKey?: string;
   mode?: 'single' | 'multiple';
+  label?: string;
 }) => {
   const [assignedTo, setAssignedTo] = useQueryState<string[] | string>(
     queryKey || 'assignedTo',
@@ -263,7 +271,7 @@ export const SelectMemberFilterBar = ({
     <Filter.BarItem queryKey={queryKey || 'assignedTo'}>
       <Filter.BarName>
         <IconUser />
-        {!iconOnly && 'Assigned To'}
+        {label ? label : !iconOnly && 'Assigned To'}
       </Filter.BarName>
       <SelectMemberProvider
         mode={mode}
