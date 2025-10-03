@@ -32,7 +32,7 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile --frozen-lockfile
 
       - name: Build shared module
         run: pnpm nx build erxes-api-shared
