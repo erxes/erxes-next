@@ -17,18 +17,13 @@ const conversationChanged = `
   }
 `;
 
-const conversationMessageInserted = (isDailycoEnabled: boolean) => `
-  subscription conversationMessageInserted($_id: String!) {
-    conversationMessageInserted(_id: $_id) {
+const ConversationMessageInserted = `
+  subscription ConversationMessageInserted($_id: String!) {
+    ConversationMessageInserted(_id: $_id) {
       ${messageFields}
-      ${
-        isDailycoEnabled
-          ? `
       videoCallData {
         url
         status
-      }`
-          : ''
       }
     }
   }
@@ -50,7 +45,7 @@ const adminMessageInserted = `
 
 export {
   CLOUDFLARE_CALL_RECEIVED,
-  conversationMessageInserted,
+  ConversationMessageInserted,
   adminMessageInserted,
   conversationChanged,
   conversationBotTypingStatus,

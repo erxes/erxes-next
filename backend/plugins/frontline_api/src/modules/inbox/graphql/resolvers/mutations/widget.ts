@@ -264,13 +264,11 @@ export const widgetMutations = {
         module: 'customers',
         action: 'getWidgetCustomer',
         input: {
-          query: {
             integrationId: integration._id,
             cachedCustomerId,
             email,
             phone,
             code,
-          },
         },
         defaultValue: [],
       });
@@ -291,11 +289,9 @@ export const widgetMutations = {
             module: 'customers',
             action: 'updateMessengerCustomer',
             input: {
-              query: {
                 _id: customer._id,
                 doc,
                 customData,
-              },
             },
           })
         : await sendTRPCMessage({
@@ -304,26 +300,24 @@ export const widgetMutations = {
             module: 'customers',
             action: 'createMessengerCustomer',
             input: {
-              query: {
                 doc,
                 customData,
-              },
             },
           });
     }
-    if (visitorId) {
-      await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'mutation',
-        module: 'customers',
-        action: 'createMessengerCustomer',
-        input: {
-          query: {
-            customData,
-          },
-        },
-      });
-    }
+    // if (visitorId) {
+    //   await sendTRPCMessage({
+    //     pluginName: 'core',
+    //     method: 'mutation',
+    //     module: 'customers',
+    //     action: 'createMessengerCustomer',
+    //     input: {
+    //       query: {
+    //         customData,
+    //       },
+    //     },
+    //   });
+    // }
     // get or create company
     if (companyData && companyData.name) {
       let company = await sendTRPCMessage({
@@ -546,6 +540,7 @@ export const widgetMutations = {
         isBot: !!botId,
         customerId,
         integrationId,
+        visitorId,
         operatorStatus: HAS_BOTENDPOINT_URL
           ? CONVERSATION_OPERATOR_STATUS.BOT
           : CONVERSATION_OPERATOR_STATUS.OPERATOR,
@@ -576,7 +571,7 @@ export const widgetMutations = {
 
           customerId,
 
-          visitorId: '',
+          // visitorId: '',
         },
       },
     );
@@ -793,18 +788,18 @@ export const widgetMutations = {
       });
     }
 
-    if (visitorId) {
-      await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'mutation',
-        module: 'customers',
-        action: 'updateEntry',
-        input: {
-          visitorId,
-          location: browserInfo,
-        },
-      });
-    }
+    // if (visitorId) {
+    //   await sendTRPCMessage({
+    //     pluginName: 'core',
+    //     method: 'mutation',
+    //     module: 'customers',
+    //     action: 'updateEntry',
+    //     input: {
+    //       visitorId,
+    //       location: browserInfo,
+    //     },
+    //   });
+    // }
 
     try {
       await trackViewPageEvent(subdomain, {

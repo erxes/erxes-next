@@ -1,36 +1,29 @@
 import { MESSAGE_FIELDS, messageFields } from './fields';
 import { gql } from '@apollo/client';
 
-const WIDGETS_INSERT_MESSAGE_MUTATION = ({
-  queryVariables,
-  queryParams,
-}: {
-  queryVariables: string;
-  queryParams: string;
-}) => gql`
-    mutation widgetsInsertMessage(
-      ${queryVariables}
-      $message: String
-      $contentType: String
-      $conversationId: String
-      $attachments: [AttachmentInput]
-      $skillId: String
-      $payload: String
-    ) {
-
-    widgetsInsertMessage(
-      ${queryParams}
-      contentType: $contentType
-      message: $message
-      conversationId: $conversationId
-      attachments: $attachments
-      skillId: $skillId
-      payload: $payload
-
-    ) {
-      ${MESSAGE_FIELDS}
-    }
-  }`;
+const WIDGETS_INSERT_MESSAGE_MUTATION = gql`
+mutation WidgetsInsertMessage(
+  $integrationId: String!
+  $customerId: String
+  $visitorId: String
+  $conversationId: String
+  $contentType: String
+  $message: String
+  $attachments: [AttachmentInput]
+) {
+  widgetsInsertMessage(
+    integrationId: $integrationId
+    customerId: $customerId
+    visitorId: $visitorId
+    conversationId: $conversationId
+    contentType: $contentType
+    message: $message
+    attachments: $attachments
+  ) {
+    ${MESSAGE_FIELDS}
+  }
+}
+`;
 
 const WIDGET_BOT_REQUEST_MUTATION = gql`
   mutation widgetBotRequest(
@@ -235,23 +228,32 @@ const TICKET_CHECK_PROGRESS_FORGET = gql`
   }
 `;
 
-const readConversationMessages = `
-  mutation widgetsReadConversationMessages($conversationId: String) {
-    widgetsReadConversationMessages(conversationId: $conversationId)
-  }
-`;
-
 const connect = (
   isCloudFlareEnabled?: boolean,
   isTicketEnabled?: boolean,
 ) => gql`
-  mutation connect($brandCode: String!, $email: String, $phone: String, $code: String
-    $isUser: Boolean, $data: JSON,
-    $companyData: JSON, $cachedCustomerId: String $visitorId: String) {
-
-    widgetsMessengerConnect(brandCode: $brandCode, email: $email, phone: $phone, code: $code,
-      isUser: $isUser, data: $data, companyData: $companyData,
-      cachedCustomerId: $cachedCustomerId, visitorId: $visitorId) {
+  mutation connect(
+    $brandCode: String!,
+    $visitorId: String
+    $cachedCustomerId: String,
+    $email: String,
+    $isUser: Boolean,
+    $phone: String,
+    $code: String
+    $data: JSON,
+    $companyData: JSON,
+    ) {
+    widgetsMessengerConnect(
+      brandCode: $brandCode,
+      visitorId: $visitorId,
+      cachedCustomerId: $cachedCustomerId,
+      email: $email,
+      isUser: $isUser,
+      phone: $phone,
+      code: $code,
+      data: $data,
+      companyData: $companyData,
+    ) {
       integrationId,
       messengerData,
       ${
@@ -325,5 +327,4 @@ export {
   connect,
   saveBrowserInfo,
   sendTypingInfo,
-  readConversationMessages,
 };

@@ -4,15 +4,13 @@ import { Button } from '../ui/button';
 import { Header } from '../messenger/header';
 import { useMessenger } from '../messenger/hooks/useMessenger';
 import { CreateTicket } from '../messenger/create-ticket';
-import {
-  ConversationMessage,
-  OperatorMessage,
-} from '../messenger/conversation';
-import { DateSeparator } from '../messenger/date-seperator';
-import { CustomerMessage } from '../messenger/conversation';
-import { ChatInput } from '../messenger/chat-input';
-import { useEnabledServices } from '@/components/messenger/hooks/useEnabledServices';
 import { useConnect } from '@/components/messenger/hooks/useConnect';
+import { Spinner } from '@/components/ui/spinner';
+import { Welcome } from '@/components/messenger/Welcome';
+import { useAtomValue } from 'jotai';
+import { connectionAtom } from '@/components/messenger/atoms';
+import { ConversationDetails } from '@/components/messenger/conversation-details';
+import { Tooltip } from '@/components/ui/tooltip';
 
 interface MessengerProps {
   brandId?: string;
@@ -25,83 +23,55 @@ export const ErxesMessenger = ({
   isOpen: controlledOpen,
   onOpenChange,
 }: MessengerProps) => {
-  console.log('ErxesMessenger rendered with brandId:', _brandId);
   const { activeTab, isOpen, setIsOpen } = useMessenger();
-  const { enabledServices, loading, error } = useEnabledServices();
-  const {
-    result,
-    loading: isConnecting,
-    error: connectError,
-  } = useConnect({ brandId: _brandId ?? '' });
-  console.log(
-    'enabledServices',
-    enabledServices,
-    'loading:',
-    loading,
-    'error:',
-    error,
-  );
+
+  const { loading: connecting } = useConnect({ brandId: _brandId ?? '' });
   const open = controlledOpen ?? isOpen;
-  const handleOpenChange = onOpenChange ?? setIsOpen;
 
-  console.log(
-    'result',
-    result,
-    'isConnecting:',
-    isConnecting,
-    'connectError:',
-    connectError,
-  );
+  const handleOpenChange = (open: boolean) => {
+    if (connecting) return;
+    onOpenChange?.(open);
+    setIsOpen(open);
+  };
 
-  console.log('Popover state:', { open, controlledOpen, isOpen, _brandId });
+  const connection = useAtomValue(connectionAtom);
+  console.log('connection:\n', connection);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'ticket':
         return <CreateTicket />;
       case 'chat':
-        return (
-          <div className="flex flex-col">
-            <div className="flex flex-auto flex-col justify-end gap-2 p-4">
-              <OperatorMessage />
-              <DateSeparator date="Today" />
-              <CustomerMessage />
-            </div>
-            <ChatInput />
-          </div>
-        );
+        return <ConversationDetails />;
       default:
-        return (
-          <div className="flex flex-col">
-            <div className="flex flex-col justify-center p-4 font-medium text-sm min-h-28">
-              <ConversationMessage />
-            </div>
-            <ChatInput />
-          </div>
-        );
+        return <Welcome />;
     }
   };
 
   return (
-    <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="fixed bottom-4 right-4 z-50 size-12 flex items-center justify-center rounded-full shadow-xs shadow-accent"
+    <Tooltip.Provider>
+      <Popover open={open} onOpenChange={handleOpenChange}>
+        <PopoverTrigger asChild>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="fixed bottom-4 right-4 z-50 size-12 flex items-center justify-center rounded-full shadow-xs shadow-accent"
+          >
+            {connecting ? <Spinner /> : <IconMessage2 size={24} />}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          align="end"
+          sideOffset={16}
+          className="flex flex-col justify-between max-w-[var(--widget-width)] min-w-96 max-h-[var(--widget-max-height)] min-h-[var(--widget-min-height)] overflow-hidden size-full bg-sidebar"
         >
-          <IconMessage2 size={24} />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        side="top"
-        align="end"
-        sideOffset={16}
-        className="max-w-[var(--widget-width)] min-w-96 w-full bg-sidebar"
-      >
-        <Header />
-        {renderContent()}
-      </PopoverContent>
-    </Popover>
+          <Header />
+          <div className="flex-1 overflow-y-hidden h-full">
+            {renderContent()}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </Tooltip.Provider>
   );
 };
