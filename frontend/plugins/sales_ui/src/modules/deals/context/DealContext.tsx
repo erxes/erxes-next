@@ -1,4 +1,3 @@
-// context/DealsContext.tsx
 import { ReactNode, createContext, useContext, useMemo } from 'react';
 import {
   useDealsAdd,
@@ -6,6 +5,7 @@ import {
   useDealsRemove,
 } from '../cards/hooks/useDeals';
 
+import { ISelectBoardsContext } from '../types/boards';
 import { useConformityEdit } from '../cards/hooks/useConformity';
 
 interface DealsContextType {
@@ -59,6 +59,20 @@ export const useDealsContext = () => {
   const context = useContext(DealsContext);
   if (!context) {
     throw new Error('useDealsContext must be used within a DealsProvider');
+  }
+  return context;
+};
+
+export const SelectBoardsContext = createContext<ISelectBoardsContext | null>(
+  null,
+);
+
+export const useSelectBoardsContext = () => {
+  const context = useContext(SelectBoardsContext);
+  if (!context) {
+    throw new Error(
+      'useSelectBoardsContext must be used within <SelectBoardsProvider>',
+    );
   }
   return context;
 };

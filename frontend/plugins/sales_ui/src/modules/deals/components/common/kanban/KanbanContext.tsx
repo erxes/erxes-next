@@ -27,8 +27,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
 import { IDeal } from '@/deals/types/deals';
 import { IStage } from '@/deals/types/stages';
-import { cn } from 'erxes-ui';
 import { Portal } from 'radix-ui';
+import { cn } from 'erxes-ui';
 
 export type { DragEndEvent } from '@dnd-kit/core';
 
@@ -260,7 +260,7 @@ export const KanbanProvider = <
     setActiveCardId(null);
     onDragEnd?.(event);
 
-    if (!over || active.id === over.id) {
+    if (!over) {
       return;
     }
 
@@ -317,6 +317,7 @@ export const KanbanProvider = <
         {
           itemId: activeId,
           destinationStageId: overId,
+          // aboveItemId: overId
         },
         'card',
       );
@@ -366,7 +367,7 @@ export const KanbanProvider = <
       updateOrders?.(
         {
           itemId: activeId,
-          destinationStageId: overId,
+          destinationStageId: overItem.stage?._id,
         },
         'card',
       );

@@ -51,7 +51,7 @@ export const NoteInput = ({ contentId }: { contentId: string }) => {
     createNote({
       variables: {
         content: JSON.stringify(trimmedContent),
-        itemId: contentId,
+        contentId: contentId,
         mentions: getMentionedUserIds(trimmedContent),
       },
       onCompleted: () => {

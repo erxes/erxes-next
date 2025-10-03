@@ -1,7 +1,7 @@
 import { Button, Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-
+import { NotificationContent } from './system/NotficationContent';
 const ConversationDetailRemoteEntry = lazy(() =>
   import('./my-inbox/components/NotificationConversationDetail').then(
     (module) => ({
@@ -46,10 +46,21 @@ export const GenericErrorFallback = ({
 };
 
 const NotificationRemoteEntries = ({ contentType, ...props }: any) => {
-  const [_, _moduleName, type] = (contentType || '')
+  const [_, moduleName, type] = (contentType || '')
     .replace(':', '.')
     .split('.');
   const RemoteComponent = Remotes[type];
+
+  if (moduleName === 'system' && type) {
+    const NotificationComponent =
+      NotificationContent[type as keyof typeof NotificationContent];
+
+    if (!NotificationComponent) {
+      return <></>;
+    }
+
+    return <NotificationComponent {...props} />;
+  }
 
   return (
     <Suspense fallback={<Spinner />}>

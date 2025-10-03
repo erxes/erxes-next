@@ -16,7 +16,7 @@ export const conformityTrpcRouter = t.router({
 
     savedConformity: t.procedure
       .input(z.any())
-      .mutation(async ({ ctx, input }) => {
+      .query(async ({ ctx, input }) => {
         const { models } = ctx;
         return models.Conformities.savedConformity(input);
       }),
@@ -38,6 +38,13 @@ export const conformityTrpcRouter = t.router({
       .mutation(async ({ ctx, input }) => {
         const { models } = ctx;
         return models.Conformities.removeConformity(input);
+      }),
+
+    deleteConformity: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { models } = ctx;
+        return models.Conformities.deleteConformities(input);
       }),
 
     getConformities: t.procedure

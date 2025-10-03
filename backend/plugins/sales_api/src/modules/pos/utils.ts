@@ -11,7 +11,7 @@ import { IModels, generateModels } from '~/connectionResolvers';
 import { IPosOrder, IPosOrderDocument } from './@types/orders';
 import { IPosDocument } from './@types/pos';
 import { sendCoreMessage } from '~/trpc/init-trpc';
-import { sendPosclientHealthCheck } from '~/initWorker';
+import { sendPosclientHealthCheck, sendPosclientMessage } from '~/initWorker';
 
 export const getConfig = async (code: string, defaultValue?: any) => {
   return await sendTRPCMessage({
@@ -28,7 +28,7 @@ export const getChildCategories = async (subdomain: string, categoryIds) => {
     pluginName: 'core',
     module: 'productCategories',
     action: 'withChilds',
-    input: { ids: categoryIds },
+    input: { _ids: categoryIds },
     defaultValue: [],
   });
 

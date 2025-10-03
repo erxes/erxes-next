@@ -7,7 +7,6 @@ export default async function posUserMiddleware(
   _res: Response,
   next: NextFunction,
 ) {
-  console.log('posUserMiddleware', 'is running');
   let token;
   try {
     token = req.headers['erxes-pos-token'] || req.cookies['pos-config-token'];

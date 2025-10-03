@@ -1,5 +1,5 @@
 import { IModels } from '~/connectionResolvers';
-import { graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { debugCall } from '@/integrations/call/debuggers';
 import {
   determineExtension,
@@ -10,6 +10,7 @@ import {
 } from '~/modules/integrations/call/services/cdrUtils';
 import { getOrCreateCustomer } from '~/modules/integrations/call/store';
 import { createOrUpdateErxesConversation } from '~/modules/integrations/call/utils';
+import { pConversationClientMessageInserted } from '~/modules/inbox/graphql/resolvers/mutations/widget';
 
 export const receiveCdr = async (models: IModels, subdomain, params) => {
   debugCall(`Request to get post data with: ${JSON.stringify(params)}`);
@@ -47,14 +48,12 @@ export const receiveCdr = async (models: IModels, subdomain, params) => {
         method: 'query',
         module: 'users',
         action: 'findOne',
-        input: { _id: matchedOperator.userId },
+        input: { query: { _id: matchedOperator.userId } },
       });
 
-      if (!operator) {
-        throw new Error('Operator not found');
+      if (operator) {
+        operatorPhone = operator?.details?.operatorPhone || '';
       }
-
-      operatorPhone = operator?.details?.operatorPhone || '';
     }
   }
 
@@ -68,22 +67,22 @@ export const receiveCdr = async (models: IModels, subdomain, params) => {
 
   if (existingCdr) {
     conversationId = existingCdr.conversationId;
-
     await createOrUpdateErxesConversation(subdomain, {
       conversationId,
       content: content,
       updatedAt: new Date(),
       owner: operatorPhone || '',
+      integrationId: inboxId,
     });
   } else {
     const startDate = new Date(params.start);
 
-    const oneMinuteBefore = new Date(startDate.getTime() - 60 * 1000);
-    const oneMinuteAfter = new Date(startDate.getTime() + 60 * 1000);
+    const startTime = new Date(startDate.getTime() - 30 * 1000);
+    const endTime = new Date(startDate.getTime() + 30 * 1000);
 
     const historySelector = {
       customerPhone: primaryPhone,
-      createdAt: { $gte: oneMinuteBefore, $lte: oneMinuteAfter },
+      createdAt: { $gte: startTime, $lte: endTime },
     } as any;
     if (extension) {
       historySelector.extensionNumber = extension;
@@ -125,12 +124,11 @@ export const receiveCdr = async (models: IModels, subdomain, params) => {
     conversationId,
   );
 
-  await graphqlPubsub.publish(`conversationMessageInserted:${cdr._id}`, {
-    conversationMessageInserted: cdr,
-    subdomain,
-    conversation: cdr,
-    integration,
-  });
+  const doc = {
+    ...cdr.toObject(),
+    conversationId: cdr.conversationId,
+  };
+  await pConversationClientMessageInserted(subdomain, doc);
 
   return 'success';
 };

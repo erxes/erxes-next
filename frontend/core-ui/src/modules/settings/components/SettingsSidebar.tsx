@@ -1,20 +1,25 @@
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import { IconChevronLeft } from '@tabler/icons-react';
 
-import { Sidebar, IUIConfig, NavigationMenuLinkItem } from 'erxes-ui';
+import { IUIConfig, NavigationMenuLinkItem, Sidebar } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
-import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
+import { pluginsConfigState } from 'ui-modules';
+import { GET_CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { SETTINGS_PATH_DATA } from '../constants/data';
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { usePageTrackerStore } from 'react-page-tracker';
+import { useVersion } from 'ui-modules';
 
 export function SettingsSidebar() {
   const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
+
+  const version = useVersion();
+
+  const CORE_MODULES = GET_CORE_MODULES(version);
 
   const pluginsWithSettingsModules: Map<string, IUIConfig['modules']> =
     useMemo(() => {
@@ -55,25 +60,23 @@ export function SettingsSidebar() {
         </SettingsNavigationGroup>
         <SettingsNavigationGroup name="Workspace">
           {SETTINGS_PATH_DATA.nav.map((item) => (
-            <Sidebar.MenuItem key={item.name}>
-              <NavigationMenuLinkItem
-                pathPrefix={AppPath.Settings}
-                path={item.path}
-                name={item.name}
-              />
-            </Sidebar.MenuItem>
+            <NavigationMenuLinkItem
+              pathPrefix={AppPath.Settings}
+              path={item.path}
+              name={item.name}
+              key={item.name}
+            />
           ))}
         </SettingsNavigationGroup>
 
         <SettingsNavigationGroup name="Core modules">
           {CORE_MODULES.filter((item) => item.hasSettings).map((item) => (
-            <Sidebar.MenuItem key={item.name}>
-              <NavigationMenuLinkItem
-                pathPrefix={AppPath.Settings}
-                path={item.path}
-                name={item.name}
-              />
-            </Sidebar.MenuItem>
+            <NavigationMenuLinkItem
+              key={item.name}
+              pathPrefix={AppPath.Settings}
+              path={item.path}
+              name={item.name}
+            />
           ))}
         </SettingsNavigationGroup>
 
@@ -84,13 +87,12 @@ export function SettingsSidebar() {
               name={pluginName.charAt(0).toUpperCase() + pluginName.slice(1)}
             >
               {modules.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <NavigationMenuLinkItem
-                    pathPrefix={AppPath.Settings}
-                    path={item.path}
-                    name={item.name}
-                  />
-                </Sidebar.MenuItem>
+                <NavigationMenuLinkItem
+                  key={item.name}
+                  pathPrefix={AppPath.Settings}
+                  path={item.path}
+                  name={item.name}
+                />
               ))}
             </SettingsNavigationGroup>
           ),
@@ -107,6 +109,9 @@ export const SettingsNavigationGroup = ({
   name: string;
   children: React.ReactNode;
 }) => {
+
+  if (React.Children.count(children) === 0) return null;
+
   return (
     <Sidebar.Group>
       <Sidebar.GroupLabel className="h-4">{name}</Sidebar.GroupLabel>

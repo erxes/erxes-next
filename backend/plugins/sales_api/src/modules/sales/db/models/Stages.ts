@@ -3,7 +3,7 @@ import { sendTRPCMessage, updateOrder } from 'erxes-api-shared/utils';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { IStage, IStageDocument } from '../../@types';
-import { removeStageItems } from '../../utils';
+import { removeStageItems } from '~/modules/sales/graphql/resolvers/utils';
 import { stageSchema } from '../definitions/stages';
 
 export interface IStageModel extends Model<IStageDocument> {

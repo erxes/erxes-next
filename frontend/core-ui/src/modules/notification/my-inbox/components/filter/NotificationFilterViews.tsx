@@ -7,16 +7,15 @@ export const NotificationFilterViews = () => {
   const [queries, setQueries] = useMultiQueryState<{
     status?: string;
     priority?: string;
-    type?: string;
     fromUserId?: string;
-  }>(['priority', 'type', 'fromUserId']);
+  }>(['priority', 'fromUserId']);
 
-  const { priority, type, fromUserId } = queries;
+  const { priority, fromUserId } = queries;
 
   return (
     <>
       <Filter.View filterKey="type">
-        <NotificationTypeCommandBar type={type || ''} setQueries={setQueries} />
+        <NotificationTypeCommandBar />
       </Filter.View>
 
       <Filter.View filterKey="priority">

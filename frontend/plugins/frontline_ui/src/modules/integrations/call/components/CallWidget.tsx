@@ -25,21 +25,52 @@ import {
   IncomingCall,
 } from '@/integrations/call/components/IncomingCall';
 import { CallTriggerContent } from '@/integrations/call/components/CallTriggerContent';
+import {
+  currentCallConversationIdAtom,
+  historyIdAtom,
+} from '@/integrations/call/states/callStates';
+import { useAddCallCustomer } from '@/integrations/call/hooks/useAddCustomer';
 
 export const CallWidgetContent = () => {
   const [sipState] = useAtom<ISipState>(sipStateAtom);
+  const setHistoryId = useSetAtom(historyIdAtom);
+  const setCurrentCallConversationId = useSetAtom(
+    currentCallConversationIdAtom,
+  );
+  const { addCustomer, customer, channels, loading } = useAddCallCustomer();
+
+  useEffect(() => {
+    if (sipState.callStatus === CallStatusEnum.ENDED) {
+      setHistoryId(null);
+      setCurrentCallConversationId(null);
+    }
+  }, [sipState.callStatus, setHistoryId, setCurrentCallConversationId]);
+
   if (sipState.callStatus === CallStatusEnum.IDLE) {
-    return <CallTabs keypad={<Dialpad />} />;
+    return <CallTabs keypad={<Dialpad addCustomer={addCustomer} />} />;
   }
 
   if (
     sipState.callDirection === CallDirectionEnum.INCOMING &&
     sipState.callStatus === CallStatusEnum.STARTING
   ) {
-    return <IncomingCall />;
+    return (
+      <IncomingCall
+        addCustomer={addCustomer}
+        customer={customer}
+        channels={channels}
+        loading={loading}
+      />
+    );
   }
 
-  return <CallTabs keypad={<InCall />} />;
+  return (
+    <CallTabs
+      keypad={
+        <InCall customer={customer} channels={channels} loading={loading} />
+      }
+    />
+  );
 };
 
 export const CallWidgetMoreActions = () => {
@@ -109,7 +140,7 @@ export const CallWidget = () => {
                   '--radix-popper-content-height': contentHeight,
                 } as CSSProperties
               }
-              className="z-[100] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
+              className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg bg-background text-foreground shadow-lg min-w-80"
             >
               <CallWidgetContent />
             </PopoverPrimitive.Content>

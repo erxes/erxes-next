@@ -1,4 +1,7 @@
-import { sipStateAtom } from '@/integrations/call/states/sipStates';
+import {
+  rtcSessionAtom,
+  sipStateAtom,
+} from '@/integrations/call/states/sipStates';
 import { CallStatusEnum } from '@/integrations/call/types/sipTypes';
 import {
   IconDialpad,
@@ -8,28 +11,55 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { Button, ButtonProps, cn } from 'erxes-ui';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useSip } from '@/integrations/call/components/SipProvider';
-import { CallNumber } from '@/integrations/call/components/CallNumber';
 import {
   Transfer,
   TransferTrigger,
 } from '@/integrations/call/components/CallTransfer';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import {
   callDurationAtom,
-  historyIdAtom,
+  currentCallConversationIdAtom,
 } from '@/integrations/call/states/callStates';
 import { useCallDuration } from '@/integrations/call/hooks/useCallDuration';
+import { refetchNewMessagesState } from '@/inbox/conversations/states/newMessagesCountState';
+import { ICustomer } from '@/integrations/call/types/callTypes';
+import { renderUserInfo } from '@/integrations/call/utils/renderUserInfo';
+import { extractPhoneNumberFromCounterpart } from '@/integrations/call/utils/callUtils';
+import { useCustomerDetail } from '@/integrations/call/hooks/useCustomerDetail';
 
-export const InCall = () => {
+export const InCall = ({
+  customer,
+  channels,
+  loading,
+}: {
+  customer: any;
+  channels: any;
+  loading: boolean;
+}) => {
+  const sipState = useAtomValue(sipStateAtom);
+
+  const phoneNumber = extractPhoneNumberFromCounterpart(
+    sipState.callCounterpart || '',
+  );
+  const { customerDetail, loading: CallLoading } = useCustomerDetail({
+    phoneNumber,
+  });
+
   const { stopCall } = useSip();
 
   return (
     <>
       <div className="text-center space-y-2 px-2 py-6">
-        <CallInfo />
+        <CallInfo
+          customer={customer}
+          channels={channels}
+          loading={loading}
+          customerDetail={customerDetail}
+          phoneNumber={phoneNumber}
+        />
       </div>
       <Transfer />
       <div className="grid grid-cols-5 p-1 gap-1 items-stretch border-b-0">
@@ -101,15 +131,21 @@ export const Mute = () => {
 
 export const Detail = () => {
   const sip = useAtomValue(sipStateAtom);
-  const historyId = useAtomValue(historyIdAtom);
+  const currentCallConversationId = useAtomValue(currentCallConversationIdAtom);
+  const setRefetchNewMessages = useSetAtom(refetchNewMessagesState);
   const navigate = useNavigate();
 
   return (
     <InCallActionButton
-      disabled={sip.callStatus !== CallStatusEnum.ACTIVE}
+      disabled={
+        sip.callStatus !== CallStatusEnum.ACTIVE || !currentCallConversationId
+      }
       onClick={() => {
         if (sip.callStatus === CallStatusEnum.ACTIVE) {
-          navigate(`/integrations/call/${historyId}`);
+          navigate(
+            `/frontline/inbox?conversationId=${currentCallConversationId}`,
+          );
+          setRefetchNewMessages(true);
         }
       }}
     >
@@ -137,14 +173,27 @@ export const SelectCustomer = () => {
   );
 };
 
-const CallInfo = () => {
+const CallInfo = ({
+  customerDetail,
+  customer,
+  channels,
+  phoneNumber,
+  loading,
+}: {
+  customerDetail: any;
+  customer: ICustomer;
+  channels: any;
+  phoneNumber: string;
+  loading: boolean;
+}) => {
   const sip = useAtomValue(sipStateAtom);
   const setStartDate = useSetAtom(callDurationAtom);
   const time = useCallDuration();
+  const [rtcSessionState] = useAtom(rtcSessionAtom);
 
   useEffect(() => {
     if (sip.callStatus === CallStatusEnum.ACTIVE) {
-      setStartDate(new Date());
+      setStartDate(rtcSessionState?.start_time || new Date());
     } else {
       setStartDate(null);
     }
@@ -156,7 +205,8 @@ const CallInfo = () => {
         {sip.callStatus === CallStatusEnum.STARTING && 'Calling...'}
         {sip.callStatus === CallStatusEnum.ACTIVE && 'In call'}
       </div>
-      <CallNumber />
+      {!loading && renderUserInfo(customer, customerDetail, phoneNumber)}
+
       {sip.callStatus === CallStatusEnum.ACTIVE && (
         <div className="text-center text-accent-foreground text-sm">
           Duration: {time}

@@ -36,7 +36,8 @@ const posUserMutations = {
       password: (password || '').trim(),
     };
 
-    await models.PosUsers.createUser(doc);
+    const user = await models.PosUsers.createUser(doc);
+    console.log('user', user);
 
     return 'success';
   },

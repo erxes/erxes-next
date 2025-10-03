@@ -1,12 +1,9 @@
-import * as bodyParser from 'body-parser';
-import crypto from 'crypto';
-
-import { getSubdomain, graphqlPubsub } from 'erxes-api-shared/utils';
+import { getEnv, getSubdomain, graphqlPubsub } from 'erxes-api-shared/utils';
 import { generateModels } from '~/connectionResolvers';
-import { debugError } from '~/modules/inbox/utils';
 import { receiveCdr } from '~/modules/integrations/call/services/cdrServices';
 
 import express from 'express';
+import redis from '~/modules/integrations/call/redlock';
 
 const authenticateApi = async (req, res, next) => {
   const erxesApiId = req.headers['x-integration-id'];
@@ -17,7 +14,10 @@ const authenticateApi = async (req, res, next) => {
   const data = req.body;
 
   const subdomain = getSubdomain(req);
-
+  if (data.history) {
+    next();
+    return;
+  }
   const isAuthorized = await validateCompanyAccess(subdomain, erxesApiId, data);
   if (!isAuthorized) {
     console.warn(
@@ -33,16 +33,21 @@ async function validateCompanyAccess(subdomain, erxesApiId, cdrData) {
     const models = await generateModels(subdomain);
 
     const integration = await models.CallIntegrations.findOne({
-      inboxId: erxesApiId,
+      _id: erxesApiId,
     });
-
     if (!integration) {
       return false;
     }
 
-    // Verify trunk permissions
     const { src_trunk_name, dst_trunk_name } = cdrData;
-
+    console.log(
+      'integration.srcTrunk::',
+      integration.srcTrunk,
+      src_trunk_name,
+      '----',
+      integration.dstTrunk,
+      dst_trunk_name,
+    );
     const hasTrunkAccess =
       integration.srcTrunk === src_trunk_name ||
       integration.dstTrunk === dst_trunk_name;
@@ -55,6 +60,9 @@ async function validateCompanyAccess(subdomain, erxesApiId, cdrData) {
 }
 
 const initCallApp = async (app) => {
+  console.log('********* INIT CALL ********');
+  await redis.del('callCookie');
+
   app.use(
     express.json({
       limit: '15mb',
@@ -65,56 +73,36 @@ const initCallApp = async (app) => {
     next();
   });
 
-  // init bots
-  app.post('/call/receiveWaitingCall', authenticateApi, async (req, res) => {
-    try {
-      const data = req.body;
-      const history = data.history;
-
-      graphqlPubsub.publish(`waitingCallReceived`, {
-        waitingCallReceived: history,
-      });
-      res.status(200).json({ message: 'Call received successfully' });
-    } catch (error) {
-      console.error('Error receiving waiting call:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+  app.get('/resetCallCookie', async (req, res) => {
+    await redis.del('callCookie');
+    return res.send('Reseted call cookie');
   });
 
-  app.post('/call/receiveTalkingCall', authenticateApi, async (req, res) => {
+  app.post('/call/queueRealtimeUpdate', authenticateApi, async (req, res) => {
     try {
-      const data = req.body;
-      const history = data.history;
-      graphqlPubsub.publish(`talkingCallReceived`, {
-        talkingCallReceived: history,
-      });
-      res.status(200).json({ message: 'Call received successfully' });
-    } catch (error) {
-      console.error('Error receiving talking call:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+      const VERSION = getEnv({ name: 'VERSION' });
+      if (!VERSION || (VERSION && VERSION === 'saas')) {
+        const data = req.body;
+        const history = data.history;
 
-  app.post('/call/receiveAgents', authenticateApi, async (req, res) => {
-    try {
-      const data = req.body;
-      const history = data.history;
-
-      graphqlPubsub.publish(`agentCallReceived`, {
-        agentCallReceived: history,
-      });
-      res.status(200).json({ message: 'Call Agents received successfully' });
+        graphqlPubsub.publish(`queueRealtimeUpdate`, {
+          queueRealtimeUpdate: history,
+        });
+        res
+          .status(200)
+          .json({ message: 'Call dashboard data received successfully' });
+      }
     } catch (error) {
       console.error('Error receiving agent call:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  // Error handling middleware
+
   app.use((error, _req, res, _next) => {
     console.error('Error in middleware:', error);
     res.status(500).send(error.message);
   });
-  // init bots
+
   app.post('/call/cdrReceive', authenticateApi, async (req, res) => {
     try {
       const data = req.body;
@@ -129,7 +117,7 @@ const initCallApp = async (app) => {
         .json({ message: 'Call cdr received successfully' });
     } catch (error) {
       console.error('Error receiving cdr:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error sda' });
     }
   });
 };

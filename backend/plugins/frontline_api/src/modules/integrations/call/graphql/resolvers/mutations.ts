@@ -9,12 +9,11 @@ import { IContext } from '~/connectionResolvers';
 import acceptCall from '../../acceptCall';
 import { saveRecordUrl, getOrCreateCustomer } from '../../store';
 import { redlock } from '../../redlock';
-import { checkPermission } from 'erxes-api-shared/core-modules';
 import {
   ICallHistory,
   ICallHistoryEdit,
 } from '~/modules/integrations/call/@types/histories';
-import { graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { getEnv, graphqlPubsub } from 'erxes-api-shared/utils';
 
 export interface ISession {
   sessionCode: string;
@@ -69,6 +68,10 @@ const callsMutations = {
     { ...doc }: ICallHistoryEdit & { inboxIntegrationId: string },
     { user, models, subdomain }: IContext,
   ) {
+    const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
+    if (ENDPOINT_URL) {
+      return;
+    }
     const { _id } = doc;
     const history = await models.CallHistory.findOne({
       _id,
@@ -416,14 +419,46 @@ const callsMutations = {
   async callSyncRecordFile(
     _root,
     { acctId, inboxId },
-    { models, subdomain }: IContext,
+    { models, subdomain, user }: IContext,
   ) {
-    const cdr = await models.CallCdrs.findOne({ acctId });
+    let cdr = await models.CallCdrs.findOne({ acctId });
     if (cdr) {
-      await models.CallCdrs.updateOne(
-        { acctId },
-        { oldRecordUrl: cdr.recordUrl },
-      );
+      if (!cdr.recordfiles) {
+        const payload = {
+          path: 'api',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          data: {
+            request: {
+              action: 'getRecordInfosByCall',
+              id: cdr.acctId,
+            },
+          },
+          integrationId: inboxId,
+          retryCount: 1,
+          isConvertToJson: true,
+          isAddExtention: false,
+        };
+
+        const callRecordInfoResponse = await sendToGrandStream(
+          models,
+          payload,
+          user,
+        );
+
+        if (callRecordInfoResponse?.response?.recordfiles) {
+          await models.CallCdrs.updateOne(
+            { acctId },
+            { recordfiles: callRecordInfoResponse?.response?.recordfiles },
+          );
+          cdr = await models.CallCdrs.findOne({ acctId });
+        }
+      } else {
+        await models.CallCdrs.updateOne(
+          { acctId },
+          { oldRecordUrl: cdr.recordUrl },
+        );
+      }
 
       await saveRecordUrl(cdr, models, inboxId, subdomain);
       return 'successfully updated';
@@ -431,7 +466,5 @@ const callsMutations = {
     throw new Error('Cannot sync record file');
   },
 };
-
-checkPermission(callsMutations, 'callSyncRecordFile', 'syncCallRecordFile');
 
 export default callsMutations;

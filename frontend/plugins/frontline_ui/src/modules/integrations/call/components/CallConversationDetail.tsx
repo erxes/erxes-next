@@ -5,13 +5,21 @@ import {
   isInternalState,
   onlyInternalState,
 } from '@/inbox/conversations/conversation-detail/states/isInternalState';
-import { readImage, useQueryState } from 'erxes-ui';
+import { Alert, Button, readImage, toast, useQueryState } from 'erxes-ui';
 import { useCallConversationDetail } from '@/integrations/call/hooks/useCallConversationDetail';
 import { CustomersInline } from 'ui-modules';
 import { useConversationDetail } from '@/inbox/conversations/conversation-detail/hooks/useConversationDetail';
 import { format } from 'date-fns';
-import { IconPhoneOutgoing, IconPhoneIncoming } from '@tabler/icons-react';
-import { formatSeconds } from '@/integrations/call/utils/callUtils';
+import {
+  IconPhoneOutgoing,
+  IconPhoneIncoming,
+  IconRefresh,
+} from '@tabler/icons-react';
+import {
+  formatSeconds,
+  safeFormatDate,
+} from '@/integrations/call/utils/callUtils';
+import { useCallSyncAudioRecord } from '@/integrations/call/hooks/useCallSyncAudioRecord';
 
 export function CallConversationDetail() {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -21,6 +29,8 @@ export function CallConversationDetail() {
     },
     skip: !conversationId,
   });
+  const { callSyncRecordFile, loading: syncFileLoading } =
+    useCallSyncAudioRecord(conversationId);
   const setIsInternalNote = useSetAtom(isInternalState);
   const setOnlyInternal = useSetAtom(onlyInternalState);
 
@@ -37,13 +47,32 @@ export function CallConversationDetail() {
     };
   }, []);
 
-  if (loading || !callHistoryDetail) {
+  const syncRecord = async (acctId: string, inboxId: string) => {
+    try {
+      if (acctId && inboxId)
+        await callSyncRecordFile({ variables: { acctId, inboxId } });
+    } catch (e: any) {
+      toast({
+        title: 'Uh oh! Something went wrong.',
+        description: e.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  if (loading || !callHistoryDetail || syncFileLoading) {
     return null;
   }
 
-  const { callType, callDuration, callStartTime, callEndTime, recordUrl } =
-    callHistoryDetail || {};
-
+  const {
+    callType,
+    callDuration,
+    callStartTime,
+    callEndTime,
+    recordUrl,
+    acctId,
+    inboxIntegrationId,
+  } = callHistoryDetail || {};
   return (
     <>
       <div className="flex flex-col max-w-[648px] mx-auto p-6">
@@ -77,13 +106,13 @@ export function CallConversationDetail() {
                     Start Time
                   </div>
                   <div className="font-medium">
-                    {format(callStartTime, 'MMM d, yyyy HH:mm')}
+                    {safeFormatDate(callStartTime)}
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="text-sm text-accent-foreground">End Time</div>
                   <div className="font-medium">
-                    {format(callEndTime, 'MMM d, yyyy HH:mm')}
+                    {safeFormatDate(callEndTime)}
                   </div>
                 </div>
               </div>
@@ -93,6 +122,19 @@ export function CallConversationDetail() {
                   Your browser does not support the audio element.
                 </audio>
               )}
+              <div className="font-medium">
+                <Button
+                  id="cdrRecordUrl"
+                  size="sm"
+                  onClick={() => {
+                    syncRecord(acctId, inboxIntegrationId);
+                  }}
+                  className="flex top-2"
+                >
+                  <IconRefresh />
+                  {'sync record file'}
+                </Button>
+              </div>
             </div>
           </div>
         </div>

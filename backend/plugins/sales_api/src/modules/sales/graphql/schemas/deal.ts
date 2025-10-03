@@ -26,6 +26,51 @@ const inputDeps = `
   }
 `;
 
+const queryParams = `
+  _ids: [String]
+  date: SalesItemDate
+  parentId:String
+  pipelineId: String
+  pipelineIds: [String]
+  customerIds: [String]
+  vendorCustomerIds: [String]
+  companyIds: [String]
+  assignedUserIds: [String]
+  productIds: [String]
+  closeDateType: String
+  labelIds: [String]
+  search: String
+  priority: [String]
+  userIds: [String]
+  segment: String
+  segmentData: String
+  assignedToMe: String
+  startDate: String
+  endDate: String
+  hasStartAndCloseDate: Boolean
+  stageChangedStartDate: Date
+  stageChangedEndDate: Date
+  noSkipArchive: Boolean
+  tagIds: [String]
+  number: String
+  branchIds: [String]
+  departmentIds: [String]
+  boardIds: [String]
+  stageCodes: [String]
+  dateRangeFilters:JSON,
+  createdStartDate: Date,
+  createdEndDate: Date
+  stateChangedStartDate: Date
+  stateChangedEndDate: Date
+  startDateStartDate: Date
+  startDateEndDate: Date
+  closeDateStartDate: Date
+  closeDateEndDate: Date
+  resolvedDayBetween:[Int]
+
+  ${GQL_CURSOR_PARAM_DEFS}
+`;
+
 export const types = `
   ${typeDeps}
   ${inputDeps}
@@ -99,51 +144,17 @@ export const types = `
     pageInfo: PageInfo
     totalCount: Int,
   }
-`;
 
-const queryParams = `
-  _ids: [String]
-  date: SalesItemDate
-  parentId:String
-  pipelineId: String
-  pipelineIds: [String]
-  customerIds: [String]
-  vendorCustomerIds: [String]
-  companyIds: [String]
-  assignedUserIds: [String]
-  productIds: [String]
-  closeDateType: String
-  labelIds: [String]
-  search: String
-  priority: [String]
-  userIds: [String]
-  segment: String
-  segmentData: String
-  assignedToMe: String
-  startDate: String
-  endDate: String
-  hasStartAndCloseDate: Boolean
-  stageChangedStartDate: Date
-  stageChangedEndDate: Date
-  noSkipArchive: Boolean
-  tagIds: [String]
-  number: String
-  branchIds: [String]
-  departmentIds: [String]
-  boardIds: [String]
-  stageCodes: [String]
-  dateRangeFilters:JSON,
-  createdStartDate: Date,
-  createdEndDate: Date
-  stateChangedStartDate: Date
-  stateChangedEndDate: Date
-  startDateStartDate: Date
-  startDateEndDate: Date
-  closeDateStartDate: Date
-  closeDateEndDate: Date
-  resolvedDayBetween:[Int]
+  input IDealFilter {
+    stageId: String,
+    initialStageId: String,
+    ${queryParams}
+  }
 
-  ${GQL_CURSOR_PARAM_DEFS}
+  type DealSubscription {
+    action: String
+    deal: Deal
+  }
 `;
 
 const archivedDealsParams = `
@@ -176,7 +187,7 @@ export const queries = `
 
 const mutationParams = `
   parentId:String,
-  proccessId: String,
+  processId: String,
   aboveItemId: String,
   stageId: String,
   assignedUserIds: [String],
@@ -203,12 +214,12 @@ const mutationParams = `
 export const mutations = `
   dealsAdd(name: String, companyIds: [String], customerIds: [String], labelIds: [String], ${mutationParams}): Deal
   dealsEdit(_id: String!, name: String, ${mutationParams}): Deal
-  dealsChange(itemId: String!, aboveItemId: String, destinationStageId: String!, sourceStageId: String, proccessId: String): Deal
+  dealsChange(itemId: String!, aboveItemId: String, destinationStageId: String!, sourceStageId: String, processId: String): Deal
   dealsRemove(_id: String!): Deal
   dealsWatch(_id: String, isAdd: Boolean): Deal
-  dealsCopy(_id: String!, proccessId: String): Deal
-  dealsArchive(stageId: String!, proccessId: String): String
-  dealsCreateProductsData(proccessId: String, dealId: String, docs: JSON): JSON
-  dealsEditProductData(proccessId: String, dealId: String, dataId: String, doc: JSON): JSON
-  dealsDeleteProductData(proccessId: String, dealId: String, dataId: String): JSON
+  dealsCopy(_id: String!, processId: String): Deal
+  dealsArchive(stageId: String!, processId: String): String
+  dealsCreateProductsData(processId: String, dealId: String, docs: JSON): JSON
+  dealsEditProductData(processId: String, dealId: String, dataId: String, doc: JSON): JSON
+  dealsDeleteProductData(processId: String, dealId: String, dataId: String): JSON
 `;
