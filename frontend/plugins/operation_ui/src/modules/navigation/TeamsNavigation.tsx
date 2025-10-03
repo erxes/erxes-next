@@ -12,7 +12,6 @@ import {
   Sidebar,
   Skeleton,
   TextOverflowTooltip,
-  useConfirm,
   useToast,
 } from 'erxes-ui';
 import {
@@ -23,9 +22,7 @@ import {
   IconDotsVertical,
   IconLink,
   IconSettings,
-  IconLogout,
 } from '@tabler/icons-react';
-import { useTeamMemberRemove } from '@/team/hooks/useTeamMemberRemove';
 
 type Team = {
   _id: string;
@@ -129,12 +126,8 @@ export function TeamsNavigation() {
 
 const TeamActionsMenu = ({ team }: { team: Team }) => {
   const navigate = useNavigate();
-  const currentUser = useAtomValue(currentUserState);
 
   const { toast } = useToast();
-  const { confirm } = useConfirm();
-
-  const { removeTeamMember } = useTeamMemberRemove();
 
   const handleCopyLink = async () => {
     const teamLink = `${window.location.origin}/operation/team/${team._id}/tasks`;
@@ -151,19 +144,6 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
         description: e as string,
       });
     }
-  };
-
-  const handleRemoveMember = () => {
-    confirm({
-      message: `Are you sure you want to leave "${team.name}"?`,
-    }).then(() => {
-      removeTeamMember({
-        variables: {
-          teamId: team._id,
-          memberId: currentUser._id,
-        },
-      });
-    });
   };
 
   return (
@@ -199,13 +179,7 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
           <IconLink className="size-4" />
           Copy link
         </DropdownMenu.Item>
-        <DropdownMenu.Item
-          className="cursor-pointer text-red-600 focus:text-red-700"
-          onClick={handleRemoveMember}
-        >
-          <IconLogout className="size-4 text-red-600" />
-          Leave team
-        </DropdownMenu.Item>
+
         {/* <DropdownMenu.Item className="cursor-pointer">
           <IconArchive className="size-4" />
           Archive team

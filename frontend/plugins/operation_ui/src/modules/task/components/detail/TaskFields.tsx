@@ -1,4 +1,10 @@
-import { Input, Separator, useBlockEditor, BlockEditor } from 'erxes-ui';
+import {
+  Input,
+  Separator,
+  useBlockEditor,
+  BlockEditor,
+  Button,
+} from 'erxes-ui';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
 import { useDebounce } from 'use-debounce';
 import { useEffect, useState } from 'react';
@@ -13,6 +19,7 @@ import { SelectTeamTask } from '@/task/components/task-selects/SelectTeamTask';
 import { SelectProject } from '@/task/components/task-selects/SelectProjectTask';
 import { SelectEstimatedPoint } from '@/task/components/task-selects/SelectEstimatedPointTask';
 import { SelectCycle } from '@/task/components/task-selects/SelectCycle';
+import { ConverToProject } from '@/task/components/task-selects/ConvertToProject';
 
 export const TaskFields = ({ task }: { task: ITask }) => {
   const {
@@ -125,12 +132,14 @@ export const TaskFields = ({ task }: { task: ITask }) => {
           variant="detail"
           teamId={teamId}
         />
+
         <SelectProject
           value={projectId}
           taskId={taskId}
           variant="detail"
           teamId={teamId}
         />
+        <ConverToProject taskId={taskId} />
         <SelectEstimatedPoint
           value={estimatePoint}
           taskId={taskId}
