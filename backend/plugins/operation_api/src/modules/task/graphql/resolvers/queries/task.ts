@@ -1,4 +1,5 @@
 import { ITaskDocument, ITaskFilter } from '@/task/@types/task';
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
@@ -94,3 +95,6 @@ export const taskQueries = {
     return { list, totalCount, pageInfo };
   },
 };
+
+requireLogin(taskQueries, 'getTask');
+requireLogin(taskQueries, 'getTasks');

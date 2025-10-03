@@ -1,3 +1,4 @@
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 
 export const cycleMutations = {
@@ -17,3 +18,7 @@ export const cycleMutations = {
     return models.Cycle.removeCycle({ _id });
   },
 };
+
+requireLogin(cycleMutations, 'createCycle');
+requireLogin(cycleMutations, 'updateCycle');
+requireLogin(cycleMutations, 'removeCycle');

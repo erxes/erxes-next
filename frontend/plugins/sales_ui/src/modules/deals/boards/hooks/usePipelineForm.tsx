@@ -7,10 +7,17 @@ export const usePipelineForm = () => {
   const methods = useForm<TPipelineForm>({
     mode: 'onBlur',
     defaultValues: {
-      title: '',
+      name: '',
+      boardId: '',
+      tagId: '',
+      departmentIds: [],
+      branchIds: [],
+      memberIds: [],
+      stages: [],
     },
     resolver: zodResolver(PIPELINE_CREATE_SCHEMA),
   });
+
   return {
     methods,
   };

@@ -31,10 +31,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Build shared module
         run: pnpm nx build erxes-api-shared
@@ -61,7 +60,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: backend/plugins/gateway/Dockerfile
+          file: backend/gateway/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
