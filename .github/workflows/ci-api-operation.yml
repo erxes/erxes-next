@@ -1,4 +1,4 @@
-name: CI plugin-operation_api
+name: CI Plugin Operation API
 
 on:
   push:
@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -30,9 +32,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build shared module
         run: pnpm nx build erxes-api-shared
