@@ -19,6 +19,7 @@ export const incomingWebhookFormSchema = z.object({
   security: z
     .object({
       beararToken: z.string(),
+      secret: z.string(),
     })
     .optional(),
   timeoutMs: z.string().optional(),

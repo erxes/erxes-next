@@ -2,7 +2,7 @@ import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mu
 import { debugError } from '@/integrations/facebook/debuggers';
 import { checkContentConditions } from '@/integrations/facebook/meta/automation/utils/messageUtils';
 import {
-  IAction,
+  IAutomationAction,
   IAutomationExecution,
   splitType,
 } from 'erxes-api-shared/core-modules';
@@ -83,7 +83,7 @@ export const actionCreateMessage = async ({
 }: {
   models: IModels;
   subdomain: string;
-  action: IAction;
+  action: IAutomationAction;
   execution: { _id: string } & IAutomationExecution;
 }) => {
   const {

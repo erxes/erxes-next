@@ -1,7 +1,7 @@
 import type { Job } from 'bullmq';
-import { IJobData } from '@/bullmq';
+import { IJobData } from '@/bullmq/initMQWorkers';
 import { IModels } from '@/connectionResolver';
-import { getActionsMap } from '@/utils/utils';
+import { getActionsMap } from '@/utils';
 import { executeActions } from '@/executions/executeActions';
 
 // Final job interfaces

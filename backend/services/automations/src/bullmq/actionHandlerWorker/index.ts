@@ -1,7 +1,7 @@
 import type { Job } from 'bullmq';
-import { executePrevActionWorker } from '@/bullmq/actions/executePrevAction';
-import { playWaitingActionWorker } from '@/bullmq/actions/playWait';
-import { setActionWaitHandler } from '@/bullmq/actions/setWait';
+import { executePrevActionWorker } from '@/bullmq/actionHandlerWorker/executePrevAction';
+import { playWaitingActionWorker } from '@/bullmq/actionHandlerWorker/playWait';
+import { setActionWaitHandler } from '@/bullmq/actionHandlerWorker/setWait';
 import { generateModels, IModels } from '@/connectionResolver';
 type ActionName = 'play' | 'wait' | 'executePrevAction';
 

@@ -1,4 +1,8 @@
-import { IAction, ITrigger, IAutomationExecution } from './definitions';
+import {
+  IAutomationAction,
+  IAutomationTrigger,
+  IAutomationExecution,
+} from './definitions';
 
 type IContext = {
   subdomain: string;
@@ -61,7 +65,7 @@ export interface AutomationWorkers {
       collectionType: string;
       actionType: string;
       triggerType: string;
-      action: IAction;
+      action: IAutomationAction;
       execution: { _id: string } & IAutomationExecution;
     },
   ) => Promise<{
@@ -83,7 +87,7 @@ export interface AutomationWorkers {
       moduleName: string;
       collectionType: string;
       automationId: string;
-      trigger: ITrigger;
+      trigger: IAutomationTrigger;
       target: TTarget;
       config: TConfig;
     },
@@ -142,17 +146,23 @@ export interface IPropertyProps<TModels> {
   relatedItems: any[];
   triggerType?: string;
 }
+export enum EXECUTE_WAIT_TYPES {
+  DELAY = 'delay',
+  IS_IN_SEGMENT = 'isInSegment',
+  CHECK_OBJECT = 'checkObject',
+  WEBHOOK = 'webhook',
+}
 
 export type AutomationExecutionSetWaitCondition =
   | {
-      type: 'delay';
+      type: EXECUTE_WAIT_TYPES.DELAY;
       subdomain: string;
       waitFor: number;
       timeUnit: 'minute' | 'hour' | 'day' | 'month' | 'year';
       startWaitingDate?: Date;
     }
   | {
-      type: 'checkObject';
+      type: EXECUTE_WAIT_TYPES.CHECK_OBJECT;
       contentType?: string;
       shouldCheckOptionalConnect?: boolean;
       targetId?: string;
@@ -161,4 +171,9 @@ export type AutomationExecutionSetWaitCondition =
       expectedStateConjunction?: 'every' | 'some';
       timeout?: Date;
     }
-  | { type: 'isInSegment'; targetId: string; segmentId: string };
+  | {
+      type: EXECUTE_WAIT_TYPES.IS_IN_SEGMENT;
+      targetId: string;
+      segmentId: string;
+    }
+  | { type: EXECUTE_WAIT_TYPES.WEBHOOK; endpoint: string; secret: string };

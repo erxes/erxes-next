@@ -31,11 +31,11 @@ export interface IUserGroup {
 export interface IUserGroupDocument extends IUserGroup, Document {
   _id: string;
 }
-export interface IActionMap {
+export interface IAutomationActionMap {
   [key: string]: boolean;
 }
 
-export interface IActionsMap {
+export interface IAutomationActionsMap {
   name?: string;
   module?: string;
   description?: string;
@@ -52,7 +52,7 @@ export interface IPermissionParams {
 export interface IModuleMap {
   name: string;
   description?: string;
-  actions?: IActionsMap[];
+  actions?: IAutomationActionsMap[];
 }
 
 export interface IPermissionContext {

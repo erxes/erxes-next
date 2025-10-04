@@ -1,9 +1,13 @@
-import { IAction, IAutomationExecution, ITrigger } from '@/core-modules';
+import {
+  IAutomationAction,
+  IAutomationExecution,
+  IAutomationTrigger,
+} from '@/core-modules';
 
 export type ICheckTriggerData = {
   collectionType: string;
   automationId: string;
-  trigger: ITrigger;
+  trigger: IAutomationTrigger;
   target: any;
   config: any;
 };
@@ -20,7 +24,7 @@ export type IAutomationWorkerContext<TModels = any> = {
 };
 
 export type IAutomationReceiveActionData = {
-  action: IAction;
+  action: IAutomationAction;
   execution: { _id: string } & IAutomationExecution;
   actionType: string;
   collectionType: string;

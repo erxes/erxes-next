@@ -1,5 +1,6 @@
 import { IModels } from '@/connectionResolver';
 import { IAutomationWaitingActionDocument } from '@/mongo/waitingActionsToExecute';
+import { EXECUTE_WAIT_TYPES } from 'erxes-api-shared/core-modules';
 
 function accessNestedObject(obj: any, keys: string[]) {
   return keys.reduce((acc, key) => acc && acc[key], obj) || '';
@@ -59,9 +60,12 @@ export const checkIsWaitingAction = async (
   for (const target of targets) {
     const waitingAction = await models.WaitingActions.findOne({
       $or: [
-        { conditionType: 'isInSegment', targetId: target._id },
         {
-          conditionType: 'checkObject',
+          conditionType: EXECUTE_WAIT_TYPES.IS_IN_SEGMENT,
+          'conditionConfig.targetId': target._id,
+        },
+        {
+          conditionType: EXECUTE_WAIT_TYPES.CHECK_OBJECT,
           'conditionConfig.contentType': { $regex: `^${type}\\..*` },
           ...(executionId ? { executionId } : {}),
         },
@@ -74,7 +78,7 @@ export const checkIsWaitingAction = async (
 
     const { conditionType } = waitingAction;
 
-    if (conditionType === 'checkObject') {
+    if (conditionType === EXECUTE_WAIT_TYPES.CHECK_OBJECT) {
       return await handleCheckObjectCondition(models, waitingAction, target);
     }
 

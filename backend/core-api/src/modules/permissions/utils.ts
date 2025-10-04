@@ -1,6 +1,6 @@
 import { getKey } from 'erxes-api-shared/core-modules';
 import {
-  IActionsMap,
+  IAutomationActionsMap,
   IModuleMap,
   IPermissionDocument,
 } from 'erxes-api-shared/core-types';
@@ -51,7 +51,7 @@ export const getPermissionModules = async () => {
 };
 
 export const getPermissionActions = async () => {
-  const actions: IActionsMap[] = [];
+  const actions: IAutomationActionsMap[] = [];
 
   const services = await getPlugins();
 
@@ -85,45 +85,46 @@ export const getPermissionActions = async () => {
   return actions;
 };
 
-export const getPermissionActionsMap = async (): Promise<IActionsMap> => {
-  const actionsMap: IActionsMap = {};
+export const getPermissionActionsMap =
+  async (): Promise<IAutomationActionsMap> => {
+    const actionsMap: IAutomationActionsMap = {};
 
-  const services = await getPlugins();
+    const services = await getPlugins();
 
-  for (const name of services) {
-    const service = await getPlugin(name);
-    if (!service) continue;
-    if (!service.config) continue;
+    for (const name of services) {
+      const service = await getPlugin(name);
+      if (!service) continue;
+      if (!service.config) continue;
 
-    const permissions =
-      service.config.meta?.permissions || service.config.permissions;
+      const permissions =
+        service.config.meta?.permissions || service.config.permissions;
 
-    if (!permissions) continue;
+      if (!permissions) continue;
 
-    const moduleKeys = Object.keys(permissions);
+      const moduleKeys = Object.keys(permissions);
 
-    for (const key of moduleKeys) {
-      const module = permissions[key];
+      for (const key of moduleKeys) {
+        const module = permissions[key];
 
-      if (module.actions) {
-        for (const action of module.actions) {
-          if (!action.name) continue;
+        if (module.actions) {
+          for (const action of module.actions) {
+            if (!action.name) continue;
 
-          actionsMap[action.name] = {
-            module: module.name,
-            description: action.description,
-          };
+            actionsMap[action.name] = {
+              module: module.name,
+              description: action.description,
+            };
 
-          if (action.use) {
-            actionsMap[action.name].use = action.use;
+            if (action.use) {
+              actionsMap[action.name].use = action.use;
+            }
           }
         }
       }
     }
-  }
 
-  return actionsMap;
-};
+    return actionsMap;
+  };
 
 export const fixPermissions = async (
   models: IModels,
@@ -137,9 +138,8 @@ export const fixPermissions = async (
     const moduleItem: IModuleMap = permissionObjects[mod];
 
     if (moduleItem && moduleItem.actions) {
-      const allAction: IActionsMap | undefined = moduleItem.actions.find(
-        (a) => a.description === 'All',
-      );
+      const allAction: IAutomationActionsMap | undefined =
+        moduleItem.actions.find((a) => a.description === 'All');
       const otherActions = moduleItem.actions
         .filter((a) => a.description !== 'All')
         .map((a) => a.name);

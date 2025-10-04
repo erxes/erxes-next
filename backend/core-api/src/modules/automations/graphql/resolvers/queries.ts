@@ -6,7 +6,9 @@ import {
 } from 'erxes-api-shared/utils';
 
 import {
+  AUTOMATION_ACTIONS,
   AUTOMATION_STATUSES,
+  AUTOMATION_TRIGGERS,
   IAutomationDocument,
   IAutomationExecutionDocument,
   IAutomationsActionConfig,
@@ -16,7 +18,6 @@ import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 
 import { IContext } from '~/connectionResolvers';
 import { AiTrainingService } from '~/modules/automations/services/aiTraining';
-import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -272,9 +273,9 @@ export const automationQueries = {
       actionsConst: IAutomationsActionConfig[];
       propertyTypesConst: Array<{ value: string; label: string }>;
     } = {
-      triggersConst: [...UI_TRIGGERS],
+      triggersConst: [...AUTOMATION_TRIGGERS],
       triggerTypesConst: [],
-      actionsConst: [...UI_ACTIONS],
+      actionsConst: [...AUTOMATION_ACTIONS],
       propertyTypesConst: [],
     };
 

@@ -1,21 +1,29 @@
 import {
-  IAction,
-  IActionsMap,
+  IAutomationAction,
+  IAutomationActionsMap,
   IAutomationExecAction,
   IAutomationExecutionDocument,
 } from 'erxes-api-shared/core-modules';
-import { isInSegment } from '@/utils/segments/utils';
+import { isInSegment } from '@/utils/isInSegment';
 import { executeActions } from '@/executions/executeActions';
+import { TIfActionConfig } from '@/types';
 
-export const handleifAction = async (
+export const executeIfCondition = async (
   subdomain: string,
   triggerType: string,
   execution: IAutomationExecutionDocument,
-  action: IAction,
+  action: IAutomationAction<TIfActionConfig>,
   execAction: IAutomationExecAction,
-  actionsMap: IActionsMap,
+  actionsMap: IAutomationActionsMap,
 ) => {
   let ifActionId: string;
+  if (!action.config) {
+    throw new Error(
+      `Execute If Condition failed: action config is missing for action ID "${
+        action?.id || 'unknown'
+      }"`,
+    );
+  }
 
   const isIn = await isInSegment(action.config.contentId, execution.targetId);
   if (isIn) {

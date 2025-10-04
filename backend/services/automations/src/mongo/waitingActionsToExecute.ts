@@ -1,11 +1,19 @@
+import { EXECUTE_WAIT_TYPES } from 'erxes-api-shared/core-modules';
 import { Schema } from 'mongoose';
+
+const waitConditionTypes = [
+  EXECUTE_WAIT_TYPES.IS_IN_SEGMENT,
+  EXECUTE_WAIT_TYPES.CHECK_OBJECT,
+  EXECUTE_WAIT_TYPES.WEBHOOK,
+] as const;
+export type WaitConditionType = (typeof waitConditionTypes)[number];
 
 export interface IAutomationWaitingAction {
   automationId: string;
   executionId: string;
   currentActionId: string;
   responseActionId: string;
-  conditionType: 'isInSegment' | 'checkObject';
+  conditionType: WaitConditionType;
   conditionConfig: any;
   lastCheckedAt: Date;
 }
@@ -29,7 +37,7 @@ export const waitingActionsToExecuteSchema = new Schema(
     },
     conditionType: {
       type: String,
-      enum: ['isInSegment', 'checkObject'],
+      enum: waitConditionTypes,
       required: true,
       index: true,
     },

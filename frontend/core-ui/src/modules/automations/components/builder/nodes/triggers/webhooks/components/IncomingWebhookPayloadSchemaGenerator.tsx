@@ -96,6 +96,3 @@ export const IncomingWebhookPayloadSchemaGenerator = ({
     </div>
   );
 };
-
-IncomingWebhookPayloadSchemaGenerator.displayName =
-  'IncomingWebhookPayloadSchemaGenerator';

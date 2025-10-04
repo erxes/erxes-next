@@ -166,11 +166,31 @@ export const IncomingWebhookConfigForm = ({
             />
             <Form.Field
               control={form.control}
-              name="maxRetries"
+              name="timeoutMs"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label>Timeout (seconds)</Form.Label>
                   <Input {...field} type="number" defaultValue={30} />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              control={form.control}
+              name="security.secret"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Secret</Form.Label>
+                  <Input {...field} type="password" defaultValue={30} />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              control={form.control}
+              name="security.beararToken"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Bearar Token</Form.Label>
+                  <Input {...field} type="password" defaultValue={30} />
                 </Form.Item>
               )}
             />

@@ -1,13 +1,13 @@
 import {
-  IAction,
+  IAutomationAction,
   IAutomationExecutionDocument,
   splitType,
 } from 'erxes-api-shared/core-modules';
 import { sendWorkerMessage } from 'erxes-api-shared/utils';
 
-export const handleSetPropertyAction = async (
+export const executeSetPropertyAction = async (
   subdomain: string,
-  action: IAction,
+  action: IAutomationAction,
   triggerType: string,
   execution: IAutomationExecutionDocument,
 ) => {

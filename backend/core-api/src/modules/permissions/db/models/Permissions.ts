@@ -1,5 +1,5 @@
 import {
-  IActionsMap,
+  IAutomationActionsMap,
   IPermission,
   IPermissionDocument,
   IPermissionParams,
@@ -27,7 +27,7 @@ export const loadPermissionClass = (models: IModels) => {
 
       let filter = {};
 
-      let actionObj: IActionsMap;
+      let actionObj: IAutomationActionsMap;
 
       const actionsMap = await getPermissionActionsMap();
 

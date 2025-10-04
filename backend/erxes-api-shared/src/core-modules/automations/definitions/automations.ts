@@ -1,13 +1,17 @@
 import { Document, Schema } from 'mongoose';
 import { AUTOMATION_STATUSES } from '../constants';
 
-export type IActionsMap = { [key: string]: IAction };
+export type IAutomationActionsMap = { [key: string]: IAutomationAction };
 
-export interface IAction {
+// type for values
+type TAutomationStatus =
+  (typeof AUTOMATION_STATUSES)[keyof typeof AUTOMATION_STATUSES];
+
+export interface IAutomationAction<TConfig = any> {
   id: string;
   type: string;
   nextActionId?: string;
-  config?: any;
+  config?: TConfig;
   style?: any;
   icon?: string;
   label?: string;
@@ -15,16 +19,7 @@ export interface IAction {
   workflowId?: string;
 }
 
-export type TriggerType =
-  | 'customer'
-  | 'company'
-  | 'deal'
-  | 'task'
-  | 'purchase'
-  | 'ticket'
-  | 'conversation';
-
-export interface ITrigger {
+export interface IAutomationTrigger<TConfig = any> {
   id: string;
   type: string;
   actionId?: string;
@@ -33,7 +28,8 @@ export interface ITrigger {
     reEnrollment: boolean;
     reEnrollmentRules: string[];
     dateConfig: any;
-  };
+    [key: string]: any;
+  } & TConfig;
   style?: any;
   icon?: string;
   label?: string;
@@ -44,9 +40,9 @@ export interface ITrigger {
 
 export interface IAutomation {
   name: string;
-  status: string;
-  triggers: ITrigger[];
-  actions: IAction[];
+  status: TAutomationStatus;
+  triggers: IAutomationTrigger[];
+  actions: IAutomationAction[];
   createdAt: Date;
   createdBy: string;
   updatedAt: Date;

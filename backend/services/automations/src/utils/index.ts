@@ -1,7 +1,10 @@
-import { IAction, IActionsMap } from 'erxes-api-shared/core-modules';
+import {
+  IAutomationAction,
+  IAutomationActionsMap,
+} from 'erxes-api-shared/core-modules';
 
-export const getActionsMap = async (actions: IAction[]) => {
-  const actionsMap: IActionsMap = {};
+export const getActionsMap = async (actions: IAutomationAction[]) => {
+  const actionsMap: IAutomationActionsMap = {};
 
   for (const action of actions) {
     actionsMap[action.id] = action;
@@ -10,7 +13,7 @@ export const getActionsMap = async (actions: IAction[]) => {
   return actionsMap;
 };
 
-const isDiffValue = (latest, target, field) => {
+export const isDiffValue = (latest, target, field) => {
   if (field.includes('customFieldsData') || field.includes('trackedData')) {
     const [ct, fieldId] = field.split('.');
     const latestFoundItem = latest[ct].find((i) => i.field === fieldId);

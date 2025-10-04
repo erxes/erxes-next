@@ -2,7 +2,10 @@ import type { Job } from 'bullmq';
 import { sendWorkerQueue } from 'erxes-api-shared/utils';
 import moment from 'moment';
 import { IModels } from '@/connectionResolver';
-import { AutomationExecutionSetWaitCondition } from 'erxes-api-shared/core-modules';
+import {
+  AutomationExecutionSetWaitCondition,
+  EXECUTE_WAIT_TYPES,
+} from 'erxes-api-shared/core-modules';
 
 export const setActionWaitHandler = async (
   models: IModels,
@@ -35,7 +38,7 @@ export const setExecutionWaitAction = async (
     condition,
   } = data;
 
-  if (condition.type === 'delay') {
+  if (condition.type === EXECUTE_WAIT_TYPES.DELAY) {
     const { subdomain, startWaitingDate, waitFor, timeUnit } = condition;
 
     if (!subdomain) {
@@ -77,7 +80,7 @@ export const setExecutionWaitAction = async (
     return;
   }
 
-  if (condition.type === 'isInSegment') {
+  if (condition.type === EXECUTE_WAIT_TYPES.IS_IN_SEGMENT) {
     const { targetId, segmentId } = condition;
 
     await models.WaitingActions.create({
@@ -85,7 +88,7 @@ export const setExecutionWaitAction = async (
       executionId,
       currentActionId,
       responseActionId,
-      conditionType: 'isInSegment',
+      conditionType: EXECUTE_WAIT_TYPES.IS_IN_SEGMENT,
       conditionConfig: {
         targetId,
         segmentId,
@@ -95,7 +98,7 @@ export const setExecutionWaitAction = async (
     return;
   }
 
-  if (condition.type === 'checkObject') {
+  if (condition.type === EXECUTE_WAIT_TYPES.CHECK_OBJECT) {
     const {
       propertyName,
       expectedState,
@@ -128,7 +131,7 @@ export const setExecutionWaitAction = async (
       executionId,
       currentActionId,
       responseActionId,
-      conditionType: 'checkObject',
+      conditionType: EXECUTE_WAIT_TYPES.CHECK_OBJECT,
       conditionConfig: {
         propertyName,
         expectedState,
@@ -140,5 +143,20 @@ export const setExecutionWaitAction = async (
     });
 
     return;
+  }
+
+  if (condition.type === EXECUTE_WAIT_TYPES.WEBHOOK) {
+    const { endpoint, secret } = condition;
+    await models.WaitingActions.create({
+      automationId,
+      executionId,
+      currentActionId,
+      responseActionId,
+      conditionType: EXECUTE_WAIT_TYPES.WEBHOOK,
+      conditionConfig: {
+        endpoint,
+        secret,
+      },
+    });
   }
 };
