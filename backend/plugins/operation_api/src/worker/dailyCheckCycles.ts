@@ -1,48 +1,67 @@
 import { Job } from 'bullmq';
-import { endOfDay } from 'date-fns'; // эсвэл өөр utility
 import {
   getEnv,
-  getSaasOrganizations,
+  getSaasOrganizationsByFilter,
+  sendTRPCMessage,
   sendWorkerQueue,
 } from 'erxes-api-shared/utils';
+import { tz } from 'moment-timezone';
 import { generateModels } from '~/connectionResolvers';
 
 export const dailyCheckCycles = async () => {
   const VERSION = getEnv({ name: 'VERSION' });
 
+  const timezone = await sendTRPCMessage({
+    pluginName: 'core',
+    method: 'query',
+    module: 'configs',
+    action: 'getConfig',
+    input: {
+      code: 'TIMEZONE',
+    },
+    defaultValue: 'UTC',
+  });
+
   if (VERSION && VERSION === 'saas') {
-    const orgs = await getSaasOrganizations();
+    const orgs = await getSaasOrganizationsByFilter({
+      cycleEnabled: true,
+    });
 
     for (const org of orgs) {
-      if (org.enabledcycles) {
-        sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
-          subdomain: org.subdomain,
-        });
-      }
+      sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
+        subdomain: org.subdomain,
+        timezone,
+      });
     }
 
     return 'success';
   } else {
     sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
       subdomain: 'os',
+      timezone,
     });
     return 'success';
   }
 };
 
 export const checkCycle = async (job: Job) => {
-  const { subdomain } = job?.data ?? {};
+  const { subdomain, timezone = 'UTC' } = job?.data ?? {};
+
+  const tzToday = tz(new Date(), timezone);
+
+  if (tzToday.hour() !== 0) {
+    return;
+  }
 
   const models = await generateModels(subdomain);
 
-  const today = new Date();
+  const utcStart = tzToday.startOf('day').toDate();
+  const utcEnd = tzToday.endOf('day').toDate();
 
   const endCycles = await models.Cycle.find({
     isActive: true,
     isCompleted: false,
-    endDate: {
-      $lte: endOfDay(today),
-    },
+    endDate: { $gte: utcStart, $lte: utcEnd },
   });
 
   if (endCycles?.length) {
@@ -54,9 +73,7 @@ export const checkCycle = async (job: Job) => {
   const startCycles = await models.Cycle.find({
     isActive: false,
     isCompleted: false,
-    startDate: {
-      $lte: endOfDay(today),
-    },
+    startDate: { $gte: utcStart, $lte: utcEnd },
   });
 
   if (startCycles?.length) {
