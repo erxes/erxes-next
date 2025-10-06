@@ -1,7 +1,7 @@
 import { Job } from 'bullmq';
 import {
   getEnv,
-  getSaasOrganizationsByFilter,
+  getSaasOrganizations,
   sendTRPCMessage,
   sendWorkerQueue,
 } from 'erxes-api-shared/utils';
@@ -11,31 +11,29 @@ import { generateModels } from '~/connectionResolvers';
 export const dailyCheckCycles = async () => {
   const VERSION = getEnv({ name: 'VERSION' });
 
-  const timezone = await sendTRPCMessage({
-    pluginName: 'core',
-    method: 'query',
-    module: 'configs',
-    action: 'getConfig',
-    input: {
-      code: 'TIMEZONE',
-    },
-    defaultValue: 'UTC',
-  });
-
   if (VERSION && VERSION === 'saas') {
-    const orgs = await getSaasOrganizationsByFilter({
-      cycleEnabled: true,
-    });
+    const orgs = await getSaasOrganizations();
 
     for (const org of orgs) {
       sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
         subdomain: org.subdomain,
-        timezone,
+        timezone: org.timezone,
       });
     }
 
     return 'success';
   } else {
+    const timezone = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'configs',
+      action: 'getConfig',
+      input: {
+        code: 'TIMEZONE',
+      },
+      defaultValue: 'UTC',
+    });
+
     sendWorkerQueue('operations', 'checkCycle').add('checkCycle', {
       subdomain: 'os',
       timezone,
