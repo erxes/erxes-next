@@ -40,6 +40,13 @@ export const conformityTrpcRouter = t.router({
         return models.Conformities.removeConformity(input);
       }),
 
+    deleteConformity: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { models } = ctx;
+        return models.Conformities.deleteConformities(input);
+      }),
+
     getConformities: t.procedure
       .input(z.any())
       .query(async ({ ctx, input }) => {

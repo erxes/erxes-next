@@ -12,7 +12,7 @@ import {
 import {
   WelcomeNotificationContentLayout,
   TOnboardingStepItem,
-  TReadOnlyTabItem,
+  TVideoTabItem,
 } from 'ui-modules';
 
 export const OnboardingSteps: TOnboardingStepItem[] = [
@@ -73,27 +73,31 @@ export const OnboardingSteps: TOnboardingStepItem[] = [
   },
 ];
 
-const TabItems: TReadOnlyTabItem[] = [
+const TabItems: TVideoTabItem[] = [
   {
     label: 'Pop-up forms',
     icon: <IconForms className="size-4" />,
+    time: 0,
   },
   {
     label: 'Contacts',
     icon: <IconMail className="size-4" />,
+    time: 2.1,
   },
   {
     label: 'Ticket management',
     icon: <IconBrandTrello className="size-4" />,
-    isActive: true,
+    time: 3.7,
   },
   {
     label: 'Business messenger',
     icon: <IconMessage className="size-4" />,
+    time: 10.5,
   },
   {
     label: 'Insight',
     icon: <IconChartCovariate className="size-4" />,
+    time: 34.4,
   },
 ];
 

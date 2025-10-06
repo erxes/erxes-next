@@ -27,7 +27,8 @@ export const useBoards = (
   export const useBoardDetail = (
     options?: QueryHookOptions<{ salesBoardDetail: IBoard }>,
   ) => {
-    const [boardId] = useQueryState('boardId');
+    const [stateBoardId] = useQueryState('boardId');
+    const idToUse = options?.variables?._id || stateBoardId;
 
     const { data, loading, error } = useQuery<{ salesBoardDetail: IBoard }>(
       GET_BOARD_DETAIL,
@@ -35,12 +36,12 @@ export const useBoards = (
         ...options,
         variables: {
           ...options?.variables,
-          _id: boardId,
+          _id: idToUse,
         },
-        skip: !boardId,
+        skip: !idToUse,
       },
     );
-  
+
     return { boardDetail: data?.salesBoardDetail, loading, error };
   };
 

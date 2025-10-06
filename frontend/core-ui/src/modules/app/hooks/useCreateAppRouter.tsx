@@ -20,6 +20,7 @@ import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
+import { useVersion } from 'ui-modules';
 import { lazy } from 'react';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { Providers } from '~/providers';
@@ -33,6 +34,8 @@ const CreateOwnerPage = lazy(
   () => import('~/pages/organization/CreateOwnerPage'),
 );
 export const useCreateAppRouter = () => {
+  const isOS = useVersion();
+
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
@@ -55,28 +58,36 @@ export const useCreateAppRouter = () => {
                 path={AppPath.SettingsCatchAll}
                 element={<SettingsRoutes />}
               />
-              <Route
-                path={AppPath.ProductsCatchAll}
-                element={<ProductsRoutes />}
-              />
+              {isOS && (
+                <Route
+                  path={AppPath.ProductsCatchAll}
+                  element={<ProductsRoutes />}
+                />
+              )}
               <Route
                 path={AppPath.ContactsCatchAll}
                 element={<ContactsRoutes />}
               />
-              <Route
-                path={AppPath.SegmentsCatchAll}
-                element={<SegmentRoutes />}
-              />
-              <Route
-                path={AppPath.AutomationsCatchAll}
-                element={<AutomationRoutes />}
-              />
+              {isOS && (
+                <Route
+                  path={AppPath.SegmentsCatchAll}
+                  element={<SegmentRoutes />}
+                />
+              )}
+              {isOS && (
+                <Route
+                  path={AppPath.AutomationsCatchAll}
+                  element={<AutomationRoutes />}
+                />
+              )}
               <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
 
-              <Route
-                path={AppPath.DocumentsCatchAll}
-                element={<DocumentsRoutes />}
-              />
+              {isOS && (
+                <Route
+                  path={AppPath.DocumentsCatchAll}
+                  element={<DocumentsRoutes />}
+                />
+              )}
 
               <Route
                 path={AppPath.MyInboxCatchAll}
