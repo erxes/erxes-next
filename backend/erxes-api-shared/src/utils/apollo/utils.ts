@@ -1,9 +1,9 @@
-import { IMainContext } from '../../core-types';
-import { extractUserFromHeader } from '../headers';
-import { getSubdomain } from '../utils';
 import { ExpressContextFunctionArgument } from '@apollo/server/dist/esm/express4';
 import { Request as ApiRequest, Response as ApiResponse } from 'express';
 import { nanoid } from 'nanoid';
+import { IMainContext } from '../../core-types';
+import { extractUserFromHeader, getTimezone } from '../headers';
+import { getSubdomain } from '../utils';
 
 export const generateApolloContext =
   <TContext>(
@@ -22,6 +22,7 @@ export const generateApolloContext =
       return {};
     }
     const user: any = extractUserFromHeader(req.headers);
+    const timezone: string = getTimezone(req.headers);
 
     const subdomain = getSubdomain(req);
 
@@ -39,6 +40,7 @@ export const generateApolloContext =
       requestInfo: {
         secure: req.secure,
         cookies: req.cookies,
+        timezone,
       },
     };
 
