@@ -15,7 +15,7 @@ export const CycleProgressByMember = ({
   isCompleted: boolean;
   statistics: any;
 }) => {
-  const [assignee] = useQueryState<string>('assignee');
+  const [assignee, setAssignee] = useQueryState<string | null>('assignee');
 
   const { cycleProgressByMember } = useGetCycleProgressByMember({
     variables: { _id: cycleId },
@@ -43,17 +43,21 @@ export const CycleProgressByMember = ({
       {progress?.map((item) => (
         <HoverCard openDelay={150} closeDelay={150} key={item.assigneeId}>
           <HoverCard.Trigger asChild>
-            <Button
-              className="flex justify-start gap-2 items-center text-sm font-normal h-10 py-1"
-              asChild
-              variant="ghost"
-              size="lg"
-            >
-              <div>
+            <div className="flex justify-start items-center gap-2 text-sm font-normal py-1">
+              <Button
+                className="p-0 truncate max-w-[170px]"
+                variant="ghost"
+                onClick={() => {
+                  setAssignee(
+                    assignee === item.assigneeId ? null : item.assigneeId,
+                  );
+                }}
+              >
                 <MembersInline
                   memberIds={[item.assigneeId]}
                   placeholder="No Assignee"
                 />
+              </Button>
 
                 <ChartContainer config={{}} className="aspect-square size-6">
                   <RadialBarChart
@@ -89,8 +93,7 @@ export const CycleProgressByMember = ({
                 <span className="text-sm text-accent-foreground">
                   {getProgress(item)}% of {item.totalScope}
                 </span>
-              </div>
-            </Button>
+            </div>
           </HoverCard.Trigger>
           <HoverCard.Content side="left" className="w-32 p-3">
             <div className="flex flex-col gap-1 text-muted-foreground">

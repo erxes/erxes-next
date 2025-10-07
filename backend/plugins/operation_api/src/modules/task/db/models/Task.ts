@@ -1,4 +1,5 @@
-import { Model } from 'mongoose';
+import { Model, FlattenMaps, FilterQuery } from 'mongoose';
+import { Document } from 'mongodb';
 import { IModels } from '~/connectionResolvers';
 import { taskSchema } from '@/task/db/definitions/task';
 import {
@@ -14,7 +15,9 @@ import { IProject, IProjectDocument } from '~/modules/project/@types/project';
 
 export interface ITaskModel extends Model<ITaskDocument> {
   getTask(_id: string): Promise<ITaskDocument>;
-  getTasks(params: ITaskFilter): Promise<ITaskDocument[]>;
+  getTasks(
+    params: ITaskFilter,
+  ): Promise<FlattenMaps<ITaskDocument>[] | Document[]>;
   createTask({
     doc,
     userId,
@@ -52,8 +55,8 @@ export const loadTaskClass = (models: IModels) => {
 
     public static async getTasks(
       params: ITaskFilter,
-    ): Promise<ITaskDocument[]> {
-      const query = {} as any;
+    ): Promise<FlattenMaps<ITaskDocument>[] | Document[]> {
+      const query = {} as FilterQuery<ITaskDocument>;
 
       if (params.assigneeId) {
         query.assigneeId = params.assigneeId;

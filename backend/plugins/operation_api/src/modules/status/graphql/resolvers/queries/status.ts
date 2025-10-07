@@ -1,6 +1,7 @@
-import { IContext } from '~/connectionResolvers';
 import { IStatusFilter } from '@/status/@types/status';
 import { STATUS_TYPES } from '@/status/constants/types';
+import { requireLogin } from 'erxes-api-shared/core-modules';
+import { IContext } from '~/connectionResolvers';
 
 export const statusQueries = {
   getStatus: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -36,3 +37,7 @@ export const statusQueries = {
     return models.Status.getStatuses(teamId, type);
   },
 };
+
+requireLogin(statusQueries, 'getStatus');
+requireLogin(statusQueries, 'getStatusesChoicesByTeam');
+requireLogin(statusQueries, 'getStatusesByType');
