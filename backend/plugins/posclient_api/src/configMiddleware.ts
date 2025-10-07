@@ -18,8 +18,7 @@ export default async function posUserMiddleware(
       const models = await generateModels(subdomain);
 
       req.posConfig = (await models.Configs.findOne({ token }).lean()) || {};
-      console.log(' req.posConfig', req.posConfig);
-      console.log('test', models.Configs.findOne);
+
       return next();
     } catch (e) {
       console.log(e.message);
