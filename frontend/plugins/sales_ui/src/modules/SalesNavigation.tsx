@@ -1,5 +1,10 @@
 import { NavigationMenuLinkItem } from 'erxes-ui';
 
 export const SalesNavigation = () => {
-  return <NavigationMenuLinkItem name="Deals" path="deals" />;
+  return (
+    <>
+      <NavigationMenuLinkItem name="Deals" path="deals" />
+      <NavigationMenuLinkItem name="POS" path="pos" />
+    </>
+  );
 };

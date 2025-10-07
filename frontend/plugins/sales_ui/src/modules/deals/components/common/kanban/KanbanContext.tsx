@@ -27,8 +27,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { Card } from './Card';
 import { IDeal } from '@/deals/types/deals';
 import { IStage } from '@/deals/types/stages';
-import { cn } from 'erxes-ui';
 import { Portal } from 'radix-ui';
+import { cn } from 'erxes-ui';
 
 export type { DragEndEvent } from '@dnd-kit/core';
 
@@ -42,7 +42,7 @@ export const KanbanContext = createContext<KanbanContextProps>({
   data: [],
   activeCardId: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onDataChange: () => { },
+  onDataChange: () => {},
 });
 
 export const KanbanBoard = ({ _id, children, className }: KanbanBoardProps) => {
@@ -260,7 +260,7 @@ export const KanbanProvider = <
     setActiveCardId(null);
     onDragEnd?.(event);
 
-    if (!over || active.id === over.id) {
+    if (!over) {
       return;
     }
 

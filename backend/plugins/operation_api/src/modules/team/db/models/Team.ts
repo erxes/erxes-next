@@ -9,12 +9,17 @@ import {
 import { ITeamFilter } from '@/team/@types/team';
 import { teamSchema } from '@/team/db/definitions/team';
 import { IModels } from '~/connectionResolvers';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, FlattenMaps } from 'mongoose';
+import { Document } from 'mongodb';
 
 export interface ITeamModel extends Model<ITeamDocument> {
   getTeam(_id: string): Promise<ITeamDocument>;
-  getTeams(params: ITeamFilter): Promise<ITeamDocument[]>;
-  getTeamsByMember(memberId: string): Promise<ITeamDocument[]>;
+  getTeams(
+    params: ITeamFilter,
+  ): Promise<FlattenMaps<ITeamDocument>[] | Document[]>;
+  getTeamsByMember(
+    memberId: string,
+  ): Promise<FlattenMaps<ITeamDocument>[] | Document[]>;
   createTeam({
     teamDoc,
     memberIds,
@@ -43,13 +48,13 @@ export const loadTeamClass = (models: IModels) => {
 
     public static async getTeamsByMember(
       memberId: string,
-    ): Promise<ITeamDocument[]> {
+    ): Promise<FlattenMaps<ITeamDocument>[] | Document[]> {
       return models.Team.find({ memberIds: memberId }).lean();
     }
 
     public static async getTeams(
       params: ITeamFilter,
-    ): Promise<ITeamDocument[]> {
+    ): Promise<FlattenMaps<ITeamDocument>[] | Document[]> {
       const query: FilterQuery<ITeamDocument> = {};
 
       if (params.name) {

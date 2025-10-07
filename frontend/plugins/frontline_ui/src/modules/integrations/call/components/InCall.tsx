@@ -58,6 +58,7 @@ export const InCall = ({
           channels={channels}
           loading={loading}
           customerDetail={customerDetail}
+          phoneNumber={phoneNumber}
         />
       </div>
       <Transfer />
@@ -176,11 +177,13 @@ const CallInfo = ({
   customerDetail,
   customer,
   channels,
+  phoneNumber,
   loading,
 }: {
   customerDetail: any;
   customer: ICustomer;
   channels: any;
+  phoneNumber: string;
   loading: boolean;
 }) => {
   const sip = useAtomValue(sipStateAtom);
@@ -202,7 +205,7 @@ const CallInfo = ({
         {sip.callStatus === CallStatusEnum.STARTING && 'Calling...'}
         {sip.callStatus === CallStatusEnum.ACTIVE && 'In call'}
       </div>
-      {!loading && renderUserInfo(customer, customerDetail)}
+      {!loading && renderUserInfo(customer, customerDetail, phoneNumber)}
 
       {sip.callStatus === CallStatusEnum.ACTIVE && (
         <div className="text-center text-accent-foreground text-sm">

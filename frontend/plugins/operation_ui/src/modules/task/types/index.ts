@@ -22,6 +22,7 @@ export interface ITask {
   number: string;
   tagIds: string[];
   createdAt: string;
+  createdBy?: string;
   priority: number;
   status: string;
   startDate?: string;

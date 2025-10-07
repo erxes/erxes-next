@@ -8,6 +8,7 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { Skeleton } from 'erxes-ui';
+import { useVersion } from 'ui-modules';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -96,7 +97,8 @@ const PropertiesSettins = lazy(() =>
 );
 
 export function SettingsRoutes() {
-  console.log('SettingsRoutes');
+  const isOs = useVersion();
+
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>
@@ -142,14 +144,19 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.Brands}
           element={<BrandsSettingsRoutes />}
         />
-        <Route
-          path={SettingsWorkspacePath.ProductsCatchAll}
-          element={<ProductsSettingsRoutes />}
-        />
-        <Route
-          path={SettingsWorkspacePath.AutomationsCatchAll}
-          element={<AutomationSettingsRoutes />}
-        />
+        {isOs && (
+          <Route
+            path={SettingsWorkspacePath.ProductsCatchAll}
+            element={<ProductsSettingsRoutes />}
+          />
+        )}
+        {isOs && (
+          <Route
+            path={SettingsWorkspacePath.AutomationsCatchAll}
+            element={<AutomationSettingsRoutes />}
+          />
+        )}
+
         <Route path={SettingsWorkspacePath.Apps} element={<AppsSettings />} />
         <Route
           path={SettingsWorkspacePath.Properties}

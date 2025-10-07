@@ -55,6 +55,7 @@ export interface IUser {
   positionIds?: string[];
   employeeId?: string;
   chatStatus?: IUserChatStatus;
+  lastSeenAt?: Date;
 }
 
 enum IUserChatStatus {

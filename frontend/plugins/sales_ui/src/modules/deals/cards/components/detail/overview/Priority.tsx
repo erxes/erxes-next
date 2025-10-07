@@ -36,7 +36,7 @@ const Priority = ({
       <Select.Trigger id="time-unit" className="mt-1">
         {loading ? (
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Spinner size="small" /> Saving...
+            <Spinner size="sm" /> Saving...
           </div>
         ) : (
           <Select.Value placeholder="Select priority" />

@@ -6,7 +6,6 @@ import FormData from 'form-data';
 import momentTz from 'moment-timezone';
 
 import type { RequestInit, HeadersInit } from 'node-fetch';
-import { getOrCreateCustomer } from './store';
 import redis from '~/modules/integrations/call/redlock';
 import { IModels, generateModels } from '~/connectionResolvers';
 import { getEnv } from 'erxes-api-shared/utils';
@@ -61,6 +60,7 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
   if (retryCount <= 0) {
     throw new Error('Retry limit exceeded.');
   }
+
   const integration = await models.CallIntegrations.findOne({
     inboxId: integrationId,
   }).lean();
@@ -76,6 +76,16 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
   }
 
   cookie = cookie?.toString();
+
+  const isValid = await validateCookie(wsServer, cookie);
+  if (!isValid) {
+    await redis.del('callCookie');
+    cookie = await getOrSetCallCookie(wsServer);
+    if (!cookie) {
+      throw new Error('Failed to refresh cookie');
+    }
+    cookie = cookie.toString();
+  }
 
   const requestOptions: RequestInit & { headers: HeadersInit } = {
     method,
@@ -116,11 +126,13 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
           user,
         )) as any;
       }
+
       if (isGetExtension) {
         return { response, extensionNumber };
       }
       return response;
     }
+
     if (isGetExtension) {
       return { res, extensionNumber };
     }
@@ -129,6 +141,31 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
   } catch (error) {
     console.error('Error in sendToGrandStream:', error);
     throw error;
+  }
+};
+
+const validateCookie = async (
+  wsServer: string,
+  cookie: string,
+): Promise<boolean> => {
+  try {
+    const requestOptions: RequestInit & { headers: HeadersInit } = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        request: {
+          action: 'getSystemStatus',
+          cookie,
+        },
+      }),
+    };
+
+    const res = await sendRequest(`https://${wsServer}/api`, requestOptions);
+    const response = await res.json();
+    return response.status !== -6;
+  } catch (error) {
+    console.error('Error validating cookie:', error);
+    return false;
   }
 };
 
@@ -143,17 +180,14 @@ export const getOrSetCallCookie = async (wsServer) => {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   // }
 
-  // Validate credentials
   if (!CALL_API_USER || !CALL_API_PASSWORD) {
     throw new Error('Regular API credentials missing!');
   }
-  // Create unique cookie keys
   const cookieKey = 'callCookie';
   const apiUser = CALL_API_USER;
   const apiPassword = CALL_API_PASSWORD;
   const expiry = CALL_API_EXPIRY;
 
-  // Check existing cookie
   const callCookie = await redis.get(cookieKey);
   if (callCookie) {
     console.log(`Using existing regular cookie:`, callCookie);
@@ -161,7 +195,6 @@ export const getOrSetCallCookie = async (wsServer) => {
   }
 
   try {
-    // Authentication logic
     const challengeResponse = await sendRequest(`https://${wsServer}/api`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -175,7 +208,7 @@ export const getOrSetCallCookie = async (wsServer) => {
     });
 
     const data = await challengeResponse.json();
-    const { challenge } = data?.response;
+    const { challenge } = data?.response ?? {};
 
     const token = crypto
       .createHash('md5')
@@ -546,141 +579,6 @@ export const getPureDate = (date: Date, updateTime) => {
   return new Date(updatedDate.getTime() + diffTimeZone);
 };
 
-export const saveCdrData = async (subdomain, cdrData, result) => {
-  const models = await generateModels(subdomain);
-  try {
-    for (const cdr of cdrData) {
-      const history = createHistoryObject(cdr, result);
-      await saveCallHistory(models, history);
-      await processCustomerAndConversation(
-        models,
-        history,
-        cdr,
-        result,
-        subdomain,
-      );
-    }
-  } catch (error) {
-    console.error(`Error in saveCdrData: ${error.message}`);
-  }
-};
-
-const createHistoryObject = (cdr, result) => {
-  const callType = cdr.userfield === 'Outbound' ? 'outgoing' : 'incoming';
-  const customerPhone = cdr.userfield === 'Inbound' ? cdr.src : cdr.dst;
-
-  return {
-    operatorPhone: result.phone,
-    customerPhone,
-    callDuration: parseInt(cdr.billsec),
-    callStartTime: new Date(cdr.start),
-    callEndTime: new Date(cdr.end),
-    callType,
-    callStatus: cdr.disposition === 'ANSWERED' ? 'connected' : 'missed',
-    timeStamp: cdr.cdr ? parseInt(cdr.cdr) : 0,
-    createdAt: cdr.start ? new Date(cdr.start) : new Date(),
-    extensionNumber: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src,
-    inboxIntegrationId: result.inboxId,
-    recordFiles: cdr.recordfiles,
-    queueName: cdr.lastdata ? cdr.lastdata.split(',')[0] : '',
-    conversationId: '',
-  };
-};
-
-const saveCallHistory = async (models, history) => {
-  try {
-    await models.CallHistory.updateOne(
-      { timeStamp: history.timeStamp },
-      { $set: history },
-      { upsert: true },
-    );
-  } catch (error) {
-    throw new Error(`Failed to save call history: ${error.message}`);
-  }
-};
-
-const processCustomerAndConversation = async (
-  models: IModels,
-  history,
-  cdr,
-  result,
-  subdomain,
-) => {
-  let customer = await models.CallCustomers.findOne({
-    primaryPhone: history.customerPhone,
-  });
-  if (!customer || !customer.erxesApiId) {
-    customer = await getOrCreateCustomer(models, subdomain, {
-      inboxIntegrationId: result.inboxId,
-      primaryPhone: history.customerPhone,
-    });
-  }
-
-  try {
-    const payload = JSON.stringify({
-      customerId: customer?.erxesApiId,
-      integrationId: result.inboxId,
-      content: history.callType || '',
-      conversationId: history.timeStamp,
-      updatedAt: history.callStartTime,
-      createdAt: history.callStartTime,
-    });
-
-    const apiConversationResponse = await createOrUpdateErxesConversation(
-      subdomain,
-      payload,
-    );
-
-    if (apiConversationResponse.status === 'success') {
-      await models.CallHistory.updateOne(
-        { timeStamp: history.timeStamp },
-        { $set: { conversationId: apiConversationResponse.data._id } },
-        { upsert: true },
-      );
-    } else {
-      throw new Error(
-        `Conversation creation failed: ${JSON.stringify(
-          apiConversationResponse,
-        )}`,
-      );
-    }
-  } catch (e) {
-    await models.CallHistory.deleteOne({ timeStamp: history.timeStamp });
-    throw new Error(e);
-  }
-
-  await handleRecordUrl(cdr, history, result, models, subdomain);
-};
-
-const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
-  if (history?.recordUrl) return;
-
-  try {
-    if (cdr?.recordfiles) {
-      const recordPath = await cfRecordUrl(
-        {
-          fileDir: 'queue',
-          recordfiles: cdr?.recordfiles,
-          inboxIntegrationId: result.inboxId,
-          retryCount: 1,
-        },
-        '',
-        models,
-        subdomain,
-      );
-
-      if (recordPath) {
-        await models.CallHistory.updateOne(
-          { timeStamp: history.timeStamp },
-          { $set: { recordUrl: recordPath } },
-          { upsert: true },
-        );
-      }
-    }
-  } catch (error) {
-    console.log(`Failed to process record URL: ${error.message}`);
-  }
-};
 const isValidSubdomain = (subdomain) => {
   const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
   return subdomainRegex.test(subdomain);
