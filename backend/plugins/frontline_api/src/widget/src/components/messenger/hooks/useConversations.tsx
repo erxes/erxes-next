@@ -3,44 +3,13 @@ import {
   integrationIdAtom,
 } from '@/components/messenger/atoms';
 import { GET_WIDGETS_CONVERSATIONS } from '@/components/messenger/graphql/queries';
+import { IConversationMessage } from '@/types';
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 
 interface IQueryResponse {
-  widgetsConversations: {
-    _id: string;
-    content: string;
-    createdAt: string;
-    participatedUsers: {
-      _id: string;
-      details: {
-        avatar: string;
-        fullName: string;
-        description: string;
-        location: string;
-        position: string;
-        shortName: string;
-      };
-    }[];
-    messages: {
-      _id: string;
-      createdAt: Date;
-      content: string;
-      fromBot: boolean;
-      customerId: string;
-      isCustomerRead: boolean;
-      userId: string;
-      user: {
-        _id: string;
-        isOnline: boolean;
-        details: {
-          avatar: string;
-          fullName: string;
-        };
-      };
-    }[];
-    idleTime: number;
-  }[];
+  widgetsConversations: IConversationMessage[];
 }
 
 export const useConversations = (
@@ -62,8 +31,17 @@ export const useConversations = (
     },
   );
 
+  const lastMessegesByContent = useMemo(() => {
+    return data?.widgetsConversations.map((conversation) => {
+      return conversation.messages.find(
+        (message) => message.content === conversation.content,
+      );
+    });
+  }, [data]);
+
   return {
     conversations: data?.widgetsConversations || [],
+    lastMesseges: lastMessegesByContent,
     loading,
     error,
   };

@@ -1,3 +1,4 @@
+import { gql } from '@apollo/client';
 import { messageFields } from './fields';
 
 const CLOUDFLARE_CALL_RECEIVED = `
@@ -17,14 +18,10 @@ const conversationChanged = `
   }
 `;
 
-const ConversationMessageInserted = `
-  subscription ConversationMessageInserted($_id: String!) {
-    ConversationMessageInserted(_id: $_id) {
+const ConversationMessageInserted = gql`
+  subscription conversationMessageInserted($_id: String!) {
+    conversationMessageInserted(_id: $_id) {
       ${messageFields}
-      videoCallData {
-        url
-        status
-      }
     }
   }
 `;

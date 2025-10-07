@@ -4,7 +4,7 @@ import { Apollo } from './components/apollo-provider';
 function App() {
   return (
     <Apollo>
-      <ErxesMessenger brandId="tBdZg4" />
+      <ErxesMessenger brandId="dGt278" />
     </Apollo>
   );
 }

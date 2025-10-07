@@ -6,6 +6,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 import {
   differenceInDays,
+  differenceInSeconds,
   formatDistance,
   isToday,
   startOfDay,
@@ -137,6 +138,10 @@ export const formatDateISOStringToRelativeDate = (
 ) => {
   const now = new Date();
   const targetDate = new Date(isoDate);
+
+  const secondsDiff = Math.abs(differenceInSeconds(targetDate, now));
+
+  if (secondsDiff < 60) return 'just now';
 
   if (isDayMaximumPrecision && isToday(targetDate)) return 'Today';
 

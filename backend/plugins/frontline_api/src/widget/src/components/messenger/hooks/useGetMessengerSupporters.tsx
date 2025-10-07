@@ -25,5 +25,10 @@ export const useGetMessengerSupporters = (
       skip: !integrationId,
     },
   );
-  return { data, loading, error };
+  return {
+    list: data?.widgetsMessengerSupporters.supporters,
+    isOnline: data?.widgetsMessengerSupporters.isOnline,
+    loading,
+    error,
+  };
 };

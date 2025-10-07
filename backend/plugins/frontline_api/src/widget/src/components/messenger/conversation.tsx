@@ -6,12 +6,7 @@ import {
   conversationIdAtom,
 } from '@/components/messenger/atoms';
 import { useAtomValue, useSetAtom } from 'jotai';
-import {
-  GET_SUPPORTERS,
-  GET_USER_DETAIL,
-} from '@/components/messenger/graphql/queries';
-import { useQuery } from '@apollo/client';
-import { IDetail, ISupporter } from '@/types';
+import { IMessage, ISupporter } from '@/types';
 import { readImage, formatDateISOStringToRelativeDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
@@ -20,33 +15,13 @@ import {
   useReadConversation,
   type ReadConversationResult,
 } from './hooks/useReadConversation';
-
-interface IConversationMessage {
-  _id: string;
-  content: string;
-  createdAt: Date;
-  fromBot: boolean;
-  customerId: string;
-  isCustomerRead: boolean;
-  userId: string;
-  user: {
-    _id: string;
-    isOnline: boolean;
-    details: {
-      avatar: string;
-      fullName: string;
-    };
-  };
-}
+import { useGetMessengerSupporters } from '@/components/messenger/hooks/useGetMessengerSupporters';
 
 export function EmptyChat() {
   const connection = useAtomValue(connectionAtom);
   const { messengerData } = connection?.data || {};
-  const { responseRate, supporterIds } = messengerData || {};
-  const { data } = useQuery(GET_SUPPORTERS, {
-    variables: { ids: supporterIds },
-  });
-  const { list } = data?.users || [];
+  const { responseRate } = messengerData || {};
+  const { list } = useGetMessengerSupporters();
   return (
     <div className="flex flex-col gap-4 font-medium text-sm">
       <div className="my-auto flex items-center gap-2">
@@ -56,7 +31,9 @@ export function EmptyChat() {
               <Avatar className="border-2 border-sidebar">
                 <AvatarImage
                   src={readImage(supporter.details.avatar)}
-                  alt={supporter.details.firstName}
+                  alt={
+                    supporter.details.fullName || supporter.details.firstName
+                  }
                   className="shrink-0 object-cover"
                 />
                 <AvatarFallback>
@@ -65,9 +42,11 @@ export function EmptyChat() {
               </Avatar>
             ))}
         </AvatarGroup>
-        <span className="text-zinc-400">Our usual reply time</span>{' '}
-        <mark className="bg-transparent text-[#4F46E5]">
-          ({responseRate || 'A few minutes'})
+        <span className="text-muted-foreground font-medium text-sm">
+          Our usual reply time
+        </span>{' '}
+        <mark className="bg-transparent text-primary font-medium text-sm">
+          ({`a few ${responseRate}` || 'a few minutes'})
         </mark>
       </div>
     </div>
@@ -75,38 +54,21 @@ export function EmptyChat() {
 }
 
 export function ConversationMessage({
-  conversation,
   conversationId,
-  participant,
+  messege,
 }: {
   conversationId: string;
-  conversation?: IConversationMessage;
-  participant?: {
-    _id: string;
-    details: {
-      avatar: string;
-      fullName: string;
-      description: string;
-      location: string;
-      position: string;
-      shortName: string;
-    };
-  };
+  messege?: IMessage;
 }) {
   const setConversationId = useSetAtom(conversationIdAtom);
   const setActiveTab = useSetAtom(activeTabAtom);
-  const { data } = useQuery(GET_USER_DETAIL, {
-    variables: { _id: participant?._id },
-  });
-  const { userDetail: user } = data || {};
-  console.log('user', user);
 
   const { readConversation } = useReadConversation();
-  const { userId, customerId } = conversation || {};
+  const { userId, customerId, user } = messege || {};
 
   const handleClick = () => {
     readConversation({
-      variables: { conversationId },
+      variables: { conversationId: conversationId },
       onCompleted: (data: ReadConversationResult) => {
         setConversationId(data.widgetsReadConversationMessages);
         setActiveTab('chat');
@@ -118,7 +80,7 @@ export function ConversationMessage({
     return (
       <div
         role="tabpanel"
-        id={conversation?._id}
+        id={messege?._id}
         tabIndex={0}
         className="flex items-center gap-3 cursor-pointer py-3"
         onClick={handleClick}
@@ -131,15 +93,15 @@ export function ConversationMessage({
           />
           <AvatarFallback>{'C'}</AvatarFallback>
         </Avatar>
-        <div className="flex flex-col gap-1 text-sm font-medium text-accent-foreground overflow-x-hidden">
+        <div className="flex flex-col gap-1 text-sm font-medium text-muted-foreground overflow-x-hidden">
           <span
             className="truncate line-clamp-1 w-auto"
-            dangerouslySetInnerHTML={{ __html: conversation?.content || '' }}
+            dangerouslySetInnerHTML={{ __html: messege?.content || '' }}
           />
-          <span className="text-xs text-accent-foreground">
+          <span className="text-sm text-muted-foreground">
             {'you'} ·{' '}
             {formatDateISOStringToRelativeDate(
-              conversation?.createdAt as unknown as string,
+              messege?.createdAt as unknown as string,
             )}
           </span>
         </div>
@@ -149,7 +111,7 @@ export function ConversationMessage({
     return (
       <div
         role="tabpanel"
-        id={conversation?._id}
+        id={messege?._id}
         tabIndex={0}
         className="flex items-center gap-3 cursor-pointer py-3"
         onClick={handleClick}
@@ -158,22 +120,22 @@ export function ConversationMessage({
           <AvatarImage
             src={readImage(user?.details?.avatar) || 'assets/user.webp'}
             className="shrink-0 object-cover"
-            alt={user?.details?.firstName}
+            alt={user?.details?.fullName}
           />
           <AvatarFallback>
-            {user?.details?.firstName?.charAt(0) || 'C'}
+            {user?.details?.fullName?.charAt(0) || 'C'}
           </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col gap-1 text-sm font-medium text-accent-foreground overflow-x-hidden">
+        <div className="flex flex-col gap-1 text-sm font-medium text-muted-foreground overflow-x-hidden">
           <span
             className="truncate line-clamp-1 w-auto"
-            dangerouslySetInnerHTML={{ __html: conversation?.content || '' }}
+            dangerouslySetInnerHTML={{ __html: messege?.content || '' }}
           />
-          <span className="text-xs text-accent-foreground">
-            {user?.details?.shortName || user?.details?.firstName || 'operator'}{' '}
+          <span className="text-sm text-muted-foreground">
+            {user?.details?.fullName || user?.details?.firstName || 'operator'}{' '}
             ·{' '}
             {formatDateISOStringToRelativeDate(
-              conversation?.createdAt as unknown as string,
+              messege?.createdAt as unknown as string,
             )}
           </span>
         </div>
@@ -244,7 +206,7 @@ export const CustomerMessage = ({
             {formatDateISOStringToRelativeDate(createdAt.toISOString())}
           </span>
           <div
-            className="h-auto font-medium flex flex-col justify-start items-start text-[13px] leading-relaxed text-zinc-900 text-left gap-1 px-3 py-2 bg-[#4F46E51A] rounded-lg"
+            className="h-auto font-medium flex flex-col justify-start items-start text-[13px] leading-relaxed text-zinc-900 text-left gap-1 px-3 py-2 bg-accent rounded-lg"
             dangerouslySetInnerHTML={{
               __html:
                 content || '<p>Hello! Have you fixed your problem yet?</p>',

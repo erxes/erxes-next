@@ -54,7 +54,7 @@ export const ErxesMessenger = ({
           side="top"
           align="end"
           sideOffset={16}
-          className="flex flex-col justify-between max-w-[var(--widget-width)] min-w-96 max-h-[var(--widget-max-height)] min-h-[var(--widget-min-height)] overflow-hidden size-full bg-widget"
+          className="flex flex-col justify-between max-w-[var(--widget-width)] min-w-96 max-h-[var(--widget-max-height)] min-h-[var(--widget-min-height)] overflow-hidden size-full"
         >
           <Header />
           <div className="flex-1 overflow-y-hidden h-full bg-card">

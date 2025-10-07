@@ -75,7 +75,7 @@ export const ConversationDetails = () => {
     <div className="flex flex-col max-h-[calc(var(--widget-max-height)-4rem)] overflow-y-hidden">
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto flex flex-col-reverse p-4 space-y-2 scroll-smooth min-h-[20rem]"
+        className="flex-1 overflow-y-auto scroll-p-0 scroll-m-0 scroll-pt-16 flex flex-col-reverse p-4 space-y-2 scroll-smooth min-h-[20rem]"
       >
         {botShowInitialMessage && <BotMessage content={botGreetMessage} />}
 

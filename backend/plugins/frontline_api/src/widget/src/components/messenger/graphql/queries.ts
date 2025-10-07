@@ -242,6 +242,8 @@ const GET_WIDGETS_CONVERSATIONS = gql`
           details {
             avatar
             fullName
+            firstName
+            shortName
           }
         }
       }

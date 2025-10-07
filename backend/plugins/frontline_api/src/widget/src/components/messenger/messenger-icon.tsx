@@ -11,7 +11,7 @@ export const MessengerIcon = ({ loading }: { loading: boolean }) => {
   const uiOptions = useAtomValue(uiOptionsAtom);
   const brand = useAtomValue(brandAtom);
   const { isOpen } = useMessenger();
-  const { color, logo } = uiOptions || {};
+  const { logo } = uiOptions || {};
   const { name, description } = brand || {};
   if (loading)
     return (

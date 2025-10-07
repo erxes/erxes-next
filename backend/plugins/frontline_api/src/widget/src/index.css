@@ -72,6 +72,17 @@
 }
 
 @layer base {
+  ::-webkit-scrollbar {
+    @apply w-2 absolute right-0;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-accent;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
   * {
     @apply border-border;
   }

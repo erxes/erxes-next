@@ -12,7 +12,6 @@ import {
   ITicketData,
 } from '@/inbox/@types/integrations';
 import { integrationSchema } from '@/inbox/db/definitions/integrations';
-import { validateColorTheme } from '~/modules/inbox/utils/colorThemeValidation';
 export interface IMessengerIntegration {
   kind: string;
   name: string;
@@ -349,12 +348,9 @@ export const loadClass = (models: IModels, subdomain: string) => {
      * Save messenger color theme data
      */
     public static async saveMessengerColorTheme(_id: string, colorTheme: any) {
-      // Validate color values
-      const validatedTheme = validateColorTheme(colorTheme);
-
       await models.Integrations.updateOne(
         { _id },
-        { $set: { uiOptions: validatedTheme } },
+        { $set: { uiOptions: colorTheme } },
         { runValidators: true },
       );
 

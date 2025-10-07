@@ -9,22 +9,12 @@ import { useConversations } from '@/components/messenger/hooks/useConversations'
 
 export const Welcome = () => {
   const { loading: loadingSupporters } = useGetMessengerSupporters();
-  const { conversations, loading: loadingConversations } = useConversations();
-  const lastConversations =
-    conversations && conversations.length > 0
-      ? conversations
-          .map((conversation) => {
-            if (!conversation.messages || conversation.messages.length === 0) {
-              return null;
-            }
-            // Find the message that matches the conversation.content
-            return conversation.messages.find(
-              (msg) => msg.content === conversation.content,
-            );
-          })
-          .filter(Boolean) // Remove null values
-      : [];
-  console.log('lastConversations', lastConversations);
+  const {
+    conversations,
+    loading: loadingConversations,
+    lastMesseges,
+  } = useConversations();
+
   if (loadingSupporters || loadingConversations) {
     return (
       <div className="flex flex-col">
@@ -51,15 +41,12 @@ export const Welcome = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col justify-center p-4 font-medium text-sm min-h-28 max-h-60 overflow-y-auto">
-        {conversations &&
-          lastConversations.map((conversation, index) => (
+        {lastMesseges &&
+          lastMesseges?.map((messege, index) => (
             <ConversationMessage
-              key={conversation?._id}
-              conversationId={conversations?.[index]._id}
-              participant={
-                conversations?.[index]?.participatedUsers?.[0] || undefined
-              }
-              conversation={conversation || undefined}
+              key={messege?._id}
+              conversationId={conversations[index]?._id}
+              messege={messege || undefined}
             />
           ))}
       </div>

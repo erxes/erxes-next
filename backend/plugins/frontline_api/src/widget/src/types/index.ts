@@ -96,6 +96,7 @@ export interface IMessage {
   _id: string;
   conversationId: string;
   user?: IUser;
+  userId?: string;
   customerId?: string;
   content: string;
   contentType?: string;
@@ -124,4 +125,13 @@ export interface IColorDefinition {
 export interface IUiOptions {
   primary: IColorDefinition;
   logo: string;
+}
+
+export interface IConversationMessage {
+  _id: string;
+  content: string;
+  messages: IMessage[];
+  createdAt?: Date;
+  idleTime?: number;
+  participatedUsers?: IDetail[];
 }

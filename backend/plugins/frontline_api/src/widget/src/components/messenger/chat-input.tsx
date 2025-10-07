@@ -21,7 +21,10 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...inputProps }) => {
       <div className="flex items-center gap-2 w-full">
         <Input
           id={id}
-          className={cn('border-none shadow-none', className)}
+          className={cn(
+            'border-none shadow-none placeholder:text-muted-foreground placeholder:font-medium placeholder:text-sm',
+            className,
+          )}
           placeholder="How can we help you?"
           value={message}
           onChange={handleInputChange}

@@ -17,7 +17,9 @@ export const useInsertMessage = () => {
   const [insertMessage, { loading }] = useMutation(
     WIDGETS_INSERT_MESSAGE_MUTATION,
   );
-  const customerId = conversationId ? getLocalStorageItem('customerId') : undefined;
+  const customerId = conversationId
+    ? getLocalStorageItem('customerId')
+    : undefined;
   const handleInsertMessage = (options?: MutationHookOptions) => {
     return insertMessage({
       ...options,
