@@ -7,11 +7,11 @@ import { Outlet } from 'react-router-dom';
 
 import { TeamsSettingsPage } from '~/pages/TeamSettingsIndexPage';
 import { TeamDetailPage } from '~/pages/TeamDetailPage';
-import { OperationPaths } from '~/types/paths';
+import { OperationPaths } from '~/types/operationPaths';
 import { TeamMembersPage } from '~/pages/TeamMembersPage';
 import { TeamStatusPage } from '~/pages/TeamStatusPage';
 
-const TeamSettings = () => {
+export const TeamSettings = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
@@ -48,5 +48,3 @@ const TeamSettings = () => {
     </Suspense>
   );
 };
-
-export default TeamSettings;

@@ -10,10 +10,10 @@
       "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
       "ui-modules": ["frontend/libs/ui-modules/src"],
       "ui-modules/*": ["frontend/libs/ui-modules/src/*"],
-      "@/*": ["frontend/core-ui/src/modules/*"],
       "@": ["frontend/core-ui/src/modules"],
-      "~/*": ["frontend/core-ui/src/*"],
-      "~": ["frontend/core-ui/src"]
+      "@/*": ["frontend/core-ui/src/modules/*"],
+      "~": ["frontend/core-ui/src"],
+      "~/*": ["frontend/core-ui/src/*"]
     }
   },
   "files": [],

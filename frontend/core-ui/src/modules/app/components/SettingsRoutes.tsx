@@ -96,6 +96,7 @@ const PropertiesSettins = lazy(() =>
 );
 
 export function SettingsRoutes() {
+  console.log('SettingsRoutes');
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>

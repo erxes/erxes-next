@@ -157,6 +157,15 @@ import { IUIConfig } from 'erxes-ui/types';
 export const CONFIG: IUIConfig = {
   name: '${kebabCaseName}',
   icon: IconSandbox,
+  navigationGroup: {
+    name: '${kebabCaseName}',
+    icon: IconSandbox,
+    content: () => (
+      <Suspense fallback={<div />}>
+        <${kebabCaseModuleName}Navigation />
+      </Suspense>
+    ),
+  },
   modules: [
     {
       name: '${moduleName}',

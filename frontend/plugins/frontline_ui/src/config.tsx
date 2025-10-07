@@ -1,4 +1,4 @@
-import { IconMail, IconStackFront, IconTicket } from '@tabler/icons-react';
+import { IconStackFront } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 
@@ -14,8 +14,21 @@ const FrontlineSubGroups = lazy(() =>
   })),
 );
 
+const FrontlineSettingsNavigation = lazy(() =>
+  import('./modules/FrontlineSettingsNavigation').then((module) => ({
+    default: module.FrontlineSettingsNavigation,
+  })),
+);
+
 export const CONFIG: IUIConfig = {
   name: 'frontline',
+  path: 'frontline',
+  hasFloatingWidget: true,
+  settingsNavigation: () => (
+    <Suspense fallback={<div />}>
+      <FrontlineSettingsNavigation />
+    </Suspense>
+  ),
   navigationGroup: {
     name: 'frontline',
     icon: IconStackFront,
@@ -24,35 +37,10 @@ export const CONFIG: IUIConfig = {
         <FrontlineNavigation />
       </Suspense>
     ),
-    subGroups: () => (
+    subGroup: () => (
       <Suspense fallback={<div />}>
         <FrontlineSubGroups />
       </Suspense>
     ),
   },
-  modules: [
-    {
-      name: 'inbox',
-      icon: IconMail,
-      path: 'inbox',
-      hasSettings: true,
-      hasRelationWidget: true,
-      hasFloatingWidget: true,
-      settingsOnly: true,
-    },
-    {
-      name: 'ticket',
-      icon: IconTicket,
-      path: 'ticket',
-      hasSettings: true,
-      hasRelationWidget: true,
-      settingsOnly: true,
-    },
-    {
-      name: 'frontline',
-      icon: IconMail,
-      path: 'frontline',
-      hasSettings: false,
-    },
-  ],
 };

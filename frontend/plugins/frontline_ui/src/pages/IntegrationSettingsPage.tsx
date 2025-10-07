@@ -2,6 +2,7 @@ import { IntegrationList } from '@/integrations/components/IntegrationList';
 import { ScrollArea } from 'erxes-ui';
 
 export const IntegrationSettingsPage = () => {
+  console.log('IntegrationSettingsPage');
   return (
     <ScrollArea>
       <div className="h-full w-full mx-auto max-w-3xl px-8 py-5 flex flex-col gap-8">
