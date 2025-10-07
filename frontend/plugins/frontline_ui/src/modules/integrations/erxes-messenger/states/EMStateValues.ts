@@ -80,10 +80,8 @@ export const erxesMessengerSetupValuesAtom = atom((get) => {
       callData: {},
     },
     uiOptions: {
-      color: appearance?.color || DEFAULT_COLORS.COLOR,
-      textColor: appearance?.textColor || DEFAULT_COLORS.TEXT,
-      wallpaper: DEFAULT_WALLPAPER,
       logo: appearance?.logo || '',
+      primary: appearance?.primary || DEFAULT_COLORS,
     },
   });
 });

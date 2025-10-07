@@ -79,10 +79,11 @@ export interface MessengerSetupPayload {
     isReceiveWebCall?: boolean;
   };
   uiOptions?: {
-    color?: string;
-    textColor?: string;
-    wallpaper?: string;
     logo?: string;
+    primary?: {
+      DEFAULT?: string;
+      foreground?: string;
+    };
   };
 }
 

@@ -12,6 +12,7 @@ import {
   ITicketData,
 } from '@/inbox/@types/integrations';
 import { integrationSchema } from '@/inbox/db/definitions/integrations';
+import { validateColorTheme } from '~/modules/inbox/utils/colorThemeValidation';
 export interface IMessengerIntegration {
   kind: string;
   name: string;
@@ -106,6 +107,10 @@ export interface IIntegrationModel extends Model<IIntegrationDocument> {
   saveMessengerAppearanceData(
     _id: string,
     doc: IUiOptions,
+  ): Promise<IIntegrationDocument>;
+  saveMessengerColorTheme(
+    _id: string,
+    colorTheme: any,
   ): Promise<IIntegrationDocument>;
   saveMessengerConfigs(
     _id: string,
@@ -329,11 +334,27 @@ export const loadClass = (models: IModels, subdomain: string) => {
      */
     public static async saveMessengerAppearanceData(
       _id: string,
-      { color, wallpaper, logo, textColor }: IUiOptions,
+      { logo, primary }: IUiOptions,
     ) {
       await models.Integrations.updateOne(
         { _id },
-        { $set: { uiOptions: { color, wallpaper, logo, textColor } } },
+        { $set: { uiOptions: { logo, primary } } },
+        { runValidators: true },
+      );
+
+      return models.Integrations.findOne({ _id });
+    }
+
+    /**
+     * Save messenger color theme data
+     */
+    public static async saveMessengerColorTheme(_id: string, colorTheme: any) {
+      // Validate color values
+      const validatedTheme = validateColorTheme(colorTheme);
+
+      await models.Integrations.updateOne(
+        { _id },
+        { $set: { uiOptions: validatedTheme } },
         { runValidators: true },
       );
 

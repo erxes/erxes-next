@@ -238,13 +238,22 @@ export const leadDataSchema = new Schema(
   { _id: false },
 );
 
+// subdocument schema for color definition
+const colorDefinitionSchema = new Schema(
+  {
+    DEFAULT: { type: String },
+    foreground: { type: String },
+  },
+  { _id: false },
+);
+
 // subdocument schema for messenger UiOptions
 const uiOptionsSchema = new Schema(
   {
-    color: { type: String },
-    textColor: { type: String },
-    wallpaper: { type: String },
+    // Legacy fields for backward compatibility
     logo: { type: String },
+    // Enhanced color theme configuration
+    primary: { type: colorDefinitionSchema },
   },
   { _id: false },
 );

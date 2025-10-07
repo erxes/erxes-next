@@ -359,6 +359,32 @@ export const integrationMutations = {
     return models.Integrations.saveMessengerAppearanceData(_id, uiOptions);
   },
 
+  async integrationsSaveMessengerColorTheme(
+    _root,
+    { _id, colorTheme }: { _id: string; colorTheme: any },
+    { models }: IContext,
+  ) {
+    return models.Integrations.saveMessengerColorTheme(_id, colorTheme);
+  },
+
+  async integrationsGetMessengerColorThemes(
+    _root,
+    _args,
+    { models }: IContext,
+  ) {
+    // Return predefined color themes for now
+    // In a full implementation, you might store these in a separate collection
+    return [
+      {
+        _id: '',
+        primary: {
+          DEFAULT: '#3b82f6',
+          foreground: '#ffffff',
+        },
+      },
+    ];
+  },
+
   /**
    * Update/save messenger data
    */

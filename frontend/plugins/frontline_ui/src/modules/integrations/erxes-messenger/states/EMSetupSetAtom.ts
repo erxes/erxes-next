@@ -27,9 +27,8 @@ export const erxesMessengerSetSetupAtom = atom(
     try {
       // Set appearance
       const appearance = {
-        brandColor: payload?.uiOptions?.color,
-        textColor: payload?.uiOptions?.textColor,
         logo: payload?.uiOptions?.logo,
+        primary: payload?.uiOptions?.primary,
       };
       set(erxesMessengerSetupAppearanceAtom, appearance);
 
