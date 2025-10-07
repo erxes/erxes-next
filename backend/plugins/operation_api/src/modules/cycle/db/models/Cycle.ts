@@ -6,7 +6,7 @@ import {
   getCycleProgressChart,
   getCyclesProgress,
 } from '@/cycle/utils';
-import { format, isBefore, isSameDay, startOfDay } from 'date-fns';
+import { isBefore, isSameDay, startOfDay } from 'date-fns';
 import { FilterQuery, Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 
@@ -16,7 +16,6 @@ export interface ICycleModel extends Model<ICycleDocument> {
   createCycle({ doc }: { doc: ICycle }): Promise<ICycleDocument>;
   updateCycle(doc: ICycleDocument): Promise<ICycleDocument>;
   removeCycle({ _id }: { _id: string }): Promise<{ ok: number }>;
-  startCycle(_id: string): Promise<ICycleDocument>;
   endCycle(_id: string): Promise<ICycleDocument>;
 }
 
@@ -67,8 +66,8 @@ export const loadCycleClass = (models: IModels) => {
         throw new Error('New cycle with an existing cycle');
       }
 
-      const today = format(new Date(), 'yyyy-MM-dd');
-      const start = format(doc.startDate, 'yyyy-MM-dd');
+      const today = startOfDay(new Date());
+      const start = startOfDay(doc.startDate);
 
       if (isBefore(start, today)) {
         throw new Error('New cycle start date must be in the future');
@@ -79,7 +78,7 @@ export const loadCycleClass = (models: IModels) => {
         { $group: { _id: null, maxNumber: { $max: '$number' } } },
       ]);
 
-      if (isSameDay(start, today)) {
+      if (isSameDay(doc.startDate, new Date())) {
         doc.isActive = true;
       }
 
@@ -117,32 +116,6 @@ export const loadCycleClass = (models: IModels) => {
       return models.Cycle.findOneAndUpdate(
         { _id },
         { $set: rest },
-        { new: true },
-      );
-    }
-
-    public static async startCycle(_id: string) {
-      const cycle = await models.Cycle.getCycle(_id);
-
-      if (cycle?.isActive) {
-        throw new Error('Cycle is already active');
-      }
-
-      const team = await models.Team.getTeam(cycle.teamId);
-
-      const cycles = await models.Cycle.find({
-        isActive: true,
-        isCompleted: false,
-        teamId: team._id,
-      });
-
-      if (cycles?.length) {
-        throw new Error('Previous cycle is active');
-      }
-
-      await models.Cycle.findOneAndUpdate(
-        { _id },
-        { $set: { isActive: true } },
         { new: true },
       );
     }

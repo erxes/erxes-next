@@ -1,9 +1,8 @@
-import { ICycleDocument } from '@/cycle/types';
-import { STATUS_TYPES } from '@/status/constants/types';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { ICycleDocument } from '@/cycle/types';
+import { STATUS_TYPES } from '@/status/constants/types';
 
-import { requireLogin } from 'erxes-api-shared/core-modules';
 import {
   getCycleProgressByMember,
   getCycleProgressByProject,
@@ -24,7 +23,7 @@ export const cycleQueries = {
           ...params,
           orderBy: { isActive: -1, isCompleted: 1, startDate: 1 },
         },
-        query: { teamId: params.teamId, isCompleted: false },
+        query: { teamId: params.teamId },
       },
     );
 
@@ -102,11 +101,3 @@ export const cycleQueries = {
     return getCycleProgressByProject(_id, assigneeId, models);
   },
 };
-
-requireLogin(cycleQueries, 'getCycle');
-requireLogin(cycleQueries, 'getCycles');
-requireLogin(cycleQueries, 'getCyclesActive');
-requireLogin(cycleQueries, 'getCycleProgress');
-requireLogin(cycleQueries, 'getCycleProgressChart');
-requireLogin(cycleQueries, 'getCycleProgressByMember');
-requireLogin(cycleQueries, 'getCycleProgressByProject');

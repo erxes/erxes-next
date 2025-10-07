@@ -13,7 +13,6 @@ export interface IProject {
   status: number;
   targetDate?: Date;
   leadId?: string;
-  createdBy?: string;
 }
 
 export interface IProjectFilter extends ICursorPaginateParams, IListParams {

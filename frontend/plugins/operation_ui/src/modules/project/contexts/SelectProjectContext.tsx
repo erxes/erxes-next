@@ -12,7 +12,6 @@ interface SelectProjectContextType {
   totalCount?: number;
   search?: string;
   setSearch?: (search: string) => void;
-  variant?: string;
 }
 
 export const SelectProjectContext = createContext<

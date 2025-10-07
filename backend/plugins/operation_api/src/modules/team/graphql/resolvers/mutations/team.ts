@@ -1,6 +1,6 @@
 import { TeamMemberRoles } from '@/team/@types/team';
 import { checkUserRole } from '@/utils';
-import { requireLogin, sendNotification } from 'erxes-api-shared/core-modules';
+import { sendNotification } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 
 export const teamMutations = {
@@ -174,10 +174,3 @@ export const teamMutations = {
     return models.TeamMember.updateTeamMember(_id, role);
   },
 };
-
-requireLogin(teamMutations, 'teamAdd');
-requireLogin(teamMutations, 'teamUpdate');
-requireLogin(teamMutations, 'teamRemove');
-requireLogin(teamMutations, 'teamAddMembers');
-requireLogin(teamMutations, 'teamRemoveMember');
-requireLogin(teamMutations, 'teamUpdateMember');

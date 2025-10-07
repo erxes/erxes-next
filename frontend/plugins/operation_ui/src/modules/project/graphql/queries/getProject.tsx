@@ -13,7 +13,6 @@ export const GET_PROJECT = gql`
       leadId
       startDate
       targetDate
-      createdBy
       createdAt
       updatedAt
     }

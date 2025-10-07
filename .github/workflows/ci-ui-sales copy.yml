@@ -1,18 +1,18 @@
-name: CI plugin-tourism_ui
+name: CI plugin-sales_ui
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'frontend/plugins/tourism_ui/**'
+      - 'frontend/plugins/sales_ui/**'
       - 'frontend/libs/**'
-      - '.github/workflows/ci-ui-tourism.yml'
+      - '.github/workflows/ci-ui-sales.yml'
   pull_request:
     paths:
-      - 'frontend/plugins/tourism_ui/**'
+      - 'frontend/plugins/sales_ui/**'
       - 'frontend/libs/**'
-      - '.github/workflows/ci-ui-tourism.yml'
+      - '.github/workflows/ci-ui-sales.yml'
 
 permissions:
   actions: read
@@ -21,7 +21,7 @@ permissions:
   id-token: write
 
 jobs:
-  tourism_ui-ci:
+  sales_ui-ci:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -44,12 +44,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build tourism UI
+      - name: Build sales UI
         run: |
           export NX_DAEMON=false
-          pnpm nx build tourism_ui
+          pnpm nx build sales_ui
 
       - name: Sync to Cloudflare R2
+        if: github.event_name == 'push' && ( github.ref == 'refs/heads/main' )
         run: |
-          aws s3 sync dist/frontend/plugins/tourism_ui s3://erxes-next/latest/tourism_ui/ \
+          aws s3 sync dist/frontend/plugins/sales_ui s3://erxes-next/latest/sales_ui/ \
             --endpoint-url https://7c8392aff8ac4518aa06dfa4b6337ef2.r2.cloudflarestorage.com

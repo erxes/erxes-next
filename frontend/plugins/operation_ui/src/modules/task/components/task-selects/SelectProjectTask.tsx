@@ -12,7 +12,7 @@ import { useGetProject } from '@/project/hooks/useGetProject';
 import { useProjectsInline } from '@/project/hooks/useGetProjects';
 import { IProject } from '@/project/types';
 import { useUpdateTask } from '@/task/hooks/useUpdateTask';
-import { IconClipboard, IconChevronRight } from '@tabler/icons-react';
+import { IconClipboard } from '@tabler/icons-react';
 import {
   Combobox,
   Command,
@@ -21,10 +21,9 @@ import {
   cn,
   useFilterContext,
   useQueryState,
-  Button,
 } from 'erxes-ui';
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 
 export const SelectProjectProvider = ({
@@ -33,16 +32,15 @@ export const SelectProjectProvider = ({
   onValueChange,
   teamId,
   taskId,
-  variant,
 }: {
   children: React.ReactNode;
   value?: string;
   onValueChange: (value: string) => void;
   teamId?: string;
   taskId?: string;
-  variant?: `${SelectTriggerVariant}`;
 }) => {
   const { teamId: _teamId } = useParams();
+
   const [search, setSearch] = useState('');
 
   const [debouncedSearch] = useDebounce(search, 500);
@@ -66,7 +64,6 @@ export const SelectProjectProvider = ({
         totalCount,
         search,
         setSearch,
-        variant,
       }}
     >
       {children}
@@ -75,9 +72,7 @@ export const SelectProjectProvider = ({
 };
 
 const SelectProjectValue = () => {
-  const { projects, value, variant } = useSelectProjectContext();
-  const { teamId } = useParams();
-  const navigate = useNavigate();
+  const { projects, value } = useSelectProjectContext();
 
   const name = projects.find((p) => p._id === value)?.name;
 
@@ -85,18 +80,6 @@ const SelectProjectValue = () => {
     variables: { _id: value },
     skip: !!name || !value,
   });
-
-  const handleNavigateToProject = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (value) {
-      const basePath = teamId
-        ? `/operation/team/${teamId}/projects/${value}/overview`
-        : `/operation/projects/${value}/overview`;
-      navigate(basePath);
-    }
-  };
-
-  const projectName = name || project?.name || 'No project';
 
   return (
     <div
@@ -106,17 +89,9 @@ const SelectProjectValue = () => {
       )}
     >
       <IconClipboard className="size-4" />
-      <span className="truncate font-medium flex-1">{projectName}</span>
-      {variant === 'detail' && value && (
-        <Button
-          variant="ghost"
-          className="h-6 w-6 flex-shrink-0"
-          onClick={handleNavigateToProject}
-          title={`Go to ${projectName} project`}
-        >
-          <IconChevronRight className="size-4" />
-        </Button>
-      )}
+      <span className="truncate font-medium">
+        {name || project?.name || 'No project'}
+      </span>
     </div>
   );
 };
@@ -250,7 +225,6 @@ const SelectProjectRoot = ({
   return (
     <SelectProjectProvider
       teamId={teamId}
-      variant={variant}
       onValueChange={(value) => {
         updateTask({
           variables: {

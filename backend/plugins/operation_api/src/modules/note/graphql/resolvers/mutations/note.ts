@@ -1,5 +1,4 @@
 import { INoteDocument } from '@/note/types';
-import { requireLogin } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 
 export const noteMutations = {
@@ -35,7 +34,3 @@ export const noteMutations = {
     return models.Note.removeNote({ _id, userId: user._id });
   },
 };
-
-requireLogin(noteMutations, 'createNote');
-requireLogin(noteMutations, 'updateNote');
-requireLogin(noteMutations, 'deleteNote');

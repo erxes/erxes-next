@@ -1,40 +1,30 @@
 import { Queue } from 'bullmq';
 import { createMQWorkerWithListeners } from 'erxes-api-shared/utils';
-import { checkCycle, dailyCheckCycles } from '~/worker/dailyCheckCycles';
+import { dailyCheckCycles } from '~/worker/dailyCheckCycles';
 
 export const initMQWorkers = async (redis: any) => {
-  const myQueue = new Queue('operations-daily-cycles-check', {
+  const myQueue = new Queue('operations-daily-cycles-end', {
     connection: redis,
   });
 
   await myQueue.upsertJobScheduler(
-    'operations-daily-cycles-check',
+    'operations-daily-cycles-end',
     {
       pattern: '0 0 * * *',
       tz: 'UTC',
     },
     {
-      name: 'operations-daily-cycles-check',
+      name: 'operations-daily-cycles-end',
     },
   );
 
-  createMQWorkerWithListeners(
+  return createMQWorkerWithListeners(
     'operations',
-    'checkCycle',
-    checkCycle,
-    redis,
-    () => {
-      console.log('Worker for queue operations-checkCycle is ready');
-    },
-  );
-
-  createMQWorkerWithListeners(
-    'operations',
-    'daily-cycles-check',
+    'daily-cycles-end',
     dailyCheckCycles,
     redis,
     () => {
-      console.log('Worker for queue operations-daily-cycles-check is ready');
+      console.log('Worker for queue operations-daily-cycles-end is ready');
     },
   );
 };

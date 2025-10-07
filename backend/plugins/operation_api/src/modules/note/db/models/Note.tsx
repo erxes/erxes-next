@@ -39,7 +39,7 @@ export const loadNoteClass = (models: IModels) => {
     public static async getNotes(
       filter: FilterQuery<INoteDocument>,
     ): Promise<INoteDocument[]> {
-      return models.Note.find(filter);
+      return models.Note.find(filter).lean();
     }
 
     public static async createNote({

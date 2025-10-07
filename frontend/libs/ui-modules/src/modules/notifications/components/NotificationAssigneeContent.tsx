@@ -61,7 +61,7 @@ export const AssigneeNotificationContent = ({
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">
-              {fromUser?.details?.fullName || fromUser?.email}
+              {fromUser?.details?.fullName || fromUser.email}
             </span>
           </div>
         </div>

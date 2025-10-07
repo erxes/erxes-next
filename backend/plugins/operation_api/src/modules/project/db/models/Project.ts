@@ -7,14 +7,10 @@ import {
   IProjectUpdate,
 } from '@/project/@types/project';
 import { createActivity } from '@/activity/utils/createActivity';
-import { Document } from 'mongodb';
-import { FlattenMaps } from 'mongoose';
 
 export interface IProjectModel extends Model<IProjectDocument> {
   getProject(_id: string): Promise<IProjectDocument>;
-  getProjects(
-    filter: any,
-  ): Promise<FlattenMaps<IProjectDocument>[] | Document[]>;
+  getProjects(filter: any): Promise<IProjectDocument[]>;
   createProject(doc: IProject): Promise<IProjectDocument>;
   updateProject({
     doc,
@@ -24,7 +20,7 @@ export interface IProjectModel extends Model<IProjectDocument> {
     doc: IProjectUpdate;
     userId: string;
     subdomain: string;
-  }): Promise<FlattenMaps<IProjectDocument> | Document>;
+  }): Promise<IProjectDocument>;
   removeProject(projectId: string): Promise<{ ok: number }>;
 }
 
@@ -40,15 +36,13 @@ export const loadProjectClass = (models: IModels) => {
       return Project;
     }
 
-    public static async getProjects(
-      filter: any,
-    ): Promise<FlattenMaps<IProjectDocument>[] | Document[]> {
+    public static async getProjects(filter: any): Promise<IProjectDocument[]> {
       return models.Project.find(filter).lean();
     }
 
     public static async createProject(
       doc: IProject,
-    ): Promise<FlattenMaps<IProjectDocument> | Document> {
+    ): Promise<IProjectDocument> {
       return models.Project.insertOne(doc);
     }
 

@@ -14,6 +14,15 @@ export const checkUserRole = async ({
   allowedRoles: string[];
   teamIds?: string[];
 }) => {
+  const userRole = await models.TeamMember.findOne({
+    teamId,
+    memberId: userId,
+  });
+
+  if (userRole?.role === TeamMemberRoles.MEMBER) {
+    return;
+  }
+
   if (teamIds && teamIds.length > 0) {
     const userRoles = await models.TeamMember.find({
       teamId: { $in: teamIds },
@@ -38,11 +47,6 @@ export const checkUserRole = async ({
 
     return;
   }
-
-  const userRole = await models.TeamMember.findOne({
-    teamId,
-    memberId: userId,
-  });
 
   if (!userRole) {
     throw new Error('User not in team');

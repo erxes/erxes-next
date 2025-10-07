@@ -1,7 +1,6 @@
-import { ITaskUpdate } from '@/task/@types/task';
-import { requireLogin } from 'erxes-api-shared/core-modules';
-import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { ITaskUpdate } from '@/task/@types/task';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const taskMutations = {
   createTask: async (
@@ -78,18 +77,4 @@ export const taskMutations = {
 
     return deletedTask;
   },
-
-  convertToProject: async (
-    _parent: undefined,
-    { _id },
-    { models }: IContext,
-  ) => {
-    const convertedTask = await models.Task.convertToProject(_id);
-
-    return convertedTask;
-  },
 };
-
-requireLogin(taskMutations, 'createTask');
-requireLogin(taskMutations, 'updateTask');
-requireLogin(taskMutations, 'removeTask');

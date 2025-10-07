@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import {
   TSocialItem,
   TOnboardingStepItem,
-  TVideoTabItem,
+  TReadOnlyTabItem,
 } from 'ui-modules/modules/notifications/types/welcome';
 
 const Socials: TSocialItem[] = [
@@ -117,7 +117,7 @@ const SocialSection = () => (
     <div className="flex flex-wrap justify-center gap-2">
       {Socials.map((item) => {
         return (
-          <Link to={item.url} key={item.url}>
+          <Link to={item.url}>
             <div className="bg-muted text-muted-foreground  rounded-sm p-[6px]">
               {item.icon}
             </div>
@@ -239,18 +239,10 @@ const OnboardingStepsSection = ({
   );
 };
 
-const VideoPlayerWithTabs = ({
-  src,
-  tabItems,
-}: {
-  src: string;
-  tabItems?: TVideoTabItem[];
-}) => {
+const LazyVideo = ({ src }: { src: string }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -270,122 +262,56 @@ const VideoPlayerWithTabs = ({
     return () => observer.disconnect();
   }, []);
 
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
-    }
-  };
-
-  const handleTabClick = (item: TVideoTabItem) => {
-    if (item.time !== undefined && videoRef.current) {
-      videoRef.current.currentTime = item.time;
-      videoRef.current.play();
-    }
-  };
-
-  const getActiveTab = () => {
-    if (!tabItems) return null;
-    const sortedTabs = [...tabItems]
-      .filter((tab) => tab.time !== undefined)
-      .sort((a, b) => (a.time || 0) - (b.time || 0));
-
-    for (let i = 0; i < sortedTabs.length; i++) {
-      const currentTab = sortedTabs[i];
-      const nextTab = sortedTabs[i + 1];
-
-      if (currentTab.time === undefined) continue;
-
-      if (nextTab?.time !== undefined) {
-        if (currentTime >= currentTab.time && currentTime < nextTab.time) {
-          return currentTab.label;
-        }
-      } else {
-        if (currentTime >= currentTab.time) {
-          return currentTab.label;
-        }
-      }
-    }
-
-    return null;
-  };
-
-  const activeTabLabel = getActiveTab();
-
   return (
-    <div className="space-y-4">
-      {tabItems && (
-        <div className="w-min mx-auto max-w-[calc(100vw-2rem)]">
-          <div className="rounded-lg border overflow-x-auto border-foreground/10 bg-foreground/10 p-1 relative">
-            <div className="flex gap-2 relative">
-              {tabItems.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  onClick={() => handleTabClick(item)}
-                  className={cn(
-                    'flex items-center justify-center gap-2 font-medium text-[13px] py-2 px-2 rounded-[4px] text-center transition-colors relative z-10',
-                    activeTabLabel === item.label && 'text-primary',
-                    item.time !== undefined &&
-                      'cursor-pointer hover:text-primary',
-                  )}
-                  transition={{ duration: 0.15 }}
-                >
-                  <motion.div
-                    animate={{
-                      scale: activeTabLabel === item.label ? 1.1 : 1,
-                    }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {item.icon}
-                  </motion.div>
-                  <span className="truncate">{item.label}</span>
-                  {activeTabLabel === item.label && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 bg-white shadow-sm rounded-[4px] z-[-1]"
-                      initial={false}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 400,
-                        damping: 40,
-                      }}
-                    />
-                  )}
-                </motion.div>
-              ))}
+    <div
+      ref={containerRef}
+      className="relative w-full aspect-video border border-foreground/10  overflow-hidden bg-foreground/10 p-3 rounded-[20px]"
+    >
+      {isInView && (
+        <>
+          {!isLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
-          </div>
+          )}
+          <video
+            src={src}
+            controls
+            className={`w-full h-full object-cover transition-opacity duration-300 bg-background rounded-md border border-foreground/10 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoadedData={() => setIsLoaded(true)}
+            preload="metadata"
+          />
+        </>
+      )}
+      {!isInView && (
+        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+          Video will load when visible
         </div>
       )}
+    </div>
+  );
+};
 
-      <div
-        ref={containerRef}
-        className="relative w-full aspect-video border border-foreground/10 overflow-hidden bg-foreground/10 p-2 rounded-[20px]"
-      >
-        {isInView && (
-          <>
-            {!isLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-            )}
-            <video
-              ref={videoRef}
-              src={src}
-              controls
-              className={`w-full h-full object-cover transition-opacity duration-300 bg-background rounded-xl border border-foreground/10 ${
-                isLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              onLoadedData={() => setIsLoaded(true)}
-              onTimeUpdate={handleTimeUpdate}
-              preload="metadata"
-            />
-          </>
-        )}
-        {!isInView && (
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-            Video will load when visible
-          </div>
-        )}
+const ReadOnlyTabs = ({ tabItems }: { tabItems: TReadOnlyTabItem[] }) => {
+  return (
+    <div className="cursor-default w-min   mx-auto max-w-[calc(100vw-2rem)]">
+      <div className="rounded-lg border overflow-x-auto  border-foreground/10 bg-foreground/10 p-1">
+        <div className="flex gap-2 ">
+          {tabItems.map((item) => (
+            <div
+              key={item.label}
+              className={cn(
+                'flex items-center justify-center gap-2 font-medium text-[13px] py-2 px-2 rounded-[4px] text-center',
+                item.isActive && 'bg-white text-primary shadow-sm',
+              )}
+            >
+              {item.icon}
+              <span className="truncate">{item.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -397,17 +323,14 @@ export const WelcomeNotificationContentLayout = ({
   tabItems,
   videoSrc,
   onboardingSteps,
-  isPlugin = true,
 }: {
   title: string;
   description: string;
-  tabItems?: TVideoTabItem[];
+  tabItems?: TReadOnlyTabItem[];
   videoSrc: string;
   onboardingSteps: TOnboardingStepItem[];
-  isPlugin?: boolean;
 }) => {
   const currentUser = useAtomValue(currentUserState);
-
   return (
     <div className="container px-4 sm:px-8 md:px-20 py-12 lg:px-4 xl:px-12 relative">
       <WelcomeMessageBackground className="absolute inset-0 z-0" />
@@ -423,24 +346,19 @@ export const WelcomeNotificationContentLayout = ({
           transition={{ delay: 0.2 }}
           className="space-y-2 text-center"
         >
-          <h1
-            className={cn(
-              'text-2xl font-semibold tracking-tight bg-clip-text',
-              isPlugin ? 'text-foreground' : 'text-primary',
-            )}
-          >
+          <h1 className="text-2xl font-semibold tracking-tight bg-clip-text text-primary">
             {title}
           </h1>
           <p className="text-base text-muted-foreground">{description}</p>
         </motion.div>
-
+        {tabItems && <ReadOnlyTabs tabItems={tabItems} />}
         <div className="space-y-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <VideoPlayerWithTabs src={videoSrc} tabItems={tabItems} />
+            <LazyVideo src={videoSrc} />
           </motion.div>
           <OnboardingStepsSection
             isOwner={currentUser?.isOwner || false}

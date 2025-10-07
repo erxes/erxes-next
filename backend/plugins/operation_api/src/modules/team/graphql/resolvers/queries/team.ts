@@ -1,6 +1,5 @@
 import { ITeamFilter } from '@/team/@types/team';
 import { getTeamEstimateChoises } from '@/team/utils';
-import { requireLogin } from 'erxes-api-shared/core-modules';
 import { Types } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
@@ -80,9 +79,3 @@ export const teamQueries = {
     return getTeamEstimateChoises(team.estimateType);
   },
 };
-
-requireLogin(teamQueries, 'getTeam');
-requireLogin(teamQueries, 'getMyTeams');
-requireLogin(teamQueries, 'getTeams');
-requireLogin(teamQueries, 'getTeamMembers');
-requireLogin(teamQueries, 'getTeamEstimateChoises');

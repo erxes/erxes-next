@@ -1,9 +1,8 @@
 import { IProjectUpdate } from '@/project/@types/project';
-import { TeamMemberRoles } from '@/team/@types/team';
 import { checkUserRole } from '@/utils';
-import { requireLogin } from 'erxes-api-shared/core-modules';
-import { graphqlPubsub } from 'erxes-api-shared/utils';
+import { TeamMemberRoles } from '@/team/@types/team';
 import { IContext } from '~/connectionResolvers';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const projectMutations = {
   createProject: async (
@@ -18,7 +17,7 @@ export const projectMutations = {
       description,
       leadId,
     },
-    { models, user }: IContext,
+    { models }: IContext,
   ) => {
     const createdProject = await models.Project.createProject({
       name,
@@ -29,7 +28,6 @@ export const projectMutations = {
       status,
       description,
       leadId,
-      createdBy: user._id,
     });
     graphqlPubsub.publish(`operationProjectChanged:${createdProject._id}`, {
       operationProjectChanged: {
@@ -102,7 +100,3 @@ export const projectMutations = {
     return deletedProject;
   },
 };
-
-requireLogin(projectMutations, 'createProject');
-requireLogin(projectMutations, 'updateProject');
-requireLogin(projectMutations, 'removeProject');
