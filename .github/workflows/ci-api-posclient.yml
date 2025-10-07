@@ -1,21 +1,21 @@
-name: CI plugin-pos_api
+name: CI plugin-posclient_api
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'backend/plugins/pos_api/**'
+      - 'backend/plugins/posclient_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-pos.yml'
+      - '.github/workflows/ci-api-posclient.yml'
   pull_request:
     paths:
-      - 'backend/plugins/pos_api/**'
+      - 'backend/plugins/posclient_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-pos.yml'
+      - '.github/workflows/ci-api-posclient.yml'
 
 jobs:
-  pos_api-ci:
+  posclient_api-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,8 +38,8 @@ jobs:
       - name: Build shared module
         run: pnpm nx build erxes-api-shared
 
-      - name: Build pos_api
-        run: pnpm nx build pos_api
+      - name: Build posclient_api
+        run: pnpm nx build posclient_api
 
       # Buildx setup
       - name: Set up QEMU
@@ -60,9 +60,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: backend/plugins/pos_api/Dockerfile
+          file: backend/plugins/posclient_api/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            erxes/erxes-next-pos_api:latest
-            erxes/erxes-next-pos_api:${{ github.sha }}
+            erxes/erxes-next-posclient_api:latest
+            erxes/erxes-next-posclient_api:${{ github.sha }}
