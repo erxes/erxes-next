@@ -13,7 +13,7 @@ import {
   IConfigDocument,
   IEbarimtConfig,
 } from '~/modules/posclient/@types/configs';
-import { IOrderItemDocument } from '~/modules/posclient/@types/OrderItems';
+import { IOrderItemDocument } from '~/modules/posclient/@types/orderItems';
 import {
   IOrderDocument,
   IOrder,

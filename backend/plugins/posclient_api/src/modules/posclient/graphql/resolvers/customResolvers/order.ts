@@ -1,5 +1,5 @@
 import { IContext } from '@/posclient/@types/types';
-import { IOrderItemDocument } from '~/modules/posclient/@types/OrderItems';
+import { IOrderItemDocument } from '~/modules/posclient/@types/orderItems';
 import { IOrderDocument } from '~/modules/posclient/@types/orders';
 import { IEbarimtDocument } from '~/modules/posclient/@types/putResponses';
 // import { sendSalesMessage, sendCoreMessage } from '../../messageBroker';

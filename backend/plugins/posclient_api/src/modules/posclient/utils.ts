@@ -11,8 +11,6 @@ import { IConfigDocument } from '~/modules/posclient/@types/configs';
 import { IOrderDocument } from '~/modules/posclient/@types/orders';
 import { IModels } from '~/connectionResolvers';
 import { IPosUserDocument } from '~/modules/posclient/@types/posUsers';
-import { FlattenMaps } from 'mongoose';
-import { IOrderItemDocument } from '~/modules/posclient/@types/OrderItems';
 import {
   BILL_TYPES,
   SUBSCRIPTION_INFO_STATUS,

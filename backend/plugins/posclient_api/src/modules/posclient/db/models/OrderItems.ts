@@ -1,6 +1,6 @@
 import { Model, model } from 'mongoose';
 import { orderItemSchema } from '../definitions/orderItems';
-import { IOrderItem, IOrderItemDocument } from '@/posclient/@types/OrderItems';
+import { IOrderItem, IOrderItemDocument } from '@/posclient/@types/orderItems';
 
 export interface IOrderItemModel extends Model<IOrderItemDocument> {
   getOrderItem(_id: string): Promise<IOrderItemDocument>;

@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { IOrderItemDocument } from '~/modules/posclient/@types/OrderItems';
+import { IOrderItemDocument } from '~/modules/posclient/@types/orderItems';
 
 export default {
   async productName(

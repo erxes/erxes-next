@@ -9,7 +9,7 @@ import {
   IProductsConfigDocument,
 } from '~/modules/posclient/@types/configs';
 import { ICoverDocument } from '~/modules/posclient/@types/cover';
-import { IOrderItemDocument } from '~/modules/posclient/@types/OrderItems';
+import { IOrderItemDocument } from '~/modules/posclient/@types/orderItems';
 import { IOrderDocument } from '~/modules/posclient/@types/orders';
 import { IPosUserDocument } from '~/modules/posclient/@types/posUsers';
 import { IProductDocument } from '~/modules/posclient/@types/products';

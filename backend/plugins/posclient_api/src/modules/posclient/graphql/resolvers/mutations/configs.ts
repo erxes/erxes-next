@@ -7,7 +7,7 @@ import {
 
 // import { connectToMessageBroker } from '@erxes/api-utils/src/messageBroker';
 // import { setupMessageConsumers, sendPosMessage } from '../../../messageBroker';
-import { IOrderItemDocument } from '@/posclient/@types/OrderItems';
+import { IOrderItemDocument } from '@/posclient/@types/orderItems';
 import fetch from 'node-fetch';
 import { IEbarimtDocument } from '@/posclient/db/definitions/putResponses';
 
