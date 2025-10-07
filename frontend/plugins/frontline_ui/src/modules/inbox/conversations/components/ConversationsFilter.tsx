@@ -135,7 +135,15 @@ export const ConversationFilterBar = ({
     awaitingResponse: boolean;
     participated: boolean;
     created: Date;
-  }>(['status', 'unassigned', 'awaitingResponse', 'participated', 'created']);
+    channelId: string;
+  }>([
+    'status',
+    'unassigned',
+    'awaitingResponse',
+    'participated',
+    'created',
+    'channelId',
+  ]);
 
   if (Object.values(filterStates).length === 0) {
     return null;
