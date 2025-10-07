@@ -23,11 +23,12 @@ export const channelQueries = {
   getChannels: async (
     _parent: undefined,
     params: IChannelFilter,
-    { models }: IContext,
+    { models, user }: IContext,
   ) => {
     if (params.channelIds && params.channelIds.length > 0) {
       return models.Channels.find({ _id: { $in: params.channelIds } });
     }
+
     if (params.integrationId) {
       const channelIds = await models.Integrations.distinct('channelId', {
         _id: params.integrationId,
@@ -35,14 +36,15 @@ export const channelQueries = {
       return models.Channels.find({ _id: { $in: channelIds } });
     }
 
-    if (params.userId) {
+    const userId = params.userId || user._id;
+    if (userId) {
       const channelIds = await models.ChannelMembers.find({
-        memberId: params.userId,
+        memberId: userId,
       }).distinct('channelId');
       return models.Channels.find({ _id: { $in: channelIds } });
     }
 
-    return models.Channels.getChannels(params);
+    return [];
   },
 
   getChannelMembers: async (

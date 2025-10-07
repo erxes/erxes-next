@@ -174,7 +174,7 @@ export const getOrSetCallCookie = async (wsServer) => {
     });
 
     const data = await challengeResponse.json();
-    const { challenge } = data?.response;
+    const { challenge } = data?.response ?? {};
 
     const token = crypto
       .createHash('md5')

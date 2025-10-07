@@ -15,9 +15,9 @@ import {
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
-import { useGetChannels } from '../hooks/useChannels';
 import { IconTopologyStar3 } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
+import { useGetChannels } from '@/channels/hooks/useGetChannels';
 
 const SelectChannelProvider = ({
   children,
@@ -222,6 +222,7 @@ export const SelectChannelFilterBar = ({
   queryKey?: string;
   mode?: 'single' | 'multiple';
 }) => {
+  console.log('called select channel filter...');
   const [channelId, setChannelId] = useQueryState<string | string[]>(
     queryKey || 'channelId',
   );
