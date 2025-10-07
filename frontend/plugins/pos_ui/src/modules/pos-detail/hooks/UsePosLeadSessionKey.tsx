@@ -5,8 +5,7 @@ import { LEADS_CURSOR_SESSION_KEY, POS_CURSOR_SESSION_KEY } from '~/modules/cons
 
 export const useIsPosLeadSessionKey = () => {
   const { pathname } = useLocation();
-
-  const isLead = pathname.includes(PosPath.Leads);
+  const isLead = new RegExp(`(^|/)${PosPath.Leads}(/|$)`).test(pathname);
   return {
     isLead,
     sessionKey: isLead
