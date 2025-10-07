@@ -1,4 +1,4 @@
-import { getSubdomain } from 'erxes-api-shared/utils/utils';
+import { getSubdomain } from 'erxes-api-shared/utils';
 import { NextFunction, Request, Response } from 'express';
 import { generateModels } from '~/connectionResolvers';
 
