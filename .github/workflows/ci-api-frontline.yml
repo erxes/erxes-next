@@ -1,4 +1,4 @@
-name: CI plugin-frontline_api
+name: CI plugin--frontline_api
 
 on:
   push:
@@ -25,12 +25,9 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false # шууд install хийлгэхгүй
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
-        with:
-          node-version: '22'
 
       - name: Install dependencies
         run: pnpm install

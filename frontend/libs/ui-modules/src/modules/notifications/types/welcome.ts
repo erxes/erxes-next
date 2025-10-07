@@ -12,9 +12,8 @@ export type TOnboardingStepItem = {
     to: string;
   };
 };
-export type TReadOnlyTabItem = {
+export type TVideoTabItem = {
   label: string;
   icon: React.ReactNode;
-  isActive?: boolean;
+  time?: number;
 };
-
