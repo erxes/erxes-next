@@ -1,6 +1,6 @@
 import { IProductCategoryDocument } from 'erxes-api-shared/core-types';
-import { sendTRPCMessage } from 'erxes-api-shared/utils/trpc';
-import { escapeRegExp, paginate } from 'erxes-api-shared/utils/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import { escapeRegExp, paginate } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { IConfigDocument } from '~/modules/posclient/@types/configs';
 import { IContext } from '~/modules/posclient/@types/types';

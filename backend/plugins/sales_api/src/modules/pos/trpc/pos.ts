@@ -3,7 +3,11 @@ import { ITRPCContext } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 // import { PosTRPCContext } from '~/init-trpc';
 import { IModels } from '~/connectionResolvers';
-import { getBranchesUtil } from '~/modules/pos/utils';
+import {
+  getBranchesUtil,
+  statusToDone,
+  syncOrderFromClient,
+} from '~/modules/pos/utils';
 // const t = initTRPC.context<PosTRPCContext>().create();
 export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
 
@@ -11,6 +15,18 @@ const t = initTRPC.context<SalesTRPCContext>().create();
 
 export const posTrpcRouter = t.router({
   pos: t.router({
+    orders: t.router({
+      updateOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+        const { selector, modifier } = input;
+        const { models } = ctx;
+
+        return {
+          status: 'success',
+          data: await models.PosOrders.updateOne(selector, modifier),
+        };
+      }),
+    }),
+
     confirm: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
@@ -86,6 +102,74 @@ export const posTrpcRouter = t.router({
             date: deal.stageChangedDate || deal.updatedAt || deal.createdAt,
             description: order.description,
           },
+        };
+      }),
+    createOrUpdateOrders: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { models, subdomain } = ctx;
+
+        const { action, posToken, responses, order, items } = input;
+        const pos = await models.Pos.findOne({ token: posToken }).lean();
+
+        if (!pos) {
+          throw new Error(`Pos token=${posToken} not found`);
+        }
+
+        // ====== if (action === 'statusToDone')
+        // if (doneOrder.type === 'delivery' && doneOrder.status === 'done') { }
+        if (action === 'statusToDone') {
+          return await statusToDone({ subdomain, models, order, pos });
+        }
+
+        // ====== if (action === 'makePayment')
+        await syncOrderFromClient({
+          subdomain,
+          models,
+          order,
+          items,
+          pos,
+          posToken,
+          responses,
+        });
+
+        return {
+          status: 'success',
+        };
+      }),
+    createOrUpdateOrdersMany: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { models, subdomain } = ctx;
+
+        const { posToken, syncOrders } = input;
+        const pos = await models.Pos.findOne({ token: posToken }).lean();
+
+        if (!pos) {
+          throw new Error(`Pos token=${posToken} not found`);
+        }
+
+        for (const perData of syncOrders) {
+          const { responses, order, items } = perData;
+          try {
+            await syncOrderFromClient({
+              subdomain,
+              models,
+              order,
+              items,
+              pos,
+              posToken,
+              responses,
+            });
+          } catch (e) {
+            console.log(
+              `createOrUpdateOrdersMany per warning: ${e.message}, #${order?.number}`,
+            );
+          }
+        }
+
+        return {
+          status: 'success',
         };
       }),
   }),

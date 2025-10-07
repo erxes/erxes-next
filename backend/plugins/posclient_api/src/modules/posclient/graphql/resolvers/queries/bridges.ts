@@ -1,4 +1,4 @@
-import { sendTRPCMessage } from 'erxes-api-shared/utils/trpc';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/modules/posclient/@types/types';
 
 export interface IListArgs {

@@ -1,4 +1,4 @@
-import { graphqlPubsub } from 'erxes-api-shared/utils/graphqlPubSub';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { withFilter } from 'graphql-subscriptions';
 
 export default {

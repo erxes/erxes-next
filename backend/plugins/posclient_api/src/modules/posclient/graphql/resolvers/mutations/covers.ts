@@ -1,6 +1,6 @@
 import { IContext } from '@/posclient/@types/types';
 import { ICover } from '~/modules/posclient/@types/cover';
-import { sendTRPCMessage } from 'erxes-api-shared/utils/trpc';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 const coverMutations = {
   async coversAdd(_root, doc: ICover, { posUser, config, models }: IContext) {

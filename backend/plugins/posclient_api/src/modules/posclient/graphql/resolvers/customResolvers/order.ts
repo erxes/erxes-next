@@ -4,7 +4,7 @@ import { IOrderDocument } from '~/modules/posclient/@types/orders';
 import { IEbarimtDocument } from '~/modules/posclient/@types/putResponses';
 // import { sendSalesMessage, sendCoreMessage } from '../../messageBroker';
 import { fakePutData } from '@/posclient/utils/orderUtils';
-import { sendTRPCMessage } from 'erxes-api-shared/utils/trpc';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export default {
   async items(order: IOrderDocument, {}, { models }: IContext) {

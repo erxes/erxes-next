@@ -17,7 +17,7 @@ import {
   BILL_TYPES,
   SUBSCRIPTION_INFO_STATUS,
 } from '~/modules/posclient/db/definitions/constants';
-import { graphqlPubsub } from 'erxes-api-shared/utils/graphqlPubSub';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { fetchEs, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IDoc } from '~/modules/posclient/db/models/PutData';
 import {

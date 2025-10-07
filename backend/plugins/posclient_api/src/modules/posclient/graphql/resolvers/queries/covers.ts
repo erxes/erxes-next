@@ -1,4 +1,4 @@
-import { getPureDate, paginate } from 'erxes-api-shared/utils/utils';
+import { getPureDate, paginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/modules/posclient/@types/types';
 
 const coverQueries = {

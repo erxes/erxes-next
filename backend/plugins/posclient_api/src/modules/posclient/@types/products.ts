@@ -1,7 +1,4 @@
-import {
-  ICustomField,
-  IPdfAttachment,
-} from 'erxes-api-shared/core-types/common';
+import { ICustomField, IPdfAttachment } from 'erxes-api-shared/core-types';
 import { Document, Schema } from 'mongoose';
 
 interface IAttachment {

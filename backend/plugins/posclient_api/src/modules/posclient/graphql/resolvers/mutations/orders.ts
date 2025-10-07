@@ -836,15 +836,30 @@ const orderMutations: Record<string, any> = {
       }
 
       try {
-        sendPosMessage({
-          subdomain,
+        // sendPosMessage({
+        //   subdomain,
+        //   action: 'createOrUpdateOrders',
+        //   data: {
+        //     posToken: config.token,
+        //     action: 'makePayment',
+        //     order,
+        //     items,
+        //   },
+        // });
+        await sendTRPCMessage({
+          method: 'query',
+          pluginName: 'sales',
+          module: 'pos',
           action: 'createOrUpdateOrders',
-          data: {
-            posToken: config.token,
-            action: 'makePayment',
-            order,
-            items,
+          input: {
+            query: {
+              posToken: config.token,
+              action: 'makePayment',
+              order,
+              items,
+            },
           },
+          defaultValue: {},
         });
       } catch (e) {
         debugError(`Error occurred while sending data to erxes: ${e.message}`);
@@ -936,18 +951,26 @@ const orderMutations: Record<string, any> = {
     }
 
     if (order.convertDealId) {
-      const deal = await sendSalesMessage({
-        subdomain,
-        action: 'deals.findOne',
-        data: { _id: order.convertDealId },
-        isRPC: true,
+      // const deal = await sendSalesMessage({
+      //   subdomain,
+      //   action: 'deals.findOne',
+      //   data: { _id: order.convertDealId },
+      //   isRPC: true,
+      // });
+      const deal = await sendTRPCMessage({
+        pluginName: 'sales',
+        module: 'deal',
+        action: 'findOne',
+        input: { _id: order.convertDealId },
+        defaultValue: null,
       });
       if (deal) {
-        const dealLink = await sendSalesMessage({
-          subdomain,
+        const dealLink = await sendTRPCMessage({
+          pluginName: 'sales',
+          module: 'deal',
           action: 'getLink',
-          data: { _id: order.convertDealId, type: 'deal' },
-          isRPC: true,
+          input: { _id: order.convertDealId, type: 'deal' },
+          defaultValue: null,
         });
 
         throw new Error(`Already converted: ${dealLink}`);
@@ -999,30 +1022,48 @@ const orderMutations: Record<string, any> = {
       ];
     }
 
-    const deal = await sendSalesMessage({
-      subdomain,
-      action: 'deals.create',
-      data: dealData,
-      isRPC: true,
-      defaultValue: {},
+    // const deal = await sendSalesMessage({
+    //   subdomain,
+    //   action: 'deals.create',
+    //   data: dealData,
+    //   isRPC: true,
+    //   defaultValue: {},
+    // });
+    const deal = await sendTRPCMessage({
+      pluginName: 'sales',
+      module: 'deal',
+      action: 'createItem',
+      input: dealData,
+      defaultValue: null,
     });
-
     if (order.customerId) {
       if (
         order.customerId &&
         deal._id &&
         ['customer', 'company'].includes(order.customerType || 'customer')
       ) {
-        await sendCoreMessage({
-          subdomain,
-          action: 'conformities.addConformity',
-          data: {
+        // await sendCoreMessage({
+        //   subdomain,
+        //   action: 'conformities.addConformity',
+        //   data: {
+        //     mainType: 'deal',
+        //     mainTypeId: deal._id,
+        //     relType: order.customerType || 'customer',
+        //     relTypeId: order.customerId,
+        //   },
+        //   isRPC: true,
+        // });
+        await sendTRPCMessage({
+          pluginName: 'core',
+          module: 'conformity',
+          action: 'addConformity',
+          input: {
             mainType: 'deal',
             mainTypeId: deal._id,
             relType: order.customerType || 'customer',
             relTypeId: order.customerId,
           },
-          isRPC: true,
+          defaultValue: null,
         });
       }
     }

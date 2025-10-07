@@ -1,4 +1,4 @@
-import { getPureDate } from 'erxes-api-shared/utils/utils';
+import { getPureDate } from 'erxes-api-shared/utils';
 
 export const checkSlotStatus = async (models, config, slots) => {
   const now = getPureDate(new Date());
