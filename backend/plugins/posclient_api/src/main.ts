@@ -79,14 +79,14 @@ startPlugin({
       ],
     }),
   ],
-  // trpcAppRouter: {
-  //   router: appRouter,
-  //   createContext: async (subdomain, context) => {
-  //     const models = await generateModels(subdomain);
+  trpcAppRouter: {
+    router: appRouter,
+    createContext: async (subdomain, context) => {
+      const models = await generateModels(subdomain);
 
-  //     context.models = models;
+      context.models = models;
 
-  //     return context;
-  //   },
-  // },
+      return context;
+    },
+  },
 });

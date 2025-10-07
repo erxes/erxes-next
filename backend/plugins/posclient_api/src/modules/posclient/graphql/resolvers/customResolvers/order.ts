@@ -24,7 +24,7 @@ export default {
       const company = await sendTRPCMessage({
         method: 'query',
         pluginName: 'core',
-        module: 'company',
+        module: 'companies',
         action: 'findOne',
         input: { query: { _id: order.customerId } },
         defaultValue: {},
@@ -68,7 +68,7 @@ export default {
     const customer = await sendTRPCMessage({
       method: 'query',
       pluginName: 'core',
-      module: 'customer',
+      module: 'customers',
       action: 'findOne',
       input: { query: { _id: order.customerId } },
       defaultValue: {},
@@ -149,10 +149,10 @@ export default {
 
     return await sendTRPCMessage({
       method: 'query',
-      pluginName: 'sale',
-      module: 'deals',
+      pluginName: 'sales',
+      module: 'deal',
       action: 'findOne',
-      input: { query: { _id: order.convertDealId } },
+      input: { _id: order.convertDealId },
       defaultValue: {},
     });
   },
@@ -169,10 +169,10 @@ export default {
     // });
     return await sendTRPCMessage({
       method: 'query',
-      pluginName: 'sale',
-      module: 'deals',
+      pluginName: 'sales',
+      module: 'deal',
       action: 'getLink',
-      input: { query: { _id: order.convertDealId, type: 'deal' } },
+      input: { _id: order.convertDealId, type: 'deal' },
       defaultValue: {},
     });
   },

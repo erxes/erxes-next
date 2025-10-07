@@ -34,13 +34,9 @@ const configQueries = {
   },
 
   async getBranches(_root, _param, { subdomain, config }: IContext) {
-    // return await sendPosMessage({
-    //   subdomain,
-    //   action: 'ecommerceGetBranches',
-    //   data: { posToken: config.token || '' },
-    //   isRPC: true,
-    //   defaultValue: [],
-    // });
+    if (!config) {
+      return {};
+    }
     return await sendTRPCMessage({
       method: 'query',
       pluginName: 'sales',

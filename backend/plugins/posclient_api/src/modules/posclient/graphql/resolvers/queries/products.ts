@@ -113,10 +113,10 @@ const generateFilter = async (
       const tagObjs = await sendTRPCMessage({
         method: 'query',
         pluginName: 'core',
-        module: 'core',
-        action: 'core:tagWithChilds',
+        module: 'tags',
+        action: 'findWithChild',
         input: { query: { _id: { $in: tagIds } } },
-        defaultValue: {},
+        defaultValue: [],
       });
       tagIds = tagObjs.map((t) => t._id);
     }
@@ -138,10 +138,10 @@ const generateFilter = async (
       const tagObjs = await sendTRPCMessage({
         method: 'query',
         pluginName: 'core',
-        module: 'core',
-        action: 'core:tagWithChilds',
+        module: 'tags',
+        action: 'findWithChild',
         input: { query: { _id: { $in: tagIds } } },
-        defaultValue: {},
+        defaultValue: [],
       });
 
       tagIds = tagObjs.map((t) => t._id);

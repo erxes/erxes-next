@@ -93,8 +93,8 @@ export const getBranchesUtil = async (
   return await sendCoreMessage({
     method: 'query',
     pluginName: 'core',
-    module: 'structure',
-    action: 'branches.find',
+    module: 'branches',
+    action: 'find',
     input: {
       query: { _id: { $in: healthyBranchIds } },
       fields: {

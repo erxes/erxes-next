@@ -22,28 +22,26 @@ const bridgesQueries = {
         method: 'query',
         pluginName: 'core',
         module: 'companies',
-        action: 'companies.findActiveCompanies',
+        action: 'findActiveCompanies',
         input: {
           query: {
-            selector: {
-              $or: [
-                { _id: searchValue },
-                { code: searchValue },
-                { primaryName: { $regex: searchValue, $options: 'i' } },
-                { primaryEmail: { $regex: searchValue, $options: 'i' } },
-                { primaryPhone: { $regex: searchValue, $options: 'i' } },
-              ],
-            },
-            fields: {
-              _id: 1,
-              code: 1,
-              primaryPhone: 1,
-              primaryEmail: 1,
-              primaryName: 1,
-            },
-            skip,
-            limit,
+            $or: [
+              { _id: searchValue },
+              { code: searchValue },
+              { primaryName: { $regex: searchValue, $options: 'i' } },
+              { primaryEmail: { $regex: searchValue, $options: 'i' } },
+              { primaryPhone: { $regex: searchValue, $options: 'i' } },
+            ],
           },
+          fields: {
+            _id: 1,
+            code: 1,
+            primaryPhone: 1,
+            primaryEmail: 1,
+            primaryName: 1,
+          },
+          skip,
+          limit,
         },
         defaultValue: [],
       });
@@ -90,8 +88,8 @@ const bridgesQueries = {
       const users = await sendTRPCMessage({
         method: 'query',
         pluginName: 'core',
-        module: 'companies',
-        action: 'companies.findActiveCompanies',
+        module: 'users',
+        action: 'find',
         input: {
           query: {
             $or: [
@@ -119,36 +117,6 @@ const bridgesQueries = {
         },
         defaultValue: [],
       });
-      // const users = await sendCoreMessage({
-      //   subdomain,
-      //   action: 'users.find',
-      //   data: {
-      //     query: {
-      //       $or: [
-      //         { _id: searchValue },
-      //         { code: searchValue },
-      //         { employeeId: searchValue },
-      //         { email: { $regex: searchValue, $options: 'i' } },
-      //         { username: { $regex: searchValue, $options: 'i' } },
-      //         {
-      //           'details.operatorPhone': { $regex: searchValue, $options: 'i' },
-      //         },
-      //       ],
-      //     },
-      //     fields: {
-      //       _id: 1,
-      //       code: 1,
-      //       details: 1,
-      //       email: 1,
-      //       firstName: 1,
-      //       lastName: 1,
-      //       userName: 1,
-      //     },
-      //     skip,
-      //     limit,
-      //   },
-      //   isRPC: true,
-      // });
 
       if (users) {
         return users.map((user) => ({
@@ -165,63 +133,33 @@ const bridgesQueries = {
     const customers = await sendTRPCMessage({
       method: 'query',
       pluginName: 'core',
-      module: 'companies',
-      action: 'companies.findActiveCompanies',
+      module: 'customers',
+      action: 'findActiveCustomers',
       input: {
         query: {
-          selector: {
-            $or: [
-              { _id: searchValue },
-              { code: searchValue },
-              { primaryPhone: { $regex: searchValue, $options: 'i' } },
-              { primaryEmail: { $regex: searchValue, $options: 'i' } },
-              { firstName: { $regex: searchValue, $options: 'i' } },
-              { lastName: { $regex: searchValue, $options: 'i' } },
-              { middleName: { $regex: searchValue, $options: 'i' } },
-            ],
-          },
-          fields: {
-            _id: 1,
-            code: 1,
-            primaryPhone: 1,
-            primaryEmail: 1,
-            firstName: 1,
-            lastName: 1,
-          },
-          skip,
-          limit,
+          $or: [
+            { _id: searchValue },
+            { code: searchValue },
+            { primaryPhone: { $regex: searchValue, $options: 'i' } },
+            { primaryEmail: { $regex: searchValue, $options: 'i' } },
+            { firstName: { $regex: searchValue, $options: 'i' } },
+            { lastName: { $regex: searchValue, $options: 'i' } },
+            { middleName: { $regex: searchValue, $options: 'i' } },
+          ],
         },
+        fields: {
+          _id: 1,
+          code: 1,
+          primaryPhone: 1,
+          primaryEmail: 1,
+          firstName: 1,
+          lastName: 1,
+        },
+        skip,
+        limit,
       },
       defaultValue: [],
     });
-    // const customers = await sendCoreMessage({
-    //   subdomain,
-    //   action: 'customers.findActiveCustomers',
-    //   data: {
-    //     selector: {
-    //       $or: [
-    //         { _id: searchValue },
-    //         { code: searchValue },
-    //         { primaryPhone: { $regex: searchValue, $options: 'i' } },
-    //         { primaryEmail: { $regex: searchValue, $options: 'i' } },
-    //         { firstName: { $regex: searchValue, $options: 'i' } },
-    //         { lastName: { $regex: searchValue, $options: 'i' } },
-    //         { middleName: { $regex: searchValue, $options: 'i' } },
-    //       ],
-    //     },
-    //     fields: {
-    //       _id: 1,
-    //       code: 1,
-    //       primaryPhone: 1,
-    //       primaryEmail: 1,
-    //       firstName: 1,
-    //       lastName: 1,
-    //     },
-    //     skip,
-    //     limit,
-    //   },
-    //   isRPC: true,
-    // });
 
     if (customers) {
       return customers.map((customer) => ({
@@ -246,34 +184,14 @@ const bridgesQueries = {
         method: 'query',
         pluginName: 'core',
         module: 'companies',
-        action: 'companies.findOne',
+        action: 'findOne',
         input: {
-          _id,
-          companyPrimaryName: _id,
-          primaryName: _id,
-          primaryEmail: _id,
-          primaryPhone: _id,
-          companyPrimaryEmail: _id,
-          companyPrimaryPhone: _id,
-          companyCode: _id,
+          query: {
+            _id,
+          },
         },
         defaultValue: null,
       });
-      // const company = await sendCoreMessage({
-      //   subdomain,
-      //   action: 'companies.findOne',
-      //   data: {
-      //     _id,
-      //     companyPrimaryName: _id,
-      //     primaryName: _id,
-      //     primaryEmail: _id,
-      //     primaryPhone: _id,
-      //     companyPrimaryEmail: _id,
-      //     companyPrimaryPhone: _id,
-      //     companyCode: _id,
-      //   },
-      //   isRPC: true,
-      // });
 
       if (company) {
         return {
@@ -293,7 +211,7 @@ const bridgesQueries = {
         method: 'query',
         pluginName: 'core',
         module: 'users',
-        action: 'users.findOne',
+        action: 'findOne',
         input: {
           $or: [
             { _id },
@@ -337,27 +255,13 @@ const bridgesQueries = {
     const customer = await sendTRPCMessage({
       method: 'query',
       pluginName: 'core',
-      module: 'users',
-      action: 'users.findOne',
+      module: 'customers',
+      action: 'findOne',
       input: {
-        _id,
-        customerCode: _id,
-        customerPrimaryPhone: _id,
-        customerPrimaryEmail: _id,
+        query: { _id },
       },
       defaultValue: null,
     });
-    // const customer = await sendCoreMessage({
-    //   subdomain,
-    //   action: 'customers.findOne',
-    //   data: {
-    //     _id,
-    //     customerCode: _id,
-    //     customerPrimaryPhone: _id,
-    //     customerPrimaryEmail: _id,
-    //   },
-    //   isRPC: true,
-    // });
 
     if (customer) {
       return {

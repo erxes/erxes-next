@@ -31,7 +31,7 @@ const configMutations = {
     const address = await getServerAddress(subdomain);
 
     const config = await models.Configs.createConfig(token, 'init');
-    console.log('config address', config, address);
+
     try {
       const response = await fetch(`${address}/pos-init`, {
         headers: { 'POS-TOKEN': token },
@@ -55,7 +55,6 @@ const configMutations = {
         ...(await extractConfig(subdomain, pos)),
         token,
       });
-
       await importUsers(models, cashiers, token);
       await importUsers(models, adminUsers, token, true);
       await importSlots(models, slots, token);
@@ -77,7 +76,7 @@ const configMutations = {
 
   async syncConfig(_root, { type }, { models, subdomain, config }: IContext) {
     const address = await getServerAddress(subdomain);
-    console.log('config address', config, address);
+
     const { token } = config;
     const response = await fetch(`${address}/pos-sync-config`, {
       headers: {
@@ -93,7 +92,6 @@ const configMutations = {
       throw new Error(response.statusText);
     }
     const responseData = await response.json();
-    console.log('responseData', responseData, config.token);
 
     switch (type) {
       case 'config':

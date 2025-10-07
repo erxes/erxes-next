@@ -34,11 +34,8 @@ import {
 } from '@/posclient/graphql/schemas/report';
 
 export const types = `
-
-
-
     extend type User @key(fields: "_id") {
-      _id: String! @external
+      _id: String @external
     }
 
     ${ProductTypes}
@@ -49,24 +46,6 @@ export const types = `
     ${BridgesTypes}
     ${CoverTypes}
   `;
-
-// extend type Query {
-//   ${PosUserQueries}
-//   ${ProductQueries}
-//   ${OrderQueries}
-//   ${ConfigQueries}
-//   ${ReportQueries}
-//   ${BridgesQueries}
-//   ${CoverQueries}
-//  }
-
-//  extend type Mutation {
-//   ${PosUserMutations}
-//   ${OrderMutations}
-//   ${ConfigMutations}
-//   ${BridgesMutations}
-//   ${CoverMutations}
-//  }
 
 export const queries = `
     ${PosUserQueries}

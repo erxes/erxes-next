@@ -15,6 +15,6 @@ export default function getTypeDefs(): DocumentNode {
       ordersOrdered(posToken: String, statuses: [String], customerId: String): Order
       orderItemsOrdered(posToken: String, statuses: [String]): PosOrderItem
       slotsStatusUpdated(posToken: String): [PosclientSlot]
-  }
+    }
 `;
 }

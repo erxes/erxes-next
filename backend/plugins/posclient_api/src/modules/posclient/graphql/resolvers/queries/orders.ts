@@ -20,7 +20,7 @@ export interface ISearchParams {
   customerId?: string;
   customerType?: string;
   isPaid?: boolean;
-  statuses: string[];
+  statuses?: string[];
   types: string[];
   saleStatus: string;
   dueStartDate?: Date;
@@ -75,7 +75,7 @@ const generateFilter = (config: IConfig, params: ISearchParams) => {
     filter.type = { $in: types };
   }
 
-  if (statuses.length) {
+  if (statuses?.length) {
     filter.status = { $in: statuses };
   }
 

@@ -3,7 +3,7 @@ import {
   ordersQueryParams,
   orderTypeFields,
   PaidAmountDefs,
-} from '../graphql/schema/orders';
+} from '../../graphql/schemas/orders';
 
 export const types = `
   type PaidAmount {
