@@ -11,10 +11,10 @@ export function HeroSection() {
   return (
     <div className="flex flex-col gap-4">
       <div className="gap-2 flex flex-col">
-        <div className="font-semibold text-foreground text-base">
+        <div className="font-semibold text-accent-foreground text-base">
           {messages?.greetings?.title || WelcomeMessage.TITLE}
         </div>
-        <div className="text-muted-foreground font-medium text-base">
+        <div className="text-muted-foreground font-medium text-sm">
           {messages?.greetings?.message || WelcomeMessage.MESSAGE}{' '}
           {messages?.thank || ''}
           {'. '}

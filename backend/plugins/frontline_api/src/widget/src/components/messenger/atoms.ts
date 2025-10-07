@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 import { TabType } from './types';
-import { IBrowserInfo, IConnection, IMessage } from '@/types';
+import { IBrand, IBrowserInfo, IConnection, IMessage, IUiOptions } from '@/types';
 
 // Active tab state atom
 export const activeTabAtom = atom<TabType>('');
@@ -45,3 +45,7 @@ export const connectionAtom = atom<IConnection>({
 export const integrationIdAtom = atom<string | null>(null);
 
 export const conversationIdAtom = atom<string | null>(null);
+
+export const uiOptionsAtom = atom<IUiOptions | null>(null);
+
+export const brandAtom = atom<IBrand | null>(null);

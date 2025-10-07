@@ -115,3 +115,13 @@ export interface ISupporter {
   iOnline: boolean;
   details: IDetail;
 }
+
+export interface IColorDefinition {
+  DEFAULT: string;
+  foreground: string;
+}
+
+export interface IUiOptions {
+  primary: IColorDefinition;
+  logo: string;
+}

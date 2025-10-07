@@ -15,12 +15,24 @@ module.exports = {
       mono: ['var(--font-mono)', ...fontFamily.mono],
     },
     fontSize: {
-      xs: ['0.75rem', '0.875rem'],
-      sm: ['0.8125rem', '1rem'],
-      base: ['0.875rem', '1.125rem'],
-      lg: ['1rem', '1.125rem'],
-      xl: ['1.25rem', '1.5rem'],
-      '2xl': ['1.5rem', '1.75rem'],
+      '2xs': ['0.625rem', '0.75rem'], //12px
+      xs: ['0.75rem', '0.875rem'], //13px
+      sm: ['0.875rem', '1rem'], //14px
+      base: ['1rem', '1.125rem'], //16px
+      lg: ['1.125rem', '1.25rem'], //18px
+      xl: ['1.25rem', '1.5rem'], //20px
+      '2xl': ['1.5rem', '1.75rem'], //24px
+    },
+    fontWeight: {
+      thin: 100,
+      extralight: 200,
+      light: 300,
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+      extrabold: 800,
+      black: 900,
     },
     container: {
       center: true,
@@ -54,6 +66,7 @@ module.exports = {
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
+          background: 'hsl(var(--muted-background))',
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
@@ -67,6 +80,15 @@ module.exports = {
           4: 'hsl(var(--chart-4))',
           5: 'hsl(var(--chart-5))',
         },
+        card: 'hsl(var(--card))',
+        // Dynamic widget colors that can be updated via uiOptions
+        'widget-primary': 'hsl(var(--widget-primary-color))',
+        'widget-text': 'hsl(var(--widget-text-color))',
+        'widget-bg': {
+          DEFAULT: 'hsl(var(--widget-primary-color))',
+          wallpaper: 'var(--widget-wallpaper)',
+        },
+        'widget-logo': 'var(--widget-logo)',
       },
       borderRadius: {
         lg: `var(--radius)`,

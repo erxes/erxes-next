@@ -1,16 +1,14 @@
-import { IconMessage2 } from '@tabler/icons-react';
-import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover';
-import { Button } from '../ui/button';
+import { Popover, PopoverContent } from '../ui/popover';
 import { Header } from '../messenger/header';
 import { useMessenger } from '../messenger/hooks/useMessenger';
 import { CreateTicket } from '../messenger/create-ticket';
 import { useConnect } from '@/components/messenger/hooks/useConnect';
-import { Spinner } from '@/components/ui/spinner';
 import { Welcome } from '@/components/messenger/Welcome';
 import { useAtomValue } from 'jotai';
 import { connectionAtom } from '@/components/messenger/atoms';
 import { ConversationDetails } from '@/components/messenger/conversation-details';
 import { Tooltip } from '@/components/ui/tooltip';
+import { MessengerIcon } from './messenger-icon';
 
 interface MessengerProps {
   brandId?: string;
@@ -51,23 +49,15 @@ export const ErxesMessenger = ({
   return (
     <Tooltip.Provider>
       <Popover open={open} onOpenChange={handleOpenChange}>
-        <PopoverTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="fixed bottom-4 right-4 z-50 size-12 flex items-center justify-center rounded-full shadow-xs shadow-accent"
-          >
-            {connecting ? <Spinner /> : <IconMessage2 size={24} />}
-          </Button>
-        </PopoverTrigger>
+        <MessengerIcon loading={connecting} />
         <PopoverContent
           side="top"
           align="end"
           sideOffset={16}
-          className="flex flex-col justify-between max-w-[var(--widget-width)] min-w-96 max-h-[var(--widget-max-height)] min-h-[var(--widget-min-height)] overflow-hidden size-full bg-sidebar"
+          className="flex flex-col justify-between max-w-[var(--widget-width)] min-w-96 max-h-[var(--widget-max-height)] min-h-[var(--widget-min-height)] overflow-hidden size-full bg-widget"
         >
           <Header />
-          <div className="flex-1 overflow-y-hidden h-full">
+          <div className="flex-1 overflow-y-hidden h-full bg-card">
             {renderContent()}
           </div>
         </PopoverContent>

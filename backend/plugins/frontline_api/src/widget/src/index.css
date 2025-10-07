@@ -4,15 +4,16 @@
 
 @layer base {
   :root {
-    --font-sans: 'Inter', sans-serif;
+    --font-sans: 'Inter';
     --font-mono: 'Roboto Mono', monospace;
     --background: 0 0% 100%;
     --foreground: 240 6% 10%;
     --primary: 244 76% 59%;
     --primary-foreground: 0 0% 100%;
     --secondary: 244 53% 85%;
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 2% 45%;
+    --muted: 0 0% 98%;
+    --muted-background: 240 5% 96%;
+    --muted-foreground: 240% 5% 65%;
     --accent: 240 3% 96%;
     --accent-foreground: 240 3% 66%;
     --destructive: 0 84.2% 60.2%;
@@ -21,15 +22,23 @@
     --warning: 25 80% 63%;
     --scroll: 240 5% 83%;
     --border: 240 6% 90%; /* gray/3 */
-    --input: 240 6% 90%; /* gray/3 */
+    --input: 0, 0%, 0%, 0.05;
     --ring: 244 76% 59%;
     --radius: 0.5rem;
     --sidebar-background: 0 0% 98%; /* gray/1 */
     --shadow: 0, 0%, 0%, 0.05;
 
+    --card: 0 0% 98%;
+
     --widget-width: 25rem;
     --widget-max-height: 37.5rem;
     --widget-min-height: 23.625rem;
+
+    /* Dynamic UI Options - These will be updated by JavaScript */
+    --widget-primary-color: var(--primary);
+    --widget-text-color: var(--foreground);
+    --widget-wallpaper: none;
+    --widget-logo: none;
   }
   .dark {
     --background: 0 0% 9%; /* primary/white */
@@ -38,6 +47,7 @@
     --primary-foreground: 0 0% 100%; /* primary/white */
     --secondary: 244 53% 16%; /* secondary/purple */
     --muted: 0 0% 14%; /* secondary/gray */
+    --muted-background: 0 0% 14%; /* secondary/gray */
     --muted-foreground: 0 2% 64%; /* grey/6 */
     --accent: 240 3% 13%; /* grey/2 */
     --accent-foreground: 240 3% 43%; /* grey/5 */
@@ -52,6 +62,12 @@
     --radius: 0.5rem;
     --sidebar-background: 0 0% 11%; /* gray/1 */
     --shadow: 0, 0%, 100%, 0.05;
+
+    /* Dynamic UI Options for dark mode */
+    --widget-primary-color: var(--primary);
+    --widget-text-color: var(--foreground);
+    --widget-wallpaper: none;
+    --widget-logo: none;
   }
 }
 

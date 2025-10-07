@@ -5,10 +5,13 @@ import { useSetAtom } from 'jotai';
 import {
   connectionAtom,
   integrationIdAtom,
+  uiOptionsAtom,
+  brandAtom,
 } from '@/components/messenger/atoms';
 import { IConnection } from '@/types';
 import { getLocalStorageItem } from '@/lib/utils';
 import { useSaveBrowserInfo } from '@/components/messenger/hooks/useSaveBrowserInfo';
+import { applyUiOptionsToTailwind } from '@/lib/tailwind-utils';
 import { getErxesSettings } from '../../../../config';
 
 interface connectionProps {
@@ -27,6 +30,8 @@ export const useConnect = ({
   const [error, setError] = useState(null);
   const setConnection = useSetAtom(connectionAtom);
   const setIntegrationId = useSetAtom(integrationIdAtom);
+  const setUiOptions = useSetAtom(uiOptionsAtom);
+  const setBrand = useSetAtom(brandAtom);
   const cachedCustomerId = getLocalStorageItem('customerId');
 
   // Call useSaveBrowserInfo hook
@@ -86,9 +91,17 @@ export const useConnect = ({
               visitorId: connectionData.visitorId,
               customerId: connectionData.customerId,
               messengerData: connectionData.messengerData,
+              uiOptions: connectionData.uiOptions,
             },
           }));
           setIntegrationId(connectionData.integrationId);
+          setUiOptions(connectionData.uiOptions);
+          setBrand(connectionData.brand);
+          
+          // Apply uiOptions to Tailwind CSS
+          if (connectionData.uiOptions) {
+            applyUiOptionsToTailwind(connectionData.uiOptions);
+          }
         }
       } catch (err) {
         console.warn('useConnect error:', err);

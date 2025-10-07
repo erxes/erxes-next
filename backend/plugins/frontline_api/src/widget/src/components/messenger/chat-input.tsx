@@ -21,7 +21,7 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...inputProps }) => {
       <div className="flex items-center gap-2 w-full">
         <Input
           id={id}
-          className={cn('bg-black/5 border-none shadow-none', className)}
+          className={cn('border-none shadow-none', className)}
           placeholder="How can we help you?"
           value={message}
           onChange={handleInputChange}
@@ -31,7 +31,7 @@ export const ChatInput: FC<ChatInputProps> = ({ className, ...inputProps }) => {
           size="icon"
           type="submit"
           aria-label="Send"
-          className="aspect-square"
+          className="aspect-square text-accent bg-widget-primary"
           disabled={isDisabled || loading}
         >
           <IconArrowUp size={16} />

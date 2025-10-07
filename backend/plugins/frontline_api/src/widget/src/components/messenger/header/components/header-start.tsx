@@ -20,12 +20,12 @@ export function HeaderStart() {
           variant="ghost"
           tabIndex={0}
           aria-label="Back"
-          className="flex items-center gap-2 hover:bg-transparent size-8"
+          className="flex items-center gap-2 hover:bg-transparent size-8 text-accent-foreground"
           onClick={goBack}
         >
           <IconChevronLeft size={16} />
         </Button>
-        <div className="text-base text-zinc-900 font-semibold">
+        <div className="text-base font-semibold">
           {getCurrentTitle()}
         </div>
       </div>
