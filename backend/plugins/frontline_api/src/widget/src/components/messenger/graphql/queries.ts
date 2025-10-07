@@ -1,12 +1,5 @@
 import { gql } from '@apollo/client';
-import { MESSAGE_FIELDS, USER_DETAIL_FIELD, messageFields } from './fields';
-import { connection } from '../connection';
-
-const GET_ENABLED_SERVICES = gql`
-  query enabledServices {
-    enabledServices
-  }
-`;
+import { MESSAGE_FIELDS, messageFields } from './fields';
 
 const GET_UNREAD_COUNT = gql`
   query widgetsUnreadCount($conversationId: String) {
@@ -14,39 +7,42 @@ const GET_UNREAD_COUNT = gql`
   }
 `;
 
-const GET_CONVERSATION_DETAIL = (isDailycoEnabled: boolean) => gql`
+const GET_CONVERSATION_DETAIL = gql`
   query ($_id: String, $integrationId: String!) {
     widgetsConversationDetail(_id: $_id, integrationId: $integrationId) {
       _id
       messages {
-        ${MESSAGE_FIELDS}
-        ${
-          isDailycoEnabled
-            ? `
-        videoCallData {
-          url
-          status
-        }`
-            : ''
+        _id
+        conversationId
+        customerId
+        user {
+          _id
+          details {
+            avatar
+            fullName
+          }
         }
+        content
+        createdAt
+        fromBot
+        contentType
+        internal
       }
-
       operatorStatus
       isOnline
       supporters {
         _id
         details {
-          ${USER_DETAIL_FIELD}
+          avatar
+          fullName
         }
       }
       participatedUsers {
         _id
         details {
-          ${USER_DETAIL_FIELD}
+          avatar
+          fullName
           shortName
-          description
-          position
-          location
         }
         links
       }
@@ -198,7 +194,7 @@ const unreadCountQuery = `
   }
 `;
 
-const messengerSupportersQuery = `
+const messengerSupportersQuery = gql`
   query widgetsMessengerSupporters($integrationId: String!) {
     widgetsMessengerSupporters(integrationId: $integrationId) {
       supporters {
@@ -210,24 +206,43 @@ const messengerSupportersQuery = `
 `;
 
 const totalUnreadCountQuery = `
-  query widgetsTotalUnreadCount(${connection.queryVariables}) {
-    widgetsTotalUnreadCount(${connection.queryParams})
+  query widgetsTotalUnreadCount($integrationId: String!, $customerId: String, $visitorId: String) {
+    widgetsTotalUnreadCount(integrationId: $integrationId, customerId: $customerId, visitorId: $visitorId)
   }
 `;
 
-const allConversations = `
-  query widgetsConversations(${connection.queryVariables}) {
-    widgetsConversations(${connection.queryParams}) {
+const GET_WIDGETS_CONVERSATIONS = gql`
+  query widgetsConversations($integrationId: String!, $customerId: String, $visitorId: String) {
+    widgetsConversations(integrationId: $integrationId, customerId: $customerId, visitorId: $visitorId) {
       _id
       content
       createdAt
+      idleTime
       participatedUsers {
+        _id
         details {
           ${userDetailFields}
           description
           location
           position
           shortName
+        }
+      }
+      messages {
+        _id
+        createdAt
+        content
+        fromBot
+        customerId
+        isCustomerRead
+        userId
+        user {
+          _id
+          isOnline
+          details {
+            avatar
+            fullName
+          }
         }
       }
     }
@@ -317,8 +332,49 @@ const integrationsFetchApi = `
   }
 `;
 
+const GET_SUPPORTERS = gql`
+  query Users($ids: [String]) {
+    users(ids: $ids) {
+      totalCount
+      list {
+        _id
+        isActive
+        isOnline
+        email
+        details {
+          avatar
+          firstName
+          lastName
+          description
+          location
+          position
+          shortName
+        }
+      }
+    }
+  }
+`;
+
+const GET_USER_DETAIL = gql`
+  query UserDetail($_id: String) {
+    userDetail(_id: $_id) {
+      _id
+      isActive
+      isOnline
+      email
+      details {
+        avatar
+        firstName
+        lastName
+        description
+        location
+        position
+        shortName
+      }
+    }
+  }
+`;
 export {
-  GET_ENABLED_SERVICES,
   GET_UNREAD_COUNT,
   GET_CONVERSATION_DETAIL,
   GET_WIDGET_EXPORT_MESSENGER_DATA,
@@ -330,7 +386,7 @@ export {
   widgetExportMessengerDataQuery,
   unreadCountQuery,
   totalUnreadCountQuery,
-  allConversations,
+  GET_WIDGETS_CONVERSATIONS,
   messengerSupportersQuery,
   getFaqCategoryQuery,
   getFaqTopicQuery,
@@ -339,4 +395,6 @@ export {
   getEngageMessage,
   customerDetail,
   MESSAGE_FIELDS,
+  GET_SUPPORTERS,
+  GET_USER_DETAIL,
 };

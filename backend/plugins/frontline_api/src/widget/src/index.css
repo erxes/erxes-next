@@ -28,6 +28,8 @@
     --shadow: 0, 0%, 0%, 0.05;
 
     --widget-width: 25rem;
+    --widget-max-height: 37.5rem;
+    --widget-min-height: 23.625rem;
   }
   .dark {
     --background: 0 0% 9%; /* primary/white */

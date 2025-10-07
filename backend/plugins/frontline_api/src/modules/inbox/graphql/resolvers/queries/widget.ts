@@ -40,12 +40,10 @@ const fetchUsers = async (
     module: 'users',
     action: 'find',
     input: {
-      query: {
         query,
-      },
     },
   });
-
+console.log(users,'users',query)
   for (const user of users) {
     if (user.details && user.details.location) {
       user.isOnline = await isMessengerOnline(
@@ -152,6 +150,9 @@ export const widgetQueries = {
           isOnline: await isMessengerOnline(models, integration),
         };
       }
+
+
+console.log('as:',conversation.participatedUserIds);
 
       const [messages, participatedUsers, readUsers, supporters, isOnline] =
         await Promise.all([

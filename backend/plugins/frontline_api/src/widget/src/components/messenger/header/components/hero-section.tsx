@@ -1,15 +1,31 @@
+import { useAtomValue } from 'jotai';
 import { HeaderItemsList } from './header-items-list';
+import { connectionAtom } from '@/components/messenger/atoms';
+import { WelcomeMessage } from '@/components/messenger/constants';
+import { formatTimeZoneLabel } from '@/lib/formatTimezone';
 
 export function HeroSection() {
+  const connection = useAtomValue(connectionAtom);
+  const { messengerData } = connection?.data || {};
+  const { messages, onlineHours, showTimezone, timezone } = messengerData || {};
   return (
     <div className="flex flex-col gap-4">
       <div className="gap-2 flex flex-col">
         <div className="font-semibold text-foreground text-base">
-          Need help?
+          {messages?.greetings?.title || WelcomeMessage.TITLE}
         </div>
         <div className="text-muted-foreground font-medium text-base">
-          Get help with setting up using erxes. We're available between 9.00 am
-          and 6.00 pm (GMT +8). We'll get back to you as soon as possible.
+          {messages?.greetings?.message || WelcomeMessage.MESSAGE}{' '}
+          {messages?.thank || ''}
+          {'. '}
+          {onlineHours?.map(
+            (hour: { day: string; from: string; to: string }) => (
+              <span key={hour.day}>
+                ({hour.from} болон {hour.to} хооронд
+                {showTimezone && ` (${formatTimeZoneLabel(timezone)})`})
+              </span>
+            ),
+          )}
         </div>
       </div>
       <HeaderItemsList />

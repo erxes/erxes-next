@@ -1,14 +1,19 @@
 import { useAtom } from 'jotai';
-import { activeTabAtom, setActiveTabAtom, resetTabAtom, isMessengerOpenAtom } from '../atoms';
+import {
+  activeTabAtom,
+  setActiveTabAtom,
+  resetTabAtom,
+  isMessengerOpenAtom,
+  conversationIdAtom,
+} from '../atoms';
 import { TabType } from '../types';
 
 export function useMessenger() {
   const [activeTab] = useAtom(activeTabAtom);
   const [, setActiveTab] = useAtom(setActiveTabAtom);
   const [, resetTab] = useAtom(resetTabAtom);
+  const [, setConversationId] = useAtom(conversationIdAtom);
   const [isOpen, setIsOpen] = useAtom(isMessengerOpenAtom);
-  
-  console.log('useMessenger - activeTab:', activeTab, 'isOpen:', isOpen);
 
   const switchToTab = (tab: TabType) => {
     setActiveTab(tab);
@@ -16,6 +21,7 @@ export function useMessenger() {
 
   const goBack = () => {
     resetTab();
+    setConversationId(null);
   };
 
   const toggleMessenger = () => {

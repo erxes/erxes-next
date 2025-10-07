@@ -412,7 +412,7 @@ export const loadCustomerClass = (models: IModels) => {
           }).lean();
         }
       }
-
+console.log(customer, 'customer****')
       return customer;
     }
 

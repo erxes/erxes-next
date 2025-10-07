@@ -6,6 +6,7 @@ export interface IHeaderItem {
   Icon: TablerIcon;
   title: string;
   value: string;
+  disabled?: boolean;
 }
 
 export type TicketsFormData = z.infer<typeof ticketSchema>;

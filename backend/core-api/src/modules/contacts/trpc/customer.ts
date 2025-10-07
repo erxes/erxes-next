@@ -11,7 +11,9 @@ export const customerRouter = t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
-
+console.log(
+  'wahahahah',query
+)
       return models.Customers.find(query).lean();
     }),
 
@@ -67,10 +69,18 @@ export const customerRouter = t.router({
     getWidgetCustomer: t.procedure
       .input(z.any())
       .query(async ({ ctx, input }) => {
-        const { _id } = input;
+        const { integrationId,
+          email,
+          phone,
+          code,
+          cachedCustomerId, } = input;
         const { models } = ctx;
-
-        return models.Customers.getWidgetCustomer(_id);
+console.log(input, 'wahhahah')
+        return models.Customers.getWidgetCustomer({integrationId,
+          email,
+          phone,
+          code,
+          cachedCustomerId,});
       }),
 
     count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
