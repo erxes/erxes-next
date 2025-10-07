@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
-const { ObjectId } = mongoose.Types;
+const { MongoClient } = require('mongodb');
 
 const MONGO_URL =
   process.argv[2] || 'mongodb://localhost:27017/erxes?directConnection=true';
@@ -9,21 +7,19 @@ if (!MONGO_URL) {
   throw new Error('MONGO_URL not provided');
 }
 
-const Channel = mongoose.model('channels', new Schema({}, { strict: false }));
-const ChannelMembers = mongoose.model(
-  'channel_members',
-  new Schema({}, { strict: false }),
-);
-const Integrations = mongoose.model(
-  'integrations',
-  new Schema({}, { strict: false }),
-);
+const client = new MongoClient(MONGO_URL);
+
+let db;
 
 async function migrate() {
-  await mongoose.connect(MONGO_URL);
-  console.log('Connected to', MONGO_URL);
+  await client.connect();
+  db = client.db();
 
-  const channels = await Channel.find({}).lean();
+  const Channel = db.collection('channels');
+  const ChannelMembers = db.collection('channel_members');
+  const Integrations = db.collection('integrations');
+
+  const channels = await Channel.find({}).toArray();
 
   for (const channel of channels) {
     const channelId = channel._id.toString();
@@ -32,7 +28,7 @@ async function migrate() {
       for (const memberId of channel.memberIds) {
         const exists = await ChannelMembers.findOne({ channelId, memberId });
         if (!exists) {
-          await ChannelMembers.create({
+          await ChannelMembers.insertOne({
             channelId,
             memberId,
             role: memberId === channel.createdBy ? 'admin' : 'member',
@@ -49,7 +45,10 @@ async function migrate() {
         if (!id) continue;
         console.log(id, 'id...');
         try {
-          const result = await Integrations.findOne({ _id: id });
+          const result = await Integrations.updateOne(
+            { _id: id },
+            { $set: { channelId: channelId } },
+          );
 
           console.log(`found ${result} integrations for channel ${channelId}`);
         } catch (error) {
