@@ -1,19 +1,17 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
-export const GET_PROJECT = gql`
-  query getProject($_id: String!) {
-    getProject(_id: $_id) {
+export const CONVERT_TO_PROJECT = gql`
+  mutation ConvertToProject($id: String!) {
+    convertToProject(_id: $id) {
       _id
       name
       icon
-      description
       status
       priority
       teamIds
       leadId
       startDate
       targetDate
-      createdBy
       createdAt
       updatedAt
     }

@@ -37,7 +37,7 @@ export const customerMutations = {
   ) {
     const customers: ICustomerDocument[] = await models.Customers.find({
       _id: { $in: customerIds },
-    }).lean();
+    });
 
     await models.Customers.removeCustomers(customerIds);
 
@@ -50,7 +50,7 @@ export const customerMutations = {
     // });
 
     // const services: string[] = await getPlugins();
-    
+
     let relatedIntegrationIds: string[] = [];
     let mergedIds: string[] = [];
 
@@ -190,27 +190,27 @@ export const customerMutations = {
     };
 
     if (verificationType === 'email') {
-      const customersCursor = models.Customers.find(
-        {
-          primaryEmail: { $exists: true, $nin: [null, ''] },
-          $or: [
-            { emailValidationStatus: 'unknown' },
-            { emailValidationStatus: { $exists: false } },
-          ],
-        },
-      ).select('primaryEmail -_id').cursor();
+      const customersCursor = models.Customers.find({
+        primaryEmail: { $exists: true, $nin: [null, ''] },
+        $or: [
+          { emailValidationStatus: 'unknown' },
+          { emailValidationStatus: { $exists: false } },
+        ],
+      })
+        .select('primaryEmail -_id')
+        .cursor();
 
       await processBatch(customersCursor, 'email');
     } else {
-      const customersCursor = models.Customers.find(
-        {
-          primaryPhone: { $exists: true, $nin: [null, ''] },
-          $or: [
-            { phoneValidationStatus: 'unknown' },
-            { phoneValidationStatus: { $exists: false } },
-          ],
-        }
-      ).select('primaryPhone -_id').cursor();
+      const customersCursor = models.Customers.find({
+        primaryPhone: { $exists: true, $nin: [null, ''] },
+        $or: [
+          { phoneValidationStatus: 'unknown' },
+          { phoneValidationStatus: { $exists: false } },
+        ],
+      })
+        .select('primaryPhone -_id')
+        .cursor();
 
       await processBatch(customersCursor, 'phone');
     }

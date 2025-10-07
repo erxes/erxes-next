@@ -1,7 +1,8 @@
-import { IContext } from '~/connectionResolvers';
 import { IStatus, IStatusEditInput } from '@/status/@types/status';
-import { checkUserRole } from '@/utils';
 import { TeamMemberRoles } from '@/team/@types/team';
+import { checkUserRole } from '@/utils';
+import { requireLogin } from 'erxes-api-shared/core-modules';
+import { IContext } from '~/connectionResolvers';
 
 export const statusMutations = {
   addStatus: async (
@@ -53,3 +54,7 @@ export const statusMutations = {
     return models.Status.removeStatus(_id);
   },
 };
+
+requireLogin(statusMutations, 'addStatus');
+requireLogin(statusMutations, 'updateStatus');
+requireLogin(statusMutations, 'deleteStatus');

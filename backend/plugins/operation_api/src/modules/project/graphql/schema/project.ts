@@ -12,6 +12,7 @@ type Project {
     leadId: String
     startDate: Date
     targetDate: Date
+    createdBy: String
     createdAt: Date
     updatedAt: Date
 }
