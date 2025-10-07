@@ -1,5 +1,5 @@
 import { IconCashRegister, IconPlus, IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link, useSearchParams } from 'react-router-dom';
 import { PosRecordTable } from '@/components/PosRecordTable';
@@ -7,6 +7,8 @@ import { useAtom } from 'jotai';
 import { PosCreate } from '@/create-pos/components/index/pos-create';
 import { PosEdit } from '@/pos-detail/components/posDetail';
 import { renderingPosCreateAtom } from '@/create-pos/states/renderingPosCreateAtom';
+import { PosFilter } from '@/pos/PosFilter';  
+
 
 export const PosIndexPage = () => {
   const [, setSearchParams] = useSearchParams();
@@ -17,7 +19,7 @@ export const PosIndexPage = () => {
     setSearchParams({ create: 'true' });
   };
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full">                                                                                                                                                                                       
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>
@@ -48,6 +50,9 @@ export const PosIndexPage = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
+      <PageSubHeader>
+      <PosFilter />
+      </PageSubHeader>
       <PosCreate />
       <PosRecordTable />
       <PosEdit />
