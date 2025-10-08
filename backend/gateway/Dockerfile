@@ -38,20 +38,21 @@ ENV PNPM_HOME="/root/.local/share/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 # Install Rover CLI for composing supergraph
-RUN apt-get update -y \
-    && apt-get install -y curl ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
+RUN apk update \
+    && apk add --no-cache curl ca-certificates bash \
     && pnpm add -g @apollo/rover@0.22.0 \
     && pnpm cache clean \
-    && rover supergraph compose --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept
+    && rover supergraph compose \
+       --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml \
+       --elv2-license=accept
 
 # Create Apollo Router folder
-RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp 
+RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp
 
 # Download Apollo Router binary safely
-RUN cd /app/backend/gateway/dist/src/apollo-router/temp \
-    && export VERSION=v1.59.2 \
-    && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh
+WORKDIR /app/backend/gateway/dist/src/apollo-router/temp
+RUN export VERSION=v1.59.2 \
+    && curl -sSL https://router.apollo.dev/download/nix/$VERSION | sh
 
 
 # ---- Environment & security ----
