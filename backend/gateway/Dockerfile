@@ -25,33 +25,35 @@
     # Build gateway
     RUN npx nx build:packageJson gateway && npx nx build gateway
     
+    # Install Rover CLI for supergraph compose
+    RUN pnpm add -g @apollo/rover@0.22.0 \
+        && rover supergraph compose \
+           --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml \
+           --elv2-license=accept
+    
+    # Download Apollo Router binary into /apollo-router
+    RUN mkdir -p /apollo-router \
+        && cd /apollo-router \
+        && export VERSION=v1.59.2 \
+        && curl -sSL https://router.apollo.dev/download/nix/${VERSION} | sh
+    
     # ---------------- RUNTIME STAGE ----------------
     FROM node:22-alpine AS runtime
     WORKDIR /app
     
-    # Install pnpm + curl for rover/apollo router
+    # Install pnpm + curl (minimal)
     RUN apk add --no-cache curl bash ca-certificates \
         && npm install -g pnpm
     
-    # Copy only build artifacts
+    # Copy build output
     COPY --from=build /app/backend/gateway/dist ./backend/gateway/dist
     COPY --from=build /app/backend/erxes-api-shared ./backend/erxes-api-shared
     COPY --from=build /app/node_modules ./node_modules
     COPY --from=build /app/backend/gateway/node_modules ./backend/gateway/node_modules
     COPY --from=build /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
     
-    # Install Rover CLI for supergraph compose
-    RUN pnpm add -g @apollo/rover@0.22.0 \
-        && pnpm cache clean \
-        && rover supergraph compose \
-           --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml \
-           --elv2-license=accept
-    
-    # Download Apollo Router binary
-    RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp \
-        && cd /app/backend/gateway/dist/src/apollo-router/temp \
-        && export VERSION=v1.59.2 \
-        && curl -sSL https://router.apollo.dev/download/nix/${VERSION} | sh
+    # Copy Apollo Router binary (cached in build stage)
+    COPY --from=build /apollo-router /apollo-router
     
     ENV NODE_ENV=production
     USER 1000

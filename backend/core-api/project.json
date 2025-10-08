@@ -1,6 +1,6 @@
 {
   "name": "core-api",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/core-api/src",
   "projectType": "application",
   "tags": [],
