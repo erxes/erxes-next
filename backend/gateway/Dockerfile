@@ -1,45 +1,43 @@
-# Base image for building
-FROM --platform=linux/amd64 node:22-bookworm AS build
-
-WORKDIR /app
-
-# Copy root files
-COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-
-# Copy service-specific package.json files
-COPY ./backend/gateway/package.json /app/backend/gateway/
-COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
-
-# Install pnpm and dependencies
-RUN npm install -g pnpm
-RUN pnpm install
-
-# Copy source files
-COPY ./backend/gateway /app/backend/gateway
-COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
-
-WORKDIR /app/backend/gateway
-
-# Disable Nx daemon (not needed in CI/builds)
-ENV NX_DAEMON=false
-
-# Build project
-RUN npx nx build:packageJson gateway
-RUN npx nx build gateway
-
-# Final image
+# Base image
 FROM --platform=linux/amd64 node:22-bookworm AS gateway
 
 WORKDIR /app
+RUN npm install -g pnpm
+
+# Dependencies (production only)
+FROM base AS deps
+# Copy root manifests
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json nx.json ./
+# Copy only the package.json files for selective deps resolution
+COPY backend/gateway/package.json backend/gateway/
+COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
+
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile
+
+# Runtime image
+FROM base AS runtime
+WORKDIR /app
+
+# Copy built dist from CI (nx build already ran in workflow)
+COPY backend/gateway ./backend/gateway
+COPY backend/erxes-api-shared ./backend/erxes-api-shared
+
+# Copy production node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/gateway/node_modules ./backend/gateway/node_modules
+COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
+
+# Environment & security
+ENV NODE_ENV=production
+
+USER 1000
 
 # Install required packages
 RUN apt-get update && apt-get install -y curl ca-certificates
 
 # Copy built app from build stage
 COPY --chown=1000:1000 --from=build /app /app
-
-# Install pnpm
-RUN npm install -g pnpm
 
 # Set PNPM env
 ENV PNPM_HOME="/root/.local/share/pnpm"
@@ -61,9 +59,7 @@ RUN cd /app/backend/gateway/dist/src/apollo-router/temp \
     && export VERSION=v1.59.2 \
     && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh
 
-WORKDIR /app/backend/gateway/dist
 
-ENV NODE_ENV=production
 
-# Start app
-CMD ["node", "src/main.js"]
+# Run app
+CMD ["node", "backend/gateway/dist/src/main.js"]
