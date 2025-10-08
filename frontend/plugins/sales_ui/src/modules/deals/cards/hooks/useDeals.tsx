@@ -122,7 +122,7 @@ export const useDeals = (
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [options?.variables]);
 
   const handleFetchMore = ({
     direction,
