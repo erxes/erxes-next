@@ -93,7 +93,6 @@ export const FacebookIntegrationEditForm = ({
   };
 
   if (loading) return <Spinner className="p-20" />;
-
   return (
     <>
       <Dialog.Header className="flex-row items-center justify-between space-y-0 px-4 py-3">
@@ -109,6 +108,25 @@ export const FacebookIntegrationEditForm = ({
           })}
         >
           <div className="p-6 pb-8 space-y-6">
+            <Form.Field
+              name="facebookPage"
+              render={({ field }) => {
+                const facebookPageName = field.value?.[0] ?? null;
+                return (
+                  <Form.Item>
+                    <Form.Label>Page Name</Form.Label>
+                    <Form.Control>
+                      <Input
+                        name={field.name}
+                        value={facebookPageName?.name || ''}
+                        disabled
+                        readOnly
+                      />
+                    </Form.Control>
+                  </Form.Item>
+                );
+              }}
+            />
             <Form.Field
               name="name"
               render={({ field }) => (
@@ -134,18 +152,20 @@ export const FacebookIntegrationEditForm = ({
               )}
             />
             <Form.Field
-              name="channelIds"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Channels</Form.Label>
-                  <SelectChannel.FormItem
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    mode="multiple"
-                  />
-                  <Form.Message />
-                </Form.Item>
-              )}
+              name="channels"
+              render={({ field }) => {
+                return (
+                  <Form.Item>
+                    <Form.Label>Channels</Form.Label>
+                    <SelectChannel.FormItem
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      mode="multiple"
+                    />
+                    <Form.Message />
+                  </Form.Item>
+                );
+              }}
             />
           </div>
           <Separator />
