@@ -67,7 +67,6 @@ export const useDeals = (
   const { list: deals, pageInfo, totalCount } = data?.deals || {};
 
   useEffect(() => {
-    console.log('in hereee');
     const unsubscribe = subscribeToMore<IDealChanged>({
       document: DEAL_LIST_CHANGED,
       variables: {
@@ -123,7 +122,7 @@ export const useDeals = (
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options?.variables]);
+  }, []);
 
   const handleFetchMore = ({
     direction,

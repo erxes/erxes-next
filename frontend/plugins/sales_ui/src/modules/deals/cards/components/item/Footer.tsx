@@ -17,7 +17,7 @@ export const ItemFooter = ({ createdAt, assignedUsers = [] }: Props) => {
       </div>
       <div className="flex">
         <MembersInline.Provider
-          memberIds={assignedUsers.map((user) => user._id)}
+          memberIds={(assignedUsers || []).map((user) => user._id)}
         >
           <MembersInline.Avatar />
         </MembersInline.Provider>

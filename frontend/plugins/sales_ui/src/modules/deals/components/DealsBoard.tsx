@@ -159,7 +159,7 @@ export const DealsBoardCards = ({ column }: { column: BoardColumnProps }) => {
           ...previousDeals,
           ...deals.map((deal) => ({
             id: deal._id,
-            column: deal.stage?._id,
+            column: deal.stageId,
             sort: deal.createdAt,
           })),
         ];
