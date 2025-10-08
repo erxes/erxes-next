@@ -80,22 +80,9 @@ export function SettingsSidebar() {
           ))}
         </SettingsNavigationGroup>
 
-        {Array.from(pluginsWithSettingsModules.entries()).map(
-          ([pluginName, modules]) => (
-            <SettingsNavigationGroup
-              key={pluginName}
-              name={pluginName.charAt(0).toUpperCase() + pluginName.slice(1)}
-            >
-              {modules.map((item) => (
-                <NavigationMenuLinkItem
-                  key={item.name}
-                  pathPrefix={AppPath.Settings}
-                  path={item.path}
-                  name={item.name}
-                />
-              ))}
-            </SettingsNavigationGroup>
-          ),
+        {pluginSettingsNavigations.map(
+          (SettingsNavigation, index) =>
+            SettingsNavigation && <SettingsNavigation key={index} />,
         )}
       </Sidebar.Content>
     </>
@@ -109,7 +96,6 @@ export const SettingsNavigationGroup = ({
   name: string;
   children: React.ReactNode;
 }) => {
-
   if (React.Children.count(children) === 0) return null;
 
   return (

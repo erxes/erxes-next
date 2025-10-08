@@ -22,6 +22,8 @@ export function RenderPluginsComponent({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState<{ message: string } | null>(null);
 
+  console.log(pluginName, remoteModuleName, moduleName);
+
   useEffect(() => {
     const loadPlugin = async () => {
       try {

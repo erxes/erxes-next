@@ -1,5 +1,5 @@
-import { FrontlineActions } from '@/FrontlineActions';
 import { ChooseIntegrationTypeContent } from '@/integrations/components/ChooseIntegrationType';
+import { InboxActions } from '@/inbox/components/InboxActions';
 import { NavigationMenuGroup } from 'erxes-ui';
 import { useLocation } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ export const FrontlineSubGroups = () => {
 
   return (
     <>
-      <FrontlineActions />
+      {location.pathname.startsWith('/frontline/inbox') && <InboxActions />}
       <NavigationMenuGroup name="Integration types">
         <ChooseIntegrationTypeContent />
       </NavigationMenuGroup>

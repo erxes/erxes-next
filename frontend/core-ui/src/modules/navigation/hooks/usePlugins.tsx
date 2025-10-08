@@ -61,7 +61,7 @@ export const usePluginsNavigationGroups = (): NavigationGroups => {
           ? [...existingGroup.contents, newContent]
           : existingGroup.contents;
 
-        const newSubGroup = plugin.navigationGroup?.subGroups;
+        const newSubGroup = plugin.navigationGroup?.subGroup;
         const updatedSubGroups = newSubGroup
           ? [...existingGroup.subGroups, newSubGroup]
           : existingGroup.subGroups;
