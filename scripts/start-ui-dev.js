@@ -8,7 +8,6 @@ let devRemotesArg = '';
 if (ENABLED_PLUGINS) {
   try {
     const remotes = ENABLED_PLUGINS.split(',').map((plugin) => `${plugin}_ui`);
-
     devRemotesArg = `--devRemotes="${remotes}"`;
   } catch (error) {
     console.error('Error parsing DEV_REMOTES:', error);

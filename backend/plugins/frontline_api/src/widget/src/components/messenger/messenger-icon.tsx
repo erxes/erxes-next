@@ -13,10 +13,20 @@ export const MessengerIcon = ({ loading }: { loading: boolean }) => {
   const { isOpen } = useMessenger();
   const { logo } = uiOptions || {};
   const { name, description } = brand || {};
+
   if (loading)
     return (
       <PopoverTrigger asChild>
-        <Spinner size="sm" />
+        <Button
+          size="icon"
+          disabled={loading}
+          variant="ghost"
+          className={cn(
+            'fixed bottom-4 right-4 z-50 size-12 flex items-center justify-center rounded-full shadow-xs shadow-muted bg-widget-bg text-accent hover:bg-widget-primary/80 hover:text-accent',
+          )}
+        >
+          <Spinner size="sm" />
+        </Button>
       </PopoverTrigger>
     );
 

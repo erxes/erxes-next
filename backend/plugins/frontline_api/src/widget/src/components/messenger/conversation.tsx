@@ -7,7 +7,7 @@ import {
 } from '@/components/messenger/atoms';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { IMessage, ISupporter } from '@/types';
-import { readImage, formatDateISOStringToRelativeDate } from '@/lib/utils';
+import { readImage, formatDateISOStringToRelativeDate, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
 import { format } from 'date-fns';
@@ -82,15 +82,11 @@ export function ConversationMessage({
         role="tabpanel"
         id={messege?._id}
         tabIndex={0}
-        className="flex items-center gap-3 cursor-pointer py-3"
+        className="flex items-center gap-3 cursor-pointer p-3 hover:bg-accent rounded-md transition-all duration-300"
         onClick={handleClick}
       >
         <Avatar>
-          <AvatarImage
-            src={'assets/user.webp'}
-            className="shrink-0 object-cover"
-            alt={'you'}
-          />
+          <AvatarImage className="shrink-0 object-cover" alt={'you'} />
           <AvatarFallback>{'C'}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-1 text-sm font-medium text-muted-foreground overflow-x-hidden">
@@ -113,7 +109,7 @@ export function ConversationMessage({
         role="tabpanel"
         id={messege?._id}
         tabIndex={0}
-        className="flex items-center gap-3 cursor-pointer py-3"
+        className="flex items-center gap-3 cursor-pointer p-3 hover:bg-accent rounded-md transition-all duration-300"
         onClick={handleClick}
       >
         <Avatar>
@@ -149,36 +145,53 @@ export function OperatorMessage({
   content,
   src,
   createdAt,
+  showAvatar = true,
+  isFirstMessage,
+  isLastMessage,
+  isMiddleMessage,
+  isSingleMessage,
 }: {
   content: string;
   src?: string;
   createdAt: Date;
+  showAvatar?: boolean;
+  isFirstMessage?: boolean;
+  isLastMessage?: boolean;
+  isMiddleMessage?: boolean;
+  isSingleMessage?: boolean;
 }) {
   return (
     <Tooltip>
       <Tooltip.Trigger asChild>
         <Button
           variant="ghost"
-          className="flex items-end gap-2 p-0 size-auto hover:bg-transparent"
+          className="flex group/operator-message items-end gap-2 p-0 mr-auto size-auto hover:bg-transparent"
         >
-          <Avatar>
-            <AvatarImage
-              src={readImage(src || 'assets/user.webp')}
-              className="shrink-0 object-cover"
-              alt="Erxes"
-            />
-            <AvatarFallback>C</AvatarFallback>
-          </Avatar>
+          {showAvatar ? (
+            <Avatar>
+              <AvatarImage
+                src={readImage(src || 'assets/user.webp')}
+                className="shrink-0 object-cover size-8"
+                alt="Erxes"
+              />
+              <AvatarFallback>C</AvatarFallback>
+            </Avatar>
+          ) : (
+            <div className="size-8" />
+          )}
           <div
-            className="h-auto font-medium flex flex-col justify-start items-start text-[13px] leading-relaxed text-zinc-900 text-left gap-1 px-3 py-2 bg-black/5 rounded-lg"
+            className={cn(
+              'h-auto font-medium flex flex-col justify-start items-start text-[13px] leading-relaxed text-foreground text-left gap-1 px-3 py-2 bg-muted',
+              isFirstMessage && 'rounded-md rounded-bl-sm rounded-t-lg',
+              isLastMessage && 'rounded-md rounded-tl-sm rounded-b-lg',
+              isMiddleMessage && 'rounded-r-md rounded-l-sm',
+              isSingleMessage && 'rounded-md',
+            )}
             dangerouslySetInnerHTML={{
               __html:
                 content || '<p>Hello! Have you fixed your problem yet?</p>',
             }}
           />
-          <span className="text-muted-foreground text-xs self-center">
-            {formatDateISOStringToRelativeDate(createdAt.toISOString())}
-          </span>
         </Button>
       </Tooltip.Trigger>
       <Tooltip.Content>
@@ -200,13 +213,15 @@ export const CustomerMessage = ({
       <Tooltip.Trigger asChild>
         <Button
           variant="ghost"
-          className="flex items-end size-auto gap-2 flex-row ml-auto p-0 hover:bg-transparent"
+          className="flex group/customer-message items-end size-auto gap-2 flex-row ml-auto p-0 hover:bg-transparent"
         >
-          <span className="text-muted-foreground text-xs self-center">
+          <span className="text-muted-foreground hidden group-hover/customer-message:block text-xs self-center">
             {formatDateISOStringToRelativeDate(createdAt.toISOString())}
           </span>
           <div
-            className="h-auto font-medium flex flex-col justify-start items-start text-[13px] leading-relaxed text-zinc-900 text-left gap-1 px-3 py-2 bg-accent rounded-lg"
+            className={cn(
+              'h-auto font-medium flex flex-col justify-start items-start text-[13px] leading-relaxed text-zinc-900 text-left gap-1 px-3 py-2 bg-accent rounded-md',
+            )}
             dangerouslySetInnerHTML={{
               __html:
                 content || '<p>Hello! Have you fixed your problem yet?</p>',

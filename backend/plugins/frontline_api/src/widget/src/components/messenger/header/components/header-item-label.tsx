@@ -9,6 +9,7 @@ export function HeaderItemLabel({ title, Icon, value, disabled }: IHeaderItem) {
   return (
     <Badge
       variant="outline"
+      // autoFocus
       aria-disabled={disabled}
       onClick={() => !disabled && switchToTab(value as any)}
       className={cn(

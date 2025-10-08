@@ -104,6 +104,19 @@ export const getMessengerData = async (
 
     if (messages) {
       messagesByLanguage = messages[languageCode];
+      
+      if (!messagesByLanguage) {
+        const languageKeys = Object.keys(messages);
+        const partialMatch = languageKeys.find(key => 
+          key.startsWith(languageCode) || languageCode.startsWith(key.split('-')[0])
+        );
+        
+        if (partialMatch) {
+          messagesByLanguage = messages[partialMatch];
+        } else if (languageKeys.length > 0) {
+          messagesByLanguage = messages[languageKeys[0]];
+        }
+      }
     }
 
     if (

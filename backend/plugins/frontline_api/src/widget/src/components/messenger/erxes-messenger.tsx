@@ -4,26 +4,23 @@ import { useMessenger } from '../messenger/hooks/useMessenger';
 import { CreateTicket } from '../messenger/create-ticket';
 import { useConnect } from '@/components/messenger/hooks/useConnect';
 import { Welcome } from '@/components/messenger/Welcome';
-import { useAtomValue } from 'jotai';
-import { connectionAtom } from '@/components/messenger/atoms';
 import { ConversationDetails } from '@/components/messenger/conversation-details';
 import { Tooltip } from '@/components/ui/tooltip';
 import { MessengerIcon } from './messenger-icon';
+import { BRAND_ID } from '../../../config';
 
 interface MessengerProps {
-  brandId?: string;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
 export const ErxesMessenger = ({
-  brandId: _brandId,
   isOpen: controlledOpen,
   onOpenChange,
 }: MessengerProps) => {
   const { activeTab, isOpen, setIsOpen } = useMessenger();
 
-  const { loading: connecting } = useConnect({ brandId: _brandId ?? '' });
+  const { loading: connecting } = useConnect({ brandId: BRAND_ID || 'dGt278' });
   const open = controlledOpen ?? isOpen;
 
   const handleOpenChange = (open: boolean) => {
@@ -31,9 +28,6 @@ export const ErxesMessenger = ({
     onOpenChange?.(open);
     setIsOpen(open);
   };
-
-  const connection = useAtomValue(connectionAtom);
-  console.log('connection:\n', connection);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -54,10 +48,11 @@ export const ErxesMessenger = ({
           side="top"
           align="end"
           sideOffset={16}
-          className="flex flex-col justify-between max-w-[var(--widget-width)] min-w-96 max-h-[var(--widget-max-height)] min-h-[var(--widget-min-height)] overflow-hidden size-full"
+          className="flex flex-col justify-between sm:max-w-[var(--widget-width)] max-w-screen-sm max-h-svh max-sm:w-dvw max-sm:h-[calc(100dvh-theme(spacing.20))] sm:min-w-96 sm:max-h-[var(--widget-max-height)] sm:min-h-[var(--widget-min-height)] overflow-hidden size-full"
+          onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <Header />
-          <div className="flex-1 overflow-y-hidden h-full bg-card">
+          <div className="flex-1 flex flex-col justify-end overflow-y-hidden h-full bg-card">
             {renderContent()}
           </div>
         </PopoverContent>

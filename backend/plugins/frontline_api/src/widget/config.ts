@@ -17,6 +17,8 @@ declare global {
   }
 }
 
-export const API_URL = window.WIDGET_CONFIG?.API_URL || 'http://localhost:4000';
+export const API_URL =
+  window.WIDGET_CONFIG?.API_URL || 'http://localhost:4000';
+export const BRAND_ID = window.erxesSettings?.messenger?.brand_id || 'dGt278';
 
 export const getErxesSettings = () => window.erxesSettings || {};

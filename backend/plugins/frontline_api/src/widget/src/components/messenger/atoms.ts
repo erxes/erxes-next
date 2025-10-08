@@ -27,6 +27,8 @@ export const isMessengerOpenAtom = atom<boolean>(false);
 export const currentConversationAtom = atom<string | null>(null);
 export const messagesAtom = atom<any[]>([]);
 
+export const brandIdAtom = atom<string | null>(null);
+
 export const browserInfoAtom = atom<IBrowserInfo | null>(null);
 export const isBrowserInfoSavedAtom = atom<boolean>(false);
 export const lastUnreadMessageAtom = atom<IMessage | null>(null);

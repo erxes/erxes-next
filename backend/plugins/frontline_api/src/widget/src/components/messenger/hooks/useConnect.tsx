@@ -97,7 +97,6 @@ export const useConnect = ({
           setIntegrationId(connectionData.integrationId);
           setUiOptions(connectionData.uiOptions);
           setBrand(connectionData.brand);
-          
           // Apply uiOptions to Tailwind CSS
           if (connectionData.uiOptions) {
             applyUiOptionsToTailwind(connectionData.uiOptions);

@@ -147,10 +147,16 @@ export const formatDateISOStringToRelativeDate = (
 
   const isWithin24h = Math.abs(differenceInDays(targetDate, now)) < 1;
 
-  if (isDayMaximumPrecision || !isWithin24h)
-    return formatDistance(startOfDay(targetDate), startOfDay(now), {
+  let formattedDate: string;
+  
+  if (isDayMaximumPrecision || !isWithin24h) {
+    formattedDate = formatDistance(startOfDay(targetDate), startOfDay(now), {
       addSuffix: true,
     });
+  } else {
+    formattedDate = formatDistance(targetDate, now, { addSuffix: true });
+  }
 
-  return formatDistance(targetDate, now, { addSuffix: true });
+  // Remove "about " prefix from the formatted date
+  return formattedDate.replace(/^about /, '');
 };
