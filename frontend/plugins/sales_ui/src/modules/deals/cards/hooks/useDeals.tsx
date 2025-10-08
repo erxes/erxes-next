@@ -67,12 +67,13 @@ export const useDeals = (
   const { list: deals, pageInfo, totalCount } = data?.deals || {};
 
   useEffect(() => {
+    console.log('in hereee');
     const unsubscribe = subscribeToMore<IDealChanged>({
       document: DEAL_LIST_CHANGED,
       variables: {
         pipelineId: lastPipelineId,
         userId: currentUser?._id,
-        filter: { ...options?.variables },
+        filter: options?.variables,
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!prev || !subscriptionData.data) return prev;
@@ -135,20 +136,16 @@ export const useDeals = (
 
     fetchMore({
       variables: {
-        filter: {
-          ...options?.variables,
-          cursor:
-            direction === EnumCursorDirection.FORWARD
-              ? pageInfo?.endCursor
-              : pageInfo?.startCursor,
-          limit: 20,
-          direction:
-            direction === EnumCursorDirection.FORWARD ? 'forward' : 'backward',
-        },
+        ...options?.variables,
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
+        limit: 20,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
-
         return Object.assign({}, prev, {
           deals: mergeCursorData({
             direction,
@@ -198,9 +195,6 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
       ...options?.variables,
       _id,
     },
-    optimisticResponse: ({ _id, name }) => ({
-      dealsEdit: { __typename: 'Deal', _id, name },
-    }),
     refetchQueries: _id
       ? [
           {

@@ -68,7 +68,7 @@ export const DealsBoard = () => {
     editDeals({
       variables: {
         _id: activeItem?._id,
-        status: overColumn,
+        stageId: overColumn,
       },
     });
     setDeals((prev) =>
