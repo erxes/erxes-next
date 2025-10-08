@@ -89,6 +89,7 @@ const BoardCard = <T extends BoardItemProps = BoardItemProps>({
     transition,
     transform: CSS.Transform.toString(transform),
   };
+
   return (
     <>
       <div style={style} {...listeners} {...attributes} ref={setNodeRef}>

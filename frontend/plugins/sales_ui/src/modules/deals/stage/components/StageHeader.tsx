@@ -14,6 +14,8 @@ import {
 
 import { AddCardForm } from '@/deals/cards/components/AddCardForm';
 import { IStage } from '@/deals/types/stages';
+import { dealCreateSheetState } from '@/deals/states/dealCreateSheetState';
+import { useAtom } from 'jotai';
 import { useDealsArchive } from '@/deals/cards/hooks/useDeals';
 import { useState } from 'react';
 
@@ -22,7 +24,7 @@ type Props = {
 };
 
 export const StageHeader = ({ stage = {} as IStage }: Props) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useAtom(dealCreateSheetState);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [, setStageId] = useQueryState<string | null>('stageId');
   const { archiveDeals } = useDealsArchive();
@@ -160,7 +162,7 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
           </DropdownMenu.Content>
         </DropdownMenu>
 
-        <Sheet open={open} onOpenChange={onSheetChange} data-no-dnd="true">
+        <Sheet open={open} onOpenChange={setOpen}>
           <Sheet.Trigger asChild>
             <Button variant="ghost" size="icon" className="size-6 relative">
               <IconPlus />

@@ -4,11 +4,12 @@ import type {
   DragOverEvent,
   DragStartEvent,
 } from '@dnd-kit/core';
+
 import { HTMLAttributes } from 'react';
 
 export type BoardItemProps = {
   id: string;
-  column: string;
+  column: string | undefined;
   sort?: unknown;
 } & Record<string, unknown>;
 
