@@ -1,5 +1,5 @@
 # ---------------- BUILD STAGE ----------------
-    FROM --platform=linux/amd64 node:22-bookworm AS build
+    FROM node:22-bookworm AS build
     WORKDIR /app
     
     # Copy root configs & manifests
@@ -25,11 +25,10 @@
     # Build gateway
     RUN npx nx build:packageJson gateway && npx nx build gateway
     
-    # Install Rover CLI for supergraph compose
-    RUN pnpm add -g @apollo/rover@0.22.0 \
-        && rover supergraph compose \
-           --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml \
-           --elv2-license=accept
+    # Run Rover CLI for supergraph compose (temporary, no global install)
+    RUN pnpm dlx @apollo/rover@0.22.0 supergraph compose \
+        --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml \
+        --elv2-license=accept
     
     # Download Apollo Router binary into /apollo-router
     RUN mkdir -p /apollo-router \
@@ -50,14 +49,5 @@
     COPY --from=build /app/backend/erxes-api-shared ./backend/erxes-api-shared
     COPY --from=build /app/node_modules ./node_modules
     COPY --from=build /app/backend/gateway/node_modules ./backend/gateway/node_modules
-    COPY --from=build /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
-    
-    # Copy Apollo Router binary (cached in build stage)
-    COPY --from=build /apollo-router /apollo-router
-    
-    ENV NODE_ENV=production
-    USER 1000
-    
-    # Start Gateway
-    CMD ["node", "backend/gateway/dist/src/main.js"]
+    COPY --from=build /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modu
     
