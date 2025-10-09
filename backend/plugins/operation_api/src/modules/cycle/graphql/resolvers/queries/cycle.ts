@@ -10,6 +10,7 @@ import {
   getCycleProgressChart,
   getCyclesProgress,
 } from '~/modules/cycle/utils';
+import { startOfDay } from 'date-fns';
 
 export const cycleQueries = {
   getCycle: async (_parent: undefined, { _id }, { models }: IContext) => {
@@ -24,7 +25,7 @@ export const cycleQueries = {
           ...params,
           orderBy: { isActive: -1, isCompleted: 1, startDate: 1 },
         },
-        query: { teamId: params.teamId, isCompleted: false },
+        query: { teamId: params.teamId },
       },
     );
 
@@ -32,6 +33,8 @@ export const cycleQueries = {
   },
 
   getCyclesActive: async (_parent: undefined, params, { models }: IContext) => {
+    const today = startOfDay(new Date());
+
     if (params.taskId) {
       const task = await models.Task.findOne({
         _id: params.taskId,
@@ -56,12 +59,14 @@ export const cycleQueries = {
 
         query: {
           teamId: params.teamId,
-          isCompleted: { $ne: true },
+          isCompleted: false,
           $or: [
-            { isActive: true },
-            { _id: params?.cycleId || null },
             {
-              startDate: { $lte: new Date() },
+              startDate: { $lte: today },
+              endDate: { $gte: today },
+            },
+            {
+              startDate: { $gt: today },
             },
           ],
         },
