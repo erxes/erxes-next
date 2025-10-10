@@ -1,3 +1,5 @@
+import { MutationHookOptions, OperationVariables } from "@apollo/client";
+
 import { IUser } from "ui-modules";
 import { PIPELINE_CREATE_SCHEMA } from "../schemas/pipelineFormSchema";
 import { z } from "zod";
@@ -41,6 +43,35 @@ export interface IPipeline {
     paymentTypes?: any[];
     erxesAppToken?: string;
   }
+
+  export interface ISelectLabelContext {
+    selectedLabels: IPipelineLabel[];
+    setSelectedLabels: (labels: IPipelineLabel[]) => void;
+    value?: string[] | string;
+    onSelect: (label: IPipelineLabel) => void;
+    newLabelName: string;
+    setNewLabelName: (labelName: string) => void;
+    mode: 'single' | 'multiple';
+    labelIds?: string[];
+  }
+
+  export type ISelectLabelProviderProps = {
+    targetIds?: string[];
+    value?: string[] | string;
+    onValueChange?: (labels?: (string | undefined)[] | string) => void;
+    mode?: 'single' | 'multiple';
+    labelIds?: string[];
+    children?: React.ReactNode;
+    options?: (newSelectedLabelIds: string[]) => MutationHookOptions<
+      {
+        LabelsMain: {
+          totalCount: number;
+          list: IPipelineLabel[];
+        };
+      },
+      OperationVariables
+    >;
+  };
 
   export interface IPipelineLabel {
     _id?: string;

@@ -1,14 +1,14 @@
+import { FileUploadSection } from './FileUploadSection';
+import { ProductBasicFields } from './ProductBasicField';
+import { ProductEditorField } from './ProductEditor';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import type React from 'react';
+import { Spinner } from 'erxes-ui';
 import { UseFormReturn } from 'react-hook-form';
 import { useProductDetail } from '../hooks/useProductDetail';
-import { useUom } from '@/products/hooks/useUom';
-import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
-import { FileUploadSection } from './FileUploadSection';
-import { ProductEditorField } from './ProductEditor';
-import { Spinner } from 'erxes-ui';
-import { ProductBasicFields } from './ProductBasicField';
-import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 import { useProductFormData } from '../hooks/useProductFormData';
+import { useUom } from '@/products/hooks/useUom';
 
 interface ProductDetailFormProps {
   form: UseFormReturn<ProductFormValues>;

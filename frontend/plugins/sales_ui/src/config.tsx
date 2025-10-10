@@ -1,4 +1,8 @@
-import { IconBriefcase, IconSandbox } from '@tabler/icons-react';
+import {
+  IconBriefcase,
+  IconSandbox,
+  IconCashRegister,
+} from '@tabler/icons-react';
 import { lazy, Suspense } from 'react';
 
 const SalesNavigation = lazy(() =>
@@ -27,6 +31,13 @@ export const CONFIG = {
       icon: IconSandbox,
       path: 'deals',
       hasSettings: true,
+    },
+    {
+      name: 'pos',
+      icon: IconCashRegister,
+      path: 'pos',
+      hasSettings: true,
+      hasRelationWidget: true,
     },
   ],
 };

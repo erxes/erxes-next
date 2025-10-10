@@ -5,6 +5,13 @@ import { pipelineLabelMutations } from '~/modules/sales/graphql/resolvers/mutati
 import { pipelineMutations } from '~/modules/sales/graphql/resolvers/mutations/pipelines';
 import { stageMutations } from '~/modules/sales/graphql/resolvers/mutations/stages';
 
+// pos section
+import {
+  pos as MutationsPos,
+  order as MutationsOrder,
+  cover as MutationsCover,
+} from '@/pos/graphql/resolvers/mutations';
+
 export const mutations = {
   ...boardMutations,
   ...pipelineMutations,
@@ -12,4 +19,7 @@ export const mutations = {
   ...dealMutations,
   ...pipelineLabelMutations,
   ...checklistMutations,
+  ...MutationsPos,
+  ...MutationsOrder,
+  ...MutationsCover,
 };
