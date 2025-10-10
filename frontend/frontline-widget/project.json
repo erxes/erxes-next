@@ -1,0 +1,62 @@
+{
+  "name": "frontline-widget",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "frontend/frontline-widget/src",
+  "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["erxes-ui"],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/frontend/frontline-widget",
+        "main": "frontend/frontline-widget/src/main.tsx",
+        "tsConfig": "frontend/frontline-widget/tsconfig.app.json",
+        "rspackConfig": "frontend/frontline-widget/rspack.config.ts",
+        "assets": ["frontend/frontline-widget/src/assets"]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "frontend/frontline-widget/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "frontline-widget:build:development",
+        "port": 3001
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "frontline-widget:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "frontline-widget:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "frontline-widget:serve:development"
+        },
+        "production": {
+          "serveTarget": "frontline-widget:serve:production"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HubSpot-Style Chat Widget Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        padding: 2rem;
+      }
+
+      .hero-content {
+        max-width: 800px;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #fff, #e0e7ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .feature {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .feature:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .feature h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .feature p {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .cta {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .cta h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .cta p {
+        margin-bottom: 1.5rem;
+      }
+
+      .btn {
+        display: inline-block;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .content-section {
+        background: white;
+        padding: 4rem 2rem;
+        margin-top: 2rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #333;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .comparison-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 2rem;
+        border-left: 4px solid #667eea;
+      }
+
+      .comparison-card h3 {
+        color: #667eea;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .comparison-card ul {
+        list-style: none;
+      }
+
+      .comparison-card li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .comparison-card li::before {
+        content: '✓';
+        color: #10b981;
+        font-weight: bold;
+        margin-right: 0.5rem;
+      }
+
+      .demo-instructions {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        margin: 2rem 0;
+      }
+
+      .demo-instructions h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .demo-instructions ol {
+        margin-left: 1.5rem;
+      }
+
+      .demo-instructions li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer {
+        background: #1f2937;
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero p {
+          font-size: 1rem;
+        }
+
+        .features {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>HubSpot-Style Chat Widget</h1>
+        <p>
+          Experience a modern, interactive chat widget built with React and
+          erxes-ui components. Featuring smooth animations, typing indicators,
+          and conversation starters.
+        </p>
+
+        <div class="features">
+          <div class="feature">
+            <span class="feature-icon">💬</span>
+            <h3>Interactive Chat</h3>
+            <p>
+              Real-time messaging with typing indicators and smooth animations
+            </p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🎨</span>
+            <h3>Modern Design</h3>
+            <p>
+              Clean, professional interface inspired by HubSpot's chat widget
+            </p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">📱</span>
+            <h3>Responsive</h3>
+            <p>Works perfectly on desktop, tablet, and mobile devices</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">⚡</span>
+            <h3>Fast & Lightweight</h3>
+            <p>Optimized performance with minimal bundle size</p>
+          </div>
+        </div>
+
+        <div class="cta">
+          <h2>Try the Chat Widget</h2>
+          <p>
+            Click the chat bubble in the bottom-right corner to start a
+            conversation!
+          </p>
+          <button class="btn" onclick="scrollToDemo()">
+            See Demo Instructions
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+      <div class="container">
+        <h2 class="section-title">Widget Features</h2>
+
+        <div class="comparison">
+          <div class="comparison-card">
+            <h3>🚀 HubSpot-Inspired Features</h3>
+            <ul>
+              <li>Conversation starters for easy engagement</li>
+              <li>Typing indicators with animated dots</li>
+              <li>Message timestamps</li>
+              <li>Online status indicator</li>
+              <li>Welcome tooltip on first visit</li>
+              <li>Notification badge for new messages</li>
+              <li>Smooth slide-in animations</li>
+              <li>Professional gradient design</li>
+            </ul>
+          </div>
+
+          <div class="comparison-card">
+            <h3>🛠️ Technical Features</h3>
+            <ul>
+              <li>Built with React & TypeScript</li>
+              <li>erxes-ui component library</li>
+              <li>Tailwind CSS for styling</li>
+              <li>Auto-scroll to latest messages</li>
+              <li>Keyboard navigation support</li>
+              <li>Focus management</li>
+              <li>Responsive design</li>
+              <li>Easy integration via script tag</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="demo-instructions" id="demo">
+          <h3>🎯 How to Test the Widget</h3>
+          <ol>
+            <li>
+              <strong>Look for the chat bubble:</strong> You'll see a blue chat
+              icon in the bottom-right corner
+            </li>
+            <li>
+              <strong>Notice the welcome tooltip:</strong> A small message
+              appears to encourage interaction
+            </li>
+            <li>
+              <strong>Click to open:</strong> The widget slides up with a smooth
+              animation
+            </li>
+            <li>
+              <strong>Try conversation starters:</strong> Click on any of the
+              suggested topics
+            </li>
+            <li>
+              <strong>Send messages:</strong> Type in the input field and press
+              Enter or click send
+            </li>
+            <li>
+              <strong>Watch typing indicators:</strong> See animated dots when
+              the bot is "typing"
+            </li>
+            <li>
+              <strong>Check timestamps:</strong> Each message shows the time it
+              was sent
+            </li>
+            <li>
+              <strong>Test responsiveness:</strong> Resize your browser to see
+              mobile adaptation
+            </li>
+          </ol>
+        </div>
+
+        <div
+          style="
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+          "
+        >
+          <h3 style="color: #333; margin-bottom: 1rem">🔧 Integration Code</h3>
+          <p style="color: #666; margin-bottom: 1rem">
+            Add this to your website to include the chat widget:
+          </p>
+          <pre
+            style="
+              background: #1f2937;
+              color: #e5e7eb;
+              padding: 1rem;
+              border-radius: 8px;
+              overflow-x: auto;
+              font-size: 0.9rem;
+            "
+          ><code>&lt;!-- Add to your HTML --&gt;
+&lt;div id="erxes-chat-widget"&gt;&lt;/div&gt;
+&lt;script src="YOUR_R2_BUCKET_URL/main.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.ChatWidget.mount(document.getElementById('erxes-chat-widget'));
+&lt;/script&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <p>
+          &copy; 2024 Erxes Chat Widget. Built with ❤️ using React, TypeScript,
+          and erxes-ui.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Widget Container -->
+    <div id="erxes-chat-widget"></div>
+
+    <!-- Widget Script -->
+    <script src="https://pub-3228955cd14343e8aac1c682acb7a75b.r2.dev/latest/test-widget/main.js"></script>
+
+    <script>
+      function initializeWidget() {
+        try {
+          if (window.ChatWidget && window.ChatWidget.mount) {
+            const widgetContainer =
+              document.getElementById('erxes-chat-widget');
+            if (widgetContainer) {
+              window.ChatWidget.mount(widgetContainer);
+              console.log(
+                '✅ HubSpot-style chat widget initialized successfully!',
+              );
+            }
+          }
+        } catch (error) {
+          console.error('❌ Error initializing widget:', error);
+        }
+      }
+
+      function handleScriptError() {
+        console.error('❌ Failed to load widget script');
+        document.getElementById('erxes-chat-widget').innerHTML = `
+          <div style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          ">
+            ⚠️ Widget failed to load
+          </div>
+        `;
+      }
+
+      function scrollToDemo() {
+        document.getElementById('demo').scrollIntoView({
+          behavior: 'smooth',
+        });
+      }
+
+      // Add some interactive effects
+      document.addEventListener('DOMContentLoaded', function () {
+        // Animate features on scroll
+        const features = document.querySelectorAll('.feature');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+            }
+          });
+        });
+
+        features.forEach((feature) => {
+          observer.observe(feature);
+        });
+      });
+
+      // Add fadeInUp animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>

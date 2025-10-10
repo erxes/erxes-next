@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
+    --primary: 244 76% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 244 53% 85%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 2% 45%;
+    --accent: 240 3% 96%;
+    --accent-foreground: 240 3% 66%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --warning: 25 80% 63%;
+    --scroll: 240 5% 83%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 244 76% 59%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --shadow: 0, 0%, 0%, 0.05;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+  }
+
+  .dark {
+    --background: 0 0% 9%;
+    --foreground: 240 6% 97%;
+    --primary: 244 76% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 244 53% 16%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 2% 64%;
+    --accent: 240 3% 13%;
+    --accent-foreground: 240 3% 43%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --warning: 25 80% 63%;
+    --scroll: 240 5% 26%;
+    --border: 240 6% 19%;
+    --input: 240 6% 19%;
+    --ring: 244 76% 50%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 11%;
+    --shadow: 0, 0%, 100%, 0.05;
+    --card: 0 0% 9%;
+    --card-foreground: 240 6% 97%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+@layer utilities {
+  .hide-scroll {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* HubSpot-style animations */
+  @keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes bounce {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-in {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+
+  .slide-in-from-bottom-4 {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+
+  .slide-in-from-bottom-2 {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  /* Custom scrollbar for chat messages */
+  .chat-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+
+  .chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Message bubble animations */
+  .message-bubble {
+    animation: scaleIn 0.2s ease-out;
+  }
+
+  /* Typing indicator animation */
+  .typing-dot {
+    animation: bounce 1.4s infinite ease-in-out both;
+  }
+
+  .typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+  .typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+  }
+  .typing-dot:nth-child(3) {
+    animation-delay: 0s;
+  }
+
+  /* Hover effects for conversation starters */
+  .conversation-starter {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .conversation-starter:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Chat bubble pulse effect */
+  .chat-bubble-pulse {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }
+
+  /* Notification badge animation */
+  .notification-badge {
+    animation: pulse 2s infinite;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  .widget-transition {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

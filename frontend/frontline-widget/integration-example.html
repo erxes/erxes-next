@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Erxes Chat Widget - Integration Examples</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .example-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .example-card h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .example-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .code-block {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        font-family: 'Monaco', 'Consolas', monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        margin-bottom: 15px;
+      }
+
+      .btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #5a6fd8;
+      }
+
+      .status {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.loading {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🚀 Erxes Chat Widget</h1>
+        <p>Integration Examples & Testing</p>
+      </div>
+
+      <div class="examples">
+        <!-- Basic Integration -->
+        <div class="example-card">
+          <h3>📦 Basic Integration</h3>
+          <p>Simple script tag integration - most common use case</p>
+          <div class="code-block">
+            &lt;!-- Add to your HTML head or before closing body tag --&gt;
+            &lt;div id="erxes-chat-widget"&gt;&lt;/div&gt; &lt;script
+            src="YOUR_R2_BUCKET_URL/main.js"&gt;&lt;/script&gt; &lt;script&gt;
+            window.ChatWidget.mount(
+            document.getElementById('erxes-chat-widget') ); &lt;/script&gt;
+          </div>
+          <button class="btn" onclick="testBasicIntegration()">
+            Test Basic Integration
+          </button>
+          <div id="basic-status" class="status" style="display: none"></div>
+        </div>
+
+        <!-- Async Loading -->
+        <div class="example-card">
+          <h3>⚡ Async Loading</h3>
+          <p>Load widget asynchronously without blocking page render</p>
+          <div class="code-block">
+            &lt;script&gt; (function() { const script =
+            document.createElement('script'); script.src =
+            'YOUR_R2_BUCKET_URL/main.js'; script.async = true; script.onload =
+            function() { window.ChatWidget.mount(
+            document.getElementById('erxes-chat-widget') ); };
+            document.head.appendChild(script); })(); &lt;/script&gt;
+          </div>
+          <button class="btn" onclick="testAsyncIntegration()">
+            Test Async Integration
+          </button>
+          <div id="async-status" class="status" style="display: none"></div>
+        </div>
+
+        <!-- Conditional Loading -->
+        <div class="example-card">
+          <h3>🎯 Conditional Loading</h3>
+          <p>Load widget based on user behavior or page conditions</p>
+          <div class="code-block">
+            &lt;script&gt; // Load widget after user scrolls 50% of page
+            window.addEventListener('scroll', function() { const scrolled =
+            window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            if (scrolled > 0.5 && !window.widgetLoaded) { loadChatWidget();
+            window.widgetLoaded = true; } }); &lt;/script&gt;
+          </div>
+          <button class="btn" onclick="testConditionalIntegration()">
+            Test Conditional Loading
+          </button>
+          <div
+            id="conditional-status"
+            class="status"
+            style="display: none"
+          ></div>
+        </div>
+
+        <!-- Multiple Widgets -->
+        <div class="example-card">
+          <h3>🔄 Multiple Instances</h3>
+          <p>Mount multiple widget instances on the same page</p>
+          <div class="code-block">
+            &lt;div id="widget-1"&gt;&lt;/div&gt; &lt;div
+            id="widget-2"&gt;&lt;/div&gt; &lt;script&gt; // Mount multiple
+            instances
+            window.ChatWidget.mount(document.getElementById('widget-1'));
+            window.ChatWidget.mount(document.getElementById('widget-2'));
+            &lt;/script&gt;
+          </div>
+          <button class="btn" onclick="testMultipleWidgets()">
+            Test Multiple Widgets
+          </button>
+          <div id="multiple-status" class="status" style="display: none"></div>
+        </div>
+      </div>
+
+      <!-- Widget Containers -->
+      <div id="erxes-chat-widget"></div>
+      <div id="async-widget"></div>
+      <div id="conditional-widget"></div>
+      <div id="multiple-widget-1"></div>
+      <div id="multiple-widget-2"></div>
+    </div>
+
+    <script>
+      // Replace with your actual R2 bucket URL
+      const WIDGET_SCRIPT_URL = 'YOUR_R2_BUCKET_URL/main.js';
+
+      let scriptLoaded = false;
+      let widgetScript = null;
+
+      function loadScript(callback) {
+        if (scriptLoaded) {
+          callback();
+          return;
+        }
+
+        if (widgetScript) {
+          widgetScript.onload = callback;
+          return;
+        }
+
+        widgetScript = document.createElement('script');
+        widgetScript.src = WIDGET_SCRIPT_URL;
+        widgetScript.async = true;
+        widgetScript.onload = function () {
+          scriptLoaded = true;
+          callback();
+        };
+        widgetScript.onerror = function () {
+          showStatus('error', 'Failed to load widget script from R2 bucket');
+        };
+        document.head.appendChild(widgetScript);
+      }
+
+      function showStatus(type, message, containerId = 'basic-status') {
+        const statusEl = document.getElementById(containerId);
+        statusEl.className = `status ${type}`;
+        statusEl.textContent = message;
+        statusEl.style.display = 'block';
+
+        if (type === 'success') {
+          setTimeout(() => {
+            statusEl.style.display = 'none';
+          }, 3000);
+        }
+      }
+
+      function testBasicIntegration() {
+        showStatus('loading', 'Loading widget...', 'basic-status');
+
+        loadScript(() => {
+          try {
+            if (window.ChatWidget && window.ChatWidget.mount) {
+              const container = document.getElementById('erxes-chat-widget');
+              window.ChatWidget.mount(container);
+              showStatus(
+                'success',
+                '✅ Widget loaded successfully!',
+                'basic-status',
+              );
+            } else {
+              showStatus(
+                'error',
+                '❌ ChatWidget not found on window object',
+                'basic-status',
+              );
+            }
+          } catch (error) {
+            showStatus('error', `❌ Error: ${error.message}`, 'basic-status');
+          }
+        });
+      }
+
+      function testAsyncIntegration() {
+        showStatus(
+          'loading',
+          'Loading widget asynchronously...',
+          'async-status',
+        );
+
+        // Simulate async loading
+        setTimeout(() => {
+          loadScript(() => {
+            try {
+              const container = document.getElementById('async-widget');
+              window.ChatWidget.mount(container);
+              showStatus('success', '✅ Async widget loaded!', 'async-status');
+            } catch (error) {
+              showStatus('error', `❌ Error: ${error.message}`, 'async-status');
+            }
+          });
+        }, 1000);
+      }
+
+      function testConditionalIntegration() {
+        showStatus(
+          'loading',
+          'Simulating scroll condition...',
+          'conditional-status',
+        );
+
+        // Simulate conditional loading after 2 seconds
+        setTimeout(() => {
+          loadScript(() => {
+            try {
+              const container = document.getElementById('conditional-widget');
+              window.ChatWidget.mount(container);
+              showStatus(
+                'success',
+                '✅ Conditional widget loaded!',
+                'conditional-status',
+              );
+            } catch (error) {
+              showStatus(
+                'error',
+                `❌ Error: ${error.message}`,
+                'conditional-status',
+              );
+            }
+          });
+        }, 2000);
+      }
+
+      function testMultipleWidgets() {
+        showStatus('loading', 'Loading multiple widgets...', 'multiple-status');
+
+        loadScript(() => {
+          try {
+            const container1 = document.getElementById('multiple-widget-1');
+            const container2 = document.getElementById('multiple-widget-2');
+
+            window.ChatWidget.mount(container1);
+            window.ChatWidget.mount(container2);
+
+            showStatus(
+              'success',
+              '✅ Multiple widgets loaded!',
+              'multiple-status',
+            );
+          } catch (error) {
+            showStatus(
+              'error',
+              `❌ Error: ${error.message}`,
+              'multiple-status',
+            );
+          }
+        });
+      }
+
+      // Debug information
+      console.log('🔧 Debug Info:');
+      console.log('Widget Script URL:', WIDGET_SCRIPT_URL);
+      console.log(
+        'Replace YOUR_R2_BUCKET_URL with your actual Cloudflare R2 bucket URL',
+      );
+    </script>
+  </body>
+</html>

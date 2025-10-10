@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Widget Test</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: white;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 50px 20px;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+      }
+
+      .status {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .success {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.3);
+      }
+
+      .error {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 HubSpot-Style Chat Widget</h1>
+      <p>Testing the fixed widget without erxes-ui dependencies</p>
+
+      <div id="widget-status" class="status">
+        <h3>Loading Widget...</h3>
+        <p>Please wait while we initialize the chat widget.</p>
+      </div>
+
+      <div class="status">
+        <h3>✨ Features to Test:</h3>
+        <ul style="text-align: left; max-width: 400px; margin: 0 auto">
+          <li>Click the blue chat bubble in bottom-right</li>
+          <li>Try the conversation starters</li>
+          <li>Send messages and watch typing indicators</li>
+          <li>Check message timestamps</li>
+          <li>Test the welcome tooltip</li>
+          <li>Notice the notification badge</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Widget Container -->
+    <div id="erxes-chat-widget"></div>
+
+    <!-- Widget Script - Using local build for testing -->
+    <script
+      src="../../dist/frontend/frontline-widget/main.js"
+      onload="initializeWidget()"
+      onerror="handleScriptError()"
+    ></script>
+
+    <script>
+      function initializeWidget() {
+        const statusEl = document.getElementById('widget-status');
+
+        try {
+          if (window.ChatWidget && window.ChatWidget.mount) {
+            const widgetContainer =
+              document.getElementById('erxes-chat-widget');
+            if (widgetContainer) {
+              window.ChatWidget.mount(widgetContainer);
+
+              statusEl.className = 'status success';
+              statusEl.innerHTML = `
+                <h3>✅ Widget Loaded Successfully!</h3>
+                <p>The HubSpot-style chat widget is now active. Look for the blue chat bubble in the bottom-right corner.</p>
+              `;
+
+              console.log(
+                '✅ HubSpot-style chat widget initialized successfully!',
+              );
+            } else {
+              throw new Error('Widget container not found');
+            }
+          } else {
+            throw new Error('ChatWidget not found on window object');
+          }
+        } catch (error) {
+          console.error('❌ Error initializing widget:', error);
+
+          statusEl.className = 'status error';
+          statusEl.innerHTML = `
+            <h3>❌ Widget Failed to Load</h3>
+            <p>Error: ${error.message}</p>
+            <p>Check the browser console for more details.</p>
+          `;
+        }
+      }
+
+      function handleScriptError() {
+        const statusEl = document.getElementById('widget-status');
+
+        console.error('❌ Failed to load widget script');
+
+        statusEl.className = 'status error';
+        statusEl.innerHTML = `
+          <h3>❌ Script Loading Failed</h3>
+          <p>Could not load the widget script. Make sure the build exists at:</p>
+          <code>../../dist/frontend/frontline-widget/main.js</code>
+          <p>Run: <code>nx build frontline-widget</code> to build the widget.</p>
+        `;
+      }
+
+      // Debug information
+      console.log('🔧 Debug Info:');
+      console.log('Testing locally built widget');
+      console.log('Script path: ../../dist/frontend/frontline-widget/main.js');
+
+      // Add some visual feedback
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM loaded, waiting for widget script...');
+      });
+    </script>
+  </body>
+</html>

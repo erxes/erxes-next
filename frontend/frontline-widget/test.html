@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Widget Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .content {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h1>Chat Widget Test Page</h1>
+      <p>
+        This is a test page for the Erxes chat widget. The chat widget should
+        appear as a floating button in the bottom-right corner of the page.
+      </p>
+      <p>
+        Click on the chat button to open the chat interface and test the
+        functionality.
+      </p>
+      <p>The widget is built using erxes-ui components including:</p>
+      <ul>
+        <li>Button components for the trigger and send button</li>
+        <li>Card components for the chat container</li>
+        <li>Input component for message input</li>
+        <li>ScrollArea for the message history</li>
+        <li>Avatar components for user and bot messages</li>
+      </ul>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+      </p>
+      <p>
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+
+    <!-- Widget Container -->
+    <div id="chat-widget"></div>
+
+    <!-- Load the widget script from Cloudflare R2 -->
+    <script
+      src="YOUR_R2_BUCKET_URL/main.js"
+      onload="initializeWidget()"
+      onerror="handleScriptError()"
+    ></script>
+
+    <script>
+      function initializeWidget() {
+        try {
+          // Check if the ChatWidget is available
+          if (window.ChatWidget && window.ChatWidget.mount) {
+            const widgetContainer = document.getElementById('chat-widget');
+            if (widgetContainer) {
+              window.ChatWidget.mount(widgetContainer);
+              console.log('✅ Chat widget initialized successfully!');
+            } else {
+              console.error('❌ Widget container not found');
+            }
+          } else {
+            console.error('❌ ChatWidget not found on window object');
+            console.log(
+              'Available on window:',
+              Object.keys(window).filter(
+                (key) => key.includes('Chat') || key.includes('Widget'),
+              ),
+            );
+          }
+        } catch (error) {
+          console.error('❌ Error initializing widget:', error);
+        }
+      }
+
+      function handleScriptError() {
+        console.error('❌ Failed to load widget script from R2 bucket');
+
+        // Show fallback message
+        const widgetContainer = document.getElementById('chat-widget');
+        if (widgetContainer) {
+          widgetContainer.innerHTML = `
+            <div style="
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              background: #ff4444;
+              color: white;
+              padding: 10px 15px;
+              border-radius: 8px;
+              font-size: 14px;
+              z-index: 1000;
+            ">
+              ⚠️ Widget failed to load
+            </div>
+          `;
+        }
+      }
+
+      // Fallback: Try to initialize after DOM is loaded if script loads before this
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.ChatWidget && !document.querySelector('#chat-widget > *')) {
+          setTimeout(initializeWidget, 100);
+        }
+      });
+    </script>
+  </body>
+</html>
