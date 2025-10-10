@@ -6,8 +6,14 @@ import {
 import { lazy, Suspense } from 'react';
 
 const SalesNavigation = lazy(() =>
-  import('./modules/SalesNavigation').then((module) => ({
+  import('./modules/navigation/SalesNavigation').then((module) => ({
     default: module.SalesNavigation,
+  })),
+);
+
+const PosOrderNavigation = lazy(() =>
+  import('./modules/navigation/PosOrderNavigation').then((module) => ({
+    default: module.PosOrderNavigation,
   })),
 );
 
@@ -24,20 +30,28 @@ export const CONFIG = {
         <SalesNavigation />
       </Suspense>
     ),
+    subGroups: () => (
+      <Suspense fallback={<div />}>
+        <PosOrderNavigation />
+      </Suspense>
+    ),
   },
   modules: [
     {
-      name: 'deals',
-      icon: IconSandbox,
-      path: 'deals',
-      hasSettings: true,
+      name: 'sales',
+      icon: IconBriefcase,
+      path: 'sales',
+      hasSettings: false,
+      hasRelationWidget: true,
+      hasFloatingWidget: false,
     },
     {
       name: 'pos',
       icon: IconCashRegister,
       path: 'pos',
-      hasSettings: true,
+      hasSettings: false,
       hasRelationWidget: true,
+      hasFloatingWidget: false,
     },
   ],
 };

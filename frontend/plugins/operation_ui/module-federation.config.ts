@@ -19,7 +19,7 @@ const config: ModuleFederationConfig = {
     './operation': './src/modules/main/Main.tsx',
     './teamSettings': './src/modules/team/Settings.tsx',
     './relationWidget': './src/widgets/relation/RelationWidgets.tsx',
-    './notificationWidget':
+    './notificationWidget': 
       './src/widgets/notifications/NotificationsWidgets.tsx',
   },
 

@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router';
-import { PosPath } from '~/modules/types/path/PosPath';
-import { LEADS_CURSOR_SESSION_KEY, POS_CURSOR_SESSION_KEY } from '~/modules/constants/PosCursorSessionKey';
+import { LEADS_CURSOR_SESSION_KEY, POS_CURSOR_SESSION_KEY } from '~/modules/pos/constants/PosCursorSessionKey';
+
+import { PosPath } from '~/modules/pos/types/path/PosPath';
   
 
 export const useIsPosLeadSessionKey = () => {

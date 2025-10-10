@@ -8,7 +8,7 @@ export interface IUser {
   __typename: string;
 }
 
-export interface IPos {
+export interface IOrder {
   _id: string;
   name: string;
   icon: string;

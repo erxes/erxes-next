@@ -7,7 +7,6 @@ import { useAtom } from 'jotai';
 import { PosCreate } from '@/create-pos/components/index/pos-create';
 import { PosEdit } from '@/pos-detail/components/posDetail';
 import { renderingPosCreateAtom } from '@/create-pos/states/renderingPosCreateAtom';
-import { PosFilter } from '@/pos/PosFilter';  
 
 
 export const PosIndexPage = () => {
@@ -51,7 +50,6 @@ export const PosIndexPage = () => {
         </PageHeader.End>
       </PageHeader>
       <PageSubHeader>
-      <PosFilter />
       </PageSubHeader>
       <PosCreate />
       <PosRecordTable />
