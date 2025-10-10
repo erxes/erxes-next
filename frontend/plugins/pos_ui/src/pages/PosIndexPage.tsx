@@ -1,5 +1,5 @@
 import { IconCashRegister, IconPlus, IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link, useSearchParams } from 'react-router-dom';
 import { PosRecordTable } from '@/components/PosRecordTable';
@@ -17,7 +17,7 @@ export const PosIndexPage = () => {
     setSearchParams({ create: 'true' });
   };
   return (
-    <div className="flex flex-col h-full">                                                                                                                                                                                       
+    <div className="flex flex-col h-full">
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>

@@ -19,5 +19,11 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "src/modules/pos-detail", "../sales_ui/src/modules/pos/pos/PosTotalCount.tsx", "../sales_ui/src/modules/pos/pos-detail/hooks/UsePosLeadSessionKey.tsx", "../sales_ui/src/modules/pos/constants/PosCursorSessionKey.tsx", "../sales_ui/src/modules/pos/states/PosCount.tsx"]
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/modules/pos-detail"
+  ]
 }
