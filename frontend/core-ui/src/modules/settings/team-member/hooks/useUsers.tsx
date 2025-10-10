@@ -7,6 +7,7 @@ import {
   useMultiQueryState,
   useRecordTableCursor,
   validateFetchMore,
+  isUndefinedOrNull,
 } from 'erxes-ui';
 import { IUser, IDetailsType } from '../types';
 import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../constants/teamMemberCursorSessionKey';
@@ -50,6 +51,7 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
       onError(error) {
         console.error('An error occoured on fetch', error.message);
       },
+      skip: isUndefinedOrNull(cursor),
     },
   );
 
