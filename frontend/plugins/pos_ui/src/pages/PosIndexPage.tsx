@@ -8,7 +8,6 @@ import { PosCreate } from '@/create-pos/components/index/pos-create';
 import { PosEdit } from '@/pos-detail/components/posDetail';
 import { renderingPosCreateAtom } from '@/create-pos/states/renderingPosCreateAtom';
 
-
 export const PosIndexPage = () => {
   const [, setSearchParams] = useSearchParams();
   const [, setRenderingPosCreate] = useAtom(renderingPosCreateAtom);
@@ -49,8 +48,6 @@ export const PosIndexPage = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
-      <PageSubHeader>
-      </PageSubHeader>
       <PosCreate />
       <PosRecordTable />
       <PosEdit />
