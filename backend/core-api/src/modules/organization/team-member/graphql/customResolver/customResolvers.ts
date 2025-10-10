@@ -1,6 +1,6 @@
+import { getUserActionsMap, USER_ROLES } from 'erxes-api-shared/core-modules';
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
-import { getUserActionsMap, USER_ROLES } from 'erxes-api-shared/core-modules';
 
 export default {
   __resolveReference: async ({ _id }, { models }: IContext) => {
@@ -19,6 +19,12 @@ export default {
     }
 
     return 'Verified';
+  },
+
+  async role(user: IUserDocument, _args: undefined, { models }: IContext) {
+    const { role } = await models.Roles.getRole(user._id);
+
+    return role;
   },
 
   //   async currentOrganization(_user, _args, { subdomain, models }: IContext) {

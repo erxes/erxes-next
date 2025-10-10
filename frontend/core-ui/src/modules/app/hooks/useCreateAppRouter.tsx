@@ -20,8 +20,8 @@ import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
-import { useVersion } from 'ui-modules';
 import { lazy } from 'react';
+import { useVersion } from 'ui-modules';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { Providers } from '~/providers';
 import { DocumentsRoutes } from '../components/DocumentsRoutes';
@@ -80,7 +80,10 @@ export const useCreateAppRouter = () => {
                   element={<AutomationRoutes />}
                 />
               )}
-              <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
+
+              {isOS && (
+                <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
+              )}
 
               {isOS && (
                 <Route
