@@ -1,5 +1,5 @@
 import { IAttachment } from 'erxes-ui';
-
+import { UomTimely } from '../constants/uom';
 export interface IProduct {
   _id: string;
   name: string;
@@ -26,5 +26,7 @@ export interface IUom {
   _id: string;
   name: string;
   code: string;
-  productCount: number;
+  createdAt: string;
+  isForSubscription: boolean;
+  timely: UomTimely | null;
 }
