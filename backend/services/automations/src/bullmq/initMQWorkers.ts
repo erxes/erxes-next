@@ -3,6 +3,7 @@ import { createMQWorkerWithListeners } from 'erxes-api-shared/utils';
 import { actionHandlerWorker } from '@/bullmq/actionHandlerWorker';
 import { triggerHandlerWorker } from '@/bullmq/triggerWorker';
 import { debugInfo } from '@/debuuger';
+import { aiWorker } from '@/bullmq/aiWorker';
 
 type ICommonJobData = {
   subdomain: string;
@@ -36,6 +37,7 @@ export const initMQWorkers = async (redis: any) => {
   await Promise.all([
     generateMQWorker(redis, 'trigger', triggerHandlerWorker),
     generateMQWorker(redis, 'action', actionHandlerWorker),
+    generateMQWorker(redis, 'aiAgent', aiWorker),
   ]);
 
   debugInfo('All workers initialized');

@@ -1,4 +1,5 @@
 import { generateModels } from '@/connectionResolver';
+import { validateAgainstSchema } from '@/executions/actions/webhook/incoming/bodyValidator';
 import {
   isTimestampValid,
   streamToBuffer,
@@ -10,6 +11,7 @@ import { getActionsMap } from '@/utils';
 import {
   AUTOMATION_EXECUTION_STATUS,
   AUTOMATION_STATUSES,
+  AutomationExecutionSetWaitCondition,
   EXECUTE_WAIT_TYPES,
 } from 'erxes-api-shared/core-modules';
 import { getSubdomain, sendWorkerQueue } from 'erxes-api-shared/utils';
@@ -95,14 +97,14 @@ export const waitingWebhookExecutionHandler = async (
 
   const endpoint = restPath.startsWith('/') ? restPath : `/${restPath}`;
 
-  const waitinAction = await models.WaitingActions.findOne({
+  const waitingAction = await models.WaitingActions.findOne({
     conditionType: EXECUTE_WAIT_TYPES.WEBHOOK,
     executionId: executionId,
     automationId: execution.automationId,
     'conditionConfig.endpoint': endpoint,
   });
 
-  if (!waitinAction) {
+  if (!waitingAction) {
     // choose your own allowed statuses; fail safe
     return res.status(409).json({
       success: false,
@@ -110,13 +112,20 @@ export const waitingWebhookExecutionHandler = async (
     });
   }
 
-  const secret = waitinAction?.conditionConfig?.secret;
+  const { secret, schema } = (waitingAction?.conditionConfig || {}) as Extract<
+    AutomationExecutionSetWaitCondition,
+    { type: EXECUTE_WAIT_TYPES.WEBHOOK }
+  >;
 
   if (secret) {
-    const raw =
-      (req as any).body instanceof Buffer
-        ? (req as any).body
-        : Buffer.from((await streamToBuffer(req)) as any);
+    let raw: Buffer;
+
+    if (req.body instanceof Buffer) {
+      raw = req.body;
+    } else {
+      const rawBuffer = await streamToBuffer(req);
+      raw = rawBuffer;
+    }
     // If you used express.raw, req.body is the Buffer. If not, adapt accordingly.
     const ok = verifyHmac(raw, secret, headerSig);
     if (!ok) {
@@ -139,9 +148,22 @@ export const waitingWebhookExecutionHandler = async (
     }
   }
 
+  if (schema) {
+    const errors = validateAgainstSchema(schema, req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid payload',
+        errors,
+      });
+    }
+  }
+
   const { actions = [] } = automation;
 
-  const action = actions.find(({ id }) => id === waitinAction.responseActionId);
+  const action = actions.find(
+    ({ id }) => id === waitingAction.responseActionId,
+  );
 
   executeActions(
     subdomain,

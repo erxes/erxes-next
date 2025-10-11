@@ -96,6 +96,18 @@ export const checkIsValidConnect = ({
     }
   }
 
+  if (source.data.nodeType === AutomationNodeType.Trigger) {
+    const targetId = target.data.id;
+    const trigger = nodes.find(
+      (node) =>
+        node.data.actionId === targetId &&
+        node.data.nodeType === AutomationNodeType.Trigger,
+    );
+    if (trigger && source.data.type !== trigger?.data.type) {
+      return false;
+    }
+  }
+
   const allNodes = [...triggersConst, ...actionsConst];
   const sourceDef = allNodes.find((n) => n.type === source.data?.type);
 

@@ -35,6 +35,88 @@ const ActionNodeContent = ({ data }: { data: NodeData }) => {
   );
 };
 
+const IfActionSourceHandler = ({
+  id,
+  config,
+}: {
+  id: string;
+  config?: any;
+}) => {
+  return (
+    <>
+      <NodeOutputHandler
+        key="yes-right"
+        id="yes-right"
+        handlerId={`${id}__yes`}
+        className="!bg-success"
+        addButtonClassName="hover:text-success hover:border-success"
+        style={{ top: '50%' }}
+        showAddButton={!config?.yes}
+        nodeType={AutomationNodeType.Action}
+      >
+        <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
+          True
+        </div>
+      </NodeOutputHandler>
+      <NodeOutputHandler
+        key="no-right"
+        id="no-right"
+        handlerId={`${id}__no`}
+        className="!bg-destructive"
+        addButtonClassName="hover:text-destructive hover:border-destructive"
+        style={{ top: '80%' }}
+        showAddButton={!config?.no}
+        nodeType={AutomationNodeType.Action}
+      >
+        <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
+          False
+        </div>
+      </NodeOutputHandler>
+    </>
+  );
+};
+
+const FindObjectActionSourceHandler = ({
+  id,
+  config,
+}: {
+  id: string;
+  config?: any;
+}) => {
+  return (
+    <>
+      <NodeOutputHandler
+        key="isExists-right"
+        id="isExists-right"
+        handlerId={`${id}__isExists`}
+        className="!bg-success"
+        addButtonClassName="hover:text-success hover:border-success"
+        style={{ top: '50%' }}
+        showAddButton={!config?.isExists}
+        nodeType={AutomationNodeType.Action}
+      >
+        <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
+          Has
+        </div>
+      </NodeOutputHandler>
+      <NodeOutputHandler
+        key="notExists-right"
+        id="notExists-right"
+        handlerId={`${id}__notExists`}
+        className="!bg-destructive"
+        addButtonClassName="hover:text-destructive hover:border-destructive"
+        style={{ top: '80%' }}
+        showAddButton={!config?.notExists}
+        nodeType={AutomationNodeType.Action}
+      >
+        <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
+          None
+        </div>
+      </NodeOutputHandler>
+    </>
+  );
+};
+
 const ActionNodeSourceHandler = ({
   id,
   type,
@@ -49,38 +131,10 @@ const ActionNodeSourceHandler = ({
   workflowId?: string;
 }) => {
   if (type === 'if') {
-    return (
-      <>
-        <NodeOutputHandler
-          key="yes-right"
-          id="yes-right"
-          handlerId={`${id}__yes`}
-          className="!bg-success"
-          addButtonClassName="hover:text-success hover:border-success"
-          style={{ top: '50%' }}
-          showAddButton={!config?.yes}
-          nodeType={AutomationNodeType.Action}
-        >
-          <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
-            True
-          </div>
-        </NodeOutputHandler>
-        <NodeOutputHandler
-          key="no-right"
-          id="no-right"
-          handlerId={`${id}__no`}
-          className="!bg-destructive"
-          addButtonClassName="hover:text-destructive hover:border-destructive"
-          style={{ top: '80%' }}
-          showAddButton={!config?.no}
-          nodeType={AutomationNodeType.Action}
-        >
-          <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
-            False
-          </div>
-        </NodeOutputHandler>
-      </>
-    );
+    return <IfActionSourceHandler id={id} config={config} />;
+  }
+  if (type === 'findObject') {
+    return <FindObjectActionSourceHandler id={id} config={config} />;
   }
 
   return (

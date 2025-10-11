@@ -3,7 +3,6 @@ import { z } from 'zod';
 const managePropertyRuleSchema = z.object({
   field: z.string().min(1, 'Field is required'),
   operator: z.string().min(1, 'Operator is required'),
-  // Accept any value type to allow placeholders and templating
   value: z.any().optional(),
 });
 

@@ -58,10 +58,8 @@ export const Attributes = ({
 
   return (
     <Popover>
-      <Combobox.TriggerBase
-        variant="link"
-        size="sm"
-        className="text-primary w-26 border-0"
+      <Popover.Trigger
+        // className="text-primary w-26 border-0"
         asChild
       >
         {trigger || (
@@ -69,8 +67,8 @@ export const Attributes = ({
             {buttonText} <IconChevronDown />
           </Button>
         )}
-      </Combobox.TriggerBase>
-      <Combobox.Content>
+      </Popover.Trigger>
+      <Popover.Content className="p-0">
         <Command ref={ref}>
           <Command.Input placeholder="Search ..." />
 
@@ -79,7 +77,7 @@ export const Attributes = ({
               <Collapsible.TriggerButton className="px-4">
                 <div className="flex items-center gap-2">
                   <span>Attributes</span>
-                  <Collapsible.TriggerIcon className="h-4 w-4" />
+                  <Collapsible.TriggerIcon className="size-4" />
                 </div>
               </Collapsible.TriggerButton>
               <Collapsible.Content className="px-4 m-0">
@@ -100,7 +98,7 @@ export const Attributes = ({
             />
           </Command.List>
         </Command>
-      </Combobox.Content>
+      </Popover.Content>
     </Popover>
   );
 };

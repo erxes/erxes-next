@@ -99,6 +99,7 @@ export const executeWaitEvent = async (
         type: EXECUTE_WAIT_TYPES.WEBHOOK,
         endpoint: webhookConfig?.endpoint,
         secret: webhookConfig.security.secret,
+        schema: webhookConfig.schema,
       },
     });
   }

@@ -1,11 +1,11 @@
-import type { Job } from 'bullmq';
-import { sendWorkerQueue } from 'erxes-api-shared/utils';
-import moment from 'moment';
 import { IModels } from '@/connectionResolver';
+import type { Job } from 'bullmq';
 import {
   AutomationExecutionSetWaitCondition,
   EXECUTE_WAIT_TYPES,
 } from 'erxes-api-shared/core-modules';
+import { sendWorkerQueue } from 'erxes-api-shared/utils';
+import moment from 'moment';
 
 export const setActionWaitHandler = async (
   models: IModels,
@@ -89,9 +89,10 @@ export const setExecutionWaitAction = async (
       currentActionId,
       responseActionId,
       conditionType: EXECUTE_WAIT_TYPES.IS_IN_SEGMENT,
+
       conditionConfig: {
-        targetId,
         segmentId,
+        targetId,
       },
     });
 
@@ -146,17 +147,14 @@ export const setExecutionWaitAction = async (
   }
 
   if (condition.type === EXECUTE_WAIT_TYPES.WEBHOOK) {
-    const { endpoint, secret } = condition;
+    const { endpoint, secret, schema } = condition;
     await models.WaitingActions.create({
       automationId,
       executionId,
       currentActionId,
       responseActionId,
       conditionType: EXECUTE_WAIT_TYPES.WEBHOOK,
-      conditionConfig: {
-        endpoint,
-        secret,
-      },
+      conditionConfig: { endpoint, secret, schema },
     });
   }
 };

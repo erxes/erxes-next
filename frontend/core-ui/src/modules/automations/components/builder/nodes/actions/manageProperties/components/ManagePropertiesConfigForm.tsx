@@ -5,24 +5,27 @@ import {
 } from '@/automations/components/builder/nodes/actions/manageProperties/states/managePropertiesForm';
 import { AutomationCoreConfigFormWrapper } from '@/automations/components/builder/nodes/components/AutomationConfigFormWrapper';
 import { useFormValidationErrorHandler } from '@/automations/hooks/useFormValidationErrorHandler';
+import { ReachableTrigger } from '@/automations/utils/automationBuilderUtils/triggerUtils';
+import { TAutomationBuilderActions } from '@/automations/utils/automationFormDefinitions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Label, Select } from 'erxes-ui';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { Alert } from 'erxes-ui';
+import { Alert, Button, Form, Label, Select } from 'erxes-ui';
 import {
   FormProvider,
   useForm,
   useFormContext,
   useWatch,
 } from 'react-hook-form';
-import { TAutomationActionProps } from 'ui-modules';
+import { TAutomationAction, TAutomationActionProps } from 'ui-modules';
 import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
-import { ReachableTrigger } from '@/automations/utils/automationBuilderUtils/triggerUtils';
-import {
-  TAutomationBuilderActions,
-  TAutomationBuilderForm,
-} from '@/automations/utils/automationFormDefinitions';
-import { AutomationNodesType } from '@/automations/types';
+
+const generateDefaultValues = (currentAction: TAutomationAction) => {
+  const values = { ...(currentAction?.config || {}) };
+  if (!values.rules?.length) {
+    values.rules = [{ field: '', operator: '' }];
+  }
+  return values;
+};
 
 export const ManagePropertiesConfigForm = ({
   currentAction,
@@ -34,14 +37,15 @@ export const ManagePropertiesConfigForm = ({
 
   const form = useForm<TManagePropertiesForm>({
     resolver: zodResolver(managePropertiesFormSchema),
-    defaultValues: { ...(currentAction?.config || {}) },
+    defaultValues: generateDefaultValues(currentAction),
   });
-  const { propertyTypes, propertyType, nonCustomTriggers, actionsCanBeTarget } =
-    useManagePropertySidebarContent(currentAction, form);
-  console.log({ propertyType });
-
-  // Keep module in sync with inferred propertyType if needed
-  // if (module && module !== propertyType) setValue('module', propertyType);
+  const {
+    propertyTypes,
+    propertyType,
+    nonCustomTriggers,
+    actionsCanBeTarget,
+    additionalAttributes,
+  } = useManagePropertySidebarContent(currentAction, form);
 
   if (!propertyType) {
     return (
@@ -63,7 +67,7 @@ export const ManagePropertiesConfigForm = ({
       <AutomationCoreConfigFormWrapper
         onSave={form.handleSubmit(handleSave, handleValidationErrors)}
       >
-        <div className="w-[500px] p-4">
+        <div className="w-[500px]">
           <SelectManagePropertyTriggerTarget
             nonCustomTriggers={nonCustomTriggers}
           />
@@ -105,6 +109,7 @@ export const ManagePropertiesConfigForm = ({
                     rule={rule}
                     index={index}
                     propertyType={propertyType}
+                    additionalAttributes={additionalAttributes}
                   />
                 ))}
                 <Button

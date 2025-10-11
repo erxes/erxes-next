@@ -1,6 +1,7 @@
 import AiAgentComponents from '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgent';
 import BranchComponents from '@/automations/components/builder/nodes/actions/branches/components/Branches';
 import DelayComponents from '@/automations/components/builder/nodes/actions/delay/components/Delay';
+import FindObjectComponents from '@/automations/components/builder/nodes/actions/findObject/components/FindObject';
 import ManagePropertiesComponents from '@/automations/components/builder/nodes/actions/manageProperties/components/ManageProperties';
 import SendEmailComponents from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmail';
 import WaitEventComponents from '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEvent';
@@ -23,6 +24,7 @@ const coreActions: AutomationComponentMap<AutomationNodeType.Action> = {
   ...WaitEventComponents,
   ...AiAgentComponents,
   ...WebhooksComponents,
+  ...FindObjectComponents,
 };
 
 type ActionName = keyof typeof coreActions & string;

@@ -7,17 +7,19 @@ import {
 
 import {
   AUTOMATION_ACTIONS,
+  AUTOMATION_CORE_PROPERTY_TYPES,
   AUTOMATION_STATUSES,
   AUTOMATION_TRIGGERS,
+  checkPermission,
   IAutomationDocument,
   IAutomationExecutionDocument,
   IAutomationsActionConfig,
   IAutomationsTriggerConfig,
+  requireLogin,
 } from 'erxes-api-shared/core-modules';
 import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 
 import { IContext } from '~/connectionResolvers';
-import { AiTrainingService } from '~/modules/automations/services/aiTraining';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -210,46 +212,6 @@ export const automationQueries = {
     return await models.AutomationExecutions.find(filter).countDocuments();
   },
 
-  async automationConfigPrievewCount(
-    _root,
-    params: { config: any },
-    { subdomain }: IContext,
-  ) {
-    return;
-    // const config = params.config;
-    // if (!config) {
-    //   return;
-    // }
-
-    // const contentId = config.contentId;
-    // if (!contentId) {
-    //   return;
-    // }
-
-    // const segment = await sendSegmentsMessage({
-    //   subdomain,
-    //   action: 'findOne',
-    //   data: { _id: contentId },
-    //   isRPC: true
-    // });
-
-    // if (!segment) {
-    //   return;
-    // }
-
-    // const result = await sendSegmentsMessage({
-    //   subdomain,
-    //   action: 'fetchSegment',
-    //   data: {
-    //     segmentId: segment._id,
-    //     options: { returnCount: true }
-    //   },
-    //   isRPC: true
-    // });
-
-    // return result;
-  },
-
   async automationsTotalCount(
     _root,
     { status }: { status: string },
@@ -276,7 +238,7 @@ export const automationQueries = {
       triggersConst: [...AUTOMATION_TRIGGERS],
       triggerTypesConst: [],
       actionsConst: [...AUTOMATION_ACTIONS],
-      propertyTypesConst: [],
+      propertyTypesConst: [...AUTOMATION_CORE_PROPERTY_TYPES],
     };
 
     // Track seen items to avoid duplicates
@@ -405,18 +367,32 @@ export const automationQueries = {
     return await models.AiAgents.findOne({});
   },
 
-  async getTrainingStatus(_root, { agentId }, { models }: IContext) {
-    const trainingService = new AiTrainingService(models);
-    return await trainingService.getTrainingStatus(agentId);
+  async getTrainingStatus(_root, { agentId }, {}: IContext) {
+    const agent = await this.models.AiAgents.findById(agentId);
+    if (!agent) {
+      throw new Error('AI Agent not found');
+    }
+
+    const files = agent.files || [];
+    const embeddedFiles = await this.models.AiEmbeddings.find({
+      fileId: { $in: files.map(({ id }) => id) },
+    });
+
+    return {
+      agentId,
+      totalFiles: files.length,
+      processedFiles: embeddedFiles.length,
+      status: embeddedFiles.length === files.length ? 'completed' : 'pending',
+    };
   },
 };
 
-// requireLogin(automationQueries, 'automationsMain');
-// requireLogin(automationQueries, 'automationNotes');
-// requireLogin(automationQueries, 'automationDetail');
+requireLogin(automationQueries, 'automationsMain');
+requireLogin(automationQueries, 'automationNotes');
+requireLogin(automationQueries, 'automationDetail');
 
-// checkPermission(automationQueries, 'automations', 'showAutomations', []);
-// checkPermission(automationQueries, 'automationsMain', 'showAutomations', {
-//   list: [],
-//   totalCount: 0
-// });
+checkPermission(automationQueries, 'automations', 'showAutomations', []);
+checkPermission(automationQueries, 'automationsMain', 'showAutomations', {
+  list: [],
+  totalCount: 0,
+});

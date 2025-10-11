@@ -30,41 +30,24 @@ incomingWebhookRouter.use(
 const rawBodyMiddleware = express.raw({
   type: '*/*',
   limit: '1mb', // limit payload to reasonable size
+  verify: (req, _, buf: Buffer) => {
+    // Store raw body for signature verification
+    (req as any).rawBody = buf;
+  },
 });
-// Enterprise rate limiting
-
-//   // Secure body parser with limits
-//   const webhookBodyParser = bodyParser({
-//     limit: '10mb', // Prevent DoS with large payloads
-//     verify: (req: any, res: any, buf: Buffer) => {
-//       // Store raw body for signature verification
-//       (req as any).rawBody = buf;
-//     },
-//   });
-
-// HMAC signature verification
-//   const verifyHMACSignature = (req: express.Request, secret: string): boolean => {
-//     const signature = req.headers['x-hub-signature-256'] ||
-//                      req.headers['x-signature'] ||
-//                      req.headers['signature'];
-
-//     if (!signature) return false;
-
-//     const expectedSignature = `sha256=${crypto
-//       .createHmac('sha256', secret)
-//       .update((req as any).rawBody || '')
-//       .digest('hex')}`;
-
-//     return crypto.timingSafeEqual(
-//       Buffer.from(Array.isArray(signature) ? signature[0] : signature),
-//       Buffer.from(expectedSignature)
-//     );
-//   };
-
-incomingWebhookRouter.all('/:id/*', webhookRateLimit, incomingWebhookHandler);
+incomingWebhookRouter.all(
+  '/:id/*',
+  webhookRateLimit,
+  rawBodyMiddleware,
+  incomingWebhookHandler,
+);
 
 // Health check endpoint for webhook route
-incomingWebhookRouter.get('/:id/health', incomingWebhookHealthHandler);
+incomingWebhookRouter.get(
+  '/:id/health',
+  rawBodyMiddleware,
+  incomingWebhookHealthHandler,
+);
 
 incomingWebhookRouter.get(
   '/executions/:executionId/continue/*',

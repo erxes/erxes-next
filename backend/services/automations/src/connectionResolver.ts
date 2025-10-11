@@ -3,6 +3,8 @@ import { Model, Connection } from 'mongoose';
 import { IMainContext } from 'erxes-api-shared/core-types';
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
+  AiAgentDocument,
+  aiAgentSchema,
   automationExecutionSchema,
   automationSchema,
   IAutomationDocument,
@@ -22,6 +24,7 @@ export interface IModels {
   Executions: Model<IAutomationExecutionDocument>;
   WaitingActions: Model<IAutomationWaitingActionDocument>;
   AiEmbeddings: Model<IAiEmbeddingDocument>;
+  AiAgents: Model<AiAgentDocument>;
 }
 
 export interface IContext extends IMainContext {
@@ -51,6 +54,10 @@ export const loadClasses = (db: Connection, subdomain: string): IModels => {
     IAiEmbeddingDocument,
     Model<IAiEmbeddingDocument>
   >('ai_embeddings', aiEmbeddingSchema);
+  models.AiAgents = db.model<AiAgentDocument, Model<AiAgentDocument>>(
+    'automations_ai_agents',
+    aiAgentSchema,
+  );
 
   return models;
 };

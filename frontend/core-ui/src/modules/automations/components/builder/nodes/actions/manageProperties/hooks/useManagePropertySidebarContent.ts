@@ -23,6 +23,8 @@ export const useManagePropertySidebarContent = (
     actions,
     triggers,
   );
+
+  let additionalAttributes: any[] = [];
   const nonCustomTriggers = reachableTriggers.filter(
     ({ trigger }) => !trigger.isCustom,
   );
@@ -78,5 +80,6 @@ export const useManagePropertySidebarContent = (
     module,
     nonCustomTriggers,
     actionsCanBeTarget,
+    additionalAttributes,
   };
 };

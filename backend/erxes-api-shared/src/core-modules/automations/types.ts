@@ -153,27 +153,44 @@ export enum EXECUTE_WAIT_TYPES {
   WEBHOOK = 'webhook',
 }
 
+export type TAutomationExecutionDelay = {
+  subdomain: string;
+  waitFor: number;
+  timeUnit: 'minute' | 'hour' | 'day' | 'month' | 'year';
+  startWaitingDate?: Date;
+};
+
+export type TAutomationExecutionCheckObject = {
+  contentType?: string;
+  shouldCheckOptionalConnect?: boolean;
+  targetId?: string;
+  expectedState: Record<string, any>;
+  propertyName: string;
+  expectedStateConjunction?: 'every' | 'some';
+  timeout?: Date;
+};
+
+export type TAutomationExecutionIsInSegment = {
+  targetId: string;
+  segmentId: string;
+};
+
+export type TAutomationExecutionWebhook = {
+  endpoint: string;
+  secret: string;
+  schema: any;
+};
+
 export type AutomationExecutionSetWaitCondition =
-  | {
+  | ({
       type: EXECUTE_WAIT_TYPES.DELAY;
-      subdomain: string;
-      waitFor: number;
-      timeUnit: 'minute' | 'hour' | 'day' | 'month' | 'year';
-      startWaitingDate?: Date;
-    }
-  | {
+    } & TAutomationExecutionDelay)
+  | ({
       type: EXECUTE_WAIT_TYPES.CHECK_OBJECT;
-      contentType?: string;
-      shouldCheckOptionalConnect?: boolean;
-      targetId?: string;
-      expectedState: Record<string, any>;
-      propertyName: string;
-      expectedStateConjunction?: 'every' | 'some';
-      timeout?: Date;
-    }
-  | {
+    } & TAutomationExecutionCheckObject)
+  | ({
       type: EXECUTE_WAIT_TYPES.IS_IN_SEGMENT;
-      targetId: string;
-      segmentId: string;
-    }
-  | { type: EXECUTE_WAIT_TYPES.WEBHOOK; endpoint: string; secret: string };
+    } & TAutomationExecutionIsInSegment)
+  | ({
+      type: EXECUTE_WAIT_TYPES.WEBHOOK;
+    } & TAutomationExecutionWebhook);

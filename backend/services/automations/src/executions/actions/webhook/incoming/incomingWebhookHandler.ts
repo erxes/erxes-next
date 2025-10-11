@@ -81,7 +81,7 @@ export const incomingWebhookHandler = async (req: Request, res: Response) => {
     // Enhanced security validation
     try {
       await validateSecurity(req, trigger.config);
-    } catch (securityError: any) {
+    } catch (securityError) {
       // Log security violation
       sendWorkerQueue('logs', 'put_log').add('put_log', {
         subdomain,
@@ -190,7 +190,7 @@ export const incomingWebhookHandler = async (req: Request, res: Response) => {
       executionId: execution._id,
       receivedAt: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Enterprise webhook error:', error);
 
     // Generic error message to avoid information leakage

@@ -7,4 +7,3 @@ export * from './segments';
 export * from './forms';
 export * from './logs';
 export * from './notifications';
-export * from './automations/ai/fileEmbedding';

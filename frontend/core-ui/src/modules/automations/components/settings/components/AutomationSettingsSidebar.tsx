@@ -16,13 +16,14 @@ export const AutomationSettingsSidebar = () => {
                 <Link to={`/settings/automations/bots`}>Bots</Link>
               </Sidebar.MenuButton>
             </Sidebar.MenuItem>
-            <Sidebar.MenuItem>
+            {/* TODO: Uncomment this when we have a way to embed files */}
+            {/* <Sidebar.MenuItem>
               <Sidebar.MenuButton
                 isActive={activePath.includes('/settings/automations/agents')}
               >
                 <Link to={`/settings/automations/agents`}>Agents</Link>
               </Sidebar.MenuButton>
-            </Sidebar.MenuItem>
+            </Sidebar.MenuItem> */}
           </Sidebar.Menu>
         </Sidebar.GroupContent>
       </Sidebar.Group>

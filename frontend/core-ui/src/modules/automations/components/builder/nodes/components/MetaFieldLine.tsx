@@ -8,7 +8,7 @@ export const MetaFieldLine = ({
   return (
     <div className="flex justify-between items-center text-foreground text-xs w-max">
       <span className="font-mono">{fieldName}:</span>
-      <span className="font-mono">{content}</span>
+      <span className="font-mono">{content ? content : 'Empty'}</span>
     </div>
   );
 };

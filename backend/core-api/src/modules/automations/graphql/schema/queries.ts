@@ -34,7 +34,6 @@ const queries = `
   automationNotes(automationId: String!, triggerId: String, actionId: String): [AutomationNote]
   automationHistories(${GQL_CURSOR_PARAM_DEFS},${historiesParams}): AutomationHistories
   automationHistoriesTotalCount(${historiesParams}):Int
-  automationConfigPrievewCount(config: JSON): Int
   automationsTotalCount(status: String): automationsTotalCountResponse
   automationConstants: JSON
   automationBotsConstants:JSON

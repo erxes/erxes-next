@@ -25,7 +25,7 @@ export const useAutomationHeader = () => {
   const { getNodes, setNodes } = useReactFlow();
   const { id } = useParams();
 
-  const { handleNodeErrors } = useNodeErrorHandler({
+  const { handleNodeErrors, clearNodeErrors } = useNodeErrorHandler({
     reactFlowInstance,
     getNodes: getNodes as () => Node<NodeData>[],
     setNodes: setNodes as (nodes: Node<NodeData>[]) => void,
@@ -79,6 +79,7 @@ export const useAutomationHeader = () => {
       },
       onCompleted: ({ automationsAdd }) => {
         clearErrors();
+        clearNodeErrors();
         toast({
           title: 'Save successful',
         });

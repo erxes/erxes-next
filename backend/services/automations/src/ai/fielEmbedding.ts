@@ -1,10 +1,6 @@
-import { getEnv } from '../../../utils';
-import {
-  embedTextCF,
-  embedTextCFChunks,
-  generateTextCF,
-  getFileAsStringFromCF,
-} from './cloudflare/utils';
+import { embedTextCFChunks } from '@/ai/embedTextCFChunks';
+import { generateTextCF } from '@/ai/generateTextCF';
+import { getFileAsStringFromCF } from '@/utils/cloudflare';
 export interface IFileEmbedding {
   fileId: string;
   fileName: string;
@@ -12,37 +8,6 @@ export interface IFileEmbedding {
   embedding: number[];
   createdAt: Date;
 }
-
-export const getConfigs = async (models: any) => {
-  const configsMap: any = {};
-  const configs = await models.Configs.find({}).lean();
-
-  for (const config of configs) {
-    configsMap[config.code] = config.value;
-  }
-
-  return configsMap;
-};
-
-export const getConfig = async (
-  code: string,
-  defaultValue?: string,
-  models?: any,
-) => {
-  if (!models) {
-    return getEnv({ name: code, defaultValue });
-  }
-
-  const configs = await getConfigs(models);
-
-  const envValue = getEnv({ name: code, defaultValue });
-
-  if (!configs[code]) {
-    return envValue || defaultValue;
-  }
-
-  return configs[code];
-};
 
 export class FileEmbeddingService {
   /**

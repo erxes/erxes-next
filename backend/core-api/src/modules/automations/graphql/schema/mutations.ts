@@ -16,12 +16,12 @@ const commonNoteFields = `
 
 const aiAgentParams = `
     name:String,
-description:String,
-provider:String,
-prompt:String,
-instructions:String,
-files:JSON,
-config:JSON,
+    description:String,
+    provider:String,
+    prompt:String,
+    instructions:String,
+    files:JSON,
+    config:JSON,
 `;
 
 const mutations = `
@@ -40,7 +40,7 @@ const mutations = `
   automationsAiAgentEdit(_id:String!,${aiAgentParams}):JSON
   startAiTraining(agentId: String!): TrainingProgress!
   getTrainingStatus(agentId: String!): TrainingProgress!
-  generateAgentMessage(agentId: String!, question: String!): AiAgentMessage!
+  generateAgentMessage(agentId: String!, prevQuestions:[String],question: String!): AiAgentMessage!
 `;
 
 export default mutations;

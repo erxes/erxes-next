@@ -130,6 +130,21 @@ export const generateBranchConnection = (
   } as TAutomationBuilderActions[number];
 };
 
+export const generateFindObjectConnection = (
+  sourceNode: TAutomationBuilderActions[number],
+  targetId: string,
+  sourceHandle: string,
+) => {
+  const config = sourceNode.config || {};
+  const [sourceHandleType] = sourceHandle.split('-');
+  return {
+    ...sourceNode,
+    config: {
+      ...config,
+      [sourceHandleType]: targetId,
+    },
+  } as TAutomationBuilderActions[number];
+};
 export const generateStandarConnection = (
   sourceNode: any,
   targetId: string,

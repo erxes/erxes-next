@@ -11,40 +11,42 @@ const handleCheckObjectCondition = async (
   waitingAction: IAutomationWaitingActionDocument,
   target: any,
 ) => {
-  const {
-    expectedState = {},
-    expectedStateConjunction = 'every',
-    propertyName,
-    shouldCheckOptionalConnect = false,
-  } = waitingAction.conditionConfig || {};
+  if (waitingAction.conditionType === EXECUTE_WAIT_TYPES.CHECK_OBJECT) {
+    const {
+      expectedState = {},
+      expectedStateConjunction = 'every',
+      propertyName,
+      shouldCheckOptionalConnect = false,
+    } = waitingAction.conditionConfig || {};
 
-  const isMatch = Object.keys(expectedState)[
-    expectedStateConjunction === 'some' ? 'some' : 'every'
-  ]((key) => target[key] === expectedState[key]);
+    const isMatch = Object.keys(expectedState)[
+      expectedStateConjunction === 'some' ? 'some' : 'every'
+    ]((key) => target[key] === expectedState[key]);
 
-  if (!shouldCheckOptionalConnect) {
-    return isMatch ? waitingAction : null;
-  }
-  const valueToCheck = propertyName
-    ? accessNestedObject(target, propertyName.split('.'))
-    : undefined;
+    if (!shouldCheckOptionalConnect) {
+      return isMatch ? waitingAction : null;
+    }
+    const valueToCheck = propertyName
+      ? accessNestedObject(target, propertyName.split('.'))
+      : undefined;
 
-  const automation = await models.Automations.findOne({
-    _id: waitingAction.automationId,
-  });
+    const automation = await models.Automations.findOne({
+      _id: waitingAction.automationId,
+    });
 
-  for (const action of automation?.actions || []) {
-    const connects = action.config?.optionalConnects || [];
+    for (const action of automation?.actions || []) {
+      const connects = action.config?.optionalConnects || [];
 
-    const optionalConnect = connects.find(
-      ({ optionalConnectId }) => optionalConnectId === valueToCheck,
-    );
+      const optionalConnect = connects.find(
+        ({ optionalConnectId }) => optionalConnectId === valueToCheck,
+      );
 
-    if (optionalConnect && optionalConnect?.actionId) {
-      if (waitingAction.responseActionId !== optionalConnect.actionId) {
-        waitingAction.responseActionId = optionalConnect.actionId;
+      if (optionalConnect && optionalConnect?.actionId) {
+        if (waitingAction.responseActionId !== optionalConnect.actionId) {
+          waitingAction.responseActionId = optionalConnect.actionId;
+        }
+        return waitingAction;
       }
-      return waitingAction;
     }
   }
 
@@ -79,6 +81,7 @@ export const checkIsWaitingAction = async (
     const { conditionType } = waitingAction;
 
     if (conditionType === EXECUTE_WAIT_TYPES.CHECK_OBJECT) {
+      waitingAction.conditionConfig;
       return await handleCheckObjectCondition(models, waitingAction, target);
     }
 

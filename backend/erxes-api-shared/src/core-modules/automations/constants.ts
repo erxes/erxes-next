@@ -25,6 +25,7 @@ export const AUTOMATION_STATUSES = {
 export const AUTOMATION_CORE_ACTIONS = {
   DELAY: 'delay',
   IF: 'if',
+  FIND_OBJECT: 'findObject',
   SET_PROPERTY: 'setProperty',
   SEND_EMAIL: 'sendEmail',
   OUTGOING_WEBHOOK: 'outgoingWebhook',
@@ -93,6 +94,12 @@ export const AUTOMATION_ACTIONS = [
     description: 'Create simple or if/then branches',
   },
   {
+    type: AUTOMATION_CORE_ACTIONS.FIND_OBJECT,
+    icon: 'IconSearch',
+    label: 'Find object',
+    description: 'Find object',
+  },
+  {
     type: AUTOMATION_CORE_ACTIONS.SET_PROPERTY,
     icon: 'IconFlask',
     label: 'Manage properties',
@@ -119,13 +126,16 @@ export const AUTOMATION_ACTIONS = [
     label: 'Wait event',
     description: 'Delay until event is triggered',
   },
-  {
-    type: AUTOMATION_CORE_ACTIONS.AI_AGENT,
-    icon: 'IconAi',
-    label: 'Ai Agent',
-    description:
-      'Handle workflow conversations by topic using AI agents with embedded knowledge',
-  },
+
+  // TODO: Uncomment this when we have a way to embed files
+
+  // {
+  //   type: AUTOMATION_CORE_ACTIONS.AI_AGENT,
+  //   icon: 'IconAi',
+  //   label: 'Ai Agent',
+  //   description:
+  //     'Handle workflow conversations by topic using AI agents with embedded knowledge',
+  // },
 ];
 
 export const AUTOMATION_TRIGGERS = [
@@ -171,5 +181,45 @@ export const AUTOMATION_TRIGGERS = [
     label: 'Form submission',
     description:
       'Start with a blank workflow that enrolls and is triggered off form submission',
+  },
+];
+
+export const AUTOMATION_CORE_PROPERTY_TYPES = [
+  {
+    value: 'core:customer',
+    label: 'Customer',
+    fields: [
+      { label: 'ID', value: '_id' },
+      { label: 'Name', value: 'name' },
+      { label: 'Email', value: 'email' },
+      { label: 'Phone', value: 'phone' },
+    ],
+  },
+  {
+    value: 'core:company',
+    label: 'Company',
+    fields: [
+      { label: 'ID', value: '_id' },
+      { label: 'Name', value: 'name' },
+      { label: 'Email', value: 'email' },
+      { label: 'Phone', value: 'phone' },
+    ],
+  },
+  {
+    value: 'core:product',
+    label: 'Product',
+    fields: [
+      { label: 'ID', value: '_id' },
+      { label: 'Name', value: 'name' },
+      { label: 'Code', value: 'code' },
+    ],
+  },
+  {
+    value: 'core:tag',
+    label: 'Tag',
+    fields: [
+      { label: 'ID', value: '_id' },
+      { label: 'Name', value: 'name' },
+    ],
   },
 ];

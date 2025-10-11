@@ -11,6 +11,7 @@ import {
 } from '@/automations/types';
 import {
   generateBranchConnection,
+  generateFindObjectConnection,
   generateOptionalConnection,
   generateStandarConnection,
   generateWorkflowConnection,
@@ -96,6 +97,15 @@ export const useNodeConnect = () => {
       const actionNode = sourceNode as TAutomationBuilderActions[number];
       if (actionNode.type === 'if' && sourceHandle) {
         const updated = generateBranchConnection(
+          actionNode,
+          targetId,
+          sourceHandle,
+        );
+        return applyConnectionUpdate(updated, sourceType, sourceIndex);
+      }
+
+      if (actionNode.type === 'findObject' && sourceHandle) {
+        const updated = generateFindObjectConnection(
           actionNode,
           targetId,
           sourceHandle,

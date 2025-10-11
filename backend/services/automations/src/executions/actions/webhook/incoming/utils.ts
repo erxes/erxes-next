@@ -66,17 +66,14 @@ export const validateTimestamp = (
 };
 
 // Enhanced security validation middleware
-export const validateSecurity = async (
-  req: express.Request,
-  triggerConfig: any,
-) => {
-  const { security = {}, headers = [], queryParams = [] } = triggerConfig;
+export const validateSecurity = async (req: express.Request, config: any) => {
+  const { security = {}, headers = [], queryParams = [] } = config;
 
   // 1. HMAC Signature Verification
   if (security.secret) {
-    // if (!verifyHMACSignature(req, security.secret)) {
-    //   throw new Error('Invalid signature');
-    // }
+    if (!verifyHMACSignature(req, security.secret)) {
+      throw new Error('Invalid signature');
+    }
   }
 
   // 2. IP Whitelist Validation
@@ -121,8 +118,8 @@ export function isTimestampValid(headerTs?: string, skewSeconds = 300) {
   return diff <= skewSeconds * 1000;
 }
 export async function trySetIdempotency(key: string, ttlSeconds = 60 * 60) {
-  // SET key value NX EX ttl
-  const r = await redis.set(key, '1', 'NX', 'EX', ttlSeconds);
+  // Correct order: SET key value EX ttl NX
+  const r = await redis.set(key, '1', 'EX', ttlSeconds, 'NX');
   return r === 'OK';
 }
 
@@ -132,14 +129,27 @@ export function verifyHmac(
   headerSig?: string,
 ): boolean {
   if (!headerSig) return false;
+
   // support formats like 'sha256=...'
   const sig = Array.isArray(headerSig) ? headerSig[0] : headerSig;
-  const expected = `sha256=${crypto
-    .createHmac('sha256', secret)
-    .update(rawBody)
+  const hmac = crypto.createHmac('sha256', secret);
+
+  // Option 1: Convert Buffer to string with explicit encoding
+  const expected = `sha256=${hmac
+    .update(rawBody.toString('binary')) // or 'utf8' depending on your data
     .digest('hex')}`;
+
   try {
-    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+    // Convert both to Buffer with explicit encoding
+    const sigBuffer = new TextEncoder().encode(sig);
+    const expectedBuffer = new TextEncoder().encode(expected);
+
+    // Ensure they're the same length (timingSafeEqual requires this)
+    if (sigBuffer.length !== expectedBuffer.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(sigBuffer, expectedBuffer);
   } catch {
     return false;
   }
@@ -148,8 +158,37 @@ export function verifyHmac(
 export async function streamToBuffer(req: express.Request): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
-    (req as any).on('data', (c: Buffer) => chunks.push(c));
-    (req as any).on('end', () => resolve(Buffer.concat(chunks)));
-    (req as any).on('error', (e: any) => reject(e));
+    req.on('data', (c: Buffer) => chunks.push(c));
+    req.on('end', () => resolve(Buffer.concat(chunks as any))); // Type assertion
+    req.on('error', (e) => reject(e));
   });
 }
+
+export const verifyHMACSignature = (
+  req: express.Request,
+  secret: string,
+): boolean => {
+  const signature =
+    req.headers['x-hub-signature-256'] ||
+    req.headers['x-signature'] ||
+    req.headers['signature'];
+
+  if (!signature) return false;
+
+  const expectedSignature = `sha256=${crypto
+    .createHmac('sha256', secret)
+    .update((req as any).rawBody || '')
+    .digest('hex')}`;
+
+  const encoder = new TextEncoder();
+  const signatureBuffer = encoder.encode(
+    Array.isArray(signature) ? signature[0] : signature,
+  );
+  const expectedBuffer = encoder.encode(expectedSignature);
+
+  if (signatureBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
+};

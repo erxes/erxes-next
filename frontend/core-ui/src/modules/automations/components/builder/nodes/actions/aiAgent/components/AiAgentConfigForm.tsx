@@ -102,7 +102,7 @@ export const AIAgentConfigForm = ({
             control={control}
             render={({ field }) => (
               <Form.Item>
-                <Textarea placeholder="Enter prompt" {...field} />Í
+                <Textarea placeholder="Enter prompt" {...field} />
                 <Form.Message />
               </Form.Item>
             )}

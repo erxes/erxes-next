@@ -1,11 +1,11 @@
 import {
   AUTOMATION_STATUSES,
+  checkPermission,
   IAutomation,
   IAutomationDoc,
 } from 'erxes-api-shared/core-modules';
+import { sendWorkerMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { detectConversationType } from '~/modules/automations/graphql/resolvers/utils';
-import { AiTrainingService } from '~/modules/automations/services/aiTraining';
 
 export interface IAutomationsEdit extends IAutomation {
   _id: string;
@@ -15,11 +15,7 @@ export const automationMutations = {
   /**
    * Creates a new automation
    */
-  async automationsAdd(
-    _root,
-    doc: IAutomation,
-    { user, models, subdomain }: IContext,
-  ) {
+  async automationsAdd(_root, doc: IAutomation, { user, models }: IContext) {
     const automation = await models.Automations.create({
       ...doc,
       createdAt: new Date(),
@@ -36,11 +32,14 @@ export const automationMutations = {
   async automationsEdit(
     _root,
     { _id, ...doc }: IAutomationsEdit,
-    { user, models, subdomain }: IContext,
+    { user, models }: IContext,
   ) {
     const automation = await models.Automations.getAutomation(_id);
+    if (!automation) {
+      throw new Error('Automation not found');
+    }
 
-    const updated = await models.Automations.updateOne(
+    await models.Automations.updateOne(
       { _id },
       { $set: { ...doc, updatedAt: new Date(), updatedBy: user._id } },
     );
@@ -69,79 +68,6 @@ export const automationMutations = {
     );
     return automationIds;
   },
-
-  /**
-   * Save as a template
-   */
-  async automationsSaveAsTemplate(
-    _root,
-    {
-      _id,
-      name,
-      duplicate,
-    }: { _id: string; name?: string; duplicate?: boolean },
-    { user, models }: IContext,
-  ) {
-    const automation = await models.Automations.getAutomation(_id);
-
-    const automationDoc: IAutomationDoc = {
-      ...automation,
-      createdAt: new Date(),
-      createdBy: user._id,
-      updatedBy: user._id,
-    };
-
-    if (name) {
-      automationDoc.name = name;
-    }
-
-    if (duplicate) {
-      automationDoc.name = `${automationDoc.name} duplicated`;
-    } else {
-      automationDoc.status = 'template';
-    }
-
-    delete automationDoc._id;
-
-    const created = await models.Automations.create({
-      ...automationDoc,
-    });
-
-    return await models.Automations.getAutomation(created._id);
-  },
-
-  /**
-   * Save as a template
-   */
-  async automationsCreateFromTemplate(
-    _root,
-    { _id }: { _id: string },
-    { user, models, subdomain }: IContext,
-  ) {
-    const automation = await models.Automations.getAutomation(_id);
-
-    if (automation.status !== 'template') {
-      throw new Error('Not template');
-    }
-
-    const automationDoc: IAutomationDoc = {
-      ...automation,
-      status: 'template',
-      name: (automation.name += ' from template'),
-      createdAt: new Date(),
-      createdBy: user._id,
-      updatedBy: user._id,
-    };
-
-    delete automationDoc._id;
-
-    const created = await models.Automations.create({
-      ...automationDoc,
-    });
-
-    return await models.Automations.getAutomation(created._id);
-  },
-
   /**
    * Removes automations
    */
@@ -173,13 +99,7 @@ export const automationMutations = {
     await models.Automations.deleteMany({ _id: { $in: automationIds } });
     await models.AutomationExecutions.removeExecutions(automationIds);
 
-    for (const segmentId of segmentIds || []) {
-      //   sendSegmentsMessage({
-      //     subdomain: '',
-      //     action: 'removeSegment',
-      //     data: { segmentId }
-      //   });
-    }
+    await models.Segments.deleteMany({ _id: { $in: segmentIds } });
 
     return automationIds;
   },
@@ -191,100 +111,38 @@ export const automationMutations = {
     return await models.AiAgents.updateOne({ _id }, { $set: { ...doc } });
   },
 
-  async startAiTraining(_root, { agentId }, { models }: IContext) {
-    const trainingService = new AiTrainingService(models);
-    return await trainingService.startAiTraining(agentId);
-  },
-
-  async getTrainingStatus(_root, { agentId }, { models }: IContext) {
-    const trainingService = new AiTrainingService(models);
-    return await trainingService.getTrainingStatus(agentId);
+  async startAiTraining(_root, { agentId }, { subdomain }: IContext) {
+    await sendWorkerMessage({
+      pluginName: 'automations',
+      queueName: 'aiAgent',
+      jobName: 'trainAiAgent',
+      subdomain,
+      data: { agentId },
+    });
+    return await sendWorkerMessage({
+      pluginName: 'automations',
+      queueName: 'aiAgent',
+      jobName: 'trainAiAgent',
+      subdomain,
+      data: { agentId },
+    });
   },
 
   async generateAgentMessage(
     _root,
     { agentId, question },
-    { models }: IContext,
+    { subdomain }: IContext,
   ) {
-    // Get AI agent
-    const agent = await models.AiAgents.findById(agentId);
-    if (!agent) {
-      throw new Error('AI Agent not found');
-    }
-
-    // Import the FileEmbeddingService
-    const { FileEmbeddingService } = await import(
-      'erxes-api-shared/core-modules'
-    );
-    const fileEmbeddingService = new FileEmbeddingService();
-
-    // Use Cloudflare AI to determine if this is general conversation or file-specific
-    const isGeneralConversation = await detectConversationType(question);
-
-    if (isGeneralConversation) {
-      // Use agent's prompt and instructions for general conversation
-      const message = await fileEmbeddingService.generateGeneralResponse(
-        agent.prompt || '',
-        agent.instructions || '',
-        question,
-      );
-
-      return {
-        message,
-        relevantFile: null,
-        similarity: 0,
-      };
-    } else {
-      // Use file embeddings for specific questions
-      const files = agent.files || [];
-      const fileIds = files.map((f) => f.id).filter(Boolean);
-
-      if (fileIds.length === 0) {
-        return {
-          message:
-            "I don't have any files to reference for this question. Please upload files and start training, or ask me a general question.",
-          relevantFile: null,
-          similarity: 0,
-        };
-      }
-
-      const fileEmbeddings = await models.AiEmbeddings.find({
-        fileId: { $in: fileIds },
-      });
-
-      if (fileEmbeddings.length === 0) {
-        return {
-          message:
-            "I don't have any trained files to reference for this question. Please start AI training first, or ask me a general question.",
-          relevantFile: null,
-          similarity: 0,
-        };
-      }
-
-      // Convert to IFileEmbedding format
-      const embeddings = fileEmbeddings.map((embedding) => ({
-        fileId: embedding.fileId,
-        fileName: embedding.fileName,
-        fileContent: embedding.fileContent,
-        embedding: embedding.embedding,
-        createdAt: embedding.createdAt,
-      }));
-
-      // Generate agent message based on files
-      const message = await fileEmbeddingService.generateAgentMessage(
-        embeddings,
-        question,
-      );
-
-      return {
-        message,
-        relevantFile: fileEmbeddings[0]?.fileName || null,
-        similarity: 0.8,
-      };
-    }
+    return await sendWorkerMessage({
+      pluginName: 'automations',
+      queueName: 'aiAgent',
+      jobName: 'generateText',
+      subdomain,
+      data: { agentId, question },
+    });
   },
 };
 
-// checkPermission(automationMutations, 'automationsAdd', 'automationsAdd');
-// checkPermission(automationMutations, 'automationsEdit', 'automationsEdit');
-// checkPermission(automationMutations, 'automationsRemove', 'automationsRemove');
+checkPermission(automationMutations, 'automationsAdd', 'automationsAdd');
+checkPermission(automationMutations, 'automationsEdit', 'automationsEdit');
+checkPermission(automationMutations, 'automationsRemove', 'automationsRemove');
