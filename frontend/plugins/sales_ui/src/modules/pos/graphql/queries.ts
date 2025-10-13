@@ -84,6 +84,21 @@ const posList = gql`
     }
   }
 `;
+const posOrdersList = gql`
+  query posOrdersList(
+    ${commonParamDefs}
+    $sortField: String
+    $sortDirection: Int
+  ) {
+    posList(
+      ${commonParams}
+      sortField: $sortField
+      sortDirection: $sortDirection
+    ) {
+      ${posCommonFields}
+    }
+  }
+`;
 
 const productGroups = gql`
   query productGroups($posId: String!) {

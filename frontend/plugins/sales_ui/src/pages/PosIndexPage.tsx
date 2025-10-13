@@ -7,6 +7,8 @@ import { useAtom } from 'jotai';
 import { PosCreate } from '@/pos/create-pos/components/index/pos-create';
 import { PosEdit } from '@/pos/pos-detail/components/posDetail';
 import { renderingPosCreateAtom } from '@/pos/create-pos/states/renderingPosCreateAtom';
+import { PosFilter } from '~/modules/pos/pos/PosFilter';
+import { OrderRecordTable } from '~/modules/orders/components/OrderRecordTable';
 
 export const PosIndexPage = () => {
   const [, setSearchParams] = useSearchParams();
@@ -49,7 +51,10 @@ export const PosIndexPage = () => {
         </PageHeader.End>
       </PageHeader>
       <PosCreate />
-      <PosRecordTable />
+      <PageHeader>
+        <PosFilter />
+      </PageHeader>
+      <OrderRecordTable />
       <PosEdit />
     </div>
   );
