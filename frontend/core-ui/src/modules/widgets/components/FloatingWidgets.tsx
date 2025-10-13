@@ -3,7 +3,6 @@ import { useFloatingWidgetsModules } from '../hooks/useFloatingWidgetsModules';
 
 export const FloatingWidgets = () => {
   const modules = useFloatingWidgetsModules();
-
   return modules.map((module) => (
     <RenderPluginsComponent
       key={module.name}
