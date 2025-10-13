@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router';
 import { Suspense, lazy } from 'react';
-
 import { Spinner } from 'erxes-ui/components';
 
 const DealsMain = lazy(() =>
