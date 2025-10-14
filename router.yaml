@@ -1,0 +1,11 @@
+supergraph:
+  listen: 0.0.0.0:4000
+
+telemetry:
+  metrics:
+    prometheus:
+      enabled: false
+
+subgraphs:
+  core:
+    routing_url: http://localhost:3300/graphql

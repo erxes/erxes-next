@@ -1,0 +1,13 @@
+{
+  "name": "rag-service",
+  "root": "backend/core-api/src/modules/AIassistant/rag-service",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "backend/core-api/src/modules/AIassistant/rag-service",
+        "command": "uvicorn main:app --reload --port 8000"
+      }
+    }
+  }
+}

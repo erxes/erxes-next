@@ -1,0 +1,225 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  margin: 0;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 180px;
+  background: #fff;
+  border-right: 1px solid #eee;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px 0;
+  cursor: pointer;
+  color: #555;
+}
+
+.sidebar li.active {
+  font-weight: bold;
+  color: #5a4dff;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 30px;
+  max-width: 900px;
+  margin-left: 0; /* ✅ stick to the left */
+  margin-right: auto;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Upload card */
+.upload-card {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.upload-box {
+  border: 2px dashed #aaa;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background: #fafafa;
+}
+
+.upload-box input {
+  display: none;
+}
+
+/* Dataset List */
+.dataset-list {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.dataset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dataset-item:last-child {
+  border-bottom: none;
+}
+
+.status {
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.status.active {
+  color: green;
+}
+
+.status.inactive {
+  color: #aaa;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+.icon-btn.delete {
+  color: red;
+}
+
+/* Ask Section */
+.ask-card {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.ask-card input {
+  width: 70%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.answer-box {
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  height: 200px;
+  overflow-y: auto;
+  background: #fafafa;
+  border-radius: 6px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 12px;
+  margin-left: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  background: #ddd;
+}
+
+.btn.primary {
+  background: #5a4dff;
+  color: #fff;
+}
+
+/* ✅ Progress bar redesign */
+.progress-container {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 18px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5a4dff, #00d4ff);
+  transition: width 0.4s ease;
+}
+
+/* ✅ Indeterminate animation when progress = 0 */
+.progress-indeterminate {
+  width: 30% !important;
+  animation: indeterminate 1.2s infinite linear;
+}
+
+@keyframes indeterminate {
+  0% {
+    margin-left: -30%;
+  }
+  50% {
+    margin-left: 35%;
+  }
+  100% {
+    margin-left: 100%;
+  }
+}
+.upload-message {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #e6f9e6;
+  color: #2d7a2d;
+  border: 1px solid #b2e6b2;
+}
+
+.upload-message.error {
+  background: #ffe6e6;
+  color: #a12d2d;
+  border: 1px solid #e6b2b2;
+}

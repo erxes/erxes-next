@@ -112,3 +112,28 @@ export const NavigationMenuGroup = forwardRef<
 });
 
 NavigationMenuGroup.displayName = 'NavigationMenuGroup';
+
+export const CoreModulesMenu = () => {
+  return (
+    <NavigationMenuGroup name="Core Modules">
+      {/* Example existing items */}
+      <NavigationMenuLinkItem
+        name="Pipelines"
+        path="pipelines"
+        pathPrefix="core"
+      />
+      <NavigationMenuLinkItem
+        name="Checklists"
+        path="checklists"
+        pathPrefix="core"
+      />
+
+      <NavigationMenuLinkItem
+        name="AI Assistant"
+        icon={IconRobot}
+        path="ai-assistant"
+        pathPrefix="core"
+      />
+    </NavigationMenuGroup>
+  );
+};

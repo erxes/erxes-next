@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  rag-service:
+    build: ./rag-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./rag-service/.env
+    volumes:
+      - ./rag-service/src:/app/src
+    restart: unless-stopped
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL}
+      - LLM_MODEL=${LLM_MODEL}
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001

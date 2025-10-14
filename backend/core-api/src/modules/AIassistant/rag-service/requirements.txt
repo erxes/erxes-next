@@ -1,0 +1,14 @@
+boto3          
+python-dotenv   
+requests    
+flask   
+
+openai          
+fastapi
+
+pandas         
+openpyxl       
+numpy          
+flask-cors
+python-docx
+faiss-cpu
