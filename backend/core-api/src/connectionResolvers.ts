@@ -153,6 +153,17 @@ import {
   IExecutionModel,
   loadClass as loadExecutionClass,
 } from './modules/automations/db/models/Executions';
+import { IRagInteractionDocument } from './modules/AIassistant/db/definitions/ragInteractions';
+import { IRagInteractionModel } from './modules/AIassistant/db/models/RagInteractions';
+import { loadRagInteractionClass } from './modules/AIassistant/db/models/loadInteractionClass';
+import { IGeneralSettingsModel } from './modules/AIassistant/db/definitions/generalSettings';
+import { IGeneralSettingsDocument } from './modules/AIassistant/db/definitions/generalSettings';
+import { loadGeneralSettingsClass } from './modules/AIassistant/db/models/loadGeneralSettingsClass';
+import { GeneralSettingsSchema } from './modules/AIassistant/db/models/GeneralSettings';
+import { ISystemPromptDocument } from '~/modules/AIassistant/db/definitions/systemPrompt';
+import { ISystemPromptModel } from '~/modules/AIassistant/db/definitions/systemPrompt';
+
+import { SystemPromptSchema } from '~/modules/AIassistant/db/models/SystemPrompt';
 
 export interface IModels {
   Brands: IBrandModel;
@@ -190,6 +201,9 @@ export interface IModels {
   Logs: ILogModel;
   Notifications: Model<INotificationDocument>;
   EmailDeliveries: Model<IEmailDeliveryDocument>;
+  RagInteractions: IRagInteractionModel;
+ GeneralSettings: IGeneralSettingsModel;
+ SystemPrompt: ISystemPromptModel;
 }
 
 export interface IContext extends IMainContext {
@@ -353,6 +367,23 @@ export const loadClasses = (
     IEmailDeliveryDocument,
     Model<IEmailDeliveryDocument>
   >('email_deliveries', emailDeliverySchema);
+
+   models.RagInteractions = db.model<IRagInteractionDocument, IRagInteractionModel>(
+   'rag_interactions',
+   loadRagInteractionClass(models)
+ );
+
+
+  models.GeneralSettings = db.model<IGeneralSettingsDocument, IGeneralSettingsModel>(
+ 'general_settings',
+ GeneralSettingsSchema
+);
+
+  models.SystemPrompt = db.model<ISystemPromptDocument, ISystemPromptModel>(
+ 'system_prompt',
+ SystemPromptSchema
+);
+ 
 
   const db_name = db.name;
 

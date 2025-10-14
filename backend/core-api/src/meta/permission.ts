@@ -546,4 +546,42 @@ export const moduleObjects = {
       },
     ],
   },
+
+  aiassistant: {
+  name: 'aiassistant',
+  description: 'AI Assistant',
+  actions: [
+    {
+      name: 'aiAssistantAll',
+      description: 'All',
+      use: [
+        'showAiAssistant',
+        'manageAiAssistant',
+        'ragUploadFile',
+        'ragAskQuestion',
+        'viewRagInteractions'
+      ],
+    },
+    {
+      name: 'showAiAssistant',
+      description: 'Show AI Assistant',
+    },
+    {
+      name: 'manageAiAssistant',
+      description: 'Manage AI Assistant',
+    },
+    {
+      name: 'ragUploadFile',
+      description: 'Upload files to RAG',
+    },
+    {
+      name: 'ragAskQuestion',
+      description: 'Ask questions to RAG',
+    },
+    {
+      name: 'viewRagInteractions',
+      description: 'View RAG interactions',
+    },
+  ],
+},
 };

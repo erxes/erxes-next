@@ -21,6 +21,7 @@ import { generateModels } from './connectionResolvers';
 import meta from './meta';
 import './meta/automations';
 import './segments';
+import AIassistant from './modules/AIassistant';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -68,6 +69,8 @@ const fileLimiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
 });
+
+AIassistant.initApp(app);
 
 app.get('/subscriptionPlugin.js', fileLimiter, async (_req, res) => {
   const apolloSubscriptionPath = path.join(

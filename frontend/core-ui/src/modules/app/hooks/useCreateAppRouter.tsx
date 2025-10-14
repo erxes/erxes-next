@@ -25,6 +25,7 @@ import { lazy } from 'react';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { Providers } from '~/providers';
 import { DocumentsRoutes } from '../components/DocumentsRoutes';
+import AIAssistant from '@/AIAssistant';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -92,6 +93,11 @@ export const useCreateAppRouter = () => {
               <Route
                 path={AppPath.MyInboxCatchAll}
                 element={<NotificationsRoutes />}
+              />
+
+              <Route
+                path={AppPath.AIAssistantCatchAll}
+                element={<AIAssistant/>}
               />
 
               {...getPluginsRoutes()}
