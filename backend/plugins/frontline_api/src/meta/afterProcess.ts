@@ -3,7 +3,6 @@ import { AfterProcessConfigs, IAfterProcessRule } from 'erxes-api-shared/utils';
 import { generateModels, IModels } from '~/connectionResolvers';
 import { inboxAfterProcessWorkers } from '~/modules/inbox/meta/afterProcess';
 import { debugError } from '~/modules/inbox/utils';
-import { IFacebookIntegrationDocument } from '~/modules/integrations/facebook/@types/integrations';
 import { facebookAfterProcessWorkers } from '~/modules/integrations/facebook/meta/afterProcess/afterProcessWorkers';
 
 type AfterProcessConfig = {

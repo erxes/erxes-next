@@ -2,8 +2,9 @@ import {
   IAutomationAction,
   IAutomationExecutionDocument,
   splitType,
+  TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendWorkerMessage } from 'erxes-api-shared/utils';
+import { sendAutomatonMessage } from 'erxes-api-shared/utils';
 
 export const executeSetPropertyAction = async (
   subdomain: string,
@@ -14,12 +15,10 @@ export const executeSetPropertyAction = async (
   const { module } = action.config;
   const [pluginName, moduleName, collectionType] = splitType(module);
 
-  return await sendWorkerMessage({
-    subdomain,
+  return await sendAutomatonMessage({
     pluginName,
-    queueName: 'automations',
-    jobName: 'receiveActions',
-    data: {
+    producerName: TAutomationProducers.RECEIVE_ACTIONS,
+    input: {
       moduleName,
       triggerType,
       actionType: 'set-property',

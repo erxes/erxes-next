@@ -27,8 +27,9 @@ type NodeOutputAwaitConnectionHandleProps = {
 };
 const selector = (
   { inProgress, fromHandle }: ConnectionState,
-  nodeId: string,
+  handleId: string,
 ) => {
+  const [nodeId] = handleId.split('__');
   return fromHandle?.nodeId === nodeId && inProgress;
 };
 
@@ -114,6 +115,7 @@ const AwaitToConnectButton = memo(
                 type="source"
                 ref={ref}
                 position={Position.Right}
+                {...props}
                 className={cn(
                   '!h-6 !w-0 !shadow-sm !bg-background flex justify-end items-center opacity-0',
                   '!shadow-button-outline !hover:bg-accent !rounded absolute inset-0 z-0',
@@ -173,8 +175,8 @@ export const NodeOutputHandler = memo(
           type="source"
           ref={ref}
           position={Position.Right}
-          className={cn('!size-4 -z-10', className)}
           {...props}
+          className={cn('!size-4 -z-10', className)}
         >
           <AwaitToConnectButton
             addButtonClassName={addButtonClassName}

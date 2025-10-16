@@ -1,13 +1,14 @@
 import { IModels } from '@/connectionResolver';
-import { isInSegment } from '@/utils/isInSegment';
 import { isDiffValue } from '@/utils';
+import { isInSegment } from '@/utils/isInSegment';
 import {
   AUTOMATION_EXECUTION_STATUS,
   IAutomationExecutionDocument,
   IAutomationTrigger,
   splitType,
+  TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendWorkerMessage } from 'erxes-api-shared/utils';
+import { sendAutomatonMessage } from 'erxes-api-shared/utils';
 
 const checkIsValidCustomTigger = async (
   type: string,
@@ -19,12 +20,10 @@ const checkIsValidCustomTigger = async (
 ) => {
   const [pluginName, moduleName, collectionType] = splitType(type);
 
-  return await sendWorkerMessage({
-    subdomain,
+  return await sendAutomatonMessage({
     pluginName,
-    queueName: 'automations',
-    jobName: 'checkCustomTrigger',
-    data: {
+    producerName: TAutomationProducers.CHECK_CUSTOM_TRIGGER,
+    input: {
       moduleName,
       collectionType,
       automationId,

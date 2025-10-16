@@ -92,12 +92,20 @@ export const AUTOMATION_ACTIONS = [
     icon: 'IconSitemap',
     label: 'Branches',
     description: 'Create simple or if/then branches',
+    folks: [
+      { key: 'yes', label: 'Yes', type: 'success' },
+      { key: 'no', label: 'No', type: 'error' },
+    ],
   },
   {
     type: AUTOMATION_CORE_ACTIONS.FIND_OBJECT,
     icon: 'IconSearch',
     label: 'Find object',
     description: 'Find object',
+    folks: [
+      { key: 'isExists', label: 'Has', type: 'success' },
+      { key: 'notExists', label: 'None', type: 'error' },
+    ],
   },
   {
     type: AUTOMATION_CORE_ACTIONS.SET_PROPERTY,

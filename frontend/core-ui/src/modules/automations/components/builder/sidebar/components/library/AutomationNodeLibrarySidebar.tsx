@@ -20,7 +20,7 @@ import {
   IAutomationsActionConfigConstants,
   IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
-import { useAutomationNodeLibrarySidebar } from '../../hooks/useAutomationNodeLibrarySidebar';
+import { useAutomationNodeLibrarySidebar } from '@/automations/components/builder/sidebar/hooks/useAutomationNodeLibrarySidebar';
 import { AUTOMATION_NODE_TYPES } from '@/automations/constants';
 
 export const AutomationNodeLibrarySidebar = () => {

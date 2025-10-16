@@ -137,6 +137,7 @@ export const generateFindObjectConnection = (
 ) => {
   const config = sourceNode.config || {};
   const [sourceHandleType] = sourceHandle.split('-');
+  console.log({ sourceHandleType, config });
   return {
     ...sourceNode,
     config: {

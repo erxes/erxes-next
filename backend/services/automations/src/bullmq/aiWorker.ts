@@ -100,17 +100,15 @@ export const executeAiAgent = async (job: Job) => {
     throw new Error('AI Agent Action not found');
   }
 
-  // const aiAgentAction = await AiAgentActionModel.findById(aiAgentActionId)
-  //   .populate('aiAgentId');
+  const actionConfig = (action.config || {}) as TAiAgentConfigForm;
 
   const aiAgent = await models.AiAgents.findOne({
-    _id: action.config.aiAgentId,
+    _id: actionConfig.aiAgentId,
   });
   if (!aiAgent) {
     throw new Error('Ai Agent not found');
   }
 
-  const aiAgentActionConfig = (action.config || {}) as TAiAgentConfigForm;
   const userInput = inputData || triggerData?.text || '';
 
   // Prepare data based on goal type
@@ -120,22 +118,23 @@ export const executeAiAgent = async (job: Job) => {
     agentConfig: aiAgent.config,
   };
 
-  switch (aiAgentActionConfig.goalType) {
-    case 'generateText':
-      jobData.textPrompt = aiAgentActionConfig.prompt;
-      break;
-    case 'classifyTopic':
-      jobData.topics = aiAgentActionConfig.topics;
-      break;
-    case 'generateObject':
-      jobData.objectFields = aiAgentActionConfig.objectFields;
-      break;
+  if (actionConfig.goalType === 'generateText') {
+    jobData.textPrompt = actionConfig.prompt;
+  }
+
+  if (actionConfig.goalType === 'classifyTopic') {
+    jobData.topics = actionConfig.topics;
+  }
+
+  if (actionConfig.goalType === 'generateObject') {
+    jobData.objectFields = actionConfig.objectFields;
   }
 
   return {
     executionId,
     actionId,
     aiAgentActionId,
+    jobData,
   };
 };
 

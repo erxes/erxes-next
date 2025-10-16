@@ -3,8 +3,9 @@ import {
   IAutomationAction,
   IAutomationExecutionDocument,
   splitType,
+  TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendWorkerMessage } from 'erxes-api-shared/utils';
+import { sendAutomatonMessage } from 'erxes-api-shared/utils';
 
 type TCreateActionResponse = Promise<{
   shouldBreak: boolean;
@@ -20,18 +21,17 @@ export const executeCreateAction = async (
     action.type,
   );
 
-  const actionResponse = await sendWorkerMessage({
-    subdomain,
+  const actionResponse = await sendAutomatonMessage({
     pluginName,
-    queueName: 'automations',
-    jobName: 'receiveActions',
-    data: {
+    producerName: TAutomationProducers.RECEIVE_ACTIONS,
+    input: {
       moduleName,
       actionType,
       action,
       execution,
       collectionType,
     },
+    defaultValue: null,
   });
 
   const waitCondition = actionResponse?.waitCondition;

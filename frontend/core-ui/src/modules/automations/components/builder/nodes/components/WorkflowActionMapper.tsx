@@ -1,11 +1,11 @@
 import PrimaryEdge from '@/automations/components/builder/edges/PrimaryEdge';
-import ActionNode from '@/automations/components/builder/nodes/ActionNode';
+import ActionNode from '@/automations/components/builder/nodes/components/ActionNode';
 import { useActionsWorkflowNode } from '@/automations/components/builder/nodes/hooks/useActionsWorkflowNode';
 import { useAutomationWorkflowActionMapper } from '@/automations/components/builder/nodes/hooks/useAutomationWorkflowActionMapper';
 import { useWorkflowMapperBeforeTitleContent } from '@/automations/components/builder/nodes/hooks/useWorkflowMapperBeforeTitleContent';
-import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
-import TriggerNode from '@/automations/components/builder/nodes/TriggerNode';
-import WorkflowNode from '@/automations/components/builder/nodes/WorkflowNode';
+import { PlaceHolderNode } from '@/automations/components/builder/nodes/components/PlaceHolderNode';
+import TriggerNode from '@/automations/components/builder/nodes/components/TriggerNode';
+import WorkflowNode from '@/automations/components/builder/nodes/components/WorkflowNode';
 import { NodeData } from '@/automations/types';
 import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';

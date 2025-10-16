@@ -22,7 +22,7 @@ export const useAutomationHeader = () => {
   const { actions, triggers } = useAutomationNodes();
   const isMobile = useIsMobile();
 
-  const { getNodes, setNodes } = useReactFlow();
+  const { getNodes, getNode, setNodes } = useReactFlow();
   const { id } = useParams();
 
   const { handleNodeErrors, clearNodeErrors } = useNodeErrorHandler({
@@ -50,7 +50,7 @@ export const useAutomationHeader = () => {
           label: t.label,
           description: t.description,
           actionId: t.actionId,
-          position: t.position,
+          position: getNode(t.id)?.position || t.position,
           isCustom: t.isCustom,
         })),
         actions: actions.map((a) => ({
@@ -61,7 +61,7 @@ export const useAutomationHeader = () => {
           icon: a.icon,
           label: a.label,
           description: a.description,
-          position: a.position,
+          position: getNode(a.id)?.position || a.position,
           workflowId: a.workflowId,
         })),
         workflows,

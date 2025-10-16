@@ -1,6 +1,9 @@
+import {
+  NodeErrorDisplay,
+  NodeErrorIndicator,
+} from '@/automations/components/builder/nodes/components/NodeErrorDisplay';
+import { NodeOutputHandler } from '@/automations/components/builder/nodes/components/NodeOutputHandler';
 import { useNodeContent } from '@/automations/components/builder/nodes/hooks/useTriggerNodeContent';
-import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
-import { ErrorState } from '@/automations/components/common/ErrorState';
 import { AutomationNodeType, NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Node, NodeProps } from '@xyflow/react';
@@ -8,10 +11,6 @@ import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
-import {
-  NodeErrorDisplay,
-  NodeErrorIndicator,
-} from './components/NodeErrorDisplay';
 
 // Configuration header component
 const ConfigurationHeader = () => (

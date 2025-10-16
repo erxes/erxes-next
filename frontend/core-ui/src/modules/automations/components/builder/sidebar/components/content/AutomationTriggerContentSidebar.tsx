@@ -95,7 +95,7 @@ const TriggerContentErrorFallback = React.memo(
 /**
  * Reusable wrapper component for trigger content with consistent layout
  */
-const TriggerContentWrapper = React.memo<TriggerContentWrapperProps>(
+export const TriggerContentWrapper = React.memo<TriggerContentWrapperProps>(
   ({ children, footer, className = '', 'aria-label': ariaLabel, ...props }) => {
     const wrapperClasses = useMemo(
       () => `flex flex-col h-full ${className}`.trim(),

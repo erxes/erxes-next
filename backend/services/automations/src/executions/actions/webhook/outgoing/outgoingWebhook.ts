@@ -4,8 +4,12 @@ import {
   OutgoingRetryOptions,
   TOutgoinWebhookActionConfig,
 } from '@/types';
-import { IAutomationAction, splitType } from 'erxes-api-shared/core-modules';
-import { sendWorkerMessage } from 'erxes-api-shared/utils/mq-worker';
+import {
+  IAutomationAction,
+  splitType,
+  TAutomationProducers,
+} from 'erxes-api-shared/core-modules';
+import { sendAutomatonMessage } from 'erxes-api-shared/utils';
 import * as https from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import jwt from 'jsonwebtoken';
@@ -19,17 +23,14 @@ async function replacePlaceholders<T extends Record<string, any>>(
   payload: T,
 ): Promise<ReplaceResult<T>> {
   const [pluginName] = splitType(triggerType);
-  const result = await sendWorkerMessage({
-    pluginName: pluginName,
-    queueName: 'automations',
-    jobName: 'replacePlaceHolders',
-    subdomain,
-    data: {
+  const result = await sendAutomatonMessage({
+    pluginName,
+    producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
+    input: {
       target: { ...target, type: triggerType },
       config: payload,
     },
     defaultValue: payload,
-    timeout: 5000,
   });
   return (result || payload) as ReplaceResult<T>;
 }

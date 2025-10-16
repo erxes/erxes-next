@@ -4,7 +4,7 @@ import {
   IAutomationExecution,
 } from './definitions';
 
-type IContext = {
+export type IAutomationContext = {
   subdomain: string;
   processId?: string;
 };
@@ -59,7 +59,7 @@ export type AutomationConstants = IAutomationTriggersActionsConfig & {
 
 export interface AutomationWorkers {
   receiveActions?: (
-    context: IContext,
+    context: IAutomationContext,
     args: {
       moduleName: string;
       collectionType: string;
@@ -79,10 +79,16 @@ export interface AutomationWorkers {
     };
   }>;
 
-  getRecipientsEmails?: (context: IContext, args: any) => Promise<any>;
-  replacePlaceHolders?: (context: IContext, args: any) => Promise<any>;
+  getRecipientsEmails?: (
+    context: IAutomationContext,
+    args: any,
+  ) => Promise<any>;
+  replacePlaceHolders?: (
+    context: IAutomationContext,
+    args: any,
+  ) => Promise<any>;
   checkCustomTrigger?: <TTarget = any, TConfig = any>(
-    context: IContext,
+    context: IAutomationContext,
     args: {
       moduleName: string;
       collectionType: string;
@@ -194,3 +200,16 @@ export type AutomationExecutionSetWaitCondition =
   | ({
       type: EXECUTE_WAIT_TYPES.WEBHOOK;
     } & TAutomationExecutionWebhook);
+
+export enum TAutomationProducers {
+  RECEIVE_ACTIONS = 'receiveActions',
+  GET_RECIPIENTS_EMAILS = 'getRecipientsEmails',
+  REPLACE_PLACEHOLDERS = 'replacePlaceHolders',
+  CHECK_CUSTOM_TRIGGER = 'checkCustomTrigger',
+}
+
+export type TAutomationProducerNames =
+  | TAutomationProducers.RECEIVE_ACTIONS
+  | TAutomationProducers.GET_RECIPIENTS_EMAILS
+  | TAutomationProducers.REPLACE_PLACEHOLDERS
+  | TAutomationProducers.CHECK_CUSTOM_TRIGGER;

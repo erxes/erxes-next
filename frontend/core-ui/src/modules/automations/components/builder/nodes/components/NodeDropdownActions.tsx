@@ -2,7 +2,7 @@ import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Dispatch, SetStateAction } from 'react';
 import { AutomationNodesType, NodeData } from '@/automations/types';
-import { NodeEditMetaDataForm } from '@/automations/components/builder/nodes/NodeEditMetaDataForm';
+import { NodeEditMetaDataForm } from '@/automations/components/builder/nodes/components/NodeEditMetaDataForm';
 import { useNodeDropDownActions } from '@/automations/components/builder/nodes/hooks/useNodeDropDownActions';
 
 export const NodeDropdownActions = ({

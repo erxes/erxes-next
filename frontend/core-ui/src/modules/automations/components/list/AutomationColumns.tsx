@@ -14,10 +14,10 @@ import {
 } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { TAutomationAction, TAutomationTrigger, SelectTags } from 'ui-modules';
-import { IAutomation } from '../../types';
+import { IAutomation } from '@/automations/types';
 import { IUser } from '@/settings/team-member/types';
 import { useMutation } from '@apollo/client';
-import { AUTOMATION_EDIT } from '../../graphql/automationMutations';
+import { AUTOMATION_EDIT } from '@/automations/graphql/automationMutations';
 
 const generateUserName = (user: IUser) => {
   if (user?.details?.firstName || user?.details?.lastName) {

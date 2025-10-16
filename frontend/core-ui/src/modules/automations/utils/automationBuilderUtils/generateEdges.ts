@@ -7,6 +7,7 @@ import {
   TAutomationWorkflowNode,
   TAutomationOptionalConnect,
 } from 'ui-modules';
+import type { IAutomationsActionFolkConfig } from 'ui-modules';
 
 const COMMON_EDGE_STYLES = { strokeWidth: 2 };
 const COMMON_EDGE_VARIABLES = {
@@ -53,6 +54,51 @@ export const buildIfEdges = (
       : [],
   );
 };
+export const buildFindObjectEdges = (
+  nodeType: AutomationNodeType,
+  edge: TAutomationAction,
+  config: Record<string, any>,
+): Edge[] => {
+  return (['isExists', 'notExists'] as const).flatMap((key) =>
+    config[key]
+      ? [
+          {
+            ...COMMON_EDGE_VARIABLES,
+            id: `${nodeType}-${edge.id}-${key}`,
+            source: edge.id,
+            sourceHandle: `${key}-right`,
+            target: config[key],
+            style: COMMON_EDGE_STYLES,
+            type: 'primary',
+            data: { type: nodeType },
+          },
+        ]
+      : [],
+  );
+};
+
+const buildFolksEdges = (
+  nodeType: AutomationNodeType,
+  edge: TAutomationAction,
+  config: Record<string, any>,
+  folks: IAutomationsActionFolkConfig[] = [],
+): Edge[] =>
+  folks.flatMap(({ key }) =>
+    config?.[key]
+      ? [
+          {
+            ...COMMON_EDGE_VARIABLES,
+            id: `${nodeType}-${edge.id}-${key}`,
+            source: edge.id,
+            sourceHandle: `${key}-right`,
+            target: config[key],
+            style: COMMON_EDGE_STYLES,
+            type: 'primary',
+            data: { type: nodeType },
+          },
+        ]
+      : [],
+  );
 
 const buildWorkflowEdges = (
   nodeType: AutomationNodeType,
@@ -115,17 +161,22 @@ export const generateEdge = (
   edge: any,
   targetField: string,
   workflowMap: Map<string, TAutomationWorkflowNode>,
+  folksMap?: Map<string, IAutomationsActionFolkConfig[]>,
 ) => {
   const generatedEdges = [];
   const target = (edge as any)[targetField];
   const { optionalConnects = [], ...config } = edge?.config || {};
 
   if (type === AutomationNodeType.Action) {
-    if (edge.type === 'if') {
+    if (folksMap && folksMap.has(edge.type)) {
       generatedEdges.push(
-        ...buildIfEdges(type, edge as TAutomationAction, config),
+        ...buildFolksEdges(
+          type,
+          edge as TAutomationAction,
+          config,
+          folksMap.get(edge.type) || [],
+        ),
       );
-      return generatedEdges;
     }
 
     if (optionalConnects.length > 0) {
@@ -154,6 +205,7 @@ export const generateEdges = (
   triggers: TAutomationTrigger[],
   actions: TAutomationAction[],
   workFlows: TAutomationWorkflowNode[] = [],
+  actionFolks: Record<string, IAutomationsActionFolkConfig[]> = {},
 ): Edge[] => {
   const generatedEdges: Edge[] = [];
 
@@ -162,6 +214,9 @@ export const generateEdges = (
   // Pre-index workflows for O(1) lookup
   const workflowMap = new Map<string, TAutomationWorkflowNode>(
     workFlows.map((wf) => [wf.id, wf]),
+  );
+  const folksMap = new Map<string, IAutomationsActionFolkConfig[]>(
+    Object.entries(actionFolks),
   );
 
   // --- Main Loop ---
@@ -173,10 +228,12 @@ export const generateEdges = (
 
     for (const edge of edges) {
       generatedEdges.push(
-        ...generateEdge(type, edge, targetField, workflowMap),
+        ...generateEdge(type, edge, targetField, workflowMap, folksMap),
       );
     }
   }
+
+  console.log({ generatedEdges });
 
   return generatedEdges;
 };

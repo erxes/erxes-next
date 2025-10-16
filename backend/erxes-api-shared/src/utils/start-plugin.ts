@@ -290,7 +290,7 @@ export async function startPlugin(
     } = configs.meta || {};
 
     if (automations) {
-      await startAutomations(configs.name, automations);
+      await startAutomations(app, configs.name, automations);
     }
 
     if (segments) {

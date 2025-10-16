@@ -4,7 +4,7 @@ import { RenderPluginsComponentWrapper } from '@/automations/components/common/R
 import { Button, Card, Spinner } from 'erxes-ui';
 import { Suspense, useRef } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useAutomationActionContentSidebar } from '../../hooks/useAutomationActionContentSidebar';
+import { useAutomationActionContentSidebar } from '@/automations/components/builder/sidebar/hooks/useAutomationActionContentSidebar';
 
 export const AutomationActionContentSidebar = () => {
   const formRef = useRef<{ submit: () => void }>(null);

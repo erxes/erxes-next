@@ -6,12 +6,21 @@ import {
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { getPlugin, isEnabled } from '../service-discovery';
 import { getSubdomain } from '../utils';
+import { TAutomationProducerNames } from '@/core-modules';
 
 export type MessageProps = {
   method?: 'query' | 'mutation';
   pluginName: string;
   module: string;
   action: string;
+  input: any;
+  defaultValue?: any;
+  options?: TRPCRequestOptions;
+};
+export type AutomationMessageProps = {
+  method?: 'query' | 'mutation';
+  pluginName: string;
+  producerName: TAutomationProducerNames;
   input: any;
   defaultValue?: any;
   options?: TRPCRequestOptions;
@@ -63,6 +72,29 @@ export const sendTRPCMessage = async ({
   });
 
   const result = await client[method](`${module}.${action}`, input, options);
+
+  return result || defaultValue;
+};
+
+export const sendAutomatonMessage = async ({
+  pluginName,
+  method = 'query',
+  producerName,
+  input,
+  defaultValue,
+  options,
+}: AutomationMessageProps) => {
+  if (pluginName && !(await isEnabled(pluginName))) {
+    return defaultValue;
+  }
+
+  const pluginInfo = await getPlugin(pluginName);
+
+  const client = createTRPCUntypedClient({
+    links: [httpBatchLink({ url: `${pluginInfo.address}/automations` })],
+  });
+
+  const result = await client[method](`${producerName}`, input, options);
 
   return result || defaultValue;
 };

@@ -187,6 +187,12 @@ export type IAutomationsTriggerConfigConstants = {
   }[];
 };
 
+export type IAutomationsActionFolkConfig = {
+  key: string;
+  label: string;
+  type: 'default' | 'success' | 'error';
+};
+
 export type IAutomationsActionConfigConstants = {
   type: string;
   icon: string;
@@ -196,6 +202,7 @@ export type IAutomationsActionConfigConstants = {
   emailRecipientsConst?: any;
   connectableActionTypes?: string[];
   canBeTarget: boolean;
+  folks?: IAutomationsActionFolkConfig[];
 };
 
 export type IAutomationNodeConfigConstants =

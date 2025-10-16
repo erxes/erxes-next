@@ -32,18 +32,28 @@ export const useReactFlowEditor = () => {
     reactFlowInstance,
     setReactFlowInstance,
     setQueryParams,
+    actionsConst,
   } = useAutomation();
   const { triggers, actions, workflows, getList } = useAutomationNodes();
   const { getNodes, addNodes, setNodes } = useReactFlow<Node<NodeData>>();
-
-  const [nodes, _setNodes, onNodesChange] = useNodesState<Node<NodeData>>(
-    generateNodes(triggers, actions, workflows),
+  const actionFolks = Object.fromEntries(
+    (actionsConst || []).map((a: any) => [a.type, a.folks || []]),
   );
-  const [edges, _setEdges, onEdgesChange] = useEdgesState<any>(
-    generateEdges(triggers, actions, workflows),
+  const generatedEdges = generateEdges(
+    triggers,
+    actions,
+    workflows,
+    actionFolks,
   );
+  const generatedNodes = generateNodes(triggers, actions, workflows);
 
-  const { onNodeDoubleClick, onNodeDragStop } = useNodeEvents();
+  const [nodes, _setNodes, onNodesChange] =
+    useNodesState<Node<NodeData>>(generatedNodes);
+
+  const [edges, _setEdges, onEdgesChange] = useEdgesState<any>(generatedEdges);
+  console.log({ edges });
+
+  const { onNodeDoubleClick } = useNodeEvents();
   const { isValidConnection, onConnect, onAwaitingNodeConnection } =
     useNodeConnect();
 
@@ -96,7 +106,6 @@ export const useReactFlowEditor = () => {
     editorWrapper,
     onNodeDoubleClick,
     isValidConnection,
-    onNodeDragStop,
     onDragOver,
     onNodesChange,
     onEdgesChange,

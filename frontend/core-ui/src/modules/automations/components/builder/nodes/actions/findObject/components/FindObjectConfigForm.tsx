@@ -12,6 +12,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { PlaceHolderInput, TAutomationActionProps } from 'ui-modules';
 
 export const FindObjectConfigForm = ({
+  currentAction,
   handleSave,
 }: TAutomationActionProps<TAutomationFindObjectConfig>) => {
   const { handleValidationErrors } = useFormValidationErrorHandler({
@@ -21,9 +22,9 @@ export const FindObjectConfigForm = ({
   const form = useForm<TAutomationFindObjectConfig>({
     resolver: zodResolver(findObjectConfigFormSchema),
     defaultValues: {
-      propertyType: '',
-      propertyField: '',
-      propertyValue: '',
+      propertyType: currentAction?.config?.propertyType || '',
+      propertyField: currentAction?.config?.propertyField || '',
+      propertyValue: currentAction?.config?.propertyValue || '',
     },
   });
   const [propertyType, propertyField] = useWatch({

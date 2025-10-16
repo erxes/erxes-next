@@ -1,5 +1,6 @@
-import { sendTRPCMessage, sendWorkerMessage } from 'erxes-api-shared/utils';
+import { sendAutomatonMessage, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { extractValidEmails } from './utils';
+import { TAutomationProducers } from 'erxes-api-shared/core-modules';
 
 export class EmailResolver {
   private subdomain: string;
@@ -59,12 +60,10 @@ export class EmailResolver {
       return this.resolveTeamMemberEmails({ _id: { $in: contentTypeIds } });
     }
 
-    return await sendWorkerMessage({
+    return await sendAutomatonMessage({
       pluginName,
-      queueName: 'automations',
-      jobName: 'replacePlaceHolders',
-      subdomain: this.subdomain,
-      data: {
+      producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
+      input: {
         type: contentType!,
         config: {
           [`${contentType}Ids`]: contentTypeIds,
@@ -111,12 +110,10 @@ export class EmailResolver {
       }
     }
 
-    const replacedContent = await sendWorkerMessage({
+    const replacedContent = await sendAutomatonMessage({
       pluginName,
-      queueName: 'automations',
-      jobName: 'replacePlaceHolders',
-      subdomain: this.subdomain,
-      data: {
+      producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
+      input: {
         target: { ...(this.target || {}), type: contentType },
         config: { [key]: value },
         relatedValueProps,

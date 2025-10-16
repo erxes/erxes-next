@@ -19,7 +19,6 @@ export const AutomationBuilderCanvas = () => {
     onDrop,
     isValidConnection,
     onNodeDoubleClick,
-    onNodeDragStop,
     onDragOver,
     setReactFlowInstance,
   } = useReactFlowEditor();
@@ -43,7 +42,6 @@ export const AutomationBuilderCanvas = () => {
         fitView
         fitViewOptions={CANVAS_FIT_VIEW_OPTIONS}
         connectionLineComponent={ConnectionLine}
-        onNodeDragStop={onNodeDragStop}
         colorMode={theme}
         minZoom={0.5}
       >

@@ -1,7 +1,7 @@
 import { useNodeDropDownActions } from '@/automations/components/builder/nodes/hooks/useNodeDropDownActions';
-import { NodeRemoveActionDialog } from '@/automations/components/builder/nodes/NodeDropdownActions';
-import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
-import { WorkflowActionMapper } from '@/automations/components/builder/nodes/WorkflowActionMapper';
+import { NodeRemoveActionDialog } from '@/automations/components/builder/nodes/components/NodeDropdownActions';
+import { NodeOutputHandler } from '@/automations/components/builder/nodes/components/NodeOutputHandler';
+import { WorkflowActionMapper } from '@/automations/components/builder/nodes/components/WorkflowActionMapper';
 import {
   AutomationNodeType,
   NodeData,

@@ -106,6 +106,17 @@ export const checkIsValidConnect = ({
     if (trigger && source.data.type !== trigger?.data.type) {
       return false;
     }
+
+    // check if the trigger is already connected to another triggers
+
+    const node = nodes.find(
+      ({ data }) =>
+        data.nodeType === AutomationNodeType.Trigger &&
+        data.actionId === targetId,
+    ) as Node<NodeData>;
+    if (node) {
+      return false;
+    }
   }
 
   const allNodes = [...triggersConst, ...actionsConst];

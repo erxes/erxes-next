@@ -45,18 +45,45 @@ const SendEmailConfigurationForm = ({
           )}
         />
         {config.type === 'custom' && (
-          <Form.Field
-            name={`actions.${currentActionIndex}.config.fromUserId`}
-            control={control}
-            render={({ field }) => (
-              <Form.Item className="py-4">
-                <SelectMember.FormItem
-                  value={field.value}
-                  onValueChange={field.onChange}
-                />
-              </Form.Item>
-            )}
-          />
+          <Tabs>
+            <Tabs.List defaultValue="default">
+              <Tabs.Trigger value="default" className="w-1/2">
+                Placeholder input
+              </Tabs.Trigger>
+              <Tabs.Trigger value="custom" className="w-1/2">
+                Select team member
+              </Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="default">
+              <Form.Field
+                name={`actions.${currentActionIndex}.config.fromEmailPlaceHolder`}
+                control={control}
+                render={({ field }) => (
+                  <Form.Item className="py-4">
+                    <PlaceHolderInput
+                      onlySet
+                      propertyType={contentType || ''}
+                      {...field}
+                    />
+                  </Form.Item>
+                )}
+              />
+            </Tabs.Content>
+            <Tabs.Content value="custom">
+              <Form.Field
+                name={`actions.${currentActionIndex}.config.fromUserId`}
+                control={control}
+                render={({ field }) => (
+                  <Form.Item className="py-4">
+                    <SelectMember.FormItem
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    />
+                  </Form.Item>
+                )}
+              />
+            </Tabs.Content>
+          </Tabs>
         )}
       </SendEmailConfigFormRow>
 

@@ -1,15 +1,17 @@
+import { FolksActionSourceHandler } from '@/automations/components/builder/nodes/components/FolksActionSourceHandler';
+import {
+  NodeErrorDisplay,
+  NodeErrorIndicator,
+} from '@/automations/components/builder/nodes/components/NodeErrorDisplay';
+import { NodeOutputHandler } from '@/automations/components/builder/nodes/components/NodeOutputHandler';
+import { useActionNodeSourceHandler } from '@/automations/components/builder/nodes/hooks/useActionNodeSourceHandler';
 import { useNodeContent } from '@/automations/components/builder/nodes/hooks/useTriggerNodeContent';
-import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
+import { AutomationNodeType, NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Handle, Node, NodeProps, Position } from '@xyflow/react';
 import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
-import { AutomationNodeType, NodeData } from '../../../types';
 import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
-import {
-  NodeErrorDisplay,
-  NodeErrorIndicator,
-} from './components/NodeErrorDisplay';
 import { NodeDropdownActions } from './NodeDropdownActions';
 
 const ActionNodeContent = ({ data }: { data: NodeData }) => {
@@ -130,11 +132,12 @@ const ActionNodeSourceHandler = ({
   config?: any;
   workflowId?: string;
 }) => {
-  if (type === 'if') {
-    return <IfActionSourceHandler id={id} config={config} />;
-  }
-  if (type === 'findObject') {
-    return <FindObjectActionSourceHandler id={id} config={config} />;
+  const { hasFolks, folks } = useActionNodeSourceHandler(type);
+
+  if (hasFolks) {
+    return (
+      <FolksActionSourceHandler nodeId={id} config={config} folks={folks} />
+    );
   }
 
   return (
@@ -148,12 +151,64 @@ const ActionNodeSourceHandler = ({
   );
 };
 
-const ActionNode = ({
+const ActionNodeHeader = ({
   data,
-  selected,
+  beforeTitleContent,
+  error,
   id,
-  ...sd
-}: NodeProps<Node<NodeData>>) => {
+}: {
+  data: NodeData;
+  beforeTitleContent?: (
+    id: string,
+    nodeType: AutomationNodeType,
+  ) => React.ReactNode;
+  error?: string;
+  id: string;
+}) => {
+  return (
+    <>
+      <div className="p-3 flex items-center justify-between border-b border-muted">
+        <div className="flex items-center gap-2 text-success/90">
+          {beforeTitleContent &&
+            beforeTitleContent(id, AutomationNodeType.Action)}
+
+          <div
+            className={`size-6 rounded-full bg-success/10  flex items-center justify-center`}
+          >
+            <IconComponent className="size-4" name={data.icon} />
+          </div>
+          <div className="flex-1">
+            <span className="font-medium">{data.label}</span>
+          </div>
+          {error && <NodeErrorIndicator error={error} />}
+        </div>
+
+        <div className="flex items-center gap-1">
+          <NodeDropdownActions id={id} data={data} />
+        </div>
+      </div>
+      <div className="p-3 border-b border-muted ">
+        <span className="text-xs text-accent-foreground font-medium">
+          {data.description}
+        </span>
+
+        {error && (
+          <div className="mt-2">
+            <NodeErrorDisplay
+              error={error}
+              nodeId={id}
+              onClearError={(nodeId) => {
+                // Clear error logic can be added here
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+const ActionNode = ({ data, selected, id }: NodeProps<Node<NodeData>>) => {
   const { beforeTitleContent, config, nextActionId, workflowId, error } = data;
 
   return (
@@ -170,44 +225,13 @@ const ActionNode = ({
           },
         )}
       >
-        <div className="p-3 flex items-center justify-between border-b border-muted">
-          <div className="flex items-center gap-2 text-success/90">
-            {beforeTitleContent &&
-              beforeTitleContent(id, AutomationNodeType.Action)}
+        <ActionNodeHeader
+          data={data}
+          beforeTitleContent={beforeTitleContent}
+          error={error}
+          id={id}
+        />
 
-            <div
-              className={`size-6 rounded-full bg-success/10  flex items-center justify-center`}
-            >
-              <IconComponent className="size-4" name={data.icon} />
-            </div>
-            <div className="flex-1">
-              <span className="font-medium">{data.label}</span>
-            </div>
-            {error && <NodeErrorIndicator error={error} />}
-          </div>
-
-          <div className="flex items-center gap-1">
-            <NodeDropdownActions id={id} data={data} />
-          </div>
-        </div>
-
-        <div className="p-3 border-b border-muted ">
-          <span className="text-xs text-accent-foreground font-medium">
-            {data.description}
-          </span>
-
-          {error && (
-            <div className="mt-2">
-              <NodeErrorDisplay
-                error={error}
-                nodeId={id}
-                onClearError={(nodeId) => {
-                  // Clear error logic can be added here
-                }}
-              />
-            </div>
-          )}
-        </div>
         <ActionNodeContent data={{ ...data, id }} />
 
         <Handle

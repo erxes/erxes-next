@@ -1,7 +1,7 @@
-import { splitType } from 'erxes-api-shared/core-modules';
+import { splitType, TAutomationProducers } from 'erxes-api-shared/core-modules';
+import { sendAutomatonMessage } from 'erxes-api-shared/utils';
 import { EmailResolver } from './generateReciepentEmailsByType';
 import { getEmailRecipientTypes } from './utils';
-import { sendWorkerMessage } from 'erxes-api-shared/utils';
 
 type EmailsGeneratorType = EmailResolver;
 
@@ -99,12 +99,10 @@ const collectEmails = async (
       }
 
       if (!!reciepentTypePluginName) {
-        const emails = await sendWorkerMessage({
-          subdomain,
+        const emails = await sendAutomatonMessage({
           pluginName,
-          queueName: 'automations',
-          jobName: 'getRecipientsEmails',
-          data: {
+          producerName: TAutomationProducers.GET_RECIPIENTS_EMAILS,
+          input: {
             type,
             config,
           },

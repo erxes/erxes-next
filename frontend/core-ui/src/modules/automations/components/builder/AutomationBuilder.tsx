@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Tabs, useMultiQueryState } from 'erxes-ui';
-import { AutomationBuilderDnDProvider } from '../../context/AutomationBuilderDnDProvider';
+import { AutomationBuilderDnDProvider } from '@/automations/context/AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './header/AutomationBuilderHeader';
 
 import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
@@ -22,7 +22,7 @@ import {
   TAutomationBuilderForm,
 } from '@/automations/utils/automationFormDefinitions';
 import { useAtom } from 'jotai';
-import { AutomationBuilderTabsType, IAutomation } from '../../types';
+import { AutomationBuilderTabsType, IAutomation } from '@/automations/types';
 import { AutomationHistories } from './history/components/AutomationHistories';
 
 type AutomationBuilderProps = {

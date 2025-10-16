@@ -18,7 +18,7 @@ export const DelayConfigForm = ({
   return (
     <FormProvider {...form}>
       <AutomationCoreConfigFormWrapper onSave={handleSubmit(handleSave)}>
-        <Card.Content className="flex space-x-4  pt-6">
+        <Card.Content className="flex space-x-4">
           <Form.Field
             name="value"
             control={control}

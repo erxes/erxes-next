@@ -11,6 +11,7 @@ import {
 import { executeEmailAction } from '@/executions/actions/emailAction/executeEmailAction';
 import { executeOutgoingWebhook } from '@/executions/actions/webhook/outgoing/outgoingWebhook';
 import { executeWaitEvent } from '@/executions/actions/executeWaitEvent';
+import { executeFindObjectAction } from '@/executions/executeFindObjectAction';
 
 type TCoreActionResponse = Promise<{
   shouldBreak: boolean;
@@ -49,6 +50,17 @@ export const executeCoreActions = async (
 
   if (actionType === AUTOMATION_CORE_ACTIONS.WAIT_EVENT) {
     executeWaitEvent(subdomain, execution, action);
+    return { actionResponse, shouldBreak: true };
+  }
+
+  if (actionType === AUTOMATION_CORE_ACTIONS.FIND_OBJECT) {
+    await executeFindObjectAction(
+      subdomain,
+      execution,
+      action,
+      execAction,
+      actionsMap,
+    );
     return { actionResponse, shouldBreak: true };
   }
 

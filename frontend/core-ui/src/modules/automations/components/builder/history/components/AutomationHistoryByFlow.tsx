@@ -4,11 +4,11 @@ import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 
 import { Background, ConnectionMode, Controls, ReactFlow } from '@xyflow/react';
 import { IAutomationHistory } from 'ui-modules';
-import PrimaryEdge from '../../edges/PrimaryEdge';
-import ActionNode from '../../nodes/ActionNode';
-import TriggerNode from '../../nodes/TriggerNode';
 import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
 import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
+import TriggerNode from '@/automations/components/builder/nodes/components/TriggerNode';
+import ActionNode from '@/automations/components/builder/nodes/components/ActionNode';
+import PrimaryEdge from '@/automations/components/builder/edges/PrimaryEdge';
 
 const nodeTypes = {
   trigger: TriggerNode,

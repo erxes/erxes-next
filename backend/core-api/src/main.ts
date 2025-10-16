@@ -15,7 +15,7 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
-import './meta/automations';
+import { initAutomation } from './meta/automations';
 import { generateModels } from './connectionResolvers';
 import { documents } from './meta/documents';
 import { moduleObjects } from './meta/permission';
@@ -108,6 +108,7 @@ const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
+  await initAutomation(app);
 
   await joinErxesGateway({
     name: 'core',
