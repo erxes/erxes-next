@@ -4,6 +4,7 @@ import {
   IconSearch,
   IconUser,
   IconUsers,
+  IconUserPlus,
 } from '@tabler/icons-react';
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 import { TaskHotKeyScope } from '@/task/TaskHotkeyScope';
@@ -13,6 +14,7 @@ import { SelectPriority } from '@/operation/components/SelectPriority';
 import { SelectStatusTask } from '@/task/components/task-selects/SelectStatusTask';
 import { useParams } from 'react-router-dom';
 import { SelectAssigneeTask } from '@/task/components/task-selects/SelectAssigneeTask';
+import { SelectCreatorTask } from '@/task/components/task-selects/SelectCreatorTask';
 import clsx from 'clsx';
 import { SelectTeam } from '@/team/components/SelectTeam';
 import { SelectStatus } from '@/operation/components/SelectStatus';
@@ -22,10 +24,11 @@ const TasksFilterPopover = () => {
   const [queries] = useMultiQueryState<{
     searchValue: string;
     assignee: string;
+    createdBy: string;
     team: string;
     priority: string;
     status: string;
-  }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
+  }>(['searchValue', 'assignee', 'createdBy', 'team', 'priority', 'status']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,
@@ -53,6 +56,10 @@ const TasksFilterPopover = () => {
                   <IconUser />
                   Assignee
                 </Filter.Item>
+                <Filter.Item value="createdBy">
+                  <IconUserPlus />
+                  Creator
+                </Filter.Item>
                 {!teamId && (
                   <Filter.Item value="team">
                     <IconUsers />
@@ -71,6 +78,7 @@ const TasksFilterPopover = () => {
             </Command>
           </Filter.View>
           <SelectAssigneeTask.FilterView teamIds={[teamId || '']} />
+          <SelectCreatorTask.FilterView />
           {!teamId && <SelectTeam.FilterView />}
           <SelectPriority.FilterView />
           {teamId ? (
@@ -94,10 +102,11 @@ export const TasksFilter = () => {
   const [queries] = useMultiQueryState<{
     searchValue: string;
     assignee: string;
+    createdBy: string;
     team: string;
     priority: string;
     status: string;
-  }>(['searchValue', 'assignee', 'team', 'priority', 'status']);
+  }>(['searchValue', 'assignee', 'createdBy', 'team', 'priority', 'status']);
   const { searchValue } = queries || {};
 
   return (
@@ -150,6 +159,13 @@ export const TasksFilter = () => {
             Assignee
           </Filter.BarName>
           <SelectAssigneeTask.FilterBar />
+        </Filter.BarItem>
+        <Filter.BarItem queryKey="createdBy">
+          <Filter.BarName>
+            <IconUserPlus />
+            Creator
+          </Filter.BarName>
+          <SelectCreatorTask.FilterBar />
         </Filter.BarItem>
         <TasksFilterPopover />
         <TasksTotalCount />
