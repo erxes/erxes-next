@@ -207,7 +207,7 @@ export interface ConnectionInfo {
   targetId: string;
   sourceType?: AutomationNodeType;
   targetType?: AutomationNodeType;
-  connectType?: 'optional' | 'workflow';
+  connectType?: 'optional' | 'workflow' | 'folks';
   optionalConnectId?: string;
   automationId?: string;
   actionId?: string;

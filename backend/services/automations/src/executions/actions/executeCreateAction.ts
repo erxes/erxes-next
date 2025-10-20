@@ -5,7 +5,7 @@ import {
   splitType,
   TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendAutomatonMessage } from 'erxes-api-shared/utils';
+import { sendCoreModuleProducer } from 'erxes-api-shared/utils';
 
 type TCreateActionResponse = Promise<{
   shouldBreak: boolean;
@@ -21,7 +21,8 @@ export const executeCreateAction = async (
     action.type,
   );
 
-  const actionResponse = await sendAutomatonMessage({
+  const actionResponse = await sendCoreModuleProducer({
+    moduleName: 'automations',
     pluginName,
     producerName: TAutomationProducers.RECEIVE_ACTIONS,
     input: {

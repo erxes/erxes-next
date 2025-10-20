@@ -1,3 +1,5 @@
+import { AutomationHistoryByFlow } from '@/automations/components/builder/history/components/AutomationHistoryByFlow';
+import { AutomationHistoryByTable } from '@/automations/components/builder/history/components/AutomationHistoryByTable';
 import {
   IconAutomaticGearbox,
   IconEye,
@@ -6,8 +8,6 @@ import {
 import { RecordTable, RecordTableInlineCell, Sheet, Tabs } from 'erxes-ui';
 import { useState } from 'react';
 import { IAutomationHistory } from 'ui-modules';
-import { AutomationHistoryByFlow } from './AutomationHistoryByFlow';
-import { AutomationHistoryByTable } from './AutomationHistoryByTable';
 
 export const AutomationHistoryDetail = ({
   history,

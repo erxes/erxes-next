@@ -2,7 +2,6 @@ import {
   delayConfigFormSchema,
   TDelayConfigForm,
 } from '@/automations/components/builder/nodes/actions/delay/states/delayConfigForm';
-import { TAutomationDelayIntervalType } from '@/automations/components/builder/nodes/actions/delay/types/automationDelay';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangeEvent } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -24,7 +23,7 @@ export const useDelay = (config: TDelayConfigForm) => {
     onChange: (...event: any[]) => void,
   ) => {
     let { value } = e.currentTarget;
-    let intervalType: TAutomationDelayIntervalType;
+    let intervalType: TDelayConfigForm['type'];
 
     const numericValue = Number(value);
     const set = (newValue: string, newType: typeof intervalType) => {

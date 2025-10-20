@@ -7,12 +7,16 @@ import {
 const DelayComponents: AutomationComponentMap<AutomationNodeType.Action> = {
   delay: {
     sidebar: lazy(() =>
-      import('./DelayConfigForm').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/delay/components/DelayConfigForm'
+      ).then((module) => ({
         default: module.DelayConfigForm,
       })),
     ),
     nodeContent: lazy(() =>
-      import('./DelayNodeContent').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/delay/components/DelayNodeContent'
+      ).then((module) => ({
         default: module.DelayNodeContent,
       })),
     ),

@@ -1,3 +1,6 @@
+import { AutomationActionContentSidebar } from '@/automations/components/builder/sidebar/components/content/AutomationActionContentSidebar';
+import { AutomationTriggerContentSidebar } from '@/automations/components/builder/sidebar/components/content/trigger/components/AutomationTriggerContentSidebar';
+import { AutomationNodeLibrarySidebar } from '@/automations/components/builder/sidebar/components/library/AutomationNodeLibrarySidebar';
 import { useAutomationBuilderSidebarHooks } from '@/automations/components/builder/sidebar/hooks/useAutomationBuilderSidebarHooks';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import {
@@ -18,9 +21,6 @@ import {
 } from 'erxes-ui';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
-import { AutomationActionContentSidebar } from './content/AutomationActionContentSidebar';
-import { AutomationTriggerContentSidebar } from './content/AutomationTriggerContentSidebar';
-import { AutomationNodeLibrarySidebar } from './library/AutomationNodeLibrarySidebar';
 
 export const AutomationBuilderSidebar = () => {
   const { awaitingToConnectNodeId } = useAutomation();

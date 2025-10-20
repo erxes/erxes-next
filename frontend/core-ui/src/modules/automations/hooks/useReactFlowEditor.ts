@@ -1,12 +1,13 @@
 import { AUTOMATION_NODE_TYPE_LIST_PROERTY } from '@/automations/constants';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { useNodeConnect } from '@/automations/hooks/useNodeConnect';
 import { useNodeEvents } from '@/automations/hooks/useNodeEvents';
+import { useReactFlowEdges } from '@/automations/hooks/useReactFlowEdges';
+import { NodeData } from '@/automations/types';
 import { automationDropHandler } from '@/automations/utils/automationBuilderUtils/dropNodeHandler';
-import { generateEdges } from '@/automations/utils/automationBuilderUtils/generateEdges';
 import { generateNodes } from '@/automations/utils/automationBuilderUtils/generateNodes';
-import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import {
   Node,
   useEdgesState,
@@ -16,14 +17,12 @@ import {
 import '@xyflow/react/dist/style.css';
 import { themeState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
-import React, { useCallback, useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { NodeData } from '../types';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 export const useReactFlowEditor = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const editorWrapper = useRef<HTMLDivElement>(null);
-  const { setValue } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
 
   const theme = useAtomValue(themeState);
   const {
@@ -32,26 +31,13 @@ export const useReactFlowEditor = () => {
     reactFlowInstance,
     setReactFlowInstance,
     setQueryParams,
-    actionsConst,
+    actionFolks,
   } = useAutomation();
   const { triggers, actions, workflows, getList } = useAutomationNodes();
-  const { getNodes, addNodes, setNodes } = useReactFlow<Node<NodeData>>();
-  const actionFolks = Object.fromEntries(
-    (actionsConst || []).map((a: any) => [a.type, a.folks || []]),
-  );
-  const generatedEdges = generateEdges(
-    triggers,
-    actions,
-    workflows,
-    actionFolks,
-  );
-  const generatedNodes = generateNodes(triggers, actions, workflows);
+  const { getNodes, addNodes } = useReactFlow<Node<NodeData>>();
 
-  const [nodes, _setNodes, onNodesChange] =
-    useNodesState<Node<NodeData>>(generatedNodes);
-
-  const [edges, _setEdges, onEdgesChange] = useEdgesState<any>(generatedEdges);
-  console.log({ edges });
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<NodeData>>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<any>([]);
 
   const { onNodeDoubleClick } = useNodeEvents();
   const { isValidConnection, onConnect, onAwaitingNodeConnection } =
@@ -76,7 +62,10 @@ export const useReactFlowEditor = () => {
     const listFieldName = AUTOMATION_NODE_TYPE_LIST_PROERTY[nodeType];
 
     // Update form state minimally
-    setValue(listFieldName, [...getList(nodeType), newNode]);
+    setAutomationBuilderFormValue(listFieldName, [
+      ...getList(nodeType),
+      newNode,
+    ]);
 
     if (newNodeId && generatedNode) {
       addNodes(generatedNode);
@@ -97,6 +86,21 @@ export const useReactFlowEditor = () => {
       setAwaitingToConnectNodeId('');
     }
   };
+
+  // 1) Generate and set nodes when data changes
+  useEffect(() => {
+    const generatedNodes = generateNodes(triggers, actions, workflows);
+    setNodes(generatedNodes);
+  }, [triggers, actions, workflows]);
+
+  // 2) Sync edges with memoization and rAF to avoid infinite loops and dropped edges
+  useReactFlowEdges({
+    triggers,
+    actions,
+    workflows,
+    actionFolks,
+    setEdges,
+  });
 
   return {
     theme,

@@ -20,7 +20,7 @@ import { generateModels } from './connectionResolvers';
 import { documents } from './meta/documents';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
-import './segments';
+import { initSegmentCoreProducers } from './segments';
 import * as path from 'path';
 import rateLimit from 'express-rate-limit';
 
@@ -108,7 +108,6 @@ const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
-  await initAutomation(app);
 
   await joinErxesGateway({
     name: 'core',
@@ -120,6 +119,8 @@ httpServer.listen(port, async () => {
       documents,
     },
   });
+  await initAutomation(app);
+  await initSegmentCoreProducers(app);
 });
 
 // GRACEFULL SHUTDOWN

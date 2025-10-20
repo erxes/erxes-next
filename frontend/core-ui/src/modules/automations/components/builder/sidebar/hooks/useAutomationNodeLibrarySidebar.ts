@@ -2,7 +2,6 @@ import { isCoreAutomationActionType } from '@/automations/components/builder/nod
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
 import { AutomationNodeType } from '@/automations/types';
-import { TDraggingNode, TDroppedNode } from '../states/automationNodeLibrary';
 import React, { useMemo } from 'react';
 import {
   IAutomationNodeConfigConstants,
@@ -12,6 +11,10 @@ import {
 import { TAutomationNodeState } from '@/automations/utils/automationFormDefinitions';
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { splitAwaitingConnectionId } from '@/automations/utils/automationConnectionUtils';
+import {
+  TDraggingNode,
+  TDroppedNode,
+} from '@/automations/components/builder/sidebar/states/automationNodeLibrary';
 
 export const useAutomationNodeLibrarySidebar = () => {
   const { awaitingToConnectNodeId, queryParams, setQueryParams } =

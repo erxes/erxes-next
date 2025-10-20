@@ -1,5 +1,6 @@
 import { SendEmailConfigFormRow } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailConfigFormRow';
 import { SendEmailCustomMailsInput } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmailCustomMailsInput';
+import { useSendEmailSidebarForm } from '@/automations/components/builder/nodes/actions/sendEmail/hooks/useSendEmailSidebarForm';
 import { TAutomationSendEmailConfig } from '@/automations/components/builder/nodes/actions/sendEmail/types/automationSendEmail';
 import { Card, Form, Label, RadioGroup, Tabs } from 'erxes-ui';
 import {
@@ -8,7 +9,6 @@ import {
   SelectMember,
   TAutomationActionProps,
 } from 'ui-modules';
-import { useSendEmailSidebarForm } from '../hooks/useSendEmailSidebarForm';
 
 const SendEmailConfigurationForm = ({
   currentActionIndex,

@@ -1,4 +1,5 @@
 import { useAutomation } from '@/automations/context/AutomationProvider';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
@@ -9,7 +10,8 @@ import { useFormContext } from 'react-hook-form';
 import { splitAutomationNodeType } from 'ui-modules';
 
 export const useCustomTriggerContent = (activeNode: NodeData) => {
-  const { setValue, watch } = useFormContext<TAutomationBuilderForm>();
+  const { watch } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const { setQueryParams } = useAutomation();
   const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
 
@@ -25,7 +27,10 @@ export const useCustomTriggerContent = (activeNode: NodeData) => {
   );
 
   const onSaveTriggerConfig = (config: any) => {
-    setValue(`triggers.${activeNode.nodeIndex}.config`, config);
+    setAutomationBuilderFormValue(
+      `triggers.${activeNode.nodeIndex}.config`,
+      config,
+    );
     setQueryParams({ activeNodeId: null });
     toggleSideBarOpen();
 

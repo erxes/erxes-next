@@ -2,7 +2,7 @@ import {
   IAutomationAction,
   IAutomationExecution,
   IAutomationTrigger,
-} from '@/core-modules';
+} from '../../../core-modules/automations/definitions';
 
 export type ICheckTriggerData = {
   collectionType: string;

@@ -1,6 +1,7 @@
 import { isCoreAutomationActionType } from '@/automations/components/builder/nodes/actions/coreAutomationActions';
 import { TAutomationActionComponent } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { toggleAutomationBuilderOpenSidebar } from '@/automations/states/automationState';
 import { AutomationNodesType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
@@ -12,7 +13,8 @@ import { splitAutomationNodeType } from 'ui-modules';
 
 export const useAutomationActionContentSidebar = () => {
   const { queryParams, setQueryParams } = useAutomation();
-  const { control, setValue } = useFormContext<TAutomationBuilderForm>();
+  const { control } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const toggleSideBarOpen = useSetAtom(toggleAutomationBuilderOpenSidebar);
   const { getNode, updateNodeData } = useReactFlow<Node<NodeData>>();
 
@@ -47,7 +49,10 @@ export const useAutomationActionContentSidebar = () => {
   };
 
   const onSaveActionConfig = (config: any) => {
-    setValue(`${AutomationNodesType.Actions}.${currentIndex}.config`, config);
+    setAutomationBuilderFormValue(
+      `${AutomationNodesType.Actions}.${currentIndex}.config`,
+      config,
+    );
     if (currentAction) {
       const node = getNode(currentAction.id);
       updateNodeData(currentAction.id, { ...node?.data, config });
@@ -57,14 +62,11 @@ export const useAutomationActionContentSidebar = () => {
 
   return {
     isCoreActionComponent,
-    control,
     currentIndex,
     currentAction,
     setQueryParams,
-    setValue,
     toggleSideBarOpen,
     onSaveActionConfig,
-    onSaveActionConfigCallback,
     pluginName,
     moduleName,
   };

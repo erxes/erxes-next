@@ -1,3 +1,4 @@
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { AutomationNodeType, NodeData } from '@/automations/types';
 import { generateNode } from '@/automations/utils/automationBuilderUtils/generateNodes';
 import {
@@ -8,7 +9,8 @@ import { Node, useReactFlow } from '@xyflow/react';
 import { useFormContext } from 'react-hook-form';
 export const useActionsWorkflowNode = (automationId: string) => {
   const { getNodes, setNodes } = useReactFlow<Node<NodeData>>();
-  const { getValues, setValue } = useFormContext<TAutomationBuilderForm>();
+  const { getValues } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const workflows = getValues('workflows') || [];
   const { selectedActionIds = [] } =
     workflows.find((workflow) => workflow?.automationId === automationId)
@@ -55,7 +57,7 @@ export const useActionsWorkflowNode = (automationId: string) => {
       }),
     );
 
-    setValue('workflows', updateWorkflows);
+    setAutomationBuilderFormValue('workflows', updateWorkflows);
   };
 
   return {

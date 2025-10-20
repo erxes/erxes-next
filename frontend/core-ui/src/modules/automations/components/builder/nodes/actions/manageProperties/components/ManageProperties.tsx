@@ -8,12 +8,16 @@ const ManagePropertiesComponents: AutomationComponentMap<AutomationNodeType.Acti
   {
     setProperty: {
       sidebar: lazy(() =>
-        import('./ManagePropertiesConfigForm').then((module) => ({
+        import(
+          '@/automations/components/builder/nodes/actions/manageProperties/components/ManagePropertiesConfigForm'
+        ).then((module) => ({
           default: module.ManagePropertiesConfigForm,
         })),
       ),
       nodeContent: lazy(() =>
-        import('./ManagePropertiesNodeContent').then((module) => ({
+        import(
+          '@/automations/components/builder/nodes/actions/manageProperties/components/ManagePropertiesNodeContent'
+        ).then((module) => ({
           default: module.ManagePropertiesNodeContent,
         })),
       ),

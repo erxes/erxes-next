@@ -7,12 +7,16 @@ import {
 const WaitEventComponents: AutomationComponentMap<AutomationNodeType.Action> = {
   waitEvent: {
     sidebar: lazy(() =>
-      import('./WaitEventConfigForm').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEventConfigForm'
+      ).then((module) => ({
         default: module.WaitEventConfigForm,
       })),
     ),
     nodeContent: lazy(() =>
-      import('./WaitEventNodeContent').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/waitEvent/components/WaitEventNodeContent'
+      ).then((module) => ({
         default: module.WaitEventNodeContent,
       })),
     ),

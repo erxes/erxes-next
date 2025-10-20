@@ -1,8 +1,8 @@
+import { useManagePropertyRule } from '@/automations/components/builder/nodes/actions/manageProperties/hooks/useManagePropertyRule';
 import { TManagePropertiesForm } from '@/automations/components/builder/nodes/actions/manageProperties/states/managePropertiesForm';
 import { IconTrash } from '@tabler/icons-react';
 import { Button, Form, Select } from 'erxes-ui';
 import { PlaceHolderInput } from 'ui-modules';
-import { useManagePropertyRule } from '../hooks/useManagePropertyRule';
 
 interface LocalRuleProps {
   rule: TManagePropertiesForm['rules'][number];

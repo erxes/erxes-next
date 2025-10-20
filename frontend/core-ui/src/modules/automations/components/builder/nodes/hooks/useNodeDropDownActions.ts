@@ -3,6 +3,7 @@ import {
   CONNECTION_PROPERTY_NAME_MAP,
 } from '@/automations/constants';
 import { useAutomation } from '@/automations/context/AutomationProvider';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import {
   AutomationNodesType,
   AutomationNodeType,
@@ -18,9 +19,10 @@ export const useNodeDropDownActions = (
   nodeType: AutomationNodeType,
 ) => {
   const { queryParams, setQueryParams } = useAutomation();
-  const { setNodes, getEdges, setEdges } = useReactFlow<Node<NodeData>, Edge>();
+  const { setNodes, setEdges } = useReactFlow<Node<NodeData>, Edge>();
 
-  const { setValue, getValues } = useFormContext<TAutomationBuilderForm>();
+  const { getValues } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const [isOpenDropDown, setOpenDropDown] = useState(false);
   const [isOpenDialog, setOpenDialog] = useState(false);
   const [isOpenRemoveAlert, setOpenRemoveAlert] = useState(false);
@@ -40,7 +42,7 @@ export const useNodeDropDownActions = (
     // remove connected edges to this node (as source or target)
     setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
     setNodes((nodes) => nodes.filter((n) => n.id !== id));
-    setValue(`${fieldName}`, updatedNodes);
+    setAutomationBuilderFormValue(`${fieldName}`, updatedNodes);
 
     if (queryParams?.activeNodeId === id) {
       setQueryParams({ activeNodeId: null });

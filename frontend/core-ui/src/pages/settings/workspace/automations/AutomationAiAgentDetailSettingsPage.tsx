@@ -1,10 +1,8 @@
 import { AutomationAiAgentDetail } from '@/automations/components/settings/components/agents/components/AutomationAiAgentDetail';
 import { useAiAgentDetail } from '@/automations/components/settings/components/agents/hooks/useAiAgentDetail';
-import { useParams } from 'react-router';
 
-export const AutomationBotDetailSettingsPage = () => {
-  const { id } = useParams();
-  const { detail, handleSave } = useAiAgentDetail(id);
+export const AutomationAiAgentDetailSettingsPage = () => {
+  const { detail, handleSave } = useAiAgentDetail();
 
   return <AutomationAiAgentDetail detail={detail} handleSave={handleSave} />;
 };

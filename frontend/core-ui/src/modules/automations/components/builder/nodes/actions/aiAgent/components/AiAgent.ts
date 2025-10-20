@@ -7,12 +7,16 @@ import { lazy } from 'react';
 const AiAgentComponents: AutomationComponentMap<AutomationNodeType.Action> = {
   aiAgent: {
     sidebar: lazy(() =>
-      import('./AiAgentConfigForm').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgentConfigForm'
+      ).then((module) => ({
         default: module.AIAgentConfigForm,
       })),
     ),
     nodeContent: lazy(() =>
-      import('./AiAgentNodeContent').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/aiAgent/components/AiAgentNodeContent'
+      ).then((module) => ({
         default: module.AiAgentNodeContent,
       })),
     ),

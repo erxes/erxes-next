@@ -1,3 +1,4 @@
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { AutomationNodesType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { Node, useReactFlow } from '@xyflow/react';
@@ -21,7 +22,7 @@ export const NodeEditMetaDataForm = ({
   data,
   callback,
 }: Props) => {
-  const { setValue } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const { updateNodeData } = useReactFlow<Node<NodeData>>();
 
   const { nodeIndex, label, description, icon } = data || {};
@@ -44,7 +45,7 @@ export const NodeEditMetaDataForm = ({
       ...doc,
       id,
     };
-    setValue(`${fieldName}.${nodeIndex}`, updatedNode, {
+    setAutomationBuilderFormValue(`${fieldName}.${nodeIndex}`, updatedNode, {
       shouldValidate: true,
       shouldDirty: true,
     });

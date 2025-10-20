@@ -1,7 +1,7 @@
 import { splitType, TAutomationProducers } from 'erxes-api-shared/core-modules';
 import {
   getEnv,
-  sendAutomatonMessage,
+  sendCoreModuleProducer,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
 import { EmailResolver } from './generateReciepentEmailsByType';
@@ -72,7 +72,8 @@ export const generateEmailPayload = async ({
 
   replacedContent = await replaceDocuments(subdomain, replacedContent, target);
 
-  const { subject, content = '' } = await sendAutomatonMessage({
+  const { subject, content = '' } = await sendCoreModuleProducer({
+    moduleName: 'automations',
     pluginName,
     producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
     input: {

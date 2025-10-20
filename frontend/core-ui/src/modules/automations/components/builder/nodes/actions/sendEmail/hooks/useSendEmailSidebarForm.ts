@@ -1,4 +1,5 @@
 import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { AutomationNodesType } from '@/automations/types';
 import { findTriggerForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
@@ -26,11 +27,12 @@ export const useSendEmailSidebarForm = (currentActionIndex: number) => {
 
 export const useSendEmailCustomMailField = (currentActionIndex: number) => {
   const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `${AutomationNodesType.Actions}.${currentActionIndex}.config`;
-  const { control, setValue } = useFormContext<TAutomationBuilderForm>();
+  const { control } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const config = useWatch({ control, name: configFieldNamePrefix });
 
   const removeMail = (mail: string) => {
-    setValue(
+    setAutomationBuilderFormValue(
       `${configFieldNamePrefix}.customMails`,
       (config?.customMails || []).filter((value: string) => value !== mail),
     );

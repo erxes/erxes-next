@@ -15,14 +15,8 @@ import { PageHeader } from 'ui-modules';
 import { useAutomationHeader } from '@/automations/components/builder/hooks/useAutomationHeader';
 
 export const AutomationBuilderHeader = () => {
-  const {
-    loading,
-    handleSubmit,
-    handleSave,
-    handleError,
-    toggleTabs,
-    isMobile,
-  } = useAutomationHeader();
+  const { loading, handleSubmit, handleSave, handleError, toggleTabs } =
+    useAutomationHeader();
   return (
     <div>
       <PageHeader>
@@ -56,20 +50,9 @@ export const AutomationBuilderHeader = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
-      <PageSubHeader
-        className={cn('flex', {
-          'items-center justify-between': !isMobile,
-          'flex-col gap-2': isMobile,
-        })}
-      >
-        <div
-          className={cn('flex ', {
-            'items-center space-x-2 gap-8': !isMobile,
-            'flex-row justify-between items-center': isMobile,
-          })}
-        >
+      <PageSubHeader className={cn('flex items-center justify-between')}>
+        <div className="flex items-center gap-24">
           <AutomationBuilderNameInput />
-
           <AutomationHeaderTabs toggleTabs={toggleTabs} />
         </div>
         <AutomationBuilderHeaderActions />

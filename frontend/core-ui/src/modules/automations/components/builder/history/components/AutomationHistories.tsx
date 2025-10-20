@@ -2,8 +2,8 @@ import { automationHistoriesColumns } from '@/automations/components/builder/his
 import { useAutomationHistories } from '@/automations/hooks/useAutomationHistories';
 import { IconArchive, IconRefresh } from '@tabler/icons-react';
 import { Button, Label, PageSubHeader, RecordTable, Skeleton } from 'erxes-ui';
-import { AutomationHistoriesRecordTableFilter } from './filters/AutomationRecordTableFilter';
 import { AUTOMATION_HISTORIES_CURSOR_SESSION_KEY } from '@/automations/constants';
+import { AutomationHistoriesRecordTableFilter } from '@/automations/components/builder/history/components/filters/AutomationRecordTableFilter';
 
 export const AutomationHistories = () => {
   const {

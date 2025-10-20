@@ -234,6 +234,5 @@ export const generateEdges = (
   }
 
   console.log({ generatedEdges });
-
   return generatedEdges;
 };

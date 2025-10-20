@@ -58,7 +58,7 @@ export const checkIsValidConnect = ({
   const source = nodes.find((node) => node.id === connection.source);
 
   const hasCycle = (node: Node<NodeData>, visited = new Set()) => {
-    if (node?.data?.nodeType === 'trigger') return true;
+    if (node?.data?.nodeType === AutomationNodeType.Trigger) return true;
     if (visited.has(node.id)) return false;
 
     visited.add(node.id);

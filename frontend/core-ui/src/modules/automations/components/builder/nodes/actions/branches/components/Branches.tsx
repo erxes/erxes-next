@@ -7,7 +7,9 @@ import {
 const BranchComponents: AutomationComponentMap<AutomationNodeType.Action> = {
   if: {
     sidebar: lazy(() =>
-      import('./BranchesConfigForm').then((module) => ({
+      import(
+        '@/automations/components/builder/nodes/actions/branches/components/BranchesConfigForm'
+      ).then((module) => ({
         default: module.BranchesConfigForm,
       })),
     ),

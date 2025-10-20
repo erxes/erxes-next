@@ -6,7 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import { IncomingWebhookConfigForm } from '@/automations/components/builder/nodes/triggers/webhooks/components/IncomingWebhookConfigForm';
 import { TAutomationWaitEventConfig } from '@/automations/components/builder/nodes/actions/waitEvent/type/waitEvent';
 import { NodeData } from '@/automations/types';
-import { TriggerContentWrapper } from '@/automations/components/builder/sidebar/components/content/AutomationTriggerContentSidebar';
+import { TriggerContentWrapper } from '@/automations/components/builder/sidebar/components/content/trigger/wrapper/TriggerContentWrapper';
 
 export function WaitEventConfigCustomForm({
   configFieldNamePrefix,
@@ -45,16 +45,5 @@ export function WaitEventConfigCustomForm({
         )}
       />
     </TriggerContentWrapper>
-  );
-
-  return (
-    <div className="flex flex-col flex-1 overflow-auto" role="region">
-      <div className="flex-1 w-auto overflow-auto px-4"></div>
-      <footer className="p-3 flex justify-end border-t bg-background/50 backdrop-blur-sm">
-        <Button onClick={() => formRef.current?.submit()}>
-          Save Configuration
-        </Button>
-      </footer>
-    </div>
   );
 }

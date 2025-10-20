@@ -68,10 +68,10 @@ export const STATUSES_BADGE_VARIABLES = {
 export const AUTOMATION_HISTORIES_CURSOR_SESSION_KEY =
   'automation-histories-cursor';
 
-export const AUTOMATION_NODE_TYPES = [
-  { value: 'trigger', label: 'Triggers' },
-  { value: 'action', label: 'Actions' },
-  { value: 'automation', label: 'Automations' },
+export const AUTOMATION_LIBRARY_TABS = [
+  { value: AutomationNodeType.Trigger, label: 'Triggers' },
+  { value: AutomationNodeType.Action, label: 'Actions' },
+  { value: AutomationNodeType.Workflow, label: 'Automations' },
 ];
 type ConnectionPropertyName = 'nextActionId' | 'actionId' | 'workflowId';
 

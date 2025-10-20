@@ -8,7 +8,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { Tabs, useMultiQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from '@/automations/context/AutomationBuilderDnDProvider';
-import { AutomationBuilderHeader } from './header/AutomationBuilderHeader';
 
 import { InspectorPanel } from '@/automations/components/builder/InspectorPanel';
 import { AutomationProvider } from '@/automations/context/AutomationProvider';
@@ -23,7 +22,8 @@ import {
 } from '@/automations/utils/automationFormDefinitions';
 import { useAtom } from 'jotai';
 import { AutomationBuilderTabsType, IAutomation } from '@/automations/types';
-import { AutomationHistories } from './history/components/AutomationHistories';
+import { AutomationBuilderHeader } from '@/automations/components/builder/header/AutomationBuilderHeader';
+import { AutomationHistories } from '@/automations/components/builder/history/components/AutomationHistories';
 
 type AutomationBuilderProps = {
   detail?: IAutomation;

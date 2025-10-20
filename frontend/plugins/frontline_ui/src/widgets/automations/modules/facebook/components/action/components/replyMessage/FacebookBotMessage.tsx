@@ -34,6 +34,9 @@ export const FacebookBotMessage = ({
     REPLY_MESSAGE_ACTION_BUTTONS.find(({ type }) => message.type === type) ||
     {};
 
+  const collapsibleTitle =
+    message.type === 'text' ? message.text : `${title} Message`;
+
   return (
     <Card ref={setNodeRef} style={style} {...attributes} className="mt-4 ">
       <Collapsible>
@@ -45,8 +48,8 @@ export const FacebookBotMessage = ({
             >
               <IconGripVertical className="w-4 h-4" />
             </div>
-            <div className="flex-1 flex flex-row gap-2 items-center">
-              {Icon && <Icon />} {`${title} Message`}
+            <div className="flex-1 flex flex-row gap-2 items-center truncate">
+              {Icon && <Icon />} {collapsibleTitle}
             </div>
             <div className="flex flex-row gap-2">
               <Button

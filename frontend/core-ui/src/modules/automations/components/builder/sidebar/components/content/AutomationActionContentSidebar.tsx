@@ -12,9 +12,7 @@ export const AutomationActionContentSidebar = () => {
     currentIndex,
     isCoreActionComponent,
     currentAction,
-    control,
     onSaveActionConfig,
-    onSaveActionConfigCallback,
     pluginName,
     moduleName,
   } = useAutomationActionContentSidebar();
@@ -25,7 +23,7 @@ export const AutomationActionContentSidebar = () => {
 
   if (!isCoreActionComponent) {
     return (
-      <div className="flex h-full">
+      <div className="flex flex-col h-full">
         <div className="flex-1 w-auto">
           <Suspense fallback={<Spinner />}>
             <ErrorBoundary

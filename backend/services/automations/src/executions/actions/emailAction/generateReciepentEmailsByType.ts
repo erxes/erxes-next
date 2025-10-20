@@ -1,4 +1,7 @@
-import { sendAutomatonMessage, sendTRPCMessage } from 'erxes-api-shared/utils';
+import {
+  sendCoreModuleProducer,
+  sendTRPCMessage,
+} from 'erxes-api-shared/utils';
 import { extractValidEmails } from './utils';
 import { TAutomationProducers } from 'erxes-api-shared/core-modules';
 
@@ -60,7 +63,8 @@ export class EmailResolver {
       return this.resolveTeamMemberEmails({ _id: { $in: contentTypeIds } });
     }
 
-    return await sendAutomatonMessage({
+    return await sendCoreModuleProducer({
+      moduleName: 'automations',
       pluginName,
       producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
       input: {
@@ -109,8 +113,8 @@ export class EmailResolver {
         if (this.target) this.target[attribute] = null;
       }
     }
-
-    const replacedContent = await sendAutomatonMessage({
+    const replacedContent = await sendCoreModuleProducer({
+      moduleName: 'automations',
       pluginName,
       producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
       input: {

@@ -5,11 +5,12 @@ import {
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import { AutomationBuilderTabsType, NodeData } from '@/automations/types';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useMutation } from '@apollo/client';
-import { useReactFlow, Node } from '@xyflow/react';
-import { useIsMobile, toast } from 'erxes-ui';
+import { Node, useReactFlow } from '@xyflow/react';
+import { toast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 
@@ -17,12 +18,13 @@ export const useAutomationHeader = () => {
   const { handleSubmit, clearErrors } =
     useFormContext<TAutomationBuilderForm>();
   const navigate = useNavigate();
+  const { setAutomationBuilderFormValue, syncPositionUpdates } =
+    useAutomationFormController();
 
   const { setQueryParams, reactFlowInstance } = useAutomation();
   const { actions, triggers } = useAutomationNodes();
-  const isMobile = useIsMobile();
 
-  const { getNodes, getNode, setNodes } = useReactFlow();
+  const { getNodes, setNodes } = useReactFlow();
   const { id } = useParams();
 
   const { handleNodeErrors, clearNodeErrors } = useNodeErrorHandler({
@@ -35,35 +37,23 @@ export const useAutomationHeader = () => {
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
   );
 
-  const handleSave = async (values: TAutomationBuilderForm) => {
-    const { triggers, actions, name, status, workflows } = values;
+  const handleSave = async ({
+    triggers,
+    actions,
+    name,
+    status,
+    workflows,
+  }: TAutomationBuilderForm) => {
+    // Sync all pending position updates to form state
+    syncPositionUpdates();
+
     const generateValues = () => {
       return {
         id,
         name,
         status: status,
-        triggers: triggers.map((t) => ({
-          id: t.id,
-          type: t.type,
-          config: t.config,
-          icon: t.icon,
-          label: t.label,
-          description: t.description,
-          actionId: t.actionId,
-          position: getNode(t.id)?.position || t.position,
-          isCustom: t.isCustom,
-        })),
-        actions: actions.map((a) => ({
-          id: a.id,
-          type: a.type,
-          nextActionId: a.nextActionId,
-          config: a.config,
-          icon: a.icon,
-          label: a.label,
-          description: a.description,
-          position: getNode(a.id)?.position || a.position,
-          workflowId: a.workflowId,
-        })),
+        triggers,
+        actions,
         workflows,
       };
     };
@@ -145,6 +135,5 @@ export const useAutomationHeader = () => {
     handleSave,
     handleError,
     toggleTabs,
-    isMobile,
   };
 };

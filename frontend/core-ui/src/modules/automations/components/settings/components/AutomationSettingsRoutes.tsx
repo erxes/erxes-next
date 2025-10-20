@@ -17,7 +17,7 @@ const AutomationBotDetailSettingsPage = lazy(() =>
 const AutomationAiAgentDetailSettingsPage = lazy(() =>
   import(
     '~/pages/settings/workspace/automations/AutomationAiAgentDetailSettingsPage'
-  ).then((module) => ({ default: module.AutomationBotDetailSettingsPage })),
+  ).then((module) => ({ default: module.AutomationAiAgentDetailSettingsPage })),
 );
 const AutomationAiAgentsSettingsPage = lazy(() =>
   import(
@@ -39,6 +39,10 @@ export const AutomationSettingsRoutes = () => {
         <Route path="/agents" element={<AutomationAiAgentsSettingsPage />} />
         <Route
           path="/agents/:id"
+          element={<AutomationAiAgentDetailSettingsPage />}
+        />
+        <Route
+          path="/agents/create"
           element={<AutomationAiAgentDetailSettingsPage />}
         />
       </Routes>

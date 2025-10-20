@@ -1,27 +1,9 @@
-import { LoadingSkeleton } from '@/automations/components/builder/sidebar/components/library/SidebarNodeLibrarySkeleton';
-import { TDraggingNode } from '@/automations/components/builder/sidebar/states/automationNodeLibrary';
-import { useAutomationsRecordTable } from '@/automations/hooks/useAutomationsRecordTable';
-import { AutomationNodeType } from '@/automations/types';
-import { ErrorState } from '@/automations/components/common/ErrorState';
-import { ApolloError } from '@apollo/client';
-import { IconArrowsSplit2, IconExternalLink } from '@tabler/icons-react';
-import {
-  Button,
-  Card,
-  cn,
-  Command,
-  IconComponent,
-  RelativeDateDisplay,
-  Tabs,
-} from 'erxes-ui';
-import React from 'react';
-import { Link, useParams } from 'react-router';
-import {
-  IAutomationsActionConfigConstants,
-  IAutomationsTriggerConfigConstants,
-} from 'ui-modules';
+import { TabContentWrapper } from '@/automations/components/builder/sidebar/components/library/TabContentWrapper';
+import { WorkflowsNodeLibrary } from '@/automations/components/builder/sidebar/components/library/WorkflowsNodeLibrary';
 import { useAutomationNodeLibrarySidebar } from '@/automations/components/builder/sidebar/hooks/useAutomationNodeLibrarySidebar';
-import { AUTOMATION_NODE_TYPES } from '@/automations/constants';
+import { AUTOMATION_LIBRARY_TABS } from '@/automations/constants';
+import { AutomationNodeType } from '@/automations/types';
+import { Command, Tabs } from 'erxes-ui';
 
 export const AutomationNodeLibrarySidebar = () => {
   const {
@@ -58,7 +40,7 @@ export const AutomationNodeLibrarySidebar = () => {
         className="flex-1 flex flex-col overflow-auto"
       >
         <Tabs.List className="w-full border-b">
-          {AUTOMATION_NODE_TYPES.map(({ value, label }) => (
+          {AUTOMATION_LIBRARY_TABS.map(({ value, label }) => (
             <Tabs.Trigger key={value} value={value} className="w-1/3">
               {label}
             </Tabs.Trigger>
@@ -86,174 +68,15 @@ export const AutomationNodeLibrarySidebar = () => {
             </Command.Group>
           </Tabs.Content>
         ))}
-        <Tabs.Content className="space-y-2 " value="automation">
+        <Tabs.Content
+          className="space-y-2 "
+          value={AutomationNodeType.Workflow}
+        >
           <Command.Group>
-            <AutomationsNodeLibrary {...commonTabContentProps} />
+            <WorkflowsNodeLibrary {...commonTabContentProps} />
           </Command.Group>
         </Tabs.Content>
       </Tabs>
     </Command>
   );
-};
-
-const TabContentWrapper = ({
-  loading,
-  error,
-  refetch,
-  type,
-  list,
-  onDragStart,
-}: {
-  loading: boolean;
-  error: ApolloError | undefined;
-  refetch: () => void;
-  type: AutomationNodeType;
-  list:
-    | IAutomationsTriggerConfigConstants[]
-    | IAutomationsActionConfigConstants[];
-  onDragStart: (
-    event: React.DragEvent<HTMLDivElement>,
-    { type, label, description, icon, isCustom }: any,
-  ) => void;
-}) => {
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <ErrorState
-        errorCode={error.message}
-        errorDetails={error.stack}
-        onRetry={refetch}
-      />
-    );
-  }
-  return (
-    <>
-      <Command.Empty />
-      {list.map((item, index) => (
-        <NodeLibraryRow
-          key={index}
-          item={item}
-          nodeType={type}
-          onDragStart={onDragStart}
-        />
-      ))}
-    </>
-  );
-};
-
-const NodeLibraryRow = ({
-  item,
-  onDragStart,
-  nodeType,
-}: {
-  item: IAutomationsTriggerConfigConstants | IAutomationsActionConfigConstants;
-  nodeType: AutomationNodeType;
-  onDragStart: (
-    event: React.DragEvent<HTMLDivElement>,
-    { type, label, description, icon, isCustom }: any,
-  ) => void;
-}) => {
-  const { icon: iconName, label, description } = item;
-
-  return (
-    <Command.Item value={label} asChild>
-      <Card
-        className={cn(
-          `cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px]`,
-          {
-            'hover:border-success': nodeType === AutomationNodeType.Action,
-            'hover:border-primary': nodeType === AutomationNodeType.Trigger,
-          },
-        )}
-        draggable
-        onDragStart={(event) => onDragStart(event, { nodeType, ...item })}
-      >
-        <Card.Content className="p-3">
-          <div className="flex items-center gap-4">
-            <div
-              className={cn(`p-3 rounded-lg`, {
-                'bg-success/10 text-success border-success':
-                  nodeType === AutomationNodeType.Action,
-                'bg-primary/10 text-primary border-primary':
-                  nodeType === AutomationNodeType.Trigger,
-              })}
-            >
-              <IconComponent name={iconName} />
-            </div>
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center gap-4">
-                <h3 className="font-semibold text-foreground text-sm">
-                  {label || ''}
-                </h3>
-              </div>
-              <p className="text-accent-foreground leading-relaxed text-xs">
-                {description || ''}
-              </p>
-            </div>
-          </div>
-        </Card.Content>
-      </Card>
-    </Command.Item>
-  );
-};
-
-const AutomationsNodeLibrary = ({
-  onDragStart,
-}: {
-  onDragStart: (
-    event: React.DragEvent<HTMLDivElement>,
-    draggingNode: Extract<
-      TDraggingNode,
-      { nodeType: AutomationNodeType.Workflow }
-    >,
-  ) => void;
-}) => {
-  const { id } = useParams();
-
-  const { list } = useAutomationsRecordTable({
-    variables: { excludeIds: [id] },
-  });
-
-  return list.map(({ _id, name = '', createdAt = '' }) => (
-    <Command.Item key={_id} value={name} asChild>
-      <Card
-        className="hover:shadow-md transition-shadow cursor-pointer border-accent cursor-grab hover:bg-accent transition-colors h-16 mb-2 w-[350px] sm:w-[500px] hover:border-warning"
-        draggable
-        onDragStart={(event) =>
-          onDragStart(event, {
-            nodeType: AutomationNodeType.Workflow,
-            automationId: _id,
-            name,
-            description: 'Hello World',
-          })
-        }
-      >
-        <Card.Content className="p-3 w-full">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-warning/10 text-warning border-warning">
-              <IconArrowsSplit2 />
-            </div>
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center gap-4">
-                <h3 className="font-semibold text-foreground text-sm">
-                  {name}
-                </h3>
-              </div>
-              <p className="text-accent-foreground leading-relaxed text-xs">
-                <RelativeDateDisplay.Value value={createdAt} />
-              </p>
-            </div>
-            <Link to={`/automations/edit/${_id}`}>
-              <Button variant="link">
-                <IconExternalLink />
-              </Button>
-            </Link>
-          </div>
-        </Card.Content>
-      </Card>
-    </Command.Item>
-  ));
 };

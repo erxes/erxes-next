@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { pluralFormation } from '../../utils';
-import { sendAutomatonMessage, sendTRPCMessage } from '../../utils/trpc';
+import { pluralFormation, sendCoreModuleProducer } from '../../utils';
+import { sendTRPCMessage } from '../../utils/trpc';
 import { AUTOMATION_PROPERTY_OPERATORS, STATIC_PLACEHOLDER } from './constants';
 import {
   IPerValueProps,
@@ -183,7 +183,8 @@ const getPerValue = async <TModels>({
 
     value =
       (
-        await sendAutomatonMessage({
+        await sendCoreModuleProducer({
+          moduleName: 'automations',
           pluginName: relatedPluginName,
           producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
           input: {

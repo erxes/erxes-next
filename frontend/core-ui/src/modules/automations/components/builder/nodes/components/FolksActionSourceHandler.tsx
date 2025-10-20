@@ -30,32 +30,37 @@ export const FolksActionSourceHandler = memo(
     const total = folks.length;
     const step = total > 1 ? 30 / (total - 1) : 0; // distribute 50%..80%
 
-    return folks.map(({ key, label, type }, index) => {
-      const { className, addButtonClassName } =
-        AUTOMATION_FOLK_VARIABLES[type] || AUTOMATION_FOLK_VARIABLES.default;
+    return (
+      <>
+        {folks.map(({ key, label, type }, index) => {
+          const { className, addButtonClassName } =
+            AUTOMATION_FOLK_VARIABLES[type] ||
+            AUTOMATION_FOLK_VARIABLES.default;
 
-      const topPercent = 50 + index * step; // 1 => 50%; 2 => 50,80; n => 50..80
-      const displayLabel =
-        label && label.length > 5 ? label.slice(0, 5) : label;
+          const topPercent = 50 + index * step; // 1 => 50%; 2 => 50,80; n => 50..80
+          const displayLabel =
+            label && label.length > 5 ? label.slice(0, 5) : label;
 
-      const id = `${key}-right`;
+          const id = `${key}-right`;
 
-      return (
-        <NodeOutputHandler
-          key={id}
-          id={id}
-          handlerId={`${nodeId}__${key}`}
-          className={className}
-          addButtonClassName={addButtonClassName}
-          style={{ top: `${topPercent}%` }}
-          showAddButton={!config[key]}
-          nodeType={AutomationNodeType.Action}
-        >
-          <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
-            {displayLabel}
-          </div>
-        </NodeOutputHandler>
-      );
-    });
+          return (
+            <NodeOutputHandler
+              key={id}
+              id={id}
+              handlerId={`${nodeId}__${key}`}
+              className={className}
+              addButtonClassName={addButtonClassName}
+              style={{ top: `${topPercent}%` }}
+              showAddButton={!config[key]}
+              nodeType={AutomationNodeType.Action}
+            >
+              <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
+                {displayLabel}
+              </div>
+            </NodeOutputHandler>
+          );
+        })}
+      </>
+    );
   },
 );

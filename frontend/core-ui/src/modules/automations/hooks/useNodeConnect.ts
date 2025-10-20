@@ -4,6 +4,7 @@ import {
 } from '@/automations/constants';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
 import {
   AutomationNodeType,
   ConnectionInfo,
@@ -12,6 +13,7 @@ import {
 import {
   generateBranchConnection,
   generateFindObjectConnection,
+  generateFolksConnection,
   generateOptionalConnection,
   generateStandarConnection,
   generateWorkflowConnection,
@@ -30,10 +32,13 @@ import {
 import { Connection, EdgeProps, Node, useReactFlow } from '@xyflow/react';
 import { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { TAutomationWorkflowNode } from 'ui-modules';
+import {
+  IAutomationsActionFolkConfig,
+  TAutomationWorkflowNode,
+} from 'ui-modules';
 
 export const useNodeConnect = () => {
-  const { setValue } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
   const { workflows, getList } = useAutomationNodes();
   const { getNodes, getEdges, getNode, addEdges, setEdges, updateNodeData } =
     useReactFlow<Node<NodeData>>();
@@ -41,7 +46,7 @@ export const useNodeConnect = () => {
   const nodes = getNodes();
   const edges = getEdges();
 
-  const { triggersConst, actionsConst } = useAutomation();
+  const { triggersConst, actionsConst, actionFolks } = useAutomation();
 
   // Memoize workflows map for O(1) lookup
   const workflowsMap = useMemo(
@@ -58,12 +63,18 @@ export const useNodeConnect = () => {
       const listFieldPrefix = AUTOMATION_NODE_TYPE_LIST_PROERTY[sourceType];
 
       // Update form state minimally
-      setValue(`${listFieldPrefix}.${sourceIndex}`, sourceNode);
+      setAutomationBuilderFormValue(
+        `${listFieldPrefix}.${sourceIndex}`,
+        sourceNode,
+      );
 
       // Update React Flow node data
       updateNodeData(
         sourceNode.id,
         generateNodeData(sourceNode, sourceType, { nodeIndex: sourceIndex }),
+      );
+      const folksMap = new Map<string, IAutomationsActionFolkConfig[]>(
+        Object.entries(actionFolks),
       );
 
       // Generate edges and add
@@ -72,10 +83,17 @@ export const useNodeConnect = () => {
         sourceNode,
         CONNECTION_PROPERTY_NAME_MAP[sourceType],
         workflowsMap,
+        folksMap,
       );
       if (newEdges.length > 0) addEdges(newEdges);
     },
-    [setValue, updateNodeData, addEdges, workflowsMap],
+    [
+      setAutomationBuilderFormValue,
+      updateNodeData,
+      addEdges,
+      workflowsMap,
+      actionsConst,
+    ],
   );
 
   const onConnection = (info: ConnectionInfo) => {
@@ -113,6 +131,15 @@ export const useNodeConnect = () => {
         return applyConnectionUpdate(updated, sourceType, sourceIndex);
       }
 
+      if (connectType === 'folks' && sourceHandle) {
+        const updated = generateFolksConnection(
+          actionNode,
+          targetId,
+          sourceHandle,
+        );
+        return applyConnectionUpdate(updated, sourceType, sourceIndex);
+      }
+
       if (connectType === 'optional') {
         const updated = generateOptionalConnection(
           info.optionalConnectId || '',
@@ -129,7 +156,7 @@ export const useNodeConnect = () => {
           info,
         );
         if (workFlow) {
-          setValue('workflows', [...workflows, workFlow]);
+          setAutomationBuilderFormValue('workflows', [...workflows, workFlow]);
           return applyConnectionUpdate(sourceAction, sourceType, sourceIndex);
         }
       }

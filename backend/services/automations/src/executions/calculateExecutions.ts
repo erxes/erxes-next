@@ -8,7 +8,7 @@ import {
   splitType,
   TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendAutomatonMessage } from 'erxes-api-shared/utils';
+import { sendCoreModuleProducer } from 'erxes-api-shared/utils';
 
 const checkIsValidCustomTigger = async (
   type: string,
@@ -20,7 +20,8 @@ const checkIsValidCustomTigger = async (
 ) => {
   const [pluginName, moduleName, collectionType] = splitType(type);
 
-  return await sendAutomatonMessage({
+  return await sendCoreModuleProducer({
+    moduleName: 'automations',
     pluginName,
     producerName: TAutomationProducers.CHECK_CUSTOM_TRIGGER,
     input: {

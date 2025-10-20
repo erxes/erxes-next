@@ -6,6 +6,8 @@ import {
 import { TAutomationActionConfigFieldPrefix } from '@/automations/components/builder/nodes/types/coreAutomationActionTypes';
 import { useAutomation } from '@/automations/context/AutomationProvider';
 import { useAutomationNodes } from '@/automations/hooks/useAutomationNodes';
+import { useAutomationFormController } from '@/automations/hooks/useFormSetValue';
+import { AutomationNodesType } from '@/automations/types';
 import { getAllTriggersForAction } from '@/automations/utils/automationBuilderUtils/triggerUtils';
 import { TAutomationBuilderForm } from '@/automations/utils/automationFormDefinitions';
 import { useEffect } from 'react';
@@ -19,9 +21,9 @@ export function useWaitEventConfigForm(
   const { actionsConst } = useAutomation();
   const { actions } = useAutomationNodes();
 
-  const { getValues, watch, setValue } =
-    useFormContext<TAutomationBuilderForm>();
-  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `actions.${currentActionIndex}.config`;
+  const { getValues, watch } = useFormContext<TAutomationBuilderForm>();
+  const { setAutomationBuilderFormValue } = useAutomationFormController();
+  const configFieldNamePrefix: TAutomationActionConfigFieldPrefix = `${AutomationNodesType.Actions}.${currentActionIndex}.config`;
 
   const config = watch(configFieldNamePrefix) as TAutomationWaitEventConfig;
 
@@ -37,7 +39,7 @@ export function useWaitEventConfigForm(
   useEffect(() => {
     const selectedId = config?.targetTriggerId;
     if (!selectedId && nonCustomTriggers.length === 1) {
-      setValue(
+      setAutomationBuilderFormValue(
         `${configFieldNamePrefix}.targetTriggerId`,
         nonCustomTriggers[0].trigger.id,
         {
@@ -49,7 +51,7 @@ export function useWaitEventConfigForm(
   }, [
     config?.targetTriggerId,
     nonCustomTriggers.length,
-    setValue,
+    setAutomationBuilderFormValue,
     configFieldNamePrefix,
   ]);
 

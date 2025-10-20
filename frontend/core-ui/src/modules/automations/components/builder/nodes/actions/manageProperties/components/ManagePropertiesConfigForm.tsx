@@ -1,4 +1,5 @@
 import { ManagePropertyRule } from '@/automations/components/builder/nodes/actions/manageProperties/components/ManagePropertyRule';
+import { useManagePropertySidebarContent } from '@/automations/components/builder/nodes/actions/manageProperties/hooks/useManagePropertySidebarContent';
 import {
   managePropertiesFormSchema,
   TManagePropertiesForm,
@@ -17,7 +18,6 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { TAutomationAction, TAutomationActionProps } from 'ui-modules';
-import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
 
 const generateDefaultValues = (currentAction: TAutomationAction) => {
   const values = { ...(currentAction?.config || {}) };

@@ -8,12 +8,16 @@ const FindObjectComponents: AutomationComponentMap<AutomationNodeType.Action> =
   {
     findObject: {
       sidebar: lazy(() =>
-        import('./FindObjectConfigForm').then((module) => ({
+        import(
+          '@/automations/components/builder/nodes/actions/findObject/components/FindObjectConfigForm'
+        ).then((module) => ({
           default: module.FindObjectConfigForm,
         })),
       ),
       nodeContent: lazy(() =>
-        import('./FindObjectNodeContent').then((module) => ({
+        import(
+          '@/automations/components/builder/nodes/actions/findObject/components/FindObjectNodeContent'
+        ).then((module) => ({
           default: module.FindObjectNodeContent,
         })),
       ),

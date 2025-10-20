@@ -1,4 +1,6 @@
+import { ActionNodeConfigurationContent } from '@/automations/components/builder/nodes/components/ActionNodeConfigurationContent';
 import { FolksActionSourceHandler } from '@/automations/components/builder/nodes/components/FolksActionSourceHandler';
+import { NodeDropdownActions } from '@/automations/components/builder/nodes/components/NodeDropdownActions';
 import {
   NodeErrorDisplay,
   NodeErrorIndicator,
@@ -11,8 +13,6 @@ import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Handle, Node, NodeProps, Position } from '@xyflow/react';
 import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
-import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
-import { NodeDropdownActions } from './NodeDropdownActions';
 
 const ActionNodeContent = ({ data }: { data: NodeData }) => {
   const { hasError, shouldRender } = useNodeContent(

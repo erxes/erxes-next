@@ -23,7 +23,7 @@ import rateLimit from 'express-rate-limit';
 import {
   SegmentConfigs,
   startAutomations,
-  startSegments,
+  initSegmentProducers,
 } from '../core-modules';
 import { AutomationConfigs } from '../core-modules/automations/types';
 import { generateApolloContext } from './apollo';
@@ -294,11 +294,11 @@ export async function startPlugin(
     }
 
     if (segments) {
-      await startSegments(configs.name, segments);
+      await initSegmentProducers(app, configs.name, segments);
     }
 
     if (afterProcess) {
-      await startAfterProcess(configs.name, afterProcess);
+      await startAfterProcess(app, configs.name, afterProcess);
     }
 
     if (notificationModules) {

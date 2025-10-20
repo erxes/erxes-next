@@ -4,7 +4,7 @@ import {
   splitType,
   TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendAutomatonMessage } from 'erxes-api-shared/utils';
+import { sendCoreModuleProducer } from 'erxes-api-shared/utils';
 
 export const executeSetPropertyAction = async (
   subdomain: string,
@@ -15,7 +15,8 @@ export const executeSetPropertyAction = async (
   const { module } = action.config;
   const [pluginName, moduleName, collectionType] = splitType(module);
 
-  return await sendAutomatonMessage({
+  return await sendCoreModuleProducer({
+    moduleName: 'automations',
     pluginName,
     producerName: TAutomationProducers.RECEIVE_ACTIONS,
     input: {

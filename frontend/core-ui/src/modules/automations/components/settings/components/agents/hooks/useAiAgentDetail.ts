@@ -6,6 +6,7 @@ import {
   AUTOMATIONS_AI_AGENT_DETAIL,
 } from '@/automations/components/settings/components/agents/graphql/automationsAiAgents';
 import { toast } from 'erxes-ui';
+import { useParams } from 'react-router';
 
 export interface AiAgentInput {
   name?: string;
@@ -17,7 +18,9 @@ export interface AiAgentInput {
   config?: unknown;
 }
 
-export function useAiAgentDetail(id?: string) {
+export function useAiAgentDetail() {
+  const { id } = useParams();
+
   const { data, loading } = useQuery(AUTOMATIONS_AI_AGENT_DETAIL, {
     variables: { id },
     skip: !id,

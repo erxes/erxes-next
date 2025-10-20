@@ -136,13 +136,32 @@ export const generateFindObjectConnection = (
   sourceHandle: string,
 ) => {
   const config = sourceNode.config || {};
+  console.log({ sourceHandle });
   const [sourceHandleType] = sourceHandle.split('-');
-  console.log({ sourceHandleType, config });
   return {
     ...sourceNode,
     config: {
       ...config,
       [sourceHandleType]: targetId,
+    },
+  } as TAutomationBuilderActions[number];
+};
+
+export const generateFolksConnection = (
+  sourceNode: TAutomationBuilderActions[number],
+  targetId: string,
+  sourceHandle: string,
+) => {
+  const config = sourceNode.config || {};
+  // Extract the folk key from sourceHandle format: "nodeId__folkKey"
+  const parts = sourceHandle.split('__');
+  const folkKey = parts[parts.length - 1]; // Get the folk key (last part)
+
+  return {
+    ...sourceNode,
+    config: {
+      ...config,
+      [folkKey]: targetId,
     },
   } as TAutomationBuilderActions[number];
 };

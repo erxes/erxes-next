@@ -24,6 +24,7 @@ import {
 } from 'react';
 import {
   IAutomationsActionConfigConstants,
+  IAutomationsActionFolkConfig,
   IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
 
@@ -47,6 +48,7 @@ interface AutomationContextType {
   triggersConst: IAutomationsTriggerConfigConstants[];
   actionsConst: IAutomationsActionConfigConstants[];
   propertyTypesConst: any[];
+  actionFolks: Record<string, IAutomationsActionFolkConfig[]>;
   loading: boolean;
   error: any;
   refetch: () => void;
@@ -98,6 +100,10 @@ export const AutomationProvider = ({
     data?.automationConstants?.propertyTypesConst ||
     [];
 
+  const actionFolks = Object.fromEntries(
+    (actionsConst || []).map((a: any) => [a.type, a.folks || []]),
+  );
+
   useEffect(() => {
     if (data?.automationConstants && !cached) {
       setCached({
@@ -120,6 +126,7 @@ export const AutomationProvider = ({
         triggersConst,
         actionsConst,
         propertyTypesConst,
+        actionFolks,
         loading: !cached && loading,
         error,
         refetch,

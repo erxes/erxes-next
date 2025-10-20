@@ -207,9 +207,3 @@ export enum TAutomationProducers {
   REPLACE_PLACEHOLDERS = 'replacePlaceHolders',
   CHECK_CUSTOM_TRIGGER = 'checkCustomTrigger',
 }
-
-export type TAutomationProducerNames =
-  | TAutomationProducers.RECEIVE_ACTIONS
-  | TAutomationProducers.GET_RECIPIENTS_EMAILS
-  | TAutomationProducers.REPLACE_PLACEHOLDERS
-  | TAutomationProducers.CHECK_CUSTOM_TRIGGER;

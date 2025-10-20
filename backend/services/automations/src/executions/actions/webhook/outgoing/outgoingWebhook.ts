@@ -9,7 +9,7 @@ import {
   splitType,
   TAutomationProducers,
 } from 'erxes-api-shared/core-modules';
-import { sendAutomatonMessage } from 'erxes-api-shared/utils';
+import { sendCoreModuleProducer } from 'erxes-api-shared/utils';
 import * as https from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import jwt from 'jsonwebtoken';
@@ -23,7 +23,8 @@ async function replacePlaceholders<T extends Record<string, any>>(
   payload: T,
 ): Promise<ReplaceResult<T>> {
   const [pluginName] = splitType(triggerType);
-  const result = await sendAutomatonMessage({
+  const result = await sendCoreModuleProducer({
+    moduleName: 'automations',
     pluginName,
     producerName: TAutomationProducers.REPLACE_PLACEHOLDERS,
     input: {
