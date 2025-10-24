@@ -277,6 +277,7 @@ import {
   IconChecklist,
   IconNote,
   IconWebhook,
+  IconBrandFacebook,
 } from '@tabler/icons-react';
 
 export const ALL_ICONS = {
@@ -558,4 +559,5 @@ export const ALL_ICONS = {
   IconChecklist,
   IconNote,
   IconWebhook,
+  IconBrandFacebook,
 };

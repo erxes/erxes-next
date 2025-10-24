@@ -16,6 +16,7 @@ export const startAutomations = async (
   pluginName: string,
   config: AutomationConfigs,
 ) => {
+  console.log('startAutomations', pluginName, config);
   await initializePluginConfig(pluginName, 'automations', config);
   const t = initTRPC.context<IAutomationContext>().create();
 
