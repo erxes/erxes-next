@@ -7,6 +7,7 @@ import {
   IconMailCheck,
   IconRefresh,
   IconUser,
+  IconUserCheck,
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
@@ -33,7 +34,6 @@ import {
   renderingTeamMemberDetailAtom,
   renderingTeamMemberResetPasswordAtom,
 } from '../../states/teamMemberDetailStates';
-import { SelectPositions } from 'ui-modules';
 import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
@@ -42,6 +42,7 @@ import { ApolloError } from '@apollo/client';
 import { TeamMemberEmailField } from '@/settings/team-member/components/record/team-member-edit/TeammemberEmailField';
 import clsx from 'clsx';
 import { useResendInvite } from '@/settings/team-member/hooks/useResendInvite';
+import { TeamMemberRoleSelect } from '@/settings/team-member/components/record/team-member-edit/TeamMemberRoleSelect';
 
 const UserResetPassword = ({ cell }: { cell: Cell<IUser, unknown> }) => {
   const [, setOpen] = useQueryState('reset_password_id');
@@ -373,6 +374,17 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             }}
           />
         </RecordTableInlineCell>
+      );
+    },
+  },
+  {
+    id: 'role',
+    accessorKey: 'role',
+    header: () => <RecordTable.InlineHead icon={IconUserCheck} label="Role" />,
+    cell: ({ cell }) => {
+      const { _id } = cell.row.original || {};
+      return (
+        <TeamMemberRoleSelect value={cell.getValue() as string} userId={_id} />
       );
     },
   },
