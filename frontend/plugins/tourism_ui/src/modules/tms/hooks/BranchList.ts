@@ -43,6 +43,7 @@ export const useBranchList = ({
         orderBy,
       },
       fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true,
     },
   );
 

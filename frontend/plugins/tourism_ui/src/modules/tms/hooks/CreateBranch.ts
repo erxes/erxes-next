@@ -42,9 +42,11 @@ export const useCreateBranch = () => {
         query: GET_BRANCH_LIST,
         variables: {
           limit: 10,
+          orderBy: { createdAt: -1 },
         },
       },
     ],
+    awaitRefetchQueries: true,
   });
 
   const createBranch = (options: {
