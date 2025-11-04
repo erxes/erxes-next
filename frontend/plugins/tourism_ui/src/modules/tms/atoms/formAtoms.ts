@@ -1,11 +1,7 @@
 import { atom } from 'jotai';
 import { atomWithStorage, RESET } from 'jotai/utils';
 
-type TmsFormStorage = {
-  name: string;
-  color: string;
-  logo: string;
-};
+type TmsFormStorage = TmsForm;
 
 export type TmsForm = {
   name: string;
@@ -28,6 +24,12 @@ const DEFAULT_STORAGE_FORM: TmsFormStorage = {
   name: '',
   color: '#4F46E5',
   logo: '',
+  favIcon: '',
+  generalManager: [],
+  managers: [],
+  payment: '',
+  token: '',
+  otherPayments: [],
 };
 
 export const DEFAULT_TMS_FORM: TmsForm = {
@@ -52,16 +54,14 @@ export const tmsFormAtom = atom(
     const storage = get(tmsFormStorageAtom);
     return {
       ...DEFAULT_TMS_FORM,
-      name: storage.name,
-      color: storage.color,
-      logo: storage.logo,
+      ...storage,
     };
   },
   (get, set, update: TmsForm) => {
+    const prev = get(tmsFormStorageAtom);
     set(tmsFormStorageAtom, {
-      name: update.name,
-      color: update.color,
-      logo: update.logo,
+      ...prev,
+      ...update,
     });
   },
 );

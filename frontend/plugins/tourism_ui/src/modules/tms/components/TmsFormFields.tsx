@@ -291,7 +291,7 @@ export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
 
 export const Payments = ({ control }: { control: Control<TmsFormType> }) => {
   const { data, loading } = useQuery(PAYMENT_LIST);
-  const payments = data?.paymentsPublic ?? [];
+  const payments = data?.payments ?? [];
   const isEmpty = !loading && payments.length === 0;
 
   return (

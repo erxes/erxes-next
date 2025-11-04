@@ -4,18 +4,20 @@ import {
   IconTrash,
   IconChevronDown,
 } from '@tabler/icons-react';
-import { Popover } from 'erxes-ui';
+import { Popover, Spinner } from 'erxes-ui';
 
 interface ActionMenuProps {
   onEdit: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+  duplicateLoading: boolean;
 }
 
 export const ActionMenu = ({
   onEdit,
   onDuplicate,
   onDelete,
+  duplicateLoading,
 }: ActionMenuProps) => {
   const dropdownItems = [
     {
@@ -24,9 +26,14 @@ export const ActionMenu = ({
       onClick: () => onEdit(),
     },
     {
-      label: 'Duplicate',
-      icon: <IconCopy className="size-4" />,
+      label: duplicateLoading ? 'Duplicating…' : 'Duplicate',
+      icon: duplicateLoading ? (
+        <Spinner className="w-4 h-4" />
+      ) : (
+        <IconCopy className="size-4" />
+      ),
       onClick: () => onDuplicate(),
+      disabled: duplicateLoading,
     },
     // {
     //   label: 'Visit website',
@@ -47,6 +54,7 @@ export const ActionMenu = ({
           className="flex items-center leading-[100%] text-foreground font-inter gap-1 text-sm font-medium rounded-md p-1 hover:bg-muted focus:outline-none"
           aria-label="Open action menu"
           aria-haspopup="true"
+          role="menuitem"
         >
           Action
           <IconChevronDown size={18} stroke={2} />
@@ -60,8 +68,14 @@ export const ActionMenu = ({
         {dropdownItems.map((item) => (
           <div
             key={item.label}
-            className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
-            onClick={item.onClick}
+            className={`flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted ${
+              (item as any).disabled ? 'opacity-60 pointer-events-none' : ''
+            }`}
+            aria-disabled={(item as any).disabled ? true : undefined}
+            onClick={(e) => {
+              if ((item as any).disabled) return;
+              item.onClick();
+            }}
           >
             {item.icon}
             <p className="text-sm font-medium leading-[100%] font-inter">

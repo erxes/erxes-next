@@ -5,8 +5,8 @@ import { IBranch } from '../types/branch';
 interface PageInfo {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
-  startCursor: string;
-  endCursor: string;
+  startCursor: string | null;
+  endCursor: string | null;
 }
 
 interface BranchListResponse {
