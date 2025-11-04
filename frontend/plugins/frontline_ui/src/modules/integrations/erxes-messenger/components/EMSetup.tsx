@@ -60,7 +60,7 @@ export const EMSetup = ({
               <Preview.View
                 iframeSrc={
                   '/settings/frontline/channels' +
-                  FrontlitnePaths.ErxesMessengerPreview +
+                  FrontlinePaths.ErxesMessengerPreview +
                   '?inPreview=true'
                 }
               />

@@ -59,6 +59,7 @@ export const ActionMenu = ({
       >
         {dropdownItems.map((item) => (
           <div
+            key={item.label}
             className="flex gap-3 items-center px-4 py-2 w-full text-left rounded-md cursor-pointer hover:bg-muted"
             onClick={item.onClick}
           >
