@@ -18,6 +18,7 @@ export const EMSetup = ({
   loading?: boolean;
 }) => {
   const step = useAtomValue(erxesMessengerSetupStepAtom);
+
   return (
     <Sheet.View
       className="gap-0 flex-col flex sm:max-w-none md:w-[calc(100vw-theme(spacing.4))]"
@@ -29,7 +30,7 @@ export const EMSetup = ({
       </Sheet.Header>
 
       {loading ? (
-        <div className="flex flex-1 items-center justify-center w-full">
+        <div className="flex flex-1 justify-center items-center w-full">
           <Spinner />
         </div>
       ) : (
@@ -59,7 +60,7 @@ export const EMSetup = ({
               <Preview.View
                 iframeSrc={
                   '/settings/frontline/channels' +
-                  FrontlinePaths.ErxesMessengerPreview +
+                  FrontlitnePaths.ErxesMessengerPreview +
                   '?inPreview=true'
                 }
               />
