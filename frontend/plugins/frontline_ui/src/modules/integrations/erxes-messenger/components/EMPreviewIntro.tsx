@@ -11,7 +11,7 @@ import { EMGreetingAvatar } from '@/integrations/erxes-messenger/components/EMGr
 export const ActiveUsers = () => {
   const { members } = useMembersInlineContext();
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex gap-2 items-center">
       {members.map((member) => (
         <Avatar key={member._id} size="xl">
           <Avatar.Image src={readImage(member.details?.avatar || '', 200)} />
@@ -27,9 +27,10 @@ export const ActiveUsers = () => {
 export const EMPreviewIntro = () => {
   const greeting = useAtomValue(erxesMessengerSetupGreetingAtom);
   const hours = useAtomValue(erxesMessengerSetupHoursAtom);
+
   return (
     <>
-      <div className="bg-primary text-primary-foreground p-6 pb-16 pt-4">
+      <div className="p-6 pt-4 pb-16 bg-primary text-primary-foreground">
         <Popover.Close asChild>
           <Button
             size="icon"
@@ -39,7 +40,7 @@ export const EMPreviewIntro = () => {
             <IconX />
           </Button>
         </Popover.Close>
-        <div className="flex items-center gap-1 text-accent mb-2">
+        <div className="flex gap-1 items-center mb-2 text-accent">
           {greeting?.links?.map(
             (link) =>
               !!link && (
@@ -60,22 +61,22 @@ export const EMPreviewIntro = () => {
         <h1 className="text-2xl font-semibold">
           {greeting?.title || 'Welcome'}
         </h1>
-        <p className="text-sm text-primary-foreground/80 mt-3 mb-5">
+        <p className="mt-3 mb-5 text-sm text-primary-foreground/80">
           {greeting?.message || 'Welcome to Erxes Messenger'}
         </p>
         <MembersInline.Provider memberIds={greeting?.supporterIds || []}>
           <ActiveUsers />
         </MembersInline.Provider>
       </div>
-      <div className="bg-background px-4 py-6 -mt-8 mx-6 rounded-xl shadow-md">
-        <div className="font-medium text-accent-foreground mb-2 text-sm px-3">
+      <div className="px-4 py-6 mx-6 -mt-8 rounded-xl shadow-md bg-background">
+        <div className="px-3 mb-2 text-sm font-medium text-accent-foreground">
           Recent conversations
         </div>
         <Button
-          className="w-full text-left h-auto justify-start rounded-md px-2 my-2"
+          className="justify-start px-2 my-2 w-full h-auto text-left rounded-md"
           variant="ghost"
         >
-          <div className="flex items-center bg-muted text-muted-foreground p-2 rounded-full">
+          <div className="flex items-center p-2 rounded-full bg-muted text-muted-foreground">
             <IconPlus className="size-5" strokeWidth={1.5} />
           </div>
           <div className="flex flex-col gap-1">
