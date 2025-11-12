@@ -21,7 +21,7 @@ import { generateModels } from './connectionResolvers';
 import meta from './meta';
 import './meta/automations';
 import './segments';
-import AIassistant from './modules/AIassistant';
+import AIassistant from './modules/aiassistant';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 

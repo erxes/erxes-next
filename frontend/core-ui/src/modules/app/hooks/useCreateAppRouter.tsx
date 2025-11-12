@@ -25,7 +25,7 @@ import { lazy } from 'react';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { Providers } from '~/providers';
 import { DocumentsRoutes } from '../components/DocumentsRoutes';
-import AIAssistant from '@/AIAssistant';
+import AIAssistant from '@/aiassistant';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 

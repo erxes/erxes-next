@@ -12,3 +12,4 @@ numpy
 flask-cors
 python-docx
 faiss-cpu
+redis

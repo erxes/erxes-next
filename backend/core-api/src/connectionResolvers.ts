@@ -153,17 +153,17 @@ import {
   IExecutionModel,
   loadClass as loadExecutionClass,
 } from './modules/automations/db/models/Executions';
-import { IRagInteractionDocument } from './modules/AIassistant/db/definitions/ragInteractions';
-import { IRagInteractionModel } from './modules/AIassistant/db/models/RagInteractions';
-import { loadRagInteractionClass } from './modules/AIassistant/db/models/loadInteractionClass';
-import { IGeneralSettingsModel } from './modules/AIassistant/db/definitions/generalSettings';
-import { IGeneralSettingsDocument } from './modules/AIassistant/db/definitions/generalSettings';
-import { loadGeneralSettingsClass } from './modules/AIassistant/db/models/loadGeneralSettingsClass';
-import { GeneralSettingsSchema } from './modules/AIassistant/db/models/GeneralSettings';
-import { ISystemPromptDocument } from '~/modules/AIassistant/db/definitions/systemPrompt';
-import { ISystemPromptModel } from '~/modules/AIassistant/db/definitions/systemPrompt';
+import { IRagInteractionDocument } from './modules/aiassistant/db/definitions/ragInteractions';
+import { IRagInteractionModel } from './modules/aiassistant/db/models/RagInteractions';
+import { loadRagInteractionClass } from './modules/aiassistant/db/models/loadInteractionClass';
+import { IGeneralSettingsModel } from './modules/aiassistant/db/definitions/generalSettings';
+import { IGeneralSettingsDocument } from './modules/aiassistant/db/definitions/generalSettings';
+import { loadGeneralSettingsClass } from './modules/aiassistant/db/models/loadGeneralSettingsClass';
+import { GeneralSettingsSchema } from './modules/aiassistant/db/models/GeneralSettings';
+import { ISystemPromptDocument } from '~/modules/aiassistant/db/definitions/systemPrompt';
+import { ISystemPromptModel } from '~/modules/aiassistant/db/definitions/systemPrompt';
 
-import { SystemPromptSchema } from '~/modules/AIassistant/db/models/SystemPrompt';
+import { SystemPromptSchema } from '~/modules/aiassistant/db/models/SystemPrompt';
 
 export interface IModels {
   Brands: IBrandModel;
