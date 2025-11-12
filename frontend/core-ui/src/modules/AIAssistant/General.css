@@ -1,0 +1,134 @@
+.general-container {
+ padding: 24px;
+ max-width: 700px;
+}
+
+
+.subtitle {
+ color: #666;
+ margin-bottom: 20px;
+}
+
+
+.field-row {
+ display: flex;
+ align-items: center;
+ gap: 20px;
+ margin-bottom: 24px;
+}
+
+
+.avatar-section {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 8px;
+}
+
+
+.avatar {
+ width: 64px;
+ height: 64px;
+ border-radius: 50%;
+}
+
+
+.input-section {
+ flex: 1;
+}
+
+
+.field {
+ margin-bottom: 20px;
+ display: flex;
+ flex-direction: column;
+}
+
+
+.field label {
+ font-size: 14px;
+ font-weight: 500;
+ margin-bottom: 6px;
+}
+
+
+.field input,
+.field textarea {
+ border: 1px solid #ddd;
+ border-radius: 6px;
+ padding: 10px;
+ font-size: 14px;
+ width: 100%;
+}
+
+
+textarea {
+ min-height: 60px;
+}
+
+
+.prompt-list {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+
+
+.prompt-item {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+}
+
+
+.prompt-item input {
+ flex: 1;
+}
+
+
+.icon-btn {
+ border: none;
+ background: transparent;
+ font-size: 16px;
+ cursor: pointer;
+ color: #999;
+}
+
+
+.icon-btn:hover {
+ color: #333;
+}
+
+
+.btn {
+ cursor: pointer;
+ border: none;
+ padding: 8px 14px;
+ border-radius: 6px;
+ font-size: 14px;
+}
+
+
+.btn.primary {
+ background: linear-gradient(90deg, #6a5acd, #7b68ee);
+ color: #fff;
+}
+
+
+.btn.secondary {
+ background: #f4f4f4;
+ color: #333;
+}
+
+
+.btn.small {
+ background: #eee;
+ color: #333;
+ font-size: 13px;
+ padding: 6px 10px;
+}
+
+
+.save-btn {
+ margin-top: 16px;
+}

@@ -9,6 +9,7 @@ import {
   IconShoppingCart,
   IconSpiral,
   IconUser,
+  IconRobot,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 
@@ -87,6 +88,12 @@ export const GET_CORE_MODULES = (version?: boolean): IUIConfig['modules'] => {
         path: 'documents',
         hasSettings: false,
       },
+      {
+        name: 'AI Assistant',
+        icon: IconRobot,
+        path: 'ai-assistant',
+        hasSettings: false,
+  },
     );
   }
 

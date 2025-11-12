@@ -1,0 +1,59 @@
+
+.systemprompt-container {
+ max-width: 768px;
+}
+
+
+.systemprompt-title {
+ font-size: 1.25rem; /* text-xl */
+ font-weight: 600;   /* font-semibold */
+ margin-bottom: 0.25rem;
+}
+
+
+.systemprompt-description {
+ color: #6b7280; /* gray-500 */
+ margin-bottom: 1rem;
+}
+
+
+.systemprompt-textarea {
+ width: 100%;
+ padding: 1rem;
+ border: 1px solid #d1d5db; /* gray-300 */
+ border-radius: 0.5rem;
+ box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+ font-size: 1rem;
+ resize: vertical;
+ outline: none;
+}
+
+
+.systemprompt-textarea:focus {
+ border-color: #6366f1; /* indigo-500 */
+ box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+
+.systemprompt-actions {
+ margin-top: 1rem;
+ display: flex;
+ justify-content: flex-end;
+}
+
+
+.systemprompt-save {
+ padding: 0.5rem 1rem;
+ border-radius: 0.5rem;
+ background-color: #4f46e5; /* indigo-600 */
+ color: white;
+ font-weight: 500;
+ border: none;
+ cursor: pointer;
+ transition: background-color 0.2s ease;
+}
+
+
+.systemprompt-save:hover {
+ background-color: #4338ca; /* indigo-700 */
+}

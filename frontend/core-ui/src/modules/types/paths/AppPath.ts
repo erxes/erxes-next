@@ -31,6 +31,9 @@ export enum AppPath {
   Documents = 'documents',
   DocumentsCatchAll = `/${Documents}/*`,
 
+  AIAssistant = 'ai-assistant',
+  AIAssistantCatchAll = '/ai-assistant/*',
+
   //not found
 
   NotFoundWildcard = '/*',
